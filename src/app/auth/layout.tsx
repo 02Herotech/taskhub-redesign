@@ -1,6 +1,6 @@
-import Icons from "@/components/icons";
 import Image from "next/image";
 import Link from "next/link";
+import { Suspense } from "react";
 
 type AuthLayoutProps = {
     children: React.ReactNode;
@@ -19,7 +19,9 @@ const AuthLayout = ({
                 </div>
             </header>
             <main className='w-full container mt-[81px] py-16 xl:py-20'>
-                {children}
+                <Suspense>
+                    {children}
+                </Suspense>
             </main>
         </>
     );
