@@ -17,7 +17,7 @@ class Toast {
                     <IoCheckmarkCircleSharp className="text-primary" />
                 </div>
             ),
-            toastStyle,
+            bodyStyle: toastStyle,
         } as CustomToastOptions);
     }
     // error(message: string = "") {

@@ -64,9 +64,4 @@ const nextConfig = {
     output: "standalone",
 };
 
-module.exports = {
-    nextConfig,
-    experimental: {
-        missingSuspenseWithCSRBailout: false,
-    },
-};
+module.exports = nextConfig
