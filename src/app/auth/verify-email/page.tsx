@@ -8,6 +8,7 @@ import { toast } from "react-toastify";
 import "react-phone-number-input/style.css";
 import React, { useEffect, useRef, useState } from "react";
 import axios from 'axios';
+import { Suspense } from 'react'
 
 const VerifyEmail = () => {
     const searchParams = useSearchParams()
@@ -121,55 +122,57 @@ const VerifyEmail = () => {
     };
 
     return (
-        <section className='w-full xl:w-[554px] mx-auto max-lg:p-10 flex items-center justify-center'>
-            <div className='space-y-10'>
-                <div className="space-y-4">
-                    <h1 className='text-2xl lg:text-4xl text-black font-medium'>
-                        Verify Email Address
-                    </h1>
-                    <p className='text-xl lg:text-2xl text-tc-gray font-medium'>
-                        {`A code has been sent to ${email}`} <Link href="/auth/sign-up" className="text-primary"> Change Email</Link>
-                    </p>
-                </div>
+        <Suspense>
+            <section className='w-full xl:w-[554px] mx-auto max-lg:p-10 flex items-center justify-center'>
+                <div className='space-y-10'>
+                    <div className="space-y-4">
+                        <h1 className='text-2xl lg:text-4xl text-black font-medium'>
+                            Verify Email Address
+                        </h1>
+                        <p className='text-xl lg:text-2xl text-tc-gray font-medium'>
+                            {`A code has been sent to ${email}`} <Link href="/auth/sign-up" className="text-primary"> Change Email</Link>
+                        </p>
+                    </div>
 
-                <form onSubmit={requestOTP}>
-                    <div>
-                        <span className='w-full flex items-center space-x-2 text-sm text-left leading-5 mb-2'>
-                            <label htmlFor="" className='capitalize text-[#5B5B66]'>Enter verification code</label>
-                        </span>
-                        <div className="flex items-center justify-center space-x-4 pb-8">
-                            {otp.map((data, index) => (
-                                <input
-                                    type="text"
-                                    name="otp"
-                                    maxLength={1}
-                                    value={data}
-                                    key={index}
-                                    onChange={(e) => handleChange(e.target, index)}
-                                    onFocus={(e) => e.target.select()}
-                                    onKeyDown={(event) => handleKeyDown(event, index)}
-                                    ref={inputRefs.current[index]}
-                                    onPaste={handlePaste}
-                                    className="border border-[#E9ECF1] p-4 w-full rounded-xl text-center text-lg font-bold outline-none flex justify-center"
-                                />
-                            ))}
+                    <form onSubmit={requestOTP}>
+                        <div>
+                            <span className='w-full flex items-center space-x-2 text-sm text-left leading-5 mb-2'>
+                                <label htmlFor="" className='capitalize text-[#5B5B66]'>Enter verification code</label>
+                            </span>
+                            <div className="flex items-center justify-center space-x-4 pb-8">
+                                {otp.map((data, index) => (
+                                    <input
+                                        type="text"
+                                        name="otp"
+                                        maxLength={1}
+                                        value={data}
+                                        key={index}
+                                        onChange={(e) => handleChange(e.target, index)}
+                                        onFocus={(e) => e.target.select()}
+                                        onKeyDown={(event) => handleKeyDown(event, index)}
+                                        ref={inputRefs.current[index]}
+                                        onPaste={handlePaste}
+                                        className="border border-[#E9ECF1] p-4 w-full rounded-xl text-center text-lg font-bold outline-none flex justify-center"
+                                    />
+                                ))}
+                            </div>
                         </div>
-                    </div>
-                    <div className='pt-1 space-y-5'>
-                        <Button
-                            type='submit'
-                            loading={isLoading}
-                            className='w-full lg:w-[170px] rounded-full font-normal'
-                        >
-                            Verify
-                        </Button>
-                        <h3 className="text-xl font-medium">If you did not receive a code?
-                            <Button theme='plain' onClick={() => resendOtp()} className="text-primary"> Resend code</Button>
-                        </h3>
-                    </div>
-                </form>
-            </div>
-        </section>
+                        <div className='pt-1 space-y-5'>
+                            <Button
+                                type='submit'
+                                loading={isLoading}
+                                className='w-full lg:w-[170px] rounded-full font-normal'
+                            >
+                                Verify
+                            </Button>
+                            <h3 className="text-xl font-medium">If you did not receive a code?
+                                <Button theme='plain' onClick={() => resendOtp()} className="text-primary"> Resend code</Button>
+                            </h3>
+                        </div>
+                    </form>
+                </div>
+            </section>
+        </Suspense>
     )
 }
 
