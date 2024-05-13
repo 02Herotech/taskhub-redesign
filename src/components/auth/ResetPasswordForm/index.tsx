@@ -5,8 +5,6 @@ import Input from "@/components/global/Input";
 import { useRouter } from "next/navigation";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
-import { signIn } from "next-auth/react";
-import Link from "next/link";
 import { useState } from "react";
 import axios from "axios";
 
@@ -90,10 +88,10 @@ const ResetPasswordForm = () => {
                             <Button
                                 className='w-full lg:w-[170px] rounded-full font-normal'
                                 theme="outline"
+                                onClick={() => router.push("/auth/login")}
                             >
                                 Cancel
                             </Button>
-
                         </div>
                     </form>
                 </FormProvider>
