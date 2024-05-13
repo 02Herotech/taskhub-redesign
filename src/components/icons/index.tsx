@@ -1,6 +1,6 @@
 "use client";
 
-import LogoIcon from "/public/assets/icons/logo.svg";
+import LogoIcon from "/assets/icons/logo.svg";
 
 const Icons = {
     LogoIcon,

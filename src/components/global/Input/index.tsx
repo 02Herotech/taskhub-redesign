@@ -2,6 +2,7 @@ import { cn } from "@/lib/utils";
 import type { InputProps } from "@/types/global/InputProps";
 import { useEffect, useRef, useState } from "react";
 import { useFormContext } from "react-hook-form";
+import { IoMdEye, IoMdEyeOff } from "react-icons/io";
 
 type ValidationResult = boolean | string;
 
@@ -291,7 +292,7 @@ const Input = ({
 					onClick={() => setShowPassword(!showPassword)}
 					className='absolute focus:border-primary focus:outline-primary flex items-center justify-center h-[44px] w-12 right-[2px] top-[19px] cursor-pointer'>
 					<div className='text-primary font-bold pr-4'>
-						{!showPassword ? "Show" : "Hide"}
+						{!showPassword ? <IoMdEye className="w-7 h-7" /> : <IoMdEyeOff className="w-7 h-7" />}
 					</div>
 				</button>
 			)}

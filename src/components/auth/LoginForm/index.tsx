@@ -98,7 +98,7 @@ const LoginForm = () => {
                             </div>
                             <Button
                                 type='submit'
-                                // loading={isLoading}
+                                loading={isLoading}
                                 disabled={!isValid}
                                 className='w-full lg:w-[170px] rounded-full font-normal'>
                                 Log in
