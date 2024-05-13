@@ -4,9 +4,7 @@ const nextConfig = {
     // compiler: {
     //     removeConsole: process.env.NEXT_PUBLIC_ENVIRONMENT === 'production',
     // },
-    experimental: {
-        missingSuspenseWithCSRBailout: false,
-    },
+    
     async headers() {
         return [
             {
@@ -66,4 +64,9 @@ const nextConfig = {
     output: "standalone",
 };
 
-module.exports = nextConfig;
+module.exports = {
+    nextConfig,
+    experimental: {
+        missingSuspenseWithCSRBailout: false,
+    },
+};
