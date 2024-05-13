@@ -1,6 +1,6 @@
 "use client"
 
-// import { useSearchParams } from 'next/navigation'
+import { useSearchParams } from 'next/navigation'
 import Button from "@/components/global/Button";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -17,7 +17,6 @@ const VerifyEmail = () => {
     const [isLoading2, setIsLoading2] = useState(false);
 
     const baseUrl = process.env.NEXT_PUBLIC_API_URL;
-
 
     const requestOTP = async (e: any) => {
         const verifyOTP = otp.join("");
@@ -43,8 +42,8 @@ const VerifyEmail = () => {
     //     }
     // };
 
-    // const searchParams = useSearchParams()
-    const email = "searchParams.get('email')"
+    const searchParams = useSearchParams()
+    const email = searchParams.get('email')
 
     const resendOtp = async (): Promise<void> => {
         try {
