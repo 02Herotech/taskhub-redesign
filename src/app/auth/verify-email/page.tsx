@@ -11,8 +11,6 @@ import axios from 'axios';
 import { Suspense } from 'react'
 
 const VerifyEmail = () => {
-    const searchParams = useSearchParams()
-    const email = searchParams.get('email')
     const [otp, setOtp] = useState(new Array(6).fill(""));
     const router = useRouter()
     const [isLoading, setIsLoading] = useState(false);
@@ -44,6 +42,9 @@ const VerifyEmail = () => {
     //         inputRefs.current[0].current!.focus();
     //     }
     // };
+
+    // const searchParams = useSearchParams()
+    const email = "searchParams.get('email')"
 
     const resendOtp = async (): Promise<void> => {
         try {
