@@ -4,6 +4,9 @@ const nextConfig = {
     // compiler: {
     //     removeConsole: process.env.NEXT_PUBLIC_ENVIRONMENT === 'production',
     // },
+    experimental: {
+        missingSuspenseWithCSRBailout: false,
+    },
     async headers() {
         return [
             {

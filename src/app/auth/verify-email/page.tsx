@@ -8,7 +8,6 @@ import { toast } from "react-toastify";
 import "react-phone-number-input/style.css";
 import React, { useEffect, useRef, useState } from "react";
 import axios from 'axios';
-import { taskhubToast } from '@/lib/TaskhubToast';
 
 const VerifyEmail = () => {
     const searchParams = useSearchParams()
