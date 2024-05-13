@@ -1,9 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
     reactStrictMode: true,
-    compiler: {
-        removeConsole: process.env.NEXT_PUBLIC_ENVIRONMENT === 'production',
-    },
+    // compiler: {
+    //     removeConsole: process.env.NEXT_PUBLIC_ENVIRONMENT === 'production',
+    // },
     async headers() {
         return [
             {

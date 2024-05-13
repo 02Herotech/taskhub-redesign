@@ -289,7 +289,7 @@ const Input = ({
 				<button
 					type='button'
 					onClick={() => setShowPassword(!showPassword)}
-					className='absolute focus:border-primary focus:outline-primary flex items-center justify-center h-[44px] w-12 right-[2px] top-[30px] cursor-pointer'>
+					className='absolute focus:border-primary focus:outline-primary flex items-center justify-center h-[44px] w-12 right-[2px] top-[19px] cursor-pointer'>
 					<div className='text-primary font-bold pr-4'>
 						{!showPassword ? "Show" : "Hide"}
 					</div>
