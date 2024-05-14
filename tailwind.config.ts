@@ -37,7 +37,8 @@ const config: Config = {
             "10": "#F2F8FF",
             "100": "#17A2B8",
           },
-          violet: "#C1BADB"
+          violet: "#C1BADB",
+          lightViolet: "#EBE9F4"
         },
       },
       fontFamily: {

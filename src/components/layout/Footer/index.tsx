@@ -1,0 +1,120 @@
+"use client";
+
+import Image from "next/image";
+import Link from "next/link";
+
+const Footer = () => {
+    const links = [
+        {
+            groupName: "Company",
+            links: [
+                {
+                    label: "About Us",
+                    url: "/about",
+                },
+                {
+                    label: "Companies",
+                    url: "/companies",
+                },
+                {
+                    label: "Pricing",
+                    url: "/pricing",
+                }
+
+            ],
+        },
+        {
+            groupName: "Services",
+            links: [
+                {
+                    url: "/services/automotive",
+                    label: "Automotive Services",
+                },
+                {
+                    url: "/services/health-fitness",
+                    label: "Health & Fitness",
+                },
+                {
+                    url: "/services/real-estate",
+                    label: "Real Estate Services",
+                },
+                {
+                    url: "/services/delivery-logistics",
+                    label: "Delivery & Logistics",
+                },
+                {
+                    url: "/services/art-creativity",
+                    label: "Art & Creativity",
+                },
+                {
+                    url: "/services/travel-adventure",
+                    label: "Travel & Adventure",
+                },
+                {
+                    url: "/services/childcare-babysitting",
+                    label: "Childcare & Babysitting",
+                },
+                {
+                    url: "/services/education-tutoring",
+                    label: "Education & Tutoring",
+                }
+            ],
+        },
+        {
+            groupName: "Other",
+            links: [
+                {
+                    label: "FAQs",
+                    url: "/faqs",
+                },
+                {
+                    label: "Contact Us",
+                    url: "/contact",
+                },
+                {
+                    label: "Terms and Conditions",
+                    url: "/terms-and-conditions",
+                },
+                {
+                    label: "Privacy",
+                    url: "/privacy",
+                },
+            ],
+        },
+    ];
+
+    return (
+        <footer className='pt-10 lg:pt-24 bg-status-lightViolet font-satoshi'>
+            <div className='container w-full grid grid-cols-1 lg:grid-cols-5 gap-10 lg:gap-20 pb-10 lg:pb-24'>
+                <div className='grid lg:col-span-2 w-full px-4'>
+                    <Link href='/' className='w-[67px] h-[50px] lg:w-[109px] relative'>
+                        <Image src="/assets/images/logo.png" fill alt="Logo" />
+                    </Link>
+                    <p>Online platform that connects Service Provider  with Customers who are seeking various services. The platform offers a wide range of services.</p>
+                </div>
+                {links.map((group, index) => {
+                    return (
+                        <ul key={index} className='space-y-5'>
+                            <h3 className='text-dark text-sm lg:text-base font-semibold'>
+                                {group.groupName}
+                            </h3>
+                            {group.links.map((link, index) => {
+                                return (
+                                    <li key={index} className='text-dark text-sm lg:text-base'>
+                                        <Link href={link.url}>{link.label}</Link>
+                                    </li>
+                                );
+                            })}
+                        </ul>
+                    );
+                })}
+
+            </div>
+            <div className='container py-5 text-black text-center text-sm lg:text-base'>
+                2023 TaskHub. All Rights Reserved.
+            </div>
+        </footer>
+    );
+};
+
+export default Footer;

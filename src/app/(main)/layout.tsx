@@ -1,3 +1,4 @@
+import Footer from "@/components/layout/Footer";
 import Navigation from "@/components/layout/Navigation";
 
 type MainLayoutProps = {
@@ -13,6 +14,7 @@ const MainLayout = ({
             <main className='mt-[20px] py-10 xl:py-20'>
                 {children}
             </main>
+            <Footer />
         </div>
     );
 };

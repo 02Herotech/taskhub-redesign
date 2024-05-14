@@ -1,24 +1,31 @@
+import Button from "@/components/global/Button";
 import { CiSearch } from "react-icons/ci";
 
 const ExploreMap = () => {
 
     return (
-        <section className='py-5'>
-            <div className='container lg:flex items-center gap-5 lg:gap-20'>
-                <div className="flex items-center justify-between">
-                    <form className="flex items-center space-x-4">
-                        <div className='border border-status-violet rounded-2xl bg-[#F1F1F2] h-[29px] lg:h-[58px] max-sm:max-w-[202px] lg:w-[300px] flex items-center space-x-2 px-4'>
+        <section className='pt-14'>
+            <div className='container'>
+                <div className="flex items-center justify-between w-full">
+                    <form className="flex items-center max-lg:justify-between max-lg:px-8 max-lg:my-4 space-x-4 max-lg:w-full">
+                        <div className='border border-status-violet rounded-lg lg:rounded-2xl bg-[#F1F1F2] h-[29px] lg:h-[58px] max-sm:w-full lg:w-[300px] flex items-center space-x-2 px-4'>
                             <CiSearch className="h-6 w-6 text-status-violet" />
                             <input
                                 placeholder='Search'
                                 type='search'
-                                className="outline-none active:outline-none placeholder:text-base text-base py-3 bg-[#F1F1F2] w-full focus:outline-none"
+                                className="outline-none active:outline-none placeholder:text-base text-base lg:py-3 bg-[#F1F1F2] w-full focus:outline-none"
                             />
                         </div>
-                        <button className="size-[56px] bg-primary">
-                            <CiSearch className="h-6 w-6 text-status-violet" />
+                        <button className="p-3 lg:p-6 bg-primary rounded-2xl flex items-center justify-center">
+                            <CiSearch className="w-5 h-5 lg:h-8 lg:w-8 text-status-violet" />
                         </button>
                     </form>
+                    <Button theme="secondary" className="hidden px-5 h-[29px] lg:h-[58px] rounded-full text-white font-bold bg-tc-orange lg:flex items-center justify-center">
+                        1 New Task
+                    </Button>
+                </div>
+                <div className="h-[124px] lg:h-[473px] bg-tc-orange/30 mt-7">
+
                 </div>
             </div>
         </section>
