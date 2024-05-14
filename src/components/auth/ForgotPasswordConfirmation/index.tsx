@@ -126,7 +126,7 @@ const PasswordConfirmationForm = ({ email }: { email: string }) => {
         <Suspense>
             <section className='w-full xl:w-[554px] mx-auto max-lg:p-10 flex items-center justify-center'>
                 <div className='space-y-10'>
-                    <div className="space-y-4">
+                    <div className="space-y-4 font-clashDisplay">
                         <h1 className='text-2xl lg:text-4xl text-black font-medium'>
                             Account Verification
                         </h1>
@@ -135,7 +135,7 @@ const PasswordConfirmationForm = ({ email }: { email: string }) => {
                         </p>
                     </div>
 
-                    <form onSubmit={requestOTP}>
+                    <form onSubmit={requestOTP} className='font-satoshi'>
                         <div>
                             <span className='w-full flex items-center space-x-2 text-sm text-left leading-5 mb-2'>
                                 <label htmlFor="" className='capitalize text-[#5B5B66]'>Enter verification code</label>
@@ -166,7 +166,7 @@ const PasswordConfirmationForm = ({ email }: { email: string }) => {
                             >
                                 Verify
                             </Button>
-                            <h3 className="text-xl font-medium">Haven’t gotten the code? 
+                            <h3 className="text-xl font-bold">Haven’t gotten the code? 
                                 <Button theme='plain' onClick={() => resendOtp()} className="text-primary"> Resend code</Button>
                             </h3>
                         </div>

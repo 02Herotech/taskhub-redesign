@@ -53,7 +53,7 @@ const ForgotPasswordForm = () => {
     return (
         <section className='w-full xl:w-[554px] mx-auto max-lg:p-10'>
             <div className='space-y-10'>
-                <div className="space-y-4">
+                <div className="space-y-4 font-clashDisplay">
                     <h1 className='text-2xl lg:text-4xl text-black font-medium'>
                         Forgot Password?
                     </h1>
@@ -65,7 +65,7 @@ const ForgotPasswordForm = () => {
                 <FormProvider {...methods}>
                     <form
                         onSubmit={methods.handleSubmit(onSubmit)}
-                        className='w-full space-y-5'>
+                        className='w-full space-y-5 font-satoshi'>
                         <Input
                             focused
                             name='email'
@@ -82,7 +82,7 @@ const ForgotPasswordForm = () => {
                                 className='w-full lg:w-[170px] rounded-full font-normal'>
                                 Send
                             </Button>
-                            <h3 className="text-xl font-medium">
+                            <h3 className="text-xl font-bold">
                                 <Link href="/auth/sign-up" className="text-primary">Back to Sign Up</Link>
                             </h3>
                         </div>

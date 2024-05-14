@@ -73,7 +73,7 @@ const SignUpForm = () => {
     return (
         <section className='w-full xl:w-[554px] mx-auto max-lg:p-10'>
             <div className='space-y-6 lg:space-y-10 w-full max-lg:container lg:max-w-[550px] lg:px-4'>
-                <div className="space-y-4">
+                <div className="space-y-4 font-clashDisplay">
                     <h1 className='text-2xl lg:text-4xl text-black font-medium'>
                         Create Account
                     </h1>
@@ -83,14 +83,17 @@ const SignUpForm = () => {
                 </div>
 
                 <FormProvider {...methods}>
-                    <form onSubmit={methods.handleSubmit(onSubmit)}>
+                    <form 
+                    onSubmit={methods.handleSubmit(onSubmit)} 
+                    className="font-satoshi"
+                    >
                         <div className='space-y-4 lg:space-y-6'>
                             <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
                                 <Input
                                     label='First Name'
                                     name='firstName'
                                     type='text'
-                                    rules={["required" ,"textOnly"]}
+                                    rules={["required", "textOnly"]}
                                 />
                                 <Input
                                     label='Last Name'
@@ -121,6 +124,13 @@ const SignUpForm = () => {
                                     className="w-full px-3 border border-[#5b5b66] active:border-primary text-dark h-12 overflow-hidden font-normal rounded-[10px] outline-none"
                                 />
                             </div>
+                            {/* <Input
+                                label="Phone Number"
+                                name="phoneNumber"
+                                type="tel"
+                                placeholder="+61 123 456 789"
+                                rules={["required", "phone"]}
+                            /> */}
                             <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
                                 <Input
                                     label='Password'
@@ -173,11 +183,11 @@ const SignUpForm = () => {
                                 className='w-full lg:w-[170px] rounded-full font-normal'>
                                 Create account
                             </Button>
-                            <h3 className="text-xl font-medium">Have an existing account?
+                            <h3 className="text-xl font-bold">Have an existing account?
                                 <Link href="/auth/login" className="text-primary"> Log In</Link>
                             </h3>
                             <div className="border w-full" />
-                            <h3 className="text-xl font-medium">Other login methods</h3>
+                            <h3 className="text-xl font-bold">Other login methods</h3>
                             <div className="flex items-center space-x-4">
                                 <Image src="/assets/images/facebook.png" height={40} width={40} alt="Social logo" />
                                 <Image src="/assets/images/apple.png" height={40} width={40} alt="Social logo" />

@@ -57,7 +57,7 @@ const LoginForm = () => {
     return (
         <section className='w-full xl:w-[554px] mx-auto max-lg:p-10'>
             <div className='space-y-10'>
-                <div className="space-y-4">
+                <div className="space-y-4 font-clashDisplay">
                     <h1 className='text-2xl lg:text-4xl text-black font-medium'>
                         Welcome to{" "}
                         <span className="text-primary"><b>Task</b>hub</span>
@@ -70,7 +70,7 @@ const LoginForm = () => {
                 <FormProvider {...methods}>
                     <form
                         onSubmit={methods.handleSubmit(onSubmit)}
-                        className='w-full space-y-5'>
+                        className='w-full space-y-5 font-satoshi'>
                         <Input
                             focused
                             name='email'
@@ -78,6 +78,7 @@ const LoginForm = () => {
                             placeholder='example@example.com'
                             rules={["email", "required"]}
                             type='email'
+                            className="shadow-sm"
                         />
                         <Input
                             name='password'
@@ -85,6 +86,7 @@ const LoginForm = () => {
                             placeholder='password'
                             rules={["required"]}
                             type='password'
+                            className="shadow-sm"
                         />
                         <div className='pt-1 space-y-5'>
                             <div className="flex items-center justify-end">
@@ -92,7 +94,7 @@ const LoginForm = () => {
                                     underline={false}
                                     tag='a'
                                     href='/auth/forgot-password'
-                                    className='flex items-center underline font-semibold'>
+                                    className='flex items-center underline font-bold'>
                                     Forgot password
                                 </Button>
                             </div>
@@ -103,7 +105,7 @@ const LoginForm = () => {
                                 className='w-full lg:w-[170px] rounded-full font-normal'>
                                 Log in
                             </Button>
-                            <h3 className="text-xl font-medium">Don’t have an account?
+                            <h3 className="text-xl font-bold">Don’t have an account?
                                 <Link href="/auth/sign-up" className="text-primary"> Sign Up</Link>
                             </h3>
                         </div>

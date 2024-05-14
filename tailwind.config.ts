@@ -38,6 +38,10 @@ const config: Config = {
           },
         },
       },
+      fontFamily: {
+        clashDisplay: ["var(----font-clashDisplay)"],
+        satoshi: ["var(----font-satoshi)"],
+      },
     },
   },
   plugins: [],

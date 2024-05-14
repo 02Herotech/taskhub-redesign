@@ -1,12 +1,6 @@
-import Head from "next/head";
-
-const Home = () => {
+const HomePage = () => {
   return (
     <div>
-      <Head>
-        <title>TaskHub | HomePage</title>
-      </Head>
-
       <main className={`min-h-screen `}>
         <div className={`h-screen flex justify-center items-center`}>
           <h1 className={`text-4xl`}>Welcome to TaskHub Homepage</h1>
@@ -15,4 +9,4 @@ const Home = () => {
     </div>
   );
 };
-export default Home;
+export default HomePage;

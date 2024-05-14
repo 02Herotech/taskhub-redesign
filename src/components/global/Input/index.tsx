@@ -296,7 +296,7 @@ const Input = ({
 				<button
 					type='button'
 					onClick={() => setShowPassword(!showPassword)}
-					className='absolute focus:border-primary focus:outline-primary flex items-center justify-center h-[44px] w-12 right-[2px] top-[19px] cursor-pointer'>
+					className='absolute focus:border-primary focus:outline-primary flex items-center justify-center h-[44px] w-12 right-[2px] top-7 cursor-pointer'>
 					<div className='text-primary font-bold pr-4'>
 						{!showPassword ? <IoMdEye className="w-7 h-7" /> : <IoMdEyeOff className="w-7 h-7" />}
 					</div>

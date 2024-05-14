@@ -50,7 +50,7 @@ const ResetPasswordForm = () => {
     return (
         <section className='w-full xl:w-[554px] mx-auto max-lg:p-10'>
             <div className='space-y-10'>
-                <div className="space-y-4">
+                <div className="space-y-4 font-clashDisplay">
                     <h1 className='text-2xl lg:text-4xl text-black font-medium'>
                         Reset your Password?
                     </h1>
@@ -62,7 +62,7 @@ const ResetPasswordForm = () => {
                 <FormProvider {...methods}>
                     <form
                         onSubmit={methods.handleSubmit(onSubmit)}
-                        className='w-full space-y-5'>
+                        className='w-full space-y-5 font-satoshi'>
                         <Input
                             name='password'
                             label='Password'
