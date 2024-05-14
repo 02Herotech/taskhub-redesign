@@ -18,12 +18,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <StoreProvider>
-        <AuthSessionProvider>
-          <body className={clashDisplay.className}>{children}</body>
-          <ToastContainer position="top-right" autoClose={7000} />
-        </AuthSessionProvider>
-      </StoreProvider>
+      <body className={clashDisplay.className}>
+        <StoreProvider>
+          <AuthSessionProvider>
+            {children}
+            <ToastContainer position="top-right" autoClose={7000} />
+          </AuthSessionProvider>
+        </StoreProvider>
+      </body>
     </html>
   );
 }

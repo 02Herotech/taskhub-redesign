@@ -11,7 +11,7 @@ import axios from 'axios';
 import { Suspense } from 'react'
 import { taskhubToast } from '@/lib/TaskhubToast';
 
-const PasswordConfirmationForm = () => {
+const PasswordConfirmationForm = ({ email }: { email: string }) => {
     const [otp, setOtp] = useState(new Array(6).fill(""));
     const router = useRouter()
     const [isLoading, setIsLoading] = useState(false);
@@ -24,13 +24,13 @@ const PasswordConfirmationForm = () => {
         e.preventDefault();
 
         try {
-            router.push("/auth/reset-password")
             setIsLoading(true);
             toast.success(
                 "OTP Verified Successfully"
             );
             setIsLoading(false);
             
+            router.push("/auth/reset-password")
         } catch (error: any) {
             toast.error("Something went wrong");
             // console.log(error.response.data.message);
@@ -131,7 +131,7 @@ const PasswordConfirmationForm = () => {
                             Account Verification
                         </h1>
                         <p className='text-xl lg:text-2xl text-tc-gray font-medium'>
-                            We sent a one time verification code to [ number/ Email address ]
+                            We sent a one time verification code to {email}. Please enter the code to verify your account.
                         </p>
                     </div>
 

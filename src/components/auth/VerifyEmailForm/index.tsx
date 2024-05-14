@@ -24,13 +24,13 @@ const VerifyEmailForm = ({ email }: { email: string }) => {
         e.preventDefault();
 
         try {
-            // router.push("/auth/login")
             // check if the otp is valid
             setIsLoading(true);
             toast.success(
                 "OTP Verified Successfully"
             );
             setIsLoading(false);
+            router.push("/auth/login")
         } catch (error: any) {
             toast.error("Something went wrong");
             // console.log(error.response.data.message);
@@ -73,7 +73,6 @@ const VerifyEmailForm = ({ email }: { email: string }) => {
     };
 
     const inputRefs = useInputRefs(6);
-
 
     const handleChange = (element: any, index: any) => {
         if (isNaN(element.value)) return false;
