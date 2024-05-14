@@ -17,6 +17,7 @@ export type ValidationRules = {
 	confirmPassword: (value: string, label?: string) => ValidationResult;
 	noSpaces: (value: string, label?: string) => ValidationResult;
 	NGNBankAccountNumber: (value: string, label?: string) => ValidationResult;
+	textOnly: (value: string, label?: string) => ValidationResult;
 };
 
 const Input = ({
@@ -144,6 +145,11 @@ const Input = ({
 				? true
 				: `The ${label} field must be equal to 10 digits`;
 		},
+		textOnly: (value, label = "") => {
+			return /^[a-zA-Z\s]*$/.test(value)
+				? true
+				: `The ${label} field must contain only alphabets`;
+		}
 	};
 
 	const computedRules = rules.reduce<{
@@ -219,7 +225,7 @@ const Input = ({
 	if (tag === "textarea")
 		return (
 			<label htmlFor={id} className='flex flex-col relative'>
-				<span className='w-full text-sm text-left leading-5 capitalize text-[#5B5B66] mb-2'>
+				<span className='w-full text-base text-left leading-5 capitalize text-[#5B5B66] mb-2'>
 					{label}
 				</span>
 				<textarea
@@ -252,7 +258,7 @@ const Input = ({
 				</span> */}
 
 				{!rules.includes("password") && (error || customError) && (
-					<span className='text-xs text-left mt-2 text-status-error-100'>
+					<span className='text-sm text-left mt-2 text-status-error-100'>
 						*{customError || error?.message}
 					</span>
 				)}
@@ -261,7 +267,7 @@ const Input = ({
 
 	return (
 		<label htmlFor={id} className='flex flex-col relative'>
-			<span className='w-full flex items-center space-x-2 text-sm text-left leading-5 mb-2'>
+			<span className='w-full flex items-center space-x-2 text-base text-left leading-5 mb-2'>
 				<span className='capitalize text-[#5B5B66]'>{label}</span>
 			</span>
 			<input
@@ -269,7 +275,7 @@ const Input = ({
 				{...register}
 				className={`w-full active:border-primary text-dark ${inputTheme(
 					theme
-				)} text-sm h-12 overflow-hidden font-normal rounded-[10px] outline-none ${className} ${
+				)} text-base h-12 overflow-hidden font-normal rounded-[10px] outline-none ${className} ${
 					type === "password" ? "pr-16" : ""
 				} ${left ? paddingLeft : ""} ${right ? paddingRight : ""}`}
 				type={showPassword ? "text" : type}
@@ -367,13 +373,13 @@ const Input = ({
 			)}
 
 			{customMessage && (
-				<span className='text-xs text-left mt-2 text-status-success-100'>
+				<span className='text-sm text-left mt-2 text-status-success-100'>
 					{customMessage}
 				</span>
 			)}
 
 			{hint && !customError && !error && !customMessage && (
-				<span className='text-xs text-left mt-2 text-tc-03'>{hint}</span>
+				<span className='text-sm text-left mt-2 text-tc-03'>{hint}</span>
 			)}
 		</label>
 	);

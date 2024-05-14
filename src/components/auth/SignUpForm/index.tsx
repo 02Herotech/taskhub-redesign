@@ -90,13 +90,13 @@ const SignUpForm = () => {
                                     label='First Name'
                                     name='firstName'
                                     type='text'
-                                    rules={["required"]}
+                                    rules={["required" ,"textOnly"]}
                                 />
                                 <Input
                                     label='Last Name'
                                     name='lastName'
                                     type='text'
-                                    rules={["required"]}
+                                    rules={["required", "textOnly"]}
                                 />
                             </div>
                             <Input
