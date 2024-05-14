@@ -129,6 +129,21 @@ const Tasks = () => {
             <form onSubmit={handleSubmit} className="flex lg:space-x-4 items-center max-lg:grid max-lg:grid-cols-2 max-lg:gap-y-8 gap-6">
                 <select id="category" name="category" onChange={(e) => handleFilterChange('category', e.target.value)} className="w-full border-2 border-primary text-primary font-semibold bg-[#F1F1F2] py-2 px-4 rounded-full">
                     <option value="">Category</option>
+                    <option value="Home Services">Home Services</option>
+                    <option value="Personal Services">Personal Services</option>
+                    <option value="Events & Entertainment">Events & Entertainment</option>
+                    <option value="Education & Tutoring">Education & Tutoring</option>
+                    <option value="Professional Services">Professional Services</option>
+                    <option value="Automotive Services">Automotive Services</option>
+                    <option value="Health & Fitness">Health & Fitness</option>
+                    <option value="Technology & Electronics">Technology & Electronics</option>
+                    <option value="Home Improvement">Home Improvement</option>
+                    <option value="Real Estate Services">Real Estate Services</option>
+                    <option value="Delivery & Logistics">Delivery & Logistics</option>
+                    <option value="Art & Creativity">Art & Creativity</option>
+                    <option value="Wedding Services">Wedding Services</option>
+                    <option value="Childcare & Babysitting">Childcare & Babysitting</option>
+                    <option value="Travel & Adventure">Travel & Adventure</option>
                 </select>
                 <select id="location" name="location" onChange={(e) => handleFilterChange('location', e.target.value)} className="w-full border-2 border-primary text-primary bg-[#F1F1F2] font-semibold py-2 px-4 rounded-full">
                     <option value="">Location</option>

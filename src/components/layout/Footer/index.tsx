@@ -90,7 +90,7 @@ const Footer = () => {
                     <Link href='/' className='w-[67px] h-[50px] lg:w-[109px] relative'>
                         <Image src="/assets/images/logo.png" fill alt="Logo" />
                     </Link>
-                    <p>Online platform that connects Service Provider  with Customers who are seeking various services. The platform offers a wide range of services.</p>
+                    <p className="text-primary font-medium max-lg:text-[13px]">Online platform that connects Service Provider  with Customers who are seeking various services. The platform offers a wide range of services.</p>
                 </div>
                 {links.map((group, index) => {
                     return (
