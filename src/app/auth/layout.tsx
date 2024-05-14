@@ -1,3 +1,4 @@
+import Icons from "@/components/icons";
 import Image from "next/image";
 import Link from "next/link";
 import { Suspense } from "react";
@@ -15,6 +16,7 @@ const AuthLayout = ({
                 <div className='w-full container py-8 px-10 flex items-center justify-between'>
                     <Link href='/'>
                         <Image src="/assets/images/logo.png" width={154} height={46} alt="Logo" />
+                        {/* <Icons.LogoIcon /> */}
                     </Link>
                 </div>
             </header>

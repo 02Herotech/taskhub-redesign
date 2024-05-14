@@ -16,7 +16,8 @@ const config: Config = {
           "light-blue": "#258FE6",
         },
         tc: {
-          gray: "#55535A"
+          gray: "#55535A", 
+          orange: "#FE9B07"
         },
         status: {
           success: {
@@ -36,11 +37,22 @@ const config: Config = {
             "10": "#F2F8FF",
             "100": "#17A2B8",
           },
+          violet: "#C1BADB"
         },
       },
       fontFamily: {
         clashDisplay: ["var(----font-clashDisplay)"],
         satoshi: ["var(----font-satoshi)"],
+      },
+      container: {
+        center: true,
+        padding: {
+          DEFAULT: "1rem",
+          sm: "2rem",
+          lg: "4rem",
+          xl: "5rem",
+          "2xl": "6rem",
+        },
       },
     },
   },

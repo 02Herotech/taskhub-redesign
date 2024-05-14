@@ -1,8 +1,10 @@
-import React from 'react'
+import ExploreMap from '@/components/main/explore/Map'
 
 const ExplorePage = () => {
   return (
-    <div>ExplorePage</div>
+    <div>
+      <ExploreMap />
+    </div>
   )
 }
 
