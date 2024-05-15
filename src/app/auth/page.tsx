@@ -9,6 +9,7 @@ import { useState } from "react";
 
 const AuthForm = () => {
     const [userType, setUserType] = useState<"Customer" | "Service Provider">("Customer");
+    const router = useRouter();
 
     return (
         <section className='w-full xl:w-[554px] h-full flex items-center justify-center mx-auto max-lg:p-10'>
@@ -45,6 +46,7 @@ const AuthForm = () => {
 
                     <Button
                         className='w-full lg:w-[170px] rounded-full font-normal'
+                        onClick={() => router.push("/auth/sign-up")}
                     >
                         Next
                     </Button>

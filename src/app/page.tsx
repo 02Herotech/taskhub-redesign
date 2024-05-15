@@ -1,12 +1,19 @@
-const HomePage = () => {
+import HeroSection from "@/components/homepage/HeroSection";
+import SecurityFeatures from "@/components/homepage/SecurityFeatures";
+import SPHomepage from "@/components/homepage/ServiceProvider";
+import Testimonials from "@/components/homepage/Testimonials";
+import WelcomeAboard from "@/components/homepage/WelcomeAboard";
+
+const Home = () => {
   return (
-    <div>
-      <main className={`min-h-screen `}>
-        <div className={`h-screen flex justify-center items-center`}>
-          <h1 className={`text-4xl`}>Welcome to TaskHub Homepage</h1>
-        </div>
-      </main>
-    </div>
+    <main>
+      <HeroSection />
+      <SecurityFeatures />
+      <WelcomeAboard />
+      <SPHomepage />
+      <Testimonials />
+    </main>
+
   );
 };
-export default HomePage;
+export default Home;
