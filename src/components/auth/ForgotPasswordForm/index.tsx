@@ -35,7 +35,7 @@ const ForgotPasswordForm = () => {
                 `${process.env.NEXT_PUBLIC_API_URL}user/forgot-password`,
                 {
                     email: payload.email
-                } 
+                }
             );
             console.log(response);
             console.log(response.status);

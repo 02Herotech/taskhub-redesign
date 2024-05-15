@@ -1,6 +1,5 @@
 import NextAuth from "next-auth";
 
-// Define types for the address and notification time
 interface Address {
     id: number;
     streetNumber: string;
@@ -15,7 +14,6 @@ interface NotificationTime {
     [key: number]: number;
 }
 
-// Define types for the app notification list items
 interface AppNotification {
     id: number;
     message: string;
@@ -24,7 +22,6 @@ interface AppNotification {
     notificationTime: NotificationTime;
 }
 
-// Define types for the user
 interface User {
     id: number;
     address: Address;

@@ -14,9 +14,7 @@ export type Task = {
     active: boolean;
 }
 
-export type GetTasksRequest = {
-    pageNumber?: number;
-};
+export type GetTasksRequest =  number;
 
 export type GetTasksResponse = {
     totalElements: number;

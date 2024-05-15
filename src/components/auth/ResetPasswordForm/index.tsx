@@ -39,7 +39,7 @@ const ResetPasswordForm = () => {
 
             if ((response.status = 200)) {
                 toast.success("Password Reset Successfully");
-                
+
             }
         } catch (error: any) {
             console.error("Password Reset Error: ", error);

@@ -23,7 +23,6 @@ type SignUpRequest = {
 const SignUpForm = () => {
     const router = useRouter();
     const [isLoading, setIsLoading] = useState(false);
-    const [investmentOption, setInvestmentOption] = useState("Mining");
     const [signUpApiCall, { data: signUpData, isLoading: isSignUpLoading }] = useSignupMutation();
 
     const methods = useForm({
@@ -68,8 +67,6 @@ const SignUpForm = () => {
         }
     };
 
-    console.log(investmentOption)
-
     return (
         <section className='w-full xl:w-[554px] mx-auto max-lg:p-10'>
             <div className='space-y-6 lg:space-y-10 w-full max-lg:container lg:max-w-[550px] lg:px-4'>
@@ -83,9 +80,9 @@ const SignUpForm = () => {
                 </div>
 
                 <FormProvider {...methods}>
-                    <form 
-                    onSubmit={methods.handleSubmit(onSubmit)} 
-                    className="font-satoshi"
+                    <form
+                        onSubmit={methods.handleSubmit(onSubmit)}
+                        className="font-satoshi"
                     >
                         <div className='space-y-4 lg:space-y-6'>
                             <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
@@ -124,13 +121,13 @@ const SignUpForm = () => {
                                     className="w-full px-3 border border-[#5b5b66] active:border-primary text-dark h-12 overflow-hidden font-normal rounded-[10px] outline-none"
                                 />
                             </div>
-                            {/* <Input
+                            <Input
                                 label="Phone Number"
                                 name="phoneNumber"
                                 type="tel"
                                 placeholder="+61 123 456 789"
                                 rules={["required", "phone"]}
-                            /> */}
+                            />
                             <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
                                 <Input
                                     label='Password'

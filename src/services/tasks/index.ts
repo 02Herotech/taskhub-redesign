@@ -52,18 +52,17 @@ export const task = createApi({
         baseUrl: process.env.NEXT_PUBLIC_API_URL + "/task",
         prepareHeaders: async (headers) => {
             const session = await getSession();
-
             const token = session?.accessToken;
 
             if (token) {
-                headers.set("authorization", `Bearer ${token}`);
+                headers.set("Authorization", `Bearer eyJhbGciOiJIUzI1NiJ9.eyJjbGFpbSI6eyJhdXRob3JpdHkiOiJTRVJWSUNFX1BST1ZJREVSIn0sInN1YiI6IjMwQG1haWxkcm9wLmNjIiwiaWF0IjoxNzE1NzU0MDMyLCJleHAiOjE3MTU3NjQ4MzJ9.Xy9uq6lGcquIg9u6S8kJELyhT7_QoKHOT4qqzQB1lJ0`);
             }
             return headers;
         },
     }),
     endpoints: (builder) => ({
         getActiveTasks: builder.query<GetTasksResponse, GetTasksRequest>({
-            query: (credentials) => getRequest("", credentials),
+            query: (credentials) => getRequest(`/all-active-tasks/${credentials}`),
             providesTags: ["Task"],
         }),
     }),

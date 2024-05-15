@@ -29,7 +29,7 @@ const PasswordConfirmationForm = ({ email }: { email: string }) => {
                 "OTP Verified Successfully"
             );
             setIsLoading(false);
-            
+
             router.push("/auth/reset-password")
         } catch (error: any) {
             toast.error("Something went wrong");
@@ -166,7 +166,7 @@ const PasswordConfirmationForm = ({ email }: { email: string }) => {
                             >
                                 Verify
                             </Button>
-                            <h3 className="text-xl font-bold">Haven’t gotten the code? 
+                            <h3 className="text-xl font-bold">Haven’t gotten the code?
                                 <Button theme='plain' onClick={() => resendOtp()} className="text-primary"> Resend code</Button>
                             </h3>
                         </div>

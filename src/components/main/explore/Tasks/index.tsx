@@ -4,6 +4,8 @@ import { useState } from "react";
 import TaskCard from "../TaskCard";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa6";
 import { useGetActiveTasksQuery } from "@/services/tasks";
+import Dropdown from "@/components/global/Dropdown";
+import { useSession } from "next-auth/react";
 
 // Sample task data
 const tasksData = {
@@ -101,15 +103,18 @@ const Tasks = () => {
         category: '',
         location: '',
         typeOfService: '',
-        pricong: '',
+        pricing: '',
         others: ''
     });
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 6;
 
-    // const { data: tasksData } = useGetActiveTasksQuery({
-    //     pageNumber: 1,
-    // });
+    const { data } = useGetActiveTasksQuery(1);
+
+    const session = useSession()
+    console.log(session)
+
+    console.log(data)
 
     const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
 
@@ -130,6 +135,52 @@ const Tasks = () => {
             </div>
         );
     };
+
+    const typeOfServiceDropdown = [
+        {
+            label: "Remote",
+            onClick: () => handleFilterChange('typeOfService', 'Remote')
+        },
+        {
+            label: "In Person",
+            onClick: () => handleFilterChange('typeOfService', 'In Person')
+        },
+    ];
+
+    const locationDropdown = [
+        {
+            label: "Western Australia",
+            onClick: () => handleFilterChange('location', 'Western Australia')
+        },
+        {
+            label: "Northern Territory",
+            onClick: () => handleFilterChange('location', 'Northern Territory')
+        },
+        {
+            label: "South Australia",
+            onClick: () => handleFilterChange('location', 'South Australia')
+        },
+        {
+            label: "Queensland",
+            onClick: () => handleFilterChange('location', 'Queensland')
+        },
+        {
+            label: "New South Wales",
+            onClick: () => handleFilterChange('location', 'New South Wales')
+        },
+        {
+            label: "Victoria",
+            onClick: () => handleFilterChange('location', 'Victoria')
+        },
+        {
+            label: "Tasmania",
+            onClick: () => handleFilterChange('location', 'Tasmania')
+        },
+        {
+            label: "Australian Capital Territory",
+            onClick: () => handleFilterChange('location', 'Australian Capital Territory')
+        }
+    ];
 
     return (
         <section className="pt-7 container">
@@ -165,11 +216,27 @@ const Tasks = () => {
                         Australian Capital Territory
                     </option>
                 </select>
-                <select id="typeOfService" name="typeOfService" onChange={(e) => handleFilterChange('typeOfService', e.target.value)} className="w-full border-2 border-primary text-primary font-semibold py-2 px-4 rounded-full">
-                    <option value="">Type of service</option>
-
-                </select>
-                <select id="pricong" name="pricong" onChange={(e) => handleFilterChange('pricong', e.target.value)} className="w-full border-2 border-primary text-primary font-semibold py-2 px-4 rounded-full">
+                <Dropdown
+                    trigger={() => (
+                        <div id="typeOfService" className="w-full border-2 border-primary text-primary font-semibold py-2 px-4 rounded-full">
+                            Type of service
+                        </div>
+                    )}
+                    className='-left-24 top-14'>
+                    <div className='w-[240px] bg-white rounded-md flex items-center'>
+                        {typeOfServiceDropdown.map((button, index) => (
+                            <div
+                                key={index}
+                                onClick={button.onClick}
+                                className='flex w-full transition-all text-sm items-center justify-between p-3'>
+                                <div className="">
+                                    {button.label}
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </Dropdown>
+                <select id="pricing" name="pricing" onChange={(e) => handleFilterChange('pricing', e.target.value)} className="w-full border-2 border-primary text-primary font-semibold py-2 px-4 rounded-full">
                     <option value="">Pricing</option>
 
                 </select>
@@ -179,6 +246,7 @@ const Tasks = () => {
                     </option>
                 </select>
             </div>
+
             <div className="">
                 {renderContent()}
                 <div className="flex items-center justify-center w-full">
