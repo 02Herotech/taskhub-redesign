@@ -26,12 +26,16 @@ export const auth = createApi({
         },
     }),
     endpoints: (builder) => ({
-        signup: builder.mutation<SignUpResponse, SignUpRequest>({
+        customerSignup: builder.mutation<SignUpResponse, SignUpRequest>({
             query: (credentials) => postRequest("customer/sign-up", credentials),
+        }),
+        serviceProviderSignup: builder.mutation<SignUpResponse, SignUpRequest>({
+            query: (credentials) => postRequest("service_provider/sign-up", credentials),
         }),
     }),
 });
 
 export const {
-    useSignupMutation,
+    useCustomerSignupMutation,
+    useServiceProviderSignupMutation,
 } = auth;

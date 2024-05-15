@@ -3,13 +3,13 @@
 import Button from "@/components/global/Button";
 import Input from "@/components/global/Input";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import "react-phone-number-input/style.css";
 import { useState } from "react";
 import PhoneInputWithCountry from "react-phone-number-input/react-hook-form"
-import { useSignupMutation } from "@/services/auth";
+import { useCustomerSignupMutation, useServiceProviderSignupMutation } from "@/services/auth";
 import Image from "next/image";
 
 type SignUpRequest = {
@@ -23,7 +23,8 @@ type SignUpRequest = {
 const SignUpForm = () => {
     const router = useRouter();
     const [isLoading, setIsLoading] = useState(false);
-    const [signUpApiCall, { data: signUpData, isLoading: isSignUpLoading }] = useSignupMutation();
+    const [customerSignUpApiCall, { data: customerSignUpData, isLoading: isCustomerSignUpLoading }] = useCustomerSignupMutation();
+    const [serviceProviderSignUpApiCall, { data: serviceProviderSignUpData, isLoading: isServiceProviderSignUpLoading }] = useServiceProviderSignupMutation();
 
     const methods = useForm({
         mode: "onChange",
@@ -35,6 +36,9 @@ const SignUpForm = () => {
             phoneNumber: ""
         },
     });
+
+    const searchParams = useSearchParams()
+    const userType = searchParams.get('userType')
 
     const {
         formState: { errors, isValid },
@@ -53,8 +57,19 @@ const SignUpForm = () => {
                 password: payload.password
             }
 
-            await signUpApiCall(data).unwrap();
-            setIsLoading(false);
+            if (userType === 'Service Provider') {
+                await serviceProviderSignUpApiCall(data).unwrap();
+                setIsLoading(false);
+                router.push('/auth/verify-email');
+                return;
+            }
+
+            if (userType === 'Customer') {
+                await customerSignUpApiCall(data).unwrap();
+                setIsLoading(false);
+                router.push('/auth/verify-email');
+                return;
+            }
 
             // pass the email to the verify email page
             const params = new URLSearchParams({ email: payload.emailAddress });
@@ -121,13 +136,6 @@ const SignUpForm = () => {
                                     className="w-full px-3 border border-[#5b5b66] active:border-primary text-dark h-12 overflow-hidden font-normal rounded-[10px] outline-none"
                                 />
                             </div>
-                            <Input
-                                label="Phone Number"
-                                name="phoneNumber"
-                                type="tel"
-                                placeholder="+61 123 456 789"
-                                rules={["required", "phone"]}
-                            />
                             <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
                                 <Input
                                     label='Password'

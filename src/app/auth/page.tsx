@@ -11,6 +11,8 @@ const AuthForm = () => {
     const [userType, setUserType] = useState<"Customer" | "Service Provider">("Customer");
     const router = useRouter();
 
+    const params = new URLSearchParams({ userType });
+
     return (
         <section className='w-full xl:w-[554px] h-full flex items-center justify-center mx-auto max-lg:p-10'>
             <div className='space-y-10'>
@@ -27,7 +29,7 @@ const AuthForm = () => {
                     <h2 className="text-primary lg:text-2xl font-bold">Sign up as a:</h2>
                     <div className='flex items-center space-x-4'>
                         <Button
-                            theme= "outline"
+                            theme="outline"
                             onClick={() => setUserType("Customer")}
                             className={userType === "Customer" ? "border border-primary" : "border-none"}
                             size="xl"
@@ -46,7 +48,7 @@ const AuthForm = () => {
 
                     <Button
                         className='w-full lg:w-[170px] rounded-full font-normal'
-                        onClick={() => router.push("/auth/sign-up")}
+                        onClick={() => router.push(`/auth/sign-up?${params}`)}
                     >
                         Next
                     </Button>
