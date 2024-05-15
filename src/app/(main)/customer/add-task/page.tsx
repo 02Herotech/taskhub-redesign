@@ -1,7 +1,6 @@
 "use client"
 
 import React, { useState } from "react";
-import axios from "axios";
 import Head from "next/head";
 import Image from "next/image";
 import { FaGreaterThan } from "react-icons/fa";
@@ -13,7 +12,6 @@ import { TiTick } from "react-icons/ti";
 import Img from "../../../../../public/assets/images/customer/task/Task management.svg";
 import Popup from "@/components/global/Popup";
 import Button from "@/components/global/Button";
-import { RxButton } from "react-icons/rx";
 
 interface Task {
     serviceDetails: string;
