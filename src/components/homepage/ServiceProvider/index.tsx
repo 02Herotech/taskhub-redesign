@@ -97,7 +97,7 @@ const SPHomepage = () => {
                             <Image src={icon2} width={60} alt=""></Image>
                             <p className="text-left lg:w-[450px]">
                                 At TaskHub, we understand the importance of being there for our{" "}
-                                customers whenever they need us. That's why we are proud to
+                                customers whenever they need us. That&apos;s why we are proud to
                                 offer round-the-clock availability, ensuring that assistance and
                                 support are always just a click or a call away.
                             </p>
@@ -127,7 +127,7 @@ const SPHomepage = () => {
                         <span className="hidden lg:block h-[2px] w-full bg-black"></span>
                     </div>
 
-                    <button className="hover:text-[#FE9B07]">
+                    {/* <button className="hover:text-[#FE9B07]">
                         {session?.user?.user?.roles[0] === "CUSTOMER" ? (
                             <div
                                 onClick={handleBecomeSP}
@@ -149,7 +149,7 @@ const SPHomepage = () => {
                                 </span>
                             </Link>
                         )}
-                    </button>
+                    </button> */}
                 </div>
 
                 <div className="lg:hidden flex flex-col space-y-7 mt-10">
@@ -168,7 +168,7 @@ const SPHomepage = () => {
                         <Image src={icon2} width={50} height={30} alt="" className="align-top"></Image>
                         <p className="text-left text-[14px]">
                             At TaskHub, we understand the importance of being there for our{" "}
-                            customers whenever they need us. That's why we are proud to
+                            customers whenever they need us. That&apos;s why we are proud to
                             offer round-the-clock availability, ensuring that assistance and
                             support are always just a click or a call away.
                         </p>
@@ -197,7 +197,7 @@ const SPHomepage = () => {
                     </div>
 
 
-                    <button className="hover:text-[#FE9B07]">
+                    {/* <button className="hover:text-[#FE9B07]">
                         {session?.user?.user?.roles[0] === "CUSTOMER" ? (
                             <div
                                 onClick={handleBecomeSP}
@@ -219,7 +219,7 @@ const SPHomepage = () => {
                                 </span>
                             </Link>
                         )}
-                    </button>
+                    </button> */}
                 </div>
             </div>
         </div>
