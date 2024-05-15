@@ -2,7 +2,7 @@
 
 import Button from "@/components/global/Button";
 import Input from "@/components/global/Input";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { useState } from "react";
@@ -23,6 +23,9 @@ const ResetPasswordForm = () => {
         },
     });
 
+    const searchParams = useSearchParams()
+    const email = searchParams.get('email')
+
     const {
         formState: { errors, isValid },
     } = methods;
@@ -32,7 +35,7 @@ const ResetPasswordForm = () => {
         try {
             setIsLoading(true)
             const response = await axios.post(
-                `${process.env.NEXT_PUBLIC_API_URL}user/reset-password`,
+                `${process.env.NEXT_PUBLIC_API_URL}user/reset-password/${email}`,
                 { password: payload.password }
             );
             console.log(response);
