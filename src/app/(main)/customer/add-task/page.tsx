@@ -10,7 +10,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { IoMdArrowDropdown } from "react-icons/io";
 import { TiTick } from "react-icons/ti";
-import Img from "../../../../public/assets/images/customer/task/Task management.svg";
+import Img from "../../../../../public/assets/images/customer/task/Task management.svg";
 import Popup from "@/components/global/Popup";
 import Button from "@/components/global/Button";
 import { RxButton } from "react-icons/rx";
