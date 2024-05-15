@@ -6,7 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { FaArrowRight, FaRegUser } from "react-icons/fa6";
 
-import loader from "../../../../../public/taskhub-newloader.gif";
+import loader from "../../../../../public/assets/images/marketplace/taskhub-newloader.gif";
 
 interface listingData {
     id: number;
