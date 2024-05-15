@@ -27,10 +27,9 @@ const ResetPasswordForm = () => {
     const email = searchParams.get('email')
 
     const {
-        formState: { errors, isValid },
+        formState: { isValid },
     } = methods;
 
-    /* Handle submit */
     const onSubmit: SubmitHandler<SignInRequest> = async (payload) => {
         try {
             setIsLoading(true)
