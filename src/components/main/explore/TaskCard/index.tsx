@@ -17,7 +17,7 @@ const TaskCard = ({taskServiceName, taskImage, taskDates, active, customerBudget
         <motion.div
             className="bg-[#EBE9F4] p-5 rounded-xl lg:rounded-4xl cursor-pointer"
             whileHover={{ scale: 1.02 }}
-            onClick={() => router.push(`/task-details/${id}`)}
+            onClick={() => router.push(`/explore/task-details/${id}`)}
         >
             <div className="flex items-center justify-between w-full">
                 <h2 className="text-2xl lg:text-[32px] text-primary font-bold">{taskServiceName}</h2>
