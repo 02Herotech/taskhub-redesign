@@ -11,6 +11,8 @@ import { BsChat } from "react-icons/bs";
 import { IoMdNotificationsOutline } from "react-icons/io";
 import { BiChevronDown } from "react-icons/bi";
 import { RiMenu3Fill } from "react-icons/ri";
+import Dropdown from "@/components/global/Dropdown";
+import { signOut } from "next-auth/react"
 
 const Navigation = () => {
     const router = useRouter();
@@ -35,6 +37,21 @@ const Navigation = () => {
             label: "Provider a service",
             url: "/provider-service",
         }
+    ];
+
+    const dropdownItems = [
+        {
+            label: "Profile",
+            onClick: () => {},
+        },
+        {
+            label: "Settings",
+            onClick: () => {},
+        },
+        {
+            label: "Logout",
+            onClick: () => {},
+        },
     ];
 
     return (
@@ -76,12 +93,28 @@ const Navigation = () => {
                             <IoMdNotificationsOutline className="size-[24px] text-black" />
                             <div className="bg-tc-orange absolute size-5 flex items-center justify-center text-xs -top-1 -right-1 rounded-full text-white">2</div>
                         </div>
-                        <div className="flex items-center space-x-1">
-                            <div className="relative size-[46px] rounded-full border">
-                                <Image src="/assets/images/logo.png" fill alt="Logo" className="object-contain" />
+                        <Dropdown
+                            trigger={() => (
+                                <div className="flex items-center space-x-1">
+                                    <div className="relative size-[46px] rounded-full border">
+                                        <Image src="/assets/images/logo.png" fill alt="Logo" className="object-contain" />
+                                    </div>
+                                    <BiChevronDown className="size-6" />
+                                </div>
+                            )}
+                            className='-left-32 top-20'>
+                            <div className='w-[200px] bg-white rounded-md'>
+                                {dropdownItems.map((button, index) => (
+                                    <button
+                                        key={index}
+                                        onClick={button.onClick}
+                                        className='flex w-full dropdown-item hover:bg-status-lightViolet transition-all text-md items-center justify-between p-3'>
+                                        {button.label}
+                                    </button>
+                                ))}
                             </div>
-                            <BiChevronDown className="size-6" />
-                        </div>
+                        </Dropdown>
+                        
                     </div>
                 </div>
             </nav>

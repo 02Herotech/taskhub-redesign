@@ -11,7 +11,7 @@ const MainLayout = ({
     return (
         <div>
             <Navigation />
-            <main className='mt-[20px] py-10 xl:py-20'>
+            <main className='mt-[20px]'>
                 {children}
             </main>
             <Footer />

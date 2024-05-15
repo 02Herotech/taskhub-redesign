@@ -4,7 +4,7 @@ import SPHomepage from "@/components/homepage/ServiceProvider";
 import Testimonials from "@/components/homepage/Testimonials";
 import WelcomeAboard from "@/components/homepage/WelcomeAboard";
 
-const Home = () => {
+const HomePage = () => {
   return (
     <main>
       <HeroSection />
@@ -16,4 +16,4 @@ const Home = () => {
 
   );
 };
-export default Home;
+export default HomePage;

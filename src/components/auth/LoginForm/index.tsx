@@ -2,10 +2,10 @@
 
 import Button from "@/components/global/Button";
 import Input from "@/components/global/Input";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
-import { signIn } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import Link from "next/link";
 import { useState } from "react";
 
@@ -16,6 +16,8 @@ type SignInRequest = {
 
 const LoginForm = () => {
     const [isLoading, setIsLoading] = useState(false);
+    const session = useSession()
+    console.log(session)
 
     const router = useRouter();
     const methods = useForm({
@@ -30,6 +32,10 @@ const LoginForm = () => {
         formState: { errors, isValid },
     } = methods;
 
+    const searchParams = useSearchParams();
+
+    const from = searchParams.get("from");
+
     /* Handle submit */
     const onSubmit: SubmitHandler<SignInRequest> = async (payload) => {
         try {
@@ -39,13 +45,9 @@ const LoginForm = () => {
                 email: payload.email,
                 password: payload.password,
             });
-            if (response?.ok) {
-                router.push("/dashboard");
-                toast.success("Logged in successfully");
-            } else {
-                toast.error("Something went wrong");
-            }
-            console.log(payload)
+
+            if (from) router.push(decodeURIComponent(from));
+            else router.push("/dashboard");
             setIsLoading(false)
         } catch (err: any) {
             console.log(err)
