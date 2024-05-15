@@ -43,18 +43,18 @@ const SignUpForm = () => {
 
     const onSubmit: SubmitHandler<SignUpRequest> = async (payload) => {
         try {
-            // setIsLoading(true);
+            setIsLoading(true);
 
-            // const data = {
-            //     firstName: payload.firstName,
-            //     lastName: payload.lastName,
-            //     emailAddress: payload.emailAddress,
-            //     phoneNumber: payload.phoneNumber,
-            //     password: payload.password
-            // }
+            const data = {
+                firstName: payload.firstName,
+                lastName: payload.lastName,
+                emailAddress: payload.emailAddress,
+                phoneNumber: payload.phoneNumber,
+                password: payload.password
+            }
 
-            // await signUpApiCall(data).unwrap();
-            // setIsLoading(false);
+            await signUpApiCall(data).unwrap();
+            setIsLoading(false);
 
             // pass the email to the verify email page
             const params = new URLSearchParams({ email: payload.emailAddress });
