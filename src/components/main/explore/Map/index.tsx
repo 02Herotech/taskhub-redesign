@@ -16,8 +16,8 @@ const ExploreMap = () => {
                                 className="outline-none active:outline-none placeholder:text-base text-base lg:py-3 bg-[#F1F1F2] w-full focus:outline-none"
                             />
                         </div>
-                        <button className="p-3 lg:p-6 bg-primary rounded-2xl flex items-center justify-center">
-                            <CiSearch className="w-5 h-5 lg:h-8 lg:w-8 text-status-violet" />
+                        <button className="h-[29px] w-[29px] lg:h-[58px] lg:w-[58px] bg-primary rounded-lg lg:rounded-2xl flex items-center justify-center">
+                            <CiSearch className="h-5 w-5 lg:w-7 lg:h-7 text-status-violet" />
                         </button>
                     </form>
                     <Button theme="secondary" className="hidden px-5 h-[29px] lg:h-[58px] rounded-full text-white font-bold bg-tc-orange lg:flex items-center justify-center">

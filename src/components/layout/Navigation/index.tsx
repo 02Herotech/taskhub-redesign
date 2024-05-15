@@ -1,7 +1,5 @@
 "use client";
 
-import Button from "@/components/global/Button";
-import Icons from "@/components/icons";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
@@ -12,6 +10,7 @@ import Image from "next/image";
 import { BsChat } from "react-icons/bs";
 import { IoMdNotificationsOutline } from "react-icons/io";
 import { BiChevronDown } from "react-icons/bi";
+import { RiMenu3Fill } from "react-icons/ri";
 
 const Navigation = () => {
     const router = useRouter();
@@ -41,14 +40,14 @@ const Navigation = () => {
     return (
         <>
             <nav className='bg-white z-50 fixed top-0 left-0 right-0 w-full drop-shadow-sm'>
-                <div className='container py-4 lg:py-5 px-14 flex items-center justify-between'>
+                <div className='container py-4 lg:py-5 px-7 lg:px-14 flex items-center justify-between'>
                     <Link href='/' className='w-[67px] h-[50px] lg:w-[109px] relative'>
                         <Image src="/assets/images/logo.png" fill alt="Logo" />
                     </Link>
                     <button
                         onClick={() => setShowMobileNav((state) => !state)}
                         className='lg:hidden'>
-                        {/* <Icons.MenuIcon /> */}
+                        <RiMenu3Fill className="text-primary w-9 h-9" />
                     </button>
                     <ul className='hidden lg:flex items-center space-x-8'>
                         {links.map((link) => {

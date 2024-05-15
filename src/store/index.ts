@@ -1,27 +1,22 @@
-import { configureStore } from '@reduxjs/toolkit';
-import { auth } from '@/services/auth';
-import type { Action, ThunkAction } from "@reduxjs/toolkit";
+import { configureStore } from "@reduxjs/toolkit";
+import { auth } from "../services/auth";
+import { rtkQueryErrorLogger } from "./middlewares";
+import { task } from "@/services/tasks";
 
-export const makeStore = () => {
-    return configureStore({
-        reducer: {
-            [auth.reducerPath]: auth.reducer,
-        },
-        middleware: getDefaultMiddleware =>
-            getDefaultMiddleware().concat(
-                auth.middleware,
-            ),
-    });
-};
+export const store = configureStore({
+	reducer: {
+		[auth.reducerPath]: auth.reducer,
+        [task.reducerPath]: task.reducer,
+	},
+	middleware: (getDefaultMiddleware) =>
+		getDefaultMiddleware().concat(
+			auth.middleware,
+            task.middleware,
+			rtkQueryErrorLogger
+		),
+});
 
-export type RootState = ReturnType<typeof makeStore>;
-// Infer the return type of `makeStore`
-export type AppStore = ReturnType<typeof makeStore>;
-// Infer the `AppDispatch` type from the store itself
-export type AppDispatch = AppStore["dispatch"];
-export type AppThunk<ThunkReturnType = void> = ThunkAction<
-    ThunkReturnType,
-    RootState,
-    unknown,
-    Action
->;
+// Infer the `RootState` and `AppDispatch` types from the store itself
+export type RootState = ReturnType<typeof store.getState>;
+// Inferred type: {posts: PostsState, comments: CommentsState, users: UsersState}
+export type AppDispatch = typeof store.dispatch;

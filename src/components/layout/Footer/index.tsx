@@ -83,10 +83,12 @@ const Footer = () => {
         },
     ];
 
+    const currentYear = new Date().getFullYear();
+
     return (
         <footer className='pt-10 lg:pt-24 bg-status-lightViolet font-satoshi'>
             <div className='container w-full grid grid-cols-1 lg:grid-cols-5 gap-10 lg:gap-20 pb-10 lg:pb-24'>
-                <div className='grid lg:col-span-2 w-full px-4'>
+                <div className='grid lg:col-span-2'>
                     <Link href='/' className='w-[67px] h-[50px] lg:w-[109px] relative'>
                         <Image src="/assets/images/logo.png" fill alt="Logo" />
                     </Link>
@@ -95,12 +97,12 @@ const Footer = () => {
                 {links.map((group, index) => {
                     return (
                         <ul key={index} className='space-y-5'>
-                            <h3 className='text-dark text-sm lg:text-base font-semibold'>
+                            <h3 className='text-primary text-base font-bold'>
                                 {group.groupName}
                             </h3>
                             {group.links.map((link, index) => {
                                 return (
-                                    <li key={index} className='text-dark text-sm lg:text-base'>
+                                    <li key={index} className='text-primary font-medium hover:underline text-sm lg:text-base'>
                                         <Link href={link.url}>{link.label}</Link>
                                     </li>
                                 );
@@ -108,10 +110,9 @@ const Footer = () => {
                         </ul>
                     );
                 })}
-
             </div>
             <div className='container py-5 text-black text-center text-sm lg:text-base'>
-                2023 TaskHub. All Rights Reserved.
+                {currentYear} TaskHub. All Rights Reserved.
             </div>
         </footer>
     );

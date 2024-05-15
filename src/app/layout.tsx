@@ -1,11 +1,9 @@
 import type { Metadata } from "next";
 import { clashDisplay, satoshi } from "@/fonts";
 import "./globals.css";
-import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { AuthSessionProvider } from "@/lib/SessionProvider";
-import { StoreProvider } from "@/lib/StoreProvider";
 import { cn } from "@/lib/utils";
+import Provider from "@/store/Provider";
 
 export const metadata: Metadata = {
   title: "Taskhub",
@@ -20,12 +18,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={cn(clashDisplay.className, satoshi.className)}>
-        <StoreProvider>
-          <AuthSessionProvider>
-            {children}
-            <ToastContainer position="top-right" autoClose={7000} />
-          </AuthSessionProvider>
-        </StoreProvider>
+        <Provider>{children}</Provider>
       </body>
     </html>
   );
