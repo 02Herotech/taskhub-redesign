@@ -7,6 +7,7 @@ import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 import Link from "next/link";
 import { useState } from "react";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 type SignInRequest = {
     email: string;
@@ -29,10 +30,11 @@ const ForgotPasswordForm = () => {
 
     /* Handle submit */
     const onSubmit: SubmitHandler<SignInRequest> = async (payload) => {
+        const params = new URLSearchParams({ email: payload.email});
         try {
             setIsLoading(true);
             const response = await axios.post(
-                `${process.env.NEXT_PUBLIC_API_URL}user/forgot-password`,
+                `${process.env.NEXT_PUBLIC_API_URL}/user/forgot-password`,
                 {
                     email: payload.email
                 }
@@ -41,12 +43,12 @@ const ForgotPasswordForm = () => {
             console.log(response.status);
 
             if (response.status == 200) {
-                router.push("/auth/forgot-password/confirmation");
+                router.push(`/auth/forgot-password/confirmation?${params}`);
                 setIsLoading(false);
             }
-        } catch (error: any) {
+        } catch (err: any) {
             setIsLoading(false);
-            console.error("Error sending link:", error);
+            toast.error(err?.data.message); 
         }
     };
 
@@ -83,7 +85,7 @@ const ForgotPasswordForm = () => {
                                 Send
                             </Button>
                             <h3 className="text-xl font-bold">
-                                <Link href="/auth/sign-up" className="text-primary">Back to Sign Up</Link>
+                                <Link href="/auth/login" className="text-primary">Back to Login</Link>
                             </h3>
                         </div>
                     </form>

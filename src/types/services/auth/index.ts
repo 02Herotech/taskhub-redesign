@@ -6,7 +6,14 @@ export type SignUpRequest = {
     password: string;
 };
 
-export type SignUpResponse = any;
+export type SignUpResponse = {
+    status: number;
+    data: {
+        data: any;
+        message: string;
+        status: string;
+    };
+}
 
 export type InitiateResetPasswordRequest = {
     email: string;

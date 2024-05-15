@@ -46,6 +46,7 @@ const SignUpForm = () => {
     } = methods;
 
     const onSubmit: SubmitHandler<SignUpRequest> = async (payload) => {
+        const params = new URLSearchParams({ email: payload.emailAddress });
         try {
             setIsLoading(true);
 
@@ -60,26 +61,22 @@ const SignUpForm = () => {
             if (userType === 'Service Provider') {
                 await serviceProviderSignUpApiCall(data).unwrap();
                 setIsLoading(false);
-                router.push('/auth/verify-email');
+                router.push(`/auth/verify-email?${params}`);
                 return;
             }
 
             if (userType === 'Customer') {
                 await customerSignUpApiCall(data).unwrap();
                 setIsLoading(false);
-                router.push('/auth/verify-email');
+                router.push(`/auth/verify-email?${params}`);
                 return;
             }
 
-            // pass the email to the verify email page
-            const params = new URLSearchParams({ email: payload.emailAddress });
-            router.push(`/auth/verify-email?${params}`);
-            console.log(payload)
-        } catch (err) {
-            console.log(err)
+        } catch (err: any) {
+            console.log("Error:", err);
             setIsLoading(false);
-            // toast.error(err?.data?.errors?.detail);
-        }
+            toast.error(err?.data.message); 
+        } 
     };
 
     return (

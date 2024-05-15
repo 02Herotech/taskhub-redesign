@@ -1,15 +1,12 @@
 "use client"
 
-import { usePathname, useSearchParams } from 'next/navigation'
 import Button from "@/components/global/Button";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { toast } from "react-toastify";
 import "react-phone-number-input/style.css";
 import React, { useEffect, useRef, useState } from "react";
-import axios from 'axios';
 import { Suspense } from 'react'
-import { taskhubToast } from '@/lib/TaskhubToast';
+import axios from "axios";
 
 const PasswordConfirmationForm = ({ email }: { email: string }) => {
     const [otp, setOtp] = useState(new Array(6).fill(""));
@@ -20,21 +17,20 @@ const PasswordConfirmationForm = ({ email }: { email: string }) => {
     const baseUrl = process.env.NEXT_PUBLIC_API_URL;
 
     const requestOTP = async (e: any) => {
-        const verifyOTP = otp.join("");
-        e.preventDefault();
-
         try {
             setIsLoading(true);
-            toast.success(
-                "OTP Verified Successfully"
+            const response = await axios.post(
+                `${process.env.NEXT_PUBLIC_API_URL}/user/forgot-password`, { email }
             );
-            setIsLoading(false);
 
-            router.push("/auth/reset-password")
-        } catch (error: any) {
-            toast.error("Something went wrong");
-            // console.log(error.response.data.message);
+            if (response.status == 200) {
+                router.push(`/auth/reset-password?email=${email}`);
+                setIsLoading(false);
+                toast.success("OTP verified successfully");
+            }
+        } catch (err: any) {
             setIsLoading(false);
+            toast.error(err?.data.message);
         }
     };
 
@@ -46,19 +42,20 @@ const PasswordConfirmationForm = ({ email }: { email: string }) => {
     // };
 
     const resendOtp = async (): Promise<void> => {
-        try {
-            router.push("/auth/reset-password")
-            // setIsLoading2(true);
-            // const response = await axios.post(
-            //     `https://syncskills-api.onrender.com/api/learning-mgt/v1/auth/resend-verify-login-otp/${email}`
-            // );
-            // toast.success("OTP Resent Successfully");
-            // setIsLoading2(false);
-        } catch (error: any) {
-            console.log(error.response);
-            toast.error("Something went wrong");
-            setIsLoading2(false);
-        }
+        // try {
+        //     setIsLoading(true);
+        //     const response = await axios.post(
+        //         `${process.env.NEXT_PUBLIC_API_URL}/user/forgot-password`,{email}
+        //     );
+
+        //     if (response.status == 200) {
+        //         router.push(`/auth/reset-password?email=${email}`);
+        //         setIsLoading(false);
+        //     }
+        // } catch (err: any) {
+        //     setIsLoading(false);
+        //     toast.error(err?.data.message);
+        // }
     };
 
     const useInputRefs = (length: number) => {
