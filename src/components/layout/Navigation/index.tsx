@@ -23,7 +23,7 @@ const Navigation = () => {
     const links = [
         {
             label: "Add a task",
-            url: "/add-task",
+            url: "/customer/add-task",
         },
         {
             label: "Explore Tasks",
