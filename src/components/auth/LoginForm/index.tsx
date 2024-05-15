@@ -16,8 +16,6 @@ type SignInRequest = {
 
 const LoginForm = () => {
     const [isLoading, setIsLoading] = useState(false);
-    const session = useSession()
-    console.log(session)
 
     const router = useRouter();
     const methods = useForm({
@@ -46,8 +44,16 @@ const LoginForm = () => {
                 password: payload.password,
             });
 
-            if (from) router.push(decodeURIComponent(from));
-            else router.push("/dashboard");
+            if (response?.ok) {
+                if (from) {
+                    router.push(from);
+                }
+                else {
+                    router.push("/dashboard");
+                }
+            }
+            
+            console.log(response)
             setIsLoading(false)
         } catch (err: any) {
             console.log(err)

@@ -41,8 +41,8 @@ export default withAuth(
 
 export const config = {
     matcher: [
-        // "/explore/:path*",
-        // "/customer/:path*",
-        // "/marketplace/:path*",
+        "/explore/:path*",
+        "/customer/:path*",
+        "/marketplace/:path*",
     ],
 };
