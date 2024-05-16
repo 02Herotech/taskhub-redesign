@@ -7,7 +7,7 @@ import Dropdown from "@/components/global/Dropdown";
 import TaskCard from "../TaskCard";
 import loader from "../../../../../public/assets/images/marketplace/taskhub-newloader.gif";
 import Image from "next/image";
-import RangeSlider from 'react-range-slider-input';
+// import RangeSlider from 'react-range-slider-input';
 import 'react-range-slider-input/dist/style.css';
 import Button from "@/components/global/Button";
 
@@ -124,7 +124,7 @@ const Tasks = () => {
                     <form className='w-[240px] bg-white rounded-md flex items-center p-4'>
                         <div className="space-y-8 w-full">
                             <h4 className="text-lg text-black font-medium">Distance</h4>
-                            <RangeSlider min={0} max={2000} step={1} />
+                            {/* <RangeSlider min={0} max={2000} step={1} /> */}
                             <div className="flex items-center justify-between w-full">
                                 <Button theme="outline">
                                     Cancel
@@ -166,7 +166,7 @@ const Tasks = () => {
                     <form className='w-[240px] bg-white rounded-md flex items-center p-4'>
                         <div className="space-y-8 w-full">
                             <h4 className="text-lg text-black font-medium">Price</h4>
-                            <RangeSlider min={0} max={2000} step={1} />
+                            {/* <RangeSlider min={0} max={2000} step={1} /> */}
                             <div className="flex items-center justify-between w-full">
                                 <Button theme="outline">
                                     Cancel
