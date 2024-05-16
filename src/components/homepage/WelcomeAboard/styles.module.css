@@ -27,7 +27,7 @@
     /* Set a z-index higher than the overlay */
 }
 
-@media screen and (min-width: 1280px) {
+@media screen and (min-width: 1024px) {
     .bgCover {
 
         border-radius: 32px;

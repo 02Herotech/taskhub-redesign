@@ -2,6 +2,8 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import MobileFooter from "./MobileFooter";
+import Newsletter from "@/components/newsletter/Newsletter";
 
 const Footer = () => {
     const links = [
@@ -12,19 +14,16 @@ const Footer = () => {
                     label: "About Us",
                     url: "/about",
                 },
+
                 {
-                    label: "Companies",
-                    url: "/companies",
-                },
-                {
-                    label: "Pricing",
-                    url: "/pricing",
+                    label: "Policy",
+                    url: "/policy",
                 }
 
             ],
         },
         {
-            groupName: "Services",
+            groupName: "Marketplace",
             links: [
                 {
                     url: "/services/automotive",
@@ -86,35 +85,53 @@ const Footer = () => {
     const currentYear = new Date().getFullYear();
 
     return (
-        <footer className='pt-10 lg:pt-24 bg-status-lightViolet font-satoshi'>
-            <div className='container w-full grid grid-cols-1 lg:grid-cols-5 gap-10 lg:gap-20 pb-10 lg:pb-24'>
-                <div className='grid lg:col-span-2'>
-                    <Link href='/' className='w-[67px] h-[50px] lg:w-[109px] relative'>
-                        <Image src="/assets/images/logo.png" fill alt="Logo" />
-                    </Link>
-                    <p className="text-primary font-medium max-lg:text-[13px]">Online platform that connects Service Provider  with Customers who are seeking various services. The platform offers a wide range of services.</p>
+        <>
+            <footer className='pt-10 lg:pt-20 bg-status-lightViolet font-satoshi hidden lg:block'>
+                <div className='container w-full grid grid-cols-1 lg:grid-cols-5 gap-10 lg:gap-20 pb-10 '>
+                    <div className='grid lg:col-span-2'>
+                        <Link href='/' className='w-[67px] h-[50px] lg:w-[109px] relative'>
+                            <Image src="/assets/images/logo.png" fill alt="Logo" />
+                        </Link>
+                        <div className=" xl:mt-0 lg:mt-[-100px]">
+                            <p className="text-primary font-medium max-lg:text-[13px] mt-5 ">Need Help? If you have any questions or encounter issues, our support team is here to assist you. Reach out to us at info@taskhub.org.au
+                                Stay Connected: Follow us on Instagram, facebook, and X for updates, tips, and community discussions.
+                                Thank you for choosing TaskHub! We look forward to enhancing your user experience.</p>
+                            <div className="mt-[70px]">
+                                <Newsletter />
+
+                                <div className=' py-5 text-black text-left text-sm lg:text-base'>
+                                    {currentYear} TaskHub. All Rights Reserved.
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                    {links.map((group, index) => {
+                        return (
+                            <ul key={index} className='space-y-5'>
+                                <h3 className='text-primary text-base font-extrabold'>
+                                    {group.groupName}
+                                </h3>
+                                {group.links.map((link, index) => {
+                                    return (
+                                        <li key={index} className='text-primary font-medium hover:underline text-sm lg:text-base'>
+                                            <Link href={link.url}>{link.label}</Link>
+                                        </li>
+                                    );
+                                })}
+                            </ul>
+                        );
+                    })}
                 </div>
-                {links.map((group, index) => {
-                    return (
-                        <ul key={index} className='space-y-5'>
-                            <h3 className='text-primary text-base font-bold'>
-                                {group.groupName}
-                            </h3>
-                            {group.links.map((link, index) => {
-                                return (
-                                    <li key={index} className='text-primary font-medium hover:underline text-sm lg:text-base'>
-                                        <Link href={link.url}>{link.label}</Link>
-                                    </li>
-                                );
-                            })}
-                        </ul>
-                    );
-                })}
+
+            </footer>
+
+            <div className="lg:hidden bg-status-lightViolet py-10">
+                <MobileFooter />
             </div>
-            <div className='container py-5 text-black text-center text-sm lg:text-base'>
-                {currentYear} TaskHub. All Rights Reserved.
-            </div>
-        </footer>
+
+        </>
     );
 };
 

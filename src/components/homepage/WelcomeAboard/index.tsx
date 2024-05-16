@@ -9,13 +9,13 @@ import styles from "./styles.module.css";
 const WelcomeAboard = () => {
     return (
         <div
-            className={`mx-auto flex max-w-7xl items-center justify-between lg:p-5 lg:px-12 lg:pb-20 lg:pt-[100px] xl:px-8 `}
+            className={`mx-auto flex max-w-7xl items-center justify-between lg:p-5 lg:px-12 lg:pb-20 lg:pt-[90px] xl:px-8 `}
         >
             <div className={`${styles.bgCover} w-full p-10 `}>
                 <div className=" z-50 flex-col space-y-5 lg:flex">
                     <div className="flex flex-col lg:space-y-5  space-y-1">
                         <div className="flex items-center justify-between ">
-                            <div className="flex flex-col lg:space-y-2 lg:text-[40px] text-[12px] font-bold text-white">
+                            <div className="flex flex-col lg:space-y-2 lg:text-[40px] text-[12px] font-extrabold  font-clashDisplayBold text-white">
                                 <h1>Welcome Aboard!</h1>
                                 <h1 >
                                     <span className="text-[#FE9B07]">Get started</span> with

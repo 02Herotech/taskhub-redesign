@@ -42,9 +42,8 @@ const HomeNavigation = () => {
 
     return (
         <>
-            <nav className="bg-[#f3dcfc] z-50 fixed top-0 left-0 right-0 w-full">
-                <div className='container py-4 lg:py-5 px-7 lg:px-14 flex items-center justify-between'>
-                    <Logo />
+            <nav className="bg-[#F5E2FC] z-50 fixed top-0 left-0 right-0 w-full">
+                <div className='container py-4 lg:py-5 px-7 lg:px-12 flex items-center justify-between'>
                     <button
                         onClick={() => setShowMobileNav((state) => !state)}
                         className='lg:hidden'>

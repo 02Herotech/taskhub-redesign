@@ -46,7 +46,7 @@ const SPHomepage = () => {
             className={`w-full bg-gradient-to-b from-[#FAF2FD] via-[#FDF7FE] to-[#F6E1FD] `}
         >
             <div
-                className={`mx-auto lg:flex max-w-7xl  items-start justify-between p-5 px-12 pb-20 lg:pt-[100px] pt-[50px] xl:px-8 `}
+                className={`mx-auto lg:flex max-w-7xl  items-start justify-between p-5 px-12 pb-20 lg:py-[80px] xl:pb-[170px] pt-[50px] xl:px-8 `}
             >
                 <div className="lg:inline-block hidden  relative xl:w-[45%]">
                     <Image src={image1} width={450} height={600} alt="Service Provider1"></Image>
@@ -58,8 +58,8 @@ const SPHomepage = () => {
 
                 <div className="lg:hidden ">
                     <div className="  space-y-3 text-center mb-5">
-                        <h1 className="text-[24px] font-bold">SERVICE PROVIDERS</h1>
-                        <h4 className="text-[16px] leading-tight">
+                        <h1 className="text-[24px] font-extrabold">SERVICE PROVIDERS</h1>
+                        <h4 className="text-[16px] leading-tight font-bold">
                             Our service provider gives you Quality <br />
                             you Expect, the service you Deserve!
                         </h4>
@@ -77,8 +77,8 @@ const SPHomepage = () => {
                 <div className="hidden lg:flex flex-col space-y-7 lg:w-[600px]">
                     <div className="ml-16 flex flex-col space-y-7">
                         <div className="hidden lg:flex flex-col space-y-3">
-                            <h1 className="text-[40px] font-bold font-SatoshiBlack">SERVICE PROVIDERS</h1>
-                            <h4 className="text-[25px] leading-tight font-SatoshiBold">
+                            <h1 className="text-[40px] font-extrabold">SERVICE PROVIDERS</h1>
+                            <h4 className="text-[25px] leading-tight font-bold">
                                 Our service provider gives you Quality <br />
                                 you Expect, the service you Deserve!
                             </h4>
@@ -127,7 +127,7 @@ const SPHomepage = () => {
                         <span className="hidden lg:block h-[2px] w-full bg-black"></span>
                     </div>
 
-                    {/* <button className="hover:text-[#FE9B07]">
+                    <button className="hover:text-[#FE9B07]">
                         {session?.user?.user?.roles[0] === "CUSTOMER" ? (
                             <div
                                 onClick={handleBecomeSP}
@@ -149,7 +149,7 @@ const SPHomepage = () => {
                                 </span>
                             </Link>
                         )}
-                    </button> */}
+                    </button>
                 </div>
 
                 <div className="lg:hidden flex flex-col space-y-7 mt-10">
@@ -197,7 +197,7 @@ const SPHomepage = () => {
                     </div>
 
 
-                    {/* <button className="hover:text-[#FE9B07]">
+                    <button className="hover:text-[#FE9B07]">
                         {session?.user?.user?.roles[0] === "CUSTOMER" ? (
                             <div
                                 onClick={handleBecomeSP}
@@ -219,7 +219,7 @@ const SPHomepage = () => {
                                 </span>
                             </Link>
                         )}
-                    </button> */}
+                    </button>
                 </div>
             </div>
         </div>

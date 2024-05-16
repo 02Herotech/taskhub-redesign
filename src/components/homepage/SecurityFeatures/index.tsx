@@ -14,6 +14,7 @@ import image2 from "../../../../public/assets/images/homepage/securityFeatures/g
 import icon1 from "../../../../public/assets/images/homepage/securityFeatures/getStartedIcon1.png";
 import icon2 from "../../../../public/assets/images/homepage/securityFeatures/getStartedIcon2.png";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 const SecurityFeatures = () => {
     const { data: session } = useSession();
@@ -76,16 +77,16 @@ const SecurityFeatures = () => {
                     </div>
                     <div className="">
                         <button
-                            className="text-bold rounded-[50px] bg-purpleBase lg:text-[20px] text-[16px]
-           px-7 py-2 text-white hover:bg-purpleHover  "
+                            className="text-bold rounded-[50px] bg-primary lg:text-[20px] text-[16px]
+           px-7 py-2 text-white hover:bg-[#25135f]  "
                         >
-                            {/* {session?.user?.user?.roles[0] === "SERVICE_PROVIDER" ? (
+                            {session?.user?.user?.roles[0] === "SERVICE_PROVIDER" ? (
                                 <p onClick={handlePostTask}>Start posting task for free</p>
                             ) : (
                                 <Link href="/dashboard/customer/my-tasks/post-request">
                                     Start posting task for free
                                 </Link>
-                            )} */}
+                            )}
                         </button>
                     </div>
                 </div>
