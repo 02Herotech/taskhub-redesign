@@ -1,13 +1,26 @@
-import axios from "axios";
-import { NextAuthOptions } from "next-auth";
-import NextAuth from "next-auth/next";
-import CredentialsProvider from "next-auth/providers/credentials";
 
-const authOptions: NextAuthOptions = {
+import NextAuth, { NextAuthOptions } from "next-auth";
+import CredentialsProvider from "next-auth/providers/credentials";
+import axios from "axios";
+
+const handler = NextAuth({
+    session: {
+        strategy: "jwt",
+        // maxAge: 60 * 24 * 60 * 60, // 60 days in seconds
+    },
+    pages: {
+        signIn: "/auth/login",
+    },
     providers: [
         CredentialsProvider({
-            name: "credentials",
-            credentials: {},
+            name: "Credentials",
+            id: "credentials",
+            type: "credentials",
+            credentials: {
+                email: { label: "Email", type: "email" },
+                password: { label: "Password", type: "password" },
+            },
+
             async authorize(credentials) {
                 const { email, password } = credentials as {
                     email: string;
@@ -16,7 +29,7 @@ const authOptions: NextAuthOptions = {
 
                 try {
 
-                    const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}auth/login`, {
+                    const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/login`, {
                         emailAddress: email,
                         password,
                     });
@@ -42,18 +55,25 @@ const authOptions: NextAuthOptions = {
                 }
 
             },
-        })
+        }),
     ],
+
     secret: process.env.JWT_SECRET,
-    session: {
-        strategy: "jwt",
+
+    callbacks: {
+        async jwt({ token, user, trigger, session }) {
+            // If there's any change to the session
+            if (trigger === "update") {
+                return { ...token, ...session.user };
+            }
+            return { ...token, ...user };
+        },
+        async session({ session, token, user }) {
+            session.user = token as any;
+            return session;
+        },
     },
-    pages: {
-        signIn: "/auth/login",
-    },
 
-};
+});
 
-const authHandler = NextAuth(authOptions);
-
-export { authHandler as GET, authHandler as POST }
+export { handler as GET, handler as POST };

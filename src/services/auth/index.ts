@@ -1,5 +1,5 @@
 
-import { SignUpRequest, SignUpResponse } from "@/types/services/auth";
+import { SignInRequest, SignInResponse, SignUpRequest, SignUpResponse } from "@/types/services/auth";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { getSession } from "next-auth/react";
 
@@ -26,6 +26,9 @@ export const auth = createApi({
         },
     }),
     endpoints: (builder) => ({
+        signin: builder.mutation<SignInResponse, SignInRequest>({
+            query: (credentials) => postRequest("/auth/login", credentials),
+        }),
         customerSignup: builder.mutation<SignUpResponse, SignUpRequest>({
             query: (credentials) => postRequest("customer/sign-up", credentials),
         }),
@@ -36,6 +39,9 @@ export const auth = createApi({
 });
 
 export const {
+    useSigninMutation,
     useCustomerSignupMutation,
     useServiceProviderSignupMutation,
 } = auth;
+
+

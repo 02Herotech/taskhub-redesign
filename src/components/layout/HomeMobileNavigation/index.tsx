@@ -53,7 +53,7 @@ const HomeMobileNavigation = ({ setShowMobileNav, links }: Props) => {
                             );
                         })}
                     </ul>
-                    <div className="">
+                    <div className="space-y-7 w-full">
                         <Link href='/auth'>
                             <Button className="rounded-full">
                                 Sign Up

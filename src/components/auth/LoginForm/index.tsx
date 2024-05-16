@@ -8,20 +8,19 @@ import { toast } from "react-toastify";
 import { signIn, useSession } from "next-auth/react";
 import Link from "next/link";
 import { useState } from "react";
+import axios from "axios";
 
 type SignInRequest = {
-    email: string;
+    emailAddress: string;
     password: string;
 };
 
 const LoginForm = () => {
-    const [isLoading, setIsLoading] = useState(false);
-
     const router = useRouter();
     const methods = useForm({
         mode: "onChange",
         defaultValues: {
-            email: "",
+            emailAddress: "",
             password: "",
         },
     });
@@ -34,31 +33,43 @@ const LoginForm = () => {
 
     const from = searchParams.get("from");
 
-    /* Handle submit */
+    const [isLoading, setIsLoading] = useState(false);
+
     const onSubmit: SubmitHandler<SignInRequest> = async (payload) => {
         try {
-            setIsLoading(true)
-            const response = await signIn("credentials", {
-                redirect: false,
-                email: payload.email,
-                password: payload.password,
-            });
+            setIsLoading(true);
 
-            if (response?.ok) {
-                if (from) {
-                    router.push(from);
+            const response = await axios.post(
+                `${process.env.NEXT_PUBLIC_API_URL}/auth/login`,
+                {
+                    emailAddress: payload.emailAddress,
+                    password: payload.password,
                 }
-                else {
-                    router.push("/dashboard");
-                }
+            );
+
+            if (response.status === 200) {
+                const userTypeRole = response.data.user.roles[0];
+                
+                    await signIn("credentials", {
+                        redirect: false,
+                        email: payload.emailAddress,
+                        password: payload.password,
+                        userType: userTypeRole,
+                    });
             }
-            
-            console.log(response)
-            setIsLoading(false)
-        } catch (err: any) {
-            console.log(err)
-            setIsLoading(false)
-            toast.error(err || "Something went wrong");
+
+            if (from) {
+                router.push(from);
+            } else {
+                router.push("/marketplace");
+            }
+
+            toast.success("Login successful");
+
+            setIsLoading(false);
+        } catch (error: any) {
+            setIsLoading(false);
+            // setErrorMessage(error.response.data.message);
         }
     };
 
@@ -81,7 +92,7 @@ const LoginForm = () => {
                         className='w-full space-y-5 font-satoshi'>
                         <Input
                             focused
-                            name='email'
+                            name='emailAddress'
                             label='Email address'
                             placeholder='example@example.com'
                             rules={["email", "required"]}
@@ -114,7 +125,7 @@ const LoginForm = () => {
                                 Log in
                             </Button>
                             <h3 className="text-xl font-bold">Don’t have an account?
-                                <Link href="/auth/sign-up" className="text-primary"> Sign Up</Link>
+                                <Link href="/auth" className="text-primary"> Sign Up</Link>
                             </h3>
                         </div>
                     </form>

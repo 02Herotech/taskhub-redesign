@@ -7,10 +7,10 @@ export type Task = {
     subCategory: string;
     taskDescription: string;
     userAddress: string;
-    postedAt: Date;
+    postedAt: any;
     customerBudget: number;
     taskImage: string;
-    taskDates: Date[];
+    taskDates: any;
     active: boolean;
 }
 
@@ -23,3 +23,5 @@ export type GetTasksResponse = {
     pageSize: string;
     content: Task[];
 };
+
+export type GetSingleTasksResponse = Task;
