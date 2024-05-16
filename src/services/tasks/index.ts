@@ -1,4 +1,4 @@
-import { GetTasksRequest, GetTasksResponse } from "@/types/services/tasks";
+import { GetSingleTasksResponse, GetTasksRequest, GetTasksResponse } from "@/types/services/tasks";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { getSession } from "next-auth/react";
 
@@ -67,7 +67,7 @@ export const task = createApi({
             query: (credentials) => getRequest(`/all-active-tasks/${credentials}`),
             providesTags: ["Task"],
         }),
-        getTaskById: builder.query<GetTasksResponse, string>({
+        getTaskById: builder.query<GetSingleTasksResponse, number>({
             query: (id) => getRequest(`/get-task/${id}`),
             providesTags: ["Task"],
         }),

@@ -6,26 +6,26 @@ export default withAuth(
     async function middleware(req) {
         const token = await getToken({ req });
         const isAuth = !!token;
-        // const isAuthPage = req.nextUrl.pathname.startsWith("/auth");
+        const isAuthPage = req.nextUrl.pathname.startsWith("/auth");
 
-        // if (isAuthPage) {
-        //     if (isAuth) {
-        //         return NextResponse.redirect(new URL("/dashboard", req.url));
-        //     }
+        if (isAuthPage) {
+            if (isAuth) {
+                return NextResponse.redirect(new URL("/marketplace", req.url));
+            }
 
-        //     return null;
-        // }
+            return null;
+        }
 
-        // if (!isAuth) {
-        //     let from = req.nextUrl.pathname;
-        //     if (req.nextUrl.search) {
-        //         from += req.nextUrl.search;
-        //     }
+        if (!isAuth) {
+            let from = req.nextUrl.pathname;
+            if (req.nextUrl.search) {
+                from += req.nextUrl.search;
+            }
 
-        //     return NextResponse.redirect(
-        //         new URL(`/auth/login?from=${encodeURIComponent(from)}`, req.url)
-        //     );
-        // }
+            return NextResponse.redirect(
+                new URL(`/auth/login?from=${encodeURIComponent(from)}`, req.url)
+            );
+        }
     },
     {
         callbacks: {
@@ -41,8 +41,8 @@ export default withAuth(
 
 export const config = {
     matcher: [
-        "/explore/:path*",
-        "/customer/:path*",
-        "/marketplace/:path*",
+        // "/explore/:path*",
+        // "/customer/:path*",
+        // "/marketplace/:path*",
     ],
 };

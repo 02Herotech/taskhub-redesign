@@ -7,21 +7,21 @@ import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { signIn, useSession } from "next-auth/react";
 import Link from "next/link";
+import { useSigninMutation } from "@/services/auth";
 import { useState } from "react";
 
 type SignInRequest = {
-    email: string;
+    emailAddress: string;
     password: string;
 };
 
 const LoginForm = () => {
-    const [isLoading, setIsLoading] = useState(false);
-
+    const [loading, setLoading] = useState(false);
     const router = useRouter();
     const methods = useForm({
         mode: "onChange",
         defaultValues: {
-            email: "",
+            emailAddress: "",
             password: "",
         },
     });
@@ -30,38 +30,34 @@ const LoginForm = () => {
         formState: { errors, isValid },
     } = methods;
 
-    // const searchParams = useSearchParams();
+    const searchParams = useSearchParams();
 
-    // const from = searchParams.get("from");
+    const from = searchParams.get("from");
 
     const session = useSession();
     console.log(session)
 
-    /* Handle submit */
+    const [_signin, { isLoading }] = useSigninMutation();
+
     const onSubmit: SubmitHandler<SignInRequest> = async (payload) => {
         try {
-            setIsLoading(true)
-            const response = await signIn("credentials", {
+            const response = await _signin(payload).unwrap();
+            setLoading(true);
+
+            const result = await signIn('credentials', {
                 redirect: false,
-                email: payload.email,
-                password: payload.password,
+                accessToken: response.accessToken,
+                refreshToken: response.refreshToken,
+                user: response.user
             });
 
-            if (response?.ok) {
-                // if (from) {
-                //     router.push(from);
-                // }
-                // else {
-                    router.push("/marketplace");
-                    toast.success("Login Successful");
-                // }
-            }
+            console.log(result)
 
-            setIsLoading(false)
+            
         } catch (err: any) {
-            setIsLoading(false)
-            toast.error(err?.data.message);
-            // toast.error(err || "Something went wrong");
+            toast.error(err?.data.message || "Invalid credentials");
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -84,7 +80,7 @@ const LoginForm = () => {
                         className='w-full space-y-5 font-satoshi'>
                         <Input
                             focused
-                            name='email'
+                            name='emailAddress'
                             label='Email address'
                             placeholder='example@example.com'
                             rules={["email", "required"]}
@@ -111,7 +107,7 @@ const LoginForm = () => {
                             </div>
                             <Button
                                 type='submit'
-                                loading={isLoading}
+                                loading={loading}
                                 disabled={!isValid}
                                 className='w-full lg:w-[170px] rounded-full font-normal'>
                                 Log in
