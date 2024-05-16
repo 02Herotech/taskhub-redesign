@@ -219,7 +219,7 @@ const page = () => {
                 height={70}
               />
               <div className="flex flex-col ">
-                <p className="text-lg font-medium">Customer's Name</p>
+                <p className="text-lg font-medium">Customer Name</p>
                 <p className="text-slate-600">Date of review drop</p>
               </div>
             </div>
@@ -247,7 +247,7 @@ const page = () => {
                 height={70}
               />
               <div className="flex flex-col ">
-                <p className="text-lg font-medium">Customer's Name</p>
+                <p className="text-lg font-medium">Customer Name</p>
                 <p className="text-slate-600">Date of review drop</p>
               </div>
             </div>
