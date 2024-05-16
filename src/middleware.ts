@@ -38,5 +38,6 @@ export const config = {
         "/explore/:path*",
         "/customer/:path*",
         "/marketplace/:path*",
+        "/service-provider/:path*",
     ],
 };

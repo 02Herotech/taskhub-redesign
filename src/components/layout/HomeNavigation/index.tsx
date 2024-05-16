@@ -12,6 +12,7 @@ import { BiChevronDown } from "react-icons/bi";
 import { RiMenu3Fill } from "react-icons/ri";
 import HomeMobileNavigation from "../HomeMobileNavigation";
 import Button from "@/components/global/Button";
+import Logo from "../Logo";
 
 const HomeNavigation = () => {
     const router = useRouter();
@@ -43,9 +44,7 @@ const HomeNavigation = () => {
         <>
             <nav className="bg-[#f3dcfc] z-50 fixed top-0 left-0 right-0 w-full">
                 <div className='container py-4 lg:py-5 px-7 lg:px-14 flex items-center justify-between'>
-                    <Link href='/' className='w-[67px] h-[50px] lg:w-[109px] relative'>
-                        <Image src="/assets/images/logo.png" fill alt="Logo" />
-                    </Link>
+                    <Logo />
                     <button
                         onClick={() => setShowMobileNav((state) => !state)}
                         className='lg:hidden'>

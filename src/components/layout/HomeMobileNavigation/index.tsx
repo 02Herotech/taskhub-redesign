@@ -1,6 +1,7 @@
 import Button from "@/components/global/Button";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
+import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { IoMdCloseCircle } from "react-icons/io";
@@ -34,7 +35,7 @@ const HomeMobileNavigation = ({ setShowMobileNav, links }: Props) => {
                     <ul className='space-y-7 mt-[70px]'>
                         {links.map((link) => {
                             return (
-                                <li key={link.label} className='text-pc-01'>
+                                <li key={link.label} className=''>
                                     <Link
                                         onClick={() => setShowMobileNav(false)}
                                         href={link.url}
@@ -53,14 +54,14 @@ const HomeMobileNavigation = ({ setShowMobileNav, links }: Props) => {
                             );
                         })}
                     </ul>
-                    <div className="space-y-7 w-full">
+                    <div className="">
                         <Link href='/auth'>
-                            <Button className="rounded-full">
+                            <Button className="rounded-full w-full my-7">
                                 Sign Up
                             </Button>
                         </Link>
                         <Link href='/auth/login'>
-                            <Button theme='outline' className="rounded-full bg-transparent">
+                            <Button theme='outline' className="rounded-full bg-transparent w-full">
                                 Log in
                             </Button>
                         </Link>
