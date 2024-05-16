@@ -6,7 +6,7 @@ import TestimonialSlider from "../TestimonialSlider";
 const Testimonials = () => {
     return (
         <div
-            className={`flex justify-between items-center xl:px-8 px-12 py-10 max-w-7xl mx-auto my-8`}
+            className={`flex  justify-between items-center xl:px-8 px-12 py-10 max-w-7xl mx-auto my-8`}
         >
             <div className="lg:flex lg:justify-between lg:items-start  w-full hidden  ">
                 <div className=" w-[570px] flex flex-col space-y-14">

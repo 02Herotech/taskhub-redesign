@@ -46,7 +46,7 @@ const SPHomepage = () => {
             className={`w-full bg-gradient-to-b from-[#FAF2FD] via-[#FDF7FE] to-[#F6E1FD] `}
         >
             <div
-                className={`mx-auto lg:flex max-w-7xl  items-start justify-between p-5 px-12 pb-20 lg:pt-[100px] pt-[50px] xl:px-8 `}
+                className={`mx-auto lg:flex max-w-7xl  items-start justify-between p-5 px-12 pb-20 lg:py-[80px] xl:pb-[170px] pt-[50px] xl:px-8 `}
             >
                 <div className="lg:inline-block hidden  relative xl:w-[45%]">
                     <Image src={image1} width={450} height={600} alt="Service Provider1"></Image>

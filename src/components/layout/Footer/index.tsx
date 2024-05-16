@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import MobileFooter from "./MobileFooter";
 
 const Footer = () => {
     const links = [
@@ -86,7 +87,8 @@ const Footer = () => {
     const currentYear = new Date().getFullYear();
 
     return (
-        <footer className='pt-10 lg:pt-24 bg-status-lightViolet font-satoshi'>
+       <>
+        <footer className='pt-10 lg:pt-24 bg-status-lightViolet font-satoshi hidden lg:block'>
             <div className='container w-full grid grid-cols-1 lg:grid-cols-5 gap-10 lg:gap-20 pb-10 lg:pb-24'>
                 <div className='grid lg:col-span-2'>
                     <Link href='/' className='w-[67px] h-[50px] lg:w-[109px] relative'>
@@ -115,6 +117,12 @@ const Footer = () => {
                 {currentYear} TaskHub. All Rights Reserved.
             </div>
         </footer>
+
+        <div className="lg:hidden bg-status-lightViolet py-10">
+        <MobileFooter />
+      </div>
+
+        </>
     );
 };
 
