@@ -1,0 +1,25 @@
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  cursor: default;
+}
+
+html {
+  font-size: 16px;
+}
+
+@media (max-width: 768px) {
+  html {
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 1024px) {
+  html {
+    font-size: 14px;
+  }
+}
