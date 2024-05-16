@@ -16,7 +16,6 @@ type SignInRequest = {
 };
 
 const LoginForm = () => {
-    const [loading, setLoading] = useState(false);
     const router = useRouter();
     const methods = useForm({
         mode: "onChange",
@@ -42,7 +41,6 @@ const LoginForm = () => {
     const onSubmit: SubmitHandler<SignInRequest> = async (payload) => {
         try {
             const response = await _signin(payload).unwrap();
-            setLoading(true);
 
             const result = await signIn('credentials', {
                 redirect: false,
@@ -51,15 +49,12 @@ const LoginForm = () => {
                 user: response.user
             });
 
-            console.log(result)
+            if (result?.ok) {
+                router.push("/marketplace")
+            }
 
-            router.push("/marketplace")
-
-            
         } catch (err: any) {
             toast.error(err?.data.message || "Invalid credentials");
-        } finally {
-            setLoading(false);
         }
     };
 
@@ -109,7 +104,7 @@ const LoginForm = () => {
                             </div>
                             <Button
                                 type='submit'
-                                loading={loading}
+                                loading={isLoading}
                                 disabled={!isValid}
                                 className='w-full lg:w-[170px] rounded-full font-normal'>
                                 Log in

@@ -13,6 +13,7 @@ import { BiChevronDown } from "react-icons/bi";
 import { RiMenu3Fill } from "react-icons/ri";
 import Dropdown from "@/components/global/Dropdown";
 import { signOut } from "next-auth/react"
+import Logo from "../Logo";
 
 const Navigation = () => {
     const router = useRouter();
@@ -39,8 +40,8 @@ const Navigation = () => {
             url: "/marketplace",
         },
         {
-            label: "Provider a service",
-            url: "/provider-service",
+            label: "Provide a service",
+            url: "/provide-service",
         }
     ];
 
@@ -63,9 +64,7 @@ const Navigation = () => {
         <>
             <nav className='bg-white z-50 fixed top-0 left-0 right-0 w-full drop-shadow-sm'>
                 <div className='container py-4 lg:py-5 px-7 lg:px-14 flex items-center justify-between'>
-                    <Link href='/' className='w-[67px] h-[50px] lg:w-[109px] relative'>
-                        <Image src="/assets/images/logo.png" fill alt="Logo" />
-                    </Link>
+                   <Logo />
                     <button
                         onClick={() => setShowMobileNav((state) => !state)}
                         className='lg:hidden'>

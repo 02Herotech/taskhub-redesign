@@ -23,8 +23,6 @@ export const authOptions: NextAuthOptions = {
                     refreshToken
                 } = credentials!;
 
-                console.log("credentials", credentials)
-
                 if (refreshToken) {
                     // Any object returned will be saved in `user` property of the JWT
                     return {

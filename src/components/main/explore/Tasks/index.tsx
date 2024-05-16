@@ -7,7 +7,9 @@ import Dropdown from "@/components/global/Dropdown";
 import TaskCard from "../TaskCard";
 import loader from "../../../../../public/assets/images/marketplace/taskhub-newloader.gif";
 import Image from "next/image";
-import RangeSlider from "@/components/global/RangeSlider";
+import RangeSlider from 'react-range-slider-input';
+import 'react-range-slider-input/dist/style.css';
+import Button from "@/components/global/Button";
 
 const Tasks = () => {
     const [selectedFilters, setSelectedFilters] = useState({
@@ -65,10 +67,34 @@ const Tasks = () => {
         },
     ];
 
+    const otherOptionsDropdown = [
+        {
+            label: "Price: High to low",
+            onClick: () => handleFilterChange('others', 'Price: High to low')
+        },
+        {
+            label: "Price: Low to high",
+            onClick: () => handleFilterChange('others', 'Price: Low to high')
+        },
+        {
+            label: "Due date: Earliest",
+            onClick: () => handleFilterChange('others', 'Due date: Earliest')
+        },
+        {
+            label: "Due date: Latest",
+            onClick: () => handleFilterChange('others', 'Due date: Latest')
+        },
+        {
+            label: "Closest to me",
+            onClick: () => handleFilterChange('others', 'Closest to me')
+        },
+    ];
+
+
 
     return (
         <section className="pt-7 container">
-            {/* <RangeSlider /> */}
+
             <div className="hidden lg:flex lg:space-x-4 lg:max-w-[810px] items-center gap-6">
                 <select id="category" name="category" onChange={(e) => handleFilterChange('category', e.target.value)} className="w-full border-2 border-primary text-primary font-semibold bg-[#F1F1F2] py-2 px-4 rounded-full">
                     <option value="">Category</option>
@@ -88,10 +114,28 @@ const Tasks = () => {
                     <option value="Childcare & Babysitting">Childcare & Babysitting</option>
                     <option value="Travel & Adventure">Travel & Adventure</option>
                 </select>
-                <select id="location" name="location" onChange={(e) => handleFilterChange('location', e.target.value)} className="w-full border-2 border-primary text-primary bg-[#F1F1F2] font-semibold py-2 px-4 rounded-full">
-                    <option value="">Location</option>
-
-                </select>
+                <Dropdown
+                    trigger={() => (
+                        <div className="w-full border-2 border-primary text-primary font-semibold py-2 px-4 rounded-full">
+                            Location
+                        </div>
+                    )}
+                    className='-left-24 top-14'>
+                    <form className='w-[240px] bg-white rounded-md flex items-center p-4'>
+                        <div className="space-y-8 w-full">
+                            <h4 className="text-lg text-black font-medium">Distance</h4>
+                            <RangeSlider min={0} max={2000} step={1} />
+                            <div className="flex items-center justify-between w-full">
+                                <Button theme="outline">
+                                    Cancel
+                                </Button>
+                                <Button>
+                                    Apply
+                                </Button>
+                            </div>
+                        </div>
+                    </form>
+                </Dropdown>
                 <Dropdown
                     trigger={() => (
                         <div id="typeOfService" className="w-full border-2 border-primary text-primary font-semibold py-2 px-4 rounded-full">
@@ -112,15 +156,48 @@ const Tasks = () => {
                         ))}
                     </div>
                 </Dropdown>
-                <select id="pricing" name="pricing" onChange={(e) => handleFilterChange('pricing', e.target.value)} className="w-full border-2 border-primary text-primary font-semibold py-2 px-4 rounded-full">
-                    <option value="">Pricing</option>
-
-                </select>
-                <select id="others" name="others" onChange={(e) => handleFilterChange('others', e.target.value)} className="w-full border-2 border-primary text-primary font-semibold py-2 px-4 rounded-full">
-                    <option value="">
-                        Others
-                    </option>
-                </select>
+                <Dropdown
+                    trigger={() => (
+                        <div className="w-full border-2 border-primary text-primary font-semibold py-2 px-4 rounded-full">
+                            Pricing
+                        </div>
+                    )}
+                    className='-left-24 top-14'>
+                    <form className='w-[240px] bg-white rounded-md flex items-center p-4'>
+                        <div className="space-y-8 w-full">
+                            <h4 className="text-lg text-black font-medium">Price</h4>
+                            <RangeSlider min={0} max={2000} step={1} />
+                            <div className="flex items-center justify-between w-full">
+                                <Button theme="outline">
+                                    Cancel
+                                </Button>
+                                <Button>
+                                    Apply
+                                </Button>
+                            </div>
+                        </div>
+                    </form>
+                </Dropdown>
+                <Dropdown
+                    trigger={() => (
+                        <div className="w-full border-2 border-primary text-primary font-semibold py-2 px-4 rounded-full">
+                            Others
+                        </div>
+                    )}
+                    className='-left-24 top-14'>
+                    <form className='w-[240px] bg-white rounded-md p-4'>
+                        {otherOptionsDropdown.map((button, index) => (
+                            <div
+                                key={index}
+                                onClick={button.onClick}
+                                className='flex w-full transition-all text-base font-bold hover:text-tc-orange cursor-pointer items-center justify-between p-3'>
+                                <div className="">
+                                    {button.label}
+                                </div>
+                            </div>
+                        ))}
+                    </form>
+                </Dropdown>
             </div>
             <div className="lg:hidden flex items-center w-full justify-center">
                 <Dropdown
