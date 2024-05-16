@@ -197,9 +197,17 @@ const AddTaskForm: React.FC = () => {
   // };
 
   const [AiLoading, setAiLoading] = useState(false);
+  const [subCategoryErr, setSubCategoryErr] = useState(false)
 
   const AiGenerate = async () => {
     setAiLoading(true);
+    if (selectedSubCategory === '') {
+      setSubCategoryErr(true)
+      setAiLoading(false);
+      return
+    } else {
+      setSubCategoryErr(false)
+    }
     try {
       const url = `${process.env.NEXT_PUBLIC_API_URL}/listing/create-listing/category/content-generate?category=${encodeURIComponent(selectedSubCategory)}`;
       const response = await axios.get(
@@ -219,7 +227,7 @@ const AddTaskForm: React.FC = () => {
   };
 
   const GeneratedAiDescription = () => (
-    <>
+    <div>
       <div className="flex flex-col space-y-6 p-4 bg-[#381F8C] mb-5 rounded-[20px]">
 
         <h2 className="text-lg font-extrabold text-white">
@@ -241,7 +249,10 @@ const AddTaskForm: React.FC = () => {
           Generate with AI
         </Button>
       </div>
-    </>
+      {subCategoryErr && (<p>
+        Kindly choose a subcategory
+      </p>)}
+    </div>
   )
 
   const renderPage = () => {
@@ -249,6 +260,7 @@ const AddTaskForm: React.FC = () => {
       case 1:
         return (
           <div className="lg:w-full  w-[80%] mx-auto">
+
             {/* <div className="mb-10 grid items-center justify-center space-y-10 w-full"> */}
             <div className="mb-10 space-y-10 ">
               <form className="space-y-10 w-full" onSubmit={nextPage}>
@@ -276,7 +288,7 @@ const AddTaskForm: React.FC = () => {
                     <option className="text-[12px] text-[#221354]">Nanny</option>
                   </select>
                 </div>
-              
+
                 <div className="grid space-y-4">
                   <label>
                     Write a short title that accurately describes your service.{" "}
@@ -290,7 +302,7 @@ const AddTaskForm: React.FC = () => {
                     className="rounded-2xl bg-[#EBE9F4] p-3 text-[13px]  outline-none"
                   />
                 </div>
-                <div className="lg:w-[390px]">
+                <div className="lg:hidden">
                   <GeneratedAiDescription />
                 </div>
                 <div className="grid space-y-3">
@@ -310,6 +322,9 @@ const AddTaskForm: React.FC = () => {
                 </Button>
               </form>
             </div>
+
+
+
           </div>
         );
       case 2:
@@ -820,19 +835,27 @@ const AddTaskForm: React.FC = () => {
             </div>
           </div>
         </div>
-        <div className="flex items-center justify-center w-full">
-          <div>
-            <div>
-              <h2 className="text-2xl">Provide a Service</h2>
-              <p className="text-[12px] text-[#716F78]">
-                Please fill out the information below to add a new listing.
-              </p>
+        <div className="lg:flex">
+          {currentPage === 1 && (
+            <div className="lg:w-[390px] hidden lg:block mr-[50px] xl:ml-[15%] lg:ml-[10%] ">
+              <GeneratedAiDescription />
             </div>
-            <div className="mt-8 w-full ">
-              
-              
-              {renderPage()}</div>
+          )}
+
+          <div className={currentPage !==1 ? "flex items-center justify-center w-full" : ''}>
+            <div>
+              <div className={currentPage ===1 ? " lg:w-full w-[80%] mx-auto " : ''}>
+                <h2 className="text-2xl">Provide a Service</h2>
+                <p className="text-[12px] text-[#716F78]">
+                  Please fill out the information below to add a new listing.
+                </p>
+              </div>
+              <div className="mt-8 w-full ">
+                {renderPage()}</div>
+            </div>
           </div>
+          
+
         </div>
       </div>
       <Popup
