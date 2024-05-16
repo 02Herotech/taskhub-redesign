@@ -13,13 +13,14 @@ import { TiTick } from "react-icons/ti";
 import Img from "../../../../../public/assets/images/customer/task/Task management.svg";
 import Popup from "@/components/global/Popup";
 import Button from "@/components/global/Button";
+import { useSession } from "next-auth/react";
 
 interface Task {
   serviceDetails: string;
   physicalService: boolean;
   remoteService: boolean;
   termsAccepted: boolean;
-  picture?: File | defaultImage;
+  picture?: File | defaultImage | null;
   workDaysTime: string;
   workDaysDate: string;
   address: string;
@@ -34,6 +35,9 @@ interface Task {
 type defaultImage = string;
 
 const AddTaskForm: React.FC = () => {
+  const session = useSession();
+  const token = session?.data?.user.accessToken;
+  console.log(token);
   const [currentPage, setCurrentPage] = useState(1);
   const defaultImage =
     "../../../../../public/assets/images/explore/google-map.png";
@@ -42,7 +46,7 @@ const AddTaskForm: React.FC = () => {
     physicalService: false,
     remoteService: false,
     termsAccepted: false,
-    picture: defaultImage,
+    picture: null,
     workDaysTime: "",
     workDaysDate: "",
     address: "",
@@ -172,10 +176,6 @@ const AddTaskForm: React.FC = () => {
     const uploadedFile = event.target.files?.[0];
     if (uploadedFile) {
       setTask({ ...task, picture: uploadedFile });
-    } else {
-      const defaultImage =
-        "../../../../../public/assets/images/explore/google-map.png";
-      setTask({ ...task, picture: defaultImage });
     }
   };
 
@@ -289,9 +289,20 @@ const AddTaskForm: React.FC = () => {
             };
           }
 
+          if (!task.picture) {
+            const defaultImage =
+              "../../../../../public/assets/images/explore/google-map.png";
+            setTask({ ...task, picture: defaultImage });
+          }
+
           await axios.post(
             "https://smp.jacinthsolutions.com.au/api/v1/task/post",
             finalTask,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            },
           );
           setTask({
             serviceDetails: "",
@@ -309,7 +320,7 @@ const AddTaskForm: React.FC = () => {
             time: isSelectedTime,
             budget: "",
           });
-          setCurrentPage(1);
+          console.log(finalTask);
           setIsSuccessPopupOpen(true);
         } catch (error) {
           console.error("Error submitting form:", error);
@@ -359,7 +370,7 @@ const AddTaskForm: React.FC = () => {
                     <button
                       className="rounded-lg bg-tc-gray px-3 py-1 text-white"
                       onClick={() => {
-                        setTask({ ...task, picture: defaultImage }); // Clear uploaded image
+                        setTask({ ...task, picture: null }); // Clear uploaded image
                       }}>
                       Remove
                     </button>

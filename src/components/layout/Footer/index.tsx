@@ -110,7 +110,7 @@ const Footer = () => {
                     {links.map((group, index) => {
                         return (
                             <ul key={index} className='space-y-5'>
-                                <h3 className='text-primary text-base font-bold'>
+                                <h3 className='text-primary text-base font-extrabold'>
                                     {group.groupName}
                                 </h3>
                                 {group.links.map((link, index) => {

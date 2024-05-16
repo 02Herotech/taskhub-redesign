@@ -17,9 +17,12 @@ const TestimonialSlider = () => {
       id: 1,
       ratedStars: 5,
       unratedStars: 0,
-      review:
-        "'Outstanding service! Our experience with Jacinth was exceptional, professional, prompt, and went above and beyond to meet our needs. Highly recommended!'",
-      name: "Dame Luca",
+      review: (
+        <>
+          Outstanding service! Our experience with <span style={{ color: '#FE9B07' }}>Taskhub</span> was exceptional, professional, prompt, and went above and beyond to meet our needs. Highly recommended!
+        </>
+      ),
+       name: "Dame Luca",
       image: image1,
     },
     {
@@ -27,7 +30,7 @@ const TestimonialSlider = () => {
       ratedStars: 4,
       unratedStars: 1,
       review:
-        "'The service providers on this website are real professionals. I'm happy I gave it a try. The service providers on this website are real professionals. I'm happy I gave it a try.'",
+        "'The service providers on this website are real professionals. I'm happy I gave it a try.'",
       name: "Jobi Fella",
       image: image2,
     },
@@ -36,7 +39,7 @@ const TestimonialSlider = () => {
       ratedStars: 3,
       unratedStars: 2,
       review:
-        "'You can never get it wrong with the services on this platform. The pay is worth it. Great job! You can never get it wrong with the services on this platform. The pay is worth it. Great job!'",
+        "'You can never get it wrong with the services on this platform. The pay is worth it. Great job!'",
       name: "Kudu Mulk",
       image: image3,
     },
