@@ -22,7 +22,8 @@ const HomeMobileNavigation = ({ setShowMobileNav, links }: Props) => {
         <>
             <div
                 onClick={() => setShowMobileNav(false)}
-                className='bg-transparent fixed top-0 z-40 right-0 left-0 bottom-0'></div>
+                className='bg-transparent fixed top-0 z-40 right-0 left-0 bottom-0'>
+            </div>
             <motion.nav
                 initial={{ x: 100, opacity: 0 }}
                 animate={{ x: 0, opacity: 1, transition: { type: "just" } }}
