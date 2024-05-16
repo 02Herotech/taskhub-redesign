@@ -30,11 +30,11 @@ const LoginForm = () => {
         formState: { errors, isValid },
     } = methods;
 
-    const searchParams = useSearchParams();
+    // const searchParams = useSearchParams();
 
-    const from = searchParams.get("from");
+    // const from = searchParams.get("from");
 
-    const { data: session } = useSession();
+    const session = useSession();
     console.log(session)
 
     /* Handle submit */
@@ -47,16 +47,15 @@ const LoginForm = () => {
                 password: payload.password,
             });
 
-            // if (response?.ok) {
-            //     if (from) {
-            //         router.push(from);
-            //     }
-            //     else {
-            //         router.push("/dashboard");
-            //     }
-            // }
-
-            console.log(response)
+            if (response?.ok) {
+                // if (from) {
+                //     router.push(from);
+                // }
+                // else {
+                    router.push("/marketplace");
+                    toast.success("Login Successful");
+                // }
+            }
 
             setIsLoading(false)
         } catch (err: any) {

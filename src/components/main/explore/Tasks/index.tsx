@@ -111,10 +111,7 @@ const Tasks = () => {
 
     const { data } = useGetActiveTasksQuery(1);
 
-    const session = useSession()
-    console.log(session)
-
-    console.log(data)
+    console.log("data", data)
 
     const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
 

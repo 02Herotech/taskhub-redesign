@@ -1,4 +1,5 @@
 import Button from "@/components/global/Button";
+import Image from "next/image";
 import { CiSearch } from "react-icons/ci";
 
 const ExploreMap = () => {
@@ -24,8 +25,8 @@ const ExploreMap = () => {
                         1 New Task
                     </Button>
                 </div>
-                <div className="h-[124px] lg:h-[473px] bg-tc-orange/30 mt-7">
-
+                <div className="h-[124px] lg:h-[473px] relative mt-7">
+                    <Image src="/assets/images/explore/google-map.png" alt="map" fill className="object-cover" />
                 </div>
             </div>
         </section>
