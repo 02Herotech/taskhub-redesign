@@ -35,31 +35,25 @@ const LoginForm = () => {
     const from = searchParams.get("from");
 
     const session = useSession();
-    console.log(session.data?.user.user.address)
+    console.log(session)
 
-    // const [_signin, { isLoading }] = useSigninMutation();
+    const [_signin, { isLoading }] = useSigninMutation();
 
     const onSubmit: SubmitHandler<SignInRequest> = async (payload) => {
         try {
-            // const result = await _signin(payload).unwrap();
+            const response = await _signin(payload).unwrap();
             setLoading(true);
+
             const result = await signIn('credentials', {
                 redirect: false,
-                emailAddress: payload.emailAddress,
-                password: payload.password,
+                accessToken: response.accessToken,
+                refreshToken: response.refreshToken,
+                user: response.user
             });
 
             console.log(result)
 
-            if (result?.ok) {
-                if (from) {
-                    router.push(from);
-                }
-                else {
-                    router.push("/marketplace");
-                    toast.success("Login Successful");
-                }
-            }
+            
         } catch (err: any) {
             toast.error(err?.data.message || "Invalid credentials");
         } finally {

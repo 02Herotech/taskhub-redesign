@@ -1,8 +1,5 @@
-import axios from "axios";
 import { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-
-const baseUrl = process.env.NEXT_PUBLIC_API_URL;
 
 export const authOptions: NextAuthOptions = {
     session: {
@@ -19,15 +16,30 @@ export const authOptions: NextAuthOptions = {
                 password: {},
             },
             async authorize(credentials: any, req) {
-                const res = await axios.post(baseUrl + "/auth/login", credentials);
-                const user = res.data;
+                const {
+                    email,
+                    id,
+                    accessToken,
+                    refreshToken
+                } = credentials!;
 
-                // If no error and we have user data, return it
-                if (res.status === 200 && user) {
-                    return user;
+                console.log("credentials", credentials)
+
+                if (refreshToken) {
+                    // Any object returned will be saved in `user` property of the JWT
+                    return {
+                        email,
+                        id,
+                        accessToken,
+                        refreshToken
+                    };
+                } else {
+                    // If you return null then an error will be displayed advising the user to check their details.
+                    return null;
+
+                    // You can also Reject this callback with an Error thus the user will be sent to the error page with the error message as a query parameter
                 }
-                // Return null if user data could not be retrieved
-                return null;
+
             },
         }),
     ],
