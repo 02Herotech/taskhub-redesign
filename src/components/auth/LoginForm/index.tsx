@@ -7,8 +7,8 @@ import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { signIn, useSession } from "next-auth/react";
 import Link from "next/link";
-import { useSigninMutation } from "@/services/auth";
 import { useState } from "react";
+import axios from "axios";
 
 type SignInRequest = {
     emailAddress: string;
@@ -33,28 +33,43 @@ const LoginForm = () => {
 
     const from = searchParams.get("from");
 
-    const session = useSession();
-    console.log(session)
-
-    const [_signin, { isLoading }] = useSigninMutation();
+    const [isLoading, setIsLoading] = useState(false);
 
     const onSubmit: SubmitHandler<SignInRequest> = async (payload) => {
         try {
-            const response = await _signin(payload).unwrap();
+            setIsLoading(true);
 
-            const result = await signIn('credentials', {
-                redirect: false,
-                accessToken: response.accessToken,
-                refreshToken: response.refreshToken,
-                user: response.user
-            });
+            const response = await axios.post(
+                `${process.env.NEXT_PUBLIC_API_URL}/auth/login`,
+                {
+                    emailAddress: payload.emailAddress,
+                    password: payload.password,
+                }
+            );
 
-            if (result?.ok) {
-                router.push("/marketplace")
+            if (response.status === 200) {
+                const userTypeRole = response.data.user.roles[0];
+                
+                    await signIn("credentials", {
+                        redirect: false,
+                        email: payload.emailAddress,
+                        password: payload.password,
+                        userType: userTypeRole,
+                    });
             }
 
-        } catch (err: any) {
-            toast.error(err?.data.message || "Invalid credentials");
+            if (from) {
+                router.push(from);
+            } else {
+                router.push("/marketplace");
+            }
+
+            toast.success("Login successful");
+
+            setIsLoading(false);
+        } catch (error: any) {
+            setIsLoading(false);
+            // setErrorMessage(error.response.data.message);
         }
     };
 
@@ -110,7 +125,7 @@ const LoginForm = () => {
                                 Log in
                             </Button>
                             <h3 className="text-xl font-bold">Don’t have an account?
-                                <Link href="/auth/sign-up" className="text-primary"> Sign Up</Link>
+                                <Link href="/auth" className="text-primary"> Sign Up</Link>
                             </h3>
                         </div>
                     </form>
