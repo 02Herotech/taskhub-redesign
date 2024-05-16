@@ -609,7 +609,7 @@ const AddTaskForm: React.FC = () => {
     }
   };
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center mt-20">
+    <div className="flex min-h-screen flex-col items-center justify-center p-20">
       <Head>
         <title>TaskHub | Add Task</title>
       </Head>
