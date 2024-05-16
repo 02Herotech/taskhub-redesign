@@ -1,7 +1,7 @@
 "use client"
 
 import Button from "@/components/global/Button";
-import { useRouter, usePathname, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import "react-phone-number-input/style.css";
 import React, { useEffect, useRef, useState } from "react";
@@ -12,15 +12,17 @@ const PasswordConfirmationForm = ({ email }: { email: string }) => {
     const [otp, setOtp] = useState(new Array(6).fill(""));
     const router = useRouter()
     const [isLoading, setIsLoading] = useState(false);
-    const [isLoading2, setIsLoading2] = useState(false);
 
-    const baseUrl = process.env.NEXT_PUBLIC_API_URL;
+    const token = otp.join("");
+
+    const isDisabled = otp.includes("");
 
     const requestOTP = async (e: any) => {
+        e.preventDefault();
         try {
             setIsLoading(true);
             const response = await axios.post(
-                `${process.env.NEXT_PUBLIC_API_URL}/user/forgot-password`, { email }
+                `${process.env.NEXT_PUBLIC_API_URL}/user/forgot-password/verify-code?email=${email}&token=${token}`
             );
 
             if (response.status == 200) {
@@ -29,8 +31,9 @@ const PasswordConfirmationForm = ({ email }: { email: string }) => {
                 toast.success("OTP verified successfully");
             }
         } catch (err: any) {
+            console.log(err)
             setIsLoading(false);
-            toast.error(err?.data.message);
+            toast.error(err?.response.data.message);
         }
     };
 
@@ -42,20 +45,23 @@ const PasswordConfirmationForm = ({ email }: { email: string }) => {
     // };
 
     const resendOtp = async (): Promise<void> => {
-        // try {
-        //     setIsLoading(true);
-        //     const response = await axios.post(
-        //         `${process.env.NEXT_PUBLIC_API_URL}/user/forgot-password`,{email}
-        //     );
+        try {
+            setIsLoading(true);
+            const response = await axios.post(
+                `${process.env.NEXT_PUBLIC_API_URL}/user/forgot-password`,
+                {
+                    email
+                }
+            );
 
-        //     if (response.status == 200) {
-        //         router.push(`/auth/reset-password?email=${email}`);
-        //         setIsLoading(false);
-        //     }
-        // } catch (err: any) {
-        //     setIsLoading(false);
-        //     toast.error(err?.data.message);
-        // }
+            if (response.status == 200) {
+                toast.success(response.data.message);
+                setIsLoading(false);
+            }
+        } catch (err: any) {
+            setIsLoading(false);
+            toast.error(err?.data.message);
+        }
     };
 
     const useInputRefs = (length: number) => {
@@ -71,7 +77,6 @@ const PasswordConfirmationForm = ({ email }: { email: string }) => {
     };
 
     const inputRefs = useInputRefs(6);
-
 
     const handleChange = (element: any, index: any) => {
         if (isNaN(element.value)) return false;
@@ -134,10 +139,10 @@ const PasswordConfirmationForm = ({ email }: { email: string }) => {
 
                     <form onSubmit={requestOTP} className='font-satoshi'>
                         <div>
-                            <span className='w-full flex items-center space-x-2 text-sm text-left leading-5 mb-2'>
+                            <span className='w-full flex items-center text-sm text-left leading-5 mb-2'>
                                 <label htmlFor="" className='capitalize text-[#5B5B66]'>Enter verification code</label>
                             </span>
-                            <div className="flex items-center justify-center space-x-4 pb-8">
+                            <div className="flex items-center space-x-4 pb-8">
                                 {otp.map((data, index) => (
                                     <input
                                         type="text"
@@ -150,7 +155,7 @@ const PasswordConfirmationForm = ({ email }: { email: string }) => {
                                         onKeyDown={(event) => handleKeyDown(event, index)}
                                         ref={inputRefs.current[index]}
                                         onPaste={handlePaste}
-                                        className="border border-[#E9ECF1] p-4 w-full rounded-xl text-center text-lg font-bold outline-none flex justify-center"
+                                        className="border border-[#E9ECF1] size-[35px] lg:size-[70px] shadow-md rounded-xl text-center text-lg font-bold outline-none flex justify-center"
                                     />
                                 ))}
                             </div>
@@ -159,13 +164,14 @@ const PasswordConfirmationForm = ({ email }: { email: string }) => {
                             <Button
                                 type='submit'
                                 loading={isLoading}
+                                disabled={isDisabled}
                                 className='w-full lg:w-[170px] rounded-full font-normal'
                             >
                                 Verify
                             </Button>
-                            <h3 className="text-xl font-bold">Haven’t gotten the code?
-                                <Button theme='plain' onClick={() => resendOtp()} className="text-primary"> Resend code</Button>
-                            </h3>
+                            <div className="text-xl font-bold">Haven’t gotten the code?
+                                <Button theme='plain' onClick={() => resendOtp()} className="text-primary">Resend code</Button>
+                            </div>
                         </div>
                     </form>
                 </div>

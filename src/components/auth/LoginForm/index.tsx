@@ -34,6 +34,9 @@ const LoginForm = () => {
 
     const from = searchParams.get("from");
 
+    const { data: session } = useSession();
+    console.log(session)
+
     /* Handle submit */
     const onSubmit: SubmitHandler<SignInRequest> = async (payload) => {
         try {
@@ -44,21 +47,22 @@ const LoginForm = () => {
                 password: payload.password,
             });
 
-            if (response?.ok) {
-                if (from) {
-                    router.push(from);
-                }
-                else {
-                    router.push("/dashboard");
-                }
-            }
-            
+            // if (response?.ok) {
+            //     if (from) {
+            //         router.push(from);
+            //     }
+            //     else {
+            //         router.push("/dashboard");
+            //     }
+            // }
+
             console.log(response)
+
             setIsLoading(false)
         } catch (err: any) {
-            console.log(err)
             setIsLoading(false)
-            toast.error(err || "Something went wrong");
+            toast.error(err?.data.message);
+            // toast.error(err || "Something went wrong");
         }
     };
 
