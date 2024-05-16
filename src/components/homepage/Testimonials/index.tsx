@@ -11,8 +11,8 @@ const Testimonials = () => {
             <div className="lg:flex lg:justify-between lg:items-start  w-full hidden  ">
                 <div className=" w-[570px] flex flex-col space-y-14">
                     <div>
-                        <h1 className={`font-SatoshiBold text-[40px]`}>Testimonials</h1>
-                        <p className="text-[35px] font-SatoshiMedium ">Our Customer Says</p>
+                        <h1 className={`font-[600] text-[40px]`}>Testimonials</h1>
+                        <p className="text-[35px] font-[400] ">Our Customer Says</p>
 
                     </div>
                     <TestimonialSlider />

@@ -58,8 +58,8 @@ const SPHomepage = () => {
 
                 <div className="lg:hidden ">
                     <div className="  space-y-3 text-center mb-5">
-                        <h1 className="text-[24px] font-bold">SERVICE PROVIDERS</h1>
-                        <h4 className="text-[16px] leading-tight">
+                        <h1 className="text-[24px] font-extrabold">SERVICE PROVIDERS</h1>
+                        <h4 className="text-[16px] leading-tight font-bold">
                             Our service provider gives you Quality <br />
                             you Expect, the service you Deserve!
                         </h4>
@@ -77,8 +77,8 @@ const SPHomepage = () => {
                 <div className="hidden lg:flex flex-col space-y-7 lg:w-[600px]">
                     <div className="ml-16 flex flex-col space-y-7">
                         <div className="hidden lg:flex flex-col space-y-3">
-                            <h1 className="text-[40px] font-bold font-SatoshiBlack">SERVICE PROVIDERS</h1>
-                            <h4 className="text-[25px] leading-tight font-SatoshiBold">
+                            <h1 className="text-[40px] font-extrabold">SERVICE PROVIDERS</h1>
+                            <h4 className="text-[25px] leading-tight font-bold">
                                 Our service provider gives you Quality <br />
                                 you Expect, the service you Deserve!
                             </h4>
@@ -127,7 +127,7 @@ const SPHomepage = () => {
                         <span className="hidden lg:block h-[2px] w-full bg-black"></span>
                     </div>
 
-                    {/* <button className="hover:text-[#FE9B07]">
+                    <button className="hover:text-[#FE9B07]">
                         {session?.user?.user?.roles[0] === "CUSTOMER" ? (
                             <div
                                 onClick={handleBecomeSP}
@@ -149,7 +149,7 @@ const SPHomepage = () => {
                                 </span>
                             </Link>
                         )}
-                    </button> */}
+                    </button>
                 </div>
 
                 <div className="lg:hidden flex flex-col space-y-7 mt-10">
@@ -197,7 +197,7 @@ const SPHomepage = () => {
                     </div>
 
 
-                    {/* <button className="hover:text-[#FE9B07]">
+                    <button className="hover:text-[#FE9B07]">
                         {session?.user?.user?.roles[0] === "CUSTOMER" ? (
                             <div
                                 onClick={handleBecomeSP}
@@ -219,7 +219,7 @@ const SPHomepage = () => {
                                 </span>
                             </Link>
                         )}
-                    </button> */}
+                    </button>
                 </div>
             </div>
         </div>
