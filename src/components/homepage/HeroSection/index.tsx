@@ -113,17 +113,17 @@ const HeroSection = () => {
           <div className={`flex lg:w-[45%] flex-col justify-around text-black `}>
             <div className={`flex flex-col`}>
               <h1
-                className={`mb-5 lg:mt-[3rem] text-center lg:text-left lg:text-[50px] text-[35px] font-[400] leading-tight lg:w-[500px] w-full font-SatoshiBold`}
+                className={`mb-5 lg:mt-[3rem] text-center lg:text-left lg:text-[50px] text-[35px] font-[600] leading-tight lg:w-[500px] w-full font-clashDisplay`}
               >
                 Get Quick
                 <br />
-                And <span className={`font-bold text-primary  bg-gradient-to-b from-[#1612C1] to-[#2E095DF2] via-[#32204A59] bg-clip-text text-transparent`}>Efficient</span> <br/> Service
+                And <span className={`font-[800] text-primary  bg-gradient-to-b from-[#1612C1] to-[#2E095DF2] via-[#32204A59] bg-clip-text text-transparent`}>Efficient</span> <br/> Service
   
               </h1>
   
   
   
-              <p className={` text-center lg:text-left lg:w-[400px] font-SatoshiMedium lg:text-[20px] text-[15px] text-[#190E3F] `}
+              <p className={` text-center lg:text-left lg:w-[400px] font-[500] lg:text-[20px] text-[15px] text-[#190E3F] `}
              >
                 Our user-friendly platform ensures a seamless
                 experience, allowing you to effortlessly find,
@@ -135,7 +135,7 @@ const HeroSection = () => {
             <div className="flex lg:flex-col flex-col-reverse items-center justify-center lg:justify-start lg:items-start">
               <div className={`lg:my-10 my-5  flex items-center justify-center lg:justify-start`}>
                 <Link href="/auth/">
-                  <button className="h-[40px] lg:w-[180px] w-[250px] rounded-[50px] border-none  bg-primary text-[12px] lg:text-[16px]  text-white hover:bg-purpleHover">
+                  <button className="h-[40px] lg:w-[180px] w-[250px] rounded-[50px] border-none  bg-primary text-[12px] lg:text-[16px]  text-white hover:bg-[#25135f]">
                     Get Started
                   </button>
                 </Link>
@@ -188,11 +188,6 @@ const HeroSection = () => {
                     <Image src={icon3} width={15} alt="" className=" lg:hidden"></Image>
                   </span>
   
-  
-  
-                  {/* <span className="absolute right-4 top-[3px] text-[#FE9B07]">
-                    <Image src={icon3} width={25} alt=""></Image>
-                  </span> */}
                 </div>
               </div>
             </div>

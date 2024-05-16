@@ -45,7 +45,7 @@ const Newsletter = () => {
                 
                 <form className={`w-[320px] flex items-center -space-x-5 `} onSubmit={onSubmit}>
                     <input type="email" placeholder="Your Email..." className={`px-5 text-left  text-[12px] text-[#381F8C] outline-none h-[36px] w-[250px] bg-white rounded-xl `} value={email} onChange={handleEmailChange} />
-                    <button className={`bg-primary hover:bg-purple5 h-[35px] flex items-center justify-center text-white text-[30px] w-[50px] rounded-[18px] ${isAllFieldsFilled() ? '' : 'opacity-50'}`} type='submit'
+                    <button className={`bg-primary hover:bg-purple5 h-[35px] flex items-center justify-center text-white text-[30px] w-[50px] rounded-[18px] ${isAllFieldsFilled() ? '' : 'opacity-80'}`} type='submit'
                         disabled={!isAllFieldsFilled()} >
                         <MdKeyboardArrowRight />
                     </button>

@@ -12,13 +12,10 @@ const MobileFooter = () => {
                     label: "About Us",
                     url: "/about",
                 },
+              
                 {
-                    label: "Companies",
-                    url: "/companies",
-                },
-                {
-                    label: "Pricing",
-                    url: "/pricing",
+                    label: "Policy",
+                    url: "/policy",
                 }
 
             ],
@@ -48,7 +45,7 @@ const MobileFooter = () => {
     ];
 
     const links2 = [{
-        groupName: "Services",
+        groupName: "Marketplace",
         links: [
             {
                 url: "/services/automotive",
@@ -96,9 +93,11 @@ const MobileFooter = () => {
                     </Link>
                 </div>
                 <div className={` text-[14px] text-primary pl-[5px] text-left font-semibold`}>
-                    <h5>
-                        Online platform that connects Service Provider  with Customers who are seeking various services. The platform offers a wide range of services.
-                    </h5>
+                    <p>
+                    Need Help? If you have any questions or encounter issues, our support team is here to assist you. Reach out to us at info@taskhub.org.au
+Stay Connected: Follow us on Instagram, facebook, and X for updates, tips, and community discussions.
+Thank you for choosing TaskHub! We look forward to enhancing your user experience.
+                    </p>
                 </div>
 
             </div>
