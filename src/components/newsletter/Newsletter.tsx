@@ -39,7 +39,7 @@ const Newsletter = () => {
 
             {submitted ? 
                 <div className={`flex items-center ${styles.animation}`}>
-                    <span className='text-md text-purpleBase'><AiOutlineCheckCircle/></span>
+                    <span className='text-md text-primary'><AiOutlineCheckCircle/></span>
                     <p className='text-[12px] ml-2'>Thank you for Subscribing</p>
                 </div> :
                 
