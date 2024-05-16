@@ -1,60 +1,129 @@
+"use client"
+
 import Button from '@/components/global/Button'
-import React from 'react'
 import { HiOutlineLocationMarker } from 'react-icons/hi'
-import { FiCalendar } from "react-icons/fi";
+import { FiCalendar, FiClock } from "react-icons/fi";
 import Image from 'next/image';
 import { FaChevronLeft } from 'react-icons/fa6';
 import Link from 'next/link';
+import { useGetTaskByIdQuery } from '@/services/tasks';
+import { formatAmount } from '@/lib/utils';
 
-const TaskDetailsPage = () => {
-    return (
-        <section className="pt-14 container">
-            <div className="space-y-7 lg:space-y-10">
-                <Link href="/explore" className="flex items-center space-x-5 lg:space-x-10 text-primary ">
-                    <FaChevronLeft />
-                    <h2 className='font-bold text-lg lg:text-2xl font-clashDisplay'>Job Details</h2>
-                </Link>
-                <hr />
-                <div className='flex items-center justify-between'>
-                    <Button theme="secondary" className="px-5 h-[24px] lg:h-[49px] rounded-lg lg:rounded-2xl text-white font-bold bg-tc-orange flex items-center justify-center">
-                        Budget: $3000
-                    </Button>
-                    <div className="flex items-center">
-                        <div className="w-6 h-6 rounded-full border mr-3 border-[#34A853] flex items-center justify-center">
-                            <div className="w-3 h-3 rounded-full bg-[#34A853] p-1" />
-                        </div>
-                        <p className='text-sm font-bold'>
-                            Available
-                        </p>
-                    </div>
-                </div>
-                <h2 className="text-lg lg:text-[32px] text-primary font-bold">Plumber Service Needed  at
-                    Office Kitchen
-                </h2>
-                <div className="flex items-center space-x-2 w-full text-primary">
-                    <HiOutlineLocationMarker className="h-6 w-6 font-bold" />
-                    <h5 className="max-lg:text-[9px] text-[15px] lg:text-xl">New Sdyney land</h5>
-                </div>
-                <div className="space-y-3">
-                    <h2 className='text-xs lg:text-2xl text-primary'>Description</h2>
-                    <p className='text-xs lg:text-xl text-status-darkViolet'>We are currently experiencing issues with the pipes in our office and are in need of professional plumbing services.</p>
-                </div>
-                <div className="">
-                    <h4 className='text-xs lg:text-xl text-dark font-medium mb-2'>Date</h4>
-                    <div className="flex items-center space-x-3">
-                        <FiCalendar className="h-6 w-6 font-bold text-tc-orange" />
-                        <div className="max-lg:text-xs ">
-                            <h5 className="font-medium text-primary">TO BE DONE ON</h5>
-                            <h5>Before Mon, 22 July (Midday) (10am - 2pm)</h5>
-                        </div>
-                    </div>
-                </div>
-                <h2 className='text-primary font-bold text-lg lg:text-2xl'>Reference Images</h2>
-                <Image src="/assets/images/task.jpg" width={200} height={125} alt="Explore task" />
-                <Button className='rounded-full max-lg:text-sm'>
-                    Make an offer
-                </Button>
+const TaskDetailsPage = ({ params }: { params: { id: string } }) => {
+
+    const id = params.id;
+    const { data: task, isLoading } = useGetTaskByIdQuery(id as unknown as number);
+
+    if (!task) {
+        return (
+            <div className="w-full flex items-center justify-center h-[full]">
+                <Image src="/assets/images/marketplace/taskhub-newloader.gif" alt="loader" height={300} width={300} />
             </div>
+        )
+    }
+
+    const availability = task?.active ? "Available" : "Unavailable";
+    const dateArray = task?.postedAt;
+    const date = new Date(dateArray[0], dateArray[1] - 1, dateArray[2], dateArray[3], dateArray[4], dateArray[5], dateArray[6]);
+
+    // Define suffixes for day
+    const suffixes = ["st", "nd", "rd", "th"];
+    const day = date.getDate();
+    const daySuffix = suffixes[(day - 1) % 10] || suffixes[3];
+
+    // Define month names
+    const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+    const month = date.getMonth();
+    const monthName = monthNames[month];
+
+    // Define day of the week names
+    const dayOfWeekNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+    const dayOfWeek = date.getDay();
+    const dayOfWeekName = dayOfWeekNames[dayOfWeek];
+
+    const formattedDate = `On ${dayOfWeekName}, ${monthName} ${day}${daySuffix}`;
+
+    // Get hours and minutes
+    const hours = date.getHours();
+    const minutes = date.getMinutes();
+
+    // Construct the formatted time string
+    let formattedTime;
+    if (hours >= 12) {
+        formattedTime = `${hours === 12 ? 12 : hours - 12}:${(minutes < 10 ? '0' : '') + minutes} PM`;
+    } else {
+        formattedTime = `${hours === 0 ? 12 : hours}:${(minutes < 10 ? '0' : '') + minutes} AM`;
+    }
+
+    return (
+        <section className="py-28 container">
+            <Link href="/explore" className="flex items-center space-x-5 lg:space-x-10 text-primary mb-2">
+                <FaChevronLeft />
+                <h2 className='font-bold text-lg lg:text-2xl font-clashDisplay'>Job Details</h2>
+            </Link>
+            <hr />
+            {isLoading ? (
+                <div className="w-full flex items-center justify-center h-[full]">
+                    <Image src="/assets/images/marketplace/taskhub-newloader.gif" alt="loader" height={300} width={300} />
+                </div>
+            ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-10 space-x-5 w-full mt-10">
+                    <div className="space-y-7 lg:space-y-20">
+                        <h2 className="text-lg lg:text-[39px] font-satoshi text-status-darkViolet font-black">{task?.taskServiceName}
+                        </h2>
+                        <div className="space-y-3 text-xs lg:text-xl">
+                            <h2 className='text-primary underline font-bold'>Service purpose</h2>
+                            <p className='text-status-darkViolet'>{task?.taskDescription}</p>
+                        </div>
+                        <div className="space-y-8">
+                            <h4 className='text-lg lg:text-[39px] font-bold text-status-darkViolet'>Location</h4>
+                            <div className="flex items-center space-x-2 w-full text-[#716F78]">
+                                <HiOutlineLocationMarker className="h-6 w-6 font-bold" />
+                                <h5 className="max-lg:text-[9px] text-[15px] lg:text-xl">{task?.userAddress}</h5>
+                            </div>
+                        </div>
+
+                        <div className="space-y-8">
+                            <h4 className='text-lg lg:text-[39px] font-bold text-status-darkViolet'>Date and Time</h4>
+                            <div className="max-lg:text-xs flex items-center space-x-3 text-[#716F78]">
+                                <FiCalendar className="h-6 w-6" />
+                                <h5>{formattedDate}</h5>
+                            </div>
+                            <div className="max-lg:text-xs flex items-center space-x-3 text-[#716F78]">
+                                <FiClock className="h-6 w-6" />
+                                <h5>{formattedTime}</h5>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className='space-y-7 lg:space-y-10'>
+                        <div className="flex items-center space-x-3">
+                            <div className="w-6 h-6 rounded-full border mr-3 border-[#34A853] flex items-center justify-center">
+                                <div className="w-3 h-3 rounded-full bg-[#34A853] p-1" />
+                            </div>
+                            <p className='text-sm lg:text-[20px] font-bold'>
+                                {availability}
+                            </p>
+                        </div>
+                        <div className="px-5 py-10 rounded-[20px] border-primary border-2">
+                            <h2 className='text-lg lg:text-[39px] font-satoshi text-primary font-black'>Budget Details</h2>
+                            <div className="border-primary border-2 my-8" />
+                            <div className="flex items-center justify-between w-full">
+                                <h2 className='text-lg lg:text-[39px] font-satoshi text-primary font-bold'>
+                                    AUD {formatAmount(task?.customerBudget!, "USD", false)}
+                                </h2>
+                                <Button className='rounded-full text-sm lg:text-lg'>
+                                    Make an offer
+                                </Button>
+                            </div>
+                        </div>
+                        <h2 className='text-primary font-bold text-lg lg:text-2xl'>Reference Images</h2>
+                        <Image src={task?.taskImage || ""} width={200} height={100} alt="Explore task" className='object-cover' />
+
+                    </div>
+                </div>
+            )}
+
         </section>
     )
 }

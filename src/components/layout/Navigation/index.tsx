@@ -20,6 +20,11 @@ const Navigation = () => {
 
     const pathname = usePathname();
 
+    const handleLogout = async () => {
+        await signOut();
+        router.push("/auth/login");
+    } 
+
     const links = [
         {
             label: "Add a task",
@@ -42,15 +47,15 @@ const Navigation = () => {
     const dropdownItems = [
         {
             label: "Profile",
-            onClick: () => {},
+            onClick: () => { },
         },
         {
             label: "Settings",
-            onClick: () => {},
+            onClick: () => { },
         },
         {
             label: "Logout",
-            onClick: () => {},
+            onClick: handleLogout,
         },
     ];
 
@@ -114,7 +119,7 @@ const Navigation = () => {
                                 ))}
                             </div>
                         </Dropdown>
-                        
+
                     </div>
                 </div>
             </nav>

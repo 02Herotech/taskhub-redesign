@@ -15,6 +15,13 @@ export type SignUpResponse = {
     };
 }
 
+export type SignInRequest = {
+    emailAddress: string;
+    password: string;
+};
+
+export type SignInResponse = any;  
+
 export type InitiateResetPasswordRequest = {
     email: string;
 };
