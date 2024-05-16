@@ -53,6 +53,8 @@ const LoginForm = () => {
 
             console.log(result)
 
+            router.push("/marketplace")
+
             
         } catch (err: any) {
             toast.error(err?.data.message || "Invalid credentials");

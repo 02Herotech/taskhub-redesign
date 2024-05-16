@@ -7,6 +7,7 @@ import Dropdown from "@/components/global/Dropdown";
 import TaskCard from "../TaskCard";
 import loader from "../../../../../public/assets/images/marketplace/taskhub-newloader.gif";
 import Image from "next/image";
+import RangeSlider from "@/components/global/RangeSlider";
 
 const Tasks = () => {
     const [selectedFilters, setSelectedFilters] = useState({
@@ -67,6 +68,7 @@ const Tasks = () => {
 
     return (
         <section className="pt-7 container">
+            {/* <RangeSlider /> */}
             <div className="hidden lg:flex lg:space-x-4 lg:max-w-[810px] items-center gap-6">
                 <select id="category" name="category" onChange={(e) => handleFilterChange('category', e.target.value)} className="w-full border-2 border-primary text-primary font-semibold bg-[#F1F1F2] py-2 px-4 rounded-full">
                     <option value="">Category</option>
