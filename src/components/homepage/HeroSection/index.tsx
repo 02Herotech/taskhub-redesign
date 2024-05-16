@@ -117,7 +117,7 @@ const HeroSection = () => {
               >
                 Get Quick
                 <br />
-                And <span className={`font-[800] text-primary  bg-gradient-to-b from-[#1612C1] to-[#2E095DF2] via-[#32204A59] bg-clip-text text-transparent`}>Efficient</span> <br/> Service
+                And <span className={`font-[800] text-primary  bg-gradient-to-b from-[#1612C1] to-[#2E095DF2] via-[#32204A59] bg-clip-text text-transparent`}>Efficient</span> <br/> Services
   
               </h1>
   
@@ -193,14 +193,14 @@ const HeroSection = () => {
             </div>
           </div>
   
-          <div className="hidden lg:flex flex-col space-y-4">
+          <div className="hidden lg:flex flex-col xl:w-[50%] space-y-4">
             <div className=" justify-center flex xl:justify-between">
               <div className="flex flex-col">
                 <div className="">
                   <Image
                     src={images1[currentImageIndex1]}
                     alt=""
-                    className={`w-[270px] opacity-0 transition-opacity duration-1000 ease-in-out`}
+                    className={`w-[270px] xl:w-[310px] opacity-0 transition-opacity duration-1000 ease-in-out`}
                     onLoadingComplete={(image) =>
                       image.classList.remove("opacity-0")
                     }
@@ -210,7 +210,7 @@ const HeroSection = () => {
                   <Image
                     src={images3[currentImageIndex3]}
                     alt=""
-                    className={`w-[270px] opacity-0 transition-opacity duration-1000 ease-in-out`}
+                    className={`w-[270px] xl:w-[310px] opacity-0 transition-opacity duration-1000 ease-in-out`}
                     onLoadingComplete={(image) =>
                       image.classList.remove("opacity-0")
                     }
@@ -222,7 +222,7 @@ const HeroSection = () => {
                   <Image
                     src={images2[currentImageIndex2]}
                     alt=""
-                    className={`w-[270px] opacity-0 transition-opacity duration-1000 ease-in-out `}
+                    className={`w-[270px] xl:w-[310px] opacity-0 transition-opacity duration-1000 ease-in-out `}
                     onLoadingComplete={(image) =>
                       image.classList.remove("opacity-0")
                     }
@@ -232,7 +232,7 @@ const HeroSection = () => {
                   <Image
                     src={images4[currentImageIndex4]}
                     alt="img"
-                    className={`w-[270px] opacity-0 transition-opacity duration-1000 ease-in-out`}
+                    className={`w-[270px] xl:w-[310px] opacity-0 transition-opacity duration-1000 ease-in-out`}
                     onLoadingComplete={(image) =>
                       image.classList.remove("opacity-0")
                     }

@@ -15,10 +15,6 @@ const HomePage = () => {
       <SecurityFeatures />
     </div>
 
-    {/* <div>
-      <FeaturedSP />
-    </div> */}
-
     <div>
       <WelcomeAboard />
     </div>

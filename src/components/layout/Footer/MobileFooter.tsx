@@ -12,7 +12,7 @@ const MobileFooter = () => {
                     label: "About Us",
                     url: "/about",
                 },
-              
+
                 {
                     label: "Policy",
                     url: "/policy",
@@ -94,9 +94,9 @@ const MobileFooter = () => {
                 </div>
                 <div className={` text-[14px] text-primary pl-[5px] text-left font-semibold`}>
                     <p>
-                    Need Help? If you have any questions or encounter issues, our support team is here to assist you. Reach out to us at info@taskhub.org.au
-Stay Connected: Follow us on Instagram, facebook, and X for updates, tips, and community discussions.
-Thank you for choosing TaskHub! We look forward to enhancing your user experience.
+                        Need Help? If you have any questions or encounter issues, our support team is here to assist you. Reach out to us at info@taskhub.org.au
+                        Stay Connected: Follow us on Instagram, facebook, and X for updates, tips, and community discussions.
+                        Thank you for choosing TaskHub! We look forward to enhancing your user experience.
                     </p>
                 </div>
 
@@ -108,7 +108,7 @@ Thank you for choosing TaskHub! We look forward to enhancing your user experienc
                     {links1.map((group, index) => {
                         return (
                             <ul key={index} className='space-y-5'>
-                                <h3 className='text-primary text-base font-bold'>
+                                <h3 className='text-primary text-base font-extrabold'>
                                     {group.groupName}
                                 </h3>
                                 {group.links.map((link, index) => {
