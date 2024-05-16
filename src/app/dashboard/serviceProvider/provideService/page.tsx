@@ -196,65 +196,120 @@ const AddTaskForm: React.FC = () => {
   //   }
   // };
 
+  const [AiLoading, setAiLoading] = useState(false);
+
+  const AiGenerate = async () => {
+    setAiLoading(true);
+    try {
+      const url = `${process.env.NEXT_PUBLIC_API_URL}/listing/create-listing/category/content-generate?category=${encodeURIComponent(selectedSubCategory)}`;
+      const response = await axios.get(
+        url
+      );
+      if (response.status === 201) {
+        const aiGeneratedDescription = response.data;
+        setTask({ ...task, 'serviceDetails': aiGeneratedDescription });
+        setAiLoading(false);
+      }
+      if (response.status === 400) {
+      }
+    }
+    catch (err: any) { } finally {
+      setAiLoading(false);
+    }
+  };
+
+  const GeneratedAiDescription = () => (
+    <>
+      <div className="flex flex-col space-y-6 p-4 bg-[#381F8C] mb-5 rounded-[20px]">
+
+        <h2 className="text-lg font-extrabold text-white">
+          Get personalized AI help
+        </h2>
+        <p className="text-white">
+          Recommended for you , Get an automated content prompt for your
+          service description by clicking on{" "}
+          <span className="text-[#FE9B07]">Generate with AI</span>{" "}
+          button.
+        </p>
+        <Button
+          loading={AiLoading}
+          onClick={AiGenerate}
+          className={` text-10px p-2 px-4 transition-transform duration-300  w-[160px]
+   ease-in-out transform hover:scale-110 bg-[#333236] text-white rounded-[20px]
+  `}
+        >
+          Generate with AI
+        </Button>
+      </div>
+    </>
+  )
+
   const renderPage = () => {
     switch (currentPage) {
       case 1:
         return (
-          <div className="mb-10 grid items-center justify-center space-y-10 w-full">
-            <form className="space-y-10" onSubmit={nextPage}>
-              <div className="grid space-y-4">
-                <label>Choose the best category for your listing. </label>
-                <select
-                  value={selectedCategory}
-                  name="category"
-                  onChange={handleCategory}
-                  className="w-full cursor-pointer rounded-2xl bg-[#EBE9F4] p-3 text-[13px]  outline-none">
-                  <option value="">Category</option>
-                  <option className="text-[12px] text-[#221354]">
-                    Childcare and Babysitting
-                  </option>
-                </select>
-              </div>
-              <div className="grid space-y-4">
-                <label>Choose a subcategory. </label>
-                <select
-                  value={selectedSubCategory}
-                  name="subCategory"
-                  onChange={handleSubCategory}
-                  className="w-full cursor-pointer rounded-2xl bg-[#EBE9F4] p-3 text-[13px]  outline-none">
-                  <option value="">subcategory</option>
-                  <option className="text-[12px] text-[#221354]">Nanny</option>
-                </select>
-              </div>
-              <div className="grid space-y-4">
-                <label>
-                  Write a short title that accurately describes your service.{" "}
-                </label>
-                <input
-                  type="text"
-                  name="describe"
-                  value={task.describe}
-                  onChange={handleChange}
-                  placeholder="Casual Babysitting"
-                  className="rounded-2xl bg-[#EBE9F4] p-3 text-[13px]  outline-none"
-                />
-              </div>
-              <div className="grid space-y-3">
-                <label>Please give a detailed description of the service</label>
-                <textarea
-                  className="h-full rounded-2xl bg-[#EBE9F4] p-3 outline-none"
-                  placeholder="Casual Babysitting"
-                  name="serviceDetails"
-                  value={task.serviceDetails}
-                  onChange={handleChange}></textarea>
-              </div>
-              {Object.keys(error).map((key, index) => (
-                <div key={index}>{error[key]}</div>
-              ))}
-              <Button type="submit" className="w-24 rounded-2xl p-3 text-white">
-                Next
-              </Button>
-            </form>
+          <div className="lg:w-full  w-[80%] mx-auto">
+            {/* <div className="mb-10 grid items-center justify-center space-y-10 w-full"> */}
+            <div className="mb-10 space-y-10 ">
+              <form className="space-y-10 w-full" onSubmit={nextPage}>
+                <div className="grid space-y-4">
+                  <label>Choose the best category for your listing. </label>
+                  <select
+                    value={selectedCategory}
+                    name="category"
+                    onChange={handleCategory}
+                    className="w-full cursor-pointer rounded-2xl bg-[#EBE9F4] p-3 text-[13px]  outline-none">
+                    <option value="">Category</option>
+                    <option className="text-[12px] text-[#221354]">
+                      Childcare and Babysitting
+                    </option>
+                  </select>
+                </div>
+                <div className="grid space-y-4">
+                  <label>Choose a subcategory. </label>
+                  <select
+                    value={selectedSubCategory}
+                    name="subCategory"
+                    onChange={handleSubCategory}
+                    className="w-full cursor-pointer rounded-2xl bg-[#EBE9F4] p-3 text-[13px]  outline-none">
+                    <option value="">subcategory</option>
+                    <option className="text-[12px] text-[#221354]">Nanny</option>
+                  </select>
+                </div>
+              
+                <div className="grid space-y-4">
+                  <label>
+                    Write a short title that accurately describes your service.{" "}
+                  </label>
+                  <input
+                    type="text"
+                    name="describe"
+                    value={task.describe}
+                    onChange={handleChange}
+                    placeholder="Casual Babysitting"
+                    className="rounded-2xl bg-[#EBE9F4] p-3 text-[13px]  outline-none"
+                  />
+                </div>
+                <div className="lg:w-[390px]">
+                  <GeneratedAiDescription />
+                </div>
+                <div className="grid space-y-3">
+                  <label>Please give a detailed description of the service</label>
+                  <textarea
+                    className=" rounded-2xl bg-[#EBE9F4] p-3 outline-none h-[350px]"
+                    placeholder="Casual Babysitting"
+                    name="serviceDetails"
+                    value={task.serviceDetails}
+                    onChange={handleChange}></textarea>
+                </div>
+                {Object.keys(error).map((key, index) => (
+                  <div key={index}>{error[key]}</div>
+                ))}
+                <Button type="submit" className="w-24 rounded-2xl p-3 text-white">
+                  Next
+                </Button>
+              </form>
+            </div>
           </div>
         );
       case 2:
@@ -265,11 +320,10 @@ const AddTaskForm: React.FC = () => {
                 <h2>Choose the pricing plans.</h2>
                 <div className="grid space-y-4 text-[13px] text-[#221354]">
                   <input
-                    className={`rounded-2xl ${
-                      activePlanIndex === 0
-                        ? " text-status-darkViolet p-1 text-lg bg-transparent disabled"
-                        : "bg-[#EBE9F4] hover:bg-status-darkViolet hover:text-white p-4 "
-                    } outline-none text-left placeholder:text-status-darkViolet hover:placeholder:text-white`}
+                    className={`rounded-2xl ${activePlanIndex === 0
+                      ? " text-status-darkViolet p-1 text-lg bg-transparent disabled"
+                      : "bg-[#EBE9F4] hover:bg-status-darkViolet hover:text-white p-4 "
+                      } outline-none text-left placeholder:text-status-darkViolet hover:placeholder:text-white`}
                     name="physical"
                     onClick={() => handlePlan(0)}
                     placeholder="Plan 1"
@@ -306,11 +360,10 @@ const AddTaskForm: React.FC = () => {
                     </div>
                   )}
                   <input
-                    className={`rounded-2xl ${
-                      activePlanIndex === 1
-                        ? " text-status-darkViolet p-1 text-lg bg-transparent"
-                        : "bg-[#EBE9F4] hover:bg-status-darkViolet hover:text-white p-4"
-                    } outline-none text-left placeholder:text-status-darkViolet hover:placeholder:text-white`}
+                    className={`rounded-2xl ${activePlanIndex === 1
+                      ? " text-status-darkViolet p-1 text-lg bg-transparent"
+                      : "bg-[#EBE9F4] hover:bg-status-darkViolet hover:text-white p-4"
+                      } outline-none text-left placeholder:text-status-darkViolet hover:placeholder:text-white`}
                     name="physical"
                     onClick={() => handlePlan(1)}
                     placeholder="Plan 2"
@@ -347,11 +400,10 @@ const AddTaskForm: React.FC = () => {
                     </div>
                   )}
                   <input
-                    className={`rounded-2xl ${
-                      activePlanIndex === 2
-                        ? " text-status-darkViolet p-1 text-lg bg-transparent"
-                        : "bg-[#EBE9F4] hover:bg-status-darkViolet hover:text-white p-4"
-                    } outline-none text-left placeholder:text-status-darkViolet hover:placeholder:text-white`}
+                    className={`rounded-2xl ${activePlanIndex === 2
+                      ? " text-status-darkViolet p-1 text-lg bg-transparent"
+                      : "bg-[#EBE9F4] hover:bg-status-darkViolet hover:text-white p-4"
+                      } outline-none text-left placeholder:text-status-darkViolet hover:placeholder:text-white`}
                     name="physical"
                     onClick={() => handlePlan(2)}
                     placeholder="Plan 3"
@@ -393,11 +445,10 @@ const AddTaskForm: React.FC = () => {
                 <h2>Type of Service</h2>
                 <div className="flex space-x-4 text-[13px] text-[#221354]">
                   <input
-                    className={`rounded-2xl p-2 ${
-                      activeButtonIndex === 0
-                        ? "bg-status-darkViolet text-white"
-                        : "bg-[#EBE9F4] hover:bg-status-darkViolet hover:text-white placeholder:text-white"
-                    } outline-none cursor-pointer`}
+                    className={`rounded-2xl p-2 ${activeButtonIndex === 0
+                      ? "bg-status-darkViolet text-white"
+                      : "bg-[#EBE9F4] hover:bg-status-darkViolet hover:text-white placeholder:text-white"
+                      } outline-none cursor-pointer`}
                     name="physical"
                     onClick={() => handleClick(0)}
                     placeholder="Physical Services"
@@ -405,11 +456,10 @@ const AddTaskForm: React.FC = () => {
                     readOnly
                   />
                   <input
-                    className={`rounded-2xl p-2 ${
-                      activeButtonIndex === 1
-                        ? "bg-status-darkViolet text-white"
-                        : "bg-[#EBE9F4] hover:bg-status-darkViolet hover:text-white placeholder:text-white"
-                    } outline-none cursor-pointer`}
+                    className={`rounded-2xl p-2 ${activeButtonIndex === 1
+                      ? "bg-status-darkViolet text-white"
+                      : "bg-[#EBE9F4] hover:bg-status-darkViolet hover:text-white placeholder:text-white"
+                      } outline-none cursor-pointer`}
                     name="remote"
                     onClick={() => handleClick(1)}
                     placeholder="Remote Services"
@@ -691,18 +741,16 @@ const AddTaskForm: React.FC = () => {
       <div className="w-full space-y-3">
         <div className="flex justify-center space-x-5">
           <div
-            className={`${
-              currentPage === 1
-                ? "text-status-darkViolet"
-                : "text-status-darkViolet"
-            }`}>
+            className={`${currentPage === 1
+              ? "text-status-darkViolet"
+              : "text-status-darkViolet"
+              }`}>
             <p className="flex items-center gap-3">
               <span
-                className={`${
-                  currentPage === 1
-                    ? "bg-status-darkViolet text-white"
-                    : "bg-status-darkViolet text-white"
-                } rounded-xl border-none px-3 py-1`}>
+                className={`${currentPage === 1
+                  ? "bg-status-darkViolet text-white"
+                  : "bg-status-darkViolet text-white"
+                  } rounded-xl border-none px-3 py-1`}>
                 01
               </span>{" "}
               Services Description
@@ -712,18 +760,16 @@ const AddTaskForm: React.FC = () => {
             </p>
           </div>
           <div
-            className={`${
-              currentPage === 2 || currentPage === 3
-                ? "text-status-darkViolet"
-                : " text-[#716F78]"
-            }`}>
+            className={`${currentPage === 2 || currentPage === 3
+              ? "text-status-darkViolet"
+              : " text-[#716F78]"
+              }`}>
             <p className="flex items-center gap-3">
               <span
-                className={`${
-                  currentPage === 2 || currentPage === 3
-                    ? "bg-status-darkViolet text-white"
-                    : "bg-[#EAE9EB] text-[#716F78]"
-                } rounded-xl border-none px-3 py-1`}>
+                className={`${currentPage === 2 || currentPage === 3
+                  ? "bg-status-darkViolet text-white"
+                  : "bg-[#EAE9EB] text-[#716F78]"
+                  } rounded-xl border-none px-3 py-1`}>
                 02
               </span>{" "}
               Services Details
@@ -733,16 +779,14 @@ const AddTaskForm: React.FC = () => {
             </p>
           </div>
           <div
-            className={`${
-              currentPage === 3 ? "text-status-darkViolet" : " text-[#716F78]"
-            }`}>
+            className={`${currentPage === 3 ? "text-status-darkViolet" : " text-[#716F78]"
+              }`}>
             <p className="flex items-center gap-3">
               <span
-                className={`${
-                  currentPage === 3
-                    ? "bg-status-darkViolet text-white"
-                    : "bg-[#EAE9EB] text-[#716F78]"
-                } rounded-xl border-none px-3 py-1`}>
+                className={`${currentPage === 3
+                  ? "bg-status-darkViolet text-white"
+                  : "bg-[#EAE9EB] text-[#716F78]"
+                  } rounded-xl border-none px-3 py-1`}>
                 03
               </span>{" "}
               Image Upload
@@ -761,13 +805,12 @@ const AddTaskForm: React.FC = () => {
               {/* Progress bar */}
               <div className="h-1 w-2/3 overflow-hidden bg-[#EAE9EB]">
                 <div
-                  className={`h-full ${
-                    currentPage === 1
-                      ? "bg-status-darkViolet"
-                      : currentPage === 2
+                  className={`h-full ${currentPage === 1
+                    ? "bg-status-darkViolet"
+                    : currentPage === 2
                       ? "bg-status-darkViolet"
                       : "bg-status-darkViolet"
-                  }`}
+                    }`}
                   style={{ width: `${(currentPage / 3) * 100}%` }}
                 />
               </div>
@@ -785,7 +828,10 @@ const AddTaskForm: React.FC = () => {
                 Please fill out the information below to add a new listing.
               </p>
             </div>
-            <div className="mt-8 w-full">{renderPage()}</div>
+            <div className="mt-8 w-full ">
+              
+              
+              {renderPage()}</div>
           </div>
         </div>
       </div>
