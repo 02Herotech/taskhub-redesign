@@ -207,62 +207,15 @@ const AddTaskForm: React.FC = () => {
   // console.log(dateString);
   // console.log(timeString);
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    if (!task.budget) {
-      const err: any = {};
-      err.budget = "please fill in budget";
-      setErr(err);
-      return Object.keys(err).length === 0;
-    } else {
-      if (validateFields() && validateField1()) {
-        let finalTask = { ...task };
-
-        if (termsAccepted) {
-          finalTask = { ...finalTask, termsAccepted };
-        }
-
-        if (isOpen && activeButtonIndex === 1) {
-          finalTask = { ...finalTask, remoteService: isOpen };
-        } else {
-          finalTask = {
-            ...finalTask,
-            physicalService: isOpen,
-            address: task.address,
-            Suite: task.Suite,
-            postalCode: selectedCode,
-            city: selectedCity,
-            state: selectedState,
-          };
-        }
-        setTask({
-          serviceDetails: "",
-          physicalService: false,
-          remoteService: false,
-          termsAccepted: false,
-          picture: defaultImage,
-          workDaysTime: timeString,
-          workDaysDate: dateString,
-          address: "",
-          Suite: "",
-          postalCode: selectedCode,
-          city: selectedCity,
-          state: selectedState,
-          time: isSelectedTime,
-          budget: "",
-        });
-        setIsSuccessPopupOpen(true);
-        console.log(finalTask);
-      } else {
-        console.log(error);
-      }
-    }
-  };
-
   // const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
   //   event.preventDefault();
-  //   if (validateFields() && validateField1()) {
-  //     try {
+  //   if (!task.budget) {
+  //     const err: any = {};
+  //     err.budget = "please fill in budget";
+  //     setErr(err);
+  //     return Object.keys(err).length === 0;
+  //   } else {
+  //     if (validateFields() && validateField1()) {
   //       let finalTask = { ...task };
 
   //       if (termsAccepted) {
@@ -282,16 +235,14 @@ const AddTaskForm: React.FC = () => {
   //           state: selectedState,
   //         };
   //       }
-
-  //       await axios.post("/api/endpoint", finalTask);
   //       setTask({
   //         serviceDetails: "",
-  //         briefDescription: "",
   //         physicalService: false,
   //         remoteService: false,
   //         termsAccepted: false,
-  //         picture: null,
-  //         workDaysTime: "",
+  //         picture: defaultImage,
+  //         workDaysTime: timeString,
+  //         workDaysDate: dateString,
   //         address: "",
   //         Suite: "",
   //         postalCode: selectedCode,
@@ -300,14 +251,73 @@ const AddTaskForm: React.FC = () => {
   //         time: isSelectedTime,
   //         budget: "",
   //       });
-  //       setCurrentPage(1);
-  //setIsSuccessPopupOpen(true)
-  //     } catch (error) {
-  //       console.error("Error submitting form:", error);
-  //setIsSuccessPopupOpen(false)
+  //       setIsSuccessPopupOpen(true);
+  //       console.log(finalTask);
+  //     } else {
+  //       console.log(error);
   //     }
   //   }
   // };
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (!task.budget) {
+      const err: any = {};
+      err.budget = "please fill in budget";
+      setErr(err);
+      return Object.keys(err).length === 0;
+    } else {
+      if (validateFields() && validateField1()) {
+        try {
+          let finalTask = { ...task };
+
+          if (termsAccepted) {
+            finalTask = { ...finalTask, termsAccepted };
+          }
+
+          if (isOpen && activeButtonIndex === 1) {
+            finalTask = { ...finalTask, remoteService: isOpen };
+          } else {
+            finalTask = {
+              ...finalTask,
+              physicalService: isOpen,
+              address: task.address,
+              Suite: task.Suite,
+              postalCode: selectedCode,
+              city: selectedCity,
+              state: selectedState,
+            };
+          }
+
+          await axios.post(
+            "https://smp.jacinthsolutions.com.au/api/v1/task/post",
+            finalTask,
+          );
+          setTask({
+            serviceDetails: "",
+            physicalService: false,
+            remoteService: false,
+            termsAccepted: false,
+            picture: defaultImage,
+            workDaysTime: timeString,
+            workDaysDate: dateString,
+            address: "",
+            Suite: "",
+            postalCode: selectedCode,
+            city: selectedCity,
+            state: selectedState,
+            time: isSelectedTime,
+            budget: "",
+          });
+          setCurrentPage(1);
+          setIsSuccessPopupOpen(true);
+        } catch (error) {
+          console.error("Error submitting form:", error);
+          setIsSuccessPopupOpen(false);
+        }
+      }
+    }
+  };
 
   const renderPage = () => {
     switch (currentPage) {
@@ -598,7 +608,6 @@ const AddTaskForm: React.FC = () => {
         return null;
     }
   };
-
   return (
     <div className="flex min-h-screen flex-col items-center justify-center mt-20">
       <Head>
