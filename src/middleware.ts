@@ -16,16 +16,16 @@ export default withAuth(
         //     return null;
         // }
 
-        if (!isAuth) {
-            let from = req.nextUrl.pathname;
-            if (req.nextUrl.search) {
-                from += req.nextUrl.search;
-            }
+        // if (!isAuth) {
+        //     let from = req.nextUrl.pathname;
+        //     if (req.nextUrl.search) {
+        //         from += req.nextUrl.search;
+        //     }
 
-            return NextResponse.redirect(
-                new URL(`/auth/login?from=${encodeURIComponent(from)}`, req.url)
-            );
-        }
+        //     return NextResponse.redirect(
+        //         new URL(`/auth/login?from=${encodeURIComponent(from)}`, req.url)
+        //     );
+        // }
     },
     {
         callbacks: {

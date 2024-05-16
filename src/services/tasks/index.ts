@@ -52,11 +52,13 @@ export const task = createApi({
         baseUrl: process.env.NEXT_PUBLIC_API_URL + "/task",
         prepareHeaders: async (headers) => {
             const session = await getSession();
-            // const token = session?.accessToken;
+            //@ts-ignore
+            const token = session?.user?.jwtToken;
 
-            // if (token) {
-            headers.set("Authorization", `Bearer eyJhbGciOiJIUzI1NiJ9.eyJjbGFpbSI6eyJhdXRob3JpdHkiOiJTRVJWSUNFX1BST1ZJREVSIn0sInN1YiI6IjMwQG1haWxkcm9wLmNjIiwiaWF0IjoxNzE1NzU0MDMyLCJleHAiOjE3MTU3NjQ4MzJ9.Xy9uq6lGcquIg9u6S8kJELyhT7_QoKHOT4qqzQB1lJ0`);
-            // }
+            if (token) {
+                headers.set("Authorization", `Bearer ${token}`);
+                headers.set("Content-Type", "application/json-patch+json");
+            }
             return headers;
         },
     }),
@@ -65,7 +67,11 @@ export const task = createApi({
             query: (credentials) => getRequest(`/all-active-tasks/${credentials}`),
             providesTags: ["Task"],
         }),
+        getTaskById: builder.query<GetTasksResponse, string>({
+            query: (id) => getRequest(`/get-task/${id}`),
+            providesTags: ["Task"],
+        }),
     }),
 });
 
-export const { useGetActiveTasksQuery } = task;
+export const { useGetActiveTasksQuery, useGetTaskByIdQuery } = task;
