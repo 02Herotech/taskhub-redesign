@@ -44,7 +44,7 @@ const AddTaskForm: React.FC = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [task, setTask] = useState<FormData>({
         taskDescription: "",
-        taskImage: null,
+        taskImage: "",
         taskTime: "",
         taskDate: "",
         taskAddress: "",
@@ -191,7 +191,7 @@ const AddTaskForm: React.FC = () => {
     const handletaskImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
         const uploadedFile = event.target.files?.[0];
         if (uploadedFile) {
-            setTask({ ...task, taskImage: uploadedFile.name });
+            setTask({ ...task, taskImage: uploadedFile });
         }
     };
 
@@ -262,7 +262,7 @@ const AddTaskForm: React.FC = () => {
 
                     if (!task.taskImage) {
                         const defaultImage =
-                            "../../../../../public/assets/images/explore/google-map.png";
+                            "google-map.png";
                         setTask({ ...task, taskImage: defaultImage });
                     }
 
@@ -339,7 +339,7 @@ const AddTaskForm: React.FC = () => {
                                         <button
                                             className="rounded-lg bg-tc-gray px-3 py-1 text-white"
                                             onClick={() => {
-                                                setTask({ ...task, taskImage: null }); // Clear uploaded image
+                                                setTask({ ...task, taskImage: "" }); // Clear uploaded image
                                             }}>
                                             Remove
                                         </button>
