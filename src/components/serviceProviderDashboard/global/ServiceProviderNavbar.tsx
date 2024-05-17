@@ -53,16 +53,22 @@ const ServiceProviderNavbar = () => {
           Add a task
         </Link>
       </nav>
-      <div className="flex items-center gap-2">
-        <button className="rounded-lg p-2  hover:shadow-md">
+      <div className="flex items-center gap-4">
+        <button className="relative rounded-lg  p-2 hover:shadow-md ">
+          <span className=" absolute -right-0 -top-0 rounded-full bg-yellow-400 p-1 text-[8px] text-white ">
+            12
+          </span>
           <IoChatbubbleOutline size={20} />
         </button>
-        <button className="rounded-lg p-2  hover:shadow-md">
-          <BiBell size={20} />
+        <button className="relative rounded-lg  p-2 hover:shadow-md ">
+          <span className=" absolute -right-0 -top-0 rounded-full bg-yellow-400 p-1 text-[8px] text-white ">
+            12
+          </span>
+          <BiBell size={22} />
         </button>
         <Link
-          href="/service-provider/provider-profile"
-          className="flex items-center gap-2"
+          href="/service-provider/dashboard"
+          className="flex items-center gap-1"
         >
           <Image
             src="/assets/images/marketplace/singleTask/oluchi.png"
@@ -71,7 +77,7 @@ const ServiceProviderNavbar = () => {
             height={40}
             className="rounded-full"
           />
-          <IoTriangle className="rotate-[60deg]" size={16} />
+          <IoTriangle className="rotate-[60deg]" size={8} />
         </Link>
       </div>
     </header>
