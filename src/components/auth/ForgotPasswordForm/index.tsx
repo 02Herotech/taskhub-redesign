@@ -40,9 +40,9 @@ const ForgotPasswordForm = () => {
                 }
             );
             console.log(response);
-            console.log(response.status);
 
             if (response.status == 200) {
+                toast.success(response.data.message || "Email sent successfully");
                 router.push(`/auth/forgot-password/confirmation?${params}`);
                 setIsLoading(false);
             }

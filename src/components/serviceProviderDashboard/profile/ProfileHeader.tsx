@@ -20,19 +20,21 @@ const ProfileHeader = () => {
           className="rounded-full"
         />
         <div className="flex flex-col gap-2">
-          <h1 className="text-[#140B31]"> Welcome {userdata.name} </h1>
+          <h1 className="text-4xl font-bold text-[#140B31]">
+            Welcome {userdata.name}
+          </h1>
           <p className="text-[#140B31]"> {userdata.email} </p>
         </div>
       </div>
 
       <div className="flex flex-col items-end gap-4">
-        <button className="border-b text-sm text-[#381F8C] ">
+        <button className="border-b text-sm font-medium text-[#381F8C] ">
           Edit Account Details
         </button>
-        <p className="text-sm text-[#140B31]  ">
+        <p className="text-sm font-medium text-[#140B31] ">
           A member since {userdata.joinedDate}{" "}
         </p>
-        <p className="text-sm text-[#140B31] ">Location</p>
+        <p className="text-sm font-medium text-[#140B31] ">Location</p>
       </div>
     </header>
   );

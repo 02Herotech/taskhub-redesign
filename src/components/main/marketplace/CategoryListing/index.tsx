@@ -1,12 +1,10 @@
 "use client"
 
-import { useState, useEffect, use } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import Image from "next/image";
 import Link from "next/link";
 import { FaArrowRight, FaRegUser } from "react-icons/fa6";
-
-import loader from "../../../../../public/assets/images/marketplace/taskhub-newloader.gif";
 
 interface listingData {
     id: number;
@@ -187,7 +185,7 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
             {
                 isLoading ?
                     <div className="w-full flex items-center justify-center h-[300px] ">
-                        <Image src={loader} alt="loader" width={80} />
+                        <Image src="/public/assets/images/customer/task/Task management.svg" alt="loader" height={300} width={80} />
                     </div>
                     :
                     <div className="flex ">

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Head from "next/head";
 import Image from "next/image";
@@ -13,45 +13,54 @@ import { TiTick } from "react-icons/ti";
 import Img from "../../../../../public/assets/images/customer/task/Task management.svg";
 import Popup from "@/components/global/Popup";
 import Button from "@/components/global/Button";
+import { useSession } from "next-auth/react";
 
 interface Task {
-  serviceDetails: string;
-  physicalService: boolean;
-  remoteService: boolean;
-  termsAccepted: boolean;
-  picture?: File | defaultImage;
-  workDaysTime: string;
-  workDaysDate: string;
-  address: string;
+  taskDescription: string;
+  taskImage?: File | defaultImage | null;
+  taskTime: string;
+  taskDate: string;
+  taskAddress: string;
+  taskType: string;
   Suite: string;
   postalCode: string;
   city: string;
   state: string;
-  budget: string;
-  time: string;
+  customerBudget: string;
+  hubTime: string;
+}
+interface PostalCodeData {
+  name: string;
+  postcode: string;
+  state: {
+    name: string;
+    abbreviation: string;
+  };
+  locality: string;
+
 }
 
 type defaultImage = string;
 
 const AddTaskForm: React.FC = () => {
+  const session = useSession();
+  const token = session?.data?.user.accessToken;
   const [currentPage, setCurrentPage] = useState(1);
   const defaultImage =
     "../../../../../public/assets/images/explore/google-map.png";
   const [task, setTask] = useState<Task>({
-    serviceDetails: "",
-    physicalService: false,
-    remoteService: false,
-    termsAccepted: false,
-    picture: defaultImage,
-    workDaysTime: "",
-    workDaysDate: "",
-    address: "",
+    taskDescription: "",
+    taskImage: null,
+    taskTime: "",
+    taskDate: "",
+    taskAddress: "",
+    taskType: "",
     Suite: "",
     postalCode: "",
     city: "",
     state: "",
-    budget: "",
-    time: "",
+    customerBudget: "",
+    hubTime: "",
   });
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [selectedTime, setSelectedTime] = useState<Date | null>(null);
@@ -68,6 +77,29 @@ const AddTaskForm: React.FC = () => {
   const [error, setError] = useState<any>({});
   const [err, setErr] = useState<any>({});
   const [isSuccessPopupOpen, setIsSuccessPopupOpen] = useState(false);
+  const [postalCodeData, setPostalCodeData] = useState<PostalCodeData[]>([]);
+
+
+  useEffect(() => {
+    const fetchPostalCodeData = async () => {
+      try {
+        const response = await axios.get(
+          `https://smp.jacinthsolutions.com.au/api/v1/util/locations/search?postcode=${selectedCode}`
+        );
+        console.log(response.data);
+        setPostalCodeData(response.data as PostalCodeData[]);
+      } catch (error) {
+        console.error("Error fetching postal code data:", error);
+        setPostalCodeData([]);
+      }
+    };
+
+    if (selectedCode.length > 0) {
+      fetchPostalCodeData();
+
+    }
+  }, [selectedCode]);
+
 
   const validateFields = () => {
     const errors: any = {};
@@ -77,16 +109,14 @@ const AddTaskForm: React.FC = () => {
         errors.postalCode = "Please select postal code.";
       } else if (!selectedCity) {
         errors.city = "Please select city.";
-      } else if (!selectedState) {
-        errors.state = "Please select State/Territory.";
       }
-      if (!task.address || !task.Suite) {
-        errors.address = "Please enter address and suite number.";
+      if (!task.taskAddress || !task.Suite) {
+        errors.taskAddress = "Please enter taskAddress and suite number.";
       }
     } else if (activeButtonIndex === 0) {
       // Validation for remote service
-      if (!task.address || !task.Suite) {
-        errors.address = "Please enter address and suite number.";
+      if (!task.taskAddress || !task.Suite) {
+        errors.taskAddress = "Please enter taskAddress and suite number.";
       }
     }
     setErrors(errors);
@@ -95,14 +125,14 @@ const AddTaskForm: React.FC = () => {
 
   const validateField1 = () => {
     const error: any = {};
-    if (!task.serviceDetails) {
-      error.serviceDetails = "please write down a brief description";
+    if (!task.taskDescription) {
+      error.taskDescription = "please write down a brief description";
     }
 
     if (!selectedDate) {
-      error.workDaysTime = "please choose a Date";
+      error.taskTime = "please choose a Date";
     } else if (!selectedTime) {
-      error.workDaysDate = "please choose a Time";
+      error.taskDate = "please choose a Time";
     }
 
     if (termsAccepted) {
@@ -119,19 +149,19 @@ const AddTaskForm: React.FC = () => {
     setActiveButtonIndex(index);
     setIsOpen(true);
   };
-  const handleCode = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedValue = event.target.value;
-    setSelectedCode(selectedValue);
+
+
+  const handleCode = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSelectedCode(event.target.value);
   };
   const handleCity = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedValue = event.target.value;
     setSelectedCity(selectedValue);
   };
-  const handleState = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedValue = event.target.value;
-    setSelectedState(selectedValue);
-  };
-
+  // const handleState = (event: React.ChangeEvent<HTMLInputElement>) => {
+  //     setSelectedState(event.target.value);
+  //     console.log(event.target.value);
+  // };
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setTermsAccepted(event.target.checked);
     if (!event.target.checked) {
@@ -166,16 +196,13 @@ const AddTaskForm: React.FC = () => {
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     setTask({ ...task, [event.target.name]: event.target.value });
+    console.log()
   };
 
-  const handlePictureUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handletaskImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const uploadedFile = event.target.files?.[0];
     if (uploadedFile) {
-      setTask({ ...task, picture: uploadedFile });
-    } else {
-      const defaultImage =
-        "../../../../../public/assets/images/explore/google-map.png";
-      setTask({ ...task, picture: defaultImage });
+      setTask({ ...task, taskImage: uploadedFile });
     }
   };
 
@@ -204,66 +231,12 @@ const AddTaskForm: React.FC = () => {
   };
   const dateString = formatDateToString(selectedDate);
   const timeString = formatTimeToString(selectedTime);
-  // console.log(dateString);
-  // console.log(timeString);
-
-  // const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-  //   event.preventDefault();
-  //   if (!task.budget) {
-  //     const err: any = {};
-  //     err.budget = "please fill in budget";
-  //     setErr(err);
-  //     return Object.keys(err).length === 0;
-  //   } else {
-  //     if (validateFields() && validateField1()) {
-  //       let finalTask = { ...task };
-
-  //       if (termsAccepted) {
-  //         finalTask = { ...finalTask, termsAccepted };
-  //       }
-
-  //       if (isOpen && activeButtonIndex === 1) {
-  //         finalTask = { ...finalTask, remoteService: isOpen };
-  //       } else {
-  //         finalTask = {
-  //           ...finalTask,
-  //           physicalService: isOpen,
-  //           address: task.address,
-  //           Suite: task.Suite,
-  //           postalCode: selectedCode,
-  //           city: selectedCity,
-  //           state: selectedState,
-  //         };
-  //       }
-  //       setTask({
-  //         serviceDetails: "",
-  //         physicalService: false,
-  //         remoteService: false,
-  //         termsAccepted: false,
-  //         picture: defaultImage,
-  //         workDaysTime: timeString,
-  //         workDaysDate: dateString,
-  //         address: "",
-  //         Suite: "",
-  //         postalCode: selectedCode,
-  //         city: selectedCity,
-  //         state: selectedState,
-  //         time: isSelectedTime,
-  //         budget: "",
-  //       });
-  //       setIsSuccessPopupOpen(true);
-  //       console.log(finalTask);
-  //     } else {
-  //       console.log(error);
-  //     }
-  //   }
-  // };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (!task.budget) {
+    if (!task.customerBudget) {
       const err: any = {};
-      err.budget = "please fill in budget";
+      err.customerBudget = "please fill in customerBudget";
       setErr(err);
       return Object.keys(err).length === 0;
     } else {
@@ -272,44 +245,64 @@ const AddTaskForm: React.FC = () => {
           let finalTask = { ...task };
 
           if (termsAccepted) {
-            finalTask = { ...finalTask, termsAccepted };
+            finalTask = { ...finalTask };
+          }
+          if (termsAccepted) {
+            const hub = isSelectedTime
+            finalTask = { ...finalTask, hubTime: hub };
+          }
+          if (selectedTime && selectedDate) {
+            const date = dateString;
+            const time = timeString;
+            finalTask = { ...finalTask, taskDate: date, taskTime: time }
           }
 
           if (isOpen && activeButtonIndex === 1) {
-            finalTask = { ...finalTask, remoteService: isOpen };
+            const type = "REMOTE_TYPE"
+            finalTask = { ...finalTask, taskType: type };
           } else {
             finalTask = {
               ...finalTask,
-              physicalService: isOpen,
-              address: task.address,
-              Suite: task.Suite,
-              postalCode: selectedCode,
-              city: selectedCity,
-              state: selectedState,
+              taskType: "PHYSICAL_TYPE",
+              taskAddress: task.taskAddress,
+              // Suite: task.Suite,
+              // postalCode: selectedCode,
+              // city: selectedCity,
+              // state: selectedState,
             };
           }
 
+          if (!task.taskImage || null) {
+            const defaultImage =
+              "../../../../../public/assets/images/explore/google-map.png";
+            setTask({ ...task, taskImage: defaultImage });
+          }
+          console.log(finalTask);
           await axios.post(
             "https://smp.jacinthsolutions.com.au/api/v1/task/post",
             finalTask,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "application/json",
+              },
+            },
           );
           setTask({
-            serviceDetails: "",
-            physicalService: false,
-            remoteService: false,
-            termsAccepted: false,
-            picture: defaultImage,
-            workDaysTime: timeString,
-            workDaysDate: dateString,
-            address: "",
+            taskDescription: "",
+            taskImage: defaultImage,
+            taskTime: "",
+            taskDate: "",
+            taskType: "",
+            taskAddress: "",
             Suite: "",
             postalCode: selectedCode,
             city: selectedCity,
             state: selectedState,
-            time: isSelectedTime,
-            budget: "",
+            hubTime: "",
+            customerBudget: "",
           });
-          setCurrentPage(1);
+          console.log(finalTask);
           setIsSuccessPopupOpen(true);
         } catch (error) {
           console.error("Error submitting form:", error);
@@ -330,14 +323,14 @@ const AddTaskForm: React.FC = () => {
                 <textarea
                   className="h-full rounded-2xl bg-[#EBE9F4] p-3 outline-none"
                   placeholder="e.g, i need a junior league coach."
-                  name="serviceDetails"
-                  value={task.serviceDetails}
+                  name="taskDescription"
+                  value={task.taskDescription}
                   onChange={handleChange}></textarea>
               </div>
               <div className="grid space-y-3">
-                <label>Upload a picture (Optional)</label>
-                {/* Check if picture is uploaded */}
-                {task.picture ? (
+                <label>Upload a taskImage (Optional)</label>
+                {/* Check if taskImage is uploaded */}
+                {task.taskImage ? (
                   <div className="flex items-end justify-center space-x-2">
                     {/* Display a disabled input with message */}
                     <label
@@ -353,19 +346,19 @@ const AddTaskForm: React.FC = () => {
                         readOnly
                         disabled
                         className="hidden"
-                        onChange={handlePictureUpload}
+                        onChange={handletaskImageUpload}
                       />
                     </label>
                     <button
                       className="rounded-lg bg-tc-gray px-3 py-1 text-white"
                       onClick={() => {
-                        setTask({ ...task, picture: defaultImage }); // Clear uploaded image
+                        setTask({ ...task, taskImage: null }); // Clear uploaded image
                       }}>
                       Remove
                     </button>
                   </div>
                 ) : (
-                  // If no picture is uploaded, render the file input
+                  // If no taskImage is uploaded, render the file input
                   <label
                     htmlFor="file-upload"
                     className="flex h-48 w-1/2 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-tc-gray p-4">
@@ -378,14 +371,14 @@ const AddTaskForm: React.FC = () => {
                       type="file"
                       accept=".png, .jpg, .jpeg, .gif"
                       className="hidden"
-                      onChange={handlePictureUpload}
+                      onChange={handletaskImageUpload}
                     />
                   </label>
                 )}
               </div>
 
               <div className="space-y-5">
-                <label htmlFor="workDaysTime">
+                <label htmlFor="taskTime">
                   Set number(s) of working Days /Time:
                 </label>
                 <div className="flex space-x-3">
@@ -399,9 +392,9 @@ const AddTaskForm: React.FC = () => {
                       timeIntervals={15}
                       dateFormat="h:mm aa"
                       placeholderText="Choose Time"
-                      id="workDaysTime"
-                      name="workDaysTime"
-                      className="cursor-pointer rounded-2xl border border-tc-gray bg-[#EBE9F4] px-2 py-1 outline-none placeholder:text-[14px] hover:bg-purpleBase hover:placeholder:text-white"
+                      id="taskTime"
+                      name="taskTime"
+                      className="cursor-pointer rounded-2xl border hover:text-white border-tc-gray bg-[#EBE9F4] px-2 py-1 outline-none placeholder:text-[14px] hover:bg-status-darkViolet hover:placeholder:text-white"
                     />
                     <IoMdArrowDropdown className="absolute right-5 top-2 cursor-pointer text-status-darkViolet" />
                   </div>
@@ -412,9 +405,9 @@ const AddTaskForm: React.FC = () => {
                       dateFormat="MMMM d, yyyy"
                       minDate={new Date()}
                       placeholderText="Choose Date"
-                      id="workDaysDate"
-                      name="workDaysDate"
-                      className="cursor-pointer rounded-2xl border border-tc-gray bg-[#EBE9F4] px-2 py-1 outline-none placeholder:text-[14px] hover:bg-status-darkViolet hover:placeholder:text-white"
+                      id="taskDate"
+                      name="taskDate"
+                      className="cursor-pointer rounded-2xl border hover:text-white border-tc-gray bg-[#EBE9F4] px-2 py-1 outline-none placeholder:text-[14px] hover:bg-status-darkViolet hover:placeholder:text-white"
                     />
                     <IoMdArrowDropdown className="absolute right-5 top-2 text-status-darkViolet" />
                   </div>
@@ -436,12 +429,13 @@ const AddTaskForm: React.FC = () => {
                     <select
                       value={isSelectedTime}
                       onChange={handleTickChange}
-                      name="time"
+                      name="hubTime"
                       className="w-full rounded-2xl border border-tc-gray bg-[#EBE9F4] px-3 py-1 text-[14px] text-status-darkViolet   outline-none">
                       <option value="">Select Time Of The Day</option>
-                      <option>Morning, before 10am</option>
-                      <option>Afternoon, before 2pm</option>
-                      <option>Evening, before 7pm</option>
+                      <option value="MORNING_BEFORE_10AM">Morning, before 10am</option>
+                      <option value="MIDDAY_10AM_to_12PM">Midday, 10am to 12pm</option>
+                      <option value="AFTERNOON_12PM_to_2PM">Afternoon, 12pm to 2pm</option>
+                      <option value="EVENING_2PM_to_5PM">Evening, 2pm to 5pm</option>
                     </select>
                   </div>
                 )}
@@ -464,21 +458,19 @@ const AddTaskForm: React.FC = () => {
               <h2>Type of Service</h2>
               <div className="flex space-x-4 text-[13px] text-[#221354]">
                 <button
-                  className={`rounded-2xl p-2 ${
-                    activeButtonIndex === 0
-                      ? "bg-status-darkViolet text-white"
-                      : "bg-[#EBE9F4] hover:bg-status-darkViolet hover:text-white"
-                  } outline-none`}
+                  className={`rounded-2xl p-2 ${activeButtonIndex === 0
+                    ? "bg-status-darkViolet text-white"
+                    : "bg-[#EBE9F4] hover:bg-status-darkViolet hover:text-white"
+                    } outline-none`}
                   name="physical"
                   onClick={() => handleClick(0)}>
                   Physical Service
                 </button>
                 <button
-                  className={`rounded-2xl p-2 ${
-                    activeButtonIndex === 1
-                      ? "bg-status-darkViolet text-white"
-                      : "bg-[#EBE9F4] hover:bg-status-darkViolet hover:text-white"
-                  } outline-none`}
+                  className={`rounded-2xl p-2 ${activeButtonIndex === 1
+                    ? "bg-status-darkViolet text-white"
+                    : "bg-[#EBE9F4] hover:bg-status-darkViolet hover:text-white"
+                    } outline-none`}
                   name="remote"
                   onClick={() => handleClick(1)}>
                   Remote Service
@@ -497,13 +489,13 @@ const AddTaskForm: React.FC = () => {
               {isOpen && activeButtonIndex === 0 && (
                 <div className="space-y-10">
                   <div className="grid space-y-4">
-                    <label>Address(Street and Area)</label>
+                    <label>taskAddress(Street and Area)</label>
                     <input
                       type="text"
-                      name="address"
-                      value={task.address}
+                      name="taskAddress"
+                      value={task.taskAddress}
                       onChange={handleChange}
-                      placeholder="Enter your house/apartment address"
+                      placeholder="Enter your house/apartment taskAddress"
                       className="rounded-2xl bg-[#EBE9F4] p-3 text-[13px]  outline-none"
                     />
                   </div>
@@ -521,43 +513,41 @@ const AddTaskForm: React.FC = () => {
                   <div className="flex space-x-4">
                     <div className="grid space-y-4">
                       <label>Postal code</label>
-                      <select
+                      <input
                         value={selectedCode}
                         onChange={handleCode}
                         name="postalCode"
-                        className="w-[155px] cursor-pointer rounded-2xl bg-[#EBE9F4] p-3 text-[13px]  outline-none">
-                        <option value="">postal code</option>
-                        <option className="text-[12px] text-[#221354]">
-                          4032
-                        </option>
-                      </select>
+                        className="w-[155px] cursor-pointer rounded-2xl bg-[#EBE9F4] p-3 text-[13px]  outline-none" />
                     </div>
+
                     <div className="grid space-y-4">
                       <label>City/Suburb</label>
                       <select
                         value={selectedCity}
-                        name="city"
                         onChange={handleCity}
-                        className="w-[155px] cursor-pointer rounded-2xl bg-[#EBE9F4] p-3 text-[13px]  outline-none">
-                        <option value="">City/Suburb</option>
-                        <option className="text-[12px] text-[#221354]">
-                          flag
-                        </option>
+                        name="city"
+                        id="city"
+                        className="w-[155px] cursor-pointer rounded-2xl bg-[#EBE9F4] p-3 text-[13px] outline-none"
+                      >
+                        <option value="">Select City/Suburb</option>
+                        {postalCodeData.map((data, index) => (
+                          <option key={index} value={data.name}>
+                            {data.name}
+                          </option>
+                        ))}
                       </select>
                     </div>
                   </div>
                   <div className="grid space-y-4">
                     <label>State/Territory</label>
-                    <select
-                      value={selectedState}
-                      onChange={handleState}
+                    <input
+                      value={postalCodeData.length > 0 ? postalCodeData[0].state.name : ''}
+                      onChange={handleChange}
                       name="state"
-                      className="w-full cursor-pointer rounded-2xl bg-[#EBE9F4] p-3 text-[13px] outline-none">
-                      <option value="">State/Territory</option>
-                      <option className="text-[12px] text-[#221354]">
-                        Queensland
-                      </option>
-                    </select>
+                      id="state"
+                      disabled
+                      className="w-full cursor-pointer rounded-2xl bg-[#EBE9F4] p-3 text-sm outline-none"
+                    />
                   </div>
                 </div>
               )}
@@ -566,7 +556,7 @@ const AddTaskForm: React.FC = () => {
                   <div key={index}>{errors[key]}</div>
                 ))}
               </div>
-              <div className="flex space-x-4">
+              <div className="flex justify-between">
                 <Button type="button" theme="outline" onClick={prevPage}>
                   Previous
                 </Button>
@@ -580,11 +570,11 @@ const AddTaskForm: React.FC = () => {
           <div className="mb-10 space-y-10">
             <form onSubmit={handleSubmit} className="space-y-10">
               <div className="grid space-y-4">
-                <label>Budget</label>
+                <label>customerBudget</label>
                 <input
                   type="text"
-                  name="budget"
-                  value={task.budget}
+                  name="customerBudget"
+                  value={task.customerBudget}
                   onChange={handleChange}
                   placeholder="$500"
                   className="rounded-2xl bg-[#EBE9F4] p-3 text-[13px] outline-none"
@@ -609,25 +599,23 @@ const AddTaskForm: React.FC = () => {
     }
   };
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center mt-20">
+    <div className="flex min-h-screen flex-col items-center justify-center p-20">
       <Head>
         <title>TaskHub | Add Task</title>
       </Head>
       <div className="w-full space-y-3">
         <div className="flex justify-center space-x-5">
           <div
-            className={`${
-              currentPage === 1
-                ? "text-status-darkViolet"
-                : "text-status-darkViolet"
-            }`}>
+            className={`${currentPage === 1
+              ? "text-status-darkViolet"
+              : "text-status-darkViolet"
+              }`}>
             <p className="flex items-center gap-3">
               <span
-                className={`${
-                  currentPage === 1
-                    ? "bg-status-darkViolet text-white"
-                    : "bg-status-darkViolet text-white"
-                } rounded-xl border-none px-3 py-1`}>
+                className={`${currentPage === 1
+                  ? "bg-status-darkViolet text-white"
+                  : "bg-status-darkViolet text-white"
+                  } rounded-xl border-none px-3 py-1`}>
                 01
               </span>{" "}
               Services Details
@@ -637,18 +625,16 @@ const AddTaskForm: React.FC = () => {
             </p>
           </div>
           <div
-            className={`${
-              currentPage === 2 || currentPage === 3
-                ? "text-status-darkViolet"
-                : " text-[#716F78]"
-            }`}>
+            className={`${currentPage === 2 || currentPage === 3
+              ? "text-status-darkViolet"
+              : " text-[#716F78]"
+              }`}>
             <p className="flex items-center gap-3">
               <span
-                className={`${
-                  currentPage === 2 || currentPage === 3
-                    ? "bg-status-darkViolet text-white"
-                    : "bg-[#EAE9EB] text-[#716F78]"
-                } rounded-xl border-none px-3 py-1`}>
+                className={`${currentPage === 2 || currentPage === 3
+                  ? "bg-status-darkViolet text-white"
+                  : "bg-[#EAE9EB] text-[#716F78]"
+                  } rounded-xl border-none px-3 py-1`}>
                 02
               </span>{" "}
               Location
@@ -658,19 +644,17 @@ const AddTaskForm: React.FC = () => {
             </p>
           </div>
           <div
-            className={`${
-              currentPage === 3 ? "text-status-darkViolet" : " text-[#716F78]"
-            }`}>
+            className={`${currentPage === 3 ? "text-status-darkViolet" : " text-[#716F78]"
+              }`}>
             <p className="flex items-center gap-3">
               <span
-                className={`${
-                  currentPage === 3
-                    ? "bg-status-darkViolet text-white"
-                    : "bg-[#EAE9EB] text-[#716F78]"
-                } rounded-xl border-none px-3 py-1`}>
+                className={`${currentPage === 3
+                  ? "bg-status-darkViolet text-white"
+                  : "bg-[#EAE9EB] text-[#716F78]"
+                  } rounded-xl border-none px-3 py-1`}>
                 03
               </span>{" "}
-              Budget
+              customerBudget
               <span className="text-[#716F78]">
                 <FaGreaterThan />
               </span>
@@ -686,13 +670,12 @@ const AddTaskForm: React.FC = () => {
               {/* Progress bar */}
               <div className="h-1 w-2/3 overflow-hidden bg-[#EAE9EB]">
                 <div
-                  className={`h-full ${
-                    currentPage === 1
-                      ? "bg-status-darkViolet"
-                      : currentPage === 2
+                  className={`h-full ${currentPage === 1
+                    ? "bg-status-darkViolet"
+                    : currentPage === 2
                       ? "bg-status-darkViolet"
                       : "bg-status-darkViolet"
-                  }`}
+                    }`}
                   style={{ width: `${(currentPage / 3) * 100}%` }}
                 />
               </div>

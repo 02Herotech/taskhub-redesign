@@ -12,7 +12,7 @@ import { PiNotepadThin } from "react-icons/pi";
 const providerSiderbarLinks = [
   {
     title: "Profile",
-    link: "/service-provider/provider-profile",
+    link: "/service-provider/dashboard",
     icon: (
       <svg
         width="24"
@@ -40,7 +40,7 @@ const providerSiderbarLinks = [
   },
   {
     title: "My Services",
-    link: "/service-provider/provider-services",
+    link: "/service-provider/dashboard/services",
     icon: (
       <svg
         width="24"
@@ -68,7 +68,7 @@ const providerSiderbarLinks = [
   },
   {
     title: "Messages",
-    link: "/service-provider/provider-message",
+    link: "/service-provider/dashboard/message",
     icon: (
       <svg
         width="24"
@@ -89,7 +89,7 @@ const providerSiderbarLinks = [
   },
   {
     title: "Notification",
-    link: "/service-provider/provider-notification",
+    link: "/service-provider/dashboard/notification",
     icon: (
       <svg
         width="24"
@@ -117,7 +117,7 @@ const providerSiderbarLinks = [
   },
   {
     title: "Payments and Wallet",
-    link: "/service-provider/provider-payment",
+    link: "/service-provider/dashboard/payment",
     icon: (
       <svg
         width="24"
@@ -157,7 +157,7 @@ const providerSiderbarLinks = [
   },
   {
     title: "Settings",
-    link: "/service-provider/provider-settings",
+    link: "/service-provider/dashboard/settings",
     icon: (
       <svg
         width="26"
@@ -185,7 +185,7 @@ const ServiceProviderSidebar = () => {
           <Link
             key={item.title}
             href={item.link}
-            className={`flex items-center gap-4 rounded-md px-4  py-3 font-medium text-white ${
+            className={`flex items-center gap-4 rounded-md px-4 py-3 font-medium  text-white transition-all duration-300 ${
               pathname === item.link
                 ? "bg-yellow-500 hover:bg-opacity-90"
                 : "hover:bg-violet-950"
