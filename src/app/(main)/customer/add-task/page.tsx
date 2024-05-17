@@ -618,6 +618,7 @@ const AddTaskForm: React.FC = () => {
         return null;
     }
   };
+  
   return (
     <div className="flex min-h-screen flex-col items-center justify-center p-20">
       <Head>
