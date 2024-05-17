@@ -10,7 +10,6 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { IoMdArrowDropdown } from "react-icons/io";
 import { TiTick } from "react-icons/ti";
-import Img from "../../../../../public/assets/images/customer/task/Task management.svg";
 import Popup from "@/components/global/Popup";
 import Button from "@/components/global/Button";
 import { useSession } from "next-auth/react";
@@ -746,7 +745,7 @@ const AddTaskForm: React.FC = () => {
               </button>
             </div>
             <div className="absolute -right-10 top-44">
-              <Image src={Img} alt="img" />
+              <Image src="/public/assets/images/customer/task/Task management.svg" height={20} width={20} alt="img" />
             </div>
           </div>
         </div>

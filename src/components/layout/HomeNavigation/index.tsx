@@ -49,6 +49,7 @@ const HomeNavigation = () => {
                         className='lg:hidden'>
                         <RiMenu3Fill className="text-primary w-9 h-9" />
                     </button>
+                    <Logo />
                     <ul className='hidden lg:flex items-center space-x-20'>
                         {links.map((link) => {
                             return (
