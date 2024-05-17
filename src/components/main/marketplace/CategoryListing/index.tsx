@@ -109,7 +109,6 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
                 setListingData(slideListingData)
             }
         } catch (error) {
-            console.error(error)
             setErrorMsg("Error searching listing");
         } finally {
             setIsLoading(false);
@@ -189,6 +188,13 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
                     </Link>
                 }
             </div>
+
+            {
+                ErrorMsg &&
+                <div className="w-full flex items-center justify-center h-[300px] ">
+                    <p className="text-[16px] text-center text-red-500">{ErrorMsg}</p>
+                </div>
+            }
 
             {
                 isLoading ?

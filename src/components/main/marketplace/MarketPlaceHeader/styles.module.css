@@ -1,24 +1,46 @@
 .headerCover {
-    position: relative;
-    background-image: url("../../../../../public/assets/images/marketplace/marketplaceHeader.png");
-    background-position: center;
-    background-size: cover;
+  position: relative;
+  background-image: url("../../../../../public/assets/images/marketplace/marketplaceHeader.png");
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  width: 100%;
+  height: auto;
+  min-height: 300px;
 }
 
 .headerCover::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    z-index: 0;
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 0;
 }
 
-.headerCover>* {
-    position: relative;
-    /* Ensure children are positioned relatively */
-    z-index: 1;
-    /* Set a z-index higher than the overlay */
+.headerCover > * {
+  position: relative;
+  /* Ensure children are positioned relatively */
+  z-index: 1;
+  /* Set a z-index higher than the overlay */
+}
+
+@media (max-width: 1024px) {
+  .headerCover {
+    min-height: 250px;
+  }
+}
+
+@media (max-width: 768px) {
+  .headerCover {
+    min-height: 200px;
+  }
+}
+
+@media (max-width: 640px) {
+  .headerCover {
+    min-height: 150px;
+  }
 }

@@ -3,7 +3,12 @@
 import { useState } from "react";
 import { FaHome } from "react-icons/fa";
 import { MdPersonalInjury } from "react-icons/md";
-
+import { GrPersonalComputer } from "react-icons/gr";
+import { BsCalendar2EventFill } from "react-icons/bs";
+import { GiStoneCrafting } from "react-icons/gi";
+import { FaBabyCarriage } from "react-icons/fa";
+import { MdSecurity } from "react-icons/md";
+import { MdLocalGroceryStore } from "react-icons/md";
 
 import header from "../../../public/marketplaceHeader.png"
 import MarketplaceHeader from "@/components/main/marketplace/MarketPlaceHeader";
@@ -11,9 +16,9 @@ import MarketPlaceFilter from "@/components/main/marketplace/MarketPlaceFilter";
 import MarketPlaceHeader from "@/components/main/marketplace/MarketPlaceHeader";
 import CategoryListing from "@/components/main/marketplace/CategoryListing";
 import BoxFilter from "@/components/main/marketplace/BoxFilter";
-import Filter from "@/components/main/marketplace/FilterResult/filter";
 import HomeNavigation from "@/components/layout/HomeNavigation";
-import Loading from "@/shared/loading";
+import Footer from "@/components/layout/Footer";
+
 
 interface Category {
     name: string;
@@ -232,32 +237,20 @@ const MareketPlace = () => {
                             <div className="flex">
 
                                 <BoxFilter category="Home Services" Icon={FaHome} />
-                                <BoxFilter category="Personal Services" Icon={MdPersonalInjury} />
-                                <BoxFilter category="Events & Entertainment" Icon={FaHome} />
-                                <BoxFilter category="Education & Tutoring" Icon={FaHome} />
-                                <BoxFilter category="Professional Services" Icon={FaHome} />
-                                <BoxFilter category="Health & Fitness" Icon={FaHome} />
-                            </div>
-
-                            <div className="flex my-5">
-
-                                <BoxFilter category="Technology & Electronics" Icon={FaHome} />
-                                <BoxFilter category="Real Estate Services" Icon={FaHome} />
-                                <BoxFilter category="Automotive Services" Icon={FaHome} />
-                                <BoxFilter category="Childcare & Babysitting" Icon={FaHome} />
-                                <BoxFilter category="Travel & Adventure" Icon={FaHome} />
+                                <BoxFilter category="Beauty" Icon={MdPersonalInjury} />
+                                <BoxFilter category="Information & Technology" Icon={GrPersonalComputer} />
+                                <BoxFilter category="Events" Icon={BsCalendar2EventFill} />
 
                             </div>
 
-                            <div className="flex">
+                            <div className="flex mt-5">
 
-                                <BoxFilter category="Art & Creativity" Icon={FaHome} />
-                                <BoxFilter category="Wedding Services" Icon={FaHome} />
-                                <BoxFilter category="Home Improvement" Icon={FaHome} />
+                                <BoxFilter category="Art and Craft" Icon={GiStoneCrafting} />
+                                <BoxFilter category="Custodian" Icon={MdSecurity} />
+                                <BoxFilter category="Grocery" Icon={MdLocalGroceryStore} />
+                                <BoxFilter category="Petcare" Icon={FaBabyCarriage} />
 
                             </div>
-
-
                         </div>
                     </div>
 
@@ -272,6 +265,8 @@ const MareketPlace = () => {
                 </div>
 
             </div>
+
+            <Footer />
         </div >
     );
 }

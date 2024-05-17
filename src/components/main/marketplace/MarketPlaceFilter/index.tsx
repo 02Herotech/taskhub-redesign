@@ -145,13 +145,13 @@ const MarketPlaceFilter = ({
                     <p className="text-[#221354] text-[20px] font-[400]">Find the help you need on Taskhub</p>
                 </div>
                 <div className="flex text-[11px] space-x-2">
-                    <p className="bg-[#381F8C] text-white py-2 px-4 rounded-3xl ">All</p>
+                    <p className="bg-[#381F8C] text-white py-2 px-4 rounded-3xl text-[16px] font-[700] ">All</p>
                     <select
                         name="category"
                         id="category"
                         value={selectedCategory}
                         onChange={handleCategoryChange}
-                        className="border-[1.5px] border-[#381F8C] rounded-3xl bg-[#F1F1F2] text-[#381F8C] text-center focus:outline-none w-[180px]"
+                        className="border-[1.5px] border-[#381F8C] rounded-3xl bg-[#F1F1F2] text-[16px] font-[700] text-[#381F8C] text-center focus:outline-none w-[180px]"
                     >
                         <option value="" disabled>
                             Category
@@ -168,7 +168,7 @@ const MarketPlaceFilter = ({
                         id="subCategory"
                         value={selectedSubCategory}
                         onChange={handleSubCategoryChange}
-                        className="border-[1.5px] border-[#381F8C] rounded-3xl bg-[#F1F1F2] text-[#381F8C] text-center focus:outline-none w-[180px]"
+                        className="border-[1.5px] border-[#381F8C] rounded-3xl bg-[#F1F1F2] text-[16px] font-[700] text-[#381F8C] text-center focus:outline-none w-[180px]"
                     >
                         <option value="" disabled>
                             Subcategory
@@ -188,7 +188,7 @@ const MarketPlaceFilter = ({
                         id="location"
                         value={location}
                         onChange={handleLocation}
-                        className="border-[1.5px] border-[#381F8C] rounded-3xl bg-[#F1F1F2] text-[#381F8C] text-center focus:outline-none w-[180px]"
+                        className="border-[1.5px] border-[#381F8C] rounded-3xl bg-[#F1F1F2] text-[16px] font-[700] text-[#381F8C] text-center focus:outline-none w-[180px]"
                     >
                         <option value="" disabled>
                             Location
@@ -211,7 +211,7 @@ const MarketPlaceFilter = ({
                         id="service"
                         value={service}
                         onChange={handleService}
-                        className="border-[1.5px] border-[#381F8C] rounded-3xl bg-[#F1F1F2] text-[#381F8C] text-center focus:outline-none w-[150px]"
+                        className="border-[1.5px] border-[#381F8C] rounded-3xl bg-[#F1F1F2] text-[16px] font-[700] text-[#381F8C] text-center focus:outline-none w-[150px]"
                     >
                         <option value="" disabled>
                             Type of service
@@ -225,7 +225,7 @@ const MarketPlaceFilter = ({
                         id="pricing"
                         value={pricing}
                         onChange={handlePricing}
-                        className="border-[1.5px] border-[#381F8C] rounded-3xl bg-[#F1F1F2] text-[#381F8C] text-center focus:outline-none w-[150px]"
+                        className="border-[1.5px] border-[#381F8C] rounded-3xl bg-[#F1F1F2] text-[16px] font-[700] text-[#381F8C] text-center focus:outline-none w-[150px]"
                     >
                         <option value="" disabled>
                             Pricing
@@ -238,7 +238,7 @@ const MarketPlaceFilter = ({
                         id="others"
                         value={others}
                         onChange={handleOther}
-                        className="border-[1.5px] border-[#381F8C] rounded-3xl bg-[#F1F1F2] text-[#381F8C] text-center focus:outline-none w-[150px]"
+                        className="border-[1.5px] border-[#381F8C] rounded-3xl bg-[#F1F1F2] text-[16px] font-[700] text-[#381F8C] text-center focus:outline-none w-[150px]"
                     >
                         <option value="" disabled>
                             Other
