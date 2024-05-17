@@ -16,37 +16,37 @@ const TaskCard = ({ task }: TaskCardProps) => {
     const router = useRouter();
 
     const availability = task.active ? "Available" : "Unavailable";
-    const dateArray = task.postedAt;
-    const date = new Date(dateArray[0], dateArray[1] - 1, dateArray[2], dateArray[3], dateArray[4], dateArray[5], dateArray[6]);
+    // const dateArray = task.postedAt;
+    // const date = new Date(dateArray[0], dateArray[1] - 1, dateArray[2], dateArray[3], dateArray[4], dateArray[5], dateArray[6]);
 
-    // Define suffixes for day
-    const suffixes = ["st", "nd", "rd", "th"];
-    const day = date.getDate();
-    const daySuffix = suffixes[(day - 1) % 10] || suffixes[3];
+    // // Define suffixes for day
+    // const suffixes = ["st", "nd", "rd", "th"];
+    // const day = date.getDate();
+    // const daySuffix = suffixes[(day - 1) % 10] || suffixes[3];
 
-    // Define month names
-    const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-    const month = date.getMonth();
-    const monthName = monthNames[month];
+    // // Define month names
+    // const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+    // const month = date.getMonth();
+    // const monthName = monthNames[month];
     
-    // Define day of the week names
-    const dayOfWeekNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-    const dayOfWeek = date.getDay();
-    const dayOfWeekName = dayOfWeekNames[dayOfWeek];
+    // // Define day of the week names
+    // const dayOfWeekNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+    // const dayOfWeek = date.getDay();
+    // const dayOfWeekName = dayOfWeekNames[dayOfWeek];
 
-    const formattedDate = `On ${dayOfWeekName}, ${monthName} ${day}${daySuffix}`;
+    // const formattedDate = `On ${dayOfWeekName}, ${monthName} ${day}${daySuffix}`;
 
-    // Get hours and minutes
-    const hours = date.getHours();
-    const minutes = date.getMinutes();
+    // // Get hours and minutes
+    // const hours = date.getHours();
+    // const minutes = date.getMinutes();
 
-    // Construct the formatted time string
-    let formattedTime;
-    if (hours >= 12) {
-        formattedTime = `${hours === 12 ? 12 : hours - 12}:${(minutes < 10 ? '0' : '') + minutes} PM`;
-    } else {
-        formattedTime = `${hours === 0 ? 12 : hours}:${(minutes < 10 ? '0' : '') + minutes} AM`;
-    }
+    // // Construct the formatted time string
+    // let formattedTime;
+    // if (hours >= 12) {
+    //     formattedTime = `${hours === 12 ? 12 : hours - 12}:${(minutes < 10 ? '0' : '') + minutes} PM`;
+    // } else {
+    //     formattedTime = `${hours === 0 ? 12 : hours}:${(minutes < 10 ? '0' : '') + minutes} AM`;
+    // }
 
     return (
         <motion.div
@@ -65,11 +65,11 @@ const TaskCard = ({ task }: TaskCardProps) => {
                 </div>
                 <div className="flex items-center space-x-2 w-full text-[#716F78] font-medium">
                     <FiCalendar className="h-6 w-6 font-bold" />
-                    <h5 className="text-[15px] lg:text-xl">{formattedDate}</h5>
+                    <h5 className="text-[15px] lg:text-xl">Date</h5>
                 </div>
                 <div className="flex items-center space-x-2 w-full text-[#716F78] font-medium">
                     <FiClock className="h-6 w-6 font-bold" />
-                    <h5 className="text-[15px] lg:text-xl">{formattedTime}</h5>
+                    <h5 className="text-[15px] lg:text-xl">Time</h5>
                 </div>
             </div>
             <div className="flex items-center justify-between">
