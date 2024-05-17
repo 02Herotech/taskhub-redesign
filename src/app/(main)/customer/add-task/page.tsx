@@ -21,11 +21,8 @@ interface Task {
   taskTime: string;
   taskDate: string;
   taskAddress: string;
-  taskType: string;
-  Suite: string;
-  postalCode: string;
-  city: string;
-  state: string;
+    taskType: string;
+    Suite: string;
   customerBudget: string;
   hubTime: string;
 }
@@ -54,11 +51,8 @@ const AddTaskForm: React.FC = () => {
     taskTime: "",
     taskDate: "",
     taskAddress: "",
-    taskType: "",
+      taskType: "",
     Suite: "",
-    postalCode: "",
-    city: "",
-    state: "",
     customerBudget: "",
     hubTime: "",
   });
@@ -230,7 +224,9 @@ const AddTaskForm: React.FC = () => {
     return "";
   };
   const dateString = formatDateToString(selectedDate);
-  const timeString = formatTimeToString(selectedTime);
+    const timeString = formatTimeToString(selectedTime);
+    
+    
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -265,12 +261,9 @@ const AddTaskForm: React.FC = () => {
               ...finalTask,
               taskType: "PHYSICAL_TYPE",
               taskAddress: task.taskAddress,
-              // Suite: task.Suite,
-              // postalCode: selectedCode,
-              // city: selectedCity,
-              // state: selectedState,
             };
-          }
+            }
+            const fullAddress = `${task.Suite} ${task.taskAddress} ${selectedCode} ${selectedCity}`;
 
           if (!task.taskImage || null) {
             const defaultImage =
@@ -295,11 +288,8 @@ const AddTaskForm: React.FC = () => {
             taskTime: "",
             taskDate: "",
             taskType: "",
-            taskAddress: "",
+            taskAddress: fullAddress,
             Suite: "",
-            postalCode: selectedCode,
-            city: selectedCity,
-            state: selectedState,
             hubTime: "",
             customerBudget: "",
           });

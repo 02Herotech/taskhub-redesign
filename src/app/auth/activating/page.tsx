@@ -10,13 +10,14 @@ const VerifyEmailForm = () => {
     const [loading, setLoading] = useState(false);
     const searchParams = useSearchParams()
     const token = searchParams.get('t')
+    const email = searchParams.get('e')
     const router = useRouter()
 
     const verifyUserEmail = async () => {
         try {
             setLoading(true);
             await axios.post(
-                `${process.env.NEXT_PUBLIC_API_URL}user/verify?${token}`
+                `${process.env.NEXT_PUBLIC_API_URL}/user/verify?t=${token}&e=${email}`
             );
             toast.success("Email verified successfully");
             router.push("/auth/login");
