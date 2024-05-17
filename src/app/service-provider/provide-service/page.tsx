@@ -876,7 +876,7 @@ const AddTaskForm: React.FC = () => {
               </button>
             </div>
             <div className="absolute -right-10 top-44">
-              <Image src="/public/assets/images/customer/task/Task management.svg" alt="img" />
+              <Image src="/public/assets/images/customer/task/Task management.svg" alt="img"  />
             </div>
           </div>
         </div>

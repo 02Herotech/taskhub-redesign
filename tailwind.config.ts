@@ -16,8 +16,8 @@ const config: Config = {
           "light-blue": "#258FE6",
         },
         tc: {
-          gray: "#55535A", 
-          orange: "#FE9B07"
+          gray: "#55535A",
+          orange: "#FE9B07",
         },
         status: {
           success: {

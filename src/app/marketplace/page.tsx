@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import { FaHome } from "react-icons/fa";
+import { MdPersonalInjury } from "react-icons/md";
+
 
 import header from "../../../public/marketplaceHeader.png"
 import MarketplaceHeader from "@/components/main/marketplace/MarketPlaceHeader";
@@ -9,6 +11,9 @@ import MarketPlaceFilter from "@/components/main/marketplace/MarketPlaceFilter";
 import MarketPlaceHeader from "@/components/main/marketplace/MarketPlaceHeader";
 import CategoryListing from "@/components/main/marketplace/CategoryListing";
 import BoxFilter from "@/components/main/marketplace/BoxFilter";
+import Filter from "@/components/main/marketplace/FilterResult/filter";
+import HomeNavigation from "@/components/layout/HomeNavigation";
+import Loading from "@/shared/loading";
 
 interface Category {
     name: string;
@@ -22,153 +27,127 @@ type Categories = {
     };
 };
 
+interface listingData {
+    id: number;
+    posterId: number;
+    businessName: string;
+    serviceCategory: string;
+    subCategory: string;
+    serviceDescription: string;
+    serviceName: string;
+    pricing: number;
+    availableDays: [string];
+    available: boolean;
+    startHour: number;
+    closeMinute: number;
+    closeHour: number;
+    startMinute: number;
+    availableFrom: {
+        hour: number;
+        minute: number;
+        second: number;
+        nano: number;
+    };
+    availableTo: {
+        hour: number;
+        minute: number;
+        second: number;
+        nano: number;
+    };
+    userAddress: {
+        id: number;
+        streetNumber: string;
+        streetName: string;
+        unitNumber: string;
+        suburb: string;
+        state: string;
+        postCode: string;
+    };
+    deleted: boolean;
+    stripeId: string;
+    businessPictures: string[]; // Updated to an array of strings
+}
+
+
 const MareketPlace = () => {
 
     const categories: Categories = {
         category1: {
             name: "Home Services",
             subcategories: [
-                "Cleaning",
-                "Plumbing",
-                "Electrician",
-                "Carpentry",
-                "Pest Control",
-                "Landscaping",
-                "HVAC (Heating, Ventilation, and Air Conditioning)",
+                "Landscaper/ground keeper",
+                "Gardeners",
+                "House Keeping",
             ],
         },
         category2: {
-            name: "Personal Services",
+            name: "Beauty",
             subcategories: [
-                "Beauty & Wellness",
-                "Personal Training",
-                "Massage Therapy",
-                "Yoga & Meditation",
-                "Life Coaching",
-                "Pet Care & Grooming",
+                "Hair vendors",
+                "Beauty products"
             ],
         },
         category3: {
-            name: "Events & Entertainment",
+            name: "Information and Technology",
             subcategories: [
-                "Event Planning",
-                "Photography & Videography",
-                "DJ Services",
-                "Catering",
-                "Live Performers (Musicians, Magicians, etc.)",
+                "Graphic designer",
+                "Web designer",
+                "Social Media Marketing/marketer",
+                "Video editor",
+                "Resume support",
+                "Cv writing",
             ],
         },
         category4: {
-            name: "Education & Tutoring",
+            name: "Events",
             subcategories: [
-                "Academic Tutoring",
-                "Language Lessons",
-                "Music Lessons",
-                "Art Classes",
-                "Test Preparationol",
+                "Event planning",
+                "Waiter",
+                "Photographer",
+                "Catering services ",
             ],
         },
         category5: {
-            name: "Professional Services",
+            name: "Art and craft",
             subcategories: [
-                "Legal Services",
-                "Financial Planning",
-                "Marketing & Design",
-                "IT Support & Consulting",
-                "Writing & Editing",
+                "Writer",
+                "Painter",
+                "Artist",
             ],
         },
         category6: {
-            name: "Automotive  Services",
+            name: "Petcare",
             subcategories: [
-                "Auto Repair",
-                "Car Detailing",
-                "Towing Services",
-                "Tire Services",
+                "Dog walker"
             ],
         },
         category7: {
-            name: "Health & Fitness",
+            name: "Custodian",
             subcategories: [
-                "Fitness Training",
-                "Nutrition Coaching",
-                "Physical Therapy",
-                "Holistic Healing",
+                "Janitor"
             ],
         },
         category8: {
-            name: "Technology & Electronics",
+            name: "Grocery",
             subcategories: [
-                "Computer Repair",
-                "Web Development",
-                "App Development",
-                "Graphic Design",
+                "Grocery delivery"
             ],
-        },
-        category9: {
-            name: "Home Improvement",
-            subcategories: [
-                "Interior Design/ Decor",
-                "Renovation Services",
-                "Home Maintenance",
-                "Flooring & Tiling",
-            ],
-        },
-        category10: {
-            name: "Real Estate Services",
-            subcategories: [
-                "Property Management",
-                "Home Inspection",
-                "Real Estate Agent Services",
-            ],
-        },
-        category11: {
-            name: "Delivery & Logistics",
-            subcategories: [
-                "Courier Services",
-                "Grocery Delivery",
-                "Moving Services",
-            ],
-        },
-        category12: {
-            name: "Art & Creativity",
-            subcategories: [
-                "Custom Artwork",
-                "Artist",
-                "Music Instructor",
-                "Craftsmanship",
-                "Creative Workshops",
-            ],
-        },
-        category13: {
-            name: "Wedding Services",
-            subcategories: [
-                "Wedding Planning",
-                "Bridal Makeup & Styling",
-                "Wedding Photography",
-            ],
-        },
-        category14: {
-            name: "Childcare & Babysitting",
-            subcategories: ["Childcare Services", "Babysitting", "Nanny Services"],
-        },
-        category15: {
-            name: "Travel & Adventure",
-            subcategories: ["Tour Guides", "Adventure Excursions", "Travel Planning"],
-        },
-        category16: {
-            name: "Groceries",
-            subcategories: ["Yam", "Vegetables", "Indomie"],
         },
     };
 
+
+    const [listingData, setListingData] = useState<listingData[]>([]);
+    const [filterData, setFilterData] = useState<listingData[]>([]);
     const [selectedCategory, setSelectedCategory] = useState("");
     const [selectedSubCategory, setSelectedSubCategory] = useState("");
+    const [isLoading, setIsLoading] = useState(false)
     const [location, setLocation] = useState("");
     const [service, setService] = useState("");
     const [pricing, setPricing] = useState("");
     const [others, setOthers] = useState("");
     const [search1, setSearch1] = useState("");
+    const [errorMsg, setErrorMsg] = useState("");
+
 
     const handleCategoryChange = (
         event: React.ChangeEvent<HTMLSelectElement>
@@ -204,8 +183,11 @@ const MareketPlace = () => {
         setSearch1("")
     }
 
+
+
     return (
         <div>
+            <HomeNavigation />
             <MarketPlaceHeader />
             <div className="max-w-7xl mx-auto px-20 flex flex-col">
 
@@ -226,62 +208,71 @@ const MareketPlace = () => {
                     handleSearch1={handleSearch1}
                     handleClearSearch={handleClearSearch}
                     categories={categories}
+                    setIsLoading={setIsLoading}
+                    filterData={filterData}
+                    setFilterData={setFilterData}
+                    setErrorMsg={setErrorMsg}
+
                 />
 
                 <div>
-                    <CategoryListing category='category1' />
+                    <div>
+                        <CategoryListing category='category1' />
 
-                    <CategoryListing category='category2' />
+                        <CategoryListing category='category2' />
 
-                    <CategoryListing category='category5' />
-                </div>
-
-                <div>
-                    <h1 className=" font-bold text-[28px]">Browse by category</h1>
-
-                    <div className="flex flex-col my-5">
-                        <div className="flex">
-
-                            <BoxFilter category="Home Services" Icon={FaHome} />
-                            <BoxFilter category="Personal Services" Icon={FaHome} />
-                            <BoxFilter category="Events & Entertainment" Icon={FaHome} />
-                            <BoxFilter category="Education & Tutoring" Icon={FaHome} />
-                            <BoxFilter category="Professional Services" Icon={FaHome} />
-                            <BoxFilter category="Health & Fitness" Icon={FaHome} />
-                        </div>
-
-                        <div className="flex my-5">
-
-                            <BoxFilter category="Technology & Electronics" Icon={FaHome} />
-                            <BoxFilter category="Real Estate Services" Icon={FaHome} />
-                            <BoxFilter category="Automotive Services" Icon={FaHome} />
-                            <BoxFilter category="Childcare & Babysitting" Icon={FaHome} />
-                            <BoxFilter category="Travel & Adventure" Icon={FaHome} />
-
-                        </div>
-
-                        <div className="flex">
-
-                            <BoxFilter category="Art & Creativity" Icon={FaHome} />
-                            <BoxFilter category="Wedding Services" Icon={FaHome} />
-                            <BoxFilter category="Home Improvement" Icon={FaHome} />
-
-                        </div>
-
-
+                        <CategoryListing category='category5' />
                     </div>
-                </div>
 
-                <div>
-                    <CategoryListing category='category1' />
 
-                    <CategoryListing category='category2' />
+                    <div>
+                        <h1 className=" font-bold text-[28px]">Browse by category</h1>
 
-                    <CategoryListing category='category5' />
+                        <div className="flex flex-col my-5">
+                            <div className="flex">
+
+                                <BoxFilter category="Home Services" Icon={FaHome} />
+                                <BoxFilter category="Personal Services" Icon={MdPersonalInjury} />
+                                <BoxFilter category="Events & Entertainment" Icon={FaHome} />
+                                <BoxFilter category="Education & Tutoring" Icon={FaHome} />
+                                <BoxFilter category="Professional Services" Icon={FaHome} />
+                                <BoxFilter category="Health & Fitness" Icon={FaHome} />
+                            </div>
+
+                            <div className="flex my-5">
+
+                                <BoxFilter category="Technology & Electronics" Icon={FaHome} />
+                                <BoxFilter category="Real Estate Services" Icon={FaHome} />
+                                <BoxFilter category="Automotive Services" Icon={FaHome} />
+                                <BoxFilter category="Childcare & Babysitting" Icon={FaHome} />
+                                <BoxFilter category="Travel & Adventure" Icon={FaHome} />
+
+                            </div>
+
+                            <div className="flex">
+
+                                <BoxFilter category="Art & Creativity" Icon={FaHome} />
+                                <BoxFilter category="Wedding Services" Icon={FaHome} />
+                                <BoxFilter category="Home Improvement" Icon={FaHome} />
+
+                            </div>
+
+
+                        </div>
+                    </div>
+
+                    <div>
+                        <CategoryListing category='category1' />
+
+                        <CategoryListing category='category2' />
+
+                        <CategoryListing category='category5' />
+                    </div>
+
                 </div>
 
             </div>
-        </div>
+        </div >
     );
 }
 

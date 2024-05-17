@@ -8,10 +8,10 @@ interface BoxFilterProper {
 const BoxFilter: React.FC<BoxFilterProper> = ({ category, Icon }) => {
     return (
         <div className="flex mr-5 cursor-pointer ">
-            <div className="bg-[#E58C06] rounded-lg shadow-md shadow-grey6 flex flex-col text-white py-3 px-3 space-y-2">
+            <div className="bg-[#E58C06] rounded-lg shadow-md shadow-[#FEFBFB80] flex flex-col text-white py-3 px-3 space-y-1">
 
-                <Icon size={20} />
-                <p className="text-[12px]">{category}</p>
+                <Icon size={25} />
+                <p className="text-[16px] font-bold">{category}</p>
             </div>
         </div>
     );
