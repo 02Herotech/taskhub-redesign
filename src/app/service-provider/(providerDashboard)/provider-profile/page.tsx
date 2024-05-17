@@ -2,9 +2,11 @@ import ProfileHeader from "@/components/serviceProviderDashboard/profile/Profile
 import React from "react";
 
 const page = () => {
-  return <main className="lg:p-8 p-4"> 
-    <ProfileHeader />
-  </main>;
+  return (
+    <main className="p-4 lg:p-8">
+      <ProfileHeader />
+    </main>
+  );
 };
 
 export default page;
