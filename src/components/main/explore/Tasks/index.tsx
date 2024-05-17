@@ -22,6 +22,7 @@ const Tasks = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 9;
     const { data, isLoading } = useGetActiveTasksQuery(currentPage);
+    console.log(data);
 
     const totalPages = Math.ceil(data?.totalElements! / itemsPerPage); // Calculate total pages
 
