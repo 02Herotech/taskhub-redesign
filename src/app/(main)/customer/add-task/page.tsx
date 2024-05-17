@@ -15,7 +15,7 @@ import Popup from "@/components/global/Popup";
 import Button from "@/components/global/Button";
 import { useSession } from "next-auth/react";
 
-interface Task {
+interface FormData {
     taskDescription: string;
     taskImage?: File | defaultImage | null;
     taskTime: string;
@@ -42,7 +42,7 @@ const AddTaskForm: React.FC = () => {
     const session = useSession();
     const token = session?.data?.user.accessToken;
     const [currentPage, setCurrentPage] = useState(1);
-    const [task, setTask] = useState<Task>({
+    const [task, setTask] = useState<FormData>({
         taskDescription: "",
         taskImage: null,
         taskTime: "",
@@ -76,7 +76,6 @@ const AddTaskForm: React.FC = () => {
                 const response = await axios.get(
                     `https://smp.jacinthsolutions.com.au/api/v1/util/locations/search?postcode=${selectedCode}`
                 );
-                console.log(response.data);
                 setPostalCodeData(response.data as PostalCodeData[]);
             } catch (error) {
                 console.error("Error fetching postal code data:", error);
@@ -208,7 +207,7 @@ const AddTaskForm: React.FC = () => {
         if (date) {
             // Formatting the date as "dd-MM-yyyy"
             const day = String(date.getDate()).padStart(2, '0');
-            const month = String(date.getMonth() + 1).padStart(2, '0'); // getMonth() returns 0-based month
+            const month = String(date.getMonth() + 1).padStart(2, '0'); 
             const year = date.getFullYear();
             return `${day}-${month}-${year}`;
         }
@@ -229,13 +228,7 @@ const AddTaskForm: React.FC = () => {
     const timeString = formatTimeToString(selectedTime);
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
-        if (!task.customerBudget) {
-            const err: any = {};
-            err.customerBudget = "please fill in customerBudget";
-            setErr(err);
-            return Object.keys(err).length === 0;
-        } else {
+        event.preventDefault()
             if (validateFields() && validateField1()) {
                 try {
                     let finalTask = { ...task };
@@ -272,6 +265,9 @@ const AddTaskForm: React.FC = () => {
                             "../../../../../public/assets/images/explore/google-map.png";
                         setTask({ ...task, taskImage: defaultImage });
                     }
+
+                  
+
                     console.log(finalTask);
                     await axios.post(
                         "https://smp.jacinthsolutions.com.au/api/v1/task/post",
@@ -279,7 +275,7 @@ const AddTaskForm: React.FC = () => {
                         {
                             headers: {
                                 Authorization: `Bearer ${token}`,
-                                "Content-Type": "application/json",
+                                 'Content-Type': 'multipart/form-data',
                             },
                         },
                     );
@@ -300,7 +296,7 @@ const AddTaskForm: React.FC = () => {
                     setIsSuccessPopupOpen(false);
                 }
             }
-        }
+        
     };
 
     const renderPage = () => {
@@ -481,7 +477,7 @@ const AddTaskForm: React.FC = () => {
                             {isOpen && activeButtonIndex === 0 && (
                                 <div className="space-y-10">
                                     <div className="grid space-y-4">
-                                        <label>taskAddress(Street and Area)</label>
+                                        <label>Address(Street and Area)</label>
                                         <input
                                             type="text"
                                             name="taskAddress"
@@ -562,7 +558,7 @@ const AddTaskForm: React.FC = () => {
                     <div className="mb-10 space-y-10">
                         <form onSubmit={handleSubmit} className="space-y-10">
                             <div className="grid space-y-4">
-                                <label>customerBudget</label>
+                                <label>Budget</label>
                                 <input
                                     type="text"
                                     name="customerBudget"
@@ -578,7 +574,7 @@ const AddTaskForm: React.FC = () => {
                                 ))}
                             </div>
                             <div className="flex justify-between">
-                                <Button type="submit">Confirm Task</Button>
+                                <Button type="submit" >Confirm Task</Button>
                                 <Button theme="outline" type="button" onClick={prevPage}>
                                     Back
                                 </Button>
@@ -705,7 +701,7 @@ const AddTaskForm: React.FC = () => {
                             proceed to marketplace
                         </p>
                         <div className="flex justify-center">
-                            <button className="w-[100px] rounded-2xl bg-purpleBase p-2 text-[14px] text-white outline-none">
+                            <button className="w-[100px] rounded-2xl bg-status-darkViolet p-2 text-[14px] text-white outline-none">
                                 Go Home
                             </button>
                         </div>
