@@ -42,6 +42,7 @@ const ForgotPasswordForm = () => {
             console.log(response);
 
             if (response.status == 200) {
+                toast.success(response.data.message);
                 router.push(`/auth/forgot-password/confirmation?${params}`);
                 setIsLoading(false);
             }
