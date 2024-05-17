@@ -6,7 +6,6 @@ import { usePathname, useRouter } from "next/navigation";
 import React, { useState } from "react";
 import MobileNavigation from "../MobileNavigation";
 import { AnimatePresence } from "framer-motion";
-import Image from "next/image";
 import { BsChat } from "react-icons/bs";
 import { IoMdNotificationsOutline } from "react-icons/io";
 import { BiChevronDown } from "react-icons/bi";
