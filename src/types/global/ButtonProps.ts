@@ -1,4 +1,5 @@
 export type ButtonProps = {
+	onClick?: () => void;
 	type?: "button" | "submit" | "reset";
 	loading?: boolean;
 	disabled?: boolean;
