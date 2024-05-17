@@ -278,6 +278,7 @@ const AddTaskForm: React.FC = () => {
             setTask({ ...task, taskImage: defaultImage });
           }
           console.log(finalTask);
+            console.log(token);
           await axios.post(
             "https://smp.jacinthsolutions.com.au/api/v1/task/post",
             finalTask,
