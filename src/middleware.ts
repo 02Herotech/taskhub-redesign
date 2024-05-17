@@ -37,7 +37,6 @@ export const config = {
     matcher: [
         "/explore/:path*",
         "/customer/:path*",
-        "/marketplace/:path*",
         "/service-provider/:path*",
     ],
 };

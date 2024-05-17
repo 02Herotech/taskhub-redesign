@@ -40,7 +40,6 @@ const ForgotPasswordForm = () => {
                 }
             );
             console.log(response);
-            console.log(response.status);
 
             if (response.status == 200) {
                 router.push(`/auth/forgot-password/confirmation?${params}`);
