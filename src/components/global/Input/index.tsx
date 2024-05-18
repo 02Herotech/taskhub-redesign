@@ -2,6 +2,7 @@ import { cn } from "@/lib/utils";
 import type { InputProps } from "@/types/global/InputProps";
 import { useEffect, useRef, useState } from "react";
 import { useFormContext } from "react-hook-form";
+import { FiAlertTriangle } from "react-icons/fi";
 import { IoMdEye, IoMdEyeOff } from "react-icons/io";
 
 type ValidationResult = boolean | string;
@@ -25,7 +26,7 @@ const Input = ({
 	placeholder,
 	type = "text",
 	id,
-	onChange = () => {},
+	onChange = () => { },
 	max,
 	min,
 	pattern,
@@ -166,23 +167,23 @@ const Input = ({
 
 		pattern: pattern
 			? {
-					value: new RegExp(pattern),
-					message:
-						errorMessage ||
-						`The ${label} field doesn't satisfy the regex ${pattern}`,
-			  }
+				value: new RegExp(pattern),
+				message:
+					errorMessage ||
+					`The ${label} field doesn't satisfy the regex ${pattern}`,
+			}
 			: undefined,
 		min: min
 			? {
-					value: min,
-					message: `The ${label} field must be greater than or equal to ${min}`,
-			  }
+				value: min,
+				message: `The ${label} field must be greater than or equal to ${min}`,
+			}
 			: undefined,
 		max: max
 			? {
-					value: max,
-					message: `The ${label} field must be less than or equal to ${max}`,
-			  }
+				value: max,
+				message: `The ${label} field must be less than or equal to ${max}`,
+			}
 			: undefined,
 	});
 
@@ -202,7 +203,7 @@ const Input = ({
 			uppercase: /[A-Z]/g.test(watchPassword),
 			lowercase: /[a-z]/g.test(watchPassword),
 			number: /[0-9]/g.test(watchPassword),
-			special: /[ `!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/g.test(watchPassword),
+			special: /[ `!@#$%^&*()+\-=\[\]{};':"\\|,.<>\/?~]/g.test(watchPassword),
 			length: watchPassword?.length >= 8,
 		});
 	}, [watchPassword]);
@@ -210,11 +211,10 @@ const Input = ({
 	const inputTheme = (theme: string) => {
 		switch (theme) {
 			case "outline":
-				return `p-4 bg-white text-tc-secondary border-[1.5px] disabled:bg-[#83819729] disabled:border-[#83819729] ${
-					error
-						? "border-status-error-100 focus:border-status-error-100"
-						: "border-[#5B5B66] focus:border-primary"
-				}`;
+				return `p-4 bg-white text-tc-secondary border-[1.5px] disabled:bg-[#83819729] disabled:border-[#83819729] ${error
+					? "border-[#E98282] focus:border-[#E98282]"
+					: "border-[#5B5B66] focus:border-primary"
+					}`;
 			case "plain":
 				return "p-4 bg-transparent border-[1.5px] border-transparent";
 			default:
@@ -252,13 +252,13 @@ const Input = ({
 				{/* <span
 					className={cn(
 						"text-sm text-primary font-medium absolute right-0 -bottom-6",
-						{ "text-status-error-100": value.length > characters - 25 }
+						{ "text-[#E98282]": value.length > characters - 25 }
 					)}>
 					{value.length}/{characters}
 				</span> */}
 
 				{!rules.includes("password") && (error || customError) && (
-					<span className='text-sm text-left mt-2 text-status-error-100'>
+					<span className='text-sm text-left mt-2 text-[#E98282]'>
 						*{customError || error?.message}
 					</span>
 				)}
@@ -275,9 +275,8 @@ const Input = ({
 				{...register}
 				className={`w-full active:border-primary text-dark ${inputTheme(
 					theme
-				)} text-base h-12 overflow-hidden font-normal rounded-[10px] outline-none ${className} ${
-					type === "password" ? "pr-16" : ""
-				} ${left ? paddingLeft : ""} ${right ? paddingRight : ""}`}
+				)} text-base h-12 overflow-hidden font-normal rounded-[10px] outline-none ${className} ${type === "password" ? "pr-16" : ""
+					} ${left ? paddingLeft : ""} ${right ? paddingRight : ""}`}
 				type={showPassword ? "text" : type}
 				placeholder={placeholder}
 				id={id}
@@ -316,58 +315,55 @@ const Input = ({
 			)}
 
 			{!rules.includes("password") && (error || customError) && (
-				<span className='text-xs text-left mt-2 text-status-error-100'>
+				<span className='text-xs text-left mt-2 text-[#E98282]'>
 					*{customError || error?.message}
 				</span>
 			)}
 
 			{passwordIsDirty && rules.includes("password") && (
-				<div className='text-xs mt-2 text-left [&>*:nth-child(even)]:text-right grid grid-cols-2 gap-x-2 xl:gap-x-8 gap-y-1'>
-					<div
-						className={
-							passwordCheck.uppercase
-								? "text-status-success-100"
-								: "text-status-error-100"
-						}>
-						*<span className='hidden sm:inline'>Must contain</span>{" "}
-						<span className='capitalize sm:lowercase'>an</span> uppercase letter
+				<div className='text-sm mt-3 gap-y-1'>
+					<div className="flex items-center text-base">
+						{(!passwordCheck.lowercase || !passwordCheck.uppercase) && (
+							<FiAlertTriangle className="mr-4 text-[#E98282]" />
+						)}
+						{!passwordCheck.lowercase && (
+							<span className="text-[#E98282] mr-1">
+								A lowercase letter
+								{!passwordCheck.uppercase && <span> and an uppercase letter</span>}
+							</span>
+						)}
+						{!passwordCheck.uppercase && passwordCheck.lowercase && (
+							<span className="text-[#E98282]">
+								An uppercase letter
+							</span>
+						)}
 					</div>
-					<div
-						className={
-							passwordCheck.lowercase
-								? "text-status-success-100"
-								: "text-status-error-100"
-						}>
-						*<span className='hidden sm:inline'>Must contain</span>{" "}
-						<span className='capitalize sm:lowercase'>a</span> lowercase letter
+
+					<div className="flex items-center text-base">
+						{(!passwordCheck.special || !passwordCheck.number) && (
+							<FiAlertTriangle className="mr-4 text-[#E98282]" />
+						)}
+						{!passwordCheck.special && (
+							<span className="text-[#E98282] mr-1">
+								1 special character
+								{!passwordCheck.number && <span> and 1 number</span>}
+							</span>
+						)}
+						{!passwordCheck.number && passwordCheck.lowercase && (
+							<span className="text-[#E98282]">
+								1 number
+							</span>
+						)}
 					</div>
-					<div
-						className={
-							passwordCheck.number
-								? "text-status-success-100"
-								: "text-status-error-100"
-						}>
-						*<span className='hidden sm:inline'>Must contain</span>{" "}
-						<span className='capitalize sm:lowercase'>a</span> number
-					</div>
-					<div
-						className={
-							passwordCheck.special
-								? "text-status-success-100"
-								: "text-status-error-100"
-						}>
-						*<span className='hidden sm:inline'>Must contain</span>{" "}
-						<span className='capitalize sm:lowercase'>a</span> special character
-					</div>
+
 					<div
 						className={
 							passwordCheck.length
-								? "text-status-success-100"
-								: "text-status-error-100"
+								? "hidden"
+								: "text-[#E98282] flex items-center space-x-4"
 						}>
-						*<span className='hidden sm:inline'>Must contain</span>{" "}
-						<span className='capitalize sm:lowercase'>at</span> least 8
-						characters
+						<FiAlertTriangle />
+						<span className='text-base'>8 characters</span>
 					</div>
 				</div>
 			)}

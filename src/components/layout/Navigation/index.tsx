@@ -13,6 +13,7 @@ import { RiMenu3Fill } from "react-icons/ri";
 import Dropdown from "@/components/global/Dropdown";
 import { signOut, useSession } from "next-auth/react";
 import Logo from "../Logo";
+import axios from "axios";
 
 const Navigation = () => {
   const router = useRouter();
@@ -21,8 +22,18 @@ const Navigation = () => {
   const pathname = usePathname();
 
   const handleLogout = async () => {
-    await signOut();
-    router.push("/auth/login");
+
+    try {
+      router.push("/");
+      await signOut();
+
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/auth/logout`
+      );
+      
+    } catch (error: any) {
+      console.log(error);
+    }
   };
 
   const links = [

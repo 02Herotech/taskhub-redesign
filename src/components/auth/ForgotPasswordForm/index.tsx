@@ -15,6 +15,7 @@ type SignInRequest = {
 
 const ForgotPasswordForm = () => {
     const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
 
     const router = useRouter();
     const methods = useForm({
@@ -39,16 +40,15 @@ const ForgotPasswordForm = () => {
                     email: payload.email
                 }
             );
-            console.log(response);
 
             if (response.status == 200) {
-                toast.success(response.data.message || "Email sent successfully");
+                // toast.success(response.data.message || "Email sent successfully");
                 router.push(`/auth/forgot-password/confirmation?${params}`);
                 setIsLoading(false);
             }
         } catch (err: any) {
             setIsLoading(false);
-            toast.error(err?.data.message); 
+            setError(err?.response?.data?.message); 
         }
     };
 
@@ -76,6 +76,9 @@ const ForgotPasswordForm = () => {
                             rules={["email", "required"]}
                             type='email'
                         />
+                        {error && (
+                            <div className="text-red-500 text-xl text-center font-bold my-5">{error}</div>
+                        )}
                         <div className='pt-1 space-y-5'>
                             <Button
                                 type='submit'

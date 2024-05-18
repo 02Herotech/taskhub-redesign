@@ -18,7 +18,7 @@ const AuthLayout = ({
                     </Link>
                 </div>
             </header>
-            <main className='w-full container mt-[81px] py-16    xl:py-20'>
+            <main className='w-full lg:container mt-[81px] py-16 xl:py-20'>
                 <Suspense>
                     {children}
                 </Suspense>
