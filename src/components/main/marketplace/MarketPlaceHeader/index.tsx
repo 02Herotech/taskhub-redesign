@@ -8,13 +8,13 @@ const MarketPlaceHeader = () => {
     return (
 
         <div className={`${styles.headerCover} w-full  lg:mt-20 md:mt-16 py-20`}>
-            <div className="text-white flex flex-col justify-center max-w-[400px] md:max-w-full items-center space-y-8 mx-auto  ">
+            <div className="text-white flex flex-col justify-center max-w-[400px] px-5 md:px-0 md:max-w-full items-center space-y-8 mx-auto  ">
                 <div className="w-full flex flex-col space-y-2 md:items-center sm:items-start justify-center ">
                     <div className=" w-full flex flex-col mt-10 md:mt-0 items-start justify-center md:flex-row md:justify-center md:items-center ">
-                        <h1 className="font-bold  text-[30px] md:text-[39px]">Put up a task.</h1>
-                        <h1 className="font-bold text-[30px] md:text-[39px] ">Complete the task at hand.</h1>
+                        <h1 className="font-bold  text-[27px] md:text-[39px]">Put up a task.</h1>
+                        <h1 className="font-bold text-[27px] md:text-[39px] ">Complete the task at hand.</h1>
                     </div>
-                    <p className="lg:text-[20px] md:text-[18px] sm:text-[18px] sm:text-start font-bold">Publish a task. Complete it.</p>
+                    <p className="lg:text-[20px] md:text-[18px] sm:text-[16px] sm:text-start font-bold">Publish a task. Complete it.</p>
                 </div>
 
 

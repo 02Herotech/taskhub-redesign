@@ -168,15 +168,15 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
     return (
         <div className="w-full my-16">
 
-            <div className="flex justify-between items-center mb-5">
-                <h1 className=" font-bold text-[30px]">{IdCategoryValue}</h1>
+            <div className="flex justify-between items-center mb-5 px-5 md:px-0">
+                <h1 className=" font-bold md:text-[30px] text-[24px]">{IdCategoryValue}</h1>
 
                 {
                     listingData.length > 0 &&
                     <Link
                         href="#"
                     >
-                        <div className="text-[18px] font-bold text-primary hover:text-status-darkViolet group  mr-10 transition-colors duration-200 ">
+                        <div className="md:text-[18px] text-[15px] font-bold text-primary hover:text-status-darkViolet group  md:mr-10 transition-colors duration-200 ">
                             <div className=" flex items-center space-x-2">
                                 <p>View more</p>
                                 <span className="bold -rotate-45">
@@ -191,8 +191,8 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
 
             {
                 ErrorMsg &&
-                <div className="w-full flex items-center justify-center h-[300px] ">
-                    <p className="text-[16px] text-center text-red-500">{ErrorMsg}</p>
+                <div className="w-full flex items-center justify-center md:h-[300px] h-[200px]">
+                    <p className="md:text-[16px] sm:text[13px] text-center text-red-500">{ErrorMsg}</p>
                 </div>
             }
 
@@ -200,22 +200,23 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
                 isLoading ?
                     <Loading />
                     :
-                    <div className="flex ">
+                    <div className="flex flex-col md:flex-row space-y-8 md:space-y-0 justify-center">
+
                         {
                             listingData.map((listing, index) => (
-                                <div key={listing.id} className=" w-full">
-                                    <div className="grid grid-col-4 gap-x-4 w-[250px] h-[280px] ">
+                                <div key={listing.id} className=" w-full flex justify-center">
+                                    <div className="grid grid-col-4 gap-x-4 w-[300px] md:w-[250px] md:h-[280px] h-[320px]">
                                         <div className="bg-[#EBE9F4]  flex flex-col p-3 rounded-2xl">
                                             {listing.businessPictures.length > 1 && (
                                                 <img
                                                     src={listing.businessPictures[0]}
                                                     alt=""
-                                                    width={230}
-                                                    className="rounded-xl border-[1.5px] border-[#D9D9D9] h-[150px]"
+                                                    width={300}
+                                                    className="rounded-xl border-[1.5px] border-[#D9D9D9] h-[200px]"
                                                 />
                                             )}
                                             <div className="mt-2 flex flex-col justify-between h-full">
-                                                <h2 className="text-[25px] font-bold">{listing.businessName}</h2>
+                                                <h2 className="text-[22px] md:text-[25px]  font-bold">{listing.businessName}</h2>
 
                                                 <div className="flex justify-between items-center">
                                                     <div className="flex items-center space-x-2 ">
