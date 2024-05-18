@@ -1,11 +1,14 @@
 import React from "react";
 import { BiCheck, BiPlus } from "react-icons/bi";
+import ProfilePieChart from "./ProfilePieChart";
 
 const ProfileCompletion = () => {
   return (
-    <section className="grid grid-cols-12 gap-3 rounded-lg bg-[#EBE9F4] p-4">
-      <div className="col-span-3">Chart Here</div>
-      <div className="col-span-9 space-y-4 ">
+    <section className="grid h-full grid-cols-12 gap-3 rounded-lg bg-[#EBE9F4] p-4">
+      <div className="col-span-4 ">
+        <ProfilePieChart />
+      </div>
+      <div className="col-span-8 space-y-4 ">
         <h2 className="text-3xl font-bold text-[#140B31] ">
           Profile Completion
         </h2>

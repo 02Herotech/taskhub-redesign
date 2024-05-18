@@ -2,6 +2,7 @@ import Icons from "@/components/icons";
 import ServiceProviderNavbar from "@/components/serviceProviderDashboard/global/ServiceProviderNavbar";
 import { Suspense } from "react";
 import "./serviceProviderStyles.css";
+// import {} from  ""
 
 type AuthLayoutProps = {
   children: React.ReactNode;

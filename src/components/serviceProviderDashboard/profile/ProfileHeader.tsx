@@ -23,7 +23,10 @@ const ProfileHeader = () => {
           <h1 className="text-4xl font-bold text-[#140B31]">
             Welcome {userdata.name}
           </h1>
-          <p className="text-[#140B31]"> {userdata.email} </p>
+          <p className="font-clashDisplay text-[#140B31] ">
+            {" "}
+            {userdata.email}{" "}
+          </p>
         </div>
       </div>
 

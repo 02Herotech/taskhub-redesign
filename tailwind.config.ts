@@ -17,7 +17,7 @@ const config: Config = {
         },
         tc: {
           gray: "#55535A",
-          orange: "#FE9B07"
+          orange: "#FE9B07",
         },
         status: {
           success: {
@@ -41,10 +41,17 @@ const config: Config = {
           lightViolet: "#EBE9F4",
           darkViolet: "#140B31",
         },
+        violet: {
+          normal: "#381F8C",
+          dark: "#140B31",
+        },
+        orange: {
+          normal: "#FE9B07",
+        },
       },
       fontFamily: {
-        satoshi: ['Satoshi', 'sans-serif'],
-        clashDisplay: ['Clash Display', 'sans-serif'],
+        satoshi: ["Satoshi", "sans-serif"],
+        clashDisplay: ["Clash Display", "sans-serif"],
       },
       container: {
         center: true,
