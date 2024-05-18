@@ -233,25 +233,21 @@ const MareketPlace = () => {
                     <div className="my-10 md:my-0">
                         <h1 className=" font-bold md:text-[28px] text-[23px]  ">Browse by category</h1>
 
-                        <div className="flex flex-col my-5">
-                            <div className="flex">
 
-                                <BoxFilter category="Home Services" Icon={FaHome} />
-                                <BoxFilter category="Beauty" Icon={MdPersonalInjury} />
-                                <BoxFilter category="Information & Technology" Icon={GrPersonalComputer} />
-                                <BoxFilter category="Events" Icon={BsCalendar2EventFill} />
+                        <div className="flex flex-wrap my-5 w-[330px] md:w-[820px] border">
 
-                            </div>
+                            <BoxFilter category="Home Services" Icon={FaHome} />
+                            <BoxFilter category="Beauty" Icon={MdPersonalInjury} />
+                            <BoxFilter category="Events" Icon={BsCalendar2EventFill} />
+                            <BoxFilter category="Custodian" Icon={MdSecurity} />
+                            <BoxFilter category="Art and Craft" Icon={GiStoneCrafting} />
+                            <BoxFilter category="Information & Technology" Icon={GrPersonalComputer} />
+                            <BoxFilter category="Grocery" Icon={MdLocalGroceryStore} />
+                            <BoxFilter category="Petcare" Icon={FaBabyCarriage} />
 
-                            <div className="flex mt-5">
 
-                                <BoxFilter category="Art and Craft" Icon={GiStoneCrafting} />
-                                <BoxFilter category="Custodian" Icon={MdSecurity} />
-                                <BoxFilter category="Grocery" Icon={MdLocalGroceryStore} />
-                                <BoxFilter category="Petcare" Icon={FaBabyCarriage} />
-
-                            </div>
                         </div>
+
                     </div>
 
                     <div className="hidden lg:block">
