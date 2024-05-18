@@ -23,7 +23,6 @@ const MarketplaceLayout = ({
             <main className='mt-[20px]'>
                 {children}
             </main>
-            <Footer />
         </div>
     );
 };
