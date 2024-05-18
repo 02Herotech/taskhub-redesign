@@ -30,25 +30,25 @@ const ServiceProviderNavbar = () => {
       <nav className="flex items-center justify-center gap-6">
         <Link
           href="/service-provider/provide-service"
-          className={`text-lg font-bold hover:opacity-90 ${pathname === "/service-provider/provide-service" ? "text-yellow-500 " : "text-[#2A1769]"} `}
+          className={`font-clashDisplay text-lg font-bold hover:opacity-90 ${pathname === "/service-provider/provide-service" ? "text-yellow-500 " : "text-[#2A1769]"} `}
         >
           Provide a service
         </Link>
         <Link
           href="/service-provider/explore-task"
-          className={`text-lg font-bold hover:opacity-90 ${pathname === "/service-provider/explore-task" ? "text-yellow-500 " : "text-[#2A1769]"} `}
+          className={`font-clashDisplay text-lg font-bold hover:opacity-90 ${pathname === "/service-provider/explore-task" ? "text-yellow-500 " : "text-[#2A1769]"} `}
         >
           Explore Task
         </Link>
         <Link
           href="/marketplace"
-          className={`text-lg font-bold hover:opacity-90 ${pathname === "/marketplace" ? "text-yellow-500 " : "text-[#2A1769]"} `}
+          className={`font-clashDisplay text-lg font-bold hover:opacity-90 ${pathname === "/marketplace" ? "text-yellow-500 " : "text-[#2A1769]"} `}
         >
           Market Place
         </Link>
         <Link
           href="/service-provider/add-task"
-          className={`text-lg font-bold hover:opacity-90 ${pathname === "/service-provider/add-task" ? "text-yellow-500 " : "text-[#2A1769]"} `}
+          className={`font-clashDisplay text-lg font-bold hover:opacity-90 ${pathname === "/service-provider/add-task" ? "text-yellow-500 " : "text-[#2A1769]"} `}
         >
           Add a task
         </Link>
