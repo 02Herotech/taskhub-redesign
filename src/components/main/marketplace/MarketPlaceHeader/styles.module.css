@@ -22,9 +22,8 @@
 
 .headerCover > * {
   position: relative;
-  /* Ensure children are positioned relatively */
   z-index: 1;
-  /* Set a z-index higher than the overlay */
+
 }
 
 @media (max-width: 1024px) {
