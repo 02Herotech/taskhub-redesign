@@ -205,14 +205,14 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
                         {
                             listingData.map((listing, index) => (
                                 <div key={listing.id} className=" w-full flex justify-center">
-                                    <div className="grid grid-col-4 gap-x-4 w-[300px] md:w-[250px] md:h-[280px] h-[320px]">
+                                    <div className="grid grid-col-4 gap-x-4 w-[320px] md:w-[250px] md:h-[280px] h-[350px]">
                                         <div className="bg-[#EBE9F4]  flex flex-col p-3 rounded-2xl">
                                             {listing.businessPictures.length > 1 && (
                                                 <img
                                                     src={listing.businessPictures[0]}
                                                     alt=""
-                                                    width={300}
-                                                    className="rounded-xl border-[1.5px] border-[#D9D9D9] h-[200px]"
+                                                    width={320}
+                                                    className="rounded-xl border-[1.5px] border-[#D9D9D9] h-[250px]"
                                                 />
                                             )}
                                             <div className="mt-2 flex flex-col justify-between h-full">
