@@ -141,8 +141,8 @@ const MarketPlaceFilter = ({
             <div className=" flex flex-col space-y-8">
 
                 <div className="flex flex-col space-y-2">
-                    <h1 className="text-[#221354] font-bold text-[39px]">Our Various Category</h1>
-                    <p className="text-[#221354] text-[20px] font-[400]">Find the help you need on Taskhub</p>
+                    <h1 className="text-[#221354] font-bold text-[34px] md:text-[39px]">Our Various Category</h1>
+                    <p className="text-[#221354] text-[16px] md:text-[20px] font-[400]">Find the help you need on Taskhub</p>
                 </div>
                 <div className="flex text-[11px] space-x-2">
                     <p className="bg-[#381F8C] text-white py-2 px-4 rounded-3xl text-[16px] font-[700] ">All</p>
