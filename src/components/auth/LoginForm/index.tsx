@@ -4,8 +4,7 @@ import Button from "@/components/global/Button";
 import Input from "@/components/global/Input";
 import { useRouter, useSearchParams } from "next/navigation";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
-import { toast } from "react-toastify";
-import { signIn, useSession } from "next-auth/react";
+import { signIn } from "next-auth/react";
 import Link from "next/link";
 import { useState } from "react";
 import axios from "axios";
@@ -16,6 +15,7 @@ type SignInRequest = {
 };
 
 const LoginForm = () => {
+  const [error, setError] = useState<string | null>(null);
   const router = useRouter();
   const methods = useForm({
     mode: "onChange",
@@ -64,12 +64,10 @@ const LoginForm = () => {
         router.push("/marketplace");
       }
 
-      toast.success("Login successful");
-
       setIsLoading(false);
     } catch (error: any) {
       setIsLoading(false);
-      toast.error(error.response.data.message);
+      setError(error.response.data.message);
     }
   };
 
@@ -109,6 +107,9 @@ const LoginForm = () => {
               type="password"
               className="shadow-sm"
             />
+            {error && (
+              <div className="text-red-500 text-xl text-center font-bold my-5">{error}</div>
+            )}
             <div className="pt-1 space-y-5">
               <div className="flex items-center justify-end">
                 <Button
@@ -134,6 +135,7 @@ const LoginForm = () => {
                 </Link>
               </h3>
             </div>
+            
           </form>
         </FormProvider>
       </div>

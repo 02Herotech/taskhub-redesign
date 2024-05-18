@@ -12,6 +12,7 @@ const PasswordConfirmationForm = ({ email }: { email: string }) => {
     const [otp, setOtp] = useState(new Array(6).fill(""));
     const router = useRouter()
     const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
 
     const token = otp.join("");
 
@@ -28,12 +29,12 @@ const PasswordConfirmationForm = ({ email }: { email: string }) => {
             if (response.status == 200) {
                 router.push(`/auth/reset-password?email=${email}`);
                 setIsLoading(false);
-                toast.success("OTP verified successfully");
+                // toast.success("OTP verified successfully");
             }
         } catch (err: any) {
             console.log(err)
             setIsLoading(false);
-            toast.error(err?.response.data.message);
+            setError(err?.response.data.message);
         }
     };
 
@@ -60,7 +61,7 @@ const PasswordConfirmationForm = ({ email }: { email: string }) => {
             }
         } catch (err: any) {
             setIsLoading(false);
-            toast.error(err?.data.message);
+            // toast.error(err?.data.message);
         }
     };
 
@@ -160,6 +161,9 @@ const PasswordConfirmationForm = ({ email }: { email: string }) => {
                                 ))}
                             </div>
                         </div>
+                        {error && (
+                            <div className="text-red-500 text-xl text-center font-bold my-5">{error}</div>
+                        )}
                         <div className='pt-1 space-y-5'>
                             <Button
                                 type='submit'

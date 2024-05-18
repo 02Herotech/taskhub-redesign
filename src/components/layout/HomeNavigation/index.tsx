@@ -44,12 +44,12 @@ const HomeNavigation = () => {
         <>
             <nav className="bg-[#F5E2FC] z-50 fixed top-0 left-0 right-0 w-full">
                 <div className='container py-4 lg:py-5 px-7 lg:px-12 flex items-center justify-between'>
+                    <Logo />
                     <button
                         onClick={() => setShowMobileNav((state) => !state)}
                         className='lg:hidden'>
                         <RiMenu3Fill className="text-primary w-9 h-9" />
                     </button>
-                    <Logo />
                     <ul className='hidden lg:flex items-center space-x-20'>
                         {links.map((link) => {
                             return (
