@@ -12,7 +12,7 @@ const EditProfileModal = ({
 }: ModalPropsTypes) => {
   return (
     <section
-      className={`fixed left-0 top-0 z-40 flex h-screen items-center justify-center bg-black bg-opacity-60 transition-opacity duration-500 ${isFormModalShown ? "pointer-events-auto opacity-100 " : "pointer-events-none opacity-0"} `}
+      className={`fixed left-0 top-0 z-40 flex h-screen w-screen items-center justify-center bg-black bg-opacity-60 transition-opacity duration-500 ${isFormModalShown ? "pointer-events-auto opacity-100 " : "pointer-events-none opacity-0"} `}
     >
       <div className="relative w-[90%] max-w-xl  space-y-10 rounded-3xl bg-white p-4  lg:p-10 ">
         <button

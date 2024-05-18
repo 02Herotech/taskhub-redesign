@@ -49,7 +49,7 @@ const EditProfile = () => {
   });
 
   const handleSubmitUserData: SubmitHandler<userDataType> = (data) => {
-    console.log(data);
+    // console.log(data);
     setIsFormModalShown(true);
     setIsEditingEnabled(false);
   };
