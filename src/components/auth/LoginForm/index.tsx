@@ -38,35 +38,35 @@ const LoginForm = () => {
 
   const onSubmit: SubmitHandler<SignInRequest> = async (payload) => {
     try {
-      toast.success("Login successful");
-      // setIsLoading(true);
+      // toast.success("Login successful");
+      setIsLoading(true);
 
-      // const response = await axios.post(
-      //   `${process.env.NEXT_PUBLIC_API_URL}/auth/login`,
-      //   {
-      //     emailAddress: payload.emailAddress,
-      //     password: payload.password,
-      //   },
-      // );
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/auth/login`,
+        {
+          emailAddress: payload.emailAddress,
+          password: payload.password,
+        },
+      );
 
-      // if (response.status === 200) {
-      //   const userTypeRole = response.data.user.roles[0];
+      if (response.status === 200) {
+        const userTypeRole = response.data.user.roles[0];
 
-      //   await signIn("credentials", {
-      //     redirect: false,
-      //     email: payload.emailAddress,
-      //     password: payload.password,
-      //     userType: userTypeRole,
-      //   });
-      // }
+        await signIn("credentials", {
+          redirect: false,
+          email: payload.emailAddress,
+          password: payload.password,
+          userType: userTypeRole,
+        });
+      }
 
-      // if (from) {
-      //   router.push(from);
-      // } else {
-      //   router.push("/marketplace");
-      // }
+      if (from) {
+        router.push(from);
+      } else {
+        router.push("/marketplace");
+      }
 
-      // setIsLoading(false);
+      setIsLoading(false);
     } catch (error: any) {
       setIsLoading(false);
       setError(error.response.data.message);
