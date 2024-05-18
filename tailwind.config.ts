@@ -42,6 +42,7 @@ const config: Config = {
           darkViolet: "#140B31",
         },
         violet: {
+          light: "#EBE9F4",
           normal: "#381F8C",
           dark: "#140B31",
         },
