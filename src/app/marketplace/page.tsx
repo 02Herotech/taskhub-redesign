@@ -234,7 +234,7 @@ const MareketPlace = () => {
                         <h1 className=" font-bold md:text-[28px] text-[23px]  ">Browse by category</h1>
 
 
-                        <div className="flex flex-wrap my-5 w-[330px] md:w-[820px] border">
+                        <div className="flex flex-wrap my-5 w-[330px] md:w-[820px]">
 
                             <BoxFilter category="Home Services" Icon={FaHome} />
                             <BoxFilter category="Beauty" Icon={MdPersonalInjury} />
