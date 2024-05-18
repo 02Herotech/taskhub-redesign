@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { FaStar } from "react-icons/fa6";
+import { motion } from "framer-motion";
 
 const myservices = [
   {
@@ -44,21 +45,21 @@ const ServicesPage = () => {
 
   return (
     <main className="space-y-8 p-4 lg:p-8">
-      <div className="flex gap-6">
+      <div className="flex flex-wrap gap-2 lg:gap-6">
         <button
-          className={` rounded-lg px-8 py-3 font-medium transition-all duration-300 hover:opacity-90 ${currentCategory === "services" ? "bg-[#381F8C] text-white" : "bg-[#E1DDEE] text-[#381F8C] "} `}
+          className={` rounded-lg px-4 py-2 font-medium transition-all duration-300 hover:opacity-90 max-md:text-sm lg:px-8 lg:py-3 ${currentCategory === "services" ? "bg-[#381F8C] text-white" : "bg-[#E1DDEE] text-[#381F8C] "} `}
           onClick={() => setCurrentCategory("services")}
         >
           My Services
         </button>
         <button
-          className={` rounded-lg px-8 py-3 font-medium transition-all duration-300 hover:opacity-90 ${currentCategory === "ongoing" ? "bg-[#381F8C] text-white" : "bg-[#E1DDEE] text-[#381F8C] "} `}
+          className={` rounded-lg px-4 py-2 font-medium transition-all duration-300 hover:opacity-90 lg:px-8 lg:py-3 ${currentCategory === "ongoing" ? "bg-[#381F8C] text-white" : "bg-[#E1DDEE] text-[#381F8C] "} `}
           onClick={() => setCurrentCategory("ongoing")}
         >
           My Ongoing Services
         </button>
         <button
-          className={` rounded-lg px-8 py-3 font-medium transition-all duration-300 hover:opacity-90 ${currentCategory === "completed" ? "bg-[#381F8C] text-white" : "bg-[#E1DDEE] text-[#381F8C] "} `}
+          className={` rounded-lg px-4 py-2 font-medium transition-all duration-300 hover:opacity-90 lg:px-8 lg:py-3 ${currentCategory === "completed" ? "bg-[#381F8C] text-white" : "bg-[#E1DDEE] text-[#381F8C] "} `}
           onClick={() => setCurrentCategory("completed")}
         >
           My Completed Services
@@ -67,10 +68,13 @@ const ServicesPage = () => {
 
       <section className="flex flex-wrap gap-4">
         {myservices.map((item, index) => (
-          <div
+          <motion.div
             key={index}
-            className="cursor-pointer space-y-8 rounded-xl bg-[#EBE9F4] p-2"
+            className="mx-auto cursor-pointer space-y-8 rounded-xl bg-[#EBE9F4] p-2"
             onClick={() => handleNavigateCard(index)}
+            initial={{ opacity: 0, translateY: "5rem" }}
+            whileInView={{ opacity: 1, translateY: "0" }}
+            transition={{ duration: 0.5 }}
           >
             <div className="space-y-2">
               <div className="h-52 w-72 overflow-hidden rounded-xl">
@@ -112,7 +116,7 @@ const ServicesPage = () => {
                 </div>
               </div>
             </div>
-          </div>
+          </motion.div>
         ))}
       </section>
     </main>

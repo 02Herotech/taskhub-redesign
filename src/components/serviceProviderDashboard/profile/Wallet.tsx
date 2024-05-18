@@ -9,7 +9,7 @@ const Wallet = () => {
         alt="overlay"
         width={400}
         height={300}
-        className="absolute right-0 top-0"
+        className="absolute -right-10 top-0"
       />
       <h4 className="text-2xl font-bold text-[#381F8C] ">Wallet</h4>
       <h1 className="flex flex-col font-bold text-yellow-300">
