@@ -14,6 +14,7 @@ const MarketplaceLayout = ({
 }: MarketplaceLayoutProps) => {
     const session = useSession();
     const isAuth = session.status === "authenticated";
+    const isUnAuth = session.status === "unauthenticated";
     console.log(session)
 
     return (
@@ -28,7 +29,7 @@ const MarketplaceLayout = ({
                 </>
             )}
 
-            {!isAuth && (
+            {isUnAuth && (
                 <>
                     <HomeNavigation />
                     <main className='mt-[20px]'>
