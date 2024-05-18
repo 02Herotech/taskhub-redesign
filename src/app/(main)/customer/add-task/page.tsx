@@ -15,17 +15,13 @@ import Popup from "@/components/global/Popup";
 import Button from "@/components/global/Button";
 import { useSession } from "next-auth/react";
 
-interface Task {
+interface FormData {
     taskDescription: string;
     taskImage?: File | defaultImage | null;
     taskTime: string;
     taskDate: string;
     taskAddress: string;
     taskType: string;
-    Suite: string;
-    postalCode: string;
-    city: string;
-    state: string;
     customerBudget: string;
     hubTime: string;
 }
@@ -46,26 +42,20 @@ const AddTaskForm: React.FC = () => {
     const session = useSession();
     const token = session?.data?.user.accessToken;
     const [currentPage, setCurrentPage] = useState(1);
-    const defaultImage =
-        "../../../../../public/assets/images/explore/google-map.png";
-    const [task, setTask] = useState<Task>({
+    const [task, setTask] = useState<FormData>({
         taskDescription: "",
-        taskImage: null,
+        taskImage: "",
         taskTime: "",
         taskDate: "",
         taskAddress: "",
         taskType: "",
-        Suite: "",
-        postalCode: "",
-        city: "",
-        state: "",
         customerBudget: "",
         hubTime: "",
     });
     const [selectedDate, setSelectedDate] = useState<Date | null>(null);
     const [selectedTime, setSelectedTime] = useState<Date | null>(null);
     const [selectedCode, setSelectedCode] = useState("");
-    const [selectedState, setSelectedState] = useState("");
+    const [selectedSuite, setSelectedSuite] = useState("");
     const [selectedCity, setSelectedCity] = useState("");
     const [termsAccepted, setTermsAccepted] = useState(false);
     const [isSelectedTime, setIsSelectedTime] = useState("");
@@ -86,7 +76,6 @@ const AddTaskForm: React.FC = () => {
                 const response = await axios.get(
                     `https://smp.jacinthsolutions.com.au/api/v1/util/locations/search?postcode=${selectedCode}`
                 );
-                console.log(response.data);
                 setPostalCodeData(response.data as PostalCodeData[]);
             } catch (error) {
                 console.error("Error fetching postal code data:", error);
@@ -110,12 +99,12 @@ const AddTaskForm: React.FC = () => {
             } else if (!selectedCity) {
                 errors.city = "Please select city.";
             }
-            if (!task.taskAddress || !task.Suite) {
+            if (!task.taskAddress || !selectedSuite) {
                 errors.taskAddress = "Please enter taskAddress and suite number.";
             }
         } else if (activeButtonIndex === 0) {
             // Validation for remote service
-            if (!task.taskAddress || !task.Suite) {
+            if (!task.taskAddress || !selectedSuite) {
                 errors.taskAddress = "Please enter taskAddress and suite number.";
             }
         }
@@ -158,10 +147,10 @@ const AddTaskForm: React.FC = () => {
         const selectedValue = event.target.value;
         setSelectedCity(selectedValue);
     };
-    // const handleState = (event: React.ChangeEvent<HTMLInputElement>) => {
-    //     setSelectedState(event.target.value);
-    //     console.log(event.target.value);
-    // };
+    const handleSuite = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setSelectedSuite(event.target.value);
+        
+    };
     const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setTermsAccepted(event.target.checked);
         if (!event.target.checked) {
@@ -216,30 +205,30 @@ const AddTaskForm: React.FC = () => {
 
     const formatDateToString = (date: Date | null) => {
         if (date) {
-            // Formatting the date as "YYYY-MM-DD"
-            return date.toISOString().split("T")[0];
+            // Formatting the date as "dd-MM-yyyy"
+            const day = String(date.getDate()).padStart(2, '0');
+            const month = String(date.getMonth() + 1).padStart(2, '0'); 
+            const year = date.getFullYear();
+            return `${day}-${month}-${year}`;
         }
         return "";
     };
 
     const formatTimeToString = (time: Date | null) => {
         if (time) {
-            // Formatting the time as "HH:mm:ss"
-            return time.toTimeString().split(" ")[0];
+            // Formatting the time as "HH:mm"
+            const hours = String(time.getHours()).padStart(2, '0');
+            const minutes = String(time.getMinutes()).padStart(2, '0');
+            return `${hours}:${minutes}`;
         }
         return "";
     };
+
     const dateString = formatDateToString(selectedDate);
     const timeString = formatTimeToString(selectedTime);
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
-        if (!task.customerBudget) {
-            const err: any = {};
-            err.customerBudget = "please fill in customerBudget";
-            setErr(err);
-            return Object.keys(err).length === 0;
-        } else {
+        event.preventDefault()
             if (validateFields() && validateField1()) {
                 try {
                     let finalTask = { ...task };
@@ -258,25 +247,27 @@ const AddTaskForm: React.FC = () => {
                     }
 
                     if (isOpen && activeButtonIndex === 1) {
-                        const type = "REMOTE_TYPE"
+                        const type = "REMOTE_SERVICE"
                         finalTask = { ...finalTask, taskType: type };
                     } else {
+                        const fullAddress = `${selectedSuite} ${task.taskAddress} ${selectedCode} ${selectedCity}`;
                         finalTask = {
                             ...finalTask,
-                            taskType: "PHYSICAL_TYPE",
-                            taskAddress: task.taskAddress,
-                            // Suite: task.Suite,
-                            // postalCode: selectedCode,
-                            // city: selectedCity,
-                            // state: selectedState,
+                            taskType: "PHYSICAL_SERVICE",
+                            taskAddress: fullAddress,
                         };
                     }
+                    
+                   
 
-                    if (!task.taskImage || null) {
+                    if (!task.taskImage) {
                         const defaultImage =
-                            "../../../../../public/assets/images/explore/google-map.png";
+                            "google-map.png";
                         setTask({ ...task, taskImage: defaultImage });
                     }
+
+                  
+
                     console.log(finalTask);
                     await axios.post(
                         "https://smp.jacinthsolutions.com.au/api/v1/task/post",
@@ -284,21 +275,17 @@ const AddTaskForm: React.FC = () => {
                         {
                             headers: {
                                 Authorization: `Bearer ${token}`,
-                                "Content-Type": "application/json",
+                                 'Content-Type': 'multipart/form-data',
                             },
                         },
                     );
                     setTask({
                         taskDescription: "",
-                        taskImage: defaultImage,
+                        taskImage: "",
                         taskTime: "",
                         taskDate: "",
                         taskType: "",
                         taskAddress: "",
-                        Suite: "",
-                        postalCode: selectedCode,
-                        city: selectedCity,
-                        state: selectedState,
                         hubTime: "",
                         customerBudget: "",
                     });
@@ -309,7 +296,7 @@ const AddTaskForm: React.FC = () => {
                     setIsSuccessPopupOpen(false);
                 }
             }
-        }
+        
     };
 
     const renderPage = () => {
@@ -352,7 +339,7 @@ const AddTaskForm: React.FC = () => {
                                         <button
                                             className="rounded-lg bg-tc-gray px-3 py-1 text-white"
                                             onClick={() => {
-                                                setTask({ ...task, taskImage: null }); // Clear uploaded image
+                                                setTask({ ...task, taskImage: "" }); // Clear uploaded image
                                             }}>
                                             Remove
                                         </button>
@@ -402,13 +389,14 @@ const AddTaskForm: React.FC = () => {
                                         <DatePicker
                                             selected={selectedDate}
                                             onChange={handleDateChange}
-                                            dateFormat="MMMM d, yyyy"
+                                            dateFormat="dd-MM-yyyy"
                                             minDate={new Date()}
                                             placeholderText="Choose Date"
                                             id="taskDate"
                                             name="taskDate"
                                             className="cursor-pointer rounded-2xl border hover:text-white border-tc-gray bg-[#EBE9F4] px-2 py-1 outline-none placeholder:text-[14px] hover:bg-status-darkViolet hover:placeholder:text-white"
                                         />
+
                                         <IoMdArrowDropdown className="absolute right-5 top-2 text-status-darkViolet" />
                                     </div>
                                 </div>
@@ -489,7 +477,7 @@ const AddTaskForm: React.FC = () => {
                             {isOpen && activeButtonIndex === 0 && (
                                 <div className="space-y-10">
                                     <div className="grid space-y-4">
-                                        <label>taskAddress(Street and Area)</label>
+                                        <label>Address(Street and Area)</label>
                                         <input
                                             type="text"
                                             name="taskAddress"
@@ -504,8 +492,8 @@ const AddTaskForm: React.FC = () => {
                                         <input
                                             type="text"
                                             name="Suite"
-                                            value={task.Suite}
-                                            onChange={handleChange}
+                                            value={selectedSuite}
+                                            onChange={handleSuite}
                                             placeholder="3"
                                             className="rounded-2xl bg-[#EBE9F4] p-3 text-[13px]  outline-none"
                                         />
@@ -570,7 +558,7 @@ const AddTaskForm: React.FC = () => {
                     <div className="mb-10 space-y-10">
                         <form onSubmit={handleSubmit} className="space-y-10">
                             <div className="grid space-y-4">
-                                <label>customerBudget</label>
+                                <label>Budget</label>
                                 <input
                                     type="text"
                                     name="customerBudget"
@@ -586,7 +574,7 @@ const AddTaskForm: React.FC = () => {
                                 ))}
                             </div>
                             <div className="flex justify-between">
-                                <Button type="submit">Confirm Task</Button>
+                                <Button type="submit" >Confirm Task</Button>
                                 <Button theme="outline" type="button" onClick={prevPage}>
                                     Back
                                 </Button>
@@ -713,7 +701,7 @@ const AddTaskForm: React.FC = () => {
                             proceed to marketplace
                         </p>
                         <div className="flex justify-center">
-                            <button className="w-[100px] rounded-2xl bg-purpleBase p-2 text-[14px] text-white outline-none">
+                            <button className="w-[100px] rounded-2xl bg-status-darkViolet p-2 text-[14px] text-white outline-none">
                                 Go Home
                             </button>
                         </div>

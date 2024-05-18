@@ -69,7 +69,7 @@ const LoginForm = () => {
       setIsLoading(false);
     } catch (error: any) {
       setIsLoading(false);
-      // setErrorMessage(error.response.data.message);
+      toast.error(error.response.data.message);
     }
   };
 

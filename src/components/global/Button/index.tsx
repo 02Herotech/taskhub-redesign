@@ -8,6 +8,7 @@ import { cn } from "@/lib/utils";
 
 const Button: React.FC<ButtonProps> = ({
 	loading = false,
+	onClick,
 	disabled,
 	theme = "primary",
 	icon = null,

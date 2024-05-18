@@ -30,39 +30,45 @@ const ServiceProviderNavbar = () => {
       <nav className="flex items-center justify-center gap-6">
         <Link
           href="/service-provider/provide-service"
-          className={`text-lg font-bold hover:opacity-90 ${pathname === "/service-provider/provide-service" ? "text-yellow-500 " : "text-[#2A1769]"} `}
+          className={`font-clashDisplay text-lg font-bold hover:opacity-90 ${pathname === "/service-provider/provide-service" ? "text-yellow-500 " : "text-[#2A1769]"} `}
         >
           Provide a service
         </Link>
         <Link
           href="/service-provider/explore-task"
-          className={`text-lg font-bold hover:opacity-90 ${pathname === "/service-provider/explore-task" ? "text-yellow-500 " : "text-[#2A1769]"} `}
+          className={`font-clashDisplay text-lg font-bold hover:opacity-90 ${pathname === "/service-provider/explore-task" ? "text-yellow-500 " : "text-[#2A1769]"} `}
         >
           Explore Task
         </Link>
         <Link
           href="/marketplace"
-          className={`text-lg font-bold hover:opacity-90 ${pathname === "/marketplace" ? "text-yellow-500 " : "text-[#2A1769]"} `}
+          className={`font-clashDisplay text-lg font-bold hover:opacity-90 ${pathname === "/marketplace" ? "text-yellow-500 " : "text-[#2A1769]"} `}
         >
           Market Place
         </Link>
         <Link
           href="/service-provider/add-task"
-          className={`text-lg font-bold hover:opacity-90 ${pathname === "/service-provider/add-task" ? "text-yellow-500 " : "text-[#2A1769]"} `}
+          className={`font-clashDisplay text-lg font-bold hover:opacity-90 ${pathname === "/service-provider/add-task" ? "text-yellow-500 " : "text-[#2A1769]"} `}
         >
           Add a task
         </Link>
       </nav>
-      <div className="flex items-center gap-2">
-        <button className="rounded-lg p-2  hover:shadow-md">
+      <div className="flex items-center gap-4">
+        <button className="relative rounded-lg  p-2 hover:shadow-md ">
+          <span className=" absolute -right-0 -top-0 rounded-full bg-yellow-400 p-1 text-[8px] text-white ">
+            12
+          </span>
           <IoChatbubbleOutline size={20} />
         </button>
-        <button className="rounded-lg p-2  hover:shadow-md">
-          <BiBell size={20} />
+        <button className="relative rounded-lg  p-2 hover:shadow-md ">
+          <span className=" absolute -right-0 -top-0 rounded-full bg-yellow-400 p-1 text-[8px] text-white ">
+            12
+          </span>
+          <BiBell size={22} />
         </button>
         <Link
-          href="/service-provider/provider-profile"
-          className="flex items-center gap-2"
+          href="/service-provider/dashboard"
+          className="flex items-center gap-1"
         >
           <Image
             src="/assets/images/marketplace/singleTask/oluchi.png"
@@ -71,7 +77,7 @@ const ServiceProviderNavbar = () => {
             height={40}
             className="rounded-full"
           />
-          <IoTriangle className="rotate-[60deg]" size={16} />
+          <IoTriangle className="rotate-[60deg]" size={8} />
         </Link>
       </div>
     </header>

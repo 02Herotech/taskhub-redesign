@@ -41,10 +41,17 @@ const config: Config = {
           lightViolet: "#EBE9F4",
           darkViolet: "#140B31",
         },
+        violet: {
+          normal: "#381F8C",
+          dark: "#140B31",
+        },
+        orange: {
+          normal: "#FE9B07",
+        },
       },
       fontFamily: {
-        clashDisplay: ["var(----font-clashDisplay)"],
-        satoshi: ["var(----font-satoshi)"],
+        satoshi: ["Satoshi", "sans-serif"],
+        clashDisplay: ["Clash Display", "sans-serif"],
       },
       container: {
         center: true,

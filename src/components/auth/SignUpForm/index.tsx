@@ -101,12 +101,14 @@ const SignUpForm = () => {
                                 <Input
                                     label='First Name'
                                     name='firstName'
+                                    placeholder="John"
                                     type='text'
                                     rules={["required", "textOnly"]}
                                 />
                                 <Input
                                     label='Last Name'
                                     name='lastName'
+                                    placeholder="Doe"
                                     type='text'
                                     rules={["required", "textOnly"]}
                                 />
