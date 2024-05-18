@@ -152,7 +152,7 @@ const MarketPlaceFilter = ({
                         id="filterBy"
                         className="border-[1.5px] border-[#381F8C] rounded-3xl bg-[#F1F1F2] text-[16px] font-[700] text-[#381F8C] text-center focus:outline-none w-[180px] py-4 px-8"
                     >
-                        <option value="">
+                        <option value="" className="rounded-3xl">
                             Filter By
                         </option>
                     </select>
