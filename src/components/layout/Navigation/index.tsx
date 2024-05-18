@@ -22,7 +22,6 @@ const Navigation = () => {
   const pathname = usePathname();
 
   const handleLogout = async () => {
-
     try {
       router.push("/");
       await signOut();
