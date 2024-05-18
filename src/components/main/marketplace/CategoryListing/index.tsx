@@ -2,9 +2,10 @@
 
 import { useState, useEffect } from "react";
 import axios from "axios";
-import Image from "next/image";
 import Link from "next/link";
 import { FaArrowRight, FaRegUser } from "react-icons/fa6";
+
+import Loading from "@/shared/loading";
 
 interface listingData {
     id: number;
@@ -100,22 +101,24 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
             }
 
             const response = await axios.post(
-                `${process.env.NEXT_PUBLIC_API_URL}listing/search-by-category?string=${category}`
+                `${process.env.NEXT_PUBLIC_API_URL}/listing/search-by-category?string=${category}`
             );
 
             if (response.status === 200) {
-                setListingData(response.data.slice(0, 4));
-                setIsLoading(false);
+                const slideListingData = response.data.slice(0, 4)
+                setListingData(slideListingData)
             }
         } catch (error) {
             setErrorMsg("Error searching listing");
+        } finally {
+            setIsLoading(false);
         }
     };
 
     const handleUserProfile = async (posterId: number) => {
         try {
             const response = await axios.get(
-                `${process.env.NEXT_PUBLIC_API_URL}user/user-profile/${posterId}`
+                `${process.env.NEXT_PUBLIC_API_URL}/user/user-profile/${posterId}`
             );
 
             if (response.status === 200) {
@@ -165,45 +168,55 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
     return (
         <div className="w-full my-16">
 
-            <div className="flex justify-between items-center mb-5">
-                <h1 className=" font-bold text-[28px]">{IdCategoryValue}</h1>
-                <Link
-                    href="#"
-                >
-                    <div className="text-[14px] text-purpleBase hover:text-grey4 group  mr-10 transition-colors duration-200 ">
-                        <div className=" flex items-center space-x-2">
-                            <p>View more</p>
-                            <span className="bold -rotate-45">
-                                <FaArrowRight />
-                            </span>
+            <div className="flex justify-between items-center mb-5 px-5 md:px-0">
+                <h1 className=" font-bold md:text-[30px] text-[24px]">{IdCategoryValue}</h1>
+
+                {
+                    listingData.length > 0 &&
+                    <Link
+                        href="#"
+                    >
+                        <div className="md:text-[18px] text-[15px] font-bold text-primary hover:text-status-darkViolet group  md:mr-10 transition-colors duration-200 ">
+                            <div className=" flex items-center space-x-2">
+                                <p>View more</p>
+                                <span className="bold -rotate-45">
+                                    <FaArrowRight />
+                                </span>
+                            </div>
+                            <span className="h-[1.5px] block bg-primary w-[90px] group-hover:text-status-darkViolet transition-colors duration-200"></span>
                         </div>
-                        <span className="h-[1.5px] block bg-purpleBase w-[90px] group-hover:bg-grey4 transition-colors duration-200"></span>
-                    </div>
-                </Link>
+                    </Link>
+                }
             </div>
 
             {
+                ErrorMsg &&
+                <div className="w-full flex items-center justify-center md:h-[300px] h-[200px]">
+                    <p className="md:text-[16px] sm:text[13px] text-center text-red-500">{ErrorMsg}</p>
+                </div>
+            }
+
+            {
                 isLoading ?
-                    <div className="w-full flex items-center justify-center h-[300px] ">
-                        <Image src="/public/assets/images/customer/task/Task management.svg" alt="loader" height={300} width={80} />
-                    </div>
+                    <Loading />
                     :
-                    <div className="flex ">
+                    <div className="flex flex-col md:flex-row space-y-8 md:space-y-0 justify-center">
+
                         {
                             listingData.map((listing, index) => (
-                                <div key={listing.id} className=" w-full">
-                                    <div className="grid grid-col-4 gap-x-4 w-[250px] h-[280px] ">
+                                <div key={listing.id} className=" w-full flex justify-center">
+                                    <div className="grid grid-col-4 gap-x-4 w-[320px] md:w-[250px] md:h-[280px] h-[350px]">
                                         <div className="bg-[#EBE9F4]  flex flex-col p-3 rounded-2xl">
                                             {listing.businessPictures.length > 1 && (
                                                 <img
                                                     src={listing.businessPictures[0]}
                                                     alt=""
-                                                    width={230}
-                                                    className="rounded-xl border-[1.5px] border-[#D9D9D9] h-[150px]"
+                                                    width={320}
+                                                    className="rounded-xl border-[1.5px] border-[#D9D9D9] h-[250px]"
                                                 />
                                             )}
                                             <div className="mt-2 flex flex-col justify-between h-full">
-                                                <h2 className="text-[18px] font-bold">{listing.businessName}</h2>
+                                                <h2 className="text-[22px] md:text-[25px]  font-bold">{listing.businessName}</h2>
 
                                                 <div className="flex justify-between items-center">
                                                     <div className="flex items-center space-x-2 ">
@@ -218,7 +231,7 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
                                                                             className="h-[25px] rounded-[50%] "
                                                                         />
                                                                     ) : (
-                                                                        <div className="bg-grey3 text-white p-2 rounded-[50%] ">
+                                                                        <div className="bg-[#b4b2be] text-white p-[9px] rounded-[50%] ">
                                                                             <FaRegUser size={10} />
                                                                         </div>
                                                                     )}
@@ -228,9 +241,9 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
                                                             )}
                                                         </div>
 
-                                                        <p className="text-[12px]">{firstName[listing.posterId]} {lastName[listing.posterId]}</p>
+                                                        <p className="text-[16px] font-[500]">{firstName[listing.posterId]} {lastName[listing.posterId]}</p>
                                                     </div>
-                                                    <p className="text-[14px] text-[#381F8C] font-bold">From ${listing.pricing} </p>
+                                                    <p className="text-[16px] text-[#381F8C] font-[600]">From ${listing.pricing} </p>
                                                 </div>
 
                                             </div>

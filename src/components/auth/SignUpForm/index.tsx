@@ -4,8 +4,7 @@ import Button from "@/components/global/Button";
 import Input from "@/components/global/Input";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
-import { toast } from "react-toastify";
+import { FormProvider, set, SubmitHandler, useForm } from "react-hook-form";
 import "react-phone-number-input/style.css";
 import { useState } from "react";
 import PhoneInputWithCountry from "react-phone-number-input/react-hook-form"
@@ -23,8 +22,9 @@ type SignUpRequest = {
 const SignUpForm = () => {
     const router = useRouter();
     const [isLoading, setIsLoading] = useState(false);
-    const [customerSignUpApiCall, { data: customerSignUpData, isLoading: isCustomerSignUpLoading }] = useCustomerSignupMutation();
-    const [serviceProviderSignUpApiCall, { data: serviceProviderSignUpData, isLoading: isServiceProviderSignUpLoading }] = useServiceProviderSignupMutation();
+    const [customerSignUpApiCall] = useCustomerSignupMutation();
+    const [serviceProviderSignUpApiCall] = useServiceProviderSignupMutation();
+    const [error, setError] = useState<string | null>(null);
 
     const methods = useForm({
         mode: "onChange",
@@ -74,9 +74,9 @@ const SignUpForm = () => {
 
         } catch (err: any) {
             console.log("Error:", err);
+            setError(err?.data.message);
             setIsLoading(false);
-            toast.error(err?.data.message); 
-        } 
+        }
     };
 
     return (
@@ -171,13 +171,16 @@ const SignUpForm = () => {
                                     and
                                     <Link
                                         href="/privacy"
-                                        className={`text-primary underline `}
+                                        className={`text-primary underline`}
                                     >
                                         {" "}
-                                        Privacy
+                                        Privacy Policy
                                     </Link>
                                 </label>
                             </div>
+                            {error && (
+                                <div className="text-red-500 text-xl text-center font-bold my-5">{error}</div>
+                            )}
                         </div>
                         <div className='pt-10 space-y-5'>
                             <Button

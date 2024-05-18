@@ -37,12 +37,10 @@ const ResetPasswordForm = () => {
                 `${process.env.NEXT_PUBLIC_API_URL}/user/reset-password?email=${email}`,
                 { password: payload.password }
             );
-            console.log(response);
 
             if ((response.status = 200)) {
                 router.push("/auth/login");
                 setIsLoading(false);
-                toast.success("Password Reset Successfully");
             }
         } catch (error: any) {
             console.error("Password Reset Error: ", error);

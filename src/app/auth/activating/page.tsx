@@ -19,7 +19,7 @@ const VerifyEmailForm = () => {
             await axios.post(
                 `${process.env.NEXT_PUBLIC_API_URL}/user/verify?t=${token}&e=${email}`
             );
-            toast.success("Email verified successfully");
+            // toast.success("Email verified successfully");
             router.push("/auth/login");
         } catch (error) {
             console.error("Error verifying email:", error);
@@ -33,9 +33,9 @@ const VerifyEmailForm = () => {
     }, []);
 
     return (
-        <section className='w-full xl:w-[554px] mx-auto max-lg:p-10 h-[60vh] flex items-center justify-center'>
+        <section className='w-full xl:w-[600px] mx-auto max-lg:p-10 h-[60vh] flex items-center justify-center'>
             <div className="space-y-4">
-                <h1 className='text-3xl lg:text-5xl text-black font-medium'>
+                <h1 className='text-3xl lg:text-5xl text-center text-black font-medium'>
                     Email Address verified 🎉
                 </h1>
                 <p className='lg:text-[15px] text-tc-gray font-medium'>
