@@ -113,11 +113,11 @@ const HeroSection = () => {
           <div className={`flex lg:w-[45%] flex-col justify-around text-black `}>
             <div className={`flex flex-col`}>
               <h1
-                className={`mb-5 lg:mt-[3rem] text-center lg:text-left lg:text-[50px] text-[35px] font-[600] leading-tight lg:w-[500px] w-full font-clashDisplay`}
+                className={`mb-5 lg:mt-[3rem] text-center lg:text-left lg:text-[50px] text-[35px] font-[600] leading-tight lg:w-[500px] w-full !font-clashDisplay`}
               >
                 Get Quick
                 <br />
-                And <span className={`font-[800] text-primary  bg-gradient-to-b from-[#1612C1] to-[#2E095DF2] via-[#32204A59] bg-clip-text text-transparent`}>Efficient</span> <br/> Services
+                And <span className={`font-[800] text-primary  bg-gradient-to-b from-[#1612C1] to-[#2E095DF2] via-[#32204A59] !bg-clip-text text-transparent`}>Efficient</span> <br/> Services
   
               </h1>
   
