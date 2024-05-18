@@ -126,8 +126,7 @@ const Footer = () => {
                 </div>
 
             </footer>
-
-            <div className="lg:hidden bg-status-lightViolet py-10">
+            <div className="block lg:hidden bg-status-lightViolet py-10">
                 <MobileFooter />
             </div>
 

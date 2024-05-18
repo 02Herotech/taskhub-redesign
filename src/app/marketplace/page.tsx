@@ -194,7 +194,7 @@ const MareketPlace = () => {
         <div>
             <HomeNavigation />
             <MarketPlaceHeader />
-            <div className="max-w-7xl mx-auto px-20 flex flex-col">
+            <div className="md:max-w-7xl mx-auto md:px-20 flex flex-col px-8">
 
                 <MarketPlaceFilter
                     selectedCategory={selectedCategory}
@@ -230,8 +230,8 @@ const MareketPlace = () => {
                     </div>
 
 
-                    <div>
-                        <h1 className=" font-bold text-[28px]">Browse by category</h1>
+                    <div className="my-10 md:my-0">
+                        <h1 className=" font-bold md:text-[28px] text-[23px]  ">Browse by category</h1>
 
                         <div className="flex flex-col my-5">
                             <div className="flex">
@@ -254,7 +254,7 @@ const MareketPlace = () => {
                         </div>
                     </div>
 
-                    <div>
+                    <div className="hidden lg:block">
                         <CategoryListing category='category1' />
 
                         <CategoryListing category='category2' />
