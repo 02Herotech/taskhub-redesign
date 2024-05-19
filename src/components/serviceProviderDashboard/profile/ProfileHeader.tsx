@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import React from "react";
 
 const userdata = {
@@ -28,9 +29,12 @@ const ProfileHeader = () => {
       </div>
 
       <div className="flex gap-4 max-md:justify-between max-md:py-4 lg:flex-col lg:items-end">
-        <button className="border-b text-sm font-medium text-[#381F8C] ">
+        <Link
+          href="/service-provider/dashboard/profile/edit-profile"
+          className="border-b text-sm font-medium text-[#381F8C] "
+        >
           Edit Account Details
-        </button>
+        </Link>
         <p className="text-sm font-medium text-[#140B31] ">
           A member since {userdata.joinedDate}
         </p>
