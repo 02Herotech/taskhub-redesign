@@ -263,14 +263,14 @@ const MarketPlaceFilter = ({
                 </div>
             </div>
 
-            <div className="flex flex-col md:flex-row md:w-full md:justify-between md:items-center my-10  space-y-10">
-                <div className="flex flex-col space-y-2">
+            <div className="flex flex-col lg:flex-row w-full lg:justify-between lg:items-center my-10  space-y-10">
+                <div className="flex flex-col space-y-2 w-[350px] md:w-full lg:w-full">
                     <h1 className="font-bold md:text-[39px] text-[30px]">Get a Tasker Directly</h1>
                     <p className="text-[#221354] md:text-[25px] text-[20px] font-[400]">Browse through our various services</p>
                 </div>
 
 
-                <form onSubmit={handleSubmit} className="flex items-center w-full justify-end ">
+                <form onSubmit={handleSubmit} className="flex items-center w-full lg:justify-end justify-center ">
 
                     <div className="flex items-center w-full md:w-[400px] border-[1.5px] rounded-xl border-[#C1BADB] px-3">
 
