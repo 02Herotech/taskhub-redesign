@@ -45,6 +45,7 @@ const config: Config = {
           light: "#EBE9F4",
           normal: "#381F8C",
           dark: "#140B31",
+          active: "#C1BADB",
         },
         orange: {
           normal: "#FE9B07",

@@ -43,7 +43,7 @@ const GeneralSidbarNavigation = () => {
               fill="none"
             />
           </svg>
-          Profie
+          Profile
         </Link>
         {providerSiderbarLinks.map((item) => (
           <Link
