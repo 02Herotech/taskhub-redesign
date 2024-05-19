@@ -8,16 +8,12 @@ interface props {
     selectedCategory: any
     selectedSubCategory: any
     location: any
-    service: any
     pricing: any
-    others: any
     search1: any
     handleCategoryChange: (event: React.ChangeEvent<HTMLSelectElement>) => void;
     handleSubCategoryChange: (event: React.ChangeEvent<HTMLSelectElement>) => void;
     handleLocation: (event: React.ChangeEvent<HTMLSelectElement>) => void;
-    handleService: (event: React.ChangeEvent<HTMLSelectElement>) => void;
     handlePricing: (event: React.ChangeEvent<HTMLSelectElement>) => void;
-    handleOther: (event: React.ChangeEvent<HTMLSelectElement>) => void;
     handleSearch1: (event: React.ChangeEvent<HTMLInputElement>) => void;
     handleClearSearch: () => void
     categories: any
@@ -25,6 +21,7 @@ interface props {
     filterData: any
     setFilterData: any
     setErrorMsg: any
+    setSearching: any
 
 }
 
@@ -33,109 +30,53 @@ const MarketPlaceFilter = ({
     selectedCategory,
     selectedSubCategory,
     location,
-    service,
     pricing,
-    others,
     search1,
     handleCategoryChange,
     handleSubCategoryChange,
     handleLocation,
-    handleService,
     handlePricing,
-    handleOther,
     handleSearch1,
     handleClearSearch,
     categories,
     setIsLoading,
-    filterData,
     setFilterData,
-    setErrorMsg
-
+    setErrorMsg,
+    setSearching
 }: props) => {
 
     const handleSubmit = (e: any) => {
         e.preventDefault
     }
-    const handleFilterByCategory = async () => {
-        setIsLoading(true);
 
-        try {
-            if (!selectedCategory) {
-                return;
-            }
 
-            const response = await axios.post(
-                `${process.env.NEXT_PUBLIC_API_URL}listing/marketplace-search?businessName=${selectedCategory}`
+    // const handleFilterByCatAndSubCatAndLocation = async () => {
+    //     setIsLoading(true);
+    //     setSearching(true)
 
-            );
-            if (response.status === 200) {
-                setFilterData(response.data);
-                setIsLoading(false);
-            }
-        } catch (error) {
-            setErrorMsg("Error searching listing");
-        }
-    };
+    //     try {
+    //         const response = await axios.post(
+    //             `${process.env.NEXT_PUBLIC_API_URL}/listing/marketplace-search?businessName=${selectedCategory}&location=${location}&subcategory=${selectedSubCategory}`
 
-    const handleFilterByCatAndSubCat = async () => {
-        setIsLoading(true);
+    //         );
+    //         if (response.status === 200) {
+    //             console.log("handleFilterByCatAndSubCatAndLocation: ", response)
+    //             setFilterData(response.data);
+    //         }
+    //     } catch (error) {
+    //         console.error(error)
+    //         setErrorMsg("Error searching listing");
+    //     } finally {
+    //         setIsLoading(false);
+    //     }
+    // };
 
-        try {
-            if (!selectedCategory && !selectedSubCategory) {
-                return;
-            }
+    // useEffect(() => {
+    //     if (selectedCategory) {
+    //         handleFilterByCatAndSubCatAndLocation()
+    //     }
+    // }, [selectedCategory])
 
-            const response = await axios.post(
-                `${process.env.NEXT_PUBLIC_API_URL}listing/marketplace-search?businessName=${selectedCategory}&subcategory=${selectedSubCategory}`
-
-            );
-            if (response.status === 200) {
-                setFilterData(response.data);
-                setIsLoading(false);
-            }
-        } catch (error) {
-            setErrorMsg("Error searching listing");
-        }
-    };
-
-    const handleFilterByCatAndSubCatAndLocation = async () => {
-        setIsLoading(true);
-
-        try {
-            if (!selectedCategory && !location) {
-                return;
-            }
-
-            const response = await axios.post(
-                `${process.env.NEXT_PUBLIC_API_URL}listing/marketplace-search?businessName=${selectedCategory}&location=${location}&subcategory=${selectedSubCategory}`
-
-            );
-            if (response.status === 200) {
-                setFilterData(response.data);
-                setIsLoading(false);
-            }
-        } catch (error) {
-            setErrorMsg("Error searching listing");
-        }
-    };
-
-    useEffect(() => {
-        if (selectedCategory) {
-            handleFilterByCategory
-        }
-    }, [selectedCategory])
-
-    useEffect(() => {
-        if (selectedCategory && selectedSubCategory) {
-            handleFilterByCatAndSubCat
-        }
-    }, [selectedSubCategory])
-
-    useEffect(() => {
-        if (selectedCategory && selectedSubCategory && selectedCategory) {
-            handleFilterByCatAndSubCatAndLocation
-        }
-    }, [selectedCategory, selectedSubCategory, selectedCategory])
 
     return (
         <div className="flex flex-col space-y-16 my-12">
@@ -220,7 +161,7 @@ const MarketPlaceFilter = ({
 
                         </select>
 
-                        <select
+                        {/* <select
                             name="service"
                             id="service"
                             value={service}
@@ -232,7 +173,7 @@ const MarketPlaceFilter = ({
                             </option>
                             <option value="Remote">Remote</option>
                             <option value="Physical">Physical</option>
-                        </select>
+                        </select> */}
 
                         <select
                             name="pricing"
@@ -244,10 +185,19 @@ const MarketPlaceFilter = ({
                             <option value="" disabled>
                                 Pricing
                             </option>
+                            <option value={`${500}, ${1000}`}>
+                                $500 -$1000
+                            </option>
+                            <option value="1000">
+                                $1000
+                            </option>
+                            <option value="2000">
+                                $2000
+                            </option>
 
                         </select>
 
-                        <select
+                        {/* <select
                             name="others"
                             id="others"
                             value={others}
@@ -258,7 +208,7 @@ const MarketPlaceFilter = ({
                                 Other
                             </option>
 
-                        </select>
+                        </select> */}
                     </div>
                 </div>
             </div>
