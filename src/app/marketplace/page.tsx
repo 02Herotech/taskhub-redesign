@@ -141,7 +141,7 @@ const MareketPlace = () => {
     };
 
 
-   
+
     const [filterData, setFilterData] = useState<listingData[]>([]);
     const [selectedCategory, setSelectedCategory] = useState("");
     const [selectedSubCategory, setSelectedSubCategory] = useState("");
@@ -234,7 +234,7 @@ const MareketPlace = () => {
                         <h1 className=" font-bold md:text-[28px] text-[20px]  ">Browse by category</h1>
 
 
-                        <div className="flex flex-wrap my-5 w-[350px] md:w-[700px]">
+                        <div className="flex flex-wrap my-5 w-[350px] md:w-[700px] lg:w-full">
 
                             <BoxFilter category="Home Services" Icon={FaHome} />
                             <BoxFilter category="Beauty" Icon={MdPersonalInjury} />
