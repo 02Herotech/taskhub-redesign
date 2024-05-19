@@ -191,10 +191,10 @@ const MareketPlace = () => {
 
 
     return (
-        <div>
-            <HomeNavigation />
+        <main>
+
             <MarketPlaceHeader />
-            <div className="md:max-w-7xl mx-auto md:px-20 flex flex-col px-8">
+            <div className="md:max-w-7xl mx-auto md:px-20 flex flex-col px-6">
 
                 <MarketPlaceFilter
                     selectedCategory={selectedCategory}
@@ -231,10 +231,10 @@ const MareketPlace = () => {
 
 
                     <div className="my-10 md:my-0">
-                        <h1 className=" font-bold md:text-[28px] text-[23px]  ">Browse by category</h1>
+                        <h1 className=" font-bold md:text-[28px] text-[20px]  ">Browse by category</h1>
 
 
-                        <div className="flex flex-wrap my-5 w-[330px] md:w-[820px]">
+                        <div className="flex flex-wrap my-5 w-[350px] md:w-[700px]">
 
                             <BoxFilter category="Home Services" Icon={FaHome} />
                             <BoxFilter category="Beauty" Icon={MdPersonalInjury} />
@@ -262,8 +262,7 @@ const MareketPlace = () => {
 
             </div>
 
-            <Footer />
-        </div >
+        </main >
     );
 }
 
