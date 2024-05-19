@@ -10,6 +10,7 @@ import Image from "next/image";
 // import RangeSlider from 'react-range-slider-input';
 import 'react-range-slider-input/dist/style.css';
 import Button from "@/components/global/Button";
+import { FaSortDown } from "react-icons/fa";
 
 const Tasks = () => {
     const [selectedFilters, setSelectedFilters] = useState({
@@ -91,34 +92,98 @@ const Tasks = () => {
         },
     ];
 
-
+    const categoryDropdown = [
+        {
+            label: "Home Services",
+            onClick: () => handleFilterChange('category', 'Home Services')
+        },
+        {
+            label: "Personal Services",
+            onClick: () => handleFilterChange('category', 'Personal Services')
+        },
+        {
+            label: "Events & Entertainment",
+            onClick: () => handleFilterChange('category', 'Events & Entertainment')
+        },
+        {
+            label: "Education & Tutoring",
+            onClick: () => handleFilterChange('category', 'Education & Tutoring')
+        },
+        {
+            label: "Professional Services",
+            onClick: () => handleFilterChange('category', 'Professional Services')
+        },
+        {
+            label: "Automotive Services",
+            onClick: () => handleFilterChange('category', 'Automotive Services')
+        },
+        {
+            label: "Health & Fitness",
+            onClick: () => handleFilterChange('category', 'Health & Fitness')
+        },
+        {
+            label: "Technology & Electronics",
+            onClick: () => handleFilterChange('category', 'Technology & Electronics')
+        },
+        {
+            label: "Home Improvement",
+            onClick: () => handleFilterChange('category', 'Home Improvement')
+        },
+        {
+            label: "Real Estate Services",
+            onClick: () => handleFilterChange('category', 'Real Estate Services')
+        },
+        {
+            label: "Delivery & Logistics",
+            onClick: () => handleFilterChange('category', 'Delivery & Logistics')
+        },
+        {
+            label: "Art & Creativity",
+            onClick: () => handleFilterChange('category', 'Art & Creativity')
+        },
+        {
+            label: "Wedding Services",
+            onClick: () => handleFilterChange('category', 'Wedding Services')
+        },
+        {
+            label: "Childcare & Babysitting",
+            onClick: () => handleFilterChange('category', 'Childcare & Babysitting')
+        },
+        {
+            label: "Travel & Adventure",
+            onClick: () => handleFilterChange('category', 'Travel & Adventure')
+        },
+    ];
 
     return (
         <section className="pt-7 container">
-
             <div className="hidden lg:flex lg:space-x-4 lg:max-w-[810px] items-center gap-6">
-                <select id="category" name="category" onChange={(e) => handleFilterChange('category', e.target.value)} className="w-full border-2 border-primary text-primary font-semibold bg-[#F1F1F2] py-2 px-4 rounded-full">
-                    <option value="">Category</option>
-                    <option value="Home Services">Home Services</option>
-                    <option value="Personal Services">Personal Services</option>
-                    <option value="Events & Entertainment">Events & Entertainment</option>
-                    <option value="Education & Tutoring">Education & Tutoring</option>
-                    <option value="Professional Services">Professional Services</option>
-                    <option value="Automotive Services">Automotive Services</option>
-                    <option value="Health & Fitness">Health & Fitness</option>
-                    <option value="Technology & Electronics">Technology & Electronics</option>
-                    <option value="Home Improvement">Home Improvement</option>
-                    <option value="Real Estate Services">Real Estate Services</option>
-                    <option value="Delivery & Logistics">Delivery & Logistics</option>
-                    <option value="Art & Creativity">Art & Creativity</option>
-                    <option value="Wedding Services">Wedding Services</option>
-                    <option value="Childcare & Babysitting">Childcare & Babysitting</option>
-                    <option value="Travel & Adventure">Travel & Adventure</option>
-                </select>
                 <Dropdown
                     trigger={() => (
-                        <div className="w-full border-2 border-primary text-primary font-semibold py-2 px-4 rounded-full">
-                            Location
+                        <div className="w-full border-2 border-primary text-primary flex items-center justify-between font-semibold py-2 px-4 rounded-full">
+                            <h2>Category</h2>
+                            <FaSortDown />
+                        </div>
+                    )}
+                    className='-left-20 top-14'>
+                    <form className='w-[240px] bg-white rounded-md p-4'>
+                        {categoryDropdown.map((button, index) => (
+                            <div
+                                key={index}
+                                onClick={button.onClick}
+                                className='flex w-full transition-all text-status-darkViolet text-base font-bold hover:text-tc-orange cursor-pointer items-center justify-between p-3'>
+                                <div className="">
+                                    {button.label}
+                                </div>
+                            </div>
+                        ))}
+                    </form>
+                </Dropdown>
+                <Dropdown
+                    trigger={() => (
+                        <div className="w-full border-2 border-primary text-primary flex items-center justify-between font-semibold py-2 px-4 rounded-full">
+                            <h2>Location</h2>
+                            <FaSortDown />
                         </div>
                     )}
                     className='-left-24 top-14'>
@@ -139,8 +204,9 @@ const Tasks = () => {
                 </Dropdown>
                 <Dropdown
                     trigger={() => (
-                        <div id="typeOfService" className="w-full border-2 border-primary text-primary font-semibold py-2 px-4 rounded-full">
-                            Type of service
+                        <div id="typeOfService" className="w-full border-2 border-primary flex items-center justify-between text-primary font-semibold py-2 px-4 rounded-full">
+                            <h2>Type of service</h2>
+                            <FaSortDown />
                         </div>
                     )}
                     className='-left-24 top-14'>
@@ -159,8 +225,9 @@ const Tasks = () => {
                 </Dropdown>
                 <Dropdown
                     trigger={() => (
-                        <div className="w-full border-2 border-primary text-primary font-semibold py-2 px-4 rounded-full">
-                            Pricing
+                        <div className="w-full border-2 border-primary text-primary flex items-center justify-between font-semibold py-2 px-4 rounded-full">
+                            <h2>Pricing</h2>
+                            <FaSortDown />
                         </div>
                     )}
                     className='-left-24 top-14'>
@@ -181,8 +248,9 @@ const Tasks = () => {
                 </Dropdown>
                 <Dropdown
                     trigger={() => (
-                        <div className="w-full border-2 border-primary text-primary font-semibold py-2 px-4 rounded-full">
-                            Others
+                        <div className="w-full border-2 border-primary text-primary flex items-center justify-between font-semibold py-2 px-4 rounded-full">
+                            <h2>Others</h2>
+                            <FaSortDown />
                         </div>
                     )}
                     className='-left-24 top-14'>
@@ -191,7 +259,7 @@ const Tasks = () => {
                             <div
                                 key={index}
                                 onClick={button.onClick}
-                                className='flex w-full transition-all text-base font-bold hover:text-tc-orange cursor-pointer items-center justify-between p-3'>
+                                className='flex w-full transition-all text-base text-status-darkViolet font-bold hover:text-tc-orange cursor-pointer items-center justify-between p-3'>
                                 <div className="">
                                     {button.label}
                                 </div>
