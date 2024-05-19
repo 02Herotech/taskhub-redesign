@@ -4,8 +4,8 @@ import ProfilePieChart from "./ProfilePieChart";
 
 const ProfileCompletion = () => {
   return (
-    <section className="grid h-full grid-cols-12 gap-3 rounded-lg bg-[#EBE9F4] p-4">
-      <div className="col-span-4 ">
+    <section className=" flex h-full flex-col gap-3 rounded-lg bg-[#EBE9F4] p-4 md:grid md:grid-cols-12">
+      <div className="col-span-4 max-md:max-w-40 ">
         <ProfilePieChart />
       </div>
       <div className="col-span-8 space-y-4 ">

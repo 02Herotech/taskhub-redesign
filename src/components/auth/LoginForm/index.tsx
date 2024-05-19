@@ -8,6 +8,7 @@ import { signIn } from "next-auth/react";
 import Link from "next/link";
 import { useState } from "react";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 type SignInRequest = {
   emailAddress: string;
@@ -37,6 +38,7 @@ const LoginForm = () => {
 
   const onSubmit: SubmitHandler<SignInRequest> = async (payload) => {
     try {
+      // toast.success("Login successful");
       setIsLoading(true);
 
       const response = await axios.post(

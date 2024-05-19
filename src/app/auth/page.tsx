@@ -6,7 +6,6 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
-
 const AuthForm = () => {
     const [userType, setUserType] = useState<"Customer" | "Service Provider">("Customer");
     const router = useRouter();
@@ -14,7 +13,7 @@ const AuthForm = () => {
     const params = new URLSearchParams({ userType });
 
     return (
-        <section className='w-full xl:w-[554px] h-full flex items-center justify-center mx-auto max-lg:p-10'>
+        <section className='w-full xl:w-[554px] h-full flex items-center justify-center mx-auto p-5 lg:p-10'>
             <div className='space-y-10'>
                 <div className="space-y-4 font-clashDisplay">
                     <h1 className='text-2xl lg:text-4xl text-black font-medium'>
@@ -27,7 +26,7 @@ const AuthForm = () => {
 
                 <div className="space-y-10 font-satoshi">
                     <h2 className="text-primary lg:text-2xl font-bold">Sign up as a:</h2>
-                    <div className='flex items-center space-x-4'>
+                    <div className='flex flex-col lg:flex-row items-center lg:space-x-4 space-y-4 lg:space-y-0'>
                         <Button
                             theme="outline"
                             onClick={() => setUserType("Customer")}
@@ -48,7 +47,7 @@ const AuthForm = () => {
 
                     <Button
                         className='w-full lg:w-[170px] rounded-full font-normal'
-                        onClick={() => router.push(`/auth/sign-up?${params}`)}
+                        onClick={() => router.push(`/auth/sign-up?${params.toString()}`)}
                     >
                         Next
                     </Button>

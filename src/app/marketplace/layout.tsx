@@ -17,12 +17,25 @@ const MarketplaceLayout = ({
 
     return (
         <div>
-            {isAuth && <Navigation />}
-            {!isAuth && <HomeNavigation />}
-            <main className='mt-[20px]'>
-                {children}
-            </main>
-            <Footer />
+            {isAuth ? (
+                <>
+                    <Navigation />
+                    <main className='mt-[20px]'>
+                        {children}
+                    </main>
+                    <Footer />
+                </>
+
+            ) : (
+
+                <>
+                    <HomeNavigation />
+                    <main className='mt-[20px]'>
+                        {children}
+                    </main>
+                    <Footer />
+                </>
+            )}
         </div>
     );
 };

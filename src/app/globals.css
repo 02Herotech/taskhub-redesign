@@ -2,3 +2,35 @@
 @tailwind components;
 @tailwind utilities;
 
+.Toastify__toast-container {
+    min-width: 388px !important;
+    z-index: 9999999999999 !important;
+}
+
+.Toastify__toast.Toastify__toast--success {
+    @apply border border-primary text-white bg-primary/25 font-normal text-base;
+    min-height: 56px;
+}
+
+.Toastify__toast-icon {
+    @apply hidden
+}
+
+.Toastify__toast.Toastify__toast--error {
+    @apply border border-status-error-100 text-status-error-100 bg-status-error-10 font-normal text-base;
+    min-height: 56px;
+}
+
+.Toastify__toast.Toastify__toast--info {
+    @apply border border-status-information-100 text-status-information-100 bg-status-information-10 font-normal text-base;
+    min-height: 56px;
+}
+
+.Toastify__toast.Toastify__toast--warning {
+    @apply border border-status-warning-100 text-status-warning-100 bg-status-warning-10 font-normal text-base;
+    min-height: 56px;
+}
+
+.Toastify__progress-bar {
+    opacity: 0 !important;
+}

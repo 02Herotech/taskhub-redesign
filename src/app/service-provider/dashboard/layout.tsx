@@ -9,7 +9,8 @@ const ServicePoviderDashboardLayout = ({ children }: AuthLayoutProps) => {
   return (
     <div className="relative mx-auto ">
       <ServiceProviderSidebar />
-      <main className="ml-72">
+
+      <main className="lg:ml-72">
         <Suspense>{children}</Suspense>
       </main>
     </div>
