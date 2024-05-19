@@ -14,7 +14,6 @@ const MarketplaceLayout = ({
 }: MarketplaceLayoutProps) => {
     const session = useSession();
     const isAuth = session.status === "authenticated";
-    console.log(session)
 
     return (
         <div>

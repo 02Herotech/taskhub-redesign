@@ -141,7 +141,7 @@ const MareketPlace = () => {
     };
 
 
-    const [listingData, setListingData] = useState<listingData[]>([]);
+   
     const [filterData, setFilterData] = useState<listingData[]>([]);
     const [selectedCategory, setSelectedCategory] = useState("");
     const [selectedSubCategory, setSelectedSubCategory] = useState("");
