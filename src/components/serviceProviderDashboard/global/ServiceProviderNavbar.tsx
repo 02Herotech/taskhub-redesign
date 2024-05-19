@@ -98,7 +98,7 @@ const ServiceProviderNavbar = () => {
         </div>
         <Link
           href="/service-provider/dashboard"
-          className="flex items-center gap-1"
+          className="flex items-center gap-1 max-md:hidden"
           onClick={() => setIsRightSidebarOpen((prev) => !prev)}
         >
           <Image
@@ -110,6 +110,19 @@ const ServiceProviderNavbar = () => {
           />
           <IoTriangle className="rotate-[60deg]" size={8} />
         </Link>
+        <button
+          className="flex items-center gap-1 lg:hidden"
+          onClick={() => setIsRightSidebarOpen((prev) => !prev)}
+        >
+          <Image
+            src="/assets/images/marketplace/singleTask/oluchi.png"
+            alt="user"
+            width={40}
+            height={40}
+            className="rounded-full max-md:h-9 max-md:w-9 "
+          />
+          <IoTriangle className="rotate-[60deg]" size={8} />
+        </button>
       </div>
     </header>
   );

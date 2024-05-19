@@ -8,6 +8,16 @@ h6 {
   cursor: default;
 }
 
+/* custom.css */
+.no-scrollbar {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none; /* WebKit-based browsers */
+}
+
 html {
   font-size: 16px;
 }

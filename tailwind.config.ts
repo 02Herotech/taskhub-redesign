@@ -49,6 +49,7 @@ const config: Config = {
         },
         orange: {
           normal: "#FE9B07",
+          light: "#FFF5E6",
         },
       },
       fontFamily: {

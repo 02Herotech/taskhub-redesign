@@ -1,11 +1,20 @@
+"use client";
+
+import Invoice from "@/components/serviceProviderDashboard/jobs/Invoice";
 import Image from "next/image";
-import React from "react";
+import Link from "next/link";
+import React, { useState } from "react";
 import { IoLocationOutline } from "react-icons/io5";
 
 const ViewJobs = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  console.log(isModalOpen);
+
   return (
-    <main className="flex min-h-[70vh] items-center justify-center space-y-8 p-4 lg:p-8">
-      <section className="bg-violet-light w-[90vw] max-w-2xl space-y-4 rounded-xl p-4 lg:p-8 ">
+    <main className=" relative flex min-h-[70vh] items-center justify-center space-y-8 p-4 lg:p-8">
+      <Invoice isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
+      <section className="w-[90vw] max-w-2xl space-y-4 rounded-xl bg-violet-light p-4 lg:p-8 ">
         <div className="flex justify-between gap-2">
           <div className="space-y-8 text-violet-normal">
             <p>A Catering Service Wanted:</p>
@@ -51,15 +60,21 @@ const ViewJobs = () => {
             Ensure seamless event catering, exceeding client expectations.
           </p>
           <div className="flex flex-wrap gap-4">
-            <button className="rounded-full bg-violet-normal px-6 py-3 text-sm font-medium text-white transition-opacity duration-300 hover:opacity-90 max-md:px-4 max-md:py-2 max-md:text-sm">
+            <button
+              onClick={() => setIsModalOpen((prev) => !prev)}
+              className="rounded-full bg-violet-normal px-6 py-3 text-sm font-medium text-white transition-opacity duration-300 hover:opacity-90 max-md:px-4 max-md:py-2 max-md:text-sm"
+            >
               Confirm
             </button>
-            <button className="bg-violet-light rounded-full border border-violet-normal px-6 py-3 text-sm font-medium  text-violet-normal transition-colors duration-300 hover:bg-violet-200 max-md:px-4 max-md:py-2 max-md:text-sm ">
+            <button className="rounded-full border border-violet-normal bg-violet-light px-6 py-3 text-sm font-medium  text-violet-normal transition-colors duration-300 hover:bg-violet-200 max-md:px-4 max-md:py-2 max-md:text-sm ">
               Cancel
             </button>
-            <button className="rounded-full px-6 py-3 font-medium transition-colors duration-300 hover:bg-violet-900 max-md:px-4  max-md:py-2 max-md:text-sm">
+            <Link
+              href={{ pathname: "/service-provider/message/1", query: "id=1" }}
+              className="rounded-full px-6 py-3 font-medium transition-colors duration-300 hover:bg-violet-900 max-md:px-4  max-md:py-2 max-md:text-sm"
+            >
               Chat with Customer
-            </button>
+            </Link>
           </div>
         </div>
       </section>
