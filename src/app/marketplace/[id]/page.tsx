@@ -55,19 +55,12 @@ interface listingData {
   businessPictures: string[];
 }
 
-const page = () => {
-
-  const router = useRouter()
-  const { id } = router.query
-
-
-  const [listingData, setListingData] = useState<listingData | null>(null);
-
+const Page = () => {
 
 
   return (
     <main className="pt-16 text-[#221354]">
-      <p>{id}</p>
+
       <PageHeader />
       <section className="grid lg:grid-cols-12  gap-16 py-10  mx-auto  px-10 max-w-screen-xl ">
         <ServiceDescription />
@@ -88,4 +81,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

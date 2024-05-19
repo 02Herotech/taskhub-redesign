@@ -142,6 +142,8 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
         }
     };
 
+
+
     useEffect(() => {
         handleFetchCategory();
     }, [category]);
@@ -153,8 +155,6 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
             });
         }
     }, [listingData]);
-
-
 
     useEffect(() => {
         if (category) {
@@ -173,23 +173,22 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
 
                 {
                     listingData.length > 0 &&
-                    <Link
-                        href="#"
-                    >
-                        <div className="md:text-[18px] text-[13px] font-bold text-primary hover:text-status-darkViolet group  md:mr-10 transition-colors duration-200 ">
-                            <div className=" flex items-center space-x-1">
-                                <p>View more</p>
 
-                                <span className="bold -rotate-45 hidden lg:block">
-                                    <FaArrowRight size={15} />
-                                </span>
-                                <span className="bold -rotate-45 block lg:hidden">
-                                    <FaArrowRight size={10} />
-                                </span>
-                            </div>
-                            <span className="h-[1.5px] block bg-primary w-[90px] group-hover:text-status-darkViolet transition-colors duration-200"></span>
+                    <div className="md:text-[18px] text-[13px] font-bold text-primary hover:text-status-darkViolet group  md:mr-10 transition-colors duration-200 "
+                    >
+                        <div className=" flex items-center space-x-1">
+                            <p>View more</p>
+
+                            <span className="bold -rotate-45 hidden lg:block">
+                                <FaArrowRight size={15} />
+                            </span>
+                            <span className="bold -rotate-45 block lg:hidden">
+                                <FaArrowRight size={10} />
+                            </span>
                         </div>
-                    </Link>
+                        <span className="h-[1.5px] block bg-primary w-[90px] group-hover:text-status-darkViolet transition-colors duration-200"></span>
+                    </div>
+
                 }
             </div>
 
