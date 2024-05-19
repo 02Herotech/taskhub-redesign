@@ -4,21 +4,17 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React, { useState } from "react";
-import { BiBell, BiChat, BiMenu } from "react-icons/bi";
-import {
-  BsChatLeftQuote,
-  BsFillChatLeftQuoteFill,
-  BsQuote,
-  BsTriangle,
-} from "react-icons/bs";
-import { CiMenuBurger } from "react-icons/ci";
+import { BiBell, BiMenu } from "react-icons/bi";
+
 import { IoChatbubbleOutline, IoTriangle } from "react-icons/io5";
-import { PiTriangleFill } from "react-icons/pi";
 import ServiceProvideMobileNav from "./ServiceProvideMobileNav";
 import ServiceProviderMobileSidebar from "./ServiceProviderMobileSidebar";
 import ServiceProviderNotificationModal from "./ServiceProviderNotificationModal";
+import { useSession } from "next-auth/react";
 
 const ServiceProviderNavbar = () => {
+  const session = useSession();
+  const user = session?.data?.user?.user;
   const pathname = usePathname();
 
   const [isLeftSidebarOpen, setIsLeftSidebarOpen] = useState(false);
@@ -102,11 +98,15 @@ const ServiceProviderNavbar = () => {
           onClick={() => setIsRightSidebarOpen((prev) => !prev)}
         >
           <Image
-            src="/assets/images/marketplace/singleTask/oluchi.png"
+            src={
+              user?.profileImage
+                ? user?.profileImage
+                : "/assets/images/serviceProvider/user.jpg"
+            }
             alt="user"
             width={40}
             height={40}
-            className="rounded-full max-md:h-9 max-md:w-9 "
+            className="size-10 rounded-full border border-violet-normal object-cover max-md:size-9 "
           />
           <IoTriangle className="rotate-[60deg]" size={8} />
         </Link>
@@ -115,11 +115,15 @@ const ServiceProviderNavbar = () => {
           onClick={() => setIsRightSidebarOpen((prev) => !prev)}
         >
           <Image
-            src="/assets/images/marketplace/singleTask/oluchi.png"
+            src={
+              user?.profileImage
+                ? user?.profileImage
+                : "/assets/images/serviceProvider/user.jpg"
+            }
             alt="user"
             width={40}
             height={40}
-            className="rounded-full max-md:h-9 max-md:w-9 "
+            className="size-10 rounded-full border border-violet-normal object-cover max-md:size-9 "
           />
           <IoTriangle className="rotate-[60deg]" size={8} />
         </button>
