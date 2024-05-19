@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import Image from "next/image";
 import React, { useCallback, useState } from "react";
@@ -12,7 +12,6 @@ import PageHeader from "@/components/matkeplaceSingleTask/PageHeader";
 import PricingPlan from "@/components/matkeplaceSingleTask/PricingPlan";
 import Reviews from "@/components/matkeplaceSingleTask/Reviews";
 import ServiceDescription from "@/components/matkeplaceSingleTask/ServiceDescription";
-
 
 interface listingData {
   id: number;
@@ -56,17 +55,14 @@ interface listingData {
 }
 
 const Page = () => {
-
-
   return (
     <main className="pt-16 text-[#221354]">
-
       <PageHeader />
-      <section className="grid lg:grid-cols-12  gap-16 py-10  mx-auto  px-10 max-w-screen-xl ">
+      <section className="mx-auto grid  max-w-screen-xl gap-4 p-4 lg:grid-cols-12 lg:gap-16 lg:p-10 ">
         <ServiceDescription />
         <PricingPlan />
       </section>
-      <section className="py-10  mx-auto px-10 ">
+      <section className="mx-auto p-4 lg:p-10 ">
         <Image
           src="/assets/images/marketplace/singleTask/googlemap.png"
           alt="googlemap"
