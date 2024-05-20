@@ -158,7 +158,7 @@ const Tasks = () => {
 
     return (
         <section className="pt-7 container">
-            <div className="hidden lg:flex lg:space-x-4 lg:max-w-[810px] items-center gap-6">
+            <div className="hidden lg:flex lg:space-x-4 lg:min-w-[810px] items-center gap-6">
                 <Dropdown
                     trigger={() => (
                         <div className="w-full border-2 border-primary text-primary flex items-center justify-between font-semibold py-2 px-4 rounded-full">

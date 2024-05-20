@@ -149,7 +149,7 @@ const AddTaskForm: React.FC = () => {
     };
     const handleSuite = (event: React.ChangeEvent<HTMLInputElement>) => {
         setSelectedSuite(event.target.value);
-        
+
     };
     const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setTermsAccepted(event.target.checked);
@@ -207,7 +207,7 @@ const AddTaskForm: React.FC = () => {
         if (date) {
             // Formatting the date as "dd-MM-yyyy"
             const day = String(date.getDate()).padStart(2, '0');
-            const month = String(date.getMonth() + 1).padStart(2, '0'); 
+            const month = String(date.getMonth() + 1).padStart(2, '0');
             const year = date.getFullYear();
             return `${day}-${month}-${year}`;
         }
@@ -229,74 +229,74 @@ const AddTaskForm: React.FC = () => {
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault()
-            if (validateFields() && validateField1()) {
-                try {
-                    let finalTask = { ...task };
+        if (validateFields() && validateField1()) {
+            try {
+                let finalTask = { ...task };
 
-                    if (termsAccepted) {
-                        finalTask = { ...finalTask };
-                    }
-                    if (termsAccepted) {
-                        const hub = isSelectedTime
-                        finalTask = { ...finalTask, hubTime: hub };
-                    }
-                    if (selectedTime && selectedDate) {
-                        const date = dateString;
-                        const time = timeString;
-                        finalTask = { ...finalTask, taskDate: date, taskTime: time }
-                    }
-
-                    if (isOpen && activeButtonIndex === 1) {
-                        const type = "REMOTE_SERVICE"
-                        finalTask = { ...finalTask, taskType: type };
-                    } else {
-                        const fullAddress = `${selectedSuite} ${task.taskAddress} ${selectedCode} ${selectedCity}`;
-                        finalTask = {
-                            ...finalTask,
-                            taskType: "PHYSICAL_SERVICE",
-                            taskAddress: fullAddress,
-                        };
-                    }
-                    
-                   
-
-                    if (!task.taskImage) {
-                        const defaultImage =
-                            "google-map.png";
-                        setTask({ ...task, taskImage: defaultImage });
-                    }
-
-                  
-
-                    console.log(finalTask);
-                    await axios.post(
-                        "https://smp.jacinthsolutions.com.au/api/v1/task/post",
-                        finalTask,
-                        {
-                            headers: {
-                                Authorization: `Bearer ${token}`,
-                                 'Content-Type': 'multipart/form-data',
-                            },
-                        },
-                    );
-                    setTask({
-                        taskDescription: "",
-                        taskImage: "",
-                        taskTime: "",
-                        taskDate: "",
-                        taskType: "",
-                        taskAddress: "",
-                        hubTime: "",
-                        customerBudget: "",
-                    });
-                    console.log(finalTask);
-                    setIsSuccessPopupOpen(true);
-                } catch (error) {
-                    console.error("Error submitting form:", error);
-                    setIsSuccessPopupOpen(false);
+                if (termsAccepted) {
+                    finalTask = { ...finalTask };
                 }
+                if (termsAccepted) {
+                    const hub = isSelectedTime
+                    finalTask = { ...finalTask, hubTime: hub };
+                }
+                if (selectedTime && selectedDate) {
+                    const date = dateString;
+                    const time = timeString;
+                    finalTask = { ...finalTask, taskDate: date, taskTime: time }
+                }
+
+                if (isOpen && activeButtonIndex === 1) {
+                    const type = "REMOTE_SERVICE"
+                    finalTask = { ...finalTask, taskType: type };
+                } else {
+                    const fullAddress = `${selectedSuite} ${task.taskAddress} ${selectedCode} ${selectedCity}`;
+                    finalTask = {
+                        ...finalTask,
+                        taskType: "PHYSICAL_SERVICE",
+                        taskAddress: fullAddress,
+                    };
+                }
+
+
+
+                if (!task.taskImage) {
+                    const defaultImage =
+                        "google-map.png";
+                    setTask({ ...task, taskImage: defaultImage });
+                }
+
+
+
+                console.log(finalTask);
+                await axios.post(
+                    "https://smp.jacinthsolutions.com.au/api/v1/task/post",
+                    finalTask,
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                            'Content-Type': 'multipart/form-data',
+                        },
+                    },
+                );
+                setTask({
+                    taskDescription: "",
+                    taskImage: "",
+                    taskTime: "",
+                    taskDate: "",
+                    taskType: "",
+                    taskAddress: "",
+                    hubTime: "",
+                    customerBudget: "",
+                });
+                console.log(finalTask);
+                setIsSuccessPopupOpen(true);
+            } catch (error) {
+                console.error("Error submitting form:", error);
+                setIsSuccessPopupOpen(false);
             }
-        
+        }
+
     };
 
     const renderPage = () => {
