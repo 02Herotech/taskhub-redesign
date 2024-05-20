@@ -9,7 +9,7 @@ const PageHeader = () => {
         alt="banner"
         width={800}
         height={500}
-        className="w-full max-w-screen-xl "
+        className="mx-auto w-full max-w-screen-xl "
       />
     </header>
   );
