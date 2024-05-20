@@ -55,8 +55,8 @@ const ServiceProviderNavbar = () => {
           Provide a service
         </Link>
         <Link
-          href="/service-provider/explore-task"
-          className={` text-lg font-bold hover:opacity-90 ${pathname === "/service-provider/explore-task" ? "text-yellow-500 " : "text-[#2A1769]"} `}
+          href="/explore"
+          className={` text-lg font-bold hover:opacity-90 ${pathname === "/explore" ? "text-yellow-500 " : "text-[#2A1769]"} `}
         >
           Explore Task
         </Link>
