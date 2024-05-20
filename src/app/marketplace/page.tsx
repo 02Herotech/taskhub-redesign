@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FaHome } from "react-icons/fa";
 import { MdPersonalInjury } from "react-icons/md";
 import { GrPersonalComputer } from "react-icons/gr";
@@ -9,15 +9,14 @@ import { GiStoneCrafting } from "react-icons/gi";
 import { FaBabyCarriage } from "react-icons/fa";
 import { MdSecurity } from "react-icons/md";
 import { MdLocalGroceryStore } from "react-icons/md";
+import axios from "axios";
 
-import header from "../../../public/marketplaceHeader.png"
-import MarketplaceHeader from "@/components/main/marketplace/MarketPlaceHeader";
+
 import MarketPlaceFilter from "@/components/main/marketplace/MarketPlaceFilter";
 import MarketPlaceHeader from "@/components/main/marketplace/MarketPlaceHeader";
 import CategoryListing from "@/components/main/marketplace/CategoryListing";
 import BoxFilter from "@/components/main/marketplace/BoxFilter";
-import HomeNavigation from "@/components/layout/HomeNavigation";
-import Footer from "@/components/layout/Footer";
+import SearchResult from "@/components/main/marketplace/SearchResult";
 
 
 interface Category {
@@ -146,12 +145,19 @@ const MareketPlace = () => {
     const [selectedCategory, setSelectedCategory] = useState("");
     const [selectedSubCategory, setSelectedSubCategory] = useState("");
     const [isLoading, setIsLoading] = useState(false)
+    const [searching, setSearching] = useState(false)
     const [location, setLocation] = useState("");
     const [service, setService] = useState("");
     const [pricing, setPricing] = useState("");
     const [others, setOthers] = useState("");
     const [search1, setSearch1] = useState("");
     const [errorMsg, setErrorMsg] = useState("");
+    const [profileImages, setProfileImages] = useState<{ [key: number]: string }>(
+        {}
+    );
+    const [firstName, setFirstName] = useState<{ [key: number]: string }>({});
+    const [lastName, setLastName] = useState<{ [key: number]: string }>({});
+    const [imgErrMsg, setImgErrMsg] = useState("")
 
 
     const handleCategoryChange = (
@@ -160,6 +166,7 @@ const MareketPlace = () => {
         const category = event.target.value;
         setSelectedCategory(category);
         setSelectedSubCategory("");
+        setLocation("")
     };
 
     const handleSubCategoryChange = (
@@ -171,6 +178,7 @@ const MareketPlace = () => {
 
     const handleLocation = (e: any) => {
         setLocation(e.target.value)
+
     }
     const handleService = (e: any) => {
         setService(e.target.value)
@@ -189,6 +197,74 @@ const MareketPlace = () => {
     }
 
 
+    const handleUserProfile = async (posterId: number) => {
+        try {
+            const response = await axios.get(
+                `${process.env.NEXT_PUBLIC_API_URL}/user/user-profile/${posterId}`
+            );
+
+            if (response.status === 200) {
+                setProfileImages((prevProfileImages) => ({
+                    ...prevProfileImages,
+                    [posterId]: response.data.profileImage,
+                }));
+
+                setFirstName((prevFirstName) => ({
+                    ...prevFirstName,
+                    [posterId]: response.data.firstName,
+                }));
+
+                setLastName((prevLastName) => ({
+                    ...prevLastName,
+                    [posterId]: response.data.lastName,
+                }));
+            }
+        } catch (error) {
+            setImgErrMsg("Error loading image");
+        }
+    };
+
+    const handleFilterByCatAndSubCatAndLocation = async () => {
+        setIsLoading(true);
+        setSearching(true);
+
+        console.log("selectedCategory: ", selectedCategory);
+        console.log("location: ", location);
+        console.log("selectedSubCategory: ", selectedSubCategory);
+
+        try {
+            const response = await axios.post(
+                `${process.env.NEXT_PUBLIC_API_URL}/listing/marketplace-search?businessName=${selectedCategory}&location=${location}&subcategory=${selectedSubCategory}`
+            );
+            if (response.status === 200) {
+                console.log("handleFilterByCatAndSubCatAndLocation: ", response);
+                setFilterData(response.data);
+            }
+        } catch (error) {
+            console.error(error);
+            setErrorMsg("Error searching listing");
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        if (selectedCategory || selectedSubCategory || location) {
+            handleFilterByCatAndSubCatAndLocation();
+        }
+    }, [selectedCategory, selectedSubCategory, location]);
+
+
+    useEffect(() => {
+        if (filterData.length > 0) {
+            filterData.forEach((task) => {
+                handleUserProfile(task.posterId);
+            });
+        }
+    }, [filterData]);
+
+
+
 
     return (
         <main>
@@ -200,65 +276,72 @@ const MareketPlace = () => {
                     selectedCategory={selectedCategory}
                     selectedSubCategory={selectedSubCategory}
                     location={location}
-                    service={service}
                     pricing={pricing}
-                    others={others}
                     search1={search1}
                     handleCategoryChange={handleCategoryChange}
                     handleSubCategoryChange={handleSubCategoryChange}
                     handleLocation={handleLocation}
-                    handleService={handleService}
                     handlePricing={handlePricing}
-                    handleOther={handleOther}
                     handleSearch1={handleSearch1}
                     handleClearSearch={handleClearSearch}
                     categories={categories}
-                    setIsLoading={setIsLoading}
-                    filterData={filterData}
-                    setFilterData={setFilterData}
-                    setErrorMsg={setErrorMsg}
-
                 />
 
-                <div>
-                    <div>
-                        <CategoryListing category='category1' />
 
-                        <CategoryListing category='category2' />
+                {
+                    searching ?
 
-                        <CategoryListing category='category5' />
-                    </div>
+                        <SearchResult
+                            isLoading={isLoading}
+                            filterData={filterData}
+                            profileImages={profileImages}
+                            imgErrMsg={imgErrMsg}
+                            firstName={firstName}
+                            lastName={lastName}
+                        />
+                        :
+                        <div>
+                            <div>
+                                <CategoryListing category='category1' />
+
+                                <CategoryListing category='category2' />
+
+                                <CategoryListing category='category5' />
+                            </div>
 
 
-                    <div className="my-10 md:my-0">
-                        <h1 className=" font-bold md:text-[28px] text-[20px]  ">Browse by category</h1>
+                            <div className="my-10 md:my-0">
+                                <h1 className=" font-bold md:text-[28px] text-[20px]  ">Browse by category</h1>
 
 
-                        <div className="flex flex-wrap my-5 w-[350px] md:w-[700px] lg:w-full">
+                                <div className="flex flex-wrap my-5 w-[350px] md:w-[700px] lg:w-full">
 
-                            <BoxFilter category="Home Services" Icon={FaHome} />
-                            <BoxFilter category="Beauty" Icon={MdPersonalInjury} />
-                            <BoxFilter category="Events" Icon={BsCalendar2EventFill} />
-                            <BoxFilter category="Custodian" Icon={MdSecurity} />
-                            <BoxFilter category="Art and Craft" Icon={GiStoneCrafting} />
-                            <BoxFilter category="Information & Technology" Icon={GrPersonalComputer} />
-                            <BoxFilter category="Grocery" Icon={MdLocalGroceryStore} />
-                            <BoxFilter category="Petcare" Icon={FaBabyCarriage} />
+                                    <BoxFilter category="Home Services" Icon={FaHome} />
+                                    <BoxFilter category="Beauty" Icon={MdPersonalInjury} />
+                                    <BoxFilter category="Events" Icon={BsCalendar2EventFill} />
+                                    <BoxFilter category="Custodian" Icon={MdSecurity} />
+                                    <BoxFilter category="Art and Craft" Icon={GiStoneCrafting} />
+                                    <BoxFilter category="Information & Technology" Icon={GrPersonalComputer} />
+                                    <BoxFilter category="Grocery" Icon={MdLocalGroceryStore} />
+                                    <BoxFilter category="Petcare" Icon={FaBabyCarriage} />
 
+
+                                </div>
+
+                            </div>
+
+                            <div className="hidden lg:block">
+                                <CategoryListing category='category1' />
+
+                                <CategoryListing category='category2' />
+
+                                <CategoryListing category='category5' />
+                            </div>
 
                         </div>
+                }
 
-                    </div>
 
-                    <div className="hidden lg:block">
-                        <CategoryListing category='category1' />
-
-                        <CategoryListing category='category2' />
-
-                        <CategoryListing category='category5' />
-                    </div>
-
-                </div>
 
             </div>
 
