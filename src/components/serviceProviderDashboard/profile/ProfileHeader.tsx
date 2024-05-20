@@ -1,3 +1,4 @@
+import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
@@ -10,21 +11,29 @@ const userdata = {
 };
 
 const ProfileHeader = () => {
+  const session = useSession();
+  const user = session?.data?.user?.user;
   return (
     <header className="flex items-center justify-between gap-2 max-md:flex-col">
       <div className="flex items-center gap-8">
         <Image
-          src={userdata.image}
-          alt={userdata.name}
+          src={
+            user?.profileImage
+              ? user?.profileImage
+              : "/assets/images/serviceProvider/user.jpg"
+          }
+          alt={user?.firstName ? user?.firstName : "user"}
           width={160}
           height={160}
-          className="max-w-40 rounded-full max-md:max-w-24"
+          className="max-siz-40 size-40 rounded-full object-cover max-md:size-24 max-md:max-w-24"
         />
         <div className="flex flex-col gap-2  ">
           <h1 className="text-3xl font-bold text-[#140B31] lg:text-4xl">
-            Welcome {userdata.name}
+            Welcome {user?.firstName} {user?.lastName}
           </h1>
-          <p className="font-clashDisplay text-[#140B31] ">{userdata.email}</p>
+          <p className="font-clashDisplay text-[#140B31] ">
+            {user?.emailAddress}
+          </p>
         </div>
       </div>
 
@@ -36,9 +45,11 @@ const ProfileHeader = () => {
           Edit Account Details
         </Link>
         <p className="text-sm font-medium text-[#140B31] ">
-          A member since {userdata.joinedDate}
+          A member since {user?.registeredAt[0]}
         </p>
-        <p className="text-sm font-medium text-[#140B31] ">Location</p>
+        <p className="text-sm font-medium text-[#140B31] ">
+          {user?.address?.state}
+        </p>
       </div>
     </header>
   );

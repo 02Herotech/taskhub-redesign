@@ -71,7 +71,7 @@ const ServicesPage = () => {
           <motion.div
             key={index}
             className="mx-auto cursor-pointer space-y-8 rounded-xl bg-[#EBE9F4] p-2"
-            onClick={() => handleNavigateCard(index)}
+            // onClick={() => handleNavigateCard(index)}
             initial={{ opacity: 0, translateY: "5rem" }}
             whileInView={{ opacity: 1, translateY: "0" }}
             transition={{ duration: 0.5 }}
