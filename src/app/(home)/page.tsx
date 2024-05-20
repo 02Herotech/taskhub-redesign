@@ -6,27 +6,13 @@ import WelcomeAboard from "@/components/homepage/WelcomeAboard";
 
 const HomePage = () => {
   return (
-    <main className={`min-h-screen `}>
-    <div>
+    <main className="min-h-screen">
       <HeroSection />
-    </div>
-
-    <div>
       <SecurityFeatures />
-    </div>
-
-    <div>
       <WelcomeAboard />
-    </div>
-
-    <div>
       <SPHomepage />
-    </div>
-
-    <div>
       <Testimonials />
-    </div>
-  </main>
+    </main>
 
   );
 };
