@@ -17,6 +17,7 @@ import MarketPlaceHeader from "@/components/main/marketplace/MarketPlaceHeader";
 import CategoryListing from "@/components/main/marketplace/CategoryListing";
 import BoxFilter from "@/components/main/marketplace/BoxFilter";
 import SearchResult from "@/components/main/marketplace/SearchResult";
+import ViewMore from "@/components/main/marketplace/view-more";
 
 
 interface Category {
@@ -142,16 +143,20 @@ const MareketPlace = () => {
 
 
     const [filterData, setFilterData] = useState<listingData[]>([]);
+    const [listingData, setListingData] = useState<listingData[]>([]);
+    const [viewMoreListing, setViewMoreListing] = useState<listingData[]>([]);
     const [selectedCategory, setSelectedCategory] = useState("");
     const [selectedSubCategory, setSelectedSubCategory] = useState("");
     const [isLoading, setIsLoading] = useState(false)
     const [searching, setSearching] = useState(false)
+    const [viewMore, setViewMore] = useState(false)
     const [location, setLocation] = useState("");
     const [service, setService] = useState("");
     const [pricing, setPricing] = useState("");
     const [others, setOthers] = useState("");
     const [search1, setSearch1] = useState("");
     const [errorMsg, setErrorMsg] = useState("");
+    const [categoryHeader, setCategoryHeader] = useState("");
     const [profileImages, setProfileImages] = useState<{ [key: number]: string }>(
         {}
     );
@@ -228,16 +233,11 @@ const MareketPlace = () => {
         setIsLoading(true);
         setSearching(true);
 
-        console.log("selectedCategory: ", selectedCategory);
-        console.log("location: ", location);
-        console.log("selectedSubCategory: ", selectedSubCategory);
-
         try {
             const response = await axios.post(
                 `${process.env.NEXT_PUBLIC_API_URL}/listing/marketplace-search?businessName=${selectedCategory}&location=${location}&subcategory=${selectedSubCategory}`
             );
             if (response.status === 200) {
-                console.log("handleFilterByCatAndSubCatAndLocation: ", response);
                 setFilterData(response.data);
             }
         } catch (error) {
@@ -267,7 +267,7 @@ const MareketPlace = () => {
 
 
     return (
-        <main>
+        <main className="font-satoshi">
 
             <MarketPlaceHeader />
             <div className="md:max-w-7xl mx-auto md:px-20 flex flex-col px-6">
@@ -285,15 +285,17 @@ const MareketPlace = () => {
                     handleSearch1={handleSearch1}
                     handleClearSearch={handleClearSearch}
                     categories={categories}
+                    categoryHeader={categoryHeader}
+
                 />
 
 
                 {
-                    searching ?
+                    viewMore ?
 
-                        <SearchResult
+                        <ViewMore
                             isLoading={isLoading}
-                            filterData={filterData}
+                            viewMoreListing={viewMoreListing}
                             profileImages={profileImages}
                             imgErrMsg={imgErrMsg}
                             firstName={firstName}
@@ -301,48 +303,60 @@ const MareketPlace = () => {
                         />
                         :
                         <div>
-                            <div>
-                                <CategoryListing category='category1' />
+                            {
+                                searching ?
 
-                                <CategoryListing category='category2' />
+                                    <SearchResult
+                                        isLoading={isLoading}
+                                        filterData={filterData}
+                                        profileImages={profileImages}
+                                        imgErrMsg={imgErrMsg}
+                                        firstName={firstName}
+                                        lastName={lastName}
+                                    />
+                                    :
+                                    <div>
+                                        <div>
+                                            <CategoryListing category='category1' setViewMore={setViewMore} listingData={listingData} setListingData={setListingData} setCategoryHeader={setCategoryHeader} setViewMoreListing={setViewMoreListing} viewMoreListing={viewMoreListing} />
 
-                                <CategoryListing category='category5' />
-                            </div>
+                                            <CategoryListing category='category2' setViewMore={setViewMore} listingData={listingData} setListingData={setListingData} setCategoryHeader={setCategoryHeader} setViewMoreListing={setViewMoreListing} viewMoreListing={viewMoreListing} />
 
-
-                            <div className="my-10 md:my-0">
-                                <h1 className=" font-bold md:text-[28px] text-[20px]  ">Browse by category</h1>
-
-
-                                <div className="flex flex-wrap my-5 w-[350px] md:w-[700px] lg:w-full">
-
-                                    <BoxFilter category="Home Services" Icon={FaHome} />
-                                    <BoxFilter category="Beauty" Icon={MdPersonalInjury} />
-                                    <BoxFilter category="Events" Icon={BsCalendar2EventFill} />
-                                    <BoxFilter category="Custodian" Icon={MdSecurity} />
-                                    <BoxFilter category="Art and Craft" Icon={GiStoneCrafting} />
-                                    <BoxFilter category="Information & Technology" Icon={GrPersonalComputer} />
-                                    <BoxFilter category="Grocery" Icon={MdLocalGroceryStore} />
-                                    <BoxFilter category="Petcare" Icon={FaBabyCarriage} />
+                                            <CategoryListing category='category5' setViewMore={setViewMore} listingData={listingData} setListingData={setListingData} setCategoryHeader={setCategoryHeader} setViewMoreListing={setViewMoreListing} viewMoreListing={viewMoreListing} />
+                                        </div>
 
 
-                                </div>
+                                        <div className="my-10 md:my-0">
+                                            <h1 className=" font-bold md:text-[28px] text-[20px]  ">Browse by category</h1>
 
-                            </div>
 
-                            <div className="hidden lg:block">
-                                <CategoryListing category='category1' />
+                                            <div className="flex flex-wrap my-5 w-[350px] md:w-[700px] lg:w-full">
 
-                                <CategoryListing category='category2' />
+                                                <BoxFilter category="Home Services" Icon={FaHome} />
+                                                <BoxFilter category="Beauty" Icon={MdPersonalInjury} />
+                                                <BoxFilter category="Events" Icon={BsCalendar2EventFill} />
+                                                <BoxFilter category="Custodian" Icon={MdSecurity} />
+                                                <BoxFilter category="Art and Craft" Icon={GiStoneCrafting} />
+                                                <BoxFilter category="Information & Technology" Icon={GrPersonalComputer} />
+                                                <BoxFilter category="Grocery" Icon={MdLocalGroceryStore} />
+                                                <BoxFilter category="Petcare" Icon={FaBabyCarriage} />
 
-                                <CategoryListing category='category5' />
-                            </div>
 
+                                            </div>
+
+                                        </div>
+
+                                        <div className="hidden lg:block">
+                                            <CategoryListing category='category1' setViewMore={setViewMore} listingData={listingData} setListingData={setListingData} setCategoryHeader={setCategoryHeader} setViewMoreListing={setViewMoreListing} viewMoreListing={viewMoreListing} />
+
+                                            <CategoryListing category='category2' setViewMore={setViewMore} listingData={listingData} setListingData={setListingData} setCategoryHeader={setCategoryHeader} setViewMoreListing={setViewMoreListing} viewMoreListing={viewMoreListing} />
+
+                                            <CategoryListing category='category5' setViewMore={setViewMore} listingData={listingData} setListingData={setListingData} setCategoryHeader={setCategoryHeader} setViewMoreListing={setViewMoreListing} viewMoreListing={viewMoreListing} />
+                                        </div>
+
+                                    </div>
+                            }
                         </div>
                 }
-
-
-
             </div>
 
         </main >

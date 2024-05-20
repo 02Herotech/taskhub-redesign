@@ -15,6 +15,7 @@ interface props {
     handleSearch1: (event: React.ChangeEvent<HTMLInputElement>) => void;
     handleClearSearch: () => void
     categories: any
+    categoryHeader: any
 
 }
 
@@ -32,6 +33,7 @@ const MarketPlaceFilter = ({
     handleSearch1,
     handleClearSearch,
     categories,
+    categoryHeader
 }: props) => {
 
     const handleSubmit = (e: any) => {
@@ -62,6 +64,7 @@ const MarketPlaceFilter = ({
                         </option>
                     </select>
                 </div>
+
                 <div className="hidden lg:block">
                     <div className="flex text-[11px] space-x-2 ">
 
@@ -154,8 +157,8 @@ const MarketPlaceFilter = ({
 
             <div className="flex flex-col lg:flex-row w-full lg:justify-between lg:items-center my-10  space-y-10">
                 <div className="flex flex-col space-y-2 w-[350px] md:w-full lg:w-full">
-                    <h1 className="font-bold md:text-[39px] text-[30px]">Get a Tasker Directly</h1>
-                    <p className="text-[#221354] md:text-[25px] text-[20px] font-[400]">Browse through our various services</p>
+                    <h1 className="font-bold md:text-[39px] text-[30px]">{categoryHeader ? categoryHeader : "Get a Tasker Directly"}</h1>
+                    <p className="text-[##381F8C] md:text-[25px] text-[20px] font-[400]">{categoryHeader ? `Here are few of our ${categoryHeader}` : "Browse through our various services"}</p>
                 </div>
 
 
