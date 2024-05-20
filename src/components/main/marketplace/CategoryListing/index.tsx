@@ -7,56 +7,19 @@ import { FaArrowRight, FaRegUser } from "react-icons/fa6";
 import Loading from "@/shared/loading";
 import Listing from "../Listing";
 
-interface listingData {
-    id: number;
-    posterId: number;
-    businessName: string;
-    serviceCategory: string;
-    subCategory: string;
-    serviceDescription: string;
-    serviceName: string;
-    pricing: number;
-    availableDays: [string];
-    available: boolean;
-    startHour: number;
-    closeMinute: number;
-    closeHour: number;
-    startMinute: number;
-    availableFrom: {
-        hour: number;
-        minute: number;
-        second: number;
-        nano: number;
-    };
-    availableTo: {
-        hour: number;
-        minute: number;
-        second: number;
-        nano: number;
-    };
-    userAddress: {
-        id: number;
-        streetNumber: string;
-        streetName: string;
-        unitNumber: string;
-        suburb: string;
-        state: string;
-        postCode: string;
-    };
-    deleted: boolean;
-    stripeId: string;
-    businessPictures: string[];
-}
-
-
 
 interface CategoryListingProps {
     category: string;
-
+    setViewMore: any
+    setListingData: any
+    listingData: any
+    setCategoryHeader: any
+    setViewMoreListing: any
+    viewMoreListing: any
 }
 
 
-const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
+const CategoryListing: React.FC<CategoryListingProps> = ({ category, setViewMore, setListingData, listingData, setCategoryHeader, setViewMoreListing, viewMoreListing }) => {
 
 
     const categoryNames: { [key: string]: string } = {
@@ -72,7 +35,6 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
 
 
     const [isLoading, setIsLoading] = useState(false)
-    const [listingData, setListingData] = useState<listingData[]>([]);
     const [ErrorMsg, setErrorMsg] = useState("")
     const [imgErrMsg, setImgErrMsg] = useState("")
     const [IdCategoryValue, setIdCategoryValue] = useState("")
@@ -99,6 +61,29 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
             if (response.status === 200) {
                 const slideListingData = response.data.slice(0, 4)
                 setListingData(slideListingData)
+            }
+        } catch (error) {
+            setErrorMsg("Error searching listing");
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    const handleFetchCategoryViewMore = async () => {
+        setIsLoading(true);
+
+        try {
+            if (!category) {
+                return;
+            }
+
+            const response = await axios.post(
+                `${process.env.NEXT_PUBLIC_API_URL}/listing/search-by-category?string=${category}`
+            );
+
+            if (response.status === 200) {
+                const slideListingData = response.data
+                setViewMoreListing(slideListingData)
             }
         } catch (error) {
             setErrorMsg("Error searching listing");
@@ -142,11 +127,17 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
 
     useEffect(() => {
         if (listingData.length > 0) {
-            listingData.forEach((task) => {
+            listingData.forEach((task: any) => {
                 handleUserProfile(task.posterId);
             });
+
+        } if (viewMoreListing.length > 0) {
+            viewMoreListing.forEach((task: any) => {
+                handleUserProfile(task.posterId);
+            });
+
         }
-    }, [listingData]);
+    }, [listingData, viewMoreListing]);
 
 
 
@@ -157,10 +148,18 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
         }
     }, [category]);
 
+    const handleClick = () => {
+        setViewMore(true);
+        handleFetchCategoryViewMore();
 
+        if (category) {
+            const idValue = categoryNames[category as keyof typeof categoryNames] || "";
+            setCategoryHeader(idValue);
+        }
+    };
 
     return (
-        <div className="w-full my-14 h-full">
+        <div className="w-full my-14 h-full font-satoshi">
 
             <div className="flex justify-between items-center mb-5">
                 <h1 className=" font-bold md:text-[30px] text-[20px]">{IdCategoryValue}</h1>
@@ -170,7 +169,7 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
 
                     <div className="md:text-[18px] text-[13px] font-bold text-primary hover:text-status-darkViolet group  md:mr-10 transition-colors duration-200 "
                     >
-                        <div className=" flex items-center space-x-1">
+                        <div className=" flex items-center space-x-1 cursor-pointer" onClick={handleClick}>
                             <p>View more</p>
 
                             <span className="bold -rotate-45 hidden lg:block">
@@ -180,7 +179,7 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
                                 <FaArrowRight size={10} />
                             </span>
                         </div>
-                        <span className="h-[1.5px] block bg-primary w-[90px] group-hover:text-status-darkViolet transition-colors duration-200"></span>
+                        <span className="h-[1.5px] block bg-primary w-[90px] group-hover:bg-status-darkViolet transition-colors duration-200"></span>
                     </div>
 
                 }
