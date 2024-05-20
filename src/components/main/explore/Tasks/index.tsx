@@ -281,8 +281,7 @@ const Tasks = () => {
                         <button
                             key={index}
                             onClick={() => handlePageChange(index + 1)}
-                            className={`bg-primary text-white rounded max-lg:text-xs mx-2 lg:rounded-[10px] h-[39px] w-[39px] flex items-center justify-center ${currentPage === index + 1 && 'bg-status-violet'
-                                }`}
+                            className={`border font-bold rounded max-lg:text-xs mx-2 lg:rounded-[10px] h-[39px] w-[39px] flex items-center justify-center ${currentPage === index + 1 ? 'bg-primary text-white' : 'bg-white text-primary '}`}
                         >
                             {index + 1}
                         </button>

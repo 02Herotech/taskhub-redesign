@@ -7,6 +7,7 @@ import Image from 'next/image';
 import { FiCalendar, FiClock } from 'react-icons/fi';
 import { HiOutlineLocationMarker } from 'react-icons/hi';
 import { motion } from 'framer-motion';
+import placeholderImage from '../../../../../public/assets/images/placeholder.png';
 
 interface TaskCardProps {
     task: Task;
@@ -17,7 +18,7 @@ const TaskCard = ({ task }: TaskCardProps) => {
 
     const availability = task.active ? "Available" : "Unavailable";
     const currentDateTime = new Date();
-    const dateArray = task.taskDate || [currentDateTime.getFullYear(), currentDateTime.getMonth() + 1, currentDateTime.getDate()];
+    const dateArray = task?.taskDate || [currentDateTime.getFullYear(), currentDateTime.getMonth() + 1, currentDateTime.getDate()];
     const date = new Date(dateArray[0], dateArray[1] - 1, dateArray[2]);
 
     // Define suffixes for day
@@ -73,7 +74,11 @@ const TaskCard = ({ task }: TaskCardProps) => {
                 <h2 className="text-2xl lg:text-[32px] text-primary font-bold truncate overflow-hidden py-4 whitespace-nowrap text-ellipsis">
                     {task.taskDescription}
                 </h2>
-                <img src={task.taskImage} alt="Logo" className="object-cover size-[46px] rounded-full border" />
+                <img
+                    src={task?.taskImage ?? placeholderImage}
+                    alt="Logo"
+                    className="object-cover w-[46px] h-[46px] rounded-full border"
+                />
             </div>
             <div className="space-y-2 my-4">
                 <div className="flex items-center space-x-2 w-full text-[#716F78] font-medium">
