@@ -30,7 +30,7 @@ const TaskCard = ({ task }: TaskCardProps) => {
     const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
     const month = date.getMonth();
     const monthName = monthNames[month];
-    
+
     // Define day of the week names
     const dayOfWeekNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
     const dayOfWeek = date.getDay();
@@ -95,11 +95,11 @@ const TaskCard = ({ task }: TaskCardProps) => {
                 </div>
             </div>
             <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-3">
-                    <h2 className="text-primary text-lg lg:text-2xl font-bold capitalize">{availability}</h2>
+                {/* <div className="flex items-center space-x-3">
                     <div className="w-2 h-2 bg-[#716F78] rounded-full" />
                     <h2 className="text-[#716F78] text-lg lg:text-2xl font-medium capitalize">{`${2} offers`}</h2>
-                </div>
+                </div> */}
+                <h2 className="text-primary text-lg lg:text-2xl font-bold capitalize">{availability}</h2>
                 <h2 className="text-primary text-2xl lg:text-[32px] font-bold capitalize">{formatAmount(task.customerBudget, "USD", false)}</h2>
             </div>
         </motion.div>

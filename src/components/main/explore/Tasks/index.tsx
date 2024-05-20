@@ -7,6 +7,7 @@ import Dropdown from "@/components/global/Dropdown";
 import TaskCard from "../TaskCard";
 import loader from "../../../../../public/assets/images/marketplace/taskhub-newloader.gif";
 import Image from "next/image";
+// import RangeSlider from 'react-range-slider-input';
 import 'react-range-slider-input/dist/style.css';
 import Button from "@/components/global/Button";
 import { FaSortDown } from "react-icons/fa";
@@ -252,12 +253,12 @@ const Tasks = () => {
                         </div>
                     )}
                     className='-left-24 top-14'>
-                    <div className='w-[240px] bg-white rounded-md flex items-center'>
+                    <div className='w-[240px] bg-white rounded-md'>
                         {otherOptionsDropdown.map((button, index) => (
                             <div
                                 key={index}
                                 onClick={button.onClick}
-                                className='flex w-full transition-all text-sm items-center justify-between p-3'>
+                                className='flex w-full transition-all text-status-darkViolet text-base font-bold hover:text-tc-orange cursor-pointer items-center justify-between p-3'>
                                 <div className="">
                                     {button.label}
                                 </div>
