@@ -345,7 +345,7 @@ const Input = ({
 						)}
 						{!passwordCheck.special && (
 							<span className="text-[#E98282] mr-1">
-								1 special character
+								At least 1 special character
 								{!passwordCheck.number && <span> and 1 number</span>}
 							</span>
 						)}
@@ -360,10 +360,10 @@ const Input = ({
 						className={
 							passwordCheck.length
 								? "hidden"
-								: "text-[#E98282] flex items-center space-x-4"
+								: "text-[#E98282] text-base flex items-center space-x-4"
 						}>
 						<FiAlertTriangle />
-						<span className='text-base'>8 characters</span>
+						<span className=''>At least 8 characters</span>
 					</div>
 				</div>
 			)}

@@ -7,6 +7,7 @@ import Image from 'next/image';
 import { FiCalendar, FiClock } from 'react-icons/fi';
 import { HiOutlineLocationMarker } from 'react-icons/hi';
 import { motion } from 'framer-motion';
+import placeholderImage from '../../../../../public/assets/images/placeholder.png';
 
 interface TaskCardProps {
     task: Task;
@@ -17,7 +18,7 @@ const TaskCard = ({ task }: TaskCardProps) => {
 
     const availability = task.active ? "Available" : "Unavailable";
     const currentDateTime = new Date();
-    const dateArray = task.taskDate || [currentDateTime.getFullYear(), currentDateTime.getMonth() + 1, currentDateTime.getDate()];
+    const dateArray = task?.taskDate || [currentDateTime.getFullYear(), currentDateTime.getMonth() + 1, currentDateTime.getDate()];
     const date = new Date(dateArray[0], dateArray[1] - 1, dateArray[2]);
 
     // Define suffixes for day
@@ -29,7 +30,7 @@ const TaskCard = ({ task }: TaskCardProps) => {
     const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
     const month = date.getMonth();
     const monthName = monthNames[month];
-    
+
     // Define day of the week names
     const dayOfWeekNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
     const dayOfWeek = date.getDay();
@@ -73,7 +74,11 @@ const TaskCard = ({ task }: TaskCardProps) => {
                 <h2 className="text-2xl lg:text-[32px] text-primary font-bold truncate overflow-hidden py-4 whitespace-nowrap text-ellipsis">
                     {task.taskDescription}
                 </h2>
-                <img src={task.taskImage} alt="Logo" className="object-cover size-[46px] rounded-full border" />
+                <img
+                    src={task?.taskImage ?? placeholderImage}
+                    alt="Logo"
+                    className="object-cover w-[46px] h-[46px] rounded-full border"
+                />
             </div>
             <div className="space-y-2 my-4">
                 <div className="flex items-center space-x-2 w-full text-[#716F78] font-medium">
@@ -90,11 +95,11 @@ const TaskCard = ({ task }: TaskCardProps) => {
                 </div>
             </div>
             <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-3">
-                    <h2 className="text-primary text-lg lg:text-2xl font-bold capitalize">{availability}</h2>
+                {/* <div className="flex items-center space-x-3">
                     <div className="w-2 h-2 bg-[#716F78] rounded-full" />
                     <h2 className="text-[#716F78] text-lg lg:text-2xl font-medium capitalize">{`${2} offers`}</h2>
-                </div>
+                </div> */}
+                <h2 className="text-primary text-lg lg:text-2xl font-bold capitalize">{availability}</h2>
                 <h2 className="text-primary text-2xl lg:text-[32px] font-bold capitalize">{formatAmount(task.customerBudget, "USD", false)}</h2>
             </div>
         </motion.div>

@@ -162,7 +162,7 @@ const PasswordConfirmationForm = ({ email }: { email: string }) => {
                             </div>
                         </div>
                         {error && (
-                            <div className="text-red-500 text-xl text-center font-bold my-5">{error}</div>
+                            <div className="text-red-500 text-xl text-center capitalize font-bold my-5">{error}</div>
                         )}
                         <div className='pt-1 space-y-5'>
                             <Button

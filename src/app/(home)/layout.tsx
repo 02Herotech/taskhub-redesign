@@ -15,9 +15,7 @@ export default function RootLayout({
     return (
         <main>
             <HomeNavigation />
-            <main className=''>
-                {children}
-            </main>
+            {children}
             <Footer />
         </main>
     );
