@@ -12,6 +12,8 @@ import { TiTick } from "react-icons/ti";
 import Popup from "@/components/global/Popup";
 import Button from "@/components/global/Button";
 import Link from "next/link";
+import AiGenerate from "./AiGenerate/page";
+import AiGeneratedDesc from "./AiGenerate/page";
 
 interface Task {
   serviceDetails: string;
@@ -199,7 +201,6 @@ const AddTaskForm: React.FC = () => {
 
   const AiGenerate = async () => {
     setAiLoading(true);
-    console.log('ok')
     if (selectedSubCategory === '') {
       setSubCategoryErr(true)
       setAiLoading(false);
@@ -232,7 +233,7 @@ const AddTaskForm: React.FC = () => {
   const TypingEffect = (text: string) => {
     console.log(text)
     let currentIndex = 0;
-   
+
     const timer = setInterval(() => {
       setTask((task) => {
         const newServiceDetails = task.serviceDetails + text[currentIndex];
@@ -245,37 +246,40 @@ const AddTaskForm: React.FC = () => {
     }, 50);
   };
 
-  const GeneratedAiDescription = () => (
-    <div>
-      <div className="flex flex-col space-y-6 p-4 bg-[#381F8C] mb-5 rounded-[20px]">
+  const GeneratedAiDescription = () => {
 
-        <h2 className="text-lg font-extrabold text-white">
-          Get personalized AI help
-        </h2>
-        <p className="text-white">
-          Recommended for you , Get an automated content prompt for your
-          service description by clicking on{" "}
-          <span className="text-[#FE9B07]">Generate with AI</span>{" "}
-          button.
-        </p>
-        <span onClick={AiGenerate}>
+    return (
+      <div>
+        <div className="flex flex-col space-y-6 p-4 bg-[#381F8C] mb-5 rounded-[20px]">
+
+          <h2 className="text-lg font-extrabold text-white">
+            Get personalized AI help
+          </h2>
+          <p className="text-white">
+            Recommended for you , Get an automated content prompt for your
+            service description by clicking on{" "}
+            <span className="text-[#FE9B07]">Generate with AI</span>{" "}
+            button.
+          </p>
+          <span onClick={AiGenerate}>
 
 
-          <Button
-            loading={AiLoading}
-            onClick={AiGenerate} type="button"
-            className={` text-10px p-2 px-4 transition-transform duration-300  w-[160px]
-   ease-in-out transform hover:scale-110 bg-[#333236] text-white rounded-[20px]
-  `}
-          >
-            Generate with AI
-          </Button> </span>
+            <Button
+              loading={AiLoading}
+              onClick={AiGenerate} type="button"
+              className={` text-10px p-2 px-4 transition-transform duration-300  w-[160px]
+     ease-in-out transform hover:scale-110 bg-[#333236] text-white rounded-[20px]
+    `}
+            >
+              Generate with AI
+            </Button> </span>
+        </div>
+        {subCategoryErr && (<p className="text-red-600 font-medium">
+          Kindly choose a subcategory
+        </p>)}
       </div>
-      {subCategoryErr && (<p className="text-red-600 font-medium">
-        Kindly choose a subcategory
-      </p>)}
-    </div>
-  )
+    )
+  }
 
   const renderPage = () => {
     switch (currentPage) {
@@ -863,7 +867,11 @@ const AddTaskForm: React.FC = () => {
         <div className="lg:flex">
           {currentPage === 1 && (
             <div className="lg:w-[390px] hidden lg:block mr-[50px] xl:ml-[15%] lg:ml-[10%] ">
-              <GeneratedAiDescription />
+              {/* <GeneratedAiDescription /> */}
+              <AiGeneratedDesc
+                subCategory={selectedSubCategory}
+                handleChange={handleChange}
+              />
             </div>
           )}
 
