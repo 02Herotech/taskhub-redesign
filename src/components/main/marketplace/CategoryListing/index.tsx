@@ -2,85 +2,39 @@
 
 import { useState, useEffect } from "react";
 import axios from "axios";
-import Link from "next/link";
 import { FaArrowRight, FaRegUser } from "react-icons/fa6";
 
 import Loading from "@/shared/loading";
-
-interface listingData {
-    id: number;
-    posterId: number;
-    businessName: string;
-    serviceCategory: string;
-    subCategory: string;
-    serviceDescription: string;
-    serviceName: string;
-    pricing: number;
-    availableDays: [string];
-    available: boolean;
-    startHour: number;
-    closeMinute: number;
-    closeHour: number;
-    startMinute: number;
-    availableFrom: {
-        hour: number;
-        minute: number;
-        second: number;
-        nano: number;
-    };
-    availableTo: {
-        hour: number;
-        minute: number;
-        second: number;
-        nano: number;
-    };
-    userAddress: {
-        id: number;
-        streetNumber: string;
-        streetName: string;
-        unitNumber: string;
-        suburb: string;
-        state: string;
-        postCode: string;
-    };
-    deleted: boolean;
-    stripeId: string;
-    businessPictures: string[];
-}
-
+import Listing from "../Listing";
 
 
 interface CategoryListingProps {
     category: string;
-
+    setViewMore: any
+    setListingData: any
+    listingData: any
+    setCategoryHeader: any
+    setViewMoreListing: any
+    viewMoreListing: any
 }
 
 
-const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
+const CategoryListing: React.FC<CategoryListingProps> = ({ category, setViewMore, setListingData, listingData, setCategoryHeader, setViewMoreListing, viewMoreListing }) => {
 
 
     const categoryNames: { [key: string]: string } = {
         category1: "Home Services",
-        category2: "Personal Services",
-        category4: "Education & Tutoring",
-        category3: "Events & Entertainment",
-        category5: "Professional Services",
-        category6: "Automotive Services",
-        category7: "Health & Fitness",
-        category8: "Technology & Electronics",
-        category9: "Home Improvement",
-        category10: "Real Estate Services",
-        category11: "Delivery & Logistics",
-        category12: "Art & Creativity",
-        category13: "Wedding Services",
-        category14: "Childcare & Babysitting",
-        category15: "Travel & Adventure",
-        category16: "Groceries",
+        category2: "Beauty",
+        category4: "Information and Technology",
+        category3: "Events",
+        category5: "Art and craft",
+        category6: "Petcare",
+        category7: "Custodian",
+        category8: "Grocery",
     };
 
 
     const [isLoading, setIsLoading] = useState(false)
-    const [listingData, setListingData] = useState<listingData[]>([]);
     const [ErrorMsg, setErrorMsg] = useState("")
     const [imgErrMsg, setImgErrMsg] = useState("")
     const [IdCategoryValue, setIdCategoryValue] = useState("")
@@ -107,6 +61,29 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
             if (response.status === 200) {
                 const slideListingData = response.data.slice(0, 4)
                 setListingData(slideListingData)
+            }
+        } catch (error) {
+            setErrorMsg("Error searching listing");
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    const handleFetchCategoryViewMore = async () => {
+        setIsLoading(true);
+
+        try {
+            if (!category) {
+                return;
+            }
+
+            const response = await axios.post(
+                `${process.env.NEXT_PUBLIC_API_URL}/listing/search-by-category?string=${category}`
+            );
+
+            if (response.status === 200) {
+                const slideListingData = response.data
+                setViewMoreListing(slideListingData)
             }
         } catch (error) {
             setErrorMsg("Error searching listing");
@@ -150,11 +127,19 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
 
     useEffect(() => {
         if (listingData.length > 0) {
-            listingData.forEach((task) => {
+            listingData.forEach((task: any) => {
                 handleUserProfile(task.posterId);
             });
+
+        } if (viewMoreListing.length > 0) {
+            viewMoreListing.forEach((task: any) => {
+                handleUserProfile(task.posterId);
+            });
+
         }
-    }, [listingData]);
+    }, [listingData, viewMoreListing]);
+
+
 
     useEffect(() => {
         if (category) {
@@ -163,10 +148,18 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
         }
     }, [category]);
 
+    const handleClick = () => {
+        setViewMore(true);
+        handleFetchCategoryViewMore();
 
+        if (category) {
+            const idValue = categoryNames[category as keyof typeof categoryNames] || "";
+            setCategoryHeader(idValue);
+        }
+    };
 
     return (
-        <div className="w-full my-16 h-full">
+        <div className="w-full my-14 h-full font-satoshi">
 
             <div className="flex justify-between items-center mb-5">
                 <h1 className=" font-bold md:text-[30px] text-[20px]">{IdCategoryValue}</h1>
@@ -176,7 +169,7 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
 
                     <div className="md:text-[18px] text-[13px] font-bold text-primary hover:text-status-darkViolet group  md:mr-10 transition-colors duration-200 "
                     >
-                        <div className=" flex items-center space-x-1">
+                        <div className=" flex items-center space-x-1 cursor-pointer" onClick={handleClick}>
                             <p>View more</p>
 
                             <span className="bold -rotate-45 hidden lg:block">
@@ -186,7 +179,7 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
                                 <FaArrowRight size={10} />
                             </span>
                         </div>
-                        <span className="h-[1.5px] block bg-primary w-[90px] group-hover:text-status-darkViolet transition-colors duration-200"></span>
+                        <span className="h-[1.5px] block bg-primary w-[90px] group-hover:bg-status-darkViolet transition-colors duration-200"></span>
                     </div>
 
                 }
@@ -203,59 +196,7 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
                 isLoading ?
                     <Loading />
                     :
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-2">
-
-                        {
-                            listingData.map((listing, index) => (
-                                <Link href={`/marketplace/${listing.id}`} key={listing.id}>
-                                    <div className=" w-full flex justify-center ">
-                                        <div className="w-[320px] md:w-[250px] md:h-[300px] h-[350px] bg-[#EBE9F4]  flex flex-col p-3 rounded-2xl">
-                                            <div className=" h-[230px] w-[295px] md:w-[225px] md:h-[150px] ">
-                                                {listing.businessPictures.length > 1 && (
-                                                    <img
-                                                        src={listing.businessPictures[0]}
-                                                        alt=""
-                                                        className="h-full w-full object-cover rounded-xl border-[1.5px] border-[#D9D9D9]"
-                                                    />
-                                                )}
-                                            </div>
-                                            <div className="mt-2 flex flex-col justify-between h-full">
-                                                <h2 className="text-[20px] md:text-[23px]  font-bold">{listing.businessName}</h2>
-
-                                                <div className="flex justify-between items-center">
-                                                    <div className="flex items-center space-x-2 ">
-                                                        <div className="flex">
-                                                            {profileImages ? (
-                                                                <div>
-                                                                    {profileImages[listing.posterId] ? (
-                                                                        <img
-                                                                            src={profileImages[listing.posterId]}
-                                                                            alt={`Profile of ${listing.posterId}`}
-                                                                            width={25}
-                                                                            className="h-[25px] rounded-[50%] "
-                                                                        />
-                                                                    ) : (
-                                                                        <div className="bg-[#b4b2be] text-white p-[9px] rounded-[50%] ">
-                                                                            <FaRegUser size={10} />
-                                                                        </div>
-                                                                    )}
-                                                                </div>
-                                                            ) : (
-                                                                <p className="text-[12px]">{imgErrMsg}</p>
-                                                            )}
-                                                        </div>
-
-                                                        <p className="text-[16px] font-[500]">{firstName[listing.posterId]} {lastName[listing.posterId]}</p>
-                                                    </div>
-                                                    <p className="text-[16px] text-[#381F8C] font-[600]">From ${listing.pricing} </p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </Link>
-                            ))
-                        }
-                    </div>
+                    <Listing data={listingData} profileImages={profileImages} imgErrMsg={imgErrMsg} firstName={firstName} lastName={lastName} />
             }
 
         </div >

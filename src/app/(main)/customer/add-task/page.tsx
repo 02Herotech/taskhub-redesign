@@ -230,9 +230,6 @@ const AddTaskForm: React.FC = () => {
 
     const calculateProgress = () => {
         const isPhysical = task.taskType === 'physical';
-
-
-
         const requiredFields = [
             task.taskDescription,
             task.taskTime,
@@ -288,14 +285,11 @@ const AddTaskForm: React.FC = () => {
                     };
                 }
 
-
-
                 if (!task.taskImage) {
                     const defaultImage =
                         "google-map.png";
                     setTask({ ...task, taskImage: defaultImage });
                 }
-
 
                 setSubmitted(true);
                 await axios.post(

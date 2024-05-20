@@ -127,7 +127,7 @@ const LoginForm = () => {
                 loading={isLoading}
                 disabled={!isValid}
                 className="w-full lg:w-[170px] rounded-full font-normal">
-                Log in
+                Login
               </Button>
               <h3 className="text-xl font-bold">
                 Don’t have an account?

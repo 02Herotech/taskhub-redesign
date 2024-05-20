@@ -1,7 +1,6 @@
-"use client"
+"use client";
 
 import Button from "@/components/global/Button";
-import Input from "@/components/global/Input";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -9,6 +8,8 @@ import { useState } from "react";
 const AuthForm = () => {
     const [userType, setUserType] = useState<"Customer" | "Service Provider">("Customer");
     const router = useRouter();
+
+    console.log(userType);
 
     const params = new URLSearchParams({ userType });
 
@@ -26,36 +27,34 @@ const AuthForm = () => {
 
                 <div className="space-y-10 font-satoshi">
                     <h2 className="text-primary lg:text-2xl font-bold">Sign up as a:</h2>
-                    <div className='flex flex-col lg:flex-row items-center lg:space-x-4 space-y-4 lg:space-y-0'>
-                        <Button
-                            theme="outline"
+                    <div className='flex items-center space-x-8'>
+                        <button
                             onClick={() => setUserType("Customer")}
-                            className={userType === "Customer" ? "border border-primary" : "border-none"}
-                            size="xl"
+                            className={`h-[48px] w-[110px] lg:w-[210px] lg:h-[70px] bg-status-lightViolet rounded-2xl font-bold text-sm lg:text-2xl text-primary ${userType === "Customer" ? "border border-primary" : "border-none"}`}
                         >
                             Customer
-                        </Button>
-                        <Button
-                            theme="outline"
+                        </button>
+                        <button
                             onClick={() => setUserType("Service Provider")}
-                            className={userType === "Service Provider" ? "border border-primary" : "border-none"}
-                            size="xl"
+                            className={`h-[48px] w-[110px] lg:w-[210px] lg:h-[70px] bg-status-lightViolet rounded-2xl font-bold text-sm lg:text-2xl text-primary ${userType === "Service Provider" ? "border border-primary" : "border-none"}`}
                         >
                             Service Provider
-                        </Button>
+                        </button>
                     </div>
 
-                    <Button
-                        className='w-full lg:w-[170px] rounded-full font-normal'
-                        onClick={() => router.push(`/auth/sign-up?${params.toString()}`)}
-                    >
-                        Next
-                    </Button>
+                    <div className="max-lg:flex max-lg:items-center max-lg:justify-center">
+                        <button
+                            className='w-[170px] h-[40px] rounded-full font-normal bg-primary text-white'
+                            onClick={() => router.push(`/auth/sign-up?${params.toString()}`)}
+                        >
+                            Next
+                        </button>
+                    </div>
 
-                    <h3 className="text-xl font-bold">Have an existing account?
+                    <h3 className="text-xl font-bold max-lg:text-center">
+                        Have an existing account?
                         <Link href="/auth/login" className="text-primary"> Log In</Link>
                     </h3>
-
                 </div>
             </div>
         </section>
