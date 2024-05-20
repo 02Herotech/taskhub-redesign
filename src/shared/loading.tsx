@@ -1,6 +1,6 @@
 import Image from "next/image";
 
-import loader from "../../public/assets/images/marketplace/taskhub-newloader.gif"
+import loader from "../../public/assets/images/marketplace/loader.gif"
 
 const Loading = () => {
     return (
