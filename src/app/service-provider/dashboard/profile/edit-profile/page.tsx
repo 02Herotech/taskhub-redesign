@@ -339,14 +339,6 @@ const EditProfile = () => {
                     <span className="text-center text-tc-gray">
                       Image Uploaded
                     </span>
-                    {/* <input
-                      id="file-upload"
-                      type="file"
-                      readOnly
-                      disabled
-                      className="hidden"
-                      onChange={(e) => handleSetDocumentImage(e)}
-                    /> */}
                   </label>
                   <button
                     className="rounded-lg bg-tc-gray px-3 py-1 text-white"
