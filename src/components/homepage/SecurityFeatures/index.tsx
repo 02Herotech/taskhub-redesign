@@ -19,12 +19,13 @@ import Link from "next/link";
 const SecurityFeatures = () => {
     const { data: session } = useSession();
     const router = useRouter();
+    console.log(session?.user?.user)
 
     const handlePostTask = async (e: { preventDefault: () => void }) => {
         e.preventDefault();
         try {
             const response = await axios.post(
-                `${process.env.NEXT_PUBLIC_API_URL}auth/logout`,
+                `${process.env.NEXT_PUBLIC_API_URL}/auth/logout`,
             );
             console.log("Sign Out: ", response);
 
@@ -32,7 +33,7 @@ const SecurityFeatures = () => {
                 await signOut({
                     redirect: false,
                 });
-                router.push("/auth/customer-signup");
+                router.push("/auth");
             }
         } catch (error) {
             console.error(error);
@@ -78,12 +79,12 @@ const SecurityFeatures = () => {
                     <div className="">
                         <button
                             className="text-bold rounded-[50px] bg-primary lg:text-[20px] text-[16px]
-           px-7 py-2 text-white hover:bg-[#25135f]  "
+           px-7 py-2 text-[#EBE9F4] hover:bg-[#25135f] "
                         >
                             {session?.user?.user?.roles[0] === "SERVICE_PROVIDER" ? (
                                 <p onClick={handlePostTask}>Start posting task for free</p>
                             ) : (
-                                <Link href="/dashboard/customer/my-tasks/post-request">
+                                <Link href="customer/add-task">
                                     Start posting task for free
                                 </Link>
                             )}

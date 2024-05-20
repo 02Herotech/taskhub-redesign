@@ -24,7 +24,7 @@ const SPHomepage = () => {
 
         try {
             const response = await axios.post(
-                `${process.env.NEXT_PUBLIC_API_URL}auth/logout`,
+                `${process.env.NEXT_PUBLIC_API_URL}/auth/logout`,
             );
 
             await signOut({
@@ -34,7 +34,7 @@ const SPHomepage = () => {
             console.log("Sign Out: ", response);
 
             if (response.status === 200) {
-                router.push("/auth/service-provider-signup");
+                router.push("/auth");
             }
         } catch (error) {
             console.error(error);
@@ -127,36 +127,38 @@ const SPHomepage = () => {
                         <span className="hidden lg:block h-[2px] w-full bg-black"></span>
                     </div>
 
-                    <button className="hover:text-[#FE9B07]">
-                        {session?.user?.user?.roles[0] === "CUSTOMER" ? (
-                            <div
-                                onClick={handleBecomeSP}
-                                className="flex items-center justify-center"
-                            >
-                                <p className="underline">Become a Service Provider</p>
-                                <span className="-rotate-45">
-                                    <IoArrowForward />
-                                </span>
-                            </div>
-                        ) : (
-                            <Link
-                                href="/auth/service-provider-signup"
-                                className="flex items-center justify-center"
-                            >
-                                <p className="underline">Become a Service Provider</p>
-                                <span className="-rotate-45">
-                                    <IoArrowForward />
-                                </span>
-                            </Link>
-                        )}
-                    </button>
+                    <div className="mt-10">
+                        <button
+                            className="text-bold rounded-[50px] w-[250px] bg-[#FE9B07] text-[#FFF5E6] lg:text-[16px]
+                          px-3 py-2   ml-16 mt-10 hover:bg-[#f0b357]  "
+                        >
+                            {session?.user?.user?.roles[0] === "CUSTOMER" ? (
+                                <div
+                                    onClick={handleBecomeSP}
+                                    className="flex items-center justify-center"
+                                >
+                                    <p className="">Become a Service Provider</p>
+                                    <span className="-rotate-45">
+                                        <IoArrowForward />
+                                    </span>
+                                </div>
+                            ) : (
+                                <Link
+                                    href="/service-provider/dashboard"
+                                    className="flex items-center justify-center"
+                                >
+                                    <p className="">Become a Service Provider</p>
+                                    <span className="-rotate-45">
+                                        <IoArrowForward />
+                                    </span>
+                                </Link>
+                            )}
+                        </button>
+                    </div>
                 </div>
 
                 <div className="lg:hidden flex flex-col space-y-7 mt-10">
                     <div className="ml-10 ">
-
-
-
                         <div className="w-[160px] flex justify-center  items-center space-x-2 rounded-3xl bg-[#FE9B07] px-3 py-2 ">
                             <Image src={icon1} width={20} alt="24/7"></Image>
                             <p className="text-[10px] font-bold">24/7 Availability</p>
@@ -197,23 +199,26 @@ const SPHomepage = () => {
                     </div>
 
 
-                    <button className="hover:text-[#FE9B07]">
+                    <button
+                        className="text-bold rounded-[50px] w-[250px] bg-[#FE9B07] text-[#FFF5E6] lg:text-[16px]
+                          px-3 py-2   ml-10 mt-10 hover:bg-[#e79823]  "
+                    >
                         {session?.user?.user?.roles[0] === "CUSTOMER" ? (
                             <div
                                 onClick={handleBecomeSP}
                                 className="flex items-center justify-center"
                             >
-                                <p className="underline">Become a Service Provider</p>
+                                <p className="">Become a Service Provider</p>
                                 <span className="-rotate-45">
                                     <IoArrowForward />
                                 </span>
                             </div>
                         ) : (
                             <Link
-                                href="/auth/service-provider-signup"
+                                href="/service-provider/dashboard"
                                 className="flex items-center justify-center"
                             >
-                                <p className="underline">Become a Service Provider</p>
+                                <p className="">Become a Service Provider</p>
                                 <span className="-rotate-45">
                                     <IoArrowForward />
                                 </span>

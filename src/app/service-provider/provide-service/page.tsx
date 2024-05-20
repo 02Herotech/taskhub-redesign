@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import Head from "next/head";
 import Image from "next/image";
@@ -11,6 +11,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import { TiTick } from "react-icons/ti";
 import Popup from "@/components/global/Popup";
 import Button from "@/components/global/Button";
+import Link from "next/link";
 
 interface Task {
   serviceDetails: string;
@@ -198,6 +199,7 @@ const AddTaskForm: React.FC = () => {
 
   const AiGenerate = async () => {
     setAiLoading(true);
+    console.log('ok')
     if (selectedSubCategory === '') {
       setSubCategoryErr(true)
       setAiLoading(false);
@@ -212,8 +214,12 @@ const AddTaskForm: React.FC = () => {
       );
       if (response.status === 201) {
         const aiGeneratedDescription = response.data;
-        setTask({ ...task, 'serviceDetails': aiGeneratedDescription });
-        setAiLoading(false);
+
+        // setTask({ ...task, 'serviceDetails': aiGeneratedDescription });
+        // setAiLoading(false);
+        setTask({ ...task, 'serviceDetails': '' });
+        TypingEffect(aiGeneratedDescription)
+
       }
       if (response.status === 400) {
       }
@@ -221,6 +227,22 @@ const AddTaskForm: React.FC = () => {
     catch (err: any) { } finally {
       setAiLoading(false);
     }
+  };
+
+  const TypingEffect = (text: string) => {
+    console.log(text)
+    let currentIndex = 0;
+   
+    const timer = setInterval(() => {
+      setTask((task) => {
+        const newServiceDetails = task.serviceDetails + text[currentIndex];
+        currentIndex++;
+        if (currentIndex === text.length) {
+          clearInterval(timer);
+        }
+        return { ...task, serviceDetails: newServiceDetails };
+      });
+    }, 50);
   };
 
   const GeneratedAiDescription = () => (
@@ -236,17 +258,20 @@ const AddTaskForm: React.FC = () => {
           <span className="text-[#FE9B07]">Generate with AI</span>{" "}
           button.
         </p>
-        <Button
-          loading={AiLoading}
-          onClick={AiGenerate}
-          className={` text-10px p-2 px-4 transition-transform duration-300  w-[160px]
+        <span onClick={AiGenerate}>
+
+
+          <Button
+            loading={AiLoading}
+            onClick={AiGenerate} type="button"
+            className={` text-10px p-2 px-4 transition-transform duration-300  w-[160px]
    ease-in-out transform hover:scale-110 bg-[#333236] text-white rounded-[20px]
   `}
-        >
-          Generate with AI
-        </Button>
+          >
+            Generate with AI
+          </Button> </span>
       </div>
-      {subCategoryErr && (<p>
+      {subCategoryErr && (<p className="text-red-600 font-medium">
         Kindly choose a subcategory
       </p>)}
     </div>
@@ -309,7 +334,10 @@ const AddTaskForm: React.FC = () => {
                     placeholder="Casual Babysitting"
                     name="serviceDetails"
                     value={task.serviceDetails}
-                    onChange={handleChange}></textarea>
+                    // onChange={handleChange}
+
+                    onChange={(e) => setTask({ ...task, serviceDetails: e.target.value })}>
+                  </textarea>
                 </div>
                 {Object.keys(error).map((key, index) => (
                   <div key={index}>{error[key]}</div>
@@ -839,9 +867,9 @@ const AddTaskForm: React.FC = () => {
             </div>
           )}
 
-          <div className={currentPage !==1 ? "flex items-center justify-center w-full" : ''}>
+          <div className={currentPage !== 1 ? "flex items-center justify-center w-full" : ''}>
             <div>
-              <div className={currentPage ===1 ? " lg:w-full w-[80%] mx-auto " : ''}>
+              <div className={currentPage === 1 ? " lg:w-full w-[80%] mx-auto " : ''}>
                 <h2 className="text-2xl">Provide a Service</h2>
                 <p className="text-[12px] text-[#716F78]">
                   Please fill out the information below to add a new listing.
@@ -851,7 +879,7 @@ const AddTaskForm: React.FC = () => {
                 {renderPage()}</div>
             </div>
           </div>
-          
+
 
         </div>
       </div>
