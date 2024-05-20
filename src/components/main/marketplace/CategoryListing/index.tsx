@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react";
 import axios from "axios";
-import Link from "next/link";
 import { FaArrowRight, FaRegUser } from "react-icons/fa6";
 
 import Loading from "@/shared/loading";
@@ -62,21 +61,13 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
 
     const categoryNames: { [key: string]: string } = {
         category1: "Home Services",
-        category2: "Personal Services",
-        category4: "Education & Tutoring",
-        category3: "Events & Entertainment",
-        category5: "Professional Services",
-        category6: "Automotive Services",
-        category7: "Health & Fitness",
-        category8: "Technology & Electronics",
-        category9: "Home Improvement",
-        category10: "Real Estate Services",
-        category11: "Delivery & Logistics",
-        category12: "Art & Creativity",
-        category13: "Wedding Services",
-        category14: "Childcare & Babysitting",
-        category15: "Travel & Adventure",
-        category16: "Groceries",
+        category2: "Beauty",
+        category4: "Information and Technology",
+        category3: "Events",
+        category5: "Art and craft",
+        category6: "Petcare",
+        category7: "Custodian",
+        category8: "Grocery",
     };
 
 
@@ -157,6 +148,8 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
         }
     }, [listingData]);
 
+
+
     useEffect(() => {
         if (category) {
             const idValue = categoryNames[category as keyof typeof categoryNames] || "";
@@ -167,7 +160,7 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
 
 
     return (
-        <div className="w-full my-16 h-full">
+        <div className="w-full my-14 h-full">
 
             <div className="flex justify-between items-center mb-5">
                 <h1 className=" font-bold md:text-[30px] text-[20px]">{IdCategoryValue}</h1>
@@ -205,8 +198,6 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
                     <Loading />
                     :
                     <Listing data={listingData} profileImages={profileImages} imgErrMsg={imgErrMsg} firstName={firstName} lastName={lastName} />
-
-
             }
 
         </div >

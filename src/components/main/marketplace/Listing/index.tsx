@@ -12,12 +12,11 @@ interface ListingProps {
 
 const Listing = ({ data, profileImages, imgErrMsg, firstName, lastName }: ListingProps) => {
     return (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-2">
-
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-x-4 gap-y-4 lg:gap-2  my-2 ">
             {
                 data.map((listing: any, index: any) => (
                     <Link href={`/marketplace/${listing.id}`} key={listing.id}>
-                        <div className=" w-full flex justify-center ">
+                        <div className=" w-full flex justify-center my-3">
                             <div className="w-[320px] md:w-[250px] md:h-[300px] h-[350px] bg-[#EBE9F4]  flex flex-col p-3 rounded-2xl">
                                 <div className=" h-[230px] w-[295px] md:w-[225px] md:h-[150px] ">
                                     {listing.businessPictures.length > 1 && (

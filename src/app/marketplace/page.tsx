@@ -9,18 +9,14 @@ import { GiStoneCrafting } from "react-icons/gi";
 import { FaBabyCarriage } from "react-icons/fa";
 import { MdSecurity } from "react-icons/md";
 import { MdLocalGroceryStore } from "react-icons/md";
+import axios from "axios";
 
-import header from "../../../public/marketplaceHeader.png"
-import MarketplaceHeader from "@/components/main/marketplace/MarketPlaceHeader";
+
 import MarketPlaceFilter from "@/components/main/marketplace/MarketPlaceFilter";
 import MarketPlaceHeader from "@/components/main/marketplace/MarketPlaceHeader";
 import CategoryListing from "@/components/main/marketplace/CategoryListing";
 import BoxFilter from "@/components/main/marketplace/BoxFilter";
-import HomeNavigation from "@/components/layout/HomeNavigation";
-import Footer from "@/components/layout/Footer";
-import Loading from "@/shared/loading";
-import axios from "axios";
-import Listing from "@/components/main/marketplace/Listing";
+import SearchResult from "@/components/main/marketplace/SearchResult";
 
 
 interface Category {
@@ -171,7 +167,6 @@ const MareketPlace = () => {
         setSelectedCategory(category);
         setSelectedSubCategory("");
         setLocation("")
-        handleFilterByCatAndSubCatAndLocation()
     };
 
     const handleSubCategoryChange = (
@@ -179,13 +174,11 @@ const MareketPlace = () => {
     ) => {
         const subCategory = event.target.value;
         setSelectedSubCategory(subCategory);
-        handleFilterByCatAndSubCatAndLocation()
-
     };
 
     const handleLocation = (e: any) => {
         setLocation(e.target.value)
-        handleFilterByCatAndSubCatAndLocation()
+
     }
     const handleService = (e: any) => {
         setService(e.target.value)
@@ -233,24 +226,33 @@ const MareketPlace = () => {
 
     const handleFilterByCatAndSubCatAndLocation = async () => {
         setIsLoading(true);
-        setSearching(true)
-        console.log("selectedCategory: ", selectedCategory)
+        setSearching(true);
+
+        console.log("selectedCategory: ", selectedCategory);
+        console.log("location: ", location);
+        console.log("selectedSubCategory: ", selectedSubCategory);
+
         try {
             const response = await axios.post(
                 `${process.env.NEXT_PUBLIC_API_URL}/listing/marketplace-search?businessName=${selectedCategory}&location=${location}&subcategory=${selectedSubCategory}`
-
             );
             if (response.status === 200) {
-                console.log("handleFilterByCatAndSubCatAndLocation: ", response)
+                console.log("handleFilterByCatAndSubCatAndLocation: ", response);
                 setFilterData(response.data);
             }
         } catch (error) {
-            console.error(error)
+            console.error(error);
             setErrorMsg("Error searching listing");
         } finally {
             setIsLoading(false);
         }
     };
+
+    useEffect(() => {
+        if (selectedCategory || selectedSubCategory || location) {
+            handleFilterByCatAndSubCatAndLocation();
+        }
+    }, [selectedCategory, selectedSubCategory, location]);
 
 
     useEffect(() => {
@@ -283,36 +285,20 @@ const MareketPlace = () => {
                     handleSearch1={handleSearch1}
                     handleClearSearch={handleClearSearch}
                     categories={categories}
-                    setIsLoading={setIsLoading}
-                    filterData={filterData}
-                    setFilterData={setFilterData}
-                    setErrorMsg={setErrorMsg}
-                    setSearching={setSearching}
-
-
                 />
 
 
                 {
                     searching ?
-                        <div>
-                            {
-                                isLoading ?
 
-                                    <Loading />
-                                    :
-                                    <div>
-                                        {
-                                            filterData.length ?
-                                                <Listing data={filterData} profileImages={profileImages} imgErrMsg={imgErrMsg} firstName={firstName} lastName={lastName} />
-                                                :
-                                                <div>
-                                                    No filter
-                                                </div>
-                                        }
-                                    </div>
-                            }
-                        </div>
+                        <SearchResult
+                            isLoading={isLoading}
+                            filterData={filterData}
+                            profileImages={profileImages}
+                            imgErrMsg={imgErrMsg}
+                            firstName={firstName}
+                            lastName={lastName}
+                        />
                         :
                         <div>
                             <div>

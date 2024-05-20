@@ -1,8 +1,6 @@
 import { FiSearch } from "react-icons/fi"
 import { IoClose } from "react-icons/io5"
-import axios from "axios"
-import { useEffect } from "react"
-import { IoFilterSharp } from "react-icons/io5"
+import Link from "next/link"
 
 interface props {
     selectedCategory: any
@@ -17,11 +15,6 @@ interface props {
     handleSearch1: (event: React.ChangeEvent<HTMLInputElement>) => void;
     handleClearSearch: () => void
     categories: any
-    setIsLoading: any
-    filterData: any
-    setFilterData: any
-    setErrorMsg: any
-    setSearching: any
 
 }
 
@@ -39,44 +32,15 @@ const MarketPlaceFilter = ({
     handleSearch1,
     handleClearSearch,
     categories,
-    setIsLoading,
-    setFilterData,
-    setErrorMsg,
-    setSearching
 }: props) => {
 
     const handleSubmit = (e: any) => {
         e.preventDefault
     }
 
-
-    // const handleFilterByCatAndSubCatAndLocation = async () => {
-    //     setIsLoading(true);
-    //     setSearching(true)
-
-    //     try {
-    //         const response = await axios.post(
-    //             `${process.env.NEXT_PUBLIC_API_URL}/listing/marketplace-search?businessName=${selectedCategory}&location=${location}&subcategory=${selectedSubCategory}`
-
-    //         );
-    //         if (response.status === 200) {
-    //             console.log("handleFilterByCatAndSubCatAndLocation: ", response)
-    //             setFilterData(response.data);
-    //         }
-    //     } catch (error) {
-    //         console.error(error)
-    //         setErrorMsg("Error searching listing");
-    //     } finally {
-    //         setIsLoading(false);
-    //     }
-    // };
-
-    // useEffect(() => {
-    //     if (selectedCategory) {
-    //         handleFilterByCatAndSubCatAndLocation()
-    //     }
-    // }, [selectedCategory])
-
+    const handleReload = () => {
+        window.location.reload();
+    };
 
     return (
         <div className="flex flex-col space-y-16 my-12">
@@ -84,7 +48,7 @@ const MarketPlaceFilter = ({
 
                 <div className="flex flex-col space-y-2">
                     <h1 className="text-[#221354] font-bold text-[30px] md:text-[39px]">Our Various Category</h1>
-                    <p className="text-[#221354] text-[16px] md:text-[20px] font-[400]">Find the help you need on Taskhub</p>
+                    <p className="text-[#221354] text-[16px] md:text-[20px] font-[400] cursor-pointer">Find the help you need on Taskhub</p>
                 </div>
 
                 <div className="flex lg:hidden justify-center">
@@ -100,7 +64,9 @@ const MarketPlaceFilter = ({
                 </div>
                 <div className="hidden lg:block">
                     <div className="flex text-[11px] space-x-2 ">
-                        <p className="bg-[#381F8C] text-white py-2 px-4 rounded-3xl text-[16px] font-[700] ">All</p>
+
+                        <p className="bg-[#381F8C] text-white py-2 px-4 rounded-3xl text-[16px] font-[700] cursor-pointer" onClick={handleReload}>All</p>
+
                         <select
                             name="category"
                             id="category"
@@ -161,20 +127,6 @@ const MarketPlaceFilter = ({
 
                         </select>
 
-                        {/* <select
-                            name="service"
-                            id="service"
-                            value={service}
-                            onChange={handleService}
-                            className="border-[1.5px] border-[#381F8C] rounded-3xl bg-[#F1F1F2] text-[16px] font-[700] text-[#381F8C] text-center focus:outline-none w-[150px]"
-                        >
-                            <option value="" disabled>
-                                Type of service
-                            </option>
-                            <option value="Remote">Remote</option>
-                            <option value="Physical">Physical</option>
-                        </select> */}
-
                         <select
                             name="pricing"
                             id="pricing"
@@ -196,19 +148,6 @@ const MarketPlaceFilter = ({
                             </option>
 
                         </select>
-
-                        {/* <select
-                            name="others"
-                            id="others"
-                            value={others}
-                            onChange={handleOther}
-                            className="border-[1.5px] border-[#381F8C] rounded-3xl bg-[#F1F1F2] text-[16px] font-[700] text-[#381F8C] text-center focus:outline-none w-[150px]"
-                        >
-                            <option value="" disabled>
-                                Other
-                            </option>
-
-                        </select> */}
                     </div>
                 </div>
             </div>
