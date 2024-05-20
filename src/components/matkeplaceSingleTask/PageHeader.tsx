@@ -3,7 +3,7 @@ import React from "react";
 
 const PageHeader = () => {
   return (
-    <header className="py-10  mx-auto px-10 bg-slate-200 rounded-br-[5rem] rounded-bl-[5rem] ">
+    <header className=" mx-auto bg-slate-200  p-4 lg:rounded-bl-[5rem] lg:rounded-br-[5rem] lg:px-10 lg:py-10 ">
       <Image
         src="/assets/images/marketplace/singleTask/marketPlace banner.png"
         alt="banner"

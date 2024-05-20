@@ -93,7 +93,11 @@ const Footer = () => {
                             <Image src="/assets/images/logo.png" fill alt="Logo" />
                         </Link>
                         <div className=" xl:mt-0 lg:mt-[-100px]">
-                            <p className="text-primary font-medium max-lg:text-[13px] mt-5 ">Need Help? If you have any questions or encounter issues, our support team is here to assist you. Reach out to us at info@taskhub.org.au
+                            <p className="text-primary font-medium max-lg:text-[13px] mt-5 ">Need Help? If you have any questions or encounter issues, our support team is here to assist you. 
+                            Reach out to us at {' '}
+                                <a href="mailto:info@taskhub.org.au" className="text-primary underline">
+                                    info@taskhub.org.au
+                                </a>. 
                                 Stay Connected: Follow us on Instagram, facebook, and X for updates, tips, and community discussions.
                                 Thank you for choosing TaskHub! We look forward to enhancing your user experience.</p>
                             <div className="mt-[70px]">

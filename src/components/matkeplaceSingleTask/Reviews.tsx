@@ -4,22 +4,22 @@ import { FaStar } from "react-icons/fa";
 
 const Reviews = () => {
   return (
-    <section className="bg-status-lightViolet py-10 px-10 space-y-8  ">
-      <h1 className="max-w-screen-sm text-center text-4xl font-bold mx-auto">
+    <section className="space-y-8 bg-status-lightViolet p-4 lg:p-10  ">
+      <h1 className="mx-auto text-center text-2xl font-bold lg:text-4xl">
         Reviews/Testimonials from Satisfied Customer
       </h1>
-      <form className="flex gap-4 items-center justify-center  ">
+      <form className="flex items-center justify-center gap-4  ">
         <input
           type="text"
           placeholder="Let the provider know you feel..."
-          className=" p-3 max-w-sm w-screen rounded-2xl border border-slate-300"
+          className=" w-screen max-w-sm rounded-2xl border border-slate-300 p-3"
         />
-        <button className="px-6 py-3 rounded-full bg-[#381F8C] text-white hover:opacity-90 transition-colors duration-300">
+        <button className=" whitespace-nowrap rounded-xl bg-violet-normal px-4 py-3 text-white transition-colors duration-300 hover:opacity-90 max-md:text-sm lg:rounded-full">
           Add Review
         </button>
       </form>
-      <article className="flex items-center justify-center gap-8">
-        <div className="flex flex-col gap-6 max-w-lg w-full ">
+      <article className="flex flex-wrap items-center justify-center gap-8">
+        <div className="flex w-full max-w-lg flex-col gap-6 ">
           <div className="flex items-center gap-2">
             <FaStar fill="gold" />
             <FaStar fill="gold" />
@@ -34,7 +34,7 @@ const Reviews = () => {
             assumenda a necessitatibus culpa inventore? Iusto porro eaque sint
             illum.
           </p>
-          <div className="flex gap-3 items-center">
+          <div className="flex items-center gap-3">
             <Image
               src="/assets/images/marketplace/singleTask/oluchi.png"
               alt="user"
@@ -47,7 +47,7 @@ const Reviews = () => {
             </div>
           </div>
         </div>
-        <div className="flex flex-col gap-6 max-w-lg w-full ">
+        <div className="flex w-full max-w-lg flex-col gap-6 ">
           <div className="flex items-center gap-2">
             <FaStar fill="gold" />
             <FaStar fill="gold" />
@@ -62,7 +62,7 @@ const Reviews = () => {
             assumenda a necessitatibus culpa inventore? Iusto porro eaque sint
             illum.
           </p>
-          <div className="flex gap-3 items-center">
+          <div className="flex items-center gap-3">
             <Image
               src="/assets/images/marketplace/singleTask/oluchi.png"
               alt="user"

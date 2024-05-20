@@ -2,17 +2,17 @@
 export type Task = {
     id: number;
     posterId: number;
-    taskServiceName: string;
-    category: string;
-    subCategory: string;
     taskDescription: string;
-    userAddress: string;
-    postedAt: any;
-    customerBudget: number;
     taskImage: string;
-    taskDates: any;
+    taskTime: string;
+    taskDate: [number, number, number];
+    hubTime: string;
+    taskType: string;
+    taskAddress: string;
+    createdAt: [number, number, number];
+    customerBudget: number;
     active: boolean;
-}
+};
 
 export type GetTasksRequest =  number;
 

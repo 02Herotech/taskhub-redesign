@@ -92,9 +92,14 @@ const MobileFooter = () => {
                         <Image src={"/assets/images/logo.png"} width={120} height={45} alt="" />
                     </Link>
                 </div>
-                <div className={` text-[14px] text-primary pl-[5px] text-left font-semibold`}>
+                <div className={` text-[14px] text-primary pl-[5px] text-left `}>
                     <p>
-                        Need Help? If you have any questions or encounter issues, our support team is here to assist you. Reach out to us at info@taskhub.org.au
+                        Need Help? If you have any questions or encounter issues, our support team is here to assist you.
+                        Reach out to us at
+                        {' '}
+                        <a href="mailto:info@taskhub.org.au" className="text-primary underline">
+                            info@taskhub.org.au
+                        </a>.
                         Stay Connected: Follow us on Instagram, facebook, and X for updates, tips, and community discussions.
                         Thank you for choosing TaskHub! We look forward to enhancing your user experience.
                     </p>

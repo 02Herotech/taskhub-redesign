@@ -22,9 +22,9 @@ const TaskDetailsPage = ({ params }: { params: { id: string } }) => {
         )
     }
 
-    const availability = task?.active ? "Available" : "Unavailable";
-    const dateArray = task?.postedAt;
-    const date = new Date(dateArray[0], dateArray[1] - 1, dateArray[2], dateArray[3], dateArray[4], dateArray[5], dateArray[6]);
+    const availability = task.active ? "Available" : "Unavailable";
+    const dateArray = task.taskDate;
+    const date = new Date(dateArray[0], dateArray[1] - 1, dateArray[2]);
 
     // Define suffixes for day
     const suffixes = ["st", "nd", "rd", "th"];
@@ -55,6 +55,16 @@ const TaskDetailsPage = ({ params }: { params: { id: string } }) => {
         formattedTime = `${hours === 0 ? 12 : hours}:${(minutes < 10 ? '0' : '') + minutes} AM`;
     }
 
+    function transformHubTime(hubTime: string): string {
+        return hubTime
+            .toLowerCase()
+            .split('_')
+            .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+            .join(' ');
+    }
+
+    const hubTime = transformHubTime(task.hubTime);
+
     return (
         <section className="py-28 container">
             <Link href="/explore" className="flex items-center space-x-5 lg:space-x-10 text-primary mb-2">
@@ -69,8 +79,7 @@ const TaskDetailsPage = ({ params }: { params: { id: string } }) => {
             ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-10 space-x-5 w-full mt-10">
                     <div className="space-y-7 lg:space-y-20">
-                        <h2 className="text-lg lg:text-[39px] font-satoshi text-status-darkViolet font-black">{task?.taskServiceName}
-                        </h2>
+                        <h2 className="text-lg lg:text-[39px] font-satoshi text-status-darkViolet font-black">{task?.taskDescription}</h2>
                         <div className="space-y-3 text-xs lg:text-xl">
                             <h2 className='text-primary underline font-bold'>Service purpose</h2>
                             <p className='text-status-darkViolet'>{task?.taskDescription}</p>
@@ -79,7 +88,7 @@ const TaskDetailsPage = ({ params }: { params: { id: string } }) => {
                             <h4 className='text-lg lg:text-[39px] font-bold text-status-darkViolet'>Location</h4>
                             <div className="flex items-center space-x-2 w-full text-[#716F78]">
                                 <HiOutlineLocationMarker className="h-6 w-6 font-bold" />
-                                <h5 className="max-lg:text-[9px] text-[15px] lg:text-xl">{task?.userAddress}</h5>
+                                <h5 className="max-lg:text-[9px] text-[15px] lg:text-xl">{task?.taskAddress}</h5>
                             </div>
                         </div>
 
@@ -91,7 +100,7 @@ const TaskDetailsPage = ({ params }: { params: { id: string } }) => {
                             </div>
                             <div className="max-lg:text-xs flex items-center space-x-3 text-[#716F78]">
                                 <FiClock className="h-6 w-6" />
-                                <h5>{formattedTime}</h5>
+                                    <h5>{hubTime}</h5>
                             </div>
                         </div>
                     </div>
