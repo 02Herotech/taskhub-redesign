@@ -16,7 +16,8 @@ const TaskCard = ({ task }: TaskCardProps) => {
     const router = useRouter();
 
     const availability = task.active ? "Available" : "Unavailable";
-    const dateArray = task.taskDate;
+    const currentDateTime = new Date();
+    const dateArray = task.taskDate || [currentDateTime.getFullYear(), currentDateTime.getMonth() + 1, currentDateTime.getDate()];
     const date = new Date(dateArray[0], dateArray[1] - 1, dateArray[2]);
 
     // Define suffixes for day
@@ -49,6 +50,10 @@ const TaskCard = ({ task }: TaskCardProps) => {
     }
 
     function transformHubTime(hubTime: string): string {
+        if (typeof hubTime !== 'string') {
+            return 'No time specified';
+        }
+
         return hubTime
             .toLowerCase()
             .split('_')
@@ -65,7 +70,9 @@ const TaskCard = ({ task }: TaskCardProps) => {
             onClick={() => router.push(`/explore/task-details/${task.id}`)}
         >
             <div className="flex items-center justify-between w-full">
-                <h2 className="text-2xl lg:text-[32px] text-primary font-bold">{task.taskDescription}</h2>
+                <h2 className="text-2xl lg:text-[32px] text-primary font-bold truncate overflow-hidden py-4 whitespace-nowrap text-ellipsis">
+                    {task.taskDescription}
+                </h2>
                 <img src={task.taskImage} alt="Logo" className="object-cover size-[46px] rounded-full border" />
             </div>
             <div className="space-y-2 my-4">
