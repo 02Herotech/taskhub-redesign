@@ -7,10 +7,14 @@ import { z } from "zod";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useSession } from "next-auth/react";
+import { PiFileArrowDownDuotone } from "react-icons/pi";
 
 const EditProfile = () => {
   const [isEditingEnabled, setIsEditingEnabled] = useState(false);
   const [isFormModalShown, setIsFormModalShown] = useState(false);
+  const [documentImage, setDocumentImage] = useState<{ image: File | null }>({
+    image: null,
+  });
 
   const session = useSession();
   const user = session?.data?.user?.user;
@@ -51,6 +55,19 @@ const EditProfile = () => {
     },
   });
 
+  const handleSetDocumentImage = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    const uploadedFile = event.target.files?.[0];
+    if (uploadedFile) {
+      setDocumentImage({ image: uploadedFile });
+    }
+  };
+
+  const handleRemoveDocumentImage = () => {
+    setDocumentImage({ image: null });
+  };
+
   useEffect(() => {
     if (user) {
       reset({
@@ -72,11 +89,13 @@ const EditProfile = () => {
     // console.log(data);
     setIsFormModalShown(true);
     setIsEditingEnabled(false);
+
+    const newUserData = { ...data, documentImage: documentImage.image };
   };
 
   return (
-    <main className="space-y-8 p-4 lg:p-8">
-      <section className="flex flex-col items-center justify-center gap-1 ">
+    <main className=" relative p-4 lg:p-8">
+      <section className="flex flex-col items-center justify-center gap-1 pb-8 ">
         <Image
           src={user?.profileImage ?? "/assets/images/serviceProvider/user.jpg"}
           alt="user"
@@ -304,17 +323,60 @@ const EditProfile = () => {
                 <p className="text-red-600">{errors.driverLicence.message}</p>
               )}
             </div>
-            {/* <div className="flex w-screen flex-col gap-3 lg:max-w-64 ">
-              <label htmlFor="state" className="text-sm text-slate-500">
-                State
+            <div className="grid space-y-3">
+              <label className="text-sm text-slate-500">
+                Upload identification document
               </label>
-              <input
-                type="text"
-                id="state"
-                name="state"
-                className="rounded-xl border border-slate-200 p-2 text-slate-700 shadow  outline-none transition-shadow duration-300 hover:shadow-md lg:max-w-sm "
-              />
-            </div> */}
+              {/* Check if taskImage is uploaded */}
+              {documentImage.image ? (
+                <div className="flex items-end justify-center space-x-2">
+                  {/* Display a disabled input with message */}
+                  <label
+                    htmlFor="file-upload"
+                    className="flex h-48 w-1/2 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-slate-200 p-4"
+                  >
+                    <PiFileArrowDownDuotone className="text-xl text-tc-gray" />
+                    <span className="text-center text-tc-gray">
+                      Image Uploaded
+                    </span>
+                    {/* <input
+                      id="file-upload"
+                      type="file"
+                      readOnly
+                      disabled
+                      className="hidden"
+                      onChange={(e) => handleSetDocumentImage(e)}
+                    /> */}
+                  </label>
+                  <button
+                    className="rounded-lg bg-tc-gray px-3 py-1 text-white"
+                    onClick={handleRemoveDocumentImage}
+                    type="button"
+                  >
+                    Remove
+                  </button>
+                </div>
+              ) : (
+                // If no taskImage is uploaded, render the file input
+                <label
+                  htmlFor="file-upload"
+                  className="flex h-48 w-1/2 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-slate-500 p-4"
+                >
+                  <PiFileArrowDownDuotone className="text-xl text-tc-gray" />
+                  <span className="text-center text-tc-gray">
+                    Choose a File Upload supports: JPG, PDF, PNG.
+                  </span>
+                  <input
+                    id="file-upload"
+                    type="file"
+                    accept=".png, .jpg, .jpeg, .gif"
+                    className="hidden"
+                    onChange={(e) => handleSetDocumentImage(e)}
+                    disabled={!isEditingEnabled}
+                  />
+                </label>
+              )}
+            </div>
           </div>
         </section>
         <div className="flex lg:items-end lg:justify-end lg:px-24">

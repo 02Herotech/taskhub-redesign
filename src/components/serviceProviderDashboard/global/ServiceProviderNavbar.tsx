@@ -47,22 +47,22 @@ const ServiceProviderNavbar = () => {
         />
       </Link>
 
-      <nav className=" hidden items-center justify-center gap-6 lg:flex">
+      <nav className=" hidden items-center justify-center gap-10 lg:flex">
         <Link
           href="/service-provider/provide-service"
-          className={`font-clashDisplay text-lg font-bold hover:opacity-90 ${pathname === "/service-provider/provide-service" ? "text-yellow-500 " : "text-[#2A1769]"} `}
+          className={` text-lg font-bold hover:opacity-90 ${pathname === "/service-provider/provide-service" ? "text-yellow-500 " : "text-[#2A1769]"} `}
         >
           Provide a service
         </Link>
         <Link
           href="/service-provider/explore-task"
-          className={`font-clashDisplay text-lg font-bold hover:opacity-90 ${pathname === "/service-provider/explore-task" ? "text-yellow-500 " : "text-[#2A1769]"} `}
+          className={` text-lg font-bold hover:opacity-90 ${pathname === "/service-provider/explore-task" ? "text-yellow-500 " : "text-[#2A1769]"} `}
         >
           Explore Task
         </Link>
         <Link
           href="/marketplace"
-          className={`font-clashDisplay text-lg font-bold hover:opacity-90 ${pathname === "/marketplace" ? "text-yellow-500 " : "text-[#2A1769]"} `}
+          className={` text-lg font-bold hover:opacity-90 ${pathname === "/marketplace" ? "text-yellow-500 " : "text-[#2A1769]"} `}
         >
           Market Place
         </Link>
