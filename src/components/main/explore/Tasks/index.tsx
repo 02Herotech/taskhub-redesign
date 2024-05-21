@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react";
-import { FaChevronLeft, FaChevronRight } from "react-icons/fa6";
+import { FaChevronLeft, FaChevronRight, FaSortDown } from "react-icons/fa";
 import {
     useFilterTaskByPriceQuery,
     useFilterTaskByTypeQuery,
@@ -9,22 +9,29 @@ import {
     useFilterTaskByEarliestDateQuery,
     useFilterTaskByLatestDateQuery,
     useFilterTaskByPriceAscQuery,
-    useFilterTaskByPriceDescQuery
+    useFilterTaskByPriceDescQuery,
 } from "@/services/tasks";
 import Dropdown from "@/components/global/Dropdown";
 import TaskCard from "../TaskCard";
 import loader from "../../../../../public/assets/images/marketplace/taskhub-newloader.gif";
 import Image from "next/image";
 import Button from "@/components/global/Button";
-import { FaSortDown } from "react-icons/fa";
-import ReactSlider from 'react-slider'
+import ReactSlider from "react-slider";
+import axios from "axios";
 
 const Tasks = () => {
     const [priceValues, setPriceValues] = useState<[number, number]>([5, 10000]);
     const [locationValues, setLocationValues] = useState<[number, number]>([1, 50]);
-    const [selectedService, setSelectedService] = useState<'Remote' | 'In Person'>('In Person');
-    const [selectedCategory, setSelectedCategory] = useState<string>('');
+    const [selectedService, setSelectedService] = useState<"Remote" | "In Person">("In Person");
+    const [selectedCategory, setSelectedCategory] = useState<string>("");
     const [currentPage, setCurrentPage] = useState(1);
+    const [filters, setFilters] = useState({
+        price: false,
+        type: "In Person",
+        date: "",
+        sort: "",
+        category: "",
+    });
     const itemsPerPage = 9;
     const serviceType = selectedService === 'Remote' ? 'REMOTE_SERVICE' : 'PHYSICAL_SERVICE';
 
@@ -38,22 +45,77 @@ const Tasks = () => {
         page: currentPage,
         type: serviceType
     });
-    const { data: filteredByEarliestDateData, isLoading: isFilteredByEarliestDateLoading, refetch: refetchFilteredByEarliestDate } = useFilterTaskByEarliestDateQuery(currentPage);
-    const { data: filteredByLatestDateData, isLoading: isFilteredByLatestDateLoading, refetch: refetchFilteredByLatestDate } = useFilterTaskByLatestDateQuery(currentPage);
-    const { data: filteredByPriceAscData, isLoading: isFilteredByPriceAscLoading, refetch: refetchFilteredByPriceAsc } = useFilterTaskByPriceAscQuery(currentPage);
-    const { data: filteredByPriceDescData, isLoading: isFilteredByPriceDescLoading, refetch: refetchFilteredByPriceDesc } = useFilterTaskByPriceDescQuery(currentPage);
+    const {
+        data: filteredByEarliestDateData,
+        isLoading: isFilteredByEarliestDateLoading,
+        refetch: refetchFilteredByEarliestDate,
+    } = useFilterTaskByEarliestDateQuery(currentPage);
+    const {
+        data: filteredByLatestDateData,
+        isLoading: isFilteredByLatestDateLoading,
+        refetch: refetchFilteredByLatestDate,
+    } = useFilterTaskByLatestDateQuery(currentPage);
+    const {
+        data: filteredByPriceAscData,
+        isLoading: isFilteredByPriceAscLoading,
+        refetch: refetchFilteredByPriceAsc,
+    } = useFilterTaskByPriceAscQuery(currentPage);
+    const {
+        data: filteredByPriceDescData,
+        isLoading: isFilteredByPriceDescLoading,
+        refetch: refetchFilteredByPriceDesc,
+    } = useFilterTaskByPriceDescQuery(currentPage);
+
+    // useEffect(async () => {
+    //     try {
+    //         const response = await axios.post(
+    //             `${process.env.NEXT_PUBLIC_API_URL}/user/reset-password?email=${email}`,
+    //         );
+
+    //     } catch (error: any) {
+    //         console.log(error)
+    //     }
+    // }, [])
 
     useEffect(() => {
-        refetchFilteredByType()
-    }, [currentPage, refetchFilteredByType])
+        if (filters.price) {
+            refetchFiltered();
+        } else if (filters.type) {
+            refetchFilteredByType();
+        } else if (filters.date === "earliest") {
+            refetchFilteredByEarliestDate();
+        } else if (filters.date === "latest") {
+            refetchFilteredByLatestDate();
+        } else if (filters.sort === "asc") {
+            refetchFilteredByPriceAsc();
+        } else if (filters.sort === "desc") {
+            refetchFilteredByPriceDesc();
+        } else {
+            refetch();
+        }
+    }, [
+        currentPage,
+        filters,
+        refetchFiltered,
+        refetchFilteredByType,
+        refetchFilteredByEarliestDate,
+        refetchFilteredByLatestDate,
+        refetchFilteredByPriceAsc,
+        refetchFilteredByPriceDesc,
+        refetch,
+    ]);
 
-    useEffect(() => {
-        refetchFiltered(); // Fetch new data when the current page changes
-    }, [currentPage, refetchFiltered]);
+    // useEffect(() => {
+    //     refetchFilteredByType()
+    // }, [currentPage, refetchFilteredByType])
 
-    useEffect(() => {
-        refetch(); // Fetch new data when the current page changes
-    }, [currentPage, refetch]);
+    // useEffect(() => {
+    //     refetchFiltered(); // Fetch new data when the current page changes
+    // }, [currentPage, refetchFiltered]);
+
+    // useEffect(() => {
+    //     refetch(); // Fetch new data when the current page changes
+    // }, [currentPage, refetch]);
 
     const totalPages = Math.ceil(data?.totalElements! / itemsPerPage); // Calculate total pages
 
@@ -62,6 +124,21 @@ const Tasks = () => {
     };
 
     const renderContent = () => {
+        let dataToRender = data;
+        if (filters.price) {
+            dataToRender = filteredByPriceData;
+        } else if (filters.type) {
+            dataToRender = filteredByTypeData;
+        } else if (filters.date === "earliest") {
+            dataToRender = filteredByEarliestDateData;
+        } else if (filters.date === "latest") {
+            dataToRender = filteredByLatestDateData;
+        } else if (filters.sort === "asc") {
+            dataToRender = filteredByPriceAscData;
+        } else if (filters.sort === "desc") {
+            dataToRender = filteredByPriceDescData;
+        }
+
         return (
             <div>
                 {isLoading ? (
@@ -70,7 +147,7 @@ const Tasks = () => {
                     </div>
                 ) : (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 my-14">
-                        {data?.content.map((task, index) => (
+                        {dataToRender?.content.map((task, index) => (
                             <TaskCard task={task} key={index} />
                         ))}
                     </div>
@@ -79,27 +156,52 @@ const Tasks = () => {
         );
     };
 
-
     const otherOptionsDropdown = [
         {
             label: "Price: High to low",
-            onClick: () => refetchFilteredByPriceDesc
+            onClick: () => {
+                setFilters((prevFilters) => ({
+                    ...prevFilters,
+                    sort: "desc",
+                }));
+                refetchFilteredByPriceDesc();
+            },
         },
         {
             label: "Price: Low to high",
-            onClick: () => refetchFilteredByPriceAsc
+            onClick: () => {
+                setFilters((prevFilters) => ({
+                    ...prevFilters,
+                    sort: "asc",
+                }));
+                refetchFilteredByPriceAsc();
+            },
         },
         {
             label: "Due date: Earliest",
-            onClick: () => refetchFilteredByEarliestDate
+            onClick: () => {
+                setFilters((prevFilters) => ({
+                    ...prevFilters,
+                    date: "earliest",
+                }));
+                refetchFilteredByEarliestDate();
+            },
         },
         {
             label: "Due date: Latest",
-            onClick: () => refetchFilteredByLatestDate
+            onClick: () => {
+                setFilters((prevFilters) => ({
+                    ...prevFilters,
+                    date: "latest",
+                }));
+                refetchFilteredByLatestDate();
+            },
         },
         {
             label: "Closest to me",
-            onClick: () => {}
+            onClick: () => {
+                // Implement the logic for closest to me filter
+            },
         },
     ];
 
@@ -269,7 +371,16 @@ const Tasks = () => {
                                 <Button theme="outline" className="rounded-full" onClick={() => setPriceValues([5, 10000])}>
                                     Cancel
                                 </Button>
-                                <Button className="rounded-full" onClick={() => refetchFiltered}>
+                                <Button
+                                    className="rounded-full"
+                                    onClick={() => {
+                                        setFilters((prevFilters) => ({
+                                            ...prevFilters,
+                                            price: true,
+                                        }));
+                                        refetchFiltered();
+                                    }}
+                                >
                                     Apply
                                 </Button>
                             </div>

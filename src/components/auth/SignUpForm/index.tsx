@@ -9,7 +9,6 @@ import "react-phone-number-input/style.css";
 import { useState } from "react";
 import PhoneInputWithCountry from "react-phone-number-input/react-hook-form"
 import { useCustomerSignupMutation, useServiceProviderSignupMutation } from "@/services/auth";
-import Image from "next/image";
 
 type SignUpRequest = {
     emailAddress: string;
@@ -24,7 +23,7 @@ const SignUpForm = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [customerSignUpApiCall] = useCustomerSignupMutation();
     const [serviceProviderSignUpApiCall] = useServiceProviderSignupMutation();
-    const [error, setError] = useState<string | null>(null);
+    const [error, setError] = useState<string | null>(null); 
 
     const methods = useForm({
         mode: "onChange",
@@ -41,7 +40,7 @@ const SignUpForm = () => {
     const userType = searchParams.get('userType')
 
     const {
-        formState: { errors, isValid },
+        formState: { isValid },
         watch,
     } = methods;
 
