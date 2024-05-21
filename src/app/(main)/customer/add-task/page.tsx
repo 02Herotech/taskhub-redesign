@@ -283,25 +283,22 @@ const AddTaskForm: React.FC = () => {
                     };
                 }
 
-
-
                 if (!task.taskImage) {
                     const defaultImage =
                         "google-map.png";
                     setTask({ ...task, taskImage: defaultImage });
                 }
 
-
-                // await axios.post(
-                //     "https://smp.jacinthsolutions.com.au/api/v1/task/post",
-                //     finalTask,
-                //     {
-                //         headers: {
-                //             Authorization: `Bearer ${token}`,
-                //             'Content-Type': 'multipart/form-data',
-                //         },
-                //     },
-                // );
+                await axios.post(
+                    "https://smp.jacinthsolutions.com.au/api/v1/task/post",
+                    finalTask,
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                            'Content-Type': 'multipart/form-data',
+                        },
+                    },
+                );
                 setTask({
                     taskDescription: "",
                     taskImage: "",
