@@ -5,7 +5,6 @@ import axios from 'axios';
 import { useSession } from 'next-auth/react';
 import React, { useEffect, useRef, useState } from 'react';
 import { BiSend } from 'react-icons/bi';
-import { GrClose } from 'react-icons/gr';
 import { IoCloseCircleOutline } from 'react-icons/io5';
 import { BeatLoader } from "react-spinners";
 
@@ -32,8 +31,7 @@ interface Task {
     time: string;
 }
 
-type AiGenerateProps = {
-    handleChange: (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
+interface AiGenerateProps {
     setTask: React.Dispatch<React.SetStateAction<Task>>;
     task: Task;
 }
@@ -87,6 +85,7 @@ const AiGeneratedDesc: React.FC<AiGenerateProps> = ({ task, setTask }) => {
             setConversation(newConversation);
             setAiQuery('');
             setAiLoading(false)
+            // scrollChatToBottom()
         }
     }
 
@@ -97,6 +96,12 @@ const AiGeneratedDesc: React.FC<AiGenerateProps> = ({ task, setTask }) => {
             conversationEndRef.current.scrollIntoView({ behavior: 'smooth' });
         }
     }, [conversation]);
+
+    // const scrollChatToBottom = () => {
+    //     if (conversationEndRef.current) {
+    //         conversationEndRef.current.scrollIntoView({ behavior: 'smooth' });
+    //     }
+    // }
 
 
     const setServiceDetails = () => {
@@ -209,22 +214,24 @@ w-full text-wrap h-[180px]'
                                 </div>
                             ))}
 
-                            <p >
-                                <span className='text-[15px] font-bold'>
-                                    Are you happy with this suggestion? you can</span> {' '}
+                            <div ref={conversationEndRef}>
+                                <p >
+                                    <span className='text-[15px] font-bold'>
+                                        Are you happy with this suggestion? you can</span> {' '}
 
-                                <span
-                                    onClick={setServiceDetails} className='bg-[#FE9B07] text-[14px] px-4 text-white p-2 rounded-[20px] hover:cursor-pointer'>
-                                    USE
-                                </span> {' '}
-                                <span
-                                    onClick={getMoreSuggestions}
-                                    className='text-[12px] underline hover:cursor-pointer'>
-                                    or  get more suggestions
-                                </span>
+                                    <span
+                                        onClick={setServiceDetails} className='bg-[#FE9B07] text-[14px] px-4 text-white p-2 rounded-[20px] hover:cursor-pointer'>
+                                        USE
+                                    </span> {' '}
+                                    <span
+                                        onClick={getMoreSuggestions}
+                                        className='text-[12px] underline hover:cursor-pointer'>
+                                        or  get more suggestions
+                                    </span>
 
 
-                            </p>
+                                </p>
+                            </div>
                             <div ref={conversationEndRef} />
                         </div>
 

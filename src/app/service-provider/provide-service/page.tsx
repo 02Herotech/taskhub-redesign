@@ -248,7 +248,6 @@ const AddTaskForm: React.FC = () => {
                 </div>
                 <div className="lg:hidden">
                   <AiGeneratedDesc
-                    handleChange={handleChange}
                     setTask={setTask}
                     task={task}
                   />
@@ -790,8 +789,6 @@ const AddTaskForm: React.FC = () => {
           {currentPage === 1 && (
             <div className="lg:w-[390px] hidden lg:block mr-[50px] xl:ml-[15%] lg:ml-[10%] ">
               <AiGeneratedDesc
-
-                handleChange={handleChange}
                 setTask={setTask}
                 task={task}
               />
