@@ -13,7 +13,9 @@ import { TiTick } from "react-icons/ti";
 import Popup from "@/components/global/Popup";
 import Button from "@/components/global/Button";
 import { useSession } from "next-auth/react";
+import image from "../../../../../public/assets/images/customer/Task management.png";
 import Image from "next/image";
+import Link from "next/link";
 
 interface FormData {
     taskDescription: string;
@@ -23,6 +25,7 @@ interface FormData {
     taskType: string;
     customerBudget: string;
     hubTime: string;
+    taskAddress: string[];
 }
 interface PostalCodeData {
     name: string;
@@ -47,6 +50,7 @@ const AddTaskForm: React.FC = () => {
         taskTime: "",
         taskDate: "",
         taskType: "",
+        taskAddress: [],
         customerBudget: "",
         hubTime: "",
     });
@@ -64,7 +68,6 @@ const AddTaskForm: React.FC = () => {
     );
     const [errors, setErrors] = useState<any>({});
     const [error, setError] = useState<any>({});
-    const [submitted, setSubmitted] = useState(false);
     const [isSuccessPopupOpen, setIsSuccessPopupOpen] = useState(false);
     const [postalCodeData, setPostalCodeData] = useState<PostalCodeData[]>([]);
 
@@ -96,9 +99,6 @@ const AddTaskForm: React.FC = () => {
                 errors.city = "Please select city.";
             } else if (!task.customerBudget) {
                 errors.customerBudget = "please enter your budget";
-            }
-            if (!selectedSuite) {
-                errors.taskAddress = "Please enter taskAddress and suite number.";
             }
         } else if (activeButtonIndex === 0) {
             // Validation for remote service
@@ -146,9 +146,6 @@ const AddTaskForm: React.FC = () => {
         setSelectedCity(selectedValue);
     };
 
-    const handleSuite = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setSelectedSuite(event.target.value);
-    };
 
     const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setTermsAccepted(event.target.checked);
@@ -227,7 +224,6 @@ const AddTaskForm: React.FC = () => {
     const dateString = formatDateToString(selectedDate);
     const timeString = formatTimeToString(selectedTime);
 
-
     const calculateProgress = () => {
         const isPhysical = task.taskType === 'physical';
         const requiredFields = [
@@ -279,11 +275,15 @@ const AddTaskForm: React.FC = () => {
                     const type = "REMOTE_SERVICE"
                     finalTask = { ...finalTask, taskType: type };
                 } else {
+                    const Address = [selectedCode, selectedCity, postalCodeData[0].state.name];
                     finalTask = {
                         ...finalTask,
                         taskType: "PHYSICAL_SERVICE",
+                        taskAddress: Address,
                     };
                 }
+
+
 
                 if (!task.taskImage) {
                     const defaultImage =
@@ -291,17 +291,17 @@ const AddTaskForm: React.FC = () => {
                     setTask({ ...task, taskImage: defaultImage });
                 }
 
-                setSubmitted(true);
-                await axios.post(
-                    "https://smp.jacinthsolutions.com.au/api/v1/task/post",
-                    finalTask,
-                    {
-                        headers: {
-                            Authorization: `Bearer ${token}`,
-                            'Content-Type': 'multipart/form-data',
-                        },
-                    },
-                );
+
+                // await axios.post(
+                //     "https://smp.jacinthsolutions.com.au/api/v1/task/post",
+                //     finalTask,
+                //     {
+                //         headers: {
+                //             Authorization: `Bearer ${token}`,
+                //             'Content-Type': 'multipart/form-data',
+                //         },
+                //     },
+                // );
                 setTask({
                     taskDescription: "",
                     taskImage: "",
@@ -309,6 +309,7 @@ const AddTaskForm: React.FC = () => {
                     taskDate: "",
                     taskType: "",
                     hubTime: "",
+                    taskAddress: [],
                     customerBudget: "",
                 });
                 console.log(finalTask);
@@ -326,7 +327,7 @@ const AddTaskForm: React.FC = () => {
             case 1:
                 return (
                     <div className="mb-10 grid items-center justify-center space-y-10">
-                        <form className="space-y-10" onSubmit={nextPage}>
+                        <form className="space-y-10 font-medium" onSubmit={nextPage}>
                             <div className="grid space-y-3">
                                 <label className="text-status-darkpurple">Briefly tell us what you need done?</label>
                                 <textarea
@@ -336,13 +337,18 @@ const AddTaskForm: React.FC = () => {
                                     value={task.taskDescription}
                                     onChange={handleChange} style={{ resize: "none", overflow: "hidden" }}></textarea>
                             </div>
-                            <div className="grid space-y-3">
+                            <div className=" space-y-3">
                                 <label className="text-status-darkpurple">Upload a taskImage (Optional)</label>
-                                {/* Check if taskImage is uploaded */}
                                 {task.taskImage ? (
                                     <div className="flex items-end justify-center">
                                         <div className="relative flex h-48 w-1/2 items-center justify-center rounded-lg border-2 border-dashed border-[#EBE9F4] p-4">
-                                            <img src={imageURL} alt="Uploaded Task" className="h-full w-full object-contain" width="100%" height="100%" />
+                                            <img
+                                                src={imageURL}
+                                                alt="Uploaded Task"
+                                                className="h-full w-full object-contain"
+                                                width="100%"
+                                                height="100%"
+                                            />
                                             <input
                                                 id="file-upload"
                                                 type="file"
@@ -356,13 +362,12 @@ const AddTaskForm: React.FC = () => {
                                         <button
                                             className="rounded-lg bg-tc-gray px-3 py-1 text-white"
                                             onClick={() => {
-                                                setTask({ ...task, taskImage: "" }); // Clear uploaded image
+                                                setTask({ ...task, taskImage: null });
                                             }}>
                                             Remove
                                         </button>
                                     </div>
                                 ) : (
-                                    // If no taskImage is uploaded, render the file input
                                     <label
                                         htmlFor="file-upload"
                                         className="flex h-48 w-1/2 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-[#EBE9F4] p-4">
@@ -380,7 +385,6 @@ const AddTaskForm: React.FC = () => {
                                     </label>
                                 )}
                             </div>
-
 
                             <div className="space-y-5">
                                 <label htmlFor="taskTime" className="text-status-darkpurple">
@@ -461,7 +465,7 @@ const AddTaskForm: React.FC = () => {
                 return (
                     <div className="mb-10 space-y-10">
                         <div className="space-y-4">
-                            <h2 className="text-status-darkpurple">Type of Service</h2>
+                            <h2 className="text-status-darkpurple font-medium">Type of Service</h2>
                             <div className="flex space-x-4 text-[13px] text-[#221354]">
                                 <button
                                     className={`rounded-2xl p-2 ${activeButtonIndex === 0
@@ -483,7 +487,7 @@ const AddTaskForm: React.FC = () => {
                                 </button>
                             </div>
                         </div>
-                        <form onSubmit={handleSubmit} className="space-y-10">
+                        <form onSubmit={handleSubmit} className="space-y-5">
                             {isOpen && activeButtonIndex === 1 && (
                                 <input
                                     type="text"
@@ -494,7 +498,7 @@ const AddTaskForm: React.FC = () => {
                                 />
                             )}
                             {isOpen && activeButtonIndex === 0 && (
-                                <div className="space-y-10 text-status-darkpurple">
+                                <div className="space-y-10 text-status-darkpurple font-medium">
                                     <div className="flex space-x-4">
                                         <div className="grid space-y-4">
                                             <label >Postal code</label>
@@ -523,7 +527,7 @@ const AddTaskForm: React.FC = () => {
                                             </select>
                                         </div>
                                     </div>
-                                    <div className="grid space-y-4">
+                                    <div className="grid space-y-4 ">
                                         <label>State/Territory</label>
                                         <input
                                             value={postalCodeData.length > 0 ? postalCodeData[0].state.name : ''}
@@ -536,7 +540,8 @@ const AddTaskForm: React.FC = () => {
                                     </div>
                                 </div>
                             )}
-                            <div className="grid space-y-4 text-status-darkpurple">
+                            <p className="text-xl text-[#381F8C] font-extrabold">Your Budget</p>
+                            <div className="grid space-y-4 text-status-darkpurple font-medium">
                                 <label>Budget</label>
                                 <input
                                     type="text"
@@ -574,14 +579,14 @@ const AddTaskForm: React.FC = () => {
             <Head>
                 <title>TaskHub | Add Task</title>
             </Head>
-            <div className="w-full space-y-3">
-                <div className="flex justify-center space-x-5">
+            <div className="w-full">
+                <div className="flex justify-center space-x-5 mb-3">
                     <div
                         className={`${currentPage === 1
                             ? "text-status-purpleBase"
                             : "text-status-purpleBase"
                             }`}>
-                        <p className="flex items-center lg:gap-3 text-[12px] lg:text-[16px]">
+                        <p className="flex items-center gap-2 lg:gap-3 text-[12px] md:text-[16px]">
                             <span
                                 className={`${currentPage === 1
                                     ? "bg-status-purpleBase text-white"
@@ -600,7 +605,7 @@ const AddTaskForm: React.FC = () => {
                             ? "text-status-purpleBase"
                             : " text-[#716F78]"
                             }`}>
-                        <p className="flex items-center lg:gap-3 text-[12px] lg:text-[16px]">
+                        <p className="flex items-center gap-2 lg:gap-3 text-[12px] md:text-[16px]">
                             <span
                                 className={`${currentPage === 2
                                     ? "bg-status-purpleBase text-white"
@@ -615,11 +620,11 @@ const AddTaskForm: React.FC = () => {
                         </p>
                     </div>
                 </div>
+                <hr className="h-[2px] bg-[#EAE9EB] text-[#EAE9EB] w-full" />
                 <div>
-                    <hr className="h-[2px] bg-[#EAE9EB] text-[#EAE9EB] w-full" />
                     <div className="flex justify-center">
                         <div
-                            className="container flex items-center justify-center space-x-5 border-2 border-[#EAE9EB] p-3"
+                            className="container flex items-center w-80 lg:w-full justify-center space-x-5 border-2 border-[#EAE9EB] p-3"
                             style={{ borderRadius: "0px 0px 20px 20px ", borderTop: "none" }}>
                             {/* Progress bar */}
                             <div className="h-1 w-2/3 overflow-hidden bg-[#EAE9EB]">
@@ -634,16 +639,15 @@ const AddTaskForm: React.FC = () => {
                                 />
                             </div>
                             <p className="text-xs text-status-darkpurple">
-                                {/* {Math.round((currentPage / 2) * 100)}% Complete */}
-                                {submitted ? 'Form submitted!' : `Progress: ${progress}%`}
+                                {`${progress}% complete`}
                             </p>
                         </div>
                     </div>
                 </div>
-                <div className="flex items-center justify-center">
+                <div className="flex items-center justify-center p-8 lg:p-0 font-medium mt-8">
                     <div>
                         <div>
-                            <h2 className="text-xl text-status-darkpurple">Add a Task</h2>
+                            <h2 className="text-4xl text-status-darkpurple">Add a Task</h2>
                             <p className="text-[12px] text-[#716F78]">
                                 Please fill out the information below to add a new task.
                             </p>
@@ -657,20 +661,23 @@ const AddTaskForm: React.FC = () => {
                 onClose={() => {
                     setIsSuccessPopupOpen(false);
                 }}>
-                <div className="p-5">
-                    <div className="relative grid items-center justify-center space-y-10">
+                <div className="p-5 lg:px-20">
+                    <div className="relative grid items-center justify-center space-y-5">
                         <div className="flex justify-center text-white">
-                            <TiTick className=" h-[40px] w-[40px] rounded-3xl bg-[#FE9B07] p-2" />
+                            <TiTick className="h-[50px] w-[50px] lg:h-[60px] lg:w-[60px] rounded-full bg-[#FE9B07] p-2" />
                         </div>
-                        <p className="text-center text-lg">Task Posted</p>
-                        <p>
+                        <p className="text-center text-[25px] lg:text-[37px] text-[#2A1769] font-extrabold font-clashDisplay ">TaskPosted</p>
+                        <p className="lg:text-[20px]">
                             Your Task has been posted! please click <br /> on the button to
                             proceed to marketplace
                         </p>
+                        <Image src={image} alt="image" className="absolute lg:top-2/3 lg:-right-20 -right-8 top-40 w-20 lg:w-32" />
                         <div className="flex justify-center">
-                            <button className="w-[100px] rounded-2xl bg-status-purpleBase p-2 text-[14px] text-white outline-none">
-                                Go Home
-                            </button>
+                            <Link href="/">
+                                <button className="w-[100px] rounded-2xl bg-status-purpleBase p-2 text-[14px] text-white outline-none">
+                                    Go Home
+                                </button>
+                            </Link>
                         </div>
                     </div>
                 </div>
