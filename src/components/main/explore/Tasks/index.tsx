@@ -18,6 +18,7 @@ import Image from "next/image";
 import Button from "@/components/global/Button";
 import ReactSlider from "react-slider";
 import axios from "axios";
+import { useSession } from "next-auth/react";
 
 const Tasks = () => {
     const [priceValues, setPriceValues] = useState<[number, number]>([5, 10000]);
@@ -66,16 +67,21 @@ const Tasks = () => {
         refetch: refetchFilteredByPriceDesc,
     } = useFilterTaskByPriceDescQuery(currentPage);
 
-    // useEffect(async () => {
-    //     try {
-    //         const response = await axios.post(
-    //             `${process.env.NEXT_PUBLIC_API_URL}/user/reset-password?email=${email}`,
-    //         );
+    useEffect(() => {
+        const fetchCategoriesData = async () => {
+            try {
+                const response = await axios.get(
+                    `${process.env.NEXT_PUBLIC_API_URL}/task/search-by-type/1`,
+                );
+                // Handle the response data as needed
+                console.log("Categories", response.data);
+            } catch (error) {
+                console.log(error);
+            }
+        };
 
-    //     } catch (error: any) {
-    //         console.log(error)
-    //     }
-    // }, [])
+        fetchCategoriesData();
+    }, []);
 
     useEffect(() => {
         if (filters.price) {
@@ -125,19 +131,19 @@ const Tasks = () => {
 
     const renderContent = () => {
         let dataToRender = data;
-        if (filters.price) {
-            dataToRender = filteredByPriceData;
-        } else if (filters.type) {
-            dataToRender = filteredByTypeData;
-        } else if (filters.date === "earliest") {
-            dataToRender = filteredByEarliestDateData;
-        } else if (filters.date === "latest") {
-            dataToRender = filteredByLatestDateData;
-        } else if (filters.sort === "asc") {
-            dataToRender = filteredByPriceAscData;
-        } else if (filters.sort === "desc") {
-            dataToRender = filteredByPriceDescData;
-        }
+        // if (filters.price) {
+        //     dataToRender = filteredByPriceData;
+        // } else if (filters.type) {
+        //     dataToRender = filteredByTypeData;
+        // } else if (filters.date === "earliest") {
+        //     dataToRender = filteredByEarliestDateData;
+        // } else if (filters.date === "latest") {
+        //     dataToRender = filteredByLatestDateData;
+        // } else if (filters.sort === "asc") {
+        //     dataToRender = filteredByPriceAscData;
+        // } else if (filters.sort === "desc") {
+        //     dataToRender = filteredByPriceDescData;
+        // }
 
         return (
             <div>

@@ -13,27 +13,29 @@ interface Message {
     text: string;
 }
 
-interface Task {
-    serviceDetails: string;
-    briefDescription: string;
-    physicalService: boolean;
-    remoteService: boolean;
-    termsAccepted: boolean;
-    picture?: File | null;
-    workDaysTime: string;
-    describe: string;
-    address: string;
-    Suite: string;
-    postalCode: string;
-    category: string;
-    subCategory: string;
-    budget: string;
-    time: string;
+interface FormData {
+  describe: string;
+  availability: string;
+  taskDescription: string;
+  planDetails: string;
+  taskImage: File | defaultImage | null;
+  taskImage1?: File | defaultImage | null;
+  taskImage2?: File | defaultImage | null;
+  taskImage3?: File | defaultImage | null;
+  taskTime: string;
+  taskDate: string;
+  taskType: string;
+  customerBudget: string;
+  hubTime: string;
+  taskAddress: string[];
+  category: string;
+  subCategory: string;
 }
 
+type defaultImage = string;
 interface AiGenerateProps {
-    setTask: React.Dispatch<React.SetStateAction<Task>>;
-    task: Task;
+    setTask: React.Dispatch<React.SetStateAction<FormData>>;
+    task: FormData;
 }
 
 const AiDesciption: React.FC<AiGenerateProps> = ({ task, setTask }) => {
@@ -112,7 +114,7 @@ const AiDesciption: React.FC<AiGenerateProps> = ({ task, setTask }) => {
     const setServiceDetails = () => {
         const descriptionIndex = conversation?.length - 1
         const description = conversation[descriptionIndex]?.text
-        setTask({ ...task, serviceDetails: description })
+        setTask({ ...task, taskDescription: description })
         closeAiChatView()
     }
 

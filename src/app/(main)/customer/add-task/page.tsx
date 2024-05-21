@@ -57,7 +57,6 @@ const AddTaskForm: React.FC = () => {
     const [selectedDate, setSelectedDate] = useState<Date | null>(null);
     const [selectedTime, setSelectedTime] = useState<Date | null>(null);
     const [selectedCode, setSelectedCode] = useState("");
-    const [selectedSuite, setSelectedSuite] = useState("");
     const [selectedCity, setSelectedCity] = useState("");
     const [termsAccepted, setTermsAccepted] = useState(false);
     const [isRemote, setIsRemote] = useState("")
@@ -99,11 +98,6 @@ const AddTaskForm: React.FC = () => {
                 errors.city = "Please select city.";
             } else if (!task.customerBudget) {
                 errors.customerBudget = "please enter your budget";
-            }
-        } else if (activeButtonIndex === 0) {
-            // Validation for remote service
-            if (!selectedSuite) {
-                errors.taskAddress = "Please enter taskAddress and suite number.";
             }
         }
         setErrors(errors);
@@ -337,7 +331,7 @@ const AddTaskForm: React.FC = () => {
                             <div className=" space-y-3">
                                 <label className="text-status-darkpurple">Upload an Image (Optional)</label>
                                 {task.taskImage ? (
-                                    <div className="flex items-end justify-center">
+                                    <div className="flex items-end ">
                                         <div className="relative flex h-48 w-1/2 items-center justify-center rounded-lg border-2 border-dashed border-[#EBE9F4] p-4">
                                             <img
                                                 src={imageURL}
@@ -400,7 +394,7 @@ const AddTaskForm: React.FC = () => {
                                             placeholderText="Choose Time"
                                             id="taskTime"
                                             name="taskTime"
-                                            className="cursor-pointer rounded-2xl w-full border  placeholder:font-bold hover:text-white border-tc-gray bg-[#EBE9F4] px-2 py-1 outline-none placeholder:text-[14px] hover:bg-status-purpleBase hover:placeholder:text-white"
+                                            className="cursor-pointer rounded-2xl w-full border  placeholder:font-bold  border-tc-gray bg-[#EBE9F4] px-2 py-1 outline-none placeholder:text-[14px] "
                                         />
                                         <IoMdArrowDropdown className="absolute right-5 top-2 cursor-pointer text-status-purpleBase" />
                                     </div>
@@ -413,10 +407,10 @@ const AddTaskForm: React.FC = () => {
                                             placeholderText="Choose Date"
                                             id="taskDate"
                                             name="taskDate"
-                                            className="cursor-pointer rounded-2xl border  placeholder:font-bold w-full hover:text-white border-tc-gray bg-[#EBE9F4] px-2 py-1 outline-none placeholder:text-[14px] hover:bg-status-purpleBase hover:placeholder:text-white"
+                                            className="cursor-pointer rounded-2xl border  placeholder:font-bold w-full border-tc-gray bg-[#EBE9F4] px-2 py-1 outline-none placeholder:text-[14px] "
                                         />
 
-                                        <IoMdArrowDropdown className="absolute right-5 top-2 text-status-purpleBase" />
+                                        <IoMdArrowDropdown className="absolute right-5 cursor-pointer top-2 text-status-purpleBase" />
                                     </div>
                                 </div>
                             </div>
@@ -439,7 +433,7 @@ const AddTaskForm: React.FC = () => {
                                             name="hubTime"
                                             className="w-full appearance-none rounded-2xl border border-tc-gray bg-[#EBE9F4] px-3 py-1 text-[14px] text-status-purpleBase   outline-none">
                                             <option value="">Select Time Of The Day</option>
-                                            <option value="MORNING_BEFORE_10AM">Morning, before 10am</option>
+                                            <option value="MORNING_BEFORE_10AM">Morning, Before 10am</option>
                                             <option value="MIDDAY_10AM_to_12PM">Midday, 10am to 12pm</option>
                                             <option value="AFTERNOON_12PM_to_2PM">Afternoon, 12pm to 2pm</option>
                                             <option value="EVENING_2PM_to_5PM">Evening, 2pm to 5pm</option>
@@ -540,7 +534,7 @@ const AddTaskForm: React.FC = () => {
                                 </div>
                             )}
                             <p className="text-xl text-[#381F8C] font-extrabold">Your Budget</p>
-                            <div className="grid space-y-4 text-status-darkpurple font-medium">
+                            <div className="grid relative space-y-4 text-status-darkpurple font-medium">
                                 <label>Budget</label>
                                 <input
                                     type="text"
@@ -550,6 +544,7 @@ const AddTaskForm: React.FC = () => {
                                     placeholder="$500"
                                     className="rounded-2xl bg-[#EBE9F4] p-3 text-[13px] outline-none  placeholder:font-bold"
                                 />
+                                <p className="absolute">$</p>
                             </div>
                             <div className="text-[#FF0000]">
                                 {Object.keys(errors).map((key, index) => (
@@ -613,9 +608,6 @@ const AddTaskForm: React.FC = () => {
                                 02
                             </span>{" "}
                             Location and Budget
-                            <span >
-                                <IoIosArrowForward />
-                            </span>
                         </p>
                     </div>
                 </div>
