@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { BiCalendar, BiLocationPlus, BiStar } from "react-icons/bi";
 import { BsArrowUp, BsTriangleFill } from "react-icons/bs";
@@ -12,6 +12,9 @@ import PageHeader from "@/components/matkeplaceSingleTask/PageHeader";
 import PricingPlan from "@/components/matkeplaceSingleTask/PricingPlan";
 import Reviews from "@/components/matkeplaceSingleTask/Reviews";
 import ServiceDescription from "@/components/matkeplaceSingleTask/ServiceDescription";
+import { signOut, useSession } from "next-auth/react";
+import { useParams } from "next/navigation";
+import { fetchListingById } from "@/lib/serviceproviderutil";
 
 interface listingData {
   id: number;
@@ -55,6 +58,28 @@ interface listingData {
 }
 
 const Page = () => {
+  const [isDataFetched, setIsDataFetched] = useState(false);
+  const session = useSession();
+  const token = session?.data?.user?.refreshToken;
+
+  const param = useParams();
+  const id = param.id[0];
+
+  // if (token && !isDataFetched) {
+  //   const fetchData = async () => {
+  //     try {
+  //       if (token) {
+  //         const data = await fetchListingById(id, token);
+  //         console.log(data);
+  //       }
+  //     } catch (error) {
+  //       console.log(error);
+  //     }
+  //   };
+  //   fetchData();
+  //   setIsDataFetched(true);
+  // }
+
   return (
     <main className="pt-16 text-[#221354]">
       <PageHeader />
