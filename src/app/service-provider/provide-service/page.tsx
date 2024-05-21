@@ -12,8 +12,7 @@ import { TiTick } from "react-icons/ti";
 import Popup from "@/components/global/Popup";
 import Button from "@/components/global/Button";
 import Link from "next/link";
-import AiGenerate from "./AiGenerate/page";
-import AiGeneratedDesc from "./AiGenerate/page";
+import AiDesciption from "@/components/AiGenerate/AiDescription";
 
 interface Task {
   serviceDetails: string;
@@ -247,7 +246,7 @@ const AddTaskForm: React.FC = () => {
                   />
                 </div>
                 <div className="lg:hidden">
-                  <AiGeneratedDesc
+                  <AiDesciption
                     setTask={setTask}
                     task={task}
                   />
@@ -788,7 +787,7 @@ const AddTaskForm: React.FC = () => {
         <div className="lg:flex">
           {currentPage === 1 && (
             <div className="lg:w-[390px] hidden lg:block mr-[50px] xl:ml-[15%] lg:ml-[10%] ">
-              <AiGeneratedDesc
+              <AiDesciption
                 setTask={setTask}
                 task={task}
               />

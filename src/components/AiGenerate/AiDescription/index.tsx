@@ -13,6 +13,7 @@ interface Message {
     text: string;
 }
 
+
 interface Task {
     serviceDetails: string;
     briefDescription: string;
@@ -36,7 +37,7 @@ interface AiGenerateProps {
     task: Task;
 }
 
-const AiGeneratedDesc: React.FC<AiGenerateProps> = ({ task, setTask }) => {
+const AiDesciption: React.FC<AiGenerateProps> = ({ task, setTask }) => {
     const session = useSession();
     const userName = session?.data?.user?.user?.firstName
 
@@ -268,4 +269,4 @@ w-full text-wrap h-[50px] rounded-[16px] p-2'
     )
 };
 
-export default AiGeneratedDesc;
+export default AiDesciption;
