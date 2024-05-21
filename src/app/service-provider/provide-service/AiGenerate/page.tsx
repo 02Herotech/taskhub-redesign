@@ -1,3 +1,5 @@
+"use client"
+
 import Button from '@/components/global/Button';
 import axios from 'axios';
 import { useSession } from 'next-auth/react';
@@ -30,8 +32,7 @@ interface Task {
     time: string;
 }
 
-
-interface AiGenerateProps {
+type AiGenerateProps = {
     handleChange: (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
     setTask: React.Dispatch<React.SetStateAction<Task>>;
     task: Task;
