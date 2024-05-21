@@ -349,7 +349,7 @@ const Input = ({
 								{!passwordCheck.number && <span> and 1 number</span>}
 							</span>
 						)}
-						{!passwordCheck.number && passwordCheck.lowercase && (
+						{!passwordCheck.number && passwordCheck.special && (
 							<span className="text-[#E98282]">
 								1 number
 							</span>

@@ -130,7 +130,7 @@ const PasswordConfirmationForm = ({ email }: { email: string }) => {
             <section className='w-full xl:w-[554px] mx-auto max-lg:p-10 flex items-center justify-center'>
                 <div className='space-y-10'>
                     <div className="space-y-4 font-clashDisplay">
-                        <h1 className='text-2xl lg:text-4xl text-black font-medium'>
+                        <h1 className='text-2xl lg:text-4xl text-[#190E3F] font-medium'>
                             Account Verification
                         </h1>
                         <p className='text-xl lg:text-2xl text-tc-gray font-medium'>

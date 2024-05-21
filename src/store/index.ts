@@ -1,6 +1,5 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { auth } from "../services/auth";
-import { rtkQueryErrorLogger } from "./middlewares";
 import { task } from "@/services/tasks";
 
 export const store = configureStore({
@@ -12,7 +11,6 @@ export const store = configureStore({
 		getDefaultMiddleware().concat(
 			auth.middleware,
             task.middleware,
-			rtkQueryErrorLogger
 		),
 });
 

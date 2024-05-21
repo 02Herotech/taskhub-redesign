@@ -15,6 +15,7 @@ import { signOut, useSession } from "next-auth/react";
 import Logo from "../Logo";
 import axios from "axios";
 import ServiceProviderNavbar from "@/components/serviceProviderDashboard/global/ServiceProviderNavbar";
+import PlaceholderImage from "../../../../public/assets/images/placeholder.jpeg"
 
 const Navigation = () => {
   const router = useRouter();
@@ -53,11 +54,11 @@ const Navigation = () => {
   const dropdownItems = [
     {
       label: "Profile",
-      onClick: () => {},
+      onClick: () => { },
     },
     {
       label: "Settings",
-      onClick: () => {},
+      onClick: () => { },
     },
     {
       label: "Logout",
@@ -123,8 +124,8 @@ const Navigation = () => {
                   trigger={() => (
                     <div className="flex items-center space-x-1">
                       <img
-                        src={profileImage || ""}
-                        alt="Logo"
+                        src={profileImage || PlaceholderImage.src}
+                        alt="Profile" 
                         className="size-[46px] rounded-full object-cover"
                       />
                       <BiChevronDown className="size-6" />
