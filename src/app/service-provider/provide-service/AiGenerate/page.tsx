@@ -32,8 +32,7 @@ interface Task {
     time: string;
 }
 
-
-interface AiGenerateProps {
+type AiGenerateProps = {
     handleChange: (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
     setTask: React.Dispatch<React.SetStateAction<Task>>;
     task: Task;
