@@ -238,12 +238,12 @@ w-full text-wrap h-[180px]'
                             <div ref={conversationEndRef} />
                         </div>
 
-                        <p className='h-[20px]'>
+                        <p className='h-[15px] '>
                             {AiLoading ? (
                                 <BeatLoader color={'white'} size={12} />
                             ) : ''}
                         </p>
-                        <div className=" font-medium  rounded-[20px] p-4 lg:pb-2 pb-7 relative">
+                        <div className=" font-medium  rounded-[20px] pt-2 px-4 lg:pb-2 pb-7 relative">
 
                             <form onSubmit={handleAiChatView}>
 
@@ -253,10 +253,10 @@ w-full text-wrap h-[180px]'
                                     onChange={handleInputChange}
                                     value={aiQuery}
                                     className='text-[16px] font-normal bg-transparent border-[2px] border-[#716F78] text-white 
-w-full text-wrap h-[50px] rounded-[16px] p-2'
+w-full text-wrap h-[50px] rounded-[16px] px-2'
                                     required
                                 />
-                                <div className='absolute lg:right-[5%] right-[10%] lg:top-[35%] top-[30%] '>
+                                <div className='absolute lg:right-[5%] right-[10%] lg:top-[25%]  top-[20%] '>
                                     <button type="submit" > <BiSend color='white' size={26} className='hover:cursor-pointer hover:scale-110 ease-in-out transform' /></button>
 
                                 </div>
