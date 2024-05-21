@@ -1,3 +1,5 @@
+"use client"
+
 import Button from '@/components/global/Button';
 import axios from 'axios';
 import { useSession } from 'next-auth/react';
