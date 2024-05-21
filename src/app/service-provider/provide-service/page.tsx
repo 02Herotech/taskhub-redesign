@@ -4,7 +4,7 @@ import React, { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import Head from "next/head";
 import Image from "next/image";
-import { FaGreaterThan } from "react-icons/fa";
+import { IoIosArrowForward } from "react-icons/io";
 import { PiFileArrowDownDuotone } from "react-icons/pi";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -12,43 +12,47 @@ import { TiTick } from "react-icons/ti";
 import Popup from "@/components/global/Popup";
 import Button from "@/components/global/Button";
 import Link from "next/link";
-
-interface Task {
-  serviceDetails: string;
-  briefDescription: string;
-  physicalService: boolean;
-  remoteService: boolean;
-  termsAccepted: boolean;
-  picture?: File | null;
-  workDaysTime: string;
+interface FormData {
   describe: string;
-  address: string;
-  Suite: string;
-  postalCode: string;
+  taskDescription: string;
+  planDetails: string;
+  taskImage?: File | defaultImage | null;
+  taskTime: string;
+  taskDate: string;
+  taskType: string;
+  customerBudget: string;
+  hubTime: string;
+  taskAddress: string[];
   category: string;
   subCategory: string;
-  budget: string;
-  time: string;
+}
+interface PostalCodeData {
+  name: string;
+  postcode: string;
+  state: {
+    name: string;
+    abbreviation: string;
+  };
+  locality: string;
+
 }
 
 const AddTaskForm: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
-  const [task, setTask] = useState<Task>({
-    serviceDetails: "",
-    briefDescription: "",
-    physicalService: false,
-    remoteService: false,
-    termsAccepted: false,
-    picture: null,
-    workDaysTime: "",
+  const [task, setTask] = useState<FormData>({
     describe: "",
-    address: "",
-    Suite: "",
-    postalCode: "",
+    taskDescription: "",
+    planDetails: "",
+    taskImage: null,
+    taskTime: "",
+    taskDate: "",
+    taskType: "",
+    taskAddress: [],
+    customerBudget: "",
+    hubTime: "",
     category: "",
     subCategory: "",
-    budget: "",
-    time: "",
+
   });
   const [selectedCode, setSelectedCode] = useState("");
   const [selectedSubCategory, setSelectedSubCategory] = useState("");
@@ -64,6 +68,25 @@ const AddTaskForm: React.FC = () => {
   const [error, setError] = useState<any>({});
   const [isSuccessPopupOpen, setIsSuccessPopupOpen] = useState(false);
   const [inputDisabled, setInputDisabled] = useState(false);
+  const [postalCodeData, setPostalCodeData] = useState<PostalCodeData[]>([]);
+
+    useEffect(() => {
+        const fetchPostalCodeData = async () => {
+            try {
+                const response = await axios.get(
+                    `https://smp.jacinthsolutions.com.au/api/v1/util/locations/search?postcode=${selectedCode}`
+                );
+                setPostalCodeData(response.data as PostalCodeData[]);
+            } catch (error) {
+                console.error("Error fetching postal code data:", error);
+                setPostalCodeData([]);
+            }
+        };
+
+        if (selectedCode.length > 0) {
+            fetchPostalCodeData();
+        }
+    }, [selectedCode]);
 
   const handleClick = (index: number) => {
     setActiveButtonIndex(index);
@@ -113,7 +136,7 @@ const AddTaskForm: React.FC = () => {
   const handlePictureUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const uploadedFile = event.target.files?.[0];
     if (uploadedFile) {
-      setTask({ ...task, picture: uploadedFile });
+      setTask({ ...task, taskImage: uploadedFile });
     }
   };
 
@@ -121,21 +144,19 @@ const AddTaskForm: React.FC = () => {
     event.preventDefault();
     try {
       setTask({
-        serviceDetails: "",
-        briefDescription: "",
-        physicalService: false,
-        remoteService: false,
-        termsAccepted: false,
-        picture: null,
-        workDaysTime: "",
         describe: "",
-        address: "",
-        Suite: "",
-        postalCode: selectedCode,
+        taskDescription: "",
+        planDetails: "",
+        taskImage: "",
+        taskTime: "",
+        taskDate: "",
+        taskType: "",
+        hubTime: "",
+        taskAddress: [],
+        customerBudget: "",
         category: selectedCategory,
         subCategory: selectedSubCategory,
-        time: isSelectedTime,
-        budget: "",
+
       });
       setIsSuccessPopupOpen(true);
       console.log(task);
@@ -215,9 +236,7 @@ const AddTaskForm: React.FC = () => {
       if (response.status === 201) {
         const aiGeneratedDescription = response.data;
 
-        // setTask({ ...task, 'serviceDetails': aiGeneratedDescription });
-        // setAiLoading(false);
-        setTask({ ...task, 'serviceDetails': '' });
+        setTask({ ...task, taskDescription: '' });
         TypingEffect(aiGeneratedDescription)
 
       }
@@ -232,10 +251,10 @@ const AddTaskForm: React.FC = () => {
   const TypingEffect = (text: string) => {
     console.log(text)
     let currentIndex = 0;
-   
+
     const timer = setInterval(() => {
       setTask((task) => {
-        const newServiceDetails = task.serviceDetails + text[currentIndex];
+        const newServiceDetails = task.taskDescription + text[currentIndex];
         currentIndex++;
         if (currentIndex === text.length) {
           clearInterval(timer);
@@ -333,10 +352,10 @@ const AddTaskForm: React.FC = () => {
                     className=" rounded-2xl bg-[#EBE9F4] p-3 outline-none h-[350px]"
                     placeholder="Casual Babysitting"
                     name="serviceDetails"
-                    value={task.serviceDetails}
+                    value={task.taskDescription}
                     // onChange={handleChange}
 
-                    onChange={(e) => setTask({ ...task, serviceDetails: e.target.value })}>
+                    onChange={(e) => setTask({ ...task, taskDescription: e.target.value })}>
                   </textarea>
                 </div>
                 {Object.keys(error).map((key, index) => (
@@ -380,14 +399,14 @@ const AddTaskForm: React.FC = () => {
                           className="h-[200px] rounded-2xl bg-[#EBE9F4] p-3 outline-none"
                           placeholder="Casual Babysitting"
                           name="serviceDetails"
-                          value={task.serviceDetails}
+                          value={task.planDetails}
                           onChange={handleChange}></textarea>
                         <label className="pl-2">Price</label>
                         <div className="flex items-center space-x-2 pl-2">
                           <input
                             type="text"
                             name="budget"
-                            value={task.budget}
+                            value={task.customerBudget}
                             onChange={handleChange}
                             placeholder="$500"
                             className="rounded-2xl w-1/3 bg-[#EBE9F4] p-3 text-[13px] outline-none"
@@ -420,14 +439,14 @@ const AddTaskForm: React.FC = () => {
                           className="h-[200px] rounded-2xl bg-[#EBE9F4] p-3 outline-none"
                           placeholder="Casual Babysitting"
                           name="serviceDetails"
-                          value={task.serviceDetails}
+                          value={task.planDetails}
                           onChange={handleChange}></textarea>
                         <label className="pl-2">Price</label>
                         <div className="flex items-center space-x-2 pl-2">
                           <input
                             type="text"
                             name="budget"
-                            value={task.budget}
+                            value={task.customerBudget}
                             onChange={handleChange}
                             placeholder="$500"
                             className="rounded-2xl w-1/3 bg-[#EBE9F4] p-3 text-[13px] outline-none"
@@ -460,14 +479,14 @@ const AddTaskForm: React.FC = () => {
                           className="h-[200px] rounded-2xl bg-[#EBE9F4] p-3 outline-none"
                           placeholder="Casual Babysitting"
                           name="serviceDetails"
-                          value={task.serviceDetails}
+                          value={task.planDetails}
                           onChange={handleChange}></textarea>
                         <label className="pl-2">Price</label>
                         <div className="flex items-center space-x-2 pl-2">
                           <input
                             type="text"
                             name="budget"
-                            value={task.budget}
+                            value={task.customerBudget}
                             onChange={handleChange}
                             placeholder="$500"
                             className="rounded-2xl w-1/3 bg-[#EBE9F4] p-3 text-[13px] outline-none"
@@ -774,7 +793,7 @@ const AddTaskForm: React.FC = () => {
   };
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center">
+    <div className="flex min-h-screen flex-col items-center justify-center mt-24">
       <Head>
         <title>TaskHub | Provide Service</title>
       </Head>
@@ -782,56 +801,56 @@ const AddTaskForm: React.FC = () => {
         <div className="flex justify-center space-x-5">
           <div
             className={`${currentPage === 1
-              ? "text-status-darkViolet"
-              : "text-status-darkViolet"
+              ? "text-status-purpleBase"
+              : "text-status-purpleBase"
               }`}>
             <p className="flex items-center gap-3">
               <span
                 className={`${currentPage === 1
-                  ? "bg-status-darkViolet text-white"
-                  : "bg-status-darkViolet text-white"
-                  } rounded-xl border-none px-3 py-1`}>
+                  ? "bg-status-purpleBase text-white"
+                  : "bg-status-purpleBase text-white"
+                  } rounded-2xl border-none px-3 py-2`}>
                 01
               </span>{" "}
               Services Description
               <span className="text-[#716F78]">
-                <FaGreaterThan />
+                <IoIosArrowForward />
               </span>
             </p>
           </div>
           <div
             className={`${currentPage === 2 || currentPage === 3
-              ? "text-status-darkViolet"
+              ? "text-status-purpleBase"
               : " text-[#716F78]"
               }`}>
             <p className="flex items-center gap-3">
               <span
                 className={`${currentPage === 2 || currentPage === 3
-                  ? "bg-status-darkViolet text-white"
+                  ? "bg-status-purpleBase text-white"
                   : "bg-[#EAE9EB] text-[#716F78]"
-                  } rounded-xl border-none px-3 py-1`}>
+                  } rounded-2xl border-none px-3 py-2`}>
                 02
               </span>{" "}
               Services Details
               <span className="text-[#716F78]">
-                <FaGreaterThan />
+                <IoIosArrowForward />
               </span>
             </p>
           </div>
           <div
-            className={`${currentPage === 3 ? "text-status-darkViolet" : " text-[#716F78]"
+            className={`${currentPage === 3 ? "text-status-purpleBase" : " text-[#716F78]"
               }`}>
             <p className="flex items-center gap-3">
               <span
                 className={`${currentPage === 3
-                  ? "bg-status-darkViolet text-white"
+                  ? "bg-status-purpleBase text-white"
                   : "bg-[#EAE9EB] text-[#716F78]"
-                  } rounded-xl border-none px-3 py-1`}>
+                  } rounded-2xl border-none px-3 py-2`}>
                 03
               </span>{" "}
               Image Upload
               <span className="text-[#716F78]">
-                <FaGreaterThan />
+                <IoIosArrowForward />
               </span>
             </p>
           </div>
@@ -846,10 +865,10 @@ const AddTaskForm: React.FC = () => {
               <div className="h-1 w-2/3 overflow-hidden bg-[#EAE9EB]">
                 <div
                   className={`h-full ${currentPage === 1
-                    ? "bg-status-darkViolet"
+                    ? "bg-status-purpleBase"
                     : currentPage === 2
-                      ? "bg-status-darkViolet"
-                      : "bg-status-darkViolet"
+                      ? "bg-status-purpleBase"
+                      : "bg-status-purpleBase"
                     }`}
                   style={{ width: `${(currentPage / 3) * 100}%` }}
                 />
