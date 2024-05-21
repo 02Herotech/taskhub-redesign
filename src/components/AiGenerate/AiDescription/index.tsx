@@ -13,7 +13,6 @@ interface Message {
     text: string;
 }
 
-
 interface Task {
     serviceDetails: string;
     briefDescription: string;
@@ -62,9 +61,16 @@ const AiDesciption: React.FC<AiGenerateProps> = ({ task, setTask }) => {
 
     const [conversation, setConversation] = useState<Message[]>([]);
     const [AiLoading, setAiLoading] = useState(false);
+    const [emptyQuerryField, setEmptyQuerryField] = useState(false)
 
     const handleAiChatView = async (e: any) => {
         e.preventDefault()
+        if (aiQuery === '') {
+            setEmptyQuerryField(true)
+            return
+        } else {
+            setEmptyQuerryField(false)
+        }
         showAiChatView(true)
         setAiLoading(true)
         const newConversation: Message[] = [
@@ -93,7 +99,6 @@ const AiDesciption: React.FC<AiGenerateProps> = ({ task, setTask }) => {
     const conversationEndRef = useRef<HTMLDivElement>(null);
     useEffect(() => {
         if (conversationEndRef.current) {
-            // conversationEndRef.current.scrollIntoView({ behavior: 'smooth' });
             conversationEndRef.current.scrollIntoView({ behavior: 'smooth' });
         }
     }, [conversation]);
@@ -177,24 +182,20 @@ w-full text-wrap h-[180px]'
 
                             <div className='lg:hidden flex justify-end'>
                                 <span onClick={handleAiChatView} > <BiSend color='white' size={26} className='hover:cursor-pointer hover:scale-110 ease-in-out transform' /></span>
-
                             </div>
-
                         </form>
 
                     </div>
-
-
-
-
-
-                </div>
+                    <p className='h-5 flex items-center justify-center mt-3'>
+                        {emptyQuerryField && (<span className=' font-light text-red-500 text-center'>Kindly Enter your request</span>)}
+                    </p>                
+                    </div>
 
             )}
 
             {aiChatView && (
                 <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-84 z-50">
-                    <div className=' w-[90%] md:w-[60%] lg:w-[50%] bg-[#140B31] h-[90%] p-10 text-white rounded-[16px]'>
+                    <div className=' w-[90%] mx-auto md:w-[60%] lg:w-[50%] bg-[#140B31] h-[90%] p-10 text-white rounded-[16px]'>
                         <div className=' flex justify-end'>
                             <div className='rounded-full bg-white h-[30px] w-[30px] flex items-center justify-center hover:cursor-pointer'
                                 onClick={closeAiChatView}>
@@ -205,12 +206,12 @@ w-full text-wrap h-[180px]'
                             <h2 className='text-[25px]'>
                                 Hello, {userName}
                             </h2>
-                            <p className='text-[#716F78] text-[16px]'>
+                            <p className='text-[#716F78] text-[16px] pb-3'>
                                 How can I help you?
                             </p>
                         </div>
 
-                        <div className="conversation h-[70%] overflow-y-scroll space-y-4">
+                        <div className="conversation h-[70%] overflow-y-scroll space-y-4 ">
                             {conversation.map((entry, index) => (
                                 <div key={index} className={` ${entry.type === 'user' ? 'flex justify-end' : ''}`}>
                                     <p className={` text-[15px] p-2 ${entry.type === 'user' ? 'bg-white text-[#2A1769] rounded-[12px] mr-[5%] lg:w-[50%] ' : 'w-[85%]'}`}>
@@ -219,15 +220,12 @@ w-full text-wrap h-[180px]'
                                 </div>
                             ))}
 
-                            <div ref={conversationEndRef}>
+                            <div>
                                 <p >
                                     <span className='text-[15px] font-bold'>
                                         Are you happy with this suggestion? you can</span> {' '}
-
-                                        <br className='lg:hidden'/>
-
                                     <span
-                                        onClick={setServiceDetails} className='bg-[#FE9B07] text-[14px] px-4 text-white p-2 lg:mt-0 mt-5 rounded-[20px] hover:cursor-pointer'>
+                                        onClick={setServiceDetails} className='bg-[#FE9B07] text-[14px] px-4 text-white lg:p-2 py-1 lg:mt-0 mt-5 rounded-[20px] hover:cursor-pointer'>
                                         USE
                                     </span> {' '}
                                     <span
@@ -235,8 +233,6 @@ w-full text-wrap h-[180px]'
                                         className='text-[12px] underline hover:cursor-pointer'>
                                         or  get more suggestions
                                     </span>
-
-
                                 </p>
                             </div>
                             <div ref={conversationEndRef} />
