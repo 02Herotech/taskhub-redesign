@@ -37,7 +37,7 @@ interface AiGenerateProps {
     task: Task;
 }
 
-const AiGeneratedDesc: React.FC<AiGenerateProps> = ({ handleChange, task, setTask }) => {
+const AiGeneratedDesc: React.FC<AiGenerateProps> = ({ task, setTask }) => {
     const session = useSession();
     const userName = session?.data?.user?.user?.firstName
 
