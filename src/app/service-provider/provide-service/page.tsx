@@ -869,8 +869,10 @@ const AddTaskForm: React.FC = () => {
             <div className="lg:w-[390px] hidden lg:block mr-[50px] xl:ml-[15%] lg:ml-[10%] ">
               {/* <GeneratedAiDescription /> */}
               <AiGeneratedDesc
-                subCategory={selectedSubCategory}
+      
                 handleChange={handleChange}
+                setTask= {setTask}
+                task= {task}
               />
             </div>
           )}
