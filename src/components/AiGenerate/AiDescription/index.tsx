@@ -159,7 +159,7 @@ const AiDesciption: React.FC<AiGenerateProps> = ({ task, setTask }) => {
             {showAiInput && (
                 <div>
                     <div className="bg-[#2A1769] font-medium min-h-[200px] rounded-[20px] p-4">
-                        <form onSubmit={handleAiChatView}>
+                        <form onSubmit={handleAiChatView} className='pb-5'>
 
                             <textarea
                                 name='aiQuery'
@@ -170,8 +170,13 @@ const AiDesciption: React.FC<AiGenerateProps> = ({ task, setTask }) => {
 w-full text-wrap h-[180px]'
                                 required
                             />
-                            <div className='flex justify-end'>
+                            <div className='hidden lg:flex justify-end '>
                                 <button type="submit" > <BiSend color='white' size={26} className='hover:cursor-pointer hover:scale-110 ease-in-out transform' /></button>
+
+                            </div>
+
+                            <div className='lg:hidden flex justify-end'>
+                                <span onClick={handleAiChatView} > <BiSend color='white' size={26} className='hover:cursor-pointer hover:scale-110 ease-in-out transform' /></span>
 
                             </div>
 
@@ -235,12 +240,12 @@ w-full text-wrap h-[180px]'
                             <div ref={conversationEndRef} />
                         </div>
 
-                        <p className='h-[30px]'>
+                        <p className='h-[20px]'>
                             {AiLoading ? (
                                 <BeatLoader color={'white'} size={12} />
                             ) : ''}
                         </p>
-                        <div className=" font-medium  rounded-[20px] p-4 relative">
+                        <div className=" font-medium  rounded-[20px] p-4 lg:pb-2 pb-7 relative">
 
                             <form onSubmit={handleAiChatView}>
 
@@ -253,7 +258,7 @@ w-full text-wrap h-[180px]'
 w-full text-wrap h-[50px] rounded-[16px] p-2'
                                     required
                                 />
-                                <div className='absolute right-[5%] top-[35%] '>
+                                <div className='absolute lg:right-[5%] right-[10%] lg:top-[35%] top-[30%] '>
                                     <button type="submit" > <BiSend color='white' size={26} className='hover:cursor-pointer hover:scale-110 ease-in-out transform' /></button>
 
                                 </div>
