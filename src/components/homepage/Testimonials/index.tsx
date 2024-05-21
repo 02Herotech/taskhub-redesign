@@ -31,7 +31,7 @@ const Testimonials = () => {
 
             {/* mobile */}
 
-            <div className="lg:hidden  justify-between items-start  w-[90%] mx-auto md:h-[820px]  h-[860px]  ">
+            <div className="lg:hidden  justify-between items-start  w-[90%] mx-auto md:h-[820px]  h-[860px] mb-10  ">
                 <div className="relative flex items-center justify-center h-[350px] ">
                     {/* <Image src={image1} width={250} height={350} alt="Image of an electrician"></Image> */}
                     <div className="w-full md:w-[50%] h-[350px] border-2 border-[#C4C4C4] rounded-tl-[50px]">

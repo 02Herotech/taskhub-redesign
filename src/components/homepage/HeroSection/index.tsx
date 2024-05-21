@@ -193,7 +193,7 @@ const HeroSection = () => {
                       onClick={handleBecomeSP}
                       className="flex items-center justify-center"
                     >
-                      <p className="underline">Become a Service Provider</p>
+                      <p className="">Become a Service Provider</p>
                  
                     </div>
                   ) : (
