@@ -2,6 +2,7 @@ import React from 'react'
 import Image from "next/image";
 import Link from "next/link";
 import Newsletter from '@/components/newsletter/Newsletter';
+import Logo from '../Logo';
 
 const MobileFooter = () => {
     const links1 = [
@@ -89,7 +90,7 @@ const MobileFooter = () => {
             <div className={`  space-y-5`}>
                 <div className={`  w-[170px]  flex justify-start`}>
                     <Link href="/" className={`flex py-1 px-2 items-center`}>
-                        <Image src={"/assets/images/logo.png"} width={120} height={45} alt="" />
+                        <Logo />
                     </Link>
                 </div>
                 <div className={` text-[14px] text-primary pl-[5px] text-left `}>

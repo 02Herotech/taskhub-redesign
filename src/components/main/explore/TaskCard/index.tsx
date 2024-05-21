@@ -7,7 +7,6 @@ import Image from 'next/image';
 import { FiCalendar, FiClock } from 'react-icons/fi';
 import { HiOutlineLocationMarker } from 'react-icons/hi';
 import { motion } from 'framer-motion';
-import placeholderImage from '../../../../../public/assets/images/placeholder.png';
 
 interface TaskCardProps {
     task: Task;
@@ -75,7 +74,7 @@ const TaskCard = ({ task }: TaskCardProps) => {
                     {task.taskDescription}
                 </h2>
                 <img
-                    src={task?.taskImage ?? placeholderImage}
+                    src={task?.taskImage ?? "../../../../../public/assets/images/placeholder.png"}
                     alt="Logo"
                     className="object-cover w-[46px] h-[46px] rounded-full border"
                 />

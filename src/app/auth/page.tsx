@@ -1,6 +1,5 @@
 "use client";
 
-import Button from "@/components/global/Button";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -8,8 +7,6 @@ import { useState } from "react";
 const AuthForm = () => {
     const [userType, setUserType] = useState<"Customer" | "Service Provider">("Customer");
     const router = useRouter();
-
-    console.log(userType);
 
     const params = new URLSearchParams({ userType });
 
@@ -27,16 +24,16 @@ const AuthForm = () => {
 
                 <div className="space-y-10 font-satoshi">
                     <h2 className="text-primary lg:text-2xl font-bold">Sign up as a:</h2>
-                    <div className='flex items-center space-x-8'>
+                    <div className='flex items-center space-x-8 w-full'>
                         <button
                             onClick={() => setUserType("Customer")}
-                            className={`h-[48px] w-[110px] lg:w-[210px] lg:h-[70px] bg-status-lightViolet rounded-2xl font-bold text-sm lg:text-2xl text-primary ${userType === "Customer" ? "border border-primary" : "border-none"}`}
+                            className={`h-[48px] w-[120px] lg:w-[210px] lg:h-[70px] bg-status-lightViolet rounded-2xl font-bold text-sm lg:text-2xl text-primary ${userType === "Customer" ? "border border-primary" : "border-none"}`}
                         >
                             Customer
                         </button>
                         <button
                             onClick={() => setUserType("Service Provider")}
-                            className={`h-[48px] w-[110px] lg:w-[210px] lg:h-[70px] bg-status-lightViolet rounded-2xl font-bold text-sm lg:text-2xl text-primary ${userType === "Service Provider" ? "border border-primary" : "border-none"}`}
+                            className={`h-[48px] w-[120px] lg:w-[210px] lg:h-[70px] bg-status-lightViolet rounded-2xl font-bold text-sm lg:text-2xl text-primary ${userType === "Service Provider" ? "border border-primary" : "border-none"}`}
                         >
                             Service Provider
                         </button>
@@ -53,7 +50,7 @@ const AuthForm = () => {
 
                     <h3 className="text-xl font-bold max-lg:text-center text-[#190E3F]">
                         Have an existing account?
-                        <Link href="/auth/login" className="text-primary"> Log In</Link>
+                        <Link href="/auth/login" className="text-primary"> Login</Link>
                     </h3>
                 </div>
             </div>

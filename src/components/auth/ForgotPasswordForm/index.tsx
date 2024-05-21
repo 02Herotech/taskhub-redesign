@@ -7,7 +7,6 @@ import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 import Link from "next/link";
 import { useState } from "react";
 import axios from "axios";
-import { toast } from "react-toastify";
 
 type SignInRequest = {
     email: string;
@@ -42,7 +41,7 @@ const ForgotPasswordForm = () => {
             );
 
             if (response.status == 200) {
-                // toast.success(response.data.message || "Email sent successfully");
+                // toast.success(response.data.message || "Email sent successfully");   
                 router.push(`/auth/forgot-password/confirmation?${params}`);
                 setIsLoading(false);
             }

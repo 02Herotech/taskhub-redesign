@@ -119,7 +119,7 @@ const TaskDetailsPage = ({ params }: { params: { id: string } }) => {
 
                         <div className='space-y-7 lg:space-y-10'>
                             <div className="px-5 py-10 rounded-[20px] border-primary border-2">
-                                <h2 className='text-lg lg:text-[39px] font-satoshi text-primary font-black'>Budget Details</h2>
+                                <h2 className='text-lg lg:text-[39px] font-satoshi text-primary font-bold'>Budget Details</h2>
                                 <div className="border-primary border-2 my-8" />
                                 <div className="flex items-center justify-between w-full">
                                     <h2 className='text-lg lg:text-[39px] font-satoshi text-primary font-bold'>
