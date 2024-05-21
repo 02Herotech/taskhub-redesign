@@ -102,6 +102,7 @@ const Button: React.FC<ButtonProps> = ({
 		<button
 			type={type}
 			disabled={disabled || loading}
+			onClick={onClick}
 			className={cn(
 				"flex items-center hover:scale-[1.015] justify-center transition-all ease-in text-center font-semibold disabled:cursor-not-allowed",
 				buttonTheme(theme),

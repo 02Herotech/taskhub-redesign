@@ -83,7 +83,7 @@ const TaskCard = ({ task }: TaskCardProps) => {
             <div className="space-y-2 my-4">
                 <div className="flex items-center space-x-2 w-full text-[#716F78] font-medium">
                     <HiOutlineLocationMarker className="h-6 w-6 font-bold" />
-                    <h5 className="text-[15px] lg:text-xl">{task.taskAddress || `No location`}</h5>
+                    <h5 className="text-[15px] lg:text-xl truncate overflow-hidden py-1 whitespace-nowrap text-ellipsis">{task.taskAddress || `No location`}</h5>
                 </div>
                 <div className="flex items-center space-x-2 w-full text-[#716F78] font-medium">
                     <FiCalendar className="h-6 w-6 font-bold" />
