@@ -77,7 +77,7 @@ const TestimonialSlider = () => {
     <div className="flex flex-col space-y-20 items-center ">
       <div className="flex items-center w-full justify-between  ">
         <div className="relative">
-          <div className="flex flex-col space-y-10 md:w-[500px] w-full items-center justify-center border-[1.5px] border-grey4 rounded-xl py-3 px-8">
+          <div className="flex flex-col space-y-10 md:w-[500px] w-full items-center justify-center border-[1.5px] border-grey4 rounded-xl py-3 px-8 h-[350px] sm:h-[225px]">
             <div className="flex flex-col space-y-6 items-center justify-center">
               <div className="flex text-[#FFE815] text-[30px]">
                 {[...Array(testimonials[selectedTestimonial].ratedStars)].map(

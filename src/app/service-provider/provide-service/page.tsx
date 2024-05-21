@@ -12,6 +12,7 @@ import { TiTick } from "react-icons/ti";
 import Popup from "@/components/global/Popup";
 import Button from "@/components/global/Button";
 import Link from "next/link";
+import AiDesciption from "@/components/AiGenerate/AiDescription";
 
 interface Task {
   serviceDetails: string;
@@ -194,88 +195,8 @@ const AddTaskForm: React.FC = () => {
   //   }
   // };
 
-  const [AiLoading, setAiLoading] = useState(false);
-  const [subCategoryErr, setSubCategoryErr] = useState(false)
-
-  const AiGenerate = async () => {
-    setAiLoading(true);
-    console.log('ok')
-    if (selectedSubCategory === '') {
-      setSubCategoryErr(true)
-      setAiLoading(false);
-      return
-    } else {
-      setSubCategoryErr(false)
-    }
-    try {
-      const url = `${process.env.NEXT_PUBLIC_API_URL}/listing/create-listing/category/content-generate?category=${encodeURIComponent(selectedSubCategory)}`;
-      const response = await axios.get(
-        url
-      );
-      if (response.status === 201) {
-        const aiGeneratedDescription = response.data;
-
-        // setTask({ ...task, 'serviceDetails': aiGeneratedDescription });
-        // setAiLoading(false);
-        setTask({ ...task, 'serviceDetails': '' });
-        TypingEffect(aiGeneratedDescription)
-
-      }
-      if (response.status === 400) {
-      }
-    }
-    catch (err: any) { } finally {
-      setAiLoading(false);
-    }
-  };
-
-  const TypingEffect = (text: string) => {
-    console.log(text)
-    let currentIndex = 0;
-   
-    const timer = setInterval(() => {
-      setTask((task) => {
-        const newServiceDetails = task.serviceDetails + text[currentIndex];
-        currentIndex++;
-        if (currentIndex === text.length) {
-          clearInterval(timer);
-        }
-        return { ...task, serviceDetails: newServiceDetails };
-      });
-    }, 50);
-  };
-
-  const GeneratedAiDescription = () => (
-    <div>
-      <div className="flex flex-col space-y-6 p-4 bg-[#381F8C] mb-5 rounded-[20px]">
-
-        <h2 className="text-lg font-extrabold text-white">
-          Get personalized AI help
-        </h2>
-        <p className="text-white">
-          Recommended for you , Get an automated content prompt for your
-          service description by clicking on{" "}
-          <span className="text-[#FE9B07]">Generate with AI</span>{" "}
-          button.
-        </p>
-        <span onClick={AiGenerate}>
 
 
-          <Button
-            loading={AiLoading}
-            onClick={AiGenerate} type="button"
-            className={` text-10px p-2 px-4 transition-transform duration-300  w-[160px]
-   ease-in-out transform hover:scale-110 bg-[#333236] text-white rounded-[20px]
-  `}
-          >
-            Generate with AI
-          </Button> </span>
-      </div>
-      {subCategoryErr && (<p className="text-red-600 font-medium">
-        Kindly choose a subcategory
-      </p>)}
-    </div>
-  )
 
   const renderPage = () => {
     switch (currentPage) {
@@ -325,7 +246,10 @@ const AddTaskForm: React.FC = () => {
                   />
                 </div>
                 <div className="lg:hidden">
-                  <GeneratedAiDescription />
+                  <AiDesciption
+                    setTask={setTask}
+                    task={task}
+                  />
                 </div>
                 <div className="grid space-y-3">
                   <label>Please give a detailed description of the service</label>
@@ -863,7 +787,10 @@ const AddTaskForm: React.FC = () => {
         <div className="lg:flex">
           {currentPage === 1 && (
             <div className="lg:w-[390px] hidden lg:block mr-[50px] xl:ml-[15%] lg:ml-[10%] ">
-              <GeneratedAiDescription />
+              <AiDesciption
+                setTask={setTask}
+                task={task}
+              />
             </div>
           )}
 
