@@ -7,7 +7,7 @@ const ExploreMap = () => {
         <section className='pt-14'>
             <div className='container'>
                 <div className="flex items-center justify-between w-full">
-                    <form className="flex items-center max-lg:justify-between max-lg:px-8 max-lg:my-4 space-x-4 max-lg:w-full">
+                    <form className="flex items-center max-lg:justify-between max-lg:px-1 max-lg:my-4 space-x-4 max-lg:w-full">
                         <div className='border border-status-violet rounded-lg lg:rounded-2xl bg-[#F1F1F2] h-[29px] lg:h-[58px] max-sm:w-full lg:w-[300px] flex items-center space-x-2 px-4'>
                             <CiSearch className="h-6 w-6 text-status-violet" />
                             <input
