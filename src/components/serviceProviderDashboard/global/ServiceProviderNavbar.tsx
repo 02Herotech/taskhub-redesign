@@ -22,7 +22,7 @@ const ServiceProviderNavbar = () => {
   const [isRightSidebarOpen, setIsRightSidebarOpen] = useState(false);
 
   return (
-    <header className="fixed left-0 top-0 z-40 mx-auto  flex h-16 w-full items-center justify-between border-b border-[#E5E9F0] bg-white px-4 lg:px-10 ">
+    <header className="fixed left-0 top-0 z-40 mx-auto flex h-[90px] w-full items-center justify-between border-b border-[#E5E9F0] bg-white px-4 lg:px-10 ">
       <ServiceProvideMobileNav
         setIsLeftSidebarOpen={setIsLeftSidebarOpen}
         isLeftSidebarOpen={isLeftSidebarOpen}
