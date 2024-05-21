@@ -224,8 +224,10 @@ w-full text-wrap h-[180px]'
                                     <span className='text-[15px] font-bold'>
                                         Are you happy with this suggestion? you can</span> {' '}
 
+                                        <br className='lg:hidden'/>
+
                                     <span
-                                        onClick={setServiceDetails} className='bg-[#FE9B07] text-[14px] px-4 text-white p-2 rounded-[20px] hover:cursor-pointer'>
+                                        onClick={setServiceDetails} className='bg-[#FE9B07] text-[14px] px-4 text-white p-2 lg:mt-0 mt-5 rounded-[20px] hover:cursor-pointer'>
                                         USE
                                     </span> {' '}
                                     <span
