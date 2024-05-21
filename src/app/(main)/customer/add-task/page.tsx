@@ -4,12 +4,12 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Head from "next/head";
-import { FaGreaterThan } from "react-icons/fa";
+import { IoIosArrowForward } from "react-icons/io";
 import { PiFileArrowDownDuotone } from "react-icons/pi";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { IoMdArrowDropdown } from "react-icons/io";
-import { TiTick } from "react-icons/ti";
+import { GrFormCheckmark } from "react-icons/gr";
 import Popup from "@/components/global/Popup";
 import Button from "@/components/global/Button";
 import { useSession } from "next-auth/react";
@@ -328,14 +328,14 @@ const AddTaskForm: React.FC = () => {
                             <div className="grid space-y-3">
                                 <label className="text-status-darkpurple">Briefly tell us what you need done?</label>
                                 <textarea
-                                    className="h-full rounded-2xl bg-[#EBE9F4] p-3 outline-none"
+                                    className="h-full rounded-2xl bg-[#EBE9F4] p-3 outline-none placeholder:font-bold"
                                     placeholder="e.g, i need a junior league coach."
                                     name="taskDescription"
                                     value={task.taskDescription}
                                     onChange={handleChange} style={{ resize: "none", overflow: "hidden" }}></textarea>
                             </div>
                             <div className=" space-y-3">
-                                <label className="text-status-darkpurple">Upload a taskImage (Optional)</label>
+                                <label className="text-status-darkpurple">Upload an Image (Optional)</label>
                                 {task.taskImage ? (
                                     <div className="flex items-end justify-center">
                                         <div className="relative flex h-48 w-1/2 items-center justify-center rounded-lg border-2 border-dashed border-[#EBE9F4] p-4">
@@ -367,10 +367,10 @@ const AddTaskForm: React.FC = () => {
                                 ) : (
                                     <label
                                         htmlFor="file-upload"
-                                        className="flex h-48 w-1/2 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-[#EBE9F4] p-4">
+                                        className="flex h-48 w-1/2 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-[#EBE9F4] p-4 ">
                                         <PiFileArrowDownDuotone className="text-xl text-[#EBE9F4]" />
-                                        <span className="text-center text-[#EBE9F4]">
-                                            Choose a File Upload supports: JPG, PDF, PNG.
+                                        <span className="text-center text-[#EBE9F4] font-bold">
+                                            File Upload supports: JPG, PDF, PNG.
                                         </span>
                                         <input
                                             id="file-upload"
@@ -385,7 +385,7 @@ const AddTaskForm: React.FC = () => {
 
                             <div className="space-y-5">
                                 <label htmlFor="taskTime" className="text-status-darkpurple">
-                                    Set number(s) of working Days /Time:
+                                    Set number of working (Day/Time):
                                 </label>
                                 <div className="flex space-x-3">
                                     <div className="relative">
@@ -400,7 +400,7 @@ const AddTaskForm: React.FC = () => {
                                             placeholderText="Choose Time"
                                             id="taskTime"
                                             name="taskTime"
-                                            className="cursor-pointer rounded-2xl w-full border hover:text-white border-tc-gray bg-[#EBE9F4] px-2 py-1 outline-none placeholder:text-[14px] hover:bg-status-purpleBase hover:placeholder:text-white"
+                                            className="cursor-pointer rounded-2xl w-full border  placeholder:font-bold hover:text-white border-tc-gray bg-[#EBE9F4] px-2 py-1 outline-none placeholder:text-[14px] hover:bg-status-purpleBase hover:placeholder:text-white"
                                         />
                                         <IoMdArrowDropdown className="absolute right-5 top-2 cursor-pointer text-status-purpleBase" />
                                     </div>
@@ -413,7 +413,7 @@ const AddTaskForm: React.FC = () => {
                                             placeholderText="Choose Date"
                                             id="taskDate"
                                             name="taskDate"
-                                            className="cursor-pointer rounded-2xl border w-full hover:text-white border-tc-gray bg-[#EBE9F4] px-2 py-1 outline-none placeholder:text-[14px] hover:bg-status-purpleBase hover:placeholder:text-white"
+                                            className="cursor-pointer rounded-2xl border  placeholder:font-bold w-full hover:text-white border-tc-gray bg-[#EBE9F4] px-2 py-1 outline-none placeholder:text-[14px] hover:bg-status-purpleBase hover:placeholder:text-white"
                                         />
 
                                         <IoMdArrowDropdown className="absolute right-5 top-2 text-status-purpleBase" />
@@ -432,18 +432,19 @@ const AddTaskForm: React.FC = () => {
                                     <span className="text-status-darkpurple">I need a certain time of day.</span>
                                 </div>
                                 {termsAccepted && (
-                                    <div className="mt-2">
+                                    <div className="mt-2 relative">
                                         <select
                                             value={isSelectedTime}
                                             onChange={handleTickChange}
                                             name="hubTime"
-                                            className="w-full rounded-2xl border border-tc-gray bg-[#EBE9F4] px-3 py-1 text-[14px] text-status-purpleBase   outline-none">
+                                            className="w-full appearance-none rounded-2xl border border-tc-gray bg-[#EBE9F4] px-3 py-1 text-[14px] text-status-purpleBase   outline-none">
                                             <option value="">Select Time Of The Day</option>
                                             <option value="MORNING_BEFORE_10AM">Morning, before 10am</option>
                                             <option value="MIDDAY_10AM_to_12PM">Midday, 10am to 12pm</option>
                                             <option value="AFTERNOON_12PM_to_2PM">Afternoon, 12pm to 2pm</option>
                                             <option value="EVENING_2PM_to_5PM">Evening, 2pm to 5pm</option>
                                         </select>
+                                        <IoMdArrowDropdown className="absolute right-5 top-2 cursor-pointer text-status-purpleBase" />
                                     </div>
                                 )}
                             </div>
@@ -452,7 +453,7 @@ const AddTaskForm: React.FC = () => {
                                     <div key={index}>{error[key]}</div>
                                 ))}
                             </div>
-                            <Button type="submit" className="w-1/2 rounded-3xl p-3 text-white">
+                            <Button type="submit" className="w-[100px] rounded-3xl p-3 text-white">
                                 Next
                             </Button>
                         </form>
@@ -503,17 +504,17 @@ const AddTaskForm: React.FC = () => {
                                                 value={selectedCode}
                                                 onChange={handleCode}
                                                 name="postalCode"
-                                                className="w-[155px] cursor-pointer rounded-2xl bg-[#EBE9F4] p-3 text-[13px]  outline-none" />
+                                                className="w-[155px] cursor-pointer  placeholder:font-bold rounded-2xl bg-[#EBE9F4] p-3 text-[13px]  outline-none" />
                                         </div>
 
-                                        <div className="grid space-y-4">
+                                        <div className="grid space-y-4 relative">
                                             <label>City/Suburb</label>
                                             <select
                                                 value={selectedCity}
                                                 onChange={handleCity}
                                                 name="city"
                                                 id="city"
-                                                className="w-[155px] cursor-pointer rounded-2xl bg-[#EBE9F4] p-3 text-[13px] outline-none"
+                                                className="w-[155px] cursor-pointer  placeholder:font-bold rounded-2xl bg-[#EBE9F4] p-3 text-[13px] outline-none appearance-none"
                                             >
                                                 <option value="">Select City/Suburb</option>
                                                 {postalCodeData.map((data, index) => (
@@ -522,6 +523,7 @@ const AddTaskForm: React.FC = () => {
                                                     </option>
                                                 ))}
                                             </select>
+                                            <IoMdArrowDropdown className="absolute right-2 top-9 cursor-pointer text-status-purpleBase" />
                                         </div>
                                     </div>
                                     <div className="grid space-y-4 ">
@@ -546,7 +548,7 @@ const AddTaskForm: React.FC = () => {
                                     value={task.customerBudget}
                                     onChange={handleChange}
                                     placeholder="$500"
-                                    className="rounded-2xl bg-[#EBE9F4] p-3 text-[13px] outline-none"
+                                    className="rounded-2xl bg-[#EBE9F4] p-3 text-[13px] outline-none  placeholder:font-bold"
                                 />
                             </div>
                             <div className="text-[#FF0000]">
@@ -588,12 +590,12 @@ const AddTaskForm: React.FC = () => {
                                 className={`${currentPage === 1
                                     ? "bg-status-purpleBase text-white"
                                     : "bg-status-purpleBase text-white"
-                                    } rounded-xl border-none px-3 py-1`}>
+                                    } rounded-2xl border-none px-3 py-2`}>
                                 01
                             </span>{" "}
                             Services Details
                             <span >
-                                <FaGreaterThan />
+                                <IoIosArrowForward />
                             </span>
                         </p>
                     </div>
@@ -607,12 +609,12 @@ const AddTaskForm: React.FC = () => {
                                 className={`${currentPage === 2
                                     ? "bg-status-purpleBase text-white"
                                     : "bg-[#EAE9EB] text-[#716F78]"
-                                    } rounded-xl border-none px-3 py-1`}>
+                                    } rounded-2xl border-none px-3 py-2`}>
                                 02
                             </span>{" "}
                             Location and Budget
                             <span >
-                                <FaGreaterThan />
+                                <IoIosArrowForward />
                             </span>
                         </p>
                     </div>
@@ -660,17 +662,17 @@ const AddTaskForm: React.FC = () => {
                 }}>
                 <div className="p-5 lg:px-20">
                     <div className="relative grid items-center justify-center space-y-5">
-                        <div className="flex justify-center text-white">
-                            <TiTick className="h-[50px] w-[50px] lg:h-[60px] lg:w-[60px] rounded-full bg-[#FE9B07] p-2" />
+                        <div className="flex justify-center text-white text-[1px]">
+                            <GrFormCheckmark className="h-[50px] w-[50px] lg:h-[60px] lg:w-[60px] rounded-full bg-[#FE9B07] p-2" />
                         </div>
-                        <p className="text-center text-[25px] lg:text-[37px] text-[#2A1769] font-extrabold font-clashDisplay ">TaskPosted</p>
+                        <p className="text-center text-[25px] lg:text-[37px] text-[#2A1769] font-extrabold font-clashDisplay ">Task posted</p>
                         <p className="lg:text-[20px]">
-                            Your Task has been posted! please click <br /> on the button to
+                            Your task has been posted! please click <br /> on the button to
                             proceed to marketplace
                         </p>
                         <Image src={image} alt="image" className="absolute lg:top-2/3 lg:-right-20 -right-8 top-40 w-20 lg:w-32" />
                         <div className="flex justify-center">
-                            <Link href="/">
+                            <Link href="/marketplace">
                                 <button className="w-[100px] rounded-2xl bg-status-purpleBase p-2 text-[14px] text-white outline-none">
                                     Go Home
                                 </button>
