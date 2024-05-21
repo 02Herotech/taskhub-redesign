@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa6";
-import { useGetActiveTasksQuery } from "@/services/tasks";
+import { useFilterTaskByPriceQuery, useFilterTaskByTypeQuery, useGetActiveTasksQuery } from "@/services/tasks";
 import Dropdown from "@/components/global/Dropdown";
 import TaskCard from "../TaskCard";
 import loader from "../../../../../public/assets/images/marketplace/taskhub-newloader.gif";
@@ -19,7 +19,26 @@ const Tasks = () => {
     const [selectedFilter, setSelectedFilter] = useState<string>('');
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 9;
+    const serviceType = selectedService === 'Remote' ? 'REMOTE_SERVICE' : 'PHYSICAL_SERVICE';
+
     const { data, isLoading, refetch } = useGetActiveTasksQuery(currentPage);
+    const { data: filteredByPriceData, isLoading: isFilteredLoading, refetch: refetchFiltered } = useFilterTaskByPriceQuery({
+        page: currentPage,
+        minPrice: priceValues[0],
+        maxPrice: priceValues[1]
+    });
+    const { data: filteredByTypeData, isLoading: isFilteredByTypeLoading, refetch: refetchFilteredByType } = useFilterTaskByTypeQuery({
+        page: currentPage,
+        type: serviceType
+    });
+
+    useEffect(() => {
+        refetchFilteredByType()
+    }, [currentPage, refetchFilteredByType])
+
+    useEffect(() => {
+        refetchFiltered(); // Fetch new data when the current page changes
+    }, [currentPage, refetchFiltered]);
 
     useEffect(() => {
         refetch(); // Fetch new data when the current page changes
@@ -47,10 +66,6 @@ const Tasks = () => {
                 )}
             </div>
         );
-    };
-
-    const handleApply = () => {
-        console.log('Applied values:', priceValues, locationValues);
     };
 
 
@@ -125,7 +140,7 @@ const Tasks = () => {
                         </div>
                     )}
                     className='left-0 right-0 mx-auto top-14'>
-                    <form className='w-[240px] bg-white rounded-md py-4 px-2'>
+                    <form className='bg-white rounded-md py-4 px-2'>
                         {categoryDropdown.map((button, index) => (
                             <div
                                 key={index}
@@ -148,7 +163,7 @@ const Tasks = () => {
                         </div>
                     )}
                     className='left-0 right-0 mx-auto top-14'>
-                    <form className='w-[240px] bg-white rounded-md flex items-center p-4'>
+                    <form className='bg-white rounded-md flex items-center p-4'>
                         <div className="space-y-8 w-full p-3">
                             <h4 className="text-lg text-[#190E3F] font-medium">Distance</h4>
                             <div className="text-2xl text-black font-bold text-center mb-6">
@@ -185,7 +200,7 @@ const Tasks = () => {
                         </div>
                     )}
                     className='left-0 right-0 mx-auto top-14'>
-                    <div className='w-[240px] bg-white rounded-md p-4 space-y-10'>
+                    <div className='bg-white rounded-md p-4 space-y-10'>
                         <h4 className="text-lg text-[#190E3F] font-medium">Type of service</h4>
                         <div className="flex mb-6 w-full rounded-full bg-orange-100">
                             <button
@@ -207,7 +222,7 @@ const Tasks = () => {
                             <Button theme="outline" className="rounded-full">
                                 Cancel
                             </Button>
-                            <Button className="rounded-full">
+                            <Button className="rounded-full" onClick={() => refetchFilteredByType}>
                                 Apply
                             </Button>
                         </div>
@@ -223,7 +238,7 @@ const Tasks = () => {
                         </div>
                     )}
                     className='left-0 right-0 mx-auto top-14'>
-                    <form className='w-[240px] bg-white rounded-md flex items-center p-2'>
+                    <form className='bg-white rounded-md flex items-center p-2'>
                         <div className="space-y-8 w-full p-3">
                             <h4 className="text-lg text-[#190E3F] font-medium">Price</h4>
                             <div className="text-2xl text-black font-bold text-center mb-6">
@@ -243,7 +258,7 @@ const Tasks = () => {
                                 <Button theme="outline" className="rounded-full" onClick={() => setPriceValues([5, 10000])}>
                                     Cancel
                                 </Button>
-                                <Button className="rounded-full">
+                                <Button className="rounded-full" onClick={() => refetchFiltered}>
                                     Apply
                                 </Button>
                             </div>
@@ -260,7 +275,7 @@ const Tasks = () => {
                         </div>
                     )}
                     className='left-0 right-0 mx-auto top-14'>
-                    <div className='w-[240px] bg-white rounded-md p-3'>
+                    <div className='bg-white rounded-md p-3'>
                         {otherOptionsDropdown.map((button, index) => (
                             <div
                                 key={index}
