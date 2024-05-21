@@ -158,7 +158,7 @@ const Tasks = () => {
 
     return (
         <section className="pt-7 container">
-            <div className="hidden lg:flex lg:space-x-4 lg:min-w-[810px] items-center gap-6">
+            <div className="hidden lg:flex lg:space-x-4 items-center">
                 <Dropdown
                     trigger={() => (
                         <div className="w-full border-2 border-primary text-primary flex items-center justify-between font-semibold py-2 px-4 rounded-full">
@@ -190,7 +190,7 @@ const Tasks = () => {
                     className='-left-24 top-14'>
                     <form className='w-[240px] bg-white rounded-md flex items-center p-4'>
                         <div className="space-y-8 w-full">
-                            <h4 className="text-lg text-black font-medium">Distance</h4>
+                            <h4 className="text-lg text-[#190E3F] font-medium">Distance</h4>
                             <div className="flex items-center justify-between w-full">
                                 <Button theme="outline">
                                     Cancel
@@ -233,7 +233,7 @@ const Tasks = () => {
                     className='-left-24 top-14'>
                     <form className='w-[240px] bg-white rounded-md flex items-center p-4'>
                         <div className="space-y-8 w-full">
-                            <h4 className="text-lg text-black font-medium">Price</h4>
+                            <h4 className="text-lg text-[#190E3F] font-medium">Price</h4>
                             <div className="flex items-center justify-between w-full">
                                 <Button theme="outline">
                                     Cancel

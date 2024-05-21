@@ -52,7 +52,7 @@ const ResetPasswordForm = () => {
         <section className='w-full xl:w-[554px] h-[50vh] flex items-center justify-center mx-auto'>
             <div className='space-y-10'>
                 <div className="space-y-4 font-clashDisplay">
-                    <h1 className='text-2xl lg:text-4xl text-black font-medium'>
+                    <h1 className='text-2xl lg:text-4xl text-[#190E3F] font-medium'>
                         Reset your Password?
                     </h1>
                     <p className='text-sm lg:text-lg text-tc-gray font-medium'>
@@ -83,11 +83,11 @@ const ResetPasswordForm = () => {
                                 type='submit'
                                 loading={isLoading}
                                 disabled={!isValid}
-                                className='w-full lg:w-[170px] rounded-full font-normal'>
+                                className='w-full lg:w-[170px] rounded-full font-bold'>
                                 Reset
                             </Button>
                             <Button
-                                className='w-full lg:w-[170px] rounded-full font-normal'
+                                className='w-full lg:w-[170px] rounded-full font-bold'
                                 theme="outline"
                                 onClick={() => router.push("/auth/login")}
                             >
