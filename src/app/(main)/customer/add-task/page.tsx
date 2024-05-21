@@ -534,7 +534,7 @@ const AddTaskForm: React.FC = () => {
                                 </div>
                             )}
                             <p className="text-xl text-[#381F8C] font-extrabold">Your Budget</p>
-                            <div className="grid space-y-4 text-status-darkpurple font-medium">
+                            <div className="grid relative space-y-4 text-status-darkpurple font-medium">
                                 <label>Budget</label>
                                 <input
                                     type="text"
@@ -544,6 +544,7 @@ const AddTaskForm: React.FC = () => {
                                     placeholder="$500"
                                     className="rounded-2xl bg-[#EBE9F4] p-3 text-[13px] outline-none  placeholder:font-bold"
                                 />
+                                <p className="absolute">$</p>
                             </div>
                             <div className="text-[#FF0000]">
                                 {Object.keys(errors).map((key, index) => (
