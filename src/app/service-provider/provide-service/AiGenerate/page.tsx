@@ -103,7 +103,6 @@ const AiGeneratedDesc: React.FC<AiGenerateProps> = ({ task, setTask }) => {
     //     }
     // }
 
-
     const setServiceDetails = () => {
         const descriptionIndex = conversation?.length - 1
         const description = conversation[descriptionIndex]?.text
