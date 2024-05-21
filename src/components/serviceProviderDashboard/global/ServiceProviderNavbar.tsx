@@ -33,7 +33,7 @@ const ServiceProviderNavbar = () => {
       />
       <button
         onClick={() => setIsLeftSidebarOpen((prev) => !prev)}
-        className="lg:hidden "
+        className="lg:hidden"
       >
         <BiMenu color="rgb(56 31 140)" size={24} />
       </button>
@@ -82,7 +82,7 @@ const ServiceProviderNavbar = () => {
             alt="user"
             width={40}
             height={40}
-            className="size-10 rounded-full border border-violet-normal object-cover max-md:size-9 "
+            className="size-10 rounded-full border border-violet-normal object-cover max-md:size-9"
           />
           <IoTriangle className="rotate-[60deg]" size={8} />
         </button>
