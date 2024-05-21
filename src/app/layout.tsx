@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { clashDisplay, satoshi } from "@/fonts";
 import "./globals.css";
-import 'react-toastify/dist/ReactToastify.css';
 import { cn } from "@/lib/utils";
 import Provider from "@/store/Provider";
 

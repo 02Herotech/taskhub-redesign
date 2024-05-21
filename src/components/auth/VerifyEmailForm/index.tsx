@@ -16,7 +16,7 @@ const VerifyEmailForm = ({ email }: { email: string }) => {
                         {`A link has been sent to ${email}, click on the link to verify email`} <Link href="/auth/sign-up" className="text-primary"> Change Email</Link>
                     </p>
                     <h3 className="text-xl font-bold">Have an existing account?
-                        <Link href="/auth/login" className="text-primary"> Log In</Link>
+                        <Link href="/auth/login" className="text-primary"> Login</Link>
                     </h3>
                 </div>
             </section>
