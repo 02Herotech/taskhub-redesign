@@ -3,7 +3,6 @@ import Image from "next/image";
 import { CiSearch } from "react-icons/ci";
 
 const ExploreMap = () => {
-
     return (
         <section className='pt-14'>
             <div className='container'>
