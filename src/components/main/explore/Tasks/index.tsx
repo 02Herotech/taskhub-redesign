@@ -2,7 +2,15 @@
 
 import { useState, useEffect } from "react";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa6";
-import { useFilterTaskByPriceQuery, useFilterTaskByTypeQuery, useGetActiveTasksQuery } from "@/services/tasks";
+import {
+    useFilterTaskByPriceQuery,
+    useFilterTaskByTypeQuery,
+    useGetActiveTasksQuery,
+    useFilterTaskByEarliestDateQuery,
+    useFilterTaskByLatestDateQuery,
+    useFilterTaskByPriceAscQuery,
+    useFilterTaskByPriceDescQuery
+} from "@/services/tasks";
 import Dropdown from "@/components/global/Dropdown";
 import TaskCard from "../TaskCard";
 import loader from "../../../../../public/assets/images/marketplace/taskhub-newloader.gif";
@@ -16,7 +24,6 @@ const Tasks = () => {
     const [locationValues, setLocationValues] = useState<[number, number]>([1, 50]);
     const [selectedService, setSelectedService] = useState<'Remote' | 'In Person'>('In Person');
     const [selectedCategory, setSelectedCategory] = useState<string>('');
-    const [selectedFilter, setSelectedFilter] = useState<string>('');
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 9;
     const serviceType = selectedService === 'Remote' ? 'REMOTE_SERVICE' : 'PHYSICAL_SERVICE';
@@ -31,6 +38,10 @@ const Tasks = () => {
         page: currentPage,
         type: serviceType
     });
+    const { data: filteredByEarliestDateData, isLoading: isFilteredByEarliestDateLoading, refetch: refetchFilteredByEarliestDate } = useFilterTaskByEarliestDateQuery(currentPage);
+    const { data: filteredByLatestDateData, isLoading: isFilteredByLatestDateLoading, refetch: refetchFilteredByLatestDate } = useFilterTaskByLatestDateQuery(currentPage);
+    const { data: filteredByPriceAscData, isLoading: isFilteredByPriceAscLoading, refetch: refetchFilteredByPriceAsc } = useFilterTaskByPriceAscQuery(currentPage);
+    const { data: filteredByPriceDescData, isLoading: isFilteredByPriceDescLoading, refetch: refetchFilteredByPriceDesc } = useFilterTaskByPriceDescQuery(currentPage);
 
     useEffect(() => {
         refetchFilteredByType()
@@ -72,23 +83,23 @@ const Tasks = () => {
     const otherOptionsDropdown = [
         {
             label: "Price: High to low",
-            onClick: () => setSelectedFilter('Price: High to low')
+            onClick: () => refetchFilteredByPriceDesc
         },
         {
             label: "Price: Low to high",
-            onClick: () => setSelectedFilter('Price: Low to high')
+            onClick: () => refetchFilteredByPriceAsc
         },
         {
             label: "Due date: Earliest",
-            onClick: () => setSelectedFilter('Due date: Earliest')
+            onClick: () => refetchFilteredByEarliestDate
         },
         {
             label: "Due date: Latest",
-            onClick: () => setSelectedFilter('Due date: Latest')
+            onClick: () => refetchFilteredByLatestDate
         },
         {
             label: "Closest to me",
-            onClick: () => setSelectedFilter('Closest to me')
+            onClick: () => {}
         },
     ];
 
@@ -145,7 +156,7 @@ const Tasks = () => {
                             <div
                                 key={index}
                                 onClick={button.onClick}
-                                className='flex w-full transition-all text-status-darkViolet text-base font-bold hover:text-tc-orange cursor-pointer items-center justify-between py-3 px-10'>
+                                className='flex w-full transition-all text-status-darkViolet text-base font-bold hover:text-tc-orange cursor-pointer items-center justify-between py-3 px-5'>
                                 <div className="">
                                     {button.label}
                                 </div>

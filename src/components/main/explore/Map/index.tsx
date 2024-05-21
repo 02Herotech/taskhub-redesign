@@ -21,7 +21,7 @@ const ExploreMap = () => {
                             <CiSearch className="h-5 w-5 lg:w-7 lg:h-7 text-status-violet" />
                         </button>
                     </form>
-                    <Button theme="secondary" className="hidden px-5 h-[29px] lg:h-[58px] rounded-full text-white font-bold bg-tc-orange lg:flex items-center justify-center">
+                    <Button theme="secondary" className="hidden px-14 h-[29px] lg:h-[58px] rounded-full text-white font-bold bg-tc-orange lg:flex items-center justify-center">
                         1 New Task
                     </Button>
                 </div>
