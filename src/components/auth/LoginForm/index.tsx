@@ -77,7 +77,7 @@ const LoginForm = () => {
     <section className="w-full xl:w-[554px] mx-auto max-lg:p-10">
       <div className="space-y-10">
         <div className="space-y-4 font-clashDisplay">
-          <h1 className="text-2xl lg:text-4xl text-black font-medium">
+          <h1 className="text-2xl lg:text-4xl text-[#190E3F] font-medium">
             Welcome to{" "}
             <span className="text-primary">
               <b>Task</b>hub
@@ -129,7 +129,7 @@ const LoginForm = () => {
                 className="w-full lg:w-[170px] rounded-full font-normal">
                 Login
               </Button>
-              <h3 className="text-xl font-bold">
+              <h3 className="text-xl font-bold text-[#190E3F]">
                 Don’t have an account?
                 <Link href="/auth" className="text-primary">
                   {" "}

@@ -4,7 +4,7 @@ import Button from "@/components/global/Button";
 import Input from "@/components/global/Input";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { FormProvider, set, SubmitHandler, useForm } from "react-hook-form";
+import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 import "react-phone-number-input/style.css";
 import { useState } from "react";
 import PhoneInputWithCountry from "react-phone-number-input/react-hook-form"
@@ -83,7 +83,7 @@ const SignUpForm = () => {
         <section className='w-full xl:w-[554px] mx-auto max-lg:p-10'>
             <div className='space-y-6 lg:space-y-10 w-full max-lg:container lg:max-w-[550px] lg:px-4'>
                 <div className="space-y-4 font-clashDisplay">
-                    <h1 className='text-2xl lg:text-4xl text-black font-medium'>
+                    <h1 className='text-2xl lg:text-4xl text-[#190E3F] font-medium'>
                         Create Account
                     </h1>
                     <p className='text-xl lg:text-2xl text-tc-gray font-medium'>
@@ -190,16 +190,16 @@ const SignUpForm = () => {
                                 className='w-full lg:w-[170px] rounded-full font-normal'>
                                 Create account
                             </Button>
-                            <h3 className="text-xl font-bold">Have an existing account?
-                                <Link href="/auth/login" className="text-primary"> Log In</Link>
+                            <h3 className="text-xl font-bold text-[#190E3F]">Have an existing account?
+                                <Link href="/auth/login" className="text-primary"> Login</Link>
                             </h3>
-                            <div className="border w-full" />
+                            {/* <div className="border w-full" />
                             <h3 className="text-xl font-bold">Other login methods</h3>
                             <div className="flex items-center space-x-4">
                                 <Image src="/assets/images/facebook.png" height={40} width={40} alt="Social logo" />
                                 <Image src="/assets/images/apple.png" height={40} width={40} alt="Social logo" />
                                 <Image src="/assets/images/google.png" height={40} width={40} alt="Social logo" />
-                            </div>
+                            </div> */}
                         </div>
                     </form>
                 </FormProvider>

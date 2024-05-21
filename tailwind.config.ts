@@ -40,6 +40,9 @@ const config: Config = {
           violet: "#C1BADB",
           lightViolet: "#EBE9F4",
           darkViolet: "#140B31",
+          purpleBase: "#381F8C",
+          darkpurple: "#140B31",
+          'black-84': 'rgba(0, 0, 0, 0.84)'
         },
         violet: {
           light: "#EBE9F4",

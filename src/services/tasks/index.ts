@@ -1,4 +1,5 @@
-import { GetSingleTasksResponse, GetTasksRequest, GetTasksResponse } from "@/types/services/tasks";
+import page from "@/app/service-provider/dashboard/page";
+import { GetFilterTaskByPriceRequest, GetFilterTaskByTypeRequest, GetSingleTasksResponse, GetTasksRequest, GetTasksResponse } from "@/types/services/tasks";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { getSession } from "next-auth/react";
 
@@ -71,7 +72,40 @@ export const task = createApi({
             query: (id) => getRequest(`/get-task/${id}`),
             providesTags: ["Task"],
         }),
+        filterTaskByPrice: builder.query<GetTasksResponse, GetFilterTaskByPriceRequest>({
+            query: (credentials) => getRequest(`/filter-by-price/${credentials.page}?minPrice=${credentials.minPrice}&maxPrice=${credentials.maxPrice}`),
+            providesTags: ["Task"],
+        }),
+        filterTaskByType: builder.query<GetTasksResponse, GetFilterTaskByTypeRequest>({
+            query: (credentials) => getRequest(`/search-by-type/${credentials.page}?type=${credentials.type}`),
+            providesTags: ["Task"],
+        }),
+        filterTaskByEarliestDate: builder.query<GetTasksResponse, number>({
+            query: (pageNumber) => getRequest(`/task-date-earliest/${pageNumber}`),
+            providesTags: ["Task"],
+        }),
+        filterTaskByLatestDate: builder.query<GetTasksResponse, number>({
+            query: (pageNumber) => getRequest(`/task-date-latest/${pageNumber}`),
+            providesTags: ["Task"],
+        }),
+        filterTaskByPriceAsc: builder.query<GetTasksResponse, number>({
+            query: (pageNumber) => getRequest(`/task-price-asc/${pageNumber}`),
+            providesTags: ["Task"],
+        }),
+        filterTaskByPriceDesc: builder.query<GetTasksResponse, number>({
+            query: (pageNumber) => getRequest(`/task-price-desc/${pageNumber}`),
+            providesTags: ["Task"],
+        }),
     }),
 });
 
-export const { useGetActiveTasksQuery, useGetTaskByIdQuery } = task;
+export const {
+    useGetActiveTasksQuery,
+    useGetTaskByIdQuery,
+    useFilterTaskByPriceQuery,
+    useFilterTaskByTypeQuery,
+    useFilterTaskByEarliestDateQuery,
+    useFilterTaskByLatestDateQuery,
+    useFilterTaskByPriceAscQuery,
+    useFilterTaskByPriceDescQuery,
+} = task;

@@ -494,7 +494,7 @@ const AddTaskForm: React.FC = () => {
                     <label
                       htmlFor="file-upload"
                       className="flex h-48 w-1/2 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-grey3 p-4">
-                      <PiFileArrowDownDuotone className="text-xl text-grey3" />
+                      <PiFileArrowDownDuotone className="text-xl text-[#716F78]" />
                       <span className="text-center text-grey6">
                         Image Uploaded
                       </span>
@@ -520,8 +520,8 @@ const AddTaskForm: React.FC = () => {
                   <label
                     htmlFor="file-upload"
                     className="flex h-48 w-1/2 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-grey3 p-4">
-                    <PiFileArrowDownDuotone className="text-xl text-grey3" />
-                    <span className="text-center text-grey3">
+                    <PiFileArrowDownDuotone className="text-xl text-[#716F78]" />
+                    <span className="text-center text-[#716F78]">
                       Choose a File Upload supports: JPG, PDF, PNG.
                     </span>
                     <input
@@ -543,7 +543,7 @@ const AddTaskForm: React.FC = () => {
                       <label
                         htmlFor="file-upload"
                         className="flex h-48 w-1/2 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-grey3 p-4">
-                        <PiFileArrowDownDuotone className="text-xl text-grey3" />
+                        <PiFileArrowDownDuotone className="text-xl text-[#716F78]" />
                         <span className="text-center text-grey6">
                           Image Uploaded
                         </span>
@@ -569,8 +569,8 @@ const AddTaskForm: React.FC = () => {
                     <label
                       htmlFor="file-upload"
                       className="flex h-48 w-1/2 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-grey3 p-4">
-                      <PiFileArrowDownDuotone className="text-xl text-grey3" />
-                      <span className="text-center text-grey3">
+                      <PiFileArrowDownDuotone className="text-xl text-[#716F78]" />
+                      <span className="text-center text-[#716F78]">
                         Choose a File Upload supports: JPG, PDF, PNG.
                       </span>
                       <input
@@ -590,7 +590,7 @@ const AddTaskForm: React.FC = () => {
                       <label
                         htmlFor="file-upload"
                         className="flex h-48 w-1/2 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-grey3 p-4">
-                        <PiFileArrowDownDuotone className="text-xl text-grey3" />
+                        <PiFileArrowDownDuotone className="text-xl text-[#716F78]" />
                         <span className="text-center text-grey6">
                           Image Uploaded
                         </span>
@@ -616,8 +616,8 @@ const AddTaskForm: React.FC = () => {
                     <label
                       htmlFor="file-upload"
                       className="flex h-48 w-1/2 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-grey3 p-4">
-                      <PiFileArrowDownDuotone className="text-xl text-grey3" />
-                      <span className="text-center text-grey3">
+                      <PiFileArrowDownDuotone className="text-xl text-[#716F78]" />
+                      <span className="text-center text-[#716F78]">
                         Choose a File Upload supports: JPG, PDF, PNG.
                       </span>
                       <input
@@ -639,7 +639,7 @@ const AddTaskForm: React.FC = () => {
                       <label
                         htmlFor="file-upload"
                         className="flex h-48 w-1/2 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-grey3 p-4">
-                        <PiFileArrowDownDuotone className="text-xl text-grey3" />
+                        <PiFileArrowDownDuotone className="text-xl text-[#716F78]" />
                         <span className="text-center text-grey6">
                           Image Uploaded
                         </span>
@@ -665,8 +665,8 @@ const AddTaskForm: React.FC = () => {
                     <label
                       htmlFor="file-upload"
                       className="flex h-48 w-1/2 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-grey3 p-4">
-                      <PiFileArrowDownDuotone className="text-xl text-grey3" />
-                      <span className="text-center text-grey3">
+                      <PiFileArrowDownDuotone className="text-xl text-[#716F78]" />
+                      <span className="text-center text-[#716F78]">
                         Choose a File Upload supports: JPG, PDF, PNG.
                       </span>
                       <input

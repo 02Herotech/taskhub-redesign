@@ -16,7 +16,6 @@ const MarketplaceLayout = ({ children }: MarketplaceLayoutProps) => {
   const userRole: string[] | undefined = session?.data?.user?.user?.roles;
 
   const isServiceProvider = userRole && userRole[0] === "SERVICE_PROVIDER";
-  const isCustomer = userRole && userRole[0] === "CUSTOMER";
 
   return (
     <div>

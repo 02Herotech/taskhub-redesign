@@ -2,27 +2,54 @@
 
 import { useState, useEffect } from "react";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa6";
-import { useGetActiveTasksQuery } from "@/services/tasks";
+import {
+    useFilterTaskByPriceQuery,
+    useFilterTaskByTypeQuery,
+    useGetActiveTasksQuery,
+    useFilterTaskByEarliestDateQuery,
+    useFilterTaskByLatestDateQuery,
+    useFilterTaskByPriceAscQuery,
+    useFilterTaskByPriceDescQuery
+} from "@/services/tasks";
 import Dropdown from "@/components/global/Dropdown";
 import TaskCard from "../TaskCard";
 import loader from "../../../../../public/assets/images/marketplace/taskhub-newloader.gif";
 import Image from "next/image";
-// import RangeSlider from 'react-range-slider-input';
-import 'react-range-slider-input/dist/style.css';
 import Button from "@/components/global/Button";
 import { FaSortDown } from "react-icons/fa";
+import ReactSlider from 'react-slider'
 
 const Tasks = () => {
-    const [selectedFilters, setSelectedFilters] = useState({
-        category: '',
-        location: '',
-        typeOfService: '',
-        pricing: '',
-        others: ''
-    });
+    const [priceValues, setPriceValues] = useState<[number, number]>([5, 10000]);
+    const [locationValues, setLocationValues] = useState<[number, number]>([1, 50]);
+    const [selectedService, setSelectedService] = useState<'Remote' | 'In Person'>('In Person');
+    const [selectedCategory, setSelectedCategory] = useState<string>('');
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 9;
+    const serviceType = selectedService === 'Remote' ? 'REMOTE_SERVICE' : 'PHYSICAL_SERVICE';
+
     const { data, isLoading, refetch } = useGetActiveTasksQuery(currentPage);
+    const { data: filteredByPriceData, isLoading: isFilteredLoading, refetch: refetchFiltered } = useFilterTaskByPriceQuery({
+        page: currentPage,
+        minPrice: priceValues[0],
+        maxPrice: priceValues[1]
+    });
+    const { data: filteredByTypeData, isLoading: isFilteredByTypeLoading, refetch: refetchFilteredByType } = useFilterTaskByTypeQuery({
+        page: currentPage,
+        type: serviceType
+    });
+    const { data: filteredByEarliestDateData, isLoading: isFilteredByEarliestDateLoading, refetch: refetchFilteredByEarliestDate } = useFilterTaskByEarliestDateQuery(currentPage);
+    const { data: filteredByLatestDateData, isLoading: isFilteredByLatestDateLoading, refetch: refetchFilteredByLatestDate } = useFilterTaskByLatestDateQuery(currentPage);
+    const { data: filteredByPriceAscData, isLoading: isFilteredByPriceAscLoading, refetch: refetchFilteredByPriceAsc } = useFilterTaskByPriceAscQuery(currentPage);
+    const { data: filteredByPriceDescData, isLoading: isFilteredByPriceDescLoading, refetch: refetchFilteredByPriceDesc } = useFilterTaskByPriceDescQuery(currentPage);
+
+    useEffect(() => {
+        refetchFilteredByType()
+    }, [currentPage, refetchFilteredByType])
+
+    useEffect(() => {
+        refetchFiltered(); // Fetch new data when the current page changes
+    }, [currentPage, refetchFiltered]);
 
     useEffect(() => {
         refetch(); // Fetch new data when the current page changes
@@ -52,113 +79,70 @@ const Tasks = () => {
         );
     };
 
-    const handleFilterChange = (filterName: string, value: any) => {
-        setSelectedFilters({
-            ...selectedFilters,
-            [filterName]: value
-        });
-    };
-
-    const typeOfServiceDropdown = [
-        {
-            label: "Remote",
-            onClick: () => handleFilterChange('typeOfService', 'Remote')
-        },
-        {
-            label: "In Person",
-            onClick: () => handleFilterChange('typeOfService', 'In Person')
-        },
-    ];
 
     const otherOptionsDropdown = [
         {
             label: "Price: High to low",
-            onClick: () => handleFilterChange('others', 'Price: High to low')
+            onClick: () => refetchFilteredByPriceDesc
         },
         {
             label: "Price: Low to high",
-            onClick: () => handleFilterChange('others', 'Price: Low to high')
+            onClick: () => refetchFilteredByPriceAsc
         },
         {
             label: "Due date: Earliest",
-            onClick: () => handleFilterChange('others', 'Due date: Earliest')
+            onClick: () => refetchFilteredByEarliestDate
         },
         {
             label: "Due date: Latest",
-            onClick: () => handleFilterChange('others', 'Due date: Latest')
+            onClick: () => refetchFilteredByLatestDate
         },
         {
             label: "Closest to me",
-            onClick: () => handleFilterChange('others', 'Closest to me')
+            onClick: () => {}
         },
     ];
 
     const categoryDropdown = [
         {
             label: "Home Services",
-            onClick: () => handleFilterChange('category', 'Home Services')
+            onClick: () => setSelectedCategory('Home Services')
         },
         {
-            label: "Personal Services",
-            onClick: () => handleFilterChange('category', 'Personal Services')
+            label: "Beauty",
+            onClick: () => setSelectedCategory('Beauty')
         },
         {
-            label: "Events & Entertainment",
-            onClick: () => handleFilterChange('category', 'Events & Entertainment')
+            label: "Information & Technology",
+            onClick: () => setSelectedCategory('Information & Technology')
         },
         {
-            label: "Education & Tutoring",
-            onClick: () => handleFilterChange('category', 'Education & Tutoring')
+            label: "Events",
+            onClick: () => setSelectedCategory('Events')
         },
         {
-            label: "Professional Services",
-            onClick: () => handleFilterChange('category', 'Professional Services')
+            label: "Arts and Crafts",
+            onClick: () => setSelectedCategory('Arts and Crafts')
         },
         {
-            label: "Automotive Services",
-            onClick: () => handleFilterChange('category', 'Automotive Services')
+            label: "Pet care",
+            onClick: () => setSelectedCategory('Pet care')
         },
         {
-            label: "Health & Fitness",
-            onClick: () => handleFilterChange('category', 'Health & Fitness')
+            label: "Custodial",
+            onClick: () => setSelectedCategory('Custodial')
         },
         {
-            label: "Technology & Electronics",
-            onClick: () => handleFilterChange('category', 'Technology & Electronics')
-        },
-        {
-            label: "Home Improvement",
-            onClick: () => handleFilterChange('category', 'Home Improvement')
-        },
-        {
-            label: "Real Estate Services",
-            onClick: () => handleFilterChange('category', 'Real Estate Services')
-        },
-        {
-            label: "Delivery & Logistics",
-            onClick: () => handleFilterChange('category', 'Delivery & Logistics')
-        },
-        {
-            label: "Art & Creativity",
-            onClick: () => handleFilterChange('category', 'Art & Creativity')
-        },
-        {
-            label: "Wedding Services",
-            onClick: () => handleFilterChange('category', 'Wedding Services')
-        },
-        {
-            label: "Childcare & Babysitting",
-            onClick: () => handleFilterChange('category', 'Childcare & Babysitting')
-        },
-        {
-            label: "Travel & Adventure",
-            onClick: () => handleFilterChange('category', 'Travel & Adventure')
-        },
+            label: "Grocery",
+            onClick: () => setSelectedCategory('Grocery')
+        }
     ];
 
     return (
         <section className="pt-7 container">
-            <div className="hidden lg:flex lg:space-x-4 lg:min-w-[810px] items-center gap-6">
+            <div className="hidden lg:flex lg:space-x-4 mt-20 items-center">
+
+                {/* Category */}
                 <Dropdown
                     trigger={() => (
                         <div className="w-full border-2 border-primary text-primary flex items-center justify-between font-semibold py-2 px-4 rounded-full">
@@ -166,13 +150,13 @@ const Tasks = () => {
                             <FaSortDown />
                         </div>
                     )}
-                    className='-left-20 top-14'>
-                    <form className='w-[240px] bg-white rounded-md p-4'>
+                    className='left-0 right-0 mx-auto top-14'>
+                    <form className='bg-white rounded-md py-4 px-2'>
                         {categoryDropdown.map((button, index) => (
                             <div
                                 key={index}
                                 onClick={button.onClick}
-                                className='flex w-full transition-all text-status-darkViolet text-base font-bold hover:text-tc-orange cursor-pointer items-center justify-between p-3'>
+                                className='flex w-full transition-all text-status-darkViolet text-base font-bold hover:text-tc-orange cursor-pointer items-center justify-between py-3 px-5'>
                                 <div className="">
                                     {button.label}
                                 </div>
@@ -180,6 +164,8 @@ const Tasks = () => {
                         ))}
                     </form>
                 </Dropdown>
+
+                {/* Location */}
                 <Dropdown
                     trigger={() => (
                         <div className="w-full border-2 border-primary text-primary flex items-center justify-between font-semibold py-2 px-4 rounded-full">
@@ -187,21 +173,36 @@ const Tasks = () => {
                             <FaSortDown />
                         </div>
                     )}
-                    className='-left-24 top-14'>
-                    <form className='w-[240px] bg-white rounded-md flex items-center p-4'>
-                        <div className="space-y-8 w-full">
-                            <h4 className="text-lg text-black font-medium">Distance</h4>
+                    className='left-0 right-0 mx-auto top-14'>
+                    <form className='bg-white rounded-md flex items-center p-4'>
+                        <div className="space-y-8 w-full p-3">
+                            <h4 className="text-lg text-[#190E3F] font-medium">Distance</h4>
+                            <div className="text-2xl text-black font-bold text-center mb-6">
+                                {locationValues[0]}km - {locationValues[1]}km
+                            </div>
+                            <ReactSlider
+                                className="relative w-full h-2 bg-[#FE9B07] rounded-md"
+                                thumbClassName="absolute h-6 w-6 bg-[#FE9B07] rounded-full cursor-grab transform -translate-y-1/2 top-1/2"
+                                trackClassName="top-1/2 bg-[#FE9B07]"
+                                value={locationValues}
+                                min={1}
+                                max={50}
+                                step={1}
+                                onChange={(newValues) => setLocationValues(newValues as [number, number])}
+                            />
                             <div className="flex items-center justify-between w-full">
-                                <Button theme="outline">
+                                <Button theme="outline" className="rounded-full" onClick={() => setLocationValues([1, 50])}>
                                     Cancel
                                 </Button>
-                                <Button>
+                                <Button className="rounded-full">
                                     Apply
                                 </Button>
                             </div>
                         </div>
                     </form>
                 </Dropdown>
+
+                {/* Type of service */}
                 <Dropdown
                     trigger={() => (
                         <div id="typeOfService" className="w-full border-2 border-primary flex items-center justify-between text-primary font-semibold py-2 px-4 rounded-full">
@@ -209,20 +210,37 @@ const Tasks = () => {
                             <FaSortDown />
                         </div>
                     )}
-                    className='-left-24 top-14'>
-                    <div className='w-[240px] bg-white rounded-md flex items-center'>
-                        {typeOfServiceDropdown.map((button, index) => (
-                            <div
-                                key={index}
-                                onClick={button.onClick}
-                                className='flex w-full transition-all text-sm items-center justify-between p-3'>
-                                <div className="">
-                                    {button.label}
-                                </div>
-                            </div>
-                        ))}
+                    className='left-0 right-0 mx-auto top-14'>
+                    <div className='bg-white rounded-md p-4 space-y-10'>
+                        <h4 className="text-lg text-[#190E3F] font-medium">Type of service</h4>
+                        <div className="flex mb-6 w-full rounded-full bg-orange-100">
+                            <button
+                                className={`px-6 py-2 rounded-full text-status-darkViolet font-bold text-lg focus:outline-none ${selectedService === 'Remote' ? 'bg-orange-500 flex-1' : 'bg-transparent'
+                                    }`}
+                                onClick={() => setSelectedService('Remote')}
+                            >
+                                Remote
+                            </button>
+                            <button
+                                className={`px-6 py-2 rounded-full text-status-darkViolet font-bold text-lg focus:outline-none ${selectedService === 'In Person' ? 'bg-orange-500  flex-1' : 'bg-transparent'
+                                    }`}
+                                onClick={() => setSelectedService('In Person')}
+                            >
+                                In Person
+                            </button>
+                        </div>
+                        <div className="flex items-center justify-between w-full">
+                            <Button theme="outline" className="rounded-full">
+                                Cancel
+                            </Button>
+                            <Button className="rounded-full" onClick={() => refetchFilteredByType}>
+                                Apply
+                            </Button>
+                        </div>
                     </div>
                 </Dropdown>
+
+                {/* Pricing */}
                 <Dropdown
                     trigger={() => (
                         <div className="w-full border-2 border-primary text-primary flex items-center justify-between font-semibold py-2 px-4 rounded-full">
@@ -230,21 +248,36 @@ const Tasks = () => {
                             <FaSortDown />
                         </div>
                     )}
-                    className='-left-24 top-14'>
-                    <form className='w-[240px] bg-white rounded-md flex items-center p-4'>
-                        <div className="space-y-8 w-full">
-                            <h4 className="text-lg text-black font-medium">Price</h4>
+                    className='left-0 right-0 mx-auto top-14'>
+                    <form className='bg-white rounded-md flex items-center p-2'>
+                        <div className="space-y-8 w-full p-3">
+                            <h4 className="text-lg text-[#190E3F] font-medium">Price</h4>
+                            <div className="text-2xl text-black font-bold text-center mb-6">
+                                ${priceValues[0]} - ${priceValues[1]}
+                            </div>
+                            <ReactSlider
+                                className="relative w-full h-2 bg-[#FE9B07] rounded-md"
+                                thumbClassName="absolute h-6 w-6 bg-[#FE9B07] rounded-full cursor-grab transform -translate-y-1/2 top-1/2"
+                                trackClassName="top-1/2 bg-[#FE9B07]"
+                                value={priceValues}
+                                min={5}
+                                max={10000}
+                                step={50}
+                                onChange={(newValues) => setPriceValues(newValues as [number, number])}
+                            />
                             <div className="flex items-center justify-between w-full">
-                                <Button theme="outline">
+                                <Button theme="outline" className="rounded-full" onClick={() => setPriceValues([5, 10000])}>
                                     Cancel
                                 </Button>
-                                <Button>
+                                <Button className="rounded-full" onClick={() => refetchFiltered}>
                                     Apply
                                 </Button>
                             </div>
                         </div>
                     </form>
                 </Dropdown>
+
+                {/* Others */}
                 <Dropdown
                     trigger={() => (
                         <div className="w-full border-2 border-primary text-primary flex items-center justify-between font-semibold py-2 px-4 rounded-full">
@@ -252,8 +285,8 @@ const Tasks = () => {
                             <FaSortDown />
                         </div>
                     )}
-                    className='-left-24 top-14'>
-                    <div className='w-[240px] bg-white rounded-md'>
+                    className='left-0 right-0 mx-auto top-14'>
+                    <div className='bg-white rounded-md p-3'>
                         {otherOptionsDropdown.map((button, index) => (
                             <div
                                 key={index}

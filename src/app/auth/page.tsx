@@ -17,7 +17,7 @@ const AuthForm = () => {
         <section className='w-full xl:w-[554px] h-full flex items-center justify-center mx-auto p-5 lg:p-10'>
             <div className='space-y-10'>
                 <div className="space-y-4 font-clashDisplay">
-                    <h1 className='text-2xl lg:text-4xl text-black font-medium'>
+                    <h1 className='text-2xl lg:text-4xl text-[#190E3F] font-medium'>
                         Create Account
                     </h1>
                     <p className='text-xl lg:text-2xl text-tc-gray font-medium'>
@@ -51,7 +51,7 @@ const AuthForm = () => {
                         </button>
                     </div>
 
-                    <h3 className="text-xl font-bold max-lg:text-center">
+                    <h3 className="text-xl font-bold max-lg:text-center text-[#190E3F]">
                         Have an existing account?
                         <Link href="/auth/login" className="text-primary"> Log In</Link>
                     </h3>

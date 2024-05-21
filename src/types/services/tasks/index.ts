@@ -25,3 +25,14 @@ export type GetTasksResponse = {
 };
 
 export type GetSingleTasksResponse = Task;
+
+export type GetFilterTaskByPriceRequest = {
+    page: number;
+    minPrice: number;
+    maxPrice: number;
+};
+
+export type GetFilterTaskByTypeRequest = {
+    page: number;
+    type: string;
+};

@@ -22,7 +22,7 @@ const ServiceProviderNavbar = () => {
   const [isRightSidebarOpen, setIsRightSidebarOpen] = useState(false);
 
   return (
-    <header className="fixed left-0 top-0 z-40 mx-auto  flex h-16 w-full items-center justify-between border-b border-[#E5E9F0] bg-white px-4 lg:px-10 ">
+    <header className="fixed left-0 top-0 z-40 mx-auto flex h-[90px] w-full items-center justify-between border-b border-[#E5E9F0] bg-white px-4 lg:px-10 ">
       <ServiceProvideMobileNav
         setIsLeftSidebarOpen={setIsLeftSidebarOpen}
         isLeftSidebarOpen={isLeftSidebarOpen}
@@ -33,7 +33,7 @@ const ServiceProviderNavbar = () => {
       />
       <button
         onClick={() => setIsLeftSidebarOpen((prev) => !prev)}
-        className="lg:hidden "
+        className="lg:hidden"
       >
         <BiMenu color="rgb(56 31 140)" size={24} />
       </button>
@@ -82,7 +82,7 @@ const ServiceProviderNavbar = () => {
             alt="user"
             width={40}
             height={40}
-            className="size-10 rounded-full border border-violet-normal object-cover max-md:size-9 "
+            className="size-10 rounded-full border border-violet-normal object-cover max-md:size-9"
           />
           <IoTriangle className="rotate-[60deg]" size={8} />
         </button>
