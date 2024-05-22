@@ -159,8 +159,8 @@ const MareketPlace = () => {
                 ) : (
                   <div>
                     <CategoryListing category="All" />
-                    {/* <CategoryListing category={categories[1]?.categoryName} />
-                    <CategoryListing category={categories[2]?.categoryName} /> */}
+                    <CategoryListing category={categories[1]?.categoryName} />
+                    <CategoryListing category={categories[2]?.categoryName} />
                   </div>
                 )}
 

@@ -11,9 +11,19 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store";
 import { updateListingArray } from "@/store/Features/marketplace";
 import Image from "next/image";
+import { number } from "zod";
+import Link from "next/link";
+import SingleListingCard from "../marketplace/SingleListingCard";
 
 interface CategoryListingProps {
   category: string;
+}
+
+interface PosterProfileTypes {
+  id: number;
+  profileImage: string;
+  firstName: string;
+  lastName: string;
 }
 
 const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
@@ -26,11 +36,6 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
   const [ErrorMsg, setErrorMsg] = useState("");
   const [imgErrMsg, setImgErrMsg] = useState("");
   const [IdCategoryValue, setIdCategoryValue] = useState(0);
-  const [profileImages, setProfileImages] = useState<{ [key: number]: string }>(
-    {},
-  );
-  const [firstName, setFirstName] = useState<{ [key: number]: string }>({});
-  const [lastName, setLastName] = useState<{ [key: number]: string }>({});
   const [isViewMore, setIsViewMore] = useState({ state: false });
   const [displayListing, setDisplayListing] = useState<ListingDataType[]>([]);
 
@@ -65,38 +70,32 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
       setIsLoading(false);
     }
   };
+  useEffect(() => {
+    handleFetchCategory();
+    // eslint-disable-next-line
+  }, []);
+
+  const [posterProfiles, setPosterProfiles] = useState<PosterProfileTypes[]>(
+    [],
+  );
 
   const handleFetchUserProfile = async (posterId: number) => {
     try {
       const url =
-        "https://smp.jacinthsolutions.com.au/api/v1/user/user-profile/1" +
-        posterId;
-      // const url = `${process.env.NEXT_PUBLIC_API_URL}/user/user-profile/${posterId}`;
-      const response = await axios.get(url);
-
-      setProfileImages((prevProfileImages) => ({
-        ...prevProfileImages,
-        [posterId]: response.data.profileImage,
-      }));
-
-      setFirstName((prevFirstName) => ({
-        ...prevFirstName,
-        [posterId]: response.data.firstName,
-      }));
-
-      setLastName((prevLastName) => ({
-        ...prevLastName,
-        [posterId]: response.data.lastName,
-      }));
+        "https://smp.jacinthsolutions.com.au/api/v1/user/user-profile/1";
+      // "https://smp.jacinthsolutions.com.au/api/v1/user/user-profile/" +
+      // posterId;
+      const {
+        data: { profileImage, firstName, lastName },
+      } = await axios.get(url);
+      setPosterProfiles((prev) => [
+        ...prev,
+        { id: posterId, profileImage, firstName, lastName },
+      ]);
     } catch (error) {
       setImgErrMsg("Error loading image");
     }
   };
-
-  useEffect(() => {
-    handleFetchCategory();
-    // eslint-disable-next-line
-  }, [category]);
 
   useEffect(() => {
     if (displayListing.length > 0) {
@@ -110,7 +109,8 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
         handleFetchUserProfile(task.posterId);
       });
     }
-  }, [listing, isViewMore, displayListing]);
+    // eslint-disable-next-line
+  }, [isViewMore]);
 
   useEffect(() => {
     if (category) {
@@ -118,7 +118,8 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
         categories?.filter((item) => item.categoryName === category)[0]?.id,
       );
     }
-  }, [category, categories]);
+    // eslint-disable-next-line
+  }, [category]);
 
   return (
     <div className="my-14 h-full w-full font-satoshi">
@@ -163,13 +164,27 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
       {isLoading ? (
         <Loading />
       ) : (
-        <Listing
-          data={displayListing}
-          profileImages={profileImages}
-          imgErrMsg={imgErrMsg}
-          firstName={firstName}
-          lastName={lastName}
-        />
+        displayListing.map((item, index) => {
+          const currentPosterProfile: PosterProfileTypes =
+            posterProfiles.filter((poster) => poster.id === item.id)[0];
+          return (
+            <div
+              key={index}
+              className="my-2 grid grid-cols-1 gap-x-4 gap-y-4 md:grid-cols-2 lg:grid-cols-4  lg:gap-2"
+            >
+              <SingleListingCard
+                posterId={item.posterId}
+                listingId={item.id}
+                businessName={item.businessName}
+                displayImage={item.businessPictures[0]}
+                pricing={item.pricing}
+                firstName={currentPosterProfile?.firstName}
+                profileImage={currentPosterProfile?.profileImage}
+                lastName={currentPosterProfile?.lastName}
+              />
+            </div>
+          );
+        })
       )}
     </div>
   );

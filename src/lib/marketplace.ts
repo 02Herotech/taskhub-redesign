@@ -24,3 +24,27 @@ export const fetchMarketplaceSubCategoryById = async (id: number) => {
     throw error;
   }
 };
+
+export const fetchCategories = async (
+  category: string | number,
+  page: number,
+) => {
+  try {
+    let url;
+    if (category === "All") {
+      url =
+        "https://smp.jacinthsolutions.com.au/api/v1/listing/all-active-listings/" +
+        page;
+    } else {
+      url =
+        "https://smp.jacinthsolutions.com.au/api/v1/listing/listing-by-category/" +
+        category +
+        "?pageNumber= " +
+        page;
+    }
+    const { data } = await axios.get(url);
+    return data.content;
+  } catch (error) {
+    throw error;
+  }
+};

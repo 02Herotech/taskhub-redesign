@@ -1,5 +1,7 @@
+import Image from "next/image";
 import Link from "next/link";
 import { FaRegUser } from "react-icons/fa";
+import SingleListingCard from "../marketplace/SingleListingCard";
 
 interface ListingProps {
   data: any;
@@ -20,13 +22,16 @@ const Listing = ({
     <div className="my-2 grid grid-cols-1 gap-x-4 gap-y-4 md:grid-cols-2 lg:grid-cols-4  lg:gap-2 ">
       {data.map((listing: any, index: any) => (
         <Link href={`/marketplace/${listing.id}`} key={listing.id}>
+          {/* <SingleListingCard  /> */}
           <div className=" my-3 flex w-full justify-center">
             <div className="flex h-[350px] w-[320px] flex-col rounded-2xl  bg-[#EBE9F4] p-3 md:h-[300px] md:w-[250px]">
               <div className=" h-[230px] w-[295px] md:h-[150px] md:w-[225px] ">
                 {listing.businessPictures.length > 1 && (
-                  <img
+                  <Image
                     src={listing.businessPictures[0]}
-                    alt=""
+                    alt="user"
+                    width={200}
+                    height={200}
                     className="h-full w-full rounded-xl border-[1.5px] border-[#D9D9D9] object-cover"
                   />
                 )}
@@ -42,10 +47,11 @@ const Listing = ({
                       {profileImages ? (
                         <div>
                           {profileImages[listing.posterId] ? (
-                            <img
+                            <Image
                               src={profileImages[listing.posterId]}
                               alt={`Profile of ${listing.posterId}`}
-                              width={25}
+                              width={200}
+                              height={200}
                               className="h-[25px] rounded-[50%] "
                             />
                           ) : (

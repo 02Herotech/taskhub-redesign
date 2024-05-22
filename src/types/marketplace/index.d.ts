@@ -3,6 +3,23 @@ declare interface CategoryType {
   categoryName: string;
 }
 
+declare interface PosterType {
+  id: number;
+  address: null;
+  enabled: boolean;
+  firstName: string;
+  lastName: string;
+  profileImage: null;
+  emailAddress: string;
+  stripeId: string;
+  roles: string[];
+  accountState: string;
+  deactivatedAt: null;
+  phoneNumber: string;
+  registeredAt: null;
+  appNotificationList: never[];
+}
+
 declare interface SubCategoryType {
   id: number;
   name: string;
