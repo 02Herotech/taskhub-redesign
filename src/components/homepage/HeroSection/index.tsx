@@ -15,6 +15,7 @@ import heroImage4a from "../../../../public/assets/images/homepage/hero/4a.png";
 import icon1 from "../../../../public/assets/images/homepage/hero/customer.png";
 import icon2 from "../../../../public/assets/images/homepage/hero/done.png";
 import icon3 from "../../../../public/assets/images/homepage/hero/review.png";
+import tested from "../../../../public/assets/images/homepage/hero/tested.jpg";
 import { signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
@@ -81,48 +82,6 @@ const HeroSection = () => {
   const customerParams = new URLSearchParams({ userType: "customer" });
   const serviceProviderParams = new URLSearchParams({ userType: "serviceProvider" });
 
-
-  const handlePostTask = async (e: { preventDefault: () => void }) => {
-    e.preventDefault();
-    try {
-      const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/auth/logout`,
-      );
-      console.log("Sign Out: ", response);
-
-      if (response.status === 200) {
-        await signOut({
-          redirect: false,
-        });
-        router.push("/auth");
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const handleBecomeSP = async (e: { preventDefault: () => void }) => {
-    e.preventDefault();
-
-    try {
-        const response = await axios.post(
-            `${process.env.NEXT_PUBLIC_API_URL}/auth/logout`,
-        );
-
-        await signOut({
-            redirect: false,
-        });
-
-        console.log("Sign Out: ", response);
-
-        if (response.status === 200) {
-            router.push("/auth");
-        }
-    } catch (error) {
-        console.error(error);
-    }
-};
-
   // Image1 transition
   const images1 = [heroImage1, heroImage1a];
   const currentImageIndex1 = useImageTransition(images1, 3000);
@@ -148,13 +107,28 @@ const HeroSection = () => {
       >
         <div className={`flex lg:w-[45%] flex-col justify-around text-black `}>
           <div className={`flex flex-col`}>
-            <h1
-              className={`mb-5 lg:mt-[3rem] text-center lg:text-left lg:text-[50px] text-[35px] font-[600] leading-tight lg:w-[500px] w-full !font-clashDisplay`}
+          <h1
+              className={ `hidden lg:block text-primary font-medium mb-5 lg:mt-[3rem] text-center lg:text-left lg:text-[65px] text-[35px]  leading-tight lg:w-[500px] w-full !font-clashDisplay
+             `}
             >
-              Get Quick
-              <br />
-              And <span className={`font-[800] text-primary  bg-gradient-to-b from-[#1612C1] to-[#2E095DF2] via-[#32204A59] !bg-clip-text text-transparent`}>Efficient</span> <br /> Services
+              <span className="flex items-center gap-4">FIND <div className="rounded-full w-2 h-2 bg-primary "></div></span>
 
+
+              <span className="flex items-center gap-4">CONNECT <div className="rounded-full w-2 h-2 bg-primary "></div></span>
+
+              <span className="flex items-center gap-4">GET IT DONE <div className="rounded-full w-2 h-2 bg-primary "></div></span>
+            </h1>
+
+            <h1
+              className={`lg:hidden text-primary font-medium mb-5 lg:mt-[3rem] text-center lg:text-left lg:text-[65px] text-[35px]  leading-tight lg:w-[500px] w-full !font-clashDisplay
+             flex flex-col justify-center items-center`}
+            >
+              <span className="flex items-center gap-4">FIND <div className="rounded-full w-2 h-2 bg-primary "></div></span>
+
+
+              <span className="flex items-center gap-4">CONNECT <div className="rounded-full w-2 h-2 bg-primary "></div></span>
+
+              <span className="flex items-center gap-4">GET IT DONE <div className="rounded-full w-2 h-2 bg-primary "></div></span>
             </h1>
 
 
@@ -164,24 +138,22 @@ const HeroSection = () => {
               Our user-friendly platform ensures a seamless
               experience, allowing you to effortlessly find,
               connect, and engage with the perfect service
-              professionals.
+              professionals.<br className="lg:hidden"/>  <span className="border-[1px] border-[#FE9B07] text-[#FE9B07] bg-[#FFF5E6] rounded-[50px] text-[10px] px-3 py-1"> Beta Version</span>
             </p>
           </div>
 
-          <div className="flex lg:flex-col flex-col-reverse items-center justify-center lg:justify-start lg:items-start">
+          <div className="flex flex-col  items-center justify-center lg:justify-start lg:items-start">
             <div className={`lg:my-10 my-5 flex lg:flex-row lg:space-x-3 lg:space-y-0 space-y-4 flex-col items-center justify-center`}>
               <div className="">
                 <button
                   className=" rounded-[50px] bg-primary xl:text-[16px]
            xl:px-7 lg:px-3 py-2 text-[#EBE9F4] hover:bg-[#25135f] w-[250px] xl:w-[190px] lg:w-[155px]  "
                 >
-                  {/* {session?.user?.user?.roles[0] === "SERVICE_PROVIDER" ? (
-                    <p onClick={handlePostTask}>Post your first task</p>
-                  ) : ( */}
+                
                   <Link href={`/auth/sign-up?${customerParams.toString()}`}>
                       Post your first task
                     </Link>
-                  {/* )}   */}
+                
                 </button>
               </div>
 
@@ -196,63 +168,22 @@ const HeroSection = () => {
                       className="flex items-center justify-center"
                     >
                       <p className="">Become a Service Provider</p>
-                      
+
                     </Link>
-                  {/* )} */}
+             
                 </button>
               </div>
 
 
             </div>
 
-            <div className="lg:w-[500px] mt-5 lg:mt-0 w-[250px] flex items-center justify-between rounded-xl border-[1.5px] border-grey3 bg-white px-8 py-4 ">
-              <div className="relative w-[30%] ">
-                <p className="text-[#381F8C]  font-bold lg:text-[18px] text-[9px]">
-                  1k+ <br /> customers
-                </p>
-                <span className="lg:block hidden absolute right-10 top-[1px] text-[#FE9B07] lg:text-[18px] text-[9px]">
-                  <Image src={icon1} width={25} alt=""></Image>
-                </span>
-
-
-                <span className="lg:hidden absolute  left-8 top-[-3px]  text-[#FE9B07]  text-[9px]">
-
-                  <Image src={icon1} width={15} alt="" className=" lg:hidden"></Image>
-                </span>
-              </div>
-
-
-              <div className="relative  w-[30%]">
-                <p className="text-[#381F8C]  font-bold lg:text-[18px] text-[9px]">
-                  2.5k <br /> tasks done
-                </p>
-
-                <span className="lg:block hidden absolute right-10 top-[-2px] text-[#FE9B07] lg:text-[18px] text-[9px]">
-                  <Image src={icon2} width={20} alt=""></Image>
-                </span>
-
-
-                <span className="lg:hidden absolute  left-8 top-[-3px]  text-[#FE9B07]  text-[9px]">
-
-                  <Image src={icon2} width={10} alt="" className=" lg:hidden"></Image>
-                </span>
-              </div>
-              <div className="relative  w-[33%]">
-                <p className="lg:text-[18px] text-[9px]  font-bold text-[#381F8C] ">
-                  4k+ <br /> user reviews
-                </p>
-
-                <span className="lg:block hidden absolute right-10 top-[-3px] text-[#FE9B07] lg:text-[18px] text-[9px]">
-                  <Image src={icon3} width={25} alt=""></Image>
-                </span>
-
-
-                <span className="lg:hidden absolute  left-8 top-[-3px]  text-[#FE9B07]  text-[9px]">
-
-                  <Image src={icon3} width={15} alt="" className=" lg:hidden"></Image>
-                </span>
-
-              </div>
+            <div className="flex gap-3">
+              <span>
+                <Image src={tested} height={25} width={25} alt="tested"/>
+              </span>
+              <p className=" text-[#321C7E] font-medium ">
+              Tested and Trusted.
+              </p>
             </div>
           </div>
         </div>
