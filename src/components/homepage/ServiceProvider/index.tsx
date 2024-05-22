@@ -201,7 +201,7 @@ const SPHomepage = () => {
 
                     <button
                         className="text-bold rounded-[50px] w-[250px] bg-[#FE9B07] text-[#FFF5E6] lg:text-[16px]
-                          px-3 py-2   ml-10 mt-10 hover:bg-[#e79823]  "
+                          px-3 py-2   mt-10 hover:bg-[#e79823]  "
                     >
                         {session?.user?.user?.roles[0] === "CUSTOMER" ? (
                             <div
