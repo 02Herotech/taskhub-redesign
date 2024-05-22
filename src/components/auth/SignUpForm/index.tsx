@@ -79,7 +79,7 @@ const SignUpForm = () => {
     };
 
     return (
-        <section className='w-full xl:w-[554px] mx-auto max-lg:p-10'>
+        <section className='w-full lg:w-[554px] mx-auto max-lg:p-10'>
             <div className='space-y-6 lg:space-y-10 w-full max-lg:container lg:max-w-[550px] lg:px-4'>
                 <div className="space-y-4 !font-clashDisplay">
                     <h1 className='text-2xl lg:text-4xl text-status-darkViolet font-medium'>
@@ -131,7 +131,7 @@ const SignUpForm = () => {
                                     international
                                     // maxLength={11}
                                     // minLength={7}
-                                    className="w-full px-3 border border-[#5b5b66] active:border-primary text-dark h-12 overflow-hidden font-normal rounded-[10px] outline-none"
+                                    className="w-full phone-input px-3 border border-[#5b5b66] active:border-primary text-dark h-12 overflow-hidden font-normal rounded-[10px] outline-none"
                                 />
                             </div>
                             <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
