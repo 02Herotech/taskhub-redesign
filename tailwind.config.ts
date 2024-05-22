@@ -31,7 +31,7 @@ const config: Config = {
           },
           error: {
             "10": "#FEE4E2",
-            "100": "#FF0000",
+            "100": "#E98282",
           },
           information: {
             "10": "#F2F8FF",
@@ -42,13 +42,14 @@ const config: Config = {
           darkViolet: "#140B31",
           purpleBase: "#381F8C",
           darkpurple: "#140B31",
-          'black-84': 'rgba(0, 0, 0, 0.84)'
+          "black-84": "rgba(0, 0, 0, 0.84)",
         },
         violet: {
           light: "#EBE9F4",
           normal: "#381F8C",
           dark: "#140B31",
           active: "#C1BADB",
+          darkHover: "#221354",
         },
         orange: {
           normal: "#FE9B07",
@@ -56,8 +57,8 @@ const config: Config = {
         },
       },
       fontFamily: {
-        satoshi: ["Satoshi", "sans-serif"],
-        clashDisplay: ["Clash Display", "sans-serif"],
+        satoshi: ["satoshi", "sans-serif"],
+        clashDisplay: ["clashDisplay", "sans-serif"],
       },
       container: {
         center: true,

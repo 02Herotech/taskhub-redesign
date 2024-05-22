@@ -17,30 +17,28 @@ interface Message {
 
 interface FormData {
   lisitingTitle: string;
+  availability: string;
+
   listingDescription: string;
-  planOneDescription: string;
-  planTwoDescription: string;
-  planThreeDescription: string;
-  image1: File | defaultImage | null;
-  image2?: File | defaultImage | null;
-  image3?: File | defaultImage | null;
-  image4?: File | defaultImage | null;
+  planDetails: string;
+  planDetails1: string;
+  planDetails2: string;
+  taskImage: File | defaultImage | null;
+  taskImage1?: File | defaultImage | null;
+  taskImage2?: File | defaultImage | null;
+  taskImage3?: File | defaultImage | null;
   taskType: string;
-  planOnePrice: string;
-  planTwoPrice: string;
-  planThreePrice: string;
-  availableDays: string[];
-  suburb: string;
-  postCode: string;
-  state: string;
-  available: boolean;
+  price: string;
+  price1: string;
+  price2: string;
+  userAddress: string[];
   categoryId: number | null;
   subCategoryId: number | null;
 }
 
 type defaultImage = string;
 interface AiGenerateProps {
-  setTask: React.Dispatch<React.SetStateAction<FormData>>;
+  setTask: React.Dispatch<React.SetStateAction<FormData>> | any;
   task: FormData;
 }
 
@@ -167,7 +165,7 @@ const AiDesciption: React.FC<AiGenerateProps> = ({ task, setTask }) => {
               </p>
             </div>
 
-            <div className="conversation h-[65%] space-y-4 overflow-y-scroll lg:h-[70%] ">
+            <div className="conversation h-[65%] space-y-4 overflow-y-scroll lg:h-[65%] ">
               {conversation.map((entry, index) => (
                 <div key={index}>
                   <div
@@ -217,8 +215,8 @@ const AiDesciption: React.FC<AiGenerateProps> = ({ task, setTask }) => {
                   placeholder="Enter request here"
                   onChange={handleInputChange}
                   value={aiQuery}
-                  className="h-[50px] w-full text-wrap rounded-[16px] border-[2px] border-[#716F78] 
-bg-transparent px-2 text-[16px] font-normal text-white"
+                  className="h-[50px] w-full overflow-hidden text-wrap rounded-[12px] border-[2px] 
+border-[#716F78] bg-transparent px-3 pt-3 text-[16px] font-normal text-white"
                   required
                 />
                 <div className="absolute right-[10%] top-[20%] hidden lg:right-[5%] lg:top-[25%]  lg:block ">

@@ -2,35 +2,72 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Custom styles */
+.phone-input input:focus {
+  outline: none !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
 .Toastify__toast-container {
-    min-width: 388px !important;
-    z-index: 9999999999999 !important;
+  min-width: 388px !important;
+  z-index: 9999999999999 !important;
 }
 
 .Toastify__toast.Toastify__toast--success {
-    @apply border border-primary text-white bg-primary/25 font-normal text-base;
-    min-height: 56px;
+  @apply border border-primary bg-primary/25 text-base font-normal text-white;
+  min-height: 56px;
 }
 
 .Toastify__toast-icon {
-    @apply hidden
+  @apply hidden;
 }
 
 .Toastify__toast.Toastify__toast--error {
-    @apply border border-status-error-100 text-status-error-100 bg-status-error-10 font-normal text-base;
-    min-height: 56px;
+  @apply border border-status-error-100 bg-status-error-10 text-base font-normal text-status-error-100;
+  min-height: 56px;
 }
 
 .Toastify__toast.Toastify__toast--info {
-    @apply border border-status-information-100 text-status-information-100 bg-status-information-10 font-normal text-base;
-    min-height: 56px;
+  @apply border border-status-information-100 bg-status-information-10 text-base font-normal text-status-information-100;
+  min-height: 56px;
 }
 
 .Toastify__toast.Toastify__toast--warning {
-    @apply border border-status-warning-100 text-status-warning-100 bg-status-warning-10 font-normal text-base;
-    min-height: 56px;
+  @apply border border-status-warning-100 bg-status-warning-10 text-base font-normal text-status-warning-100;
+  min-height: 56px;
 }
 
 .Toastify__progress-bar {
-    opacity: 0 !important;
+  opacity: 0 !important;
+}
+.no-scrollbar {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none; /* WebKit-based browsers */
+}
+
+.small-scrollbar::-webkit-scrollbar {
+  width: 2px; /* Adjust the width as needed */
+}
+
+.small-scrollbar::-webkit-scrollbar-thumb {
+  background: transparent; /* Customize the color */
+  border-radius: 10px;
+}
+
+.small-scrollbar::-webkit-scrollbar-track {
+  background: transparent; /* Customize the track color */
+}
+
+.small-scrollbar::-webkit-scrollbar-button {
+  display: none; /* Remove the buttons */
+}
+
+/* Firefox */
+.small-scrollbar {
+  scrollbar-width: thin; /* Set scrollbar width for Firefox */
 }

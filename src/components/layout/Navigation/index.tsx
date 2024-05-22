@@ -25,12 +25,12 @@ const Navigation = () => {
 
   const handleLogout = async () => {
     try {
-      router.push("/");
       await signOut();
-
+      
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_API_URL}/auth/logout`,
       );
+      router.push("/marketplace");
     } catch (error: any) {
       console.log(error);
     }
@@ -71,6 +71,8 @@ const Navigation = () => {
   const userRole = session?.data?.user.user.roles;
   const isServiceProvider = userRole && userRole[0] === "SERVICE_PROVIDER";
 
+  const notificationLength = session.data?.user.user.appNotificationList.length
+
   return (
     <>
       {isServiceProvider ? (
@@ -79,7 +81,9 @@ const Navigation = () => {
         <>
           <nav className="fixed left-0 right-0 top-0 z-50 w-full bg-white drop-shadow-sm">
             <div className="container flex items-center justify-between px-7 py-4 lg:px-14 lg:py-5">
-              <Logo />
+              <Link href="/marketplace">
+                <Logo />
+              </Link>
               <button
                 onClick={() => setShowMobileNav((state) => !state)}
                 className="lg:hidden"
@@ -108,24 +112,24 @@ const Navigation = () => {
                 })}
               </ul>
               <div className="hidden items-center space-x-5 lg:flex">
-                <div className="relative">
+                <div className="relative cursor-pointer">
                   <BsChat className="size-[22px] text-black" />
                   <div className="absolute -right-1 -top-1 flex size-5 items-center justify-center rounded-full bg-tc-orange text-xs text-white">
                     2
                   </div>
                 </div>
-                <div className="relative">
+                <div className="relative cursor-pointer">
                   <IoMdNotificationsOutline className="size-[24px] text-black" />
                   <div className="absolute -right-1 -top-1 flex size-5 items-center justify-center rounded-full bg-tc-orange text-xs text-white">
-                    2
+                    {notificationLength}
                   </div>
                 </div>
                 <Dropdown
                   trigger={() => (
-                    <div className="flex items-center space-x-1">
+                    <div className="flex items-center space-x-1 cursor-pointer">
                       <img
                         src={profileImage || PlaceholderImage.src}
-                        alt="Profile" 
+                        alt="Profile"
                         className="size-[46px] rounded-full object-cover"
                       />
                       <BiChevronDown className="size-6" />

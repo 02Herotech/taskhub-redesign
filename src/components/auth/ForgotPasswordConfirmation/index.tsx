@@ -125,7 +125,7 @@ const PasswordConfirmationForm = ({ email }: { email: string }) => {
 
     return (
         <Suspense>
-            <section className='w-full xl:w-[554px] mx-auto max-lg:p-10 flex items-center justify-center'>
+            <section className='w-full xl:w-[554px] mx-auto max-lg:p-5 flex items-center justify-center'>
                 <div className='space-y-10'>
                     <div className="space-y-4 font-clashDisplay">
                         <h1 className='text-2xl lg:text-4xl text-[#190E3F] font-medium'>
@@ -160,7 +160,7 @@ const PasswordConfirmationForm = ({ email }: { email: string }) => {
                             </div>
                         </div>
                         {error && (
-                            <div className="text-red-500 text-xl text-center capitalize font-bold my-5">{error}</div>
+                            <div className="text-status-error-100 text-base text-center capitalize font-semibold my-5">{error}</div>
                         )}
                         <div className='pt-1 space-y-5'>
                             <Button

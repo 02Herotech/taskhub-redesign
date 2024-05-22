@@ -5,10 +5,11 @@ import Input from "@/components/global/Input";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
-import "react-phone-number-input/style.css";
 import { useState } from "react";
-import PhoneInputWithCountry from "react-phone-number-input/react-hook-form"
+import PhoneInputWithCountry from "react-phone-number-input/react-hook-form";
+import "react-phone-number-input/style.css";
 import { useCustomerSignupMutation, useServiceProviderSignupMutation } from "@/services/auth";
+import { setCookie, getCookie } from 'cookies-next';
 
 type SignUpRequest = {
     emailAddress: string;
@@ -23,21 +24,25 @@ const SignUpForm = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [customerSignUpApiCall] = useCustomerSignupMutation();
     const [serviceProviderSignUpApiCall] = useServiceProviderSignupMutation();
-    const [error, setError] = useState<string | null>(null); 
+    const [error, setError] = useState<string | null>(null);
 
+    const searchParams = useSearchParams();
+    const userType = searchParams.get('userType') || getCookie('userType');
+
+    console.log(getCookie('firstName'))
+
+    // Read cookies and set default values
     const methods = useForm({
         mode: "onChange",
         defaultValues: {
-            firstName: "",
-            lastName: "",
+            firstName: getCookie('firstName') || "",
+            lastName: getCookie('lastName') || "",
             emailAddress: "",
-            password: "",
-            phoneNumber: ""
+            password: getCookie('password') || "",
+            phoneNumber: getCookie('phoneNumber') || "",
+            confirmPassword: getCookie('password') || "",
         },
     });
-
-    const searchParams = useSearchParams()
-    const userType = searchParams.get('userType')
 
     const {
         formState: { isValid },
@@ -45,7 +50,6 @@ const SignUpForm = () => {
     } = methods;
 
     const onSubmit: SubmitHandler<SignUpRequest> = async (payload) => {
-        const params = new URLSearchParams({ email: payload.emailAddress });
         try {
             setIsLoading(true);
 
@@ -55,19 +59,27 @@ const SignUpForm = () => {
                 emailAddress: payload.emailAddress,
                 phoneNumber: payload.phoneNumber,
                 password: payload.password
-            }
+            };
+
+            // Store form data in cookiesStore
+            setCookie('firstName', payload.firstName, { maxAge: 60 * 2 });
+            setCookie('lastName', payload.lastName, { maxAge: 60 * 2 });
+            setCookie('phoneNumber', payload.phoneNumber, { maxAge: 60 * 2 });
+            setCookie('emailAddress', payload.emailAddress, { maxAge: 60 * 2 });
+            setCookie('password', payload.password, { maxAge: 60 * 2 });
+            setCookie('userType', userType);
 
             if (userType === 'Service Provider') {
                 await serviceProviderSignUpApiCall(data).unwrap();
                 setIsLoading(false);
-                router.push(`/auth/verify-email?${params}`);
+                router.push(`/auth/verify-email?email=${payload.emailAddress}`);
                 return;
             }
 
             if (userType === 'Customer') {
                 await customerSignUpApiCall(data).unwrap();
                 setIsLoading(false);
-                router.push(`/auth/verify-email?${params}`);
+                router.push(`/auth/verify-email?email=${payload.emailAddress}`);
                 return;
             }
 
@@ -79,10 +91,10 @@ const SignUpForm = () => {
     };
 
     return (
-        <section className='w-full xl:w-[554px] mx-auto max-lg:p-10'>
+        <section className='w-full lg:w-[554px] mx-auto max-lg:p-5'>
             <div className='space-y-6 lg:space-y-10 w-full max-lg:container lg:max-w-[550px] lg:px-4'>
-                <div className="space-y-4 font-clashDisplay">
-                    <h1 className='text-2xl lg:text-4xl text-[#190E3F] font-medium'>
+                <div className="space-y-4 !font-clashDisplay">
+                    <h1 className='text-2xl lg:text-4xl text-status-darkViolet font-medium'>
                         Create Account
                     </h1>
                     <p className='text-xl lg:text-2xl text-tc-gray font-medium'>
@@ -129,9 +141,9 @@ const SignUpForm = () => {
                                     defaultCountry="AU"
                                     rules={{ required: true }}
                                     international
-                                    maxLength={17}
-                                    minLength={7}
-                                    className="w-full px-3 border border-[#5b5b66] active:border-primary text-dark h-12 overflow-hidden font-normal rounded-[10px] outline-none"
+                                    // maxLength={11}
+                                    // minLength={7}
+                                    className="w-full phone-input px-3 border border-[#5b5b66] active:border-primary text-dark h-12 overflow-hidden font-normal rounded-[10px] outline-none"
                                 />
                             </div>
                             <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
@@ -139,16 +151,20 @@ const SignUpForm = () => {
                                     label='Password'
                                     name='password'
                                     type='password'
+                                    placeholder="**********"
+                                    className=" placeholder:text-dark"
                                     rules={["required", "password"]}
                                 />
                                 <Input
                                     label='Confirm Password'
                                     name='confirmPassword'
                                     type='password'
+                                    className=" placeholder:text-dark"
+                                    placeholder="**********"
                                     rules={["required", "confirmPassword"]}
                                 />
                             </div>
-                            <div className={`space-x-2 flex`}>
+                            <div className="space-x-2 flex max-lg:items-center max-lg:justify-center">
                                 <input
                                     type="checkbox"
                                     name="agreement"
@@ -157,12 +173,12 @@ const SignUpForm = () => {
                                 />
                                 <label
                                     htmlFor="agreement"
-                                    className={`font-medium text-[12px]`}
+                                    className={`font-medium text-[12px] text-status-darkViolet`}
                                 >
                                     I agree to all
                                     <Link
                                         href="/terms-and-condition"
-                                        className={`text-primary underline`}
+                                        className="text-primary underline underline-offset-2"
                                     >
                                         {" "}
                                         Terms of service{" "}
@@ -170,26 +186,26 @@ const SignUpForm = () => {
                                     and
                                     <Link
                                         href="/privacy"
-                                        className={`text-primary underline`}
+                                        className="text-primary underline underline-offset-2"
                                     >
                                         {" "}
-                                        Privacy Policy
+                                        Privacy
                                     </Link>
                                 </label>
                             </div>
                             {error && (
-                                <div className="text-red-500 text-xl text-center font-bold my-5">{error}</div>
+                                <div className="text-status-error-100 text-base text-center font-semibold my-5">{error}</div>
                             )}
                         </div>
-                        <div className='pt-10 space-y-5'>
+                        <div className='pt-10 space-y-5 max-lg:flex max-lg:flex-col max-lg:items-center max-lg:justify-center'>
                             <Button
                                 type='submit'
                                 loading={isLoading}
                                 disabled={!isValid}
-                                className='w-full lg:w-[170px] rounded-full font-normal'>
+                                className='w-[170px] rounded-full font-normal'>
                                 Create account
                             </Button>
-                            <h3 className="text-xl font-bold text-[#190E3F]">Have an existing account?
+                            <h3 className="text-xl font-bold text-[#190E3F] text-center">Have an existing account?
                                 <Link href="/auth/login" className="text-primary"> Login</Link>
                             </h3>
                             {/* <div className="border w-full" />
