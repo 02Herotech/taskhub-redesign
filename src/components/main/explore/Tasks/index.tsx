@@ -357,7 +357,7 @@ const Tasks = () => {
                             <form action="" className="space-y-8 mt-5">
                                 <h3 className="font-bold text-status-darkViolet text-2xl">Services</h3>
                                 {categoriesData.map((category, index) => (
-                                    <div className="flex items-center space-x-3 cursor-pointer hover:underline">
+                                    <div className="flex items-center space-x-3 cursor-pointer hover:underline" key={index}>
                                         <div className="w-3 h-3 bg-tc-orange rounded-full" />
                                         <div className="font-medium text-lg text-primary">{category.categoryName}</div>
                                     </div>
