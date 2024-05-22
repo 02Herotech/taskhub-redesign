@@ -12,7 +12,7 @@ const AuthLayout = ({
     return (
         <>
             <header className='w-full bg-white fixed top-0 left-0 z-40'>
-                <div className='w-full container py-8 lg:px-10 px-4 flex items-center justify-between'>
+                <div className='w-full container py-5 lg:py-8 lg:px-10 px-4 flex items-center justify-between'>
                     <Link href='/'>
                         <Logo />
                     </Link>

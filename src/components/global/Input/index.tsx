@@ -225,8 +225,8 @@ const Input = ({
 	if (tag === "textarea")
 		return (
 			<label htmlFor={id} className='flex flex-col relative'>
-				<span className='w-full text-base text-left leading-5 capitalize text-[#5B5B66] mb-2'>
-					{label}
+				<span className='w-full flex items-center space-x-2 text-base text-left leading-5 mb-2'>
+					<span className='capitalize text-[#333236] font-medium'>{label}</span>
 				</span>
 				<textarea
 					{...register}
@@ -268,7 +268,7 @@ const Input = ({
 	return (
 		<label htmlFor={id} className='flex flex-col relative'>
 			<span className='w-full flex items-center space-x-2 text-base text-left leading-5 mb-2'>
-				<span className='capitalize text-[#5B5B66]'>{label}</span>
+				<span className='capitalize text-[#333236] font-medium'>{label}</span>
 			</span>
 			<input
 				onFocus={() => setPasswordIsDirty(true)}
@@ -296,7 +296,7 @@ const Input = ({
 					type='button'
 					onClick={() => setShowPassword(!showPassword)}
 					className='absolute focus:border-primary focus:outline-primary flex items-center justify-center h-[44px] w-12 right-[2px] top-7 cursor-pointer'>
-					<div className='text-primary font-bold pr-4'>
+					<div className='text-black font-bold pr-4'>
 						{!showPassword ? <IoMdEye className="w-7 h-7" /> : <IoMdEyeOff className="w-7 h-7" />}
 					</div>
 				</button>
