@@ -129,8 +129,8 @@ const SignUpForm = () => {
                                     defaultCountry="AU"
                                     rules={{ required: true }}
                                     international
-                                    maxLength={11}
-                                    minLength={7}
+                                    // maxLength={11}
+                                    // minLength={7}
                                     className="w-full px-3 border border-[#5b5b66] active:border-primary text-dark h-12 overflow-hidden font-normal rounded-[10px] outline-none"
                                 />
                             </div>
