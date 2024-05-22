@@ -102,7 +102,7 @@ const ResetPasswordForm = () => {
                                 type='password'
                             />
                             {error && (
-                                <div className="text-red-500 text-xl text-center font-bold my-5">{error}</div>
+                                <div className="text-status-error-100 text-base text-center font-semibold my-5">{error}</div>
                             )}
                             <div className='pt-1 flex items-center space-x-4'>
                                 <Button

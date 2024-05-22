@@ -72,7 +72,7 @@ const LoginForm = () => {
   };
 
   return (
-    <section className="w-full xl:w-[554px] mx-auto max-lg:p-10">
+    <section className="w-full xl:w-[554px] mx-auto max-lg:p-5">
       <div className="space-y-10">
         <div className="space-y-4 font-clashDisplay">
           <h1 className="text-2xl lg:text-4xl text-[#190E3F] font-medium">
@@ -108,7 +108,7 @@ const LoginForm = () => {
               type="password"
             />
             {error && (
-              <div className="text-red-500 text-xl text-center font-bold my-5">{error}</div>
+              <div className="text-status-error-100 text-base text-center font-semibold my-5">{error}</div>
             )}
             <div className="space-y-8 lg:space-y-5">
               <div className="flex items-center justify-end">

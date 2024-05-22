@@ -28,7 +28,7 @@ export const clashDisplay = localFont({
 			style: "normal",
 		},
 	],
-	display: "swap",
+	// display: "swap",
 	variable: "--font-clashDisplay",
 });
 
@@ -85,6 +85,6 @@ export const satoshi = localFont({
 			style: "italic",
 		},
 	],
-	display: "swap",
+	// display: "swap",
 	variable: "--font-satoshi",
 });

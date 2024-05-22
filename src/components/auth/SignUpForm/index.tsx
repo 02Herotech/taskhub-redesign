@@ -5,10 +5,12 @@ import Input from "@/components/global/Input";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
-import { useState } from "react";
-import PhoneInputWithCountry from "react-phone-number-input/react-hook-form"
+import { useEffect, useState } from "react";
+import PhoneInputWithCountry from "react-phone-number-input/react-hook-form";
 import "react-phone-number-input/style.css";
 import { useCustomerSignupMutation, useServiceProviderSignupMutation } from "@/services/auth";
+import { setCookie } from 'cookies-next';
+import { getCookie } from 'cookies-next';
 
 type SignUpRequest = {
     emailAddress: string;
@@ -23,21 +25,26 @@ const SignUpForm = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [customerSignUpApiCall] = useCustomerSignupMutation();
     const [serviceProviderSignUpApiCall] = useServiceProviderSignupMutation();
-    const [error, setError] = useState<string | null>(null); 
+    const [error, setError] = useState<string | null>(null);
 
+    const searchParams = useSearchParams();
+    const userType = searchParams.get('userType') || getCookie('userType');
+
+    const name = getCookie('firstName')
+    console.log(name)
+
+    // Read cookies and set default values
     const methods = useForm({
         mode: "onChange",
         defaultValues: {
-            firstName: "",
-            lastName: "",
+            firstName: getCookie('firstName') || "",
+            lastName: getCookie('lastName') || "",
             emailAddress: "",
-            password: "",
-            phoneNumber: ""
+            password: getCookie('password') || "",
+            phoneNumber: getCookie('phoneNumber') || "",
+            confirmPassword: getCookie('password') || "",
         },
     });
-
-    const searchParams = useSearchParams()
-    const userType = searchParams.get('userType')
 
     const {
         formState: { isValid },
@@ -45,7 +52,6 @@ const SignUpForm = () => {
     } = methods;
 
     const onSubmit: SubmitHandler<SignUpRequest> = async (payload) => {
-        const params = new URLSearchParams({ email: payload.emailAddress });
         try {
             setIsLoading(true);
 
@@ -55,19 +61,26 @@ const SignUpForm = () => {
                 emailAddress: payload.emailAddress,
                 phoneNumber: payload.phoneNumber,
                 password: payload.password
-            }
+            };
+
+            // Store form data in cookiesStore
+            setCookie('firstName', payload.firstName);
+            setCookie('lastName', payload.lastName);
+            setCookie('phoneNumber', payload.phoneNumber);
+            setCookie('password', payload.password);
+            setCookie('userType', userType);
 
             if (userType === 'Service Provider') {
                 await serviceProviderSignUpApiCall(data).unwrap();
                 setIsLoading(false);
-                router.push(`/auth/verify-email?${params}`);
+                router.push(`/auth/verify-email`);
                 return;
             }
 
             if (userType === 'Customer') {
                 await customerSignUpApiCall(data).unwrap();
                 setIsLoading(false);
-                router.push(`/auth/verify-email?${params}`);
+                router.push(`/auth/verify-email`);
                 return;
             }
 
@@ -79,7 +92,7 @@ const SignUpForm = () => {
     };
 
     return (
-        <section className='w-full lg:w-[554px] mx-auto max-lg:p-10'>
+        <section className='w-full lg:w-[554px] mx-auto max-lg:p-5'>
             <div className='space-y-6 lg:space-y-10 w-full max-lg:container lg:max-w-[550px] lg:px-4'>
                 <div className="space-y-4 !font-clashDisplay">
                     <h1 className='text-2xl lg:text-4xl text-status-darkViolet font-medium'>
@@ -142,7 +155,7 @@ const SignUpForm = () => {
                                     placeholder="**********"
                                     className=" placeholder:text-dark"
                                     rules={["required", "password"]}
-                                    />
+                                />
                                 <Input
                                     label='Confirm Password'
                                     name='confirmPassword'
@@ -177,12 +190,12 @@ const SignUpForm = () => {
                                         className="text-primary underline underline-offset-2"
                                     >
                                         {" "}
-                                        Privacy 
+                                        Privacy
                                     </Link>
                                 </label>
                             </div>
                             {error && (
-                                <div className="text-red-500 text-xl text-center font-bold my-5">{error}</div>
+                                <div className="text-status-error-100 text-base text-center font-semibold my-5">{error}</div>
                             )}
                         </div>
                         <div className='pt-10 space-y-5 max-lg:flex max-lg:flex-col max-lg:items-center max-lg:justify-center'>
@@ -193,7 +206,7 @@ const SignUpForm = () => {
                                 className='w-[170px] rounded-full font-normal'>
                                 Create account
                             </Button>
-                            <h3 className="text-xl font-bold text-[#190E3F]">Have an existing account?
+                            <h3 className="text-xl font-bold text-[#190E3F] text-center">Have an existing account?
                                 <Link href="/auth/login" className="text-primary"> Login</Link>
                             </h3>
                             {/* <div className="border w-full" />
