@@ -5,6 +5,9 @@ import icon1 from "../../../../public/assets/images/homepage/welcomeAboard/welco
 import icon2 from "../../../../public/assets/images/homepage/welcomeAboard/welcomeIcon2.png";
 import icon3 from "../../../../public/assets/images/homepage/welcomeAboard/welcomeIcon3.png";
 import styles from "./styles.module.css";
+import { BiArrowFromRight, BiArrowToRight } from "react-icons/bi";
+import { BsArrowRight } from "react-icons/bs";
+import { FaArrowRight } from "react-icons/fa6";
 
 const WelcomeAboard = () => {
     return (
@@ -85,8 +88,6 @@ const WelcomeAboard = () => {
                             </ul>
                         </div>
 
-                        {/* <div className="flex flex-col space-y-3 rounded-xl px-8 py-4 text-white transition-opacity duration-700 hover:bg-[#FE9B07]">
-               */}
                         <div className="flex flex-col space-y-3 rounded-xl px-8 py-4 text-white transition-all duration-500 hover:bg-[#FE9B07] hover:transform hover:translate-x-2 hover:translate-y-2">
 
                             <h1 className="lg:text-[40px] text-[24px] font-bold">03.</h1>
@@ -110,6 +111,7 @@ const WelcomeAboard = () => {
                         </div>
                     </div>
                 </div>
+                <p className="text-[#FE9B07] text-[16px]  font-bold md:px-8 flex items-center space-x-2 lg:mt-0 mt-4"><span>Learn how TASKhub works</span> <span> <FaArrowRight size={15}/></span></p>
             </div>
         </div>
     );
