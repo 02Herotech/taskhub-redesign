@@ -82,48 +82,6 @@ const HeroSection = () => {
   const customerParams = new URLSearchParams({ userType: "customer" });
   const serviceProviderParams = new URLSearchParams({ userType: "serviceProvider" });
 
-
-  const handlePostTask = async (e: { preventDefault: () => void }) => {
-    e.preventDefault();
-    try {
-      const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/auth/logout`,
-      );
-      console.log("Sign Out: ", response);
-
-      if (response.status === 200) {
-        await signOut({
-          redirect: false,
-        });
-        router.push("/auth");
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const handleBecomeSP = async (e: { preventDefault: () => void }) => {
-    e.preventDefault();
-
-    try {
-      const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/auth/logout`,
-      );
-
-      await signOut({
-        redirect: false,
-      });
-
-      console.log("Sign Out: ", response);
-
-      if (response.status === 200) {
-        router.push("/auth");
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
   // Image1 transition
   const images1 = [heroImage1, heroImage1a];
   const currentImageIndex1 = useImageTransition(images1, 3000);
@@ -191,13 +149,11 @@ const HeroSection = () => {
                   className=" rounded-[50px] bg-primary xl:text-[16px]
            xl:px-7 lg:px-3 py-2 text-[#EBE9F4] hover:bg-[#25135f] w-[250px] xl:w-[190px] lg:w-[155px]  "
                 >
-                  {/* {session?.user?.user?.roles[0] === "SERVICE_PROVIDER" ? (
-                    <p onClick={handlePostTask}>Post your first task</p>
-                  ) : ( */}
+                
                   <Link href={`/auth/sign-up?${customerParams.toString()}`}>
                       Post your first task
                     </Link>
-                  {/* )}   */}
+                
                 </button>
               </div>
 
@@ -214,7 +170,7 @@ const HeroSection = () => {
                       <p className="">Become a Service Provider</p>
 
                     </Link>
-                  {/* )} */}
+             
                 </button>
               </div>
 

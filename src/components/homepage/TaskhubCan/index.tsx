@@ -87,6 +87,7 @@ const TaskhubCan = () => {
                             className="text-bold rounded-[50px] bg-primary lg:text-[20px] text-[16px]
            px-7 py-2 text-[#EBE9F4] hover:bg-[#25135f] "
                         >
+                            
                             {session?.user?.user?.roles[0] === "SERVICE_PROVIDER" ? (
                                 <p onClick={handlePostTask}>Start posting task for free</p>
                             ) : (
