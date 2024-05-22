@@ -25,12 +25,12 @@ const Navigation = () => {
 
   const handleLogout = async () => {
     try {
-      router.push("/");
       await signOut();
-
+      
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_API_URL}/auth/logout`,
       );
+      router.push("/marketplace");
     } catch (error: any) {
       console.log(error);
     }
@@ -112,13 +112,13 @@ const Navigation = () => {
                 })}
               </ul>
               <div className="hidden items-center space-x-5 lg:flex">
-                <div className="relative">
+                <div className="relative cursor-pointer">
                   <BsChat className="size-[22px] text-black" />
                   <div className="absolute -right-1 -top-1 flex size-5 items-center justify-center rounded-full bg-tc-orange text-xs text-white">
                     2
                   </div>
                 </div>
-                <div className="relative">
+                <div className="relative cursor-pointer">
                   <IoMdNotificationsOutline className="size-[24px] text-black" />
                   <div className="absolute -right-1 -top-1 flex size-5 items-center justify-center rounded-full bg-tc-orange text-xs text-white">
                     {notificationLength}
@@ -126,7 +126,7 @@ const Navigation = () => {
                 </div>
                 <Dropdown
                   trigger={() => (
-                    <div className="flex items-center space-x-1">
+                    <div className="flex items-center space-x-1 cursor-pointer">
                       <img
                         src={profileImage || PlaceholderImage.src}
                         alt="Profile"

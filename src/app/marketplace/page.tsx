@@ -264,8 +264,6 @@ const MareketPlace = () => {
     }, [filterData]);
 
 
-
-
     return (
         <main className="font-satoshi">
 
@@ -288,8 +286,6 @@ const MareketPlace = () => {
                     categoryHeader={categoryHeader}
 
                 />
-
-
                 {
                     viewMore ?
 
