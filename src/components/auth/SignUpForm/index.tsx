@@ -5,12 +5,11 @@ import Input from "@/components/global/Input";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import PhoneInputWithCountry from "react-phone-number-input/react-hook-form";
 import "react-phone-number-input/style.css";
 import { useCustomerSignupMutation, useServiceProviderSignupMutation } from "@/services/auth";
-import { setCookie } from 'cookies-next';
-import { getCookie } from 'cookies-next';
+import { setCookie, getCookie } from 'cookies-next';
 
 type SignUpRequest = {
     emailAddress: string;
@@ -29,6 +28,8 @@ const SignUpForm = () => {
 
     const searchParams = useSearchParams();
     const userType = searchParams.get('userType') || getCookie('userType');
+
+    console.log(getCookie('firstName'))
 
     // Read cookies and set default values
     const methods = useForm({
@@ -61,24 +62,24 @@ const SignUpForm = () => {
             };
 
             // Store form data in cookiesStore
-            setCookie('firstName', payload.firstName);
-            setCookie('lastName', payload.lastName);
-            setCookie('phoneNumber', payload.phoneNumber);
-            setCookie('emailAddress', payload.emailAddress);
-            setCookie('password', payload.password);
+            setCookie('firstName', payload.firstName, { maxAge: 60 * 2 });
+            setCookie('lastName', payload.lastName, { maxAge: 60 * 2 });
+            setCookie('phoneNumber', payload.phoneNumber, { maxAge: 60 * 2 });
+            setCookie('emailAddress', payload.emailAddress, { maxAge: 60 * 2 });
+            setCookie('password', payload.password, { maxAge: 60 * 2 });
             setCookie('userType', userType);
 
             if (userType === 'Service Provider') {
                 await serviceProviderSignUpApiCall(data).unwrap();
                 setIsLoading(false);
-                router.push(`/auth/verify-email`);
+                router.push(`/auth/verify-email?email=${payload.emailAddress}`);
                 return;
             }
 
             if (userType === 'Customer') {
                 await customerSignUpApiCall(data).unwrap();
                 setIsLoading(false);
-                router.push(`/auth/verify-email`);
+                router.push(`/auth/verify-email?email=${payload.emailAddress}`);
                 return;
             }
 
