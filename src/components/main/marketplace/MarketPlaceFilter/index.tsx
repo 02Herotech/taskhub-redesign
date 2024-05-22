@@ -1,199 +1,317 @@
-import { FiSearch } from "react-icons/fi"
-import { IoClose } from "react-icons/io5"
-import Link from "next/link"
+import { FiSearch } from "react-icons/fi";
+import { IoClose } from "react-icons/io5";
+import Link from "next/link";
+import { BsTriangle, BsTriangleFill } from "react-icons/bs";
+import { useEffect, useState } from "react";
+import {
+  fetchAllMarketplaseCategories,
+  fetchMarketplaceSubCategoryById,
+} from "@/lib/marketplace";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/store";
+import {
+  updateCategories,
+  updateFilterStatus,
+} from "@/store/Features/marketplace";
 
 interface props {
-    selectedCategory: any
-    selectedSubCategory: any
-    location: any
-    pricing: any
-    search1: any
-    handleCategoryChange: (event: React.ChangeEvent<HTMLSelectElement>) => void;
-    handleSubCategoryChange: (event: React.ChangeEvent<HTMLSelectElement>) => void;
-    handleLocation: (event: React.ChangeEvent<HTMLSelectElement>) => void;
-    handlePricing: (event: React.ChangeEvent<HTMLSelectElement>) => void;
-    handleSearch1: (event: React.ChangeEvent<HTMLInputElement>) => void;
-    handleClearSearch: () => void
-    categories: any
-    categoryHeader: any
-
+  search1: any;
+  handleSearch1: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  handleClearSearch: () => void;
+  categoryHeader: any;
 }
-
 
 const MarketPlaceFilter = ({
-    selectedCategory,
-    selectedSubCategory,
-    location,
-    pricing,
-    search1,
-    handleCategoryChange,
-    handleSubCategoryChange,
-    handleLocation,
-    handlePricing,
-    handleSearch1,
-    handleClearSearch,
-    categories,
-    categoryHeader
+  search1,
+  handleSearch1,
+  handleClearSearch,
+  categoryHeader,
 }: props) => {
+  const dispatch = useDispatch();
+  const {
+    currentFilterStatus: { category, subCategory, location, pricing },
+    categories,
+  } = useSelector((state: RootState) => state.market);
 
-    const handleSubmit = (e: any) => {
-        e.preventDefault
-    }
+  const [isDropdownOpen, setIsDropdownOpen] = useState({
+    isOpened: false,
+    category: "",
+  });
 
-    const handleReload = () => {
-        window.location.reload();
+  const [subCategories, setSubCategories] = useState<SubCategoryType[]>([]);
+  const handleSubmit = (e: any) => {
+    e.preventDefault;
+  };
+
+  const handleReload = () => {
+    window.location.reload();
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const categoryData: CategoryType[] =
+        await fetchAllMarketplaseCategories();
+      dispatch(updateCategories(categoryData));
     };
+    fetchData();
+    // eslint-disable-next-line
+  }, []);
 
-    return (
-        <div className="flex flex-col space-y-16 my-12">
-            <div className=" flex flex-col space-y-8">
+  const handleFetchSubCategory = async (
+    id: number,
+    category: string,
+    title: string,
+  ) => {
+    dispatch(updateFilterStatus({ title, value: category }));
+    const subcategoryData: SubCategoryType[] =
+      await fetchMarketplaceSubCategoryById(id);
+    setSubCategories(subcategoryData);
+    handleShowDropdown(title);
+  };
 
-                <div className="flex flex-col space-y-2">
-                    <h1 className="text-[#221354] font-bold text-[30px] md:text-[39px]">Our Various Category</h1>
-                    <p className="text-[#221354] text-[16px] md:text-[20px] font-[400] cursor-pointer">Find the help you need on Taskhub</p>
-                </div>
+  const handleFilterDataBySubcategory = (
+    id: number,
+    subCategory: string,
+    title: string,
+  ) => {
+    dispatch(updateFilterStatus({ title, value: subCategory }));
+    handleShowDropdown(title);
+  };
 
-                <div className="flex lg:hidden justify-center">
-                    <select
-                        name="filterBy"
-                        id="filterBy"
-                        className="border-[1.5px] border-[#381F8C] rounded-3xl bg-[#F1F1F2] text-[16px] font-[700] text-[#381F8C] text-center focus:outline-none w-[180px] py-4 px-8"
-                    >
-                        <option value="" className="rounded-3xl">
-                            Filter By
-                        </option>
-                    </select>
-                </div>
+  const handleFilterbyLocation = (location: string, title: string) => {
+    dispatch(updateFilterStatus({ title, value: location }));
+    handleShowDropdown(title);
+  };
 
-                <div className="hidden lg:block">
-                    <div className="flex text-[11px] space-x-2 ">
+  const handleShowDropdown = (category: string) => {
+    if (isDropdownOpen.category === category && isDropdownOpen.isOpened) {
+      setIsDropdownOpen((prev) => ({ ...prev, isOpened: false, category }));
+    } else {
+      setIsDropdownOpen((prev) => ({ ...prev, isOpened: true, category }));
+    }
+  };
 
-                        <p className="bg-[#381F8C] text-white py-2 px-4 rounded-3xl text-[16px] font-[700] cursor-pointer" onClick={handleReload}>All</p>
+  const locationData = [
+    "Western Australia",
+    "Northern Territory",
+    "South Australia",
+    "Queensland",
+    "New South Wales",
+    "Victoria",
+    "Tasmania",
+    "Australian Capital Territory",
+  ];
 
-                        <select
-                            name="category"
-                            id="category"
-                            value={selectedCategory}
-                            onChange={handleCategoryChange}
-                            className="border-[1.5px] border-[#381F8C] rounded-3xl bg-[#F1F1F2] text-[16px] font-[700] text-[#381F8C] text-center focus:outline-none w-[180px]"
-                        >
-                            <option value="" disabled>
-                                Category
-                            </option>
-                            {Object.keys(categories).map((categoryKey) => (
-                                <option key={categoryKey} value={categoryKey}>
-                                    {categories[categoryKey].name}
-                                </option>
-                            ))}
-                        </select>
+  return (
+    <div className="my-12 flex flex-col space-y-16">
+      <div className=" flex flex-col space-y-8">
+        <div className="flex flex-col space-y-2">
+          <h1 className="text-2xl font-bold text-violet-darkHover md:text-3xl">
+            Our Various Category
+          </h1>
+          <p className="cursor-pointer text-base font-[400] text-violet-darkHover md:text-lg">
+            Find the help you need on Taskhub
+          </p>
+        </div>
 
-                        <select
-                            name="subCategory"
-                            id="subCategory"
-                            value={selectedSubCategory}
-                            onChange={handleSubCategoryChange}
-                            className="border-[1.5px] border-[#381F8C] rounded-3xl bg-[#F1F1F2] text-[16px] font-[700] text-[#381F8C] text-center focus:outline-none w-[180px]"
-                        >
-                            <option value="" disabled>
-                                Subcategory
-                            </option>
+        <div className="flex justify-center lg:hidden">
+          <select
+            name="filterBy"
+            id="filterBy"
+            className="w-[180px] rounded-3xl border-[1.5px] border-[#381F8C] bg-[#F1F1F2] px-8 py-4 text-center text-[16px] font-[700] text-[#381F8C] focus:outline-none"
+          >
+            <option value="" className="rounded-3xl">
+              Filter By
+            </option>
+          </select>
+        </div>
 
-                            {categories[selectedCategory]?.subcategories.map(
-                                (subCategory: any, index: any) => (
-                                    <option key={index} value={subCategory}>
-                                        {subCategory}
-                                    </option>
-                                )
-                            )}
-                        </select>
+        <div className="hidden lg:block">
+          <div className="flex space-x-2 text-xs lg:space-x-6 ">
+            <button
+              className="cursor-pointer rounded-3xl bg-violet-normal px-4 py-2 text-base  font-bold text-white"
+              onClick={handleReload}
+            >
+              All
+            </button>
 
-                        <select
-                            name="location"
-                            id="location"
-                            value={location}
-                            onChange={handleLocation}
-                            className="border-[1.5px] border-[#381F8C] rounded-3xl bg-[#F1F1F2] text-[16px] font-[700] text-[#381F8C] text-center focus:outline-none w-[180px]"
-                        >
-                            <option value="" disabled>
-                                Location
-                            </option>
-                            <option value="Western Australia">Western Australia</option>
-                            <option value="Northern Territory">Northern Territory</option>
-                            <option value="South Australia">South Australia</option>
-                            <option value="Queensland">Queensland</option>
-                            <option value="New South Wales">New South Wales</option>
-                            <option value="Victoria">Victoria</option>
-                            <option value="Tasmania">Tasmania</option>
-                            <option value="Australian Capital Territory">
-                                Australian Capital Territory
-                            </option>
-
-                        </select>
-
-                        <select
-                            name="pricing"
-                            id="pricing"
-                            value={pricing}
-                            onChange={handlePricing}
-                            className="border-[1.5px] border-[#381F8C] rounded-3xl bg-[#F1F1F2] text-[16px] font-[700] text-[#381F8C] text-center focus:outline-none w-[150px]"
-                        >
-                            <option value="" disabled>
-                                Pricing
-                            </option>
-                            <option value={`${500}, ${1000}`}>
-                                $500 -$1000
-                            </option>
-                            <option value="1000">
-                                $1000
-                            </option>
-                            <option value="2000">
-                                $2000
-                            </option>
-
-                        </select>
-                    </div>
-                </div>
+            {/* Category */}
+            <div className="relative">
+              <button
+                className=" flex items-center gap-2 rounded-3xl border border-violet-normal  bg-violet-light px-4 py-2 text-base font-bold text-violet-normal transition-colors duration-300 hover:bg-violet-200 "
+                onClick={() => handleShowDropdown("category")}
+              >
+                {category === "" ? "Category" : category}
+                <span>
+                  <BsTriangleFill
+                    fill="rgb(56 31 140)"
+                    className="size-2 rotate-[60deg] text-violet-normal"
+                  />
+                </span>
+              </button>
+              <div
+                className={`small-scrollbar absolute top-[calc(100%+1rem)] flex max-h-0 min-w-full flex-col rounded-md bg-violet-50 transition-all duration-300 ${isDropdownOpen.category === "category" && isDropdownOpen.isOpened ? "max-h-64 overflow-y-auto border border-slate-200 " : "max-h-0  overflow-hidden "} `}
+              >
+                {categories.map((item) => (
+                  <button
+                    className="whitespace-nowrap px-8 py-3 text-left text-base text-violet-normal transition-colors duration-300 hover:bg-violet-100 "
+                    key={item.id}
+                    onClick={() =>
+                      handleFetchSubCategory(
+                        item.id,
+                        item.categoryName,
+                        "category",
+                      )
+                    }
+                  >
+                    {item.categoryName}
+                  </button>
+                ))}
+              </div>
             </div>
 
-            <div className="flex flex-col lg:flex-row w-full lg:justify-between lg:items-center my-10  space-y-10">
-                <div className="flex flex-col space-y-2 w-[350px] md:w-full lg:w-full">
-                    <h1 className="font-bold md:text-[39px] text-[30px]">{categoryHeader ? categoryHeader : "Get a Tasker Directly"}</h1>
-                    <p className="text-[##381F8C] md:text-[25px] text-[20px] font-[400]">{categoryHeader ? `Here are few of our ${categoryHeader}` : "Browse through our various services"}</p>
-                </div>
+            {/* SubCategory */}
+            <div className="relative">
+              <button
+                className=" flex items-center gap-2 rounded-3xl border border-violet-normal  bg-violet-light px-4 py-2 text-base font-bold text-violet-normal transition-colors duration-300 hover:bg-violet-200 "
+                onClick={() => handleShowDropdown("sub-category")}
+              >
+                {subCategory === "" ? "Subcategory" : subCategory}
 
-
-                <form onSubmit={handleSubmit} className="flex items-center w-full lg:justify-end justify-center ">
-
-                    <div className="flex items-center w-full md:w-[400px] border-[1.5px] rounded-xl border-[#C1BADB] px-3">
-
-                        <FiSearch size={15} className="text-[#C1BADB]" />
-
-                        <input
-                            type="text"
-                            value={search1}
-                            className=" w-full focus:border-white focus:outline-none px-2 py-4 text-[16px]  "
-                            onChange={handleSearch1}
-                            placeholder="Search"
-                        />
-
-                        {search1 && (
-
-                            <IoClose size={15} className=" cursor-pointer text-grey6 hover:text-[#C1BADB] " onClick={handleClearSearch} />
-
-                        )}
-                    </div>
-
+                <span>
+                  <BsTriangleFill
+                    fill="rgb(56 31 140)"
+                    className="size-2 rotate-[60deg] text-violet-normal"
+                  />
+                </span>
+              </button>
+              <div
+                className={`small-scrollbar absolute top-[calc(100%+1rem)] flex max-h-0 min-w-full flex-col rounded-md bg-violet-50 transition-all duration-300 ${isDropdownOpen.category === "sub-category" && isDropdownOpen.isOpened ? "max-h-64 overflow-y-auto border border-slate-200 " : "max-h-0  overflow-hidden "} `}
+              >
+                {category === "" ? (
+                  <p className="cursor-default whitespace-nowrap px-8 py-3 text-left text-base text-violet-normal">
+                    Select A Category
+                  </p>
+                ) : (
+                  subCategories.map((item) => (
                     <button
-                        type="submit"
-                        className="bg-primary hover:bg-status-darkViolet rounded-xl py-5 px-5 text-[12px] ml-2 focus:outline-none text-white"
+                      key={item.id}
+                      className="whitespace-nowrap px-8 py-3 text-left text-base text-violet-normal transition-colors duration-300 hover:bg-violet-100 "
+                      onClick={() =>
+                        handleFilterDataBySubcategory(
+                          item.id,
+                          item.name,
+                          "sub-category",
+                        )
+                      }
                     >
-                        <FiSearch size={20} />
+                      {item.name}
                     </button>
-                </form>
-
+                  ))
+                )}
+              </div>
             </div>
-        </div >
-    );
-}
+
+            {/* location */}
+            <div className="relative">
+              <button
+                className=" flex items-center gap-2 rounded-3xl border border-violet-normal  bg-violet-light px-4 py-2 text-base font-bold text-violet-normal transition-colors duration-300 hover:bg-violet-200 "
+                onClick={() => handleShowDropdown("location")}
+              >
+                {location === "" ? "Location" : location}
+                <span>
+                  <BsTriangleFill
+                    fill="rgb(56 31 140)"
+                    className="size-2 rotate-[60deg] text-violet-normal"
+                  />
+                </span>
+              </button>
+              <div
+                className={`small-scrollbar absolute top-[calc(100%+1rem)] flex max-h-0 min-w-full flex-col rounded-md bg-violet-50 transition-all duration-300 ${isDropdownOpen.category === "location" && isDropdownOpen.isOpened ? "max-h-64 overflow-y-auto border border-slate-200 " : "max-h-0  overflow-hidden "} `}
+              >
+                {locationData.map((item, index) => (
+                  <button
+                    className="whitespace-nowrap px-8 py-3 text-left text-base text-violet-normal transition-colors duration-300 hover:bg-violet-100 "
+                    key={index}
+                    onClick={() => handleFilterbyLocation(item, "location")}
+                  >
+                    {item}
+                  </button>
+                ))}
+              </div>
+            </div>
+            {/* Pricing */}
+            <div className="relative">
+              <button
+                className="flex items-center gap-2 rounded-3xl border border-violet-normal  bg-violet-light px-4 py-2 text-base font-bold text-violet-normal transition-colors duration-300 hover:bg-violet-200 "
+                onClick={() => handleShowDropdown("pricing")}
+              >
+                Pricing
+                <span>
+                  <BsTriangleFill
+                    fill="rgb(56 31 140)"
+                    className="size-2 rotate-[60deg] text-violet-normal"
+                  />
+                </span>
+              </button>
+              <div
+                className={`small-scrollbar absolute top-[calc(100%+1rem)] flex max-h-0 min-w-full flex-col rounded-md bg-violet-50 transition-all duration-300 ${isDropdownOpen.category === "pricing" && isDropdownOpen.isOpened ? "max-h-64 overflow-y-auto border border-slate-200 " : "max-h-0  overflow-hidden "} `}
+              >
+                <button className="whitespace-nowrap px-8 py-3 text-left text-base text-violet-normal transition-colors duration-300 hover:bg-violet-100 ">
+                  Slider
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="my-10 flex w-full flex-col space-y-10 lg:flex-row lg:items-center  lg:justify-between">
+        <div className="flex w-[350px] flex-col space-y-2 md:w-full lg:w-full">
+          <h1 className="text-xl font-bold text-violet-dark md:text-3xl">
+            {categoryHeader ? categoryHeader : "Get a Tasker Directly"}
+          </h1>
+          <p className="text-base font-[400] text-[##381F8C] text-violet-darkHover md:text-lg">
+            {categoryHeader
+              ? `Here are few of our ${categoryHeader}`
+              : "Browse through our various services"}
+          </p>
+        </div>
+
+        <form
+          onSubmit={handleSubmit}
+          className="flex w-full items-center justify-center lg:justify-end "
+        >
+          <div className="flex w-full items-center rounded-xl border-[1.5px] border-[#C1BADB] px-3 md:w-[400px]">
+            <FiSearch size={15} className="text-[#C1BADB]" />
+
+            <input
+              type="text"
+              value={search1}
+              className=" w-full px-2 py-4 text-[16px] focus:border-white focus:outline-none  "
+              onChange={handleSearch1}
+              placeholder="Search"
+            />
+
+            {search1 && (
+              <IoClose
+                size={15}
+                className=" text-grey6 cursor-pointer hover:text-[#C1BADB] "
+                onClick={handleClearSearch}
+              />
+            )}
+          </div>
+
+          <button
+            type="submit"
+            className="ml-2 rounded-xl bg-primary px-5 py-5 text-[12px] text-white hover:bg-status-darkViolet focus:outline-none"
+          >
+            <FiSearch size={20} />
+          </button>
+        </form>
+      </div>
+    </div>
+  );
+};
 
 export default MarketPlaceFilter;
