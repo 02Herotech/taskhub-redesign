@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Head from "next/head";
 import Image from "next/image";
@@ -22,20 +22,23 @@ import { GrFormCheckmark } from "react-icons/gr";
 
 interface FormData {
   lisitingTitle: string;
-  availability: string;
   listingDescription: string;
-  planDetails: string;
-  planDetails1: string;
-  planDetails2: string;
-  taskImage: File | defaultImage | null;
-  taskImage1?: File | defaultImage | null;
-  taskImage2?: File | defaultImage | null;
-  taskImage3?: File | defaultImage | null;
+  planOneDescription: string;
+  planTwoDescription: string;
+  planThreeDescription: string;
+  image1: File | defaultImage | null;
+  image2?: File | defaultImage | null;
+  image3?: File | defaultImage | null;
+  image4?: File | defaultImage | null;
   taskType: string;
-  price: string;
-  price1: string;
-  price2: string;
-  userAddress: string[];
+  planOnePrice: string;
+  planTwoPrice: string;
+  planThreePrice: string;
+  availableDays: string[];
+  suburb: string;
+  postCode: string;
+  state: string;
+  available: boolean;
   categoryId: number | null;
   subCategoryId: number | null;
 }
@@ -65,23 +68,28 @@ type defaultImage = string;
 const ProvideService: React.FC = () => {
   const session = useSession();
   const token = session?.data?.user.accessToken;
+  const id = session?.data?.user.user.id;
+  const authenticated = session?.data?.user.user.enabled;
   const [currentPage, setCurrentPage] = useState(1);
   const [task, setTask] = useState<FormData>({
     lisitingTitle: "",
-    availability: "",
     listingDescription: "",
-    planDetails: "",
-    planDetails1: "",
-    planDetails2: "",
-    taskImage: null,
-    taskImage1: null,
-    taskImage2: null,
-    taskImage3: null,
+    planOneDescription: "",
+    planTwoDescription: "",
+    planThreeDescription: "",
+    image1: null,
+    image2: null,
+    image3: null,
+    image4: null,
     taskType: "",
-    userAddress: [],
-    price: "",
-    price1: "",
-    price2: "",
+    planOnePrice: "",
+    planTwoPrice: "",
+    planThreePrice: "",
+    availableDays: [],
+    suburb: "",
+    postCode: "",
+    state: "",
+    available: true,
     categoryId: null,
     subCategoryId: null,
   });
@@ -105,6 +113,8 @@ const ProvideService: React.FC = () => {
   const [postalCodeData, setPostalCodeData] = useState<PostalCodeData[]>([]);
   const [items, setItems] = useState<Item[]>([]);
   const [subcategories, setSubcategories] = useState<Subcategory[]>([]);
+  const [selectedDay, setSelectedDay] = useState("");
+  const [selectedDays, setSelectedDays] = useState<string[]>([]);
 
   useEffect(() => {
     const fetchPostalCodeData = async () => {
@@ -175,10 +185,10 @@ const ProvideService: React.FC = () => {
 
   const validateField1 = () => {
     const error: any = {};
-    if (!task.planDetails || !task.planDetails1 || task.planDetails2) {
+    if (!task.planOneDescription) {
       error.planDetails = "Please write down details about your plan";
     }
-    if (!task.price || !task.price1 || !task.price2) {
+    if (!task.planOnePrice) {
       error.price = "Please write down your budget price";
     }
     if (activeButtonIndex === 0) {
@@ -196,10 +206,10 @@ const ProvideService: React.FC = () => {
 
   const validateField2 = () => {
     const err: any = {};
-    if (!task.availability) {
-      err.availability = "Please write down details about your availability";
+    if (!selectedDays) {
+      err.availableDays = "Please select an available day";
     }
-    if (!task.taskImage) {
+    if (!task.image1) {
       err.image = "Please upload an Image";
     }
 
@@ -215,9 +225,7 @@ const ProvideService: React.FC = () => {
     setTask({
       ...task,
       categoryId: selectedId,
-      subCategoryId: null,
     });
-    setSelectedSubCategory(null);
     setSubcategories([]);
   };
 
@@ -226,9 +234,10 @@ const ProvideService: React.FC = () => {
   ) => {
     const selectedId = parseInt(event.target.value);
     setSelectedSubCategory(selectedId);
+    console.log(selectedCategory);
     setTask({
       ...task,
-      subCategoryId: selectedSubCategory ? selectedId : null,
+      subCategoryId: selectedCategory,
     });
   };
 
@@ -250,18 +259,32 @@ const ProvideService: React.FC = () => {
     setSelectedCity(selectedValue);
   };
 
+  const handleTickChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const value = event.target.value;
+    if (value && !selectedDays.includes(value)) {
+      setSelectedDays([...selectedDays, value]);
+    }
+    setSelectedDay("");
+  };
+
+  const handleRemoveDay = (day: any) => {
+    setSelectedDays(selectedDays.filter((d) => d !== day));
+  };
+
   const nextPage = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    setCurrentPage(currentPage + 1);
     if (validateFields()) {
-      setCurrentPage(currentPage + 1);
+      // setCurrentPage(currentPage + 1);
       console.log(selectedCategory, selectedSubCategory);
     }
   };
 
   const nextPages = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    setCurrentPage(currentPage + 1);
     if (validateField1()) {
-      setCurrentPage(currentPage + 1);
+      // setCurrentPage(currentPage + 1);
     }
   };
 
@@ -283,16 +306,16 @@ const ProvideService: React.FC = () => {
     if (uploadedFile) {
       switch (imageIndex) {
         case 1:
-          setTask({ ...task, taskImage1: uploadedFile });
+          setTask({ ...task, image2: uploadedFile });
           break;
         case 2:
-          setTask({ ...task, taskImage2: uploadedFile });
+          setTask({ ...task, image3: uploadedFile });
           break;
         case 3:
-          setTask({ ...task, taskImage3: uploadedFile });
+          setTask({ ...task, image4: uploadedFile });
           break;
         default:
-          setTask({ ...task, taskImage: uploadedFile });
+          setTask({ ...task, image1: uploadedFile });
       }
     }
   };
@@ -300,28 +323,22 @@ const ProvideService: React.FC = () => {
   const getImageURL = (imageIndex: number) => {
     switch (imageIndex) {
       case 1:
-        return task.taskImage1 instanceof File
-          ? URL.createObjectURL(task.taskImage1)
+        return task.image2 instanceof File
+          ? URL.createObjectURL(task.image2)
           : "";
       case 2:
-        return task.taskImage2 instanceof File
-          ? URL.createObjectURL(task.taskImage2)
+        return task.image3 instanceof File
+          ? URL.createObjectURL(task.image3)
           : "";
       case 3:
-        return task.taskImage3 instanceof File
-          ? URL.createObjectURL(task.taskImage3)
+        return task.image4 instanceof File
+          ? URL.createObjectURL(task.image4)
           : "";
       default:
-        return task.taskImage instanceof File
-          ? URL.createObjectURL(task.taskImage)
+        return task.image1 instanceof File
+          ? URL.createObjectURL(task.image1)
           : "";
     }
-  };
-
-  const validateImages = () => {
-    return (
-      task.taskImage || task.taskImage1 || task.taskImage2 || task.taskImage3
-    );
   };
 
   const imageURL = getImageURL(0);
@@ -332,12 +349,11 @@ const ProvideService: React.FC = () => {
   const calculateProgress = () => {
     const requiredFields = [
       task.listingDescription,
-      task.price,
+      task.planOnePrice,
       task.lisitingTitle,
-      task.availability,
-      task.planDetails,
-      task.taskImage,
-      task.price,
+      selectedDay,
+      task.planOneDescription,
+      task.image1,
       task.categoryId,
       task.subCategoryId,
     ];
@@ -351,7 +367,7 @@ const ProvideService: React.FC = () => {
       (value) => value !== "" && value !== null,
     ).length;
 
-    const totalFields = isOpen && activeButtonIndex === 0 ? 10 : 9;
+    const totalFields = isOpen && activeButtonIndex === 0 ? 9 : 8;
 
     return Math.round((filledFields / totalFields) * 100);
   };
@@ -362,86 +378,74 @@ const ProvideService: React.FC = () => {
     event.preventDefault();
     if (validateField2()) {
       try {
-        if (
-          !task.taskImage ||
-          !task.taskImage1 ||
-          !task.taskImage2 ||
-          !task.taskImage3
-        ) {
-          const defaultImage = "google-map.png";
-          setTask({ ...task, taskImage: defaultImage });
+        let finalTask = { ...task };
+
+        if (isOpen && activeButtonIndex === 1) {
+          const type = "REMOTE_SERVICE";
+          finalTask = { ...finalTask, taskType: type };
+        } else {
+          finalTask = {
+            ...finalTask,
+            taskType: "PHYSICAL_SERVICE",
+            suburb: selectedCity,
+            postCode: selectedCode,
+            state: "Queensland",
+          };
         }
+
+        if (!task.image2 || !task.image3 || !task.image4) {
+          const defaultImage = "google-map.png";
+          setTask({
+            ...task,
+            image2: defaultImage,
+            image3: defaultImage,
+            image4: defaultImage,
+          });
+        }
+
+        if (selectedDays) {
+          finalTask = { ...finalTask, availableDays: selectedDays };
+        }
+        console.log(finalTask);
+        await axios.post(
+          `https://smp.jacinthsolutions.com.au/api/v1/listing/create-listing?userId=${id}`,
+          finalTask,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "multipart/form-data",
+            },
+          },
+        );
         setTask({
           lisitingTitle: "",
-          availability: "",
           listingDescription: "",
-          planDetails: "",
-          planDetails1: "",
-          planDetails2: "",
-          taskImage: null,
-          taskImage1: null,
-          taskImage2: null,
-          taskImage3: null,
+          planOneDescription: "",
+          planTwoDescription: "",
+          planThreeDescription: "",
+          image1: "",
+          image2: "",
+          image3: "",
+          image4: "",
           taskType: "",
-          userAddress: [],
-          price: "",
-          price1: "",
-          price2: "",
+          planOnePrice: "",
+          planTwoPrice: "",
+          planThreePrice: "",
+          availableDays: [],
+          suburb: "",
+          postCode: "",
+          state: "",
+          available: true,
           categoryId: null,
           subCategoryId: null,
         });
         setIsSuccessPopupOpen(true);
-        console.log(task);
-      } catch {
-        console.log(error);
+      } catch (error) {
+        console.error("Error submitting form:", error);
+        setIsSuccessPopupOpen(false);
       }
     }
   };
-
-  // const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-  //   event.preventDefault();
-  //   if (validateField2()) {
-  //     try {
-  // if (isOpen && activeButtonIndex === 1) {
-  //         const type = "REMOTE_SERVICE";
-  //         finalTask = { ...finalTask, taskType: type };
-  //       } else {
-  //         const Address = [
-  //           selectedCode,
-  //           selectedCity,
-  //           postalCodeData[0].state.name,
-  //         ];
-  //         finalTask = {
-  //           ...finalTask,
-  //           taskType: "PHYSICAL_SERVICE",
-  //           userAddress: Address,
-  //         };
-  //       }
-
-  //       await axios.post(`https://smp.jacinthsolutions.com.au/api/v1/listing/create-listing?date=${date}&userId=${id}`, finalTask);
-  //       setTask({
-  //  lisitingTitle: "",
-  //   availability: "",
-  //   listingDescription: "",
-  //   planDetails: "",
-  //   taskImage: "",
-  //   taskImage1: "",
-  //   taskImage2: "",
-  //   taskImage3: "",
-  //   taskType: "",
-  //   taskAddress: [],
-  //   price: "",
-  //   categoryId: null,
-  //   subCategoryId: null,
-  //       });
-  //
-  //setIsSuccessPopupOpen(true)
-  //     } catch (error) {
-  //       console.error("Error submitting form:", error);
-  //setIsSuccessPopupOpen(false)
-  //     }
-  //   }
-  // };
 
   const renderPage = () => {
     switch (currentPage) {
@@ -453,6 +457,19 @@ const ProvideService: React.FC = () => {
                 className="w-full space-y-10 text-status-darkpurple"
                 onSubmit={nextPage}
               >
+                <div className="grid space-y-4">
+                  <label className="font-semibold">
+                    Write a short title that accurately describes your service.{" "}
+                  </label>
+                  <input
+                    type="text"
+                    name="lisitingTitle"
+                    value={task.lisitingTitle}
+                    onChange={handleChange}
+                    placeholder="Casual Babysitting"
+                    className="rounded-2xl bg-[#EBE9F4] p-3 text-[13px]  outline-none"
+                  />
+                </div>
                 <div className="relative grid space-y-4">
                   <label className="font-semibold">
                     Choose the best category for your listing.{" "}
@@ -498,20 +515,6 @@ const ProvideService: React.FC = () => {
                   <IoMdArrowDropdown className="absolute right-5 top-10 cursor-pointer text-status-purpleBase" />
                 </div>
 
-                <div className="grid space-y-4">
-                  <label className="font-semibold">
-                    Write a short title that accurately lisitingTitles your
-                    service.{" "}
-                  </label>
-                  <input
-                    type="text"
-                    name="lisitingTitle"
-                    value={task.lisitingTitle}
-                    onChange={handleChange}
-                    placeholder="Casual Babysitting"
-                    className="rounded-2xl bg-[#EBE9F4] p-3 text-[13px]  outline-none"
-                  />
-                </div>
                 <div className="lg:hidden">
                   <AiDesciption setTask={setTask} task={task} />
                 </div>
@@ -569,16 +572,16 @@ const ProvideService: React.FC = () => {
                         <textarea
                           className="h-[200px] rounded-2xl bg-[#EBE9F4] p-3 outline-none placeholder:font-semibold"
                           placeholder="Casual Babysitting"
-                          name="planDetails"
-                          value={task.planDetails}
+                          name="planOneDescription"
+                          value={task.planOneDescription}
                           onChange={handleChange}
                         ></textarea>
                         <label className="pl-2 font-medium">Price</label>
                         <div className="flex items-center space-x-2 pl-2">
                           <input
                             type="text"
-                            name="price"
-                            value={task.price}
+                            name="planOnePrice"
+                            value={task.planOnePrice}
                             onChange={handleChange}
                             placeholder="$500"
                             className="w-1/3 rounded-2xl bg-[#EBE9F4] p-3 text-[13px] outline-none"
@@ -598,8 +601,8 @@ const ProvideService: React.FC = () => {
                     } text-left outline-none placeholder:text-[#2A1769] hover:placeholder:text-white`}
                     name="physical"
                     onClick={() => handlePlan(1)}
-                    placeholder="Plan 2"
-                    value="Plan 2"
+                    placeholder="Plan 2  (Optional)"
+                    value="Plan 2  (Optional)"
                     readOnly
                   />
                   {isOpen && activePlanIndex === 1 && (
@@ -611,16 +614,16 @@ const ProvideService: React.FC = () => {
                         <textarea
                           className="h-[200px] rounded-2xl bg-[#EBE9F4] p-3 outline-none placeholder:font-bold"
                           placeholder="Casual Babysitting"
-                          name="planDetails1"
-                          value={task.planDetails1}
+                          name="planTwoDescription"
+                          value={task.planTwoDescription}
                           onChange={handleChange}
                         ></textarea>
                         <label className="pl-2 font-medium">Price</label>
                         <div className="flex items-center space-x-2 pl-2">
                           <input
                             type="text"
-                            name="price1"
-                            value={task.price1}
+                            name="planOnePrice"
+                            value={task.planOnePrice}
                             onChange={handleChange}
                             placeholder="$500"
                             className="w-1/3 rounded-2xl bg-[#EBE9F4] p-3 text-[13px] outline-none"
@@ -640,8 +643,8 @@ const ProvideService: React.FC = () => {
                     } text-left outline-none placeholder:text-[#2A1769] hover:placeholder:text-white`}
                     name="physical"
                     onClick={() => handlePlan(2)}
-                    placeholder="Plan 3"
-                    value="Plan 3"
+                    placeholder="Plan 3  (Optional)"
+                    value="Plan 3  (Optional)"
                     readOnly
                   />
                   {isOpen && activePlanIndex === 2 && (
@@ -653,16 +656,16 @@ const ProvideService: React.FC = () => {
                         <textarea
                           className="h-[200px] rounded-2xl bg-[#EBE9F4] p-3 outline-none placeholder:font-bold"
                           placeholder="Casual Babysitting"
-                          name="planDetails2"
-                          value={task.planDetails2}
+                          name="planThreeDescription"
+                          value={task.planThreeDescription}
                           onChange={handleChange}
                         ></textarea>
                         <label className="pl-2 font-medium">Price</label>
                         <div className="flex items-center space-x-2 pl-2">
                           <input
                             type="text"
-                            name="price2"
-                            value={task.price2}
+                            name="planThreePrice"
+                            value={task.planThreePrice}
                             onChange={handleChange}
                             placeholder="$500"
                             className="w-1/3 rounded-2xl bg-[#EBE9F4] p-3 text-[13px] outline-none"
@@ -786,23 +789,53 @@ const ProvideService: React.FC = () => {
         return (
           <div className="xs:w-[500px] mb-10 space-y-10 font-bold text-status-darkpurple lg:w-[700px]">
             <form onSubmit={handleSubmit} className="space-y-10">
-              <div className="grid space-y-3">
-                <label>Select your availabiliy</label>
-                <textarea
-                  className="h-full rounded-2xl bg-[#EBE9F4] p-3 outline-none lg:w-2/3"
-                  placeholder="e.g Mondays 5pm."
-                  name="availability"
-                  value={task.availability}
-                  onChange={handleChange}
-                  style={{ resize: "none", overflow: "hidden" }}
-                ></textarea>
+              <div className="relative mt-2">
+                <select
+                  value={selectedDay}
+                  onChange={handleTickChange}
+                  name="availableDays"
+                  className="h-10 w-1/2 appearance-none rounded-2xl border border-tc-gray bg-[#EBE9F4] px-3 py-1 text-[14px] text-status-purpleBase outline-none"
+                >
+                  <option value="">Available Days</option>
+                  <option value="MONDAY">Monday</option>
+                  <option value="TUESDAY">Tuesday</option>
+                  <option value="WEDNESDAY">Wednesday</option>
+                  <option value="THURSDAY">Thursday</option>
+                  <option value="FRIDAY">Friday</option>
+                  <option value="SATURDAY">Saturday</option>
+                  <option value="SUNDAY">Sunday</option>
+                </select>
+                <IoMdArrowDropdown className="absolute right-96 top-3 cursor-pointer text-status-purpleBase" />
+                <div className="mt-4 w-1/2 rounded-2xl border bg-[#EBE9F4] p-4">
+                  <h3 className="text-[14px] text-status-purpleBase">
+                    Selected Days:
+                  </h3>
+                  <ul>
+                    {selectedDays.map((day) => (
+                      <li
+                        key={day}
+                        className="flex justify-between text-[13px]"
+                        style={{ textTransform: "capitalize" }}
+                      >
+                        {day}
+                        <button
+                          type="button"
+                          onClick={() => handleRemoveDay(day)}
+                          className="ml-2 text-red-500"
+                        >
+                          Remove
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
               </div>
               <div className="space-y-3">
                 <label className="text-status-darkpurple">
                   Upload an Image <br /> This is the main image that would be
                   seen by customers
                 </label>
-                {task.taskImage ? (
+                {task.image1 ? (
                   <div className="flex items-end ">
                     <div className="relative flex h-48 w-1/2 items-center justify-center rounded-lg border-2 border-dashed border-[#EBE9F4] p-4 lg:w-2/5">
                       <img
@@ -825,7 +858,7 @@ const ProvideService: React.FC = () => {
                     <button
                       className="rounded-lg bg-tc-gray px-3 py-1 text-white"
                       onClick={() => {
-                        setTask({ ...task, taskImage: null });
+                        setTask({ ...task, image1: null });
                       }}
                     >
                       Remove
@@ -856,7 +889,7 @@ const ProvideService: React.FC = () => {
                 <p>Upload additional images of service.</p>
                 <div className="flex flex-col space-y-3 lg:flex-row lg:space-x-3 lg:space-y-0">
                   <div className=" space-y-3">
-                    {task.taskImage1 ? (
+                    {task.image2 ? (
                       <div className="relative flex items-end">
                         <div className="relative flex h-48 w-1/2 items-center justify-center rounded-lg border-2 border-dashed border-[#EBE9F4] p-4 lg:w-full">
                           <img
@@ -879,7 +912,7 @@ const ProvideService: React.FC = () => {
                         <button
                           type="button"
                           className="absolute right-2 top-2 text-red-500"
-                          onClick={() => setTask({ ...task, taskImage1: null })}
+                          onClick={() => setTask({ ...task, image2: null })}
                         >
                           <IoMdClose className="h-[24px] w-[24px] rounded-3xl border-2 border-[#5A5960]" />
                         </button>
@@ -905,7 +938,7 @@ const ProvideService: React.FC = () => {
                   </div>
 
                   <div className=" space-y-3">
-                    {task.taskImage2 ? (
+                    {task.image3 ? (
                       <div className="relative flex items-end ">
                         <div className="relative flex h-48 w-1/2 items-center justify-center rounded-lg border-2 border-dashed border-[#EBE9F4] p-4 lg:w-full">
                           <img
@@ -927,7 +960,7 @@ const ProvideService: React.FC = () => {
                         </div>
                         <button
                           className="absolute right-2 top-2 text-red-500"
-                          onClick={() => setTask({ ...task, taskImage2: null })}
+                          onClick={() => setTask({ ...task, image3: null })}
                         >
                           <IoMdClose className="h-[24px] w-[24px] rounded-3xl border-2 border-[#5A5960]" />
                         </button>
@@ -953,7 +986,7 @@ const ProvideService: React.FC = () => {
                   </div>
 
                   <div className=" space-y-3">
-                    {task.taskImage3 ? (
+                    {task.image4 ? (
                       <div className="relative flex items-end">
                         <div className="relative flex h-48 w-1/2 items-center justify-center rounded-lg border-2 border-dashed border-[#EBE9F4] p-4 lg:w-full">
                           <img
@@ -975,7 +1008,7 @@ const ProvideService: React.FC = () => {
                         </div>
                         <button
                           className="absolute right-2 top-2 text-red-500"
-                          onClick={() => setTask({ ...task, taskImage3: null })}
+                          onClick={() => setTask({ ...task, image4: null })}
                         >
                           <IoMdClose className="h-[24px] w-[24px] rounded-3xl border-2 border-[#5A5960]" />
                         </button>
@@ -1148,79 +1181,84 @@ const ProvideService: React.FC = () => {
           </div>
         </div>
       </div>
-      <Popup
-        isOpen={isSuccessPopupOpen}
-        onClose={() => {
-          setIsSuccessPopupOpen(false);
-        }}
-      >
-        <div className="p-5 lg:px-20">
-          <div className="relative grid items-center justify-center space-y-5">
-            <div className="flex justify-center text-[1px] text-white">
-              <GrFormCheckmark className="h-[50px] w-[50px] rounded-full bg-[#FE9B07] p-2 lg:h-[60px] lg:w-[60px]" />
+      <div>
+        {authenticated === true ? (
+          <Popup
+            isOpen={isSuccessPopupOpen}
+            onClose={() => {
+              setIsSuccessPopupOpen(false);
+            }}
+          >
+            <div className="p-5 lg:px-20">
+              <div className="relative grid items-center justify-center space-y-5">
+                <div className="flex justify-center text-[1px] text-white">
+                  <GrFormCheckmark className="h-[50px] w-[50px] rounded-full bg-[#FE9B07] p-2 lg:h-[60px] lg:w-[60px]" />
+                </div>
+                <p className="text-center font-clashDisplay text-[25px] font-extrabold text-[#2A1769] lg:text-[37px] ">
+                  Task posted
+                </p>
+                <p className="lg:text-[20px]">
+                  Your task has been posted! please click <br /> on the button
+                  to proceed to marketplace
+                </p>
+                <Image
+                  src={image}
+                  alt="image"
+                  className="absolute -right-8 top-40 w-20 lg:-right-20 lg:top-2/3 lg:w-32"
+                />
+                <div className="flex justify-center">
+                  <Link href="/marketplace">
+                    <button className="w-[100px] rounded-2xl bg-status-purpleBase p-2 text-[14px] text-white outline-none">
+                      Go Home
+                    </button>
+                  </Link>
+                </div>
+              </div>
             </div>
-            <p className="text-center font-clashDisplay text-[25px] font-extrabold text-[#2A1769] lg:text-[37px] ">
-              Task posted
-            </p>
-            <p className="lg:text-[20px]">
-              Your task has been posted! please click <br /> on the button to
-              proceed to marketplace
-            </p>
-            <Image
-              src={image}
-              alt="image"
-              className="absolute -right-8 top-40 w-20 lg:-right-20 lg:top-2/3 lg:w-32"
-            />
-            <div className="flex justify-center">
-              <Link href="/marketplace">
-                <button className="w-[100px] rounded-2xl bg-status-purpleBase p-2 text-[14px] text-white outline-none">
-                  Go Home
-                </button>
-              </Link>
+          </Popup>
+        ) : (
+          <Popup
+            isOpen={isSuccessPopupOpen}
+            onClose={() => {
+              setIsSuccessPopupOpen(false);
+            }}
+          >
+            <div className="p-10 lg:px-12">
+              <div className="relative grid items-center justify-center space-y-5">
+                <p className="text-center font-clashDisplay text-[20px] font-extrabold text-[#2A1769] md:text-[36px] lg:text-[37px] ">
+                  You are almost done!!!
+                </p>
+                <p className="text-center text-[14px] lg:text-[20px]">
+                  Please proceed to update your profile
+                  <br /> before your Task can be posted
+                </p>
+                <Image
+                  src={image}
+                  alt="image"
+                  className="absolute -right-12 top-28 w-24 lg:-right-20 lg:top-1/2 lg:w-36"
+                />
+                <Image
+                  src={img}
+                  alt="image"
+                  className="absolute -left-12 top-12 w-12 lg:-left-[73px] lg:top-2 lg:w-24"
+                />
+                <div className="flex justify-center space-x-3 md:justify-around">
+                  <Link href="/marketplace">
+                    <button className="rounded-2xl border-2 border-status-purpleBase p-2 text-[14px] font-semibold text-status-purpleBase outline-none md:w-[100px]">
+                      Back
+                    </button>
+                  </Link>
+                  <Link href="/marketplace">
+                    <button className="rounded-2xl bg-status-purpleBase p-2 text-[14px] text-white outline-none md:w-[100px]">
+                      Go to profile
+                    </button>
+                  </Link>
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
-      </Popup>
-      <Popup
-        isOpen={isSuccessPopupOpen}
-        onClose={() => {
-          setIsSuccessPopupOpen(false);
-        }}
-      >
-        <div className="p-10 lg:px-20">
-          <div className="relative grid items-center justify-center space-y-5">
-            <p className="text-center font-clashDisplay text-[20px] font-extrabold text-[#2A1769] md:text-[36px] lg:text-[37px] ">
-              You are almost done!!!
-            </p>
-            <p className="text-center text-[14px] lg:text-[20px]">
-              Please proceed to update your profile
-              <br /> before your Task can be posted
-            </p>
-            <Image
-              src={image}
-              alt="image"
-              className="absolute -right-12 top-28 w-24 lg:-right-28 lg:top-1/2 lg:w-36"
-            />
-            <Image
-              src={img}
-              alt="image"
-              className="absolute -left-12 top-12 w-12 lg:-left-[105px] lg:top-2 lg:w-24"
-            />
-            <div className="flex justify-center space-x-3 md:justify-around">
-              <Link href="/marketplace">
-                <button className="rounded-2xl border-2 border-status-purpleBase p-2 text-[14px] font-semibold text-status-purpleBase outline-none md:w-[100px]">
-                  Back
-                </button>
-              </Link>
-              <Link href="/marketplace">
-                <button className="rounded-2xl bg-status-purpleBase p-2 text-[14px] text-white outline-none md:w-[100px]">
-                  Go to profile
-                </button>
-              </Link>
-            </div>
-          </div>
-        </div>
-      </Popup>
+          </Popup>
+        )}
+      </div>
     </div>
   );
 };

@@ -17,20 +17,23 @@ interface Message {
 
 interface FormData {
   lisitingTitle: string;
-  availability: string;
   listingDescription: string;
-  planDetails: string;
-  planDetails1: string;
-  planDetails2: string;
-  taskImage: File | defaultImage | null;
-  taskImage1?: File | defaultImage | null;
-  taskImage2?: File | defaultImage | null;
-  taskImage3?: File | defaultImage | null;
+  planOneDescription: string;
+  planTwoDescription: string;
+  planThreeDescription: string;
+  image1: File | defaultImage | null;
+  image2?: File | defaultImage | null;
+  image3?: File | defaultImage | null;
+  image4?: File | defaultImage | null;
   taskType: string;
-  price: string;
-  price1: string;
-  price2: string;
-  userAddress: string[];
+  planOnePrice: string;
+  planTwoPrice: string;
+  planThreePrice: string;
+  availableDays: string[];
+  suburb: string;
+  postCode: string;
+  state: string;
+  available: boolean;
   categoryId: number | null;
   subCategoryId: number | null;
 }
