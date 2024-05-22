@@ -71,6 +71,8 @@ const Navigation = () => {
   const userRole = session?.data?.user.user.roles;
   const isServiceProvider = userRole && userRole[0] === "SERVICE_PROVIDER";
 
+  const notificationLength = session.data?.user.user.appNotificationList.length
+
   return (
     <>
       {isServiceProvider ? (
@@ -119,7 +121,7 @@ const Navigation = () => {
                 <div className="relative">
                   <IoMdNotificationsOutline className="size-[24px] text-black" />
                   <div className="absolute -right-1 -top-1 flex size-5 items-center justify-center rounded-full bg-tc-orange text-xs text-white">
-                    2
+                    {notificationLength}
                   </div>
                 </div>
                 <Dropdown
