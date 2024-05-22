@@ -1,8 +1,11 @@
 import Button from "@/components/global/Button";
 import { cn } from "@/lib/utils";
+import axios from "axios";
 import { motion } from "framer-motion";
+import { signOut } from "next-auth/react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useRouter } from "next/router";
 import { IoMdCloseCircle } from "react-icons/io";
 
 type Props = {
@@ -16,6 +19,20 @@ type Props = {
 
 const MobileNavigation = ({ setShowMobileNav, links }: Props) => {
 	const pathname = usePathname();
+	const router = useRouter()
+
+	const handleLogout = async () => {
+		try {
+			router.push("/");
+			await signOut();
+
+			const response = await axios.post(
+				`${process.env.NEXT_PUBLIC_API_URL}/auth/logout`,
+			);
+		} catch (error: any) {
+			console.log(error);
+		}
+	};
 
 	return (
 		<>
@@ -49,6 +66,9 @@ const MobileNavigation = ({ setShowMobileNav, links }: Props) => {
 										})}>
 										{link.label}
 									</Link>
+									<Button theme="plain" onClick={handleLogout}>
+										Logout
+									</Button>
 								</li>
 							);
 						})}

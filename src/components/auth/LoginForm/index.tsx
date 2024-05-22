@@ -8,7 +8,6 @@ import { signIn } from "next-auth/react";
 import Link from "next/link";
 import { useState } from "react";
 import axios from "axios";
-import { toast } from "react-toastify";
 
 type SignInRequest = {
   emailAddress: string;
@@ -38,7 +37,6 @@ const LoginForm = () => {
 
   const onSubmit: SubmitHandler<SignInRequest> = async (payload) => {
     try {
-      // toast.success("Login successful");
       setIsLoading(true);
 
       const response = await axios.post(
@@ -91,12 +89,12 @@ const LoginForm = () => {
         <FormProvider {...methods}>
           <form
             onSubmit={methods.handleSubmit(onSubmit)}
-            className="w-full space-y-5 font-satoshi">
+            className="w-full space-y-7 font-satoshi">
             <Input
               focused
               name="emailAddress"
               label="Email address"
-              placeholder="example@example.com"
+              placeholder="johndoe@gmail.com"
               rules={["email", "required"]}
               type="email"
               className="shadow-sm"
@@ -104,40 +102,41 @@ const LoginForm = () => {
             <Input
               name="password"
               label="Password"
-              placeholder="password"
+              placeholder="**********"
+              className=" placeholder:text-dark shadow-sm"
               rules={["required"]}
               type="password"
-              className="shadow-sm"
             />
             {error && (
               <div className="text-red-500 text-xl text-center font-bold my-5">{error}</div>
             )}
-            <div className="pt-1 space-y-5">
+            <div className="space-y-8 lg:space-y-5">
               <div className="flex items-center justify-end">
                 <Button
-                  underline={false}
                   tag="a"
                   href="/auth/forgot-password"
-                  className="flex items-center underline font-bold">
+                  className="flex items-center underline font-bold underline-offset-2">
                   Forgot password
                 </Button>
               </div>
-              <Button
-                type="submit"
-                loading={isLoading}
-                disabled={!isValid}
-                className="w-full lg:w-[170px] rounded-full font-normal">
-                Login
-              </Button>
-              <h3 className="text-xl font-bold text-[#190E3F]">
-                Don’t have an account?
-                <Link href="/auth" className="text-primary">
-                  {" "}
-                  Sign Up
-                </Link>
-              </h3>
+              <div className="max-lg:flex max-lg:flex-col max-lg:items-center max-lg:justify-center">
+                <Button
+                  type="submit"
+                  loading={isLoading}
+                  disabled={!isValid}
+                  className="w-[170px] rounded-full font-normal">
+                  Login
+                </Button>
+                <h3 className="text-xl mt-8 font-bold text-[#190E3F]">
+                  Don’t have an account?
+                  <Link href="/auth" className="text-primary">
+                    {" "}
+                    Sign Up
+                  </Link>
+                </h3>
+              </div>
             </div>
-            
+
           </form>
         </FormProvider>
       </div>

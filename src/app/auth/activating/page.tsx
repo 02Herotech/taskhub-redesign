@@ -4,7 +4,6 @@ import axios from "axios";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { toast } from "react-toastify";
 
 const VerifyEmailForm = () => {
     const [loading, setLoading] = useState(false);

@@ -1,164 +1,167 @@
-"use client"
+"use client";
 
 import { useState, useEffect } from "react";
-import { FaChevronLeft, FaChevronRight } from "react-icons/fa6";
+import { FaChevronLeft, FaChevronRight, FaSortDown } from "react-icons/fa";
 import {
-    useFilterTaskByPriceQuery,
-    useFilterTaskByTypeQuery,
     useGetActiveTasksQuery,
-    useFilterTaskByEarliestDateQuery,
-    useFilterTaskByLatestDateQuery,
-    useFilterTaskByPriceAscQuery,
-    useFilterTaskByPriceDescQuery
 } from "@/services/tasks";
 import Dropdown from "@/components/global/Dropdown";
 import TaskCard from "../TaskCard";
 import loader from "../../../../../public/assets/images/marketplace/taskhub-newloader.gif";
 import Image from "next/image";
 import Button from "@/components/global/Button";
-import { FaSortDown } from "react-icons/fa";
-import ReactSlider from 'react-slider'
+import ReactSlider from "react-slider";
+import axios from "axios";
+import { Task } from "@/types/services/tasks";
 
 const Tasks = () => {
     const [priceValues, setPriceValues] = useState<[number, number]>([5, 10000]);
     const [locationValues, setLocationValues] = useState<[number, number]>([1, 50]);
-    const [selectedService, setSelectedService] = useState<'Remote' | 'In Person'>('In Person');
-    const [selectedCategory, setSelectedCategory] = useState<string>('');
+    const [selectedService, setSelectedService] = useState<"REMOTE_SERVICE" | "PHYSICAL_SERVICE">("PHYSICAL_SERVICE");
+    const [categoriesData, setCategoriesData] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
+    const [filteredData, setFilteredData] = useState<Task[]>([]);
     const itemsPerPage = 9;
-    const serviceType = selectedService === 'Remote' ? 'REMOTE_SERVICE' : 'PHYSICAL_SERVICE';
+    const [dataToRender, setDataToRender] = useState<Task[]>([]);
+    const [filtersApplied, setFiltersApplied] = useState(false);
 
-    const { data, isLoading, refetch } = useGetActiveTasksQuery(currentPage);
-    const { data: filteredByPriceData, isLoading: isFilteredLoading, refetch: refetchFiltered } = useFilterTaskByPriceQuery({
-        page: currentPage,
-        minPrice: priceValues[0],
-        maxPrice: priceValues[1]
-    });
-    const { data: filteredByTypeData, isLoading: isFilteredByTypeLoading, refetch: refetchFilteredByType } = useFilterTaskByTypeQuery({
-        page: currentPage,
-        type: serviceType
-    });
-    const { data: filteredByEarliestDateData, isLoading: isFilteredByEarliestDateLoading, refetch: refetchFilteredByEarliestDate } = useFilterTaskByEarliestDateQuery(currentPage);
-    const { data: filteredByLatestDateData, isLoading: isFilteredByLatestDateLoading, refetch: refetchFilteredByLatestDate } = useFilterTaskByLatestDateQuery(currentPage);
-    const { data: filteredByPriceAscData, isLoading: isFilteredByPriceAscLoading, refetch: refetchFilteredByPriceAsc } = useFilterTaskByPriceAscQuery(currentPage);
-    const { data: filteredByPriceDescData, isLoading: isFilteredByPriceDescLoading, refetch: refetchFilteredByPriceDesc } = useFilterTaskByPriceDescQuery(currentPage);
+    const { data: tasksData, isLoading, refetch } = useGetActiveTasksQuery(currentPage);
 
     useEffect(() => {
-        refetchFilteredByType()
-    }, [currentPage, refetchFilteredByType])
+        const fetchCategoriesData = async () => {
+            try {
+                const response = await axios.get(
+                    `${process.env.NEXT_PUBLIC_API_URL}/util/all-categories`,
+                );
+                setCategoriesData(response.data);
+            } catch (error) {
+                console.log(error);
+            }
+        };
 
-    useEffect(() => {
-        refetchFiltered(); // Fetch new data when the current page changes
-    }, [currentPage, refetchFiltered]);
+        fetchCategoriesData();
+    }, []);
 
-    useEffect(() => {
-        refetch(); // Fetch new data when the current page changes
-    }, [currentPage, refetch]);
-
-    const totalPages = Math.ceil(data?.totalElements! / itemsPerPage); // Calculate total pages
+    const totalPages = Math.ceil(tasksData?.totalElements! / itemsPerPage); // Calculate total pages
 
     const handlePageChange = (pageNumber: number) => {
         setCurrentPage(pageNumber);
     };
 
-    const renderContent = () => {
-        return (
-            <div>
-                {isLoading ? (
-                    <div className="w-full flex items-center justify-center h-[300px]">
-                        <Image src={loader} alt="loader" width={80} />
-                    </div>
-                ) : (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 my-14">
-                        {data?.content.map((task, index) => (
-                            <TaskCard task={task} key={index} />
-                        ))}
-                    </div>
-                )}
-            </div>
-        );
+    const handleFilterByPriceRange = (minPrice: number, maxPrice: number) => {
+        if (!tasksData?.content) return;
+        const filtered = tasksData.content.filter((item) => item.customerBudget >= minPrice && item.customerBudget <= maxPrice);
+        setFilteredData(filtered);
+        setFiltersApplied(true);
     };
 
+    const handleFilterByType = (type: "REMOTE_SERVICE" | "PHYSICAL_SERVICE") => {
+        if (!tasksData?.content) return;
+        setSelectedService(type);
+        const filtered = tasksData.content.filter((item) => item.taskType === type);
+        setFilteredData(filtered);
+        setFiltersApplied(true);
+    };
 
+    const handleFilterByDate = (order: "asc" | "desc") => {
+        if (!tasksData?.content) return;
+        const sortedData = [...tasksData.content].sort((a, b) => {
+            const dateA = new Date(a.taskTime).getTime();
+            const dateB = new Date(b.taskTime).getTime();
+            return order === "asc" ? dateA - dateB : dateB - dateA;
+        });
+        setFilteredData(sortedData);
+        setFiltersApplied(true);
+    };
+
+    const handleSortByPrice = (order: "asc" | "desc") => {
+        if (!tasksData?.content) return;
+        const sortedData = [...tasksData.content].sort((a, b) => {
+            return order === "asc" ? a.customerBudget - b.customerBudget : b.customerBudget - a.customerBudget;
+        });
+        setFilteredData(sortedData);
+        setFiltersApplied(true);
+    };
+
+    const resetFilters = () => {
+        setFilteredData([]);
+        setFiltersApplied(false);
+        refetch();
+    };
+
+    // Originally, render the tasksData.content but once a filter is applied, render the filteredData and if it's empty, show no filter result found
+    useEffect(() => {
+        if (filteredData.length > 0) {
+            setDataToRender(filteredData);
+        } else if (filtersApplied && filteredData.length === 0) {
+            setDataToRender([]);
+        } else {
+            setDataToRender(tasksData?.content || []);
+        }
+    }, [filteredData, tasksData, filtersApplied]);
+
+    const renderContent = () => {
+        if (isLoading) {
+            return (
+                <div className="w-full flex items-center justify-center h-[300px]">
+                    <Image src={loader} alt="loader" width={80} />
+                </div>
+            );
+        } else if (dataToRender.length === 0) {
+            return <div className="text-center text-status-darkViolet text-2xl font-semibold my-20">No results found</div>;
+        } else {
+            return (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 my-14">
+                    {dataToRender.map((task, index) => (
+                        <TaskCard task={task} key={index} />
+                    ))}
+                </div>
+            );
+        }
+    };
     const otherOptionsDropdown = [
         {
             label: "Price: High to low",
-            onClick: () => refetchFilteredByPriceDesc
+            onClick: () => handleSortByPrice("desc"),
         },
         {
             label: "Price: Low to high",
-            onClick: () => refetchFilteredByPriceAsc
+            onClick: () => handleSortByPrice("asc"),
         },
         {
             label: "Due date: Earliest",
-            onClick: () => refetchFilteredByEarliestDate
+            onClick: () => handleFilterByDate("asc"),
         },
         {
             label: "Due date: Latest",
-            onClick: () => refetchFilteredByLatestDate
+            onClick: () => handleFilterByDate("desc"),
         },
         {
             label: "Closest to me",
-            onClick: () => {}
+            onClick: () => { },
         },
-    ];
-
-    const categoryDropdown = [
-        {
-            label: "Home Services",
-            onClick: () => setSelectedCategory('Home Services')
-        },
-        {
-            label: "Beauty",
-            onClick: () => setSelectedCategory('Beauty')
-        },
-        {
-            label: "Information & Technology",
-            onClick: () => setSelectedCategory('Information & Technology')
-        },
-        {
-            label: "Events",
-            onClick: () => setSelectedCategory('Events')
-        },
-        {
-            label: "Arts and Crafts",
-            onClick: () => setSelectedCategory('Arts and Crafts')
-        },
-        {
-            label: "Pet care",
-            onClick: () => setSelectedCategory('Pet care')
-        },
-        {
-            label: "Custodial",
-            onClick: () => setSelectedCategory('Custodial')
-        },
-        {
-            label: "Grocery",
-            onClick: () => setSelectedCategory('Grocery')
-        }
     ];
 
     return (
         <section className="pt-7 container">
-            <div className="hidden lg:flex lg:space-x-4 mt-20 items-center">
+            <div className="hidden lg:flex lg:space-x-4 mt-14 items-center">
 
                 {/* Category */}
                 <Dropdown
                     trigger={() => (
-                        <div className="w-full border-2 border-primary text-primary flex items-center justify-between font-semibold py-2 px-4 rounded-full">
+                        <div className="w-full border-2 border-primary text-primary bg-[#F1F1F2] flex items-center justify-between font-semibold py-2 px-4 rounded-full">
                             <h2>Category</h2>
                             <FaSortDown />
                         </div>
                     )}
                     className='left-0 right-0 mx-auto top-14'>
                     <form className='bg-white rounded-md py-4 px-2'>
-                        {categoryDropdown.map((button, index) => (
+                        {categoriesData.map((button, index) => (
                             <div
                                 key={index}
-                                onClick={button.onClick}
                                 className='flex w-full transition-all text-status-darkViolet text-base font-bold hover:text-tc-orange cursor-pointer items-center justify-between py-3 px-5'>
                                 <div className="">
-                                    {button.label}
+                                    {/* {button.label} */}
                                 </div>
                             </div>
                         ))}
@@ -168,13 +171,13 @@ const Tasks = () => {
                 {/* Location */}
                 <Dropdown
                     trigger={() => (
-                        <div className="w-full border-2 border-primary text-primary flex items-center justify-between font-semibold py-2 px-4 rounded-full">
+                        <div className="w-full border-2 border-primary text-primary bg-[#F1F1F2] flex items-center justify-between font-semibold py-2 px-4 rounded-full">
                             <h2>Location</h2>
                             <FaSortDown />
                         </div>
                     )}
-                    className='left-0 right-0 mx-auto top-14'>
-                    <form className='bg-white rounded-md flex items-center p-4'>
+                    className='-left-24 top-14'>
+                    <form className='bg-white min-w-[240px] rounded-md flex items-center p-4'>
                         <div className="space-y-8 w-full p-3">
                             <h4 className="text-lg text-[#190E3F] font-medium">Distance</h4>
                             <div className="text-2xl text-black font-bold text-center mb-6">
@@ -205,53 +208,53 @@ const Tasks = () => {
                 {/* Type of service */}
                 <Dropdown
                     trigger={() => (
-                        <div id="typeOfService" className="w-full border-2 border-primary flex items-center justify-between text-primary font-semibold py-2 px-4 rounded-full">
+                        <div id="typeOfService" className="w-full border-2 border-primary bg-[#F1F1F2] flex items-center justify-between text-primary font-semibold py-2 px-4 rounded-full">
                             <h2>Type of service</h2>
                             <FaSortDown />
                         </div>
                     )}
-                    className='left-0 right-0 mx-auto top-14'>
-                    <div className='bg-white rounded-md p-4 space-y-10'>
-                        <h4 className="text-lg text-[#190E3F] font-medium">Type of service</h4>
+                    className='-left-24 top-14'>
+                    <div className='bg-white min-w-[240px] rounded-md p-4 space-y-8'>
+                        <h4 className="text-xl text-[#190E3F] font-medium">Type of service</h4>
                         <div className="flex mb-6 w-full rounded-full bg-orange-100">
                             <button
-                                className={`px-6 py-2 rounded-full text-status-darkViolet font-bold text-lg focus:outline-none ${selectedService === 'Remote' ? 'bg-orange-500 flex-1' : 'bg-transparent'
+                                className={`px-6 py-2 rounded-full text-status-darkViolet font-bold text-lg focus:outline-none ${selectedService === 'REMOTE_SERVICE' ? 'bg-orange-500 flex-1' : 'bg-transparent'
                                     }`}
-                                onClick={() => setSelectedService('Remote')}
+                                onClick={() => handleFilterByType('REMOTE_SERVICE')}
                             >
                                 Remote
                             </button>
                             <button
-                                className={`px-6 py-2 rounded-full text-status-darkViolet font-bold text-lg focus:outline-none ${selectedService === 'In Person' ? 'bg-orange-500  flex-1' : 'bg-transparent'
+                                className={`px-6 py-2 rounded-full text-status-darkViolet font-bold text-lg focus:outline-none ${selectedService === 'PHYSICAL_SERVICE' ? 'bg-orange-500  flex-1' : 'bg-transparent'
                                     }`}
-                                onClick={() => setSelectedService('In Person')}
+                                onClick={() => handleFilterByType('PHYSICAL_SERVICE')}
                             >
-                                In Person
+                                Physical
                             </button>
                         </div>
                         <div className="flex items-center justify-between w-full">
                             <Button theme="outline" className="rounded-full">
                                 Cancel
                             </Button>
-                            <Button className="rounded-full" onClick={() => refetchFilteredByType}>
+                            <Button className="rounded-full" onClick={() => handleFilterByType(selectedService)}>
                                 Apply
                             </Button>
                         </div>
                     </div>
                 </Dropdown>
 
-                {/* Pricing */}
+                {/* Price */}
                 <Dropdown
                     trigger={() => (
-                        <div className="w-full border-2 border-primary text-primary flex items-center justify-between font-semibold py-2 px-4 rounded-full">
-                            <h2>Pricing</h2>
+                        <div className="w-full border-2 border-primary text-primary bg-[#F1F1F2] flex items-center justify-between font-semibold py-2 px-4 rounded-full">
+                            <h2>Price</h2>
                             <FaSortDown />
                         </div>
                     )}
-                    className='left-0 right-0 mx-auto top-14'>
-                    <form className='bg-white rounded-md flex items-center p-2'>
+                    className='-left-24 top-14'>
+                    <form className='bg-white min-w-[240px] rounded-md flex items-center p-4'>
                         <div className="space-y-8 w-full p-3">
-                            <h4 className="text-lg text-[#190E3F] font-medium">Price</h4>
+                            <h4 className="text-xl text-[#190E3F] font-medium">Price</h4>
                             <div className="text-2xl text-black font-bold text-center mb-6">
                                 ${priceValues[0]} - ${priceValues[1]}
                             </div>
@@ -262,14 +265,14 @@ const Tasks = () => {
                                 value={priceValues}
                                 min={5}
                                 max={10000}
-                                step={50}
+                                step={5}
                                 onChange={(newValues) => setPriceValues(newValues as [number, number])}
                             />
-                            <div className="flex items-center justify-between w-full">
+                            <div className="flex items-center justify-between space-x-8 w-full">
                                 <Button theme="outline" className="rounded-full" onClick={() => setPriceValues([5, 10000])}>
                                     Cancel
                                 </Button>
-                                <Button className="rounded-full" onClick={() => refetchFiltered}>
+                                <Button className="rounded-full" onClick={() => handleFilterByPriceRange(priceValues[0], priceValues[1])}>
                                     Apply
                                 </Button>
                             </div>
@@ -280,25 +283,30 @@ const Tasks = () => {
                 {/* Others */}
                 <Dropdown
                     trigger={() => (
-                        <div className="w-full border-2 border-primary text-primary flex items-center justify-between font-semibold py-2 px-4 rounded-full">
+                        <div className="w-full border-2 border-primary text-primary bg-[#F1F1F2] flex items-center justify-between font-semibold py-2 px-4 rounded-full">
                             <h2>Others</h2>
                             <FaSortDown />
                         </div>
                     )}
                     className='left-0 right-0 mx-auto top-14'>
-                    <div className='bg-white rounded-md p-3'>
-                        {otherOptionsDropdown.map((button, index) => (
+                    <form className='bg-white rounded-md p-4'>
+                        <h4 className="text-lg text-[#190E3F] font-medium mb-4">Others</h4>
+                        {otherOptionsDropdown.map((option, index) => (
                             <div
                                 key={index}
-                                onClick={button.onClick}
-                                className='flex w-full transition-all text-status-darkViolet text-base font-bold hover:text-tc-orange cursor-pointer items-center justify-between p-3'>
+                                onClick={option.onClick}
+                                className='flex w-full transition-all text-status-darkViolet text-base font-bold hover:text-tc-orange cursor-pointer items-center justify-between py-3 px-5'>
                                 <div className="">
-                                    {button.label}
+                                    {option.label}
                                 </div>
                             </div>
                         ))}
-                    </div>
+                    </form>
                 </Dropdown>
+
+                <Button className="rounded-full w-full" onClick={resetFilters}>
+                    Reset
+                </Button>   
             </div>
 
             <div className="w-full">
@@ -332,6 +340,6 @@ const Tasks = () => {
             </div>
         </section>
     );
-}
+};
 
 export default Tasks;

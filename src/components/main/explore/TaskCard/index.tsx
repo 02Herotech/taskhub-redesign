@@ -7,7 +7,6 @@ import Image from "next/image";
 import { FiCalendar, FiClock } from "react-icons/fi";
 import { HiOutlineLocationMarker } from "react-icons/hi";
 import { motion } from "framer-motion";
-// import placeholderImage from "../../../../../public/assets/images/placeholder.png";
 
 interface TaskCardProps {
   task: Task;
@@ -99,11 +98,14 @@ const TaskCard = ({ task }: TaskCardProps) => {
         <h2 className="overflow-hidden truncate text-ellipsis whitespace-nowrap py-4 text-2xl font-bold text-primary lg:text-[32px]">
           {task.taskDescription}
         </h2>
-        {/* <img
-          src={task?.taskImage ?? placeholderImage}
+        <img
+          src={
+            task?.taskImage ??
+            "../../../../../public/assets/images/placeholder.png"
+          }
           alt="Logo"
           className="h-[46px] w-[46px] rounded-full border object-cover"
-        /> */}
+        />
       </div>
       <div className="my-4 space-y-2">
         <div className="flex w-full items-center space-x-2 font-medium text-[#716F78]">

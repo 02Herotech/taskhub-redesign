@@ -2,8 +2,6 @@
 
 import Button from "@/components/global/Button";
 import { useRouter } from "next/navigation";
-import { toast } from "react-toastify";
-import "react-phone-number-input/style.css";
 import React, { useEffect, useRef, useState } from "react";
 import { Suspense } from 'react'
 import axios from "axios";
@@ -56,7 +54,7 @@ const PasswordConfirmationForm = ({ email }: { email: string }) => {
             );
 
             if (response.status == 200) {
-                toast.success(response.data.message);
+                // toast.success(response.data.message);
                 setIsLoading(false);
             }
         } catch (err: any) {

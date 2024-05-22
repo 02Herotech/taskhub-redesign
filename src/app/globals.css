@@ -2,6 +2,13 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Custom styles */
+.phone-input input:focus {
+  outline: none !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
 .Toastify__toast-container {
   min-width: 388px !important;
   z-index: 9999999999999 !important;

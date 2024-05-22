@@ -1,60 +1,97 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import Head from "next/head";
 import Image from "next/image";
-import { FaGreaterThan } from "react-icons/fa";
+import {
+  IoIosArrowForward,
+  IoMdArrowDropdown,
+  IoMdClose,
+} from "react-icons/io";
 import { PiFileArrowDownDuotone } from "react-icons/pi";
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
-import { TiTick } from "react-icons/ti";
 import Popup from "@/components/global/Popup";
 import Button from "@/components/global/Button";
 import Link from "next/link";
+import image from "../../../../public/assets/images/customer/Task management.png";
+import img from "../../../../public/assets/images/blend.png";
+import AiDesciption from "@/components/AiGenerate/AiDescription";
+import { useSession } from "next-auth/react";
+import { GrFormCheckmark } from "react-icons/gr";
 
-interface Task {
-  serviceDetails: string;
-  briefDescription: string;
-  physicalService: boolean;
-  remoteService: boolean;
-  termsAccepted: boolean;
-  picture?: File | null;
-  workDaysTime: string;
-  describe: string;
-  address: string;
-  Suite: string;
-  postalCode: string;
-  category: string;
-  subCategory: string;
-  budget: string;
-  time: string;
+interface FormData {
+  lisitingTitle: string;
+  availability: string;
+  listingDescription: string;
+  planDetails: string;
+  planDetails1: string;
+  planDetails2: string;
+  taskImage: File | defaultImage | null;
+  taskImage1?: File | defaultImage | null;
+  taskImage2?: File | defaultImage | null;
+  taskImage3?: File | defaultImage | null;
+  taskType: string;
+  price: string;
+  price1: string;
+  price2: string;
+  userAddress: string[];
+  categoryId: number | null;
+  subCategoryId: number | null;
 }
 
-const AddTaskForm: React.FC = () => {
+interface PostalCodeData {
+  name: string;
+  postcode: string;
+  state: {
+    name: string;
+    abbreviation: string;
+  };
+  locality: string;
+}
+
+interface Item {
+  id: string;
+  categoryName: string;
+}
+
+interface Subcategory {
+  id: string;
+  name: string;
+}
+
+type defaultImage = string;
+
+const ProvideService: React.FC = () => {
+  const session = useSession();
+  const token = session?.data?.user.accessToken;
   const [currentPage, setCurrentPage] = useState(1);
-  const [task, setTask] = useState<Task>({
-    serviceDetails: "",
-    briefDescription: "",
-    physicalService: false,
-    remoteService: false,
-    termsAccepted: false,
-    picture: null,
-    workDaysTime: "",
-    describe: "",
-    address: "",
-    Suite: "",
-    postalCode: "",
-    category: "",
-    subCategory: "",
-    budget: "",
-    time: "",
+  const [task, setTask] = useState<FormData>({
+    lisitingTitle: "",
+    availability: "",
+    listingDescription: "",
+    planDetails: "",
+    planDetails1: "",
+    planDetails2: "",
+    taskImage: null,
+    taskImage1: null,
+    taskImage2: null,
+    taskImage3: null,
+    taskType: "",
+    userAddress: [],
+    price: "",
+    price1: "",
+    price2: "",
+    categoryId: null,
+    subCategoryId: null,
   });
   const [selectedCode, setSelectedCode] = useState("");
-  const [selectedSubCategory, setSelectedSubCategory] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("");
-  const [termsAccepted, setTermsAccepted] = useState(false);
-  const [isSelectedTime, setIsSelectedTime] = useState("");
+  const [selectedSubCategory, setSelectedSubCategory] = useState<number | null>(
+    null,
+  );
+  const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
+  const [selectedCity, setSelectedCity] = useState("");
+  const [isRemote, setIsRemote] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const [activeButtonIndex, setActiveButtonIndex] = useState<number | null>(
     null,
@@ -62,8 +99,138 @@ const AddTaskForm: React.FC = () => {
   const [activePlanIndex, setActivePlanIndex] = useState<number | null>(null);
   const [errors, setErrors] = useState<any>({});
   const [error, setError] = useState<any>({});
+  const [err, setErr] = useState<any>({});
   const [isSuccessPopupOpen, setIsSuccessPopupOpen] = useState(false);
   const [inputDisabled, setInputDisabled] = useState(false);
+  const [postalCodeData, setPostalCodeData] = useState<PostalCodeData[]>([]);
+  const [items, setItems] = useState<Item[]>([]);
+  const [subcategories, setSubcategories] = useState<Subcategory[]>([]);
+
+  useEffect(() => {
+    const fetchPostalCodeData = async () => {
+      try {
+        const response = await axios.get(
+          `https://smp.jacinthsolutions.com.au/api/v1/util/locations/search?postcode=${selectedCode}`,
+        );
+        setPostalCodeData(response.data as PostalCodeData[]);
+      } catch (error) {
+        console.error("Error fetching postal code data:", error);
+        setPostalCodeData([]);
+      }
+    };
+
+    if (selectedCode.length > 0) {
+      fetchPostalCodeData();
+    }
+  }, [selectedCode]);
+
+  useEffect(() => {
+    const fetchItems = async () => {
+      try {
+        const response = await axios.get(
+          "https://smp.jacinthsolutions.com.au/api/v1/util/all-categories",
+        );
+        const data: Item[] = response.data;
+        setItems(data);
+      } catch (error) {
+        console.error("Error fetching items:", error);
+      }
+    };
+
+    fetchItems();
+  }, []);
+
+  useEffect(() => {
+    if (selectedCategory) {
+      const fetchSubcategories = async () => {
+        try {
+          const response = await axios.get(
+            `https://smp.jacinthsolutions.com.au/api/v1/util/all-sub-categories-by-categoryId/${selectedCategory}`,
+          );
+          const data: Subcategory[] = response.data;
+          setSubcategories(data);
+        } catch (error) {
+          console.error("Error fetching subcategories:", error);
+        }
+      };
+
+      fetchSubcategories();
+    }
+  }, [selectedCategory]);
+
+  const validateFields = () => {
+    const errors: any = {};
+    if (!selectedCategory) {
+      errors.category = "Please select a category.";
+    } else if (!selectedSubCategory) {
+      errors.subCategory = "Please select a subcategory.";
+    } else if (!task.lisitingTitle) {
+      errors.lisitingTitle = "Please lisitingTitle with a short title";
+    } else if (!task.listingDescription) {
+      errors.description = "Please give a detailed description";
+    }
+    setErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
+  const validateField1 = () => {
+    const error: any = {};
+    if (!task.planDetails || !task.planDetails1 || task.planDetails2) {
+      error.planDetails = "Please write down details about your plan";
+    }
+    if (!task.price || !task.price1 || !task.price2) {
+      error.price = "Please write down your budget price";
+    }
+    if (activeButtonIndex === 0) {
+      if (!selectedCode) {
+        error.postalCode = "Please input your postal code";
+      }
+      if (!selectedCity) {
+        error.city = "Please select your city";
+      }
+    }
+
+    setError(error);
+    return Object.keys(error).length === 0;
+  };
+
+  const validateField2 = () => {
+    const err: any = {};
+    if (!task.availability) {
+      err.availability = "Please write down details about your availability";
+    }
+    if (!task.taskImage) {
+      err.image = "Please upload an Image";
+    }
+
+    setErr(err);
+    return Object.keys(err).length === 0;
+  };
+
+  const handleCategoryChange = (
+    event: React.ChangeEvent<HTMLSelectElement>,
+  ) => {
+    const selectedId = parseInt(event.target.value);
+    setSelectedCategory(selectedId);
+    setTask({
+      ...task,
+      categoryId: selectedId,
+      subCategoryId: null,
+    });
+    setSelectedSubCategory(null);
+    setSubcategories([]);
+  };
+
+  const handleSubCategoryChange = (
+    event: React.ChangeEvent<HTMLSelectElement>,
+  ) => {
+    const selectedId = parseInt(event.target.value);
+    setSelectedSubCategory(selectedId);
+    setTask({
+      ...task,
+      subCategoryId: selectedSubCategory ? selectedId : null,
+    });
+  };
 
   const handleClick = (index: number) => {
     setActiveButtonIndex(index);
@@ -75,29 +242,27 @@ const AddTaskForm: React.FC = () => {
     setIsOpen(true);
     setInputDisabled(!inputDisabled);
   };
-  const handleCode = (event: React.ChangeEvent<HTMLSelectElement>) => {
+  const handleCode = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSelectedCode(event.target.value);
   };
-  const handleCategory = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    setSelectedCategory(event.target.value);
-  };
-  const handleSubCategory = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    setSelectedSubCategory(event.target.value);
+  const handleCity = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedValue = event.target.value;
+    setSelectedCity(selectedValue);
   };
 
   const nextPage = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setCurrentPage(currentPage + 1);
-  };
-
-  const Page = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    setCurrentPage(currentPage);
+    if (validateFields()) {
+      setCurrentPage(currentPage + 1);
+      console.log(selectedCategory, selectedSubCategory);
+    }
   };
 
   const nextPages = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setCurrentPage(currentPage + 1);
+    if (validateField1()) {
+      setCurrentPage(currentPage + 1);
+    }
   };
 
   const prevPage = () => {
@@ -110,82 +275,166 @@ const AddTaskForm: React.FC = () => {
     setTask({ ...task, [event.target.name]: event.target.value });
   };
 
-  const handlePictureUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handlePictureUpload = (
+    event: React.ChangeEvent<HTMLInputElement>,
+    imageIndex: number,
+  ) => {
     const uploadedFile = event.target.files?.[0];
     if (uploadedFile) {
-      setTask({ ...task, picture: uploadedFile });
+      switch (imageIndex) {
+        case 1:
+          setTask({ ...task, taskImage1: uploadedFile });
+          break;
+        case 2:
+          setTask({ ...task, taskImage2: uploadedFile });
+          break;
+        case 3:
+          setTask({ ...task, taskImage3: uploadedFile });
+          break;
+        default:
+          setTask({ ...task, taskImage: uploadedFile });
+      }
     }
   };
 
+  const getImageURL = (imageIndex: number) => {
+    switch (imageIndex) {
+      case 1:
+        return task.taskImage1 instanceof File
+          ? URL.createObjectURL(task.taskImage1)
+          : "";
+      case 2:
+        return task.taskImage2 instanceof File
+          ? URL.createObjectURL(task.taskImage2)
+          : "";
+      case 3:
+        return task.taskImage3 instanceof File
+          ? URL.createObjectURL(task.taskImage3)
+          : "";
+      default:
+        return task.taskImage instanceof File
+          ? URL.createObjectURL(task.taskImage)
+          : "";
+    }
+  };
+
+  const validateImages = () => {
+    return (
+      task.taskImage || task.taskImage1 || task.taskImage2 || task.taskImage3
+    );
+  };
+
+  const imageURL = getImageURL(0);
+  const imageURL1 = getImageURL(1);
+  const imageURL2 = getImageURL(2);
+  const imageURL3 = getImageURL(3);
+
+  const calculateProgress = () => {
+    const requiredFields = [
+      task.listingDescription,
+      task.price,
+      task.lisitingTitle,
+      task.availability,
+      task.planDetails,
+      task.taskImage,
+      task.price,
+      task.categoryId,
+      task.subCategoryId,
+    ];
+
+    if (isOpen && activeButtonIndex === 1) {
+      requiredFields.push(isRemote);
+    } else {
+      requiredFields.push(selectedCode, selectedCity);
+    }
+    const filledFields = requiredFields.filter(
+      (value) => value !== "" && value !== null,
+    ).length;
+
+    const totalFields = isOpen && activeButtonIndex === 0 ? 10 : 9;
+
+    return Math.round((filledFields / totalFields) * 100);
+  };
+
+  const progress = calculateProgress();
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    try {
-      setTask({
-        serviceDetails: "",
-        briefDescription: "",
-        physicalService: false,
-        remoteService: false,
-        termsAccepted: false,
-        picture: null,
-        workDaysTime: "",
-        describe: "",
-        address: "",
-        Suite: "",
-        postalCode: selectedCode,
-        category: selectedCategory,
-        subCategory: selectedSubCategory,
-        time: isSelectedTime,
-        budget: "",
-      });
-      setIsSuccessPopupOpen(true);
-      console.log(task);
-    } catch {
-      console.log(error);
+    if (validateField2()) {
+      try {
+        if (
+          !task.taskImage ||
+          !task.taskImage1 ||
+          !task.taskImage2 ||
+          !task.taskImage3
+        ) {
+          const defaultImage = "google-map.png";
+          setTask({ ...task, taskImage: defaultImage });
+        }
+        setTask({
+          lisitingTitle: "",
+          availability: "",
+          listingDescription: "",
+          planDetails: "",
+          planDetails1: "",
+          planDetails2: "",
+          taskImage: null,
+          taskImage1: null,
+          taskImage2: null,
+          taskImage3: null,
+          taskType: "",
+          userAddress: [],
+          price: "",
+          price1: "",
+          price2: "",
+          categoryId: null,
+          subCategoryId: null,
+        });
+        setIsSuccessPopupOpen(true);
+        console.log(task);
+      } catch {
+        console.log(error);
+      }
     }
   };
 
   // const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
   //   event.preventDefault();
-  //   if (validateFields() && validateField1()) {
+  //   if (validateField2()) {
   //     try {
-  //       let finalTask = { ...task };
-
-  //       if (termsAccepted) {
-  //         finalTask = { ...finalTask, termsAccepted };
-  //       }
-
-  //       if (isOpen && activeButtonIndex === 1) {
-  //         finalTask = { ...finalTask, remoteService: isOpen };
+  // if (isOpen && activeButtonIndex === 1) {
+  //         const type = "REMOTE_SERVICE";
+  //         finalTask = { ...finalTask, taskType: type };
   //       } else {
+  //         const Address = [
+  //           selectedCode,
+  //           selectedCity,
+  //           postalCodeData[0].state.name,
+  //         ];
   //         finalTask = {
   //           ...finalTask,
-  //           physicalService: isOpen,
-  //           address: task.address,
-  //           Suite: task.Suite,
-  //           postalCode: selectedCode,
-  //           city: selectedCity,
-  //           state: selectedState,
+  //           taskType: "PHYSICAL_SERVICE",
+  //           userAddress: Address,
   //         };
   //       }
 
-  //       await axios.post("/api/endpoint", finalTask);
+  //       await axios.post(`https://smp.jacinthsolutions.com.au/api/v1/listing/create-listing?date=${date}&userId=${id}`, finalTask);
   //       setTask({
-  //         serviceDetails: "",
-  //         briefDescription: "",
-  //         physicalService: false,
-  //         remoteService: false,
-  //         termsAccepted: false,
-  //         picture: null,
-  //         workDaysTime: "",
-  //         address: "",
-  //         Suite: "",
-  //         postalCode: selectedCode,
-  //         city: selectedCity,
-  //         state: selectedState,
-  //         time: isSelectedTime,
-  //         budget: "",
+  //  lisitingTitle: "",
+  //   availability: "",
+  //   listingDescription: "",
+  //   planDetails: "",
+  //   taskImage: "",
+  //   taskImage1: "",
+  //   taskImage2: "",
+  //   taskImage3: "",
+  //   taskType: "",
+  //   taskAddress: [],
+  //   price: "",
+  //   categoryId: null,
+  //   subCategoryId: null,
   //       });
-  //       setCurrentPage(1);
+  //
   //setIsSuccessPopupOpen(true)
   //     } catch (error) {
   //       console.error("Error submitting form:", error);
@@ -194,176 +443,117 @@ const AddTaskForm: React.FC = () => {
   //   }
   // };
 
-  const [AiLoading, setAiLoading] = useState(false);
-  const [subCategoryErr, setSubCategoryErr] = useState(false)
-
-  const AiGenerate = async () => {
-    setAiLoading(true);
-    console.log('ok')
-    if (selectedSubCategory === '') {
-      setSubCategoryErr(true)
-      setAiLoading(false);
-      return
-    } else {
-      setSubCategoryErr(false)
-    }
-    try {
-      const url = `${process.env.NEXT_PUBLIC_API_URL}/listing/create-listing/category/content-generate?category=${encodeURIComponent(selectedSubCategory)}`;
-      const response = await axios.get(
-        url
-      );
-      if (response.status === 201) {
-        const aiGeneratedDescription = response.data;
-
-        // setTask({ ...task, 'serviceDetails': aiGeneratedDescription });
-        // setAiLoading(false);
-        setTask({ ...task, 'serviceDetails': '' });
-        TypingEffect(aiGeneratedDescription)
-
-      }
-      if (response.status === 400) {
-      }
-    }
-    catch (err: any) { } finally {
-      setAiLoading(false);
-    }
-  };
-
-  const TypingEffect = (text: string) => {
-    console.log(text)
-    let currentIndex = 0;
-   
-    const timer = setInterval(() => {
-      setTask((task) => {
-        const newServiceDetails = task.serviceDetails + text[currentIndex];
-        currentIndex++;
-        if (currentIndex === text.length) {
-          clearInterval(timer);
-        }
-        return { ...task, serviceDetails: newServiceDetails };
-      });
-    }, 50);
-  };
-
-  const GeneratedAiDescription = () => (
-    <div>
-      <div className="flex flex-col space-y-6 p-4 bg-[#381F8C] mb-5 rounded-[20px]">
-
-        <h2 className="text-lg font-extrabold text-white">
-          Get personalized AI help
-        </h2>
-        <p className="text-white">
-          Recommended for you , Get an automated content prompt for your
-          service description by clicking on{" "}
-          <span className="text-[#FE9B07]">Generate with AI</span>{" "}
-          button.
-        </p>
-        <span onClick={AiGenerate}>
-
-
-          <Button
-            loading={AiLoading}
-            onClick={AiGenerate} type="button"
-            className={` text-10px p-2 px-4 transition-transform duration-300  w-[160px]
-   ease-in-out transform hover:scale-110 bg-[#333236] text-white rounded-[20px]
-  `}
-          >
-            Generate with AI
-          </Button> </span>
-      </div>
-      {subCategoryErr && (<p className="text-red-600 font-medium">
-        Kindly choose a subcategory
-      </p>)}
-    </div>
-  )
-
   const renderPage = () => {
     switch (currentPage) {
       case 1:
         return (
-          <div className="lg:w-full  w-[80%] mx-auto">
-
-            {/* <div className="mb-10 grid items-center justify-center space-y-10 w-full"> */}
+          <div className="mx-auto  w-[80%] lg:w-full">
             <div className="mb-10 space-y-10 ">
-              <form className="space-y-10 w-full" onSubmit={nextPage}>
-                <div className="grid space-y-4">
-                  <label>Choose the best category for your listing. </label>
+              <form
+                className="w-full space-y-10 text-status-darkpurple"
+                onSubmit={nextPage}
+              >
+                <div className="relative grid space-y-4">
+                  <label className="font-semibold">
+                    Choose the best category for your listing.{" "}
+                  </label>
                   <select
-                    value={selectedCategory}
+                    value={selectedCategory || ""}
                     name="category"
-                    onChange={handleCategory}
-                    className="w-full cursor-pointer rounded-2xl bg-[#EBE9F4] p-3 text-[13px]  outline-none">
+                    onChange={handleCategoryChange}
+                    className="w-full cursor-pointer appearance-none rounded-2xl bg-[#EBE9F4] p-3 text-[13px] outline-none"
+                  >
                     <option value="">Category</option>
-                    <option className="text-[12px] text-[#221354]">
-                      Childcare and Babysitting
-                    </option>
+                    {items.map((item) => (
+                      <option
+                        key={item.id}
+                        value={item.id}
+                        className="text-[12px] text-[#221354]"
+                      >
+                        {item.categoryName}
+                      </option>
+                    ))}
                   </select>
+                  <IoMdArrowDropdown className="absolute right-5 top-10 cursor-pointer text-status-purpleBase" />
                 </div>
-                <div className="grid space-y-4">
-                  <label>Choose a subcategory. </label>
+                <div className="relative grid space-y-4">
+                  <label className="font-bold">Choose a subcategory. </label>
                   <select
-                    value={selectedSubCategory}
+                    value={selectedSubCategory || ""}
                     name="subCategory"
-                    onChange={handleSubCategory}
-                    className="w-full cursor-pointer rounded-2xl bg-[#EBE9F4] p-3 text-[13px]  outline-none">
-                    <option value="">subcategory</option>
-                    <option className="text-[12px] text-[#221354]">Nanny</option>
+                    onChange={handleSubCategoryChange}
+                    className="w-full cursor-pointer appearance-none rounded-2xl bg-[#EBE9F4] p-3 text-[13px] outline-none"
+                  >
+                    <option value="">Subcategory</option>
+                    {subcategories.map((subcategory) => (
+                      <option
+                        key={subcategory.id}
+                        value={subcategory.id}
+                        className="text-[12px] text-[#221354]"
+                      >
+                        <p>{subcategory.name}</p>
+                      </option>
+                    ))}
                   </select>
+                  <IoMdArrowDropdown className="absolute right-5 top-10 cursor-pointer text-status-purpleBase" />
                 </div>
 
                 <div className="grid space-y-4">
-                  <label>
-                    Write a short title that accurately describes your service.{" "}
+                  <label className="font-semibold">
+                    Write a short title that accurately lisitingTitles your
+                    service.{" "}
                   </label>
                   <input
                     type="text"
-                    name="describe"
-                    value={task.describe}
+                    name="lisitingTitle"
+                    value={task.lisitingTitle}
                     onChange={handleChange}
                     placeholder="Casual Babysitting"
                     className="rounded-2xl bg-[#EBE9F4] p-3 text-[13px]  outline-none"
                   />
                 </div>
                 <div className="lg:hidden">
-                  <GeneratedAiDescription />
+                  <AiDesciption setTask={setTask} task={task} />
                 </div>
                 <div className="grid space-y-3">
-                  <label>Please give a detailed description of the service</label>
+                  <label className="font-semibold">
+                    Please give a detailed description of the service
+                  </label>
                   <textarea
-                    className=" rounded-2xl bg-[#EBE9F4] p-3 outline-none h-[350px]"
+                    className=" h-[350px] rounded-2xl bg-[#EBE9F4] p-3 outline-none"
                     placeholder="Casual Babysitting"
-                    name="serviceDetails"
-                    value={task.serviceDetails}
+                    name="description"
+                    value={task.listingDescription}
                     // onChange={handleChange}
 
-                    onChange={(e) => setTask({ ...task, serviceDetails: e.target.value })}>
-                  </textarea>
+                    onChange={(e) =>
+                      setTask({ ...task, listingDescription: e.target.value })
+                    }
+                  ></textarea>
                 </div>
-                {Object.keys(error).map((key, index) => (
-                  <div key={index}>{error[key]}</div>
+                {Object.keys(errors).map((key, index) => (
+                  <div key={index} className="text-red-500">
+                    {errors[key]}
+                  </div>
                 ))}
-                <Button type="submit" className="w-24 rounded-2xl p-3 text-white">
-                  Next
-                </Button>
+                <Button type="submit">Next</Button>
               </form>
             </div>
-
-
-
           </div>
         );
       case 2:
         return (
-          <div className="mb-10 lg:w-[400px] space-y-10">
+          <div className="mb-10 space-y-10 lg:w-[470px]">
             <form onSubmit={nextPages} className="space-y-10">
               <div className="space-y-4">
-                <h2>Choose the pricing plans.</h2>
+                <h2 className="font-bold">Choose the pricing plans.</h2>
                 <div className="grid space-y-4 text-[13px] text-[#221354]">
                   <input
-                    className={`rounded-2xl ${activePlanIndex === 0
-                      ? " text-status-darkViolet p-1 text-lg bg-transparent disabled"
-                      : "bg-[#EBE9F4] hover:bg-status-darkViolet hover:text-white p-4 "
-                      } outline-none text-left placeholder:text-status-darkViolet hover:placeholder:text-white`}
+                    className={`rounded-2xl ${
+                      activePlanIndex === 0
+                        ? " disabled bg-transparent p-1 text-lg font-bold text-status-darkViolet"
+                        : "bg-[#EBE9F4] p-4 hover:bg-status-darkViolet hover:text-white "
+                    } text-left outline-none placeholder:text-[#2A1769] hover:placeholder:text-white`}
                     name="physical"
                     onClick={() => handlePlan(0)}
                     placeholder="Plan 1"
@@ -372,27 +562,28 @@ const AddTaskForm: React.FC = () => {
                   />
                   {isOpen && activePlanIndex === 0 && (
                     <div>
-                      <label>
+                      <label className="font-semibold">
                         Give Details about everything this plan includes
                       </label>
-                      <div className="grid space-y-3 border-2 rounded-2xl pb-5">
+                      <div className="grid space-y-3 rounded-2xl border-2 pb-5">
                         <textarea
-                          className="h-[200px] rounded-2xl bg-[#EBE9F4] p-3 outline-none"
+                          className="h-[200px] rounded-2xl bg-[#EBE9F4] p-3 outline-none placeholder:font-semibold"
                           placeholder="Casual Babysitting"
-                          name="serviceDetails"
-                          value={task.serviceDetails}
-                          onChange={handleChange}></textarea>
-                        <label className="pl-2">Price</label>
+                          name="planDetails"
+                          value={task.planDetails}
+                          onChange={handleChange}
+                        ></textarea>
+                        <label className="pl-2 font-medium">Price</label>
                         <div className="flex items-center space-x-2 pl-2">
                           <input
                             type="text"
-                            name="budget"
-                            value={task.budget}
+                            name="price"
+                            value={task.price}
                             onChange={handleChange}
                             placeholder="$500"
-                            className="rounded-2xl w-1/3 bg-[#EBE9F4] p-3 text-[13px] outline-none"
+                            className="w-1/3 rounded-2xl bg-[#EBE9F4] p-3 text-[13px] outline-none"
                           />
-                          <p className="text-xs text-status-lightViolet">
+                          <p className="text-xs font-bold text-status-lightViolet">
                             Minimum AUD$25 + 10% GST inclusive
                           </p>
                         </div>
@@ -400,10 +591,11 @@ const AddTaskForm: React.FC = () => {
                     </div>
                   )}
                   <input
-                    className={`rounded-2xl ${activePlanIndex === 1
-                      ? " text-status-darkViolet p-1 text-lg bg-transparent"
-                      : "bg-[#EBE9F4] hover:bg-status-darkViolet hover:text-white p-4"
-                      } outline-none text-left placeholder:text-status-darkViolet hover:placeholder:text-white`}
+                    className={`rounded-2xl ${
+                      activePlanIndex === 1
+                        ? " disabled bg-transparent p-1 text-lg font-bold text-status-darkViolet"
+                        : "bg-[#EBE9F4] p-4 hover:bg-status-darkViolet hover:text-white"
+                    } text-left outline-none placeholder:text-[#2A1769] hover:placeholder:text-white`}
                     name="physical"
                     onClick={() => handlePlan(1)}
                     placeholder="Plan 2"
@@ -412,27 +604,28 @@ const AddTaskForm: React.FC = () => {
                   />
                   {isOpen && activePlanIndex === 1 && (
                     <div>
-                      <label>
+                      <label className="font-bold">
                         Give Details about everything this plan includes
                       </label>
-                      <div className="grid space-y-3 border-2 rounded-2xl pb-5">
+                      <div className="grid space-y-3 rounded-2xl border-2 pb-5">
                         <textarea
-                          className="h-[200px] rounded-2xl bg-[#EBE9F4] p-3 outline-none"
+                          className="h-[200px] rounded-2xl bg-[#EBE9F4] p-3 outline-none placeholder:font-bold"
                           placeholder="Casual Babysitting"
-                          name="serviceDetails"
-                          value={task.serviceDetails}
-                          onChange={handleChange}></textarea>
-                        <label className="pl-2">Price</label>
+                          name="planDetails1"
+                          value={task.planDetails1}
+                          onChange={handleChange}
+                        ></textarea>
+                        <label className="pl-2 font-medium">Price</label>
                         <div className="flex items-center space-x-2 pl-2">
                           <input
                             type="text"
-                            name="budget"
-                            value={task.budget}
+                            name="price1"
+                            value={task.price1}
                             onChange={handleChange}
                             placeholder="$500"
-                            className="rounded-2xl w-1/3 bg-[#EBE9F4] p-3 text-[13px] outline-none"
+                            className="w-1/3 rounded-2xl bg-[#EBE9F4] p-3 text-[13px] outline-none"
                           />
-                          <p className="text-xs text-status-lightViolet">
+                          <p className="text-xs font-bold text-status-lightViolet">
                             Minimum AUD$25 + 10% GST inclusive
                           </p>
                         </div>
@@ -440,10 +633,11 @@ const AddTaskForm: React.FC = () => {
                     </div>
                   )}
                   <input
-                    className={`rounded-2xl ${activePlanIndex === 2
-                      ? " text-status-darkViolet p-1 text-lg bg-transparent"
-                      : "bg-[#EBE9F4] hover:bg-status-darkViolet hover:text-white p-4"
-                      } outline-none text-left placeholder:text-status-darkViolet hover:placeholder:text-white`}
+                    className={`rounded-2xl ${
+                      activePlanIndex === 2
+                        ? " disabled bg-transparent p-1 text-lg font-bold text-status-darkViolet"
+                        : "bg-[#EBE9F4] p-4 hover:bg-status-darkViolet hover:text-white"
+                    } text-left outline-none placeholder:text-[#2A1769] hover:placeholder:text-white`}
                     name="physical"
                     onClick={() => handlePlan(2)}
                     placeholder="Plan 3"
@@ -452,27 +646,28 @@ const AddTaskForm: React.FC = () => {
                   />
                   {isOpen && activePlanIndex === 2 && (
                     <div>
-                      <label>
+                      <label className="font-bold">
                         Give Details about everything this plan includes
                       </label>
-                      <div className="grid space-y-3 border-2 rounded-2xl pb-5">
+                      <div className="grid space-y-3 rounded-2xl border-2 pb-5">
                         <textarea
-                          className="h-[200px] rounded-2xl bg-[#EBE9F4] p-3 outline-none"
+                          className="h-[200px] rounded-2xl bg-[#EBE9F4] p-3 outline-none placeholder:font-bold"
                           placeholder="Casual Babysitting"
-                          name="serviceDetails"
-                          value={task.serviceDetails}
-                          onChange={handleChange}></textarea>
-                        <label className="pl-2">Price</label>
+                          name="planDetails2"
+                          value={task.planDetails2}
+                          onChange={handleChange}
+                        ></textarea>
+                        <label className="pl-2 font-medium">Price</label>
                         <div className="flex items-center space-x-2 pl-2">
                           <input
                             type="text"
-                            name="budget"
-                            value={task.budget}
+                            name="price2"
+                            value={task.price2}
                             onChange={handleChange}
                             placeholder="$500"
-                            className="rounded-2xl w-1/3 bg-[#EBE9F4] p-3 text-[13px] outline-none"
+                            className="w-1/3 rounded-2xl bg-[#EBE9F4] p-3 text-[13px] outline-none"
                           />
-                          <p className="text-xs text-status-lightViolet">
+                          <p className="text-xs font-bold text-status-lightViolet">
                             Minimum AUD$25 + 10% GST inclusive
                           </p>
                         </div>
@@ -482,13 +677,14 @@ const AddTaskForm: React.FC = () => {
                 </div>
               </div>
               <div className="space-y-4">
-                <h2>Type of Service</h2>
+                <h2 className="text-xl font-bold">Type of Service</h2>
                 <div className="flex space-x-4 text-[13px] text-[#221354]">
                   <input
-                    className={`rounded-2xl p-2 ${activeButtonIndex === 0
-                      ? "bg-status-darkViolet text-white"
-                      : "bg-[#EBE9F4] hover:bg-status-darkViolet hover:text-white placeholder:text-white"
-                      } outline-none cursor-pointer`}
+                    className={`rounded-2xl p-2 ${
+                      activeButtonIndex === 0
+                        ? "bg-status-purpleBase text-white"
+                        : "bg-[#EBE9F4] placeholder:text-white hover:bg-status-purpleBase hover:text-white"
+                    } cursor-pointer outline-none placeholder:font-bold`}
                     name="physical"
                     onClick={() => handleClick(0)}
                     placeholder="Physical Services"
@@ -496,12 +692,16 @@ const AddTaskForm: React.FC = () => {
                     readOnly
                   />
                   <input
-                    className={`rounded-2xl p-2 ${activeButtonIndex === 1
-                      ? "bg-status-darkViolet text-white"
-                      : "bg-[#EBE9F4] hover:bg-status-darkViolet hover:text-white placeholder:text-white"
-                      } outline-none cursor-pointer`}
+                    className={`rounded-2xl p-2 ${
+                      activeButtonIndex === 1
+                        ? "bg-status-purpleBase text-white"
+                        : "bg-[#EBE9F4] placeholder:text-white hover:bg-status-purpleBase hover:text-white "
+                    } cursor-pointer outline-none placeholder:font-bold`}
                     name="remote"
-                    onClick={() => handleClick(1)}
+                    onClick={() => {
+                      handleClick(1);
+                      setIsRemote("Remote");
+                    }}
                     placeholder="Remote Services"
                     value="Remote Services"
                     readOnly
@@ -512,32 +712,68 @@ const AddTaskForm: React.FC = () => {
               {isOpen && activeButtonIndex === 1 && (
                 <input
                   type="text"
-                  value="Remote"
+                  value={isRemote}
                   readOnly
                   className=" rounded-2xl bg-[#EBE9F4] p-3 "
                 />
               )}
               {isOpen && activeButtonIndex === 0 && (
-                <div className="space-y-10">
-                  <div className="grid space-y-4">
-                    <label>Address(Street and Area)</label>
+                <div className="flex flex-col font-medium text-status-darkpurple lg:flex-row lg:space-x-3">
+                  <div className="flex space-x-4 lg:justify-normal">
+                    <div className="grid space-y-4">
+                      <label>Postal code</label>
+                      <input
+                        value={selectedCode}
+                        onChange={handleCode}
+                        name="postalCode"
+                        className="w-[155px] cursor-pointer rounded-2xl bg-[#EBE9F4]  p-3 text-[13px] outline-none placeholder:font-bold sm:w-[200px]  lg:w-[140px]"
+                      />
+                    </div>
+
+                    <div className="relative grid space-y-4">
+                      <label>City/Suburb</label>
+                      <select
+                        value={selectedCity}
+                        onChange={handleCity}
+                        name="city"
+                        id="city"
+                        className="w-[180px] cursor-pointer appearance-none  rounded-2xl bg-[#EBE9F4] p-3 text-[13px] outline-none placeholder:font-bold lg:w-[155px]"
+                      >
+                        <option value="">Select City/Suburb</option>
+                        {postalCodeData.map((data, index) => (
+                          <option key={index} value={data.name}>
+                            {data.name}
+                          </option>
+                        ))}
+                      </select>
+                      <IoMdArrowDropdown className="absolute right-2 top-9 cursor-pointer text-status-purpleBase" />
+                    </div>
+                  </div>
+                  <div className="grid space-y-4 ">
+                    <label>State/Territory</label>
                     <input
-                      type="text"
-                      name="address"
-                      value={task.address}
+                      value={
+                        postalCodeData.length > 0
+                          ? postalCodeData[0].state.name
+                          : ""
+                      }
                       onChange={handleChange}
-                      placeholder="Enter your house/apartment address"
-                      className="rounded-2xl bg-[#EBE9F4] p-3 text-[13px]  outline-none"
+                      name="state"
+                      id="state"
+                      disabled
+                      className=" cursor-pointer rounded-2xl bg-[#EBE9F4] p-3 text-sm outline-none lg:w-[145px]"
                     />
                   </div>
                 </div>
               )}
               <div className="text-[#FF0000]">
-                {Object.keys(errors).map((key, index) => (
-                  <div key={index}>{errors[key]}</div>
+                {Object.keys(error).map((key, index) => (
+                  <div key={index} className="text-red-500">
+                    {error[key]}
+                  </div>
                 ))}
               </div>
-              <div className="flex space-x-4">
+              <div className="flex justify-between">
                 <Button type="button" theme="outline" onClick={prevPage}>
                   Previous
                 </Button>
@@ -548,215 +784,226 @@ const AddTaskForm: React.FC = () => {
         );
       case 3:
         return (
-          <div className="mb-10 space-y-10">
+          <div className="xs:w-[500px] mb-10 space-y-10 font-bold text-status-darkpurple lg:w-[700px]">
             <form onSubmit={handleSubmit} className="space-y-10">
               <div className="grid space-y-3">
                 <label>Select your availabiliy</label>
                 <textarea
-                  className="h-full rounded-2xl bg-[#EBE9F4] p-3 outline-none"
+                  className="h-full rounded-2xl bg-[#EBE9F4] p-3 outline-none lg:w-2/3"
                   placeholder="e.g Mondays 5pm."
-                  name="serviceDetails"
-                  value={task.serviceDetails}
-                  onChange={handleChange}></textarea>
+                  name="availability"
+                  value={task.availability}
+                  onChange={handleChange}
+                  style={{ resize: "none", overflow: "hidden" }}
+                ></textarea>
               </div>
-              <div className="grid space-y-3">
-                <label>Upload a picture </label>
-                {/* Check if picture is uploaded */}
-                {task.picture ? (
-                  <div className="flex items-end justify-center space-x-2">
-                    {/* Display a disabled input with message */}
-                    <label
-                      htmlFor="file-upload"
-                      className="flex h-48 w-1/2 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-grey3 p-4">
-                      <PiFileArrowDownDuotone className="text-xl text-grey3" />
-                      <span className="text-center text-grey6">
-                        Image Uploaded
-                      </span>
+              <div className="space-y-3">
+                <label className="text-status-darkpurple">
+                  Upload an Image <br /> This is the main image that would be
+                  seen by customers
+                </label>
+                {task.taskImage ? (
+                  <div className="flex items-end ">
+                    <div className="relative flex h-48 w-1/2 items-center justify-center rounded-lg border-2 border-dashed border-[#EBE9F4] p-4 lg:w-2/5">
+                      <img
+                        src={imageURL}
+                        alt="Uploaded Task"
+                        className="h-full w-full object-contain"
+                        width="100%"
+                        height="100%"
+                      />
                       <input
-                        id="file-upload"
+                        id="file-upload-main"
                         type="file"
                         readOnly
                         disabled
+                        name="image"
                         className="hidden"
-                        onChange={handlePictureUpload}
+                        onChange={(e) => handlePictureUpload(e, 0)}
                       />
-                    </label>
+                    </div>
                     <button
-                      className="rounded-lg bg-grey4 px-3 py-1 text-white"
+                      className="rounded-lg bg-tc-gray px-3 py-1 text-white"
                       onClick={() => {
-                        setTask({ ...task, picture: null }); // Clear uploaded image
-                      }}>
+                        setTask({ ...task, taskImage: null });
+                      }}
+                    >
                       Remove
                     </button>
                   </div>
                 ) : (
-                  // If no picture is uploaded, render the file input
                   <label
-                    htmlFor="file-upload"
-                    className="flex h-48 w-1/2 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-grey3 p-4">
-                    <PiFileArrowDownDuotone className="text-xl text-grey3" />
-                    <span className="text-center text-grey3">
-                      Choose a File Upload supports: JPG, PDF, PNG.
+                    htmlFor="file-upload-main"
+                    className="flex h-48 w-1/2 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-[#EBE9F4] p-4 lg:w-2/5 "
+                  >
+                    <PiFileArrowDownDuotone className="text-xl text-[#EBE9F4]" />
+                    <span className="text-center font-bold text-[#EBE9F4]">
+                      File Upload supports: JPG, PDF, PNG.
                     </span>
                     <input
-                      id="file-upload"
+                      id="file-upload-main"
                       type="file"
                       accept=".png, .jpg, .jpeg, .gif"
                       className="hidden"
-                      onChange={handlePictureUpload}
+                      onChange={(e) => handlePictureUpload(e, 0)}
+                      name="image"
                     />
                   </label>
                 )}
               </div>
-              <div className="flex">
-                <div className="grid space-y-3">
-                  <label>Upload a picture </label>
-                  {task.picture ? (
-                    <div className="flex items-end justify-center space-x-2">
-                      {/* Display a disabled input with message */}
+
+              <div className="space-y-4">
+                <p>Upload additional images of service.</p>
+                <div className="flex flex-col space-y-3 lg:flex-row lg:space-x-3 lg:space-y-0">
+                  <div className=" space-y-3">
+                    {task.taskImage1 ? (
+                      <div className="relative flex items-end">
+                        <div className="relative flex h-48 w-1/2 items-center justify-center rounded-lg border-2 border-dashed border-[#EBE9F4] p-4 lg:w-full">
+                          <img
+                            src={imageURL1}
+                            alt="Uploaded Task"
+                            className="h-full w-full object-contain"
+                            width="100%"
+                            height="100%"
+                          />
+                          <input
+                            id="file-upload-1"
+                            type="file"
+                            readOnly
+                            disabled
+                            name="image"
+                            className="hidden"
+                            onChange={(e) => handlePictureUpload(e, 1)}
+                          />
+                        </div>
+                        <button
+                          type="button"
+                          className="absolute right-2 top-2 text-red-500"
+                          onClick={() => setTask({ ...task, taskImage1: null })}
+                        >
+                          <IoMdClose className="h-[24px] w-[24px] rounded-3xl border-2 border-[#5A5960]" />
+                        </button>
+                      </div>
+                    ) : (
                       <label
-                        htmlFor="file-upload"
-                        className="flex h-48 w-1/2 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-grey3 p-4">
-                        <PiFileArrowDownDuotone className="text-xl text-grey3" />
-                        <span className="text-center text-grey6">
-                          Image Uploaded
+                        htmlFor="file-upload-1"
+                        className="flex h-48 w-1/2 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-[#EBE9F4] p-4 lg:w-full "
+                      >
+                        <PiFileArrowDownDuotone className="text-xl text-[#EBE9F4]" />
+                        <span className="text-center font-bold text-[#EBE9F4]">
+                          File Upload supports: JPG, PDF, PNG.
                         </span>
                         <input
-                          id="file-upload"
+                          id="file-upload-1"
                           type="file"
-                          readOnly
-                          disabled
+                          accept=".png, .jpg, .jpeg, .gif"
                           className="hidden"
-                          onChange={handlePictureUpload}
+                          onChange={(e) => handlePictureUpload(e, 1)}
                         />
                       </label>
-                      <button
-                        className="rounded-lg bg-grey4 px-3 py-1 text-white"
-                        onClick={() => {
-                          setTask({ ...task, picture: null }); // Clear uploaded image
-                        }}>
-                        Remove
-                      </button>
-                    </div>
-                  ) : (
-                    // If no picture is uploaded, render the file input
-                    <label
-                      htmlFor="file-upload"
-                      className="flex h-48 w-1/2 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-grey3 p-4">
-                      <PiFileArrowDownDuotone className="text-xl text-grey3" />
-                      <span className="text-center text-grey3">
-                        Choose a File Upload supports: JPG, PDF, PNG.
-                      </span>
-                      <input
-                        id="file-upload"
-                        type="file"
-                        accept=".png, .jpg, .jpeg, .gif"
-                        className="hidden"
-                        onChange={handlePictureUpload}
-                      />
-                    </label>
-                  )}
-                </div>
-                <div className="grid space-y-3">
-                  {task.picture ? (
-                    <div className="flex items-end justify-center space-x-2">
-                      {/* Display a disabled input with message */}
+                    )}
+                  </div>
+
+                  <div className=" space-y-3">
+                    {task.taskImage2 ? (
+                      <div className="relative flex items-end ">
+                        <div className="relative flex h-48 w-1/2 items-center justify-center rounded-lg border-2 border-dashed border-[#EBE9F4] p-4 lg:w-full">
+                          <img
+                            src={imageURL2}
+                            alt="Uploaded Task"
+                            className="h-full w-full object-contain"
+                            width="100%"
+                            height="100%"
+                          />
+                          <input
+                            id="file-upload-2"
+                            type="file"
+                            readOnly
+                            disabled
+                            name="image"
+                            className="hidden"
+                            onChange={(e) => handlePictureUpload(e, 2)}
+                          />
+                        </div>
+                        <button
+                          className="absolute right-2 top-2 text-red-500"
+                          onClick={() => setTask({ ...task, taskImage2: null })}
+                        >
+                          <IoMdClose className="h-[24px] w-[24px] rounded-3xl border-2 border-[#5A5960]" />
+                        </button>
+                      </div>
+                    ) : (
                       <label
-                        htmlFor="file-upload"
-                        className="flex h-48 w-1/2 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-grey3 p-4">
-                        <PiFileArrowDownDuotone className="text-xl text-grey3" />
-                        <span className="text-center text-grey6">
-                          Image Uploaded
+                        htmlFor="file-upload-2"
+                        className="flex h-48 w-1/2 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-[#EBE9F4] p-4 lg:w-full "
+                      >
+                        <PiFileArrowDownDuotone className="text-xl text-[#EBE9F4]" />
+                        <span className="text-center font-bold text-[#EBE9F4]">
+                          File Upload supports: JPG, PDF, PNG.
                         </span>
                         <input
-                          id="file-upload"
+                          id="file-upload-2"
                           type="file"
-                          readOnly
-                          disabled
+                          accept=".png, .jpg, .jpeg, .gif"
                           className="hidden"
-                          onChange={handlePictureUpload}
+                          onChange={(e) => handlePictureUpload(e, 2)}
                         />
                       </label>
-                      <button
-                        className="rounded-lg bg-grey4 px-3 py-1 text-white"
-                        onClick={() => {
-                          setTask({ ...task, picture: null }); // Clear uploaded image
-                        }}>
-                        Remove
-                      </button>
-                    </div>
-                  ) : (
-                    // If no picture is uploaded, render the file input
-                    <label
-                      htmlFor="file-upload"
-                      className="flex h-48 w-1/2 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-grey3 p-4">
-                      <PiFileArrowDownDuotone className="text-xl text-grey3" />
-                      <span className="text-center text-grey3">
-                        Choose a File Upload supports: JPG, PDF, PNG.
-                      </span>
-                      <input
-                        id="file-upload"
-                        type="file"
-                        accept=".png, .jpg, .jpeg, .gif"
-                        className="hidden"
-                        onChange={handlePictureUpload}
-                      />
-                    </label>
-                  )}
-                </div>
-                <div className="grid space-y-3">
-                  <label>Upload a picture </label>
-                  {/* Check if picture is uploaded */}
-                  {task.picture ? (
-                    <div className="flex items-end justify-center space-x-2">
-                      {/* Display a disabled input with message */}
+                    )}
+                  </div>
+
+                  <div className=" space-y-3">
+                    {task.taskImage3 ? (
+                      <div className="relative flex items-end">
+                        <div className="relative flex h-48 w-1/2 items-center justify-center rounded-lg border-2 border-dashed border-[#EBE9F4] p-4 lg:w-full">
+                          <img
+                            src={imageURL3}
+                            alt="Uploaded Task"
+                            className="h-full w-full object-contain"
+                            width="100%"
+                            height="100%"
+                          />
+                          <input
+                            id="file-upload-3"
+                            type="file"
+                            readOnly
+                            disabled
+                            name="image"
+                            className="hidden"
+                            onChange={(e) => handlePictureUpload(e, 3)}
+                          />
+                        </div>
+                        <button
+                          className="absolute right-2 top-2 text-red-500"
+                          onClick={() => setTask({ ...task, taskImage3: null })}
+                        >
+                          <IoMdClose className="h-[24px] w-[24px] rounded-3xl border-2 border-[#5A5960]" />
+                        </button>
+                      </div>
+                    ) : (
                       <label
-                        htmlFor="file-upload"
-                        className="flex h-48 w-1/2 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-grey3 p-4">
-                        <PiFileArrowDownDuotone className="text-xl text-grey3" />
-                        <span className="text-center text-grey6">
-                          Image Uploaded
+                        htmlFor="file-upload-3"
+                        className="flex h-48 w-1/2 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-[#EBE9F4] p-4 lg:w-full "
+                      >
+                        <PiFileArrowDownDuotone className="text-xl text-[#EBE9F4]" />
+                        <span className="text-center font-bold text-[#EBE9F4]">
+                          File Upload supports: JPG, PDF, PNG.
                         </span>
                         <input
-                          id="file-upload"
+                          id="file-upload-3"
                           type="file"
-                          readOnly
-                          disabled
+                          accept=".png, .jpg, .jpeg, .gif"
                           className="hidden"
-                          onChange={handlePictureUpload}
+                          onChange={(e) => handlePictureUpload(e, 3)}
                         />
                       </label>
-                      <button
-                        className="rounded-lg bg-grey4 px-3 py-1 text-white"
-                        onClick={() => {
-                          setTask({ ...task, picture: null }); // Clear uploaded image
-                        }}>
-                        Remove
-                      </button>
-                    </div>
-                  ) : (
-                    // If no picture is uploaded, render the file input
-                    <label
-                      htmlFor="file-upload"
-                      className="flex h-48 w-1/2 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-grey3 p-4">
-                      <PiFileArrowDownDuotone className="text-xl text-grey3" />
-                      <span className="text-center text-grey3">
-                        Choose a File Upload supports: JPG, PDF, PNG.
-                      </span>
-                      <input
-                        id="file-upload"
-                        type="file"
-                        accept=".png, .jpg, .jpeg, .gif"
-                        className="hidden"
-                        onChange={handlePictureUpload}
-                      />
-                    </label>
-                  )}
+                    )}
+                  </div>
                 </div>
               </div>
               <div className="text-[#FF0000]">
-                {Object.keys(error).map((key, index) => (
-                  <div key={index}>{error[key]}</div>
+                {Object.keys(err).map((key, index) => (
+                  <div key={index}>{err[key]}</div>
                 ))}
               </div>
               <div className="flex justify-between">
@@ -774,137 +1021,202 @@ const AddTaskForm: React.FC = () => {
   };
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center">
+    <div className="mt-24 flex min-h-screen flex-col items-center justify-center">
       <Head>
         <title>TaskHub | Provide Service</title>
       </Head>
-      <div className="w-full space-y-3">
-        <div className="flex justify-center space-x-5">
+      <div className="w-full">
+        <div className="mb-3 flex justify-center space-x-5">
           <div
-            className={`${currentPage === 1
-              ? "text-status-darkViolet"
-              : "text-status-darkViolet"
-              }`}>
-            <p className="flex items-center gap-3">
+            className={`${
+              currentPage === 1
+                ? "text-status-purpleBase"
+                : "text-status-purpleBase"
+            }`}
+          >
+            <p className="flex items-center gap-2 text-[12px] md:text-[16px] lg:gap-3">
               <span
-                className={`${currentPage === 1
-                  ? "bg-status-darkViolet text-white"
-                  : "bg-status-darkViolet text-white"
-                  } rounded-xl border-none px-3 py-1`}>
+                className={`${
+                  currentPage === 1
+                    ? "bg-status-purpleBase text-white"
+                    : "bg-status-purpleBase text-white"
+                } rounded-2xl border-none px-3 py-2`}
+              >
                 01
               </span>{" "}
               Services Description
-              <span className="text-[#716F78]">
-                <FaGreaterThan />
+              <span>
+                <IoIosArrowForward />
               </span>
             </p>
           </div>
           <div
-            className={`${currentPage === 2 || currentPage === 3
-              ? "text-status-darkViolet"
-              : " text-[#716F78]"
-              }`}>
-            <p className="flex items-center gap-3">
+            className={`${
+              currentPage === 2 || currentPage === 3
+                ? "text-status-purpleBase"
+                : " text-[#716F78]"
+            }`}
+          >
+            <p className="flex items-center gap-2 text-[12px] md:text-[16px] lg:gap-3">
               <span
-                className={`${currentPage === 2 || currentPage === 3
-                  ? "bg-status-darkViolet text-white"
-                  : "bg-[#EAE9EB] text-[#716F78]"
-                  } rounded-xl border-none px-3 py-1`}>
+                className={`${
+                  currentPage === 2 || currentPage === 3
+                    ? "bg-status-purpleBase text-white"
+                    : "bg-[#EAE9EB] text-[#716F78]"
+                } rounded-2xl border-none px-3 py-2`}
+              >
                 02
               </span>{" "}
               Services Details
-              <span className="text-[#716F78]">
-                <FaGreaterThan />
+              <span>
+                <IoIosArrowForward />
               </span>
             </p>
           </div>
           <div
-            className={`${currentPage === 3 ? "text-status-darkViolet" : " text-[#716F78]"
-              }`}>
-            <p className="flex items-center gap-3">
+            className={`${
+              currentPage === 3 ? "text-status-purpleBase" : " text-[#716F78]"
+            }`}
+          >
+            <p className="flex items-center gap-2 text-[12px] md:text-[16px] lg:gap-3">
               <span
-                className={`${currentPage === 3
-                  ? "bg-status-darkViolet text-white"
-                  : "bg-[#EAE9EB] text-[#716F78]"
-                  } rounded-xl border-none px-3 py-1`}>
+                className={`${
+                  currentPage === 3
+                    ? "bg-status-purpleBase text-white"
+                    : "bg-[#EAE9EB] text-[#716F78]"
+                } rounded-2xl border-none px-3 py-2`}
+              >
                 03
               </span>{" "}
               Image Upload
-              <span className="text-[#716F78]">
-                <FaGreaterThan />
-              </span>
             </p>
           </div>
         </div>
+        <hr className="h-[2px] w-full bg-[#EAE9EB] text-[#EAE9EB]" />
         <div>
-          <hr className="h-[2px] bg-[#EAE9EB] text-[#EAE9EB]" />
           <div className="flex justify-center">
             <div
-              className="container flex items-center justify-center space-x-5 border-2 border-[#EAE9EB] p-3"
-              style={{ borderRadius: "0px 0px 20px 20px ", borderTop: "none" }}>
+              className="container flex w-80 items-center justify-center space-x-5 border-2 border-[#EAE9EB] p-3 lg:w-full"
+              style={{ borderRadius: "0px 0px 20px 20px ", borderTop: "none" }}
+            >
               {/* Progress bar */}
               <div className="h-1 w-2/3 overflow-hidden bg-[#EAE9EB]">
                 <div
-                  className={`h-full ${currentPage === 1
-                    ? "bg-status-darkViolet"
-                    : currentPage === 2
-                      ? "bg-status-darkViolet"
-                      : "bg-status-darkViolet"
-                    }`}
-                  style={{ width: `${(currentPage / 3) * 100}%` }}
+                  className={`h-full ${
+                    currentPage === 1
+                      ? "bg-status-purpleBase"
+                      : currentPage === 2
+                        ? "bg-status-purpleBase"
+                        : "bg-status-purpleBase"
+                  }`}
+                  style={{ width: `${progress}%` }}
                 />
               </div>
-              <p className="text-xs">
-                {Math.round((currentPage / 3) * 100)}% Complete
+              <p className="text-xs text-status-darkpurple">
+                {`${progress}% complete`}
               </p>
             </div>
           </div>
         </div>
-        <div className="lg:flex">
+        <div className="mt-8 lg:flex">
           {currentPage === 1 && (
-            <div className="lg:w-[390px] hidden lg:block mr-[50px] xl:ml-[15%] lg:ml-[10%] ">
-              <GeneratedAiDescription />
+            <div className="mr-[50px] hidden lg:ml-[10%] lg:block lg:w-[390px] xl:ml-[15%] ">
+              <AiDesciption setTask={setTask} task={task} />
             </div>
           )}
 
-          <div className={currentPage !== 1 ? "flex items-center justify-center w-full" : ''}>
+          <div
+            className={
+              currentPage !== 1 ? "flex w-full items-center justify-center" : ""
+            }
+          >
             <div>
-              <div className={currentPage === 1 ? " lg:w-full w-[80%] mx-auto " : ''}>
-                <h2 className="text-2xl">Provide a Service</h2>
-                <p className="text-[12px] text-[#716F78]">
+              <div
+                className={
+                  currentPage === 1 ? " mx-auto w-[80%] lg:w-full " : ""
+                }
+              >
+                <h2 className="text-4xl font-medium text-status-darkpurple">
+                  Provide a Service
+                </h2>
+                <p className="text-[12px] font-medium text-[#716F78]">
                   Please fill out the information below to add a new listing.
                 </p>
               </div>
-              <div className="mt-8 w-full ">
-                {renderPage()}</div>
+              <div className="mt-8">{renderPage()}</div>
             </div>
           </div>
-
-
         </div>
       </div>
       <Popup
         isOpen={isSuccessPopupOpen}
         onClose={() => {
           setIsSuccessPopupOpen(false);
-        }}>
-        <div className="p-5">
-          <div className="relative grid items-center justify-center space-y-10">
-            <div className="flex justify-center text-white">
-              <TiTick className=" h-[40px] w-[40px] rounded-3xl bg-[#FE9B07] p-2" />
+        }}
+      >
+        <div className="p-5 lg:px-20">
+          <div className="relative grid items-center justify-center space-y-5">
+            <div className="flex justify-center text-[1px] text-white">
+              <GrFormCheckmark className="h-[50px] w-[50px] rounded-full bg-[#FE9B07] p-2 lg:h-[60px] lg:w-[60px]" />
             </div>
-            <p className="text-center text-lg">Task Posted</p>
-            <p>
-              Your Task has been posted! please click <br /> on the button to
+            <p className="text-center font-clashDisplay text-[25px] font-extrabold text-[#2A1769] lg:text-[37px] ">
+              Task posted
+            </p>
+            <p className="lg:text-[20px]">
+              Your task has been posted! please click <br /> on the button to
               proceed to marketplace
             </p>
+            <Image
+              src={image}
+              alt="image"
+              className="absolute -right-8 top-40 w-20 lg:-right-20 lg:top-2/3 lg:w-32"
+            />
             <div className="flex justify-center">
-              <button className="w-[100px] rounded-2xl bg-purpleBase p-2 text-[14px] text-white outline-none">
-                Go Home
-              </button>
+              <Link href="/marketplace">
+                <button className="w-[100px] rounded-2xl bg-status-purpleBase p-2 text-[14px] text-white outline-none">
+                  Go Home
+                </button>
+              </Link>
             </div>
-            <div className="absolute -right-10 top-44">
-              <Image src="/public/assets/images/customer/task/Task management.svg" height={10} width={19} alt="img" />
+          </div>
+        </div>
+      </Popup>
+      <Popup
+        isOpen={isSuccessPopupOpen}
+        onClose={() => {
+          setIsSuccessPopupOpen(false);
+        }}
+      >
+        <div className="p-10 lg:px-20">
+          <div className="relative grid items-center justify-center space-y-5">
+            <p className="text-center font-clashDisplay text-[20px] font-extrabold text-[#2A1769] md:text-[36px] lg:text-[37px] ">
+              You are almost done!!!
+            </p>
+            <p className="text-center text-[14px] lg:text-[20px]">
+              Please proceed to update your profile
+              <br /> before your Task can be posted
+            </p>
+            <Image
+              src={image}
+              alt="image"
+              className="absolute -right-12 top-28 w-24 lg:-right-28 lg:top-1/2 lg:w-36"
+            />
+            <Image
+              src={img}
+              alt="image"
+              className="absolute -left-12 top-12 w-12 lg:-left-[105px] lg:top-2 lg:w-24"
+            />
+            <div className="flex justify-center space-x-3 md:justify-around">
+              <Link href="/marketplace">
+                <button className="rounded-2xl border-2 border-status-purpleBase p-2 text-[14px] font-semibold text-status-purpleBase outline-none md:w-[100px]">
+                  Back
+                </button>
+              </Link>
+              <Link href="/marketplace">
+                <button className="rounded-2xl bg-status-purpleBase p-2 text-[14px] text-white outline-none md:w-[100px]">
+                  Go to profile
+                </button>
+              </Link>
             </div>
           </div>
         </div>
@@ -913,4 +1225,4 @@ const AddTaskForm: React.FC = () => {
   );
 };
 
-export default AddTaskForm;
+export default ProvideService;

@@ -16,6 +16,7 @@ const ResetPasswordForm = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [isVisible, setIsVisible] = useState(false);
     const [message, setMessage] = useState('');
+    const [error, setError] = useState<string | null>(null);
 
     const showToast = (msg: string) => {
         setMessage(msg);
@@ -52,10 +53,10 @@ const ResetPasswordForm = () => {
                 router.push("/auth/login");
                 setIsLoading(false);
             }
-            showToast("Password reset successful");
+            // showToast("Password reset successful");
         } catch (error: any) {
             setIsLoading(false);
-            showToast(error.response.data.message);
+            setError(error.response.data.message);
         }
     };
 
@@ -100,6 +101,9 @@ const ResetPasswordForm = () => {
                                 rules={["required", "confirmPassword"]}
                                 type='password'
                             />
+                            {error && (
+                                <div className="text-red-500 text-xl text-center font-bold my-5">{error}</div>
+                            )}
                             <div className='pt-1 flex items-center space-x-4'>
                                 <Button
                                     type='submit'

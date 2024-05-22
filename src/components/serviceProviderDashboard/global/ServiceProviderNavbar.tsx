@@ -37,7 +37,7 @@ const ServiceProviderNavbar = () => {
       >
         <BiMenu color="rgb(56 31 140)" size={24} />
       </button>
-      <Link href="/">
+      <Link href="/marketplace">
         <Image
           src="/assets/images/logo.png"
           width={154}
