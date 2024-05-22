@@ -7,7 +7,7 @@ interface MarketSliceTypes {
     category: string;
     subCategory: string;
     location: string;
-    pricing: number;
+    pricing: { minPrice: number; maxPrice: number };
   };
   categories: CategoryType[];
   listing: ListingDataType[];
@@ -18,7 +18,7 @@ const initialState: MarketSliceTypes = {
     category: "",
     subCategory: "",
     location: "",
-    pricing: 0,
+    pricing: { minPrice: 0, maxPrice: 0 },
   },
   categories: [],
   listing: [],

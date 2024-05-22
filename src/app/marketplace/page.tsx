@@ -132,7 +132,6 @@ const MareketPlace = () => {
           handleClearSearch={handleClearSearch}
           categoryHeader={categoryHeader}
         />
-
         {viewMore ? (
           <ViewMore
             isLoading={isLoading}

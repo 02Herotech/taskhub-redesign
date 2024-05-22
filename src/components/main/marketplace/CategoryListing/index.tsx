@@ -128,13 +128,13 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
       </div>
 
       {ErrorMsg && (
-        <div className="flex min-h-80 w-full flex-col items-center justify-center gap-4 md:h-[100px]">
+        <div className="flex min-h-64 w-full flex-col items-center justify-center gap-4 md:h-[100px]">
           <Image
             src="/assets/images/marketplace/undraw_void_-3-ggu.svg"
             alt="nothing illustration"
-            width={600}
-            height={600}
-            className="mx-auto h-full"
+            width={200}
+            height={200}
+            className="mx-auto h-full max-h-40"
           />
           <p className="sm:text[13px] text-center text-red-500 md:text-[16px]">
             Kindly Check Your Connection And Try Again
