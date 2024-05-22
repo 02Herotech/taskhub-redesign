@@ -16,7 +16,7 @@ import icon2 from "../../../../public/assets/images/homepage/securityFeatures/ge
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
-const TaskhubCan = () => {
+const Taskhub = () => {
     const { data: session } = useSession();
     const router = useRouter();
     console.log(session?.user?.user)
@@ -184,4 +184,4 @@ const TaskhubCan = () => {
     );
 };
 
-export default TaskhubCan;
+export default Taskhub;
