@@ -40,10 +40,25 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
       if (!category) {
         return;
       }
-      const url = `${process.env.NEXT_PUBLIC_API_URL}/listing/search-by-category?string=${category}`;
-      const response = await axios.post(url);
-      dispatch(updateListingArray(response.data));
-      setDisplayListing(response.data);
+      let url;
+      const page = 0;
+      // if (category === "All") {
+      //   // url =
+      //   //   "https://smp.jacinthsolutions.com.au/api/v1/listing/all-active-listings/" +
+      //   //   page;
+      // } else {
+      //   url =
+      //   "https://smp.jacinthsolutions.com.au/api/v1/listing/listing-by-category/" +
+      //   IdCategoryValue +
+      //   "?pageNumber= " +
+      //   page;
+      // }
+      url =
+        "https://smp.jacinthsolutions.com.au/api/v1/listing/all-active-listings/0";
+      const response = await axios.get(url);
+      dispatch(updateListingArray(response.data.content));
+      console.log(response.data.content);
+      setDisplayListing(response.data.content);
     } catch (error) {
       setErrorMsg("Error searching listing");
     } finally {
@@ -53,7 +68,10 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
 
   const handleFetchUserProfile = async (posterId: number) => {
     try {
-      const url = `${process.env.NEXT_PUBLIC_API_URL}/user/user-profile/${posterId}`;
+      const url =
+        "https://smp.jacinthsolutions.com.au/api/v1/user/user-profile/1" +
+        posterId;
+      // const url = `${process.env.NEXT_PUBLIC_API_URL}/user/user-profile/${posterId}`;
       const response = await axios.get(url);
 
       setProfileImages((prevProfileImages) => ({
@@ -81,8 +99,8 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
   }, [category]);
 
   useEffect(() => {
-    if (listing.length > 0) {
-      setDisplayListing(listing.slice(0, 4));
+    if (displayListing.length > 0) {
+      setDisplayListing((prev) => [...prev.slice(0, 4)]);
       displayListing.forEach((task: any) => {
         handleFetchUserProfile(task.posterId);
       });
