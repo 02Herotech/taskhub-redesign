@@ -1,280 +1,279 @@
-"use client"
+"use client";
 
-import Button from '@/components/global/Button';
-import axios from 'axios';
-import { useSession } from 'next-auth/react';
-import React, { useEffect, useRef, useState } from 'react';
-import { BiSend } from 'react-icons/bi';
-import { IoCloseCircleOutline } from 'react-icons/io5';
+import Button from "@/components/global/Button";
+import axios from "axios";
+import { useSession } from "next-auth/react";
+import React, { useEffect, useRef, useState } from "react";
+import { BiSend } from "react-icons/bi";
+import { IoCloseCircleOutline } from "react-icons/io5";
 import { BeatLoader } from "react-spinners";
 
 interface Message {
-    type: 'user' | 'ai';
-    text: string;
+  type: "user" | "ai";
+  text: string;
 }
-
 interface FormData {
-  describe: string;
+  lisitingTitle: string;
   availability: string;
-  taskDescription: string;
+  listingDescription: string;
   planDetails: string;
+  planDetails1: string;
+  planDetails2: string;
   taskImage: File | defaultImage | null;
   taskImage1?: File | defaultImage | null;
   taskImage2?: File | defaultImage | null;
   taskImage3?: File | defaultImage | null;
-  taskTime: string;
-  taskDate: string;
   taskType: string;
-  customerBudget: string;
-  hubTime: string;
-  taskAddress: string[];
-  category: string;
-  subCategory: string;
+  price: string;
+  price1: string;
+  price2: string;
+  userAddress: string[];
+  categoryId: number | null;
+  subCategoryId: number | null;
 }
 
 type defaultImage = string;
 interface AiGenerateProps {
-    setTask: React.Dispatch<React.SetStateAction<FormData>>;
-    task: FormData;
+  setTask: React.Dispatch<React.SetStateAction<FormData>>;
+  task: FormData;
 }
 
 const AiDesciption: React.FC<AiGenerateProps> = ({ task, setTask }) => {
-    const session = useSession();
-    const userName = session?.data?.user?.user?.firstName
+  const session = useSession();
+  const userName = session?.data?.user?.user?.firstName;
 
-    const [showAiInput, setShowAiInput] = useState(false)
-    const toggleAiInput = () => {
-        setShowAiInput(true)
+  const [showAiInput, setShowAiInput] = useState(false);
+  const toggleAiInput = () => {
+    setShowAiInput(true);
+  };
+
+  const [aiQuery, setAiQuery] = useState("");
+  const [currentQuery, setCurrentQuery] = useState("");
+  const handleInputChange = (
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
+    setAiQuery(event.target.value);
+    setCurrentQuery(event.target.value);
+  };
+
+  const [aiChatView, showAiChatView] = useState(false);
+  const closeAiChatView = () => {
+    showAiChatView(false);
+  };
+
+  const [conversation, setConversation] = useState<Message[]>([]);
+  const [AiLoading, setAiLoading] = useState(false);
+
+  const handleAiChatView = async (e: any) => {
+    e.preventDefault();
+    showAiChatView(true);
+    setAiLoading(true);
+    const newConversation: Message[] = [
+      ...conversation,
+      { type: "user", text: aiQuery },
+    ];
+    setConversation(newConversation);
+    try {
+      const url = `${process.env.NEXT_PUBLIC_API_URL}/listing/create-listing/category/content-generate?category=${encodeURIComponent(aiQuery)}`;
+      const response = await axios.get(url);
+      const data = await response.data[0]?.message?.content;
+      newConversation.push({ type: "ai", text: data });
+    } catch (error) {
+      console.error("Error fetching AI response:", error);
+    } finally {
+      setConversation(newConversation);
+      setAiQuery("");
+      setAiLoading(false);
+      // scrollChatToBottom()
     }
+  };
 
-    const [aiQuery, setAiQuery] = useState('')
-    const [currentQuery, setCurrentQuery] = useState('')
-    const handleInputChange = (
-        event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-    ) => {
-        setAiQuery(event.target.value);
-        setCurrentQuery(event.target.value);
-    };
-
-    const [aiChatView, showAiChatView] = useState(false)
-    const closeAiChatView = () => {
-        showAiChatView(false)
+  const conversationEndRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (conversationEndRef.current) {
+      // conversationEndRef.current.scrollIntoView({ behavior: 'smooth' });
+      conversationEndRef.current.scrollIntoView({ behavior: "smooth" });
     }
+  }, [conversation]);
 
-    const [conversation, setConversation] = useState<Message[]>([]);
-    const [AiLoading, setAiLoading] = useState(false);
+  // const scrollChatToBottom = () => {
+  //     if (conversationEndRef.current) {
+  //         conversationEndRef.current.scrollIntoView({ behavior: 'smooth' });
+  //     }
+  // }
 
-    const handleAiChatView = async (e: any) => {
-        e.preventDefault()
-        showAiChatView(true)
-        setAiLoading(true)
-        const newConversation: Message[] = [
-            ...conversation,
-            { type: 'user', text: aiQuery }
-        ];
-        setConversation(newConversation);
-        try {
+  const setServiceDetails = () => {
+    const descriptionIndex = conversation?.length - 1;
+    const description = conversation[descriptionIndex]?.text;
+    setTask({ ...task, listingDescription: description });
+    closeAiChatView();
+  };
 
-            const url = `${process.env.NEXT_PUBLIC_API_URL}/listing/create-listing/category/content-generate?category=${encodeURIComponent(aiQuery)}`;
-            const response = await axios.get(
-                url
-            );
-            const data = await response.data[0]?.message?.content;
-            newConversation.push({ type: 'ai', text: data });
-        } catch (error) {
-            console.error('Error fetching AI response:', error);
-        } finally {
-            setConversation(newConversation);
-            setAiQuery('');
-            setAiLoading(false)
-            // scrollChatToBottom()
-        }
+  const getMoreSuggestions = async () => {
+    setAiLoading(true);
+    try {
+      const url = `${process.env.NEXT_PUBLIC_API_URL}/listing/create-listing/category/content-generate?category=${encodeURIComponent(currentQuery)}`;
+      const response = await axios.get(url);
+      const data = await response.data[0]?.message?.content;
+      const newConversation: Message[] = [
+        ...conversation,
+        { type: "ai", text: data },
+      ];
+      setConversation(newConversation);
+    } catch (error) {
+      console.error("Error fetching AI response:", error);
+    } finally {
+      setAiLoading(false);
     }
+  };
 
-    const conversationEndRef = useRef<HTMLDivElement>(null);
-    useEffect(() => {
-        if (conversationEndRef.current) {
-            // conversationEndRef.current.scrollIntoView({ behavior: 'smooth' });
-            conversationEndRef.current.scrollIntoView({ behavior: 'smooth' });
-        }
-    }, [conversation]);
-
-    // const scrollChatToBottom = () => {
-    //     if (conversationEndRef.current) {
-    //         conversationEndRef.current.scrollIntoView({ behavior: 'smooth' });
-    //     }
-    // }
-
-    const setServiceDetails = () => {
-        const descriptionIndex = conversation?.length - 1
-        const description = conversation[descriptionIndex]?.text
-        setTask({ ...task, taskDescription: description })
-        closeAiChatView()
-    }
-
-
-    const getMoreSuggestions = async () => {
-        setAiLoading(true)
-        try {
-            const url = `${process.env.NEXT_PUBLIC_API_URL}/listing/create-listing/category/content-generate?category=${encodeURIComponent(currentQuery)}`;
-            const response = await axios.get(
-                url
-            );
-            const data = await response.data[0]?.message?.content;
-            const newConversation: Message[] = [
-                ...conversation,
-                { type: 'ai', text: data }
-            ];
-            setConversation(newConversation);
-        } catch (error) {
-            console.error('Error fetching AI response:', error);
-        } finally {
-            setAiLoading(false)
-        }
-    }
-
-    return (
-        <div>
-            <div className="flex flex-col space-y-6 p-4 bg-[#381F8C] mb-5 rounded-[20px]">
-
-                <h2 className="text-lg font-extrabold text-white">
-                    Get personalized AI help
-                </h2>
-                <p className="text-white">
-                    Recommended for you , Get an automated content prompt for your
-                    service description by clicking on{" "}
-                    <span className="text-[#FE9B07]">Generate with AI</span>{" "}
-                    button.
-                </p>
-                <span>
-                    <button
-                        onClick={toggleAiInput} type="button"
-                        className={` text-10px p-2 px-4 transition-transform duration-300  w-[160px]
-       ease-in-out transform hover:scale-110 bg-[#333236] text-white rounded-[20px]
+  return (
+    <div>
+      <div className="mb-5 flex flex-col space-y-6 rounded-[20px] bg-[#381F8C] p-4">
+        <h2 className="text-lg font-extrabold text-white">
+          Get personalized AI help
+        </h2>
+        <p className="text-white">
+          Recommended for you , Get an automated content prompt for your service
+          description by clicking on{" "}
+          <span className="text-[#FE9B07]">Generate with AI</span> button.
+        </p>
+        <span>
+          <button
+            onClick={toggleAiInput}
+            type="button"
+            className={` text-10px w-[160px] transform rounded-[20px] bg-[#333236]  p-2
+       px-4 text-white transition-transform duration-300 ease-in-out hover:scale-110
       `}
-                    >
-                        Generate with AI
-                    </button> </span>
+          >
+            Generate with AI
+          </button>{" "}
+        </span>
+      </div>
+
+      {showAiInput && (
+        <div>
+          <div className="min-h-[200px] rounded-[20px] bg-[#2A1769] p-4 font-medium">
+            <form onSubmit={handleAiChatView} className="pb-5">
+              <textarea
+                name="aiQuery"
+                placeholder="Give a service description for a makeup artist who only does sfx makeup"
+                onChange={handleInputChange}
+                value={aiQuery}
+                className="h-[180px] w-full text-wrap border-none bg-transparent 
+text-[18px] font-normal text-white"
+                required
+              />
+              <div className="hidden justify-end lg:flex ">
+                <button type="submit">
+                  {" "}
+                  <BiSend
+                    color="white"
+                    size={26}
+                    className="transform ease-in-out hover:scale-110 hover:cursor-pointer"
+                  />
+                </button>
+              </div>
+
+              <div className="flex justify-end lg:hidden">
+                <span onClick={handleAiChatView}>
+                  {" "}
+                  <BiSend
+                    color="white"
+                    size={26}
+                    className="transform ease-in-out hover:scale-110 hover:cursor-pointer"
+                  />
+                </span>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {aiChatView && (
+        <div className="bg-opacity-84 fixed inset-0 z-50 flex items-center justify-center bg-black">
+          <div className=" h-[90%] w-[90%] rounded-[16px] bg-[#140B31] p-10 text-white md:w-[60%] lg:w-[50%]">
+            <div className=" flex justify-end">
+              <div
+                className="flex h-[30px] w-[30px] items-center justify-center rounded-full bg-white hover:cursor-pointer"
+                onClick={closeAiChatView}
+              >
+                <IoCloseCircleOutline color="#4E5158" size={20} className="" />
+              </div>
+            </div>
+            <div>
+              <h2 className="text-[25px]">Hello, {userName}</h2>
+              <p className="text-[16px] text-[#716F78]">How can I help you?</p>
             </div>
 
-            {showAiInput && (
-                <div>
-                    <div className="bg-[#2A1769] font-medium min-h-[200px] rounded-[20px] p-4">
-                        <form onSubmit={handleAiChatView} className='pb-5'>
-
-                            <textarea
-                                name='aiQuery'
-                                placeholder='Give a service description for a makeup artist who only does sfx makeup'
-                                onChange={handleInputChange}
-                                value={aiQuery}
-                                className='text-[18px] font-normal bg-transparent border-none text-white 
-w-full text-wrap h-[180px]'
-                                required
-                            />
-                            <div className='hidden lg:flex justify-end '>
-                                <button type="submit" > <BiSend color='white' size={26} className='hover:cursor-pointer hover:scale-110 ease-in-out transform' /></button>
-
-                            </div>
-
-                            <div className='lg:hidden flex justify-end'>
-                                <span onClick={handleAiChatView} > <BiSend color='white' size={26} className='hover:cursor-pointer hover:scale-110 ease-in-out transform' /></span>
-
-                            </div>
-
-                        </form>
-
-                    </div>
-
-
-
-
-
+            <div className="conversation h-[70%] space-y-4 overflow-y-scroll">
+              {conversation.map((entry, index) => (
+                <div
+                  key={index}
+                  className={` ${entry.type === "user" ? "flex justify-end" : ""}`}
+                >
+                  <p
+                    className={` p-2 text-[15px] ${entry.type === "user" ? "mr-[5%] rounded-[12px] bg-white text-[#2A1769] lg:w-[50%] " : "w-[85%]"}`}
+                  >
+                    {entry.text}
+                  </p>
                 </div>
+              ))}
 
-            )}
+              <div ref={conversationEndRef}>
+                <p>
+                  <span className="text-[15px] font-bold">
+                    Are you happy with this suggestion? you can
+                  </span>{" "}
+                  <br className="lg:hidden" />
+                  <span
+                    onClick={setServiceDetails}
+                    className="mt-5 rounded-[20px] bg-[#FE9B07] p-2 px-4 text-[14px] text-white hover:cursor-pointer lg:mt-0"
+                  >
+                    USE
+                  </span>{" "}
+                  <span
+                    onClick={getMoreSuggestions}
+                    className="text-[12px] underline hover:cursor-pointer"
+                  >
+                    or get more suggestions
+                  </span>
+                </p>
+              </div>
+              <div ref={conversationEndRef} />
+            </div>
 
-            {aiChatView && (
-                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-84 z-50">
-                    <div className=' w-[90%] md:w-[60%] lg:w-[50%] bg-[#140B31] h-[90%] p-10 text-white rounded-[16px]'>
-                        <div className=' flex justify-end'>
-                            <div className='rounded-full bg-white h-[30px] w-[30px] flex items-center justify-center hover:cursor-pointer'
-                                onClick={closeAiChatView}>
-                                <IoCloseCircleOutline color='#4E5158' size={20} className='' />
-                            </div>
-                        </div>
-                        <div>
-                            <h2 className='text-[25px]'>
-                                Hello, {userName}
-                            </h2>
-                            <p className='text-[#716F78] text-[16px]'>
-                                How can I help you?
-                            </p>
-                        </div>
-
-                        <div className="conversation h-[70%] overflow-y-scroll space-y-4">
-                            {conversation.map((entry, index) => (
-                                <div key={index} className={` ${entry.type === 'user' ? 'flex justify-end' : ''}`}>
-                                    <p className={` text-[15px] p-2 ${entry.type === 'user' ? 'bg-white text-[#2A1769] rounded-[12px] mr-[5%] lg:w-[50%] ' : 'w-[85%]'}`}>
-                                        {entry.text}
-                                    </p>
-                                </div>
-                            ))}
-
-                            <div ref={conversationEndRef}>
-                                <p >
-                                    <span className='text-[15px] font-bold'>
-                                        Are you happy with this suggestion? you can</span> {' '}
-
-                                        <br className='lg:hidden'/>
-
-                                    <span
-                                        onClick={setServiceDetails} className='bg-[#FE9B07] text-[14px] px-4 text-white p-2 lg:mt-0 mt-5 rounded-[20px] hover:cursor-pointer'>
-                                        USE
-                                    </span> {' '}
-                                    <span
-                                        onClick={getMoreSuggestions}
-                                        className='text-[12px] underline hover:cursor-pointer'>
-                                        or  get more suggestions
-                                    </span>
-
-
-                                </p>
-                            </div>
-                            <div ref={conversationEndRef} />
-                        </div>
-
-                        <p className='h-[20px]'>
-                            {AiLoading ? (
-                                <BeatLoader color={'white'} size={12} />
-                            ) : ''}
-                        </p>
-                        <div className=" font-medium  rounded-[20px] p-4 lg:pb-2 pb-7 relative">
-
-                            <form onSubmit={handleAiChatView}>
-
-                                <textarea
-                                    name='aiQuery'
-                                    placeholder='Enter request here'
-                                    onChange={handleInputChange}
-                                    value={aiQuery}
-                                    className='text-[16px] font-normal bg-transparent border-[2px] border-[#716F78] text-white 
-w-full text-wrap h-[50px] rounded-[16px] p-2'
-                                    required
-                                />
-                                <div className='absolute lg:right-[5%] right-[10%] lg:top-[35%] top-[30%] '>
-                                    <button type="submit" > <BiSend color='white' size={26} className='hover:cursor-pointer hover:scale-110 ease-in-out transform' /></button>
-
-                                </div>
-
-                            </form>
-
-                        </div>
-
-                    </div>
+            <p className="h-[20px]">
+              {AiLoading ? <BeatLoader color={"white"} size={12} /> : ""}
+            </p>
+            <div className=" relative  rounded-[20px] p-4 pb-7 font-medium lg:pb-2">
+              <form onSubmit={handleAiChatView}>
+                <textarea
+                  name="aiQuery"
+                  placeholder="Enter request here"
+                  onChange={handleInputChange}
+                  value={aiQuery}
+                  className="h-[50px] w-full text-wrap rounded-[16px] border-[2px] border-[#716F78] 
+bg-transparent p-2 text-[16px] font-normal text-white"
+                  required
+                />
+                <div className="absolute right-[10%] top-[30%] lg:right-[5%] lg:top-[35%] ">
+                  <button type="submit">
+                    {" "}
+                    <BiSend
+                      color="white"
+                      size={26}
+                      className="transform ease-in-out hover:scale-110 hover:cursor-pointer"
+                    />
+                  </button>
                 </div>
-            )}
+              </form>
+            </div>
+          </div>
         </div>
-    )
+      )}
+    </div>
+  );
 };
 
 export default AiDesciption;
