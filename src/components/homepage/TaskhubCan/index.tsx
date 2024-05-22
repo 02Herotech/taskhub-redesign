@@ -41,7 +41,7 @@ const TaskhubCan = () => {
     };
 
     return (
-        <div className={` w-full bg-gradient-to-b from-[#CEFDF930] to-[#F5DDFD] `}>
+        <div className={` w-full bg-[#CEFDF930] `}>
 
             <h1 className="lg:hidden text-[20px] text-center py-10 px-12 font-[900] text-[#381F8C] block font-SatoshiBold">
             WITH TASKHUB, YOU CAN:
