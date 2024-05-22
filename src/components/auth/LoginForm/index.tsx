@@ -108,7 +108,7 @@ const LoginForm = () => {
               type="password"
             />
             {error && (
-              <div className="text-red-500 text-xl text-center font-bold my-5">{error}</div>
+              <div className="text-status-error-100 text-base text-center font-semibold my-5">{error}</div>
             )}
             <div className="space-y-8 lg:space-y-5">
               <div className="flex items-center justify-end">

@@ -2,7 +2,7 @@ import { cn } from "@/lib/utils";
 import type { InputProps } from "@/types/global/InputProps";
 import { useEffect, useRef, useState } from "react";
 import { useFormContext } from "react-hook-form";
-import { FiAlertTriangle } from "react-icons/fi";
+import { MdErrorOutline } from "react-icons/md";
 import { IoMdEye, IoMdEyeOff } from "react-icons/io";
 
 type ValidationResult = boolean | string;
@@ -321,15 +321,15 @@ const Input = ({
 			)}
 
 			{passwordIsDirty && rules.includes("password") && (
-				<div className='text-sm mt-3 gap-y-1'>
-					<div className="flex items-center text-base">
+				<div className='text-sm mt-3 space-y-2'>
+					<div className="flex items-start text-[12px]">
 						{(!passwordCheck.lowercase || !passwordCheck.uppercase) && (
-							<FiAlertTriangle className="mr-4 text-status-error-100 h-5 w-5" />
+							<MdErrorOutline className="mr-4 text-status-error-100 h-5 w-5" />
 						)}
 						{!passwordCheck.lowercase && (
 							<span className="text-status-error-100 mr-1">
-								A lowercase letter
-								{!passwordCheck.uppercase && <span> and an uppercase letter</span>}
+								A lowercase
+								{!passwordCheck.uppercase && <span> and uppercase letter</span>}
 							</span>
 						)}
 						{!passwordCheck.uppercase && passwordCheck.lowercase && (
@@ -339,13 +339,23 @@ const Input = ({
 						)}
 					</div>
 
-					<div className="flex items-center text-base">
+					<div
+						className={
+							passwordCheck.length
+								? "hidden"
+								: "text-status-error-100 text-[12px] flex items-center space-x-4"
+						}>
+						<MdErrorOutline className="w-5 h-5" />
+						<span className=''>At least 8 characters</span>
+					</div>
+
+					<div className="flex items-start text-[12px]">
 						{(!passwordCheck.special || !passwordCheck.number) && (
-							<FiAlertTriangle className="mr-4 text-status-error-100 h-5 w-5" />
+							<MdErrorOutline className="mr-4 text-status-error-100 h-5 w-5" />
 						)}
 						{!passwordCheck.special && (
 							<span className="text-status-error-100 mr-1">
-								At least 1 special character
+								1 special character
 								{!passwordCheck.number && <span> and 1 number</span>}
 							</span>
 						)}
@@ -354,16 +364,6 @@ const Input = ({
 								1 number
 							</span>
 						)}
-					</div>
-
-					<div
-						className={
-							passwordCheck.length
-								? "hidden"
-								: "text-status-error-100 text-base flex items-center space-x-4"
-						}>
-						<FiAlertTriangle className="w-5 h-5"/>
-						<span className=''>At least 8 characters</span>
 					</div>
 				</div>
 			)}

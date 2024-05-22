@@ -79,7 +79,9 @@ const Navigation = () => {
         <>
           <nav className="fixed left-0 right-0 top-0 z-50 w-full bg-white drop-shadow-sm">
             <div className="container flex items-center justify-between px-7 py-4 lg:px-14 lg:py-5">
-              <Logo />
+              <Link href="/marketplace">
+                <Logo />
+              </Link>
               <button
                 onClick={() => setShowMobileNav((state) => !state)}
                 className="lg:hidden"
@@ -125,7 +127,7 @@ const Navigation = () => {
                     <div className="flex items-center space-x-1">
                       <img
                         src={profileImage || PlaceholderImage.src}
-                        alt="Profile" 
+                        alt="Profile"
                         className="size-[46px] rounded-full object-cover"
                       />
                       <BiChevronDown className="size-6" />
