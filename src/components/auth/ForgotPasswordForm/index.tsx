@@ -30,7 +30,7 @@ const ForgotPasswordForm = () => {
 
     /* Handle submit */
     const onSubmit: SubmitHandler<SignInRequest> = async (payload) => {
-        const params = new URLSearchParams({ email: payload.email});
+        const params = new URLSearchParams({ email: payload.email });
         try {
             setIsLoading(true);
             const response = await axios.post(
@@ -47,7 +47,7 @@ const ForgotPasswordForm = () => {
             }
         } catch (err: any) {
             setIsLoading(false);
-            setError(err?.response?.data?.message); 
+            setError(err?.response?.data?.message);
         }
     };
 
@@ -76,7 +76,7 @@ const ForgotPasswordForm = () => {
                             type='email'
                         />
                         {error && (
-                            <div className="text-red-500 text-xl text-center font-bold my-5">{error}</div>
+                            <div className="text-status-error-100 text-base text-center font-semibold my-5">{error}</div>
                         )}
                         <div className='pt-1 space-y-5'>
                             <Button

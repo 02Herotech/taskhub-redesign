@@ -31,7 +31,7 @@ const config: Config = {
           },
           error: {
             "10": "#FEE4E2",
-            "100": "#FF0000",
+            "100": "#E98282",
           },
           information: {
             "10": "#F2F8FF",
@@ -56,8 +56,8 @@ const config: Config = {
         },
       },
       fontFamily: {
-        satoshi: ["Satoshi", "sans-serif"],
-        clashDisplay: ["Clash Display", "sans-serif"],
+        satoshi: ["satoshi", "sans-serif"],
+        clashDisplay: ["clashDisplay", "sans-serif"],
       },
       container: {
         center: true,
