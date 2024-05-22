@@ -169,7 +169,7 @@ const AiDesciption: React.FC<AiGenerateProps> = ({ task, setTask }) => {
                             </p>
                         </div>
 
-                        <div className="conversation lg:h-[70%] h-[65%] overflow-y-scroll space-y-4 ">
+                        <div className="conversation lg:h-[65%] h-[65%] overflow-y-scroll space-y-4 ">
                             {conversation.map((entry, index) => (
                                 <div key={index}>
                                     <div key={index} className={` ${entry.type === 'user' ? 'flex justify-end' : ''}`}>
@@ -215,7 +215,7 @@ const AiDesciption: React.FC<AiGenerateProps> = ({ task, setTask }) => {
                                     onChange={handleInputChange}
                                     value={aiQuery}
                                     className='text-[16px] font-normal bg-transparent border-[2px] border-[#716F78] text-white 
-w-full text-wrap h-[50px] rounded-[16px] px-2'
+w-full text-wrap h-[50px] rounded-[12px] px-3 pt-3 overflow-hidden'
                                     required
                                 />
                                 <div className='hidden lg:block absolute lg:right-[5%] right-[10%] lg:top-[25%]  top-[20%] '>
