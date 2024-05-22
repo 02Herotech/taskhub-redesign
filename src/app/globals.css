@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 /* Custom styles */
-input:focus {
+.phone-input input:focus {
     outline: none !important;
     border: none !important;
     box-shadow: none !important;

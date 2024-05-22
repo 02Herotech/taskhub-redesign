@@ -131,7 +131,7 @@ const SignUpForm = () => {
                                     international
                                     // maxLength={11}
                                     // minLength={7}
-                                    className="w-full px-3 border border-[#5b5b66] active:border-primary text-dark h-12 overflow-hidden font-normal rounded-[10px] outline-none"
+                                    className="w-full phone-input px-3 border border-[#5b5b66] active:border-primary text-dark h-12 overflow-hidden font-normal rounded-[10px] outline-none"
                                 />
                             </div>
                             <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
