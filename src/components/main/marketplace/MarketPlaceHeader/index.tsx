@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { FormEvent, useState } from "react";
 import styles from "./styles.module.css";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
@@ -12,14 +12,16 @@ const MarketPlaceHeader = () => {
   const userRole = session?.data?.user?.user?.roles;
   const token = session?.data?.user?.accessToken;
 
-  const isServiceProvider = userRole && userRole[0] === "SERVICE-PROVIDER";
+  const isServiceProvider = userRole && userRole[0] === "SERVICE_PROVIDER";
   const userState = isServiceProvider ? "Service" : "Task";
 
-  const handleSubmit = (e: any) => {
-    e.preventDefault;
+  console.log(userState);
+
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
     console.log(description);
     if (!token) {
-      router.push("/login");
+      router.push("/auth/login");
     } else if (isServiceProvider) {
       router.push("/service-provider/provide-service");
     } else {
@@ -30,9 +32,9 @@ const MarketPlaceHeader = () => {
     <div className={`${styles.headerCover} w-full  py-20 md:mt-16 lg:mt-20`}>
       <div className="mx-auto flex max-w-[400px] flex-col items-center justify-center space-y-8 px-5 text-white md:max-w-full md:px-0  ">
         <div className="flex w-full flex-col justify-center space-y-2 sm:items-start md:items-center ">
-          <div className=" mt-10 flex w-full flex-col items-start justify-center md:mt-0 md:flex-row md:items-center md:justify-center ">
-            <h1 className="text-[27px]  font-bold md:text-[39px]">
-              Put up a {userState}
+          <div className=" mt-10 flex w-full flex-col flex-wrap items-start justify-center gap-3 md:mt-0 md:flex-row md:items-center md:justify-center ">
+            <h1 className="text-[27px] font-bold md:text-[39px]">
+              Put up a {userState}.
             </h1>
             <h1 className="text-[27px] font-bold md:text-[39px] ">
               Complete the {userState} at hand.
@@ -44,7 +46,7 @@ const MarketPlaceHeader = () => {
         </div>
 
         <form
-          onSubmit={handleSubmit}
+          onSubmit={(event) => handleSubmit(event)}
           className="flex w-full flex-col items-start md:w-[600px] md:flex-row md:items-center md:space-x-2"
         >
           <input

@@ -13,6 +13,20 @@ import {
   updateCategories,
   updateFilterStatus,
 } from "@/store/Features/marketplace";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import ReactSlider from "react-slider";
+
+const locationData = [
+  "Western Australia",
+  "Northern Territory",
+  "South Australia",
+  "Queensland",
+  "New South Wales",
+  "Victoria",
+  "Tasmania",
+  "Australian Capital Territory",
+];
 
 interface props {
   search1: any;
@@ -28,15 +42,21 @@ const MarketPlaceFilter = ({
   categoryHeader,
 }: props) => {
   const dispatch = useDispatch();
+  const session = useSession();
+  const router = useRouter();
   const {
     currentFilterStatus: { category, subCategory, location, pricing },
     categories,
   } = useSelector((state: RootState) => state.market);
 
+  const token = session?.data?.user?.accessToken;
+
   const [isDropdownOpen, setIsDropdownOpen] = useState({
     isOpened: false,
     category: "",
   });
+
+  const [priceValues, setPriceValues] = useState<[number, number]>([5, 10000]);
 
   const [subCategories, setSubCategories] = useState<SubCategoryType[]>([]);
   const handleSubmit = (e: any) => {
@@ -90,17 +110,6 @@ const MarketPlaceFilter = ({
       setIsDropdownOpen((prev) => ({ ...prev, isOpened: true, category }));
     }
   };
-
-  const locationData = [
-    "Western Australia",
-    "Northern Territory",
-    "South Australia",
-    "Queensland",
-    "New South Wales",
-    "Victoria",
-    "Tasmania",
-    "Australian Capital Territory",
-  ];
 
   return (
     <div className="my-12 flex flex-col space-y-16">
@@ -257,9 +266,33 @@ const MarketPlaceFilter = ({
               <div
                 className={`small-scrollbar absolute top-[calc(100%+1rem)] flex max-h-0 min-w-full flex-col rounded-md bg-violet-50 transition-all duration-300 ${isDropdownOpen.category === "pricing" && isDropdownOpen.isOpened ? "max-h-64 overflow-y-auto border border-slate-200 " : "max-h-0  overflow-hidden "} `}
               >
-                <button className="whitespace-nowrap px-8 py-3 text-left text-base text-violet-normal transition-colors duration-300 hover:bg-violet-100 ">
-                  Slider
-                </button>
+                <div className="space-y-4 p-4">
+                  <div className="min-w-64 p-4">
+                    <div className="mb-6 text-center text-2xl font-bold text-violet-normal">
+                      ${priceValues[0]} - ${priceValues[1]}
+                    </div>
+                    <ReactSlider
+                      className="relative h-2 w-full rounded-md bg-[#FE9B07]"
+                      thumbClassName="absolute h-6 w-6 bg-[#FE9B07] rounded-full cursor-grab transform -translate-y-1/2 top-1/2"
+                      trackClassName="top-1/2 bg-[#FE9B07]"
+                      value={priceValues}
+                      min={5}
+                      max={10000}
+                      step={5}
+                      onChange={(newValues) =>
+                        setPriceValues(newValues as [number, number])
+                      }
+                    />
+                  </div>
+                  <div className="flex items-center gap-4 ">
+                    <button className=" rounded-full  bg-violet-normal px-4 py-2 text-left text-sm text-white transition-opacity duration-300 hover:opacity-90 ">
+                      Apply
+                    </button>
+                    <button className=" rounded-full border border-violet-normal  bg-violet-light px-4 py-2 text-left text-sm text-violet-normal transition-all duration-300  hover:bg-violet-100">
+                      Cancel
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -269,9 +302,9 @@ const MarketPlaceFilter = ({
       <div className="my-10 flex w-full flex-col space-y-10 lg:flex-row lg:items-center  lg:justify-between">
         <div className="flex w-[350px] flex-col space-y-2 md:w-full lg:w-full">
           <h1 className="text-xl font-bold text-violet-dark md:text-3xl">
-            {categoryHeader ? categoryHeader : "Get a Tasker Directly"}
+            {categoryHeader ? categoryHeader : "Get a Specialist Directly"}
           </h1>
-          <p className="text-base font-[400] text-[##381F8C] text-violet-darkHover md:text-lg">
+          <p className="text-base font-[400] text-violet-darkHover md:text-lg">
             {categoryHeader
               ? `Here are few of our ${categoryHeader}`
               : "Browse through our various services"}
@@ -279,7 +312,7 @@ const MarketPlaceFilter = ({
         </div>
 
         <form
-          onSubmit={handleSubmit}
+          onSubmit={(event) => handleSubmit(event)}
           className="flex w-full items-center justify-center lg:justify-end "
         >
           <div className="flex w-full items-center rounded-xl border-[1.5px] border-[#C1BADB] px-3 md:w-[400px]">
