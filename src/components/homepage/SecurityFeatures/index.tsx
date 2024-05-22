@@ -9,10 +9,8 @@ import { useSession } from "next-auth/react";
 import { signOut } from "next-auth/react";
 import axios from "axios";
 
-import image1 from "../../../../public/assets/images/homepage/securityFeatures/getStartedImg.png";
-import image2 from "../../../../public/assets/images/homepage/securityFeatures/getStartedImg2.png";
-import icon1 from "../../../../public/assets/images/homepage/securityFeatures/getStartedIcon1.png";
-import icon2 from "../../../../public/assets/images/homepage/securityFeatures/getStartedIcon2.png";
+import image1 from "../../../../public/assets/images/homepage/securityFeatures/lady.jpg";
+
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
@@ -41,135 +39,73 @@ const SecurityFeatures = () => {
     };
 
     return (
-        <div className={` w-full bg-gradient-to-b from-[#CEFDF930] to-[#F5DDFD] `}>
-
-            <h1 className="lg:hidden text-[20px] text-center py-10 px-12 font-[900] text-[#381F8C] block font-SatoshiBold">
-                Security features ensuring your trust and safety
-            </h1>
-
+        <div className={` w-full  bg-gradient-to-b from-[#FAF2FD] via-[#FDF7FE] to-[#F6E1FD] `}>
             <div
-                className={`mx-auto flex max-w-7xl flex-wrap-reverse items-start justify-between  px-12 pb-20 lg:pt-[60px] lg:flex-nowrap xl:px-8 font-SatoshiBold `}
+                className={`lg:block hidden xl:ml-[80px] lg:ml-[48px] xl:pl-12 pb-20 lg:pt-[60px]   font-SatoshiBold `}
             >
+                <div className="flex justify-between items-center">
+                    <div className="flex w-[400px] flex-col gap-5 space-y-8 xl:w-1/2">
+                        <h1 className="hidden xl:text-[50px] text-[40px] font-[900] text-[#381F8C] lg:block font-SatoshiBlack ">
+                            Security features ensuring your trust and safety
+                        </h1>
+                        <div className="flex flex-col gap-5 lg:space-y-6">
+                            <div className="flex items-center space-x-3">
+                                <span className="text-[20px] text-[#FE9B07]">
+                                    <BiSolidBadgeDollar />
+                                </span>
+                                <p className="font-semibold lg:text-[24px] text-[16px]">Payments with Enhanced Security</p>
+                            </div>
+                            <div className="flex items-center space-x-3">
+                                <span className="text-[20px] text-[#FE9B07]">
+                                    <BsFillPatchCheckFill />
+                                </span>
+                                <p className="font-semibold  lg:text-[24px] text-[16px]">Reliable ratings and reviews</p>
+                            </div>
+                            <div className="flex items-center space-x-3">
+                                <span className="text-[20px] text-[#FE9B07]">
+                                    <BsShieldFillCheck />
+                                </span>
+                                <p className="font-semibold lg:text-[24px] text-[16px]">Coverage for peace of mind</p>
+                            </div>
+                        </div>
 
-
-                <div className="flex w-[400px] flex-col gap-5 space-y-8 xl:w-1/2">
-                    <h1 className="hidden text-[50px] font-[900] text-[#381F8C] lg:block font-SatoshiBlack ">
-                        Security features ensuring your trust and safety
-                    </h1>
-                    <div className="flex flex-col gap-5 lg:space-y-6">
-                        <div className="flex items-center space-x-3">
-                            <span className="text-[20px] text-[#FE9B07]">
-                                <BiSolidBadgeDollar />
-                            </span>
-                            <p className="font-semibold lg:text-[24px] text-[16px]">Payments with Enhanced Security</p>
-                        </div>
-                        <div className="flex items-center space-x-3">
-                            <span className="text-[20px] text-[#FE9B07]">
-                                <BsFillPatchCheckFill />
-                            </span>
-                            <p className="font-semibold  lg:text-[24px] text-[16px]">Reliable ratings and reviews</p>
-                        </div>
-                        <div className="flex items-center space-x-3">
-                            <span className="text-[20px] text-[#FE9B07]">
-                                <BsShieldFillCheck />
-                            </span>
-                            <p className="font-semibold lg:text-[24px] text-[16px]">Coverage for peace of mind</p>
-                        </div>
                     </div>
-                    <div className="">
-                        <button
-                            className="text-bold rounded-[50px] bg-primary lg:text-[20px] text-[16px]
-           px-7 py-2 text-[#EBE9F4] hover:bg-[#25135f] "
-                        >
-                            {session?.user?.user?.roles[0] === "SERVICE_PROVIDER" ? (
-                                <p onClick={handlePostTask}>Start posting task for free</p>
-                            ) : (
-                                <Link href="customer/add-task">
-                                    Start posting task for free
-                                </Link>
-                            )}
-                        </button>
+
+                    <div className="xl:h-[650px] xl:w-[650px] lg:h-[500px] lg:w-[500px]  relative rounded-l-[150px]">
+                        <Image src={image1} fill alt="" className="absolute rounded-l-[150px]" />
                     </div>
                 </div>
 
-                {/* Large screen Images  part*/}
-                <div className="hidden xl:w-1/2 w-[500px] lg:flex justify-end items-center relative">
-                    <Image src={image1} width={400} alt="Security Features"></Image>
-                    <div className="flex absolute -bottom-4 left-[5px] shadow-md bg-white rounded-[30px]">
-                        <Image src={image2} width={250} alt="devon lane"></Image>
-                        <div className="flex flex-col text-[12px] bg-white rounded-r-xl px-4 items-start justify-center space-y-6">
-                            <div className="flex text-[#F2994A] text-[16px] ">
-                                <MdOutlineStarPurple500 />
-                                <MdOutlineStarPurple500 />
-                                <MdOutlineStarPurple500 />
-                                <MdOutlineStarPurple500 />
-                                <MdOutlineStarPurple500 />
-                            </div>
-                            <p className="font-bold">5 Star Rating !!!</p>
-                            <div className="flex text-[10px] space-x-2">
-                                <p className="font-bold">Devon Lane</p>
-                                <p>DLDesign.co</p>
-                            </div>
-                        </div>
 
-                        <div className="flex space-x-2 shadow-md items-center text-[12px] bg-[#EEE5FC] rounded-xl px-4 py-2 absolute -top-[17em] left-12 xl:left-36 xl:py-3 xl:px-6">
-                            <Image src={icon2} width={25} alt="hand shake"></Image>
-                            <p className="font-bold">Task completed</p>
-                            <p className="text-[#969696]">Just now</p>
-                        </div>
+            </div>
 
-                        <div className="flex space-x-2 shadow-md items-center text-[12px] bg-[#EEE5FC] rounded-xl px-3 py-1 absolute -top-[10em] -left-3 xl:left-20 xl:py-3 xl:px-6">
-                            <Image src={icon1} width={25} alt="hand & dollar"></Image>
-                            <p className="font-bold">Payment has been made</p>
-                            <p className="text-[#969696]">2mins ago</p>
-                        </div>
+            <div className="lg:hidden px-12">
+                <h1 className=" text-[20px] text-center pt-10  font-[900] text-[#381F8C] block font-SatoshiBold">
+                    Security features ensuring your trust and safety
+                </h1>
 
-
-                    </div>
+                <div className="h-[250px] w-[250px] my-5 relative rounded-[150px]">
+                    <Image src={image1} fill alt="" className="absolute rounded-[150px]" />
                 </div>
 
-                {/* Mobile Images  part*/}
-
-                <div className="lg:hidden  w-full flex flex-col items-center justify-cente  ">
-                    <div className=" w-full flex flex-col items-center justify-cente relative">
-                        <div className="relative w-[85%] h-[300px] rounded-lg">
-                            <Image src={image1} fill alt="Security Features" className="object-cover rounded-[15px]"></Image>
-                        </div>
-
-
-                        <div className="flex space-x-2 shadow-md items-center text-[8px] bg-[#EEE5FC] rounded-xl px-4 py-2 absolute top-[120px] -left-[20px] ">
-                            <Image src={icon2} width={25} alt="hand shake"></Image>
-                            <p className="font-bold">Task completed</p>
-                            <p className="text-[#969696]">Just now</p>
-                        </div>
-
-                        <div className="flex space-x-2 shadow-md items-center text-[8px] bg-[#EEE5FC] rounded-xl px-3 py-2 absolute top-[210px] -right-[20px] ">
-                            <Image src={icon1} width={25} alt="hand & dollar"></Image>
-                            <p className="font-bold">Payment has been made</p>
-                            <p className="text-[#969696]">2mins ago</p>
-                        </div>
-
+                <div className="flex flex-col gap-5 pb-10 ">
+                    <div className="flex items-center space-x-3">
+                        <span className="text-[20px] text-[#FE9B07]">
+                            <BiSolidBadgeDollar />
+                        </span>
+                        <p className="font-semibold  text-[16px]">Payments with Enhanced Security</p>
                     </div>
-
-                    <div className="flex  shadow-md bg-white rounded-[30px] w-[250px] mt-5">
-                        <Image src={image2} width={150} alt="devon lane"></Image>
-                        <div className="flex flex-col text-[12px] bg-white rounded-r-xl px-4 items-start justify-center space-y-6">
-                            <div className="flex text-[#F2994A] text-[16px] ">
-                                <MdOutlineStarPurple500 />
-                                <MdOutlineStarPurple500 />
-                                <MdOutlineStarPurple500 />
-                                <MdOutlineStarPurple500 />
-                                <MdOutlineStarPurple500 />
-                            </div>
-                            <p className="font-bold text-[8px]">5 Star Rating !!!</p>
-                            <div className="flex text-[8px] space-x-2">
-                                <p className="font-bold">Devon Lane</p>
-                                <p>DLDesign.co</p>
-                            </div>
-                        </div>
-
-
-
+                    <div className="flex items-center space-x-3">
+                        <span className="text-[20px] text-[#FE9B07]">
+                            <BsFillPatchCheckFill />
+                        </span>
+                        <p className="font-semibold   text-[16px]">Reliable ratings and reviews</p>
+                    </div>
+                    <div className="flex items-center space-x-3">
+                        <span className="text-[20px] text-[#FE9B07]">
+                            <BsShieldFillCheck />
+                        </span>
+                        <p className="font-semibold text-[16px]">Coverage for peace of mind</p>
                     </div>
                 </div>
             </div>
