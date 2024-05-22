@@ -24,7 +24,7 @@ const AuthForm = () => {
 
                 <div className="space-y-10 font-satoshi">
                     <h2 className="text-primary lg:text-2xl font-bold">Sign up as a:</h2>
-                    <div className='flex items-center space-x-8 w-full'>
+                    <div className='flex items-center max-lg:justify-center space-x-8 w-full'>
                         <button
                             onClick={() => setUserType("Customer")}
                             className={`h-[48px] w-[120px] lg:w-[210px] lg:h-[70px] bg-status-lightViolet rounded-2xl font-bold text-sm lg:text-2xl text-primary ${userType === "Customer" ? "border border-primary" : "border-none"}`}

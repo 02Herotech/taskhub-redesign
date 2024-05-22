@@ -79,7 +79,9 @@ interface searchListing {
 const HeroSection = () => {
   const { data: session } = useSession();
   const router = useRouter();
-  console.log(session?.user?.user)
+  const customerParams = new URLSearchParams({ userType: "customer" });
+  const serviceProviderParams = new URLSearchParams({ userType: "serviceProvider" });
+
 
   const handlePostTask = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
@@ -189,13 +191,13 @@ const HeroSection = () => {
                   className=" rounded-[50px] bg-primary xl:text-[16px]
            xl:px-7 lg:px-3 py-2 text-[#EBE9F4] hover:bg-[#25135f] w-[250px] xl:w-[190px] lg:w-[155px]  "
                 >
-                  {session?.user?.user?.roles[0] === "SERVICE_PROVIDER" ? (
+                  {/* {session?.user?.user?.roles[0] === "SERVICE_PROVIDER" ? (
                     <p onClick={handlePostTask}>Post your first task</p>
-                  ) : (
-                    <Link href="customer/add-task">
+                  ) : ( */}
+                  <Link href={`/auth/sign-up?${customerParams.toString()}`}>
                       Post your first task
                     </Link>
-                  )}
+                  {/* )}   */}
                 </button>
               </div>
 
@@ -204,23 +206,15 @@ const HeroSection = () => {
                   className=" rounded-[50px] w-[250px] bg-[#FE9B07] text-[#FFF5E6] xl:text-[16px] 
                           px-3 py-2    hover:bg-[#e79823]  "
                 >
-                  {session?.user?.user?.roles[0] === "CUSTOMER" ? (
-                    <div
-                      onClick={handleBecomeSP}
-                      className="flex items-center justify-center"
-                    >
-                      <p className="">Become a Service Provider</p>
-
-                    </div>
-                  ) : (
+                  
                     <Link
-                      href="/service-provider/dashboard"
+                    href={`/auth/sign-up?${serviceProviderParams.toString()}`}
                       className="flex items-center justify-center"
                     >
                       <p className="">Become a Service Provider</p>
 
                     </Link>
-                  )}
+                  {/* )} */}
                 </button>
               </div>
 

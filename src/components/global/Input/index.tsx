@@ -225,8 +225,8 @@ const Input = ({
 	if (tag === "textarea")
 		return (
 			<label htmlFor={id} className='flex flex-col relative'>
-				<span className='w-full text-base text-left leading-5 capitalize text-[#5B5B66] mb-2'>
-					{label}
+				<span className='w-full flex items-center space-x-2 text-base text-left leading-5 mb-2'>
+					<span className='capitalize text-[#333236] font-medium'>{label}</span>
 				</span>
 				<textarea
 					{...register}
@@ -268,7 +268,7 @@ const Input = ({
 	return (
 		<label htmlFor={id} className='flex flex-col relative'>
 			<span className='w-full flex items-center space-x-2 text-base text-left leading-5 mb-2'>
-				<span className='capitalize text-[#5B5B66]'>{label}</span>
+				<span className='capitalize text-[#333236] font-medium'>{label}</span>
 			</span>
 			<input
 				onFocus={() => setPasswordIsDirty(true)}
@@ -296,7 +296,7 @@ const Input = ({
 					type='button'
 					onClick={() => setShowPassword(!showPassword)}
 					className='absolute focus:border-primary focus:outline-primary flex items-center justify-center h-[44px] w-12 right-[2px] top-7 cursor-pointer'>
-					<div className='text-primary font-bold pr-4'>
+					<div className='text-black font-bold pr-4'>
 						{!showPassword ? <IoMdEye className="w-7 h-7" /> : <IoMdEyeOff className="w-7 h-7" />}
 					</div>
 				</button>
@@ -315,7 +315,7 @@ const Input = ({
 			)}
 
 			{!rules.includes("password") && (error || customError) && (
-				<span className='text-xs text-left mt-2 text-[#E98282]'>
+				<span className='text-xs text-left mt-2 text-status-error-100'>
 					*{customError || error?.message}
 				</span>
 			)}
@@ -324,16 +324,16 @@ const Input = ({
 				<div className='text-sm mt-3 gap-y-1'>
 					<div className="flex items-center text-base">
 						{(!passwordCheck.lowercase || !passwordCheck.uppercase) && (
-							<FiAlertTriangle className="mr-4 text-[#E98282]" />
+							<FiAlertTriangle className="mr-4 text-status-error-100 h-5 w-5" />
 						)}
 						{!passwordCheck.lowercase && (
-							<span className="text-[#E98282] mr-1">
+							<span className="text-status-error-100 mr-1">
 								A lowercase letter
 								{!passwordCheck.uppercase && <span> and an uppercase letter</span>}
 							</span>
 						)}
 						{!passwordCheck.uppercase && passwordCheck.lowercase && (
-							<span className="text-[#E98282]">
+							<span className="text-status-error-100">
 								An uppercase letter
 							</span>
 						)}
@@ -341,16 +341,16 @@ const Input = ({
 
 					<div className="flex items-center text-base">
 						{(!passwordCheck.special || !passwordCheck.number) && (
-							<FiAlertTriangle className="mr-4 text-[#E98282]" />
+							<FiAlertTriangle className="mr-4 text-status-error-100 h-5 w-5" />
 						)}
 						{!passwordCheck.special && (
-							<span className="text-[#E98282] mr-1">
+							<span className="text-status-error-100 mr-1">
 								At least 1 special character
 								{!passwordCheck.number && <span> and 1 number</span>}
 							</span>
 						)}
 						{!passwordCheck.number && passwordCheck.special && (
-							<span className="text-[#E98282]">
+							<span className="text-status-error-100">
 								1 number
 							</span>
 						)}
@@ -360,9 +360,9 @@ const Input = ({
 						className={
 							passwordCheck.length
 								? "hidden"
-								: "text-[#E98282] text-base flex items-center space-x-4"
+								: "text-status-error-100 text-base flex items-center space-x-4"
 						}>
-						<FiAlertTriangle />
+						<FiAlertTriangle className="w-5 h-5"/>
 						<span className=''>At least 8 characters</span>
 					</div>
 				</div>

@@ -22,7 +22,7 @@ const ServiceProviderNavbar = () => {
   const [isRightSidebarOpen, setIsRightSidebarOpen] = useState(false);
 
   return (
-    <header className="fixed left-0 top-0 z-40 mx-auto flex h-[90px] w-full items-center justify-between border-b border-[#E5E9F0] bg-white px-4 lg:px-10 ">
+    <header className="fixed left-0 top-0 z-40 mx-auto flex h-20 w-full items-center justify-between border-b border-[#E5E9F0] bg-white px-4 lg:px-10 ">
       <ServiceProvideMobileNav
         setIsLeftSidebarOpen={setIsLeftSidebarOpen}
         isLeftSidebarOpen={isLeftSidebarOpen}
@@ -37,7 +37,7 @@ const ServiceProviderNavbar = () => {
       >
         <BiMenu color="rgb(56 31 140)" size={24} />
       </button>
-      <Link href="/">
+      <Link href="/marketplace">
         <Image
           src="/assets/images/logo.png"
           width={154}
@@ -67,7 +67,7 @@ const ServiceProviderNavbar = () => {
           Market Place
         </Link>
       </nav>
-      <div>
+      <div className="flex items-center gap-2">
         <ServiceProviderUserNav />
         <button
           className="flex items-center gap-1 lg:hidden"
