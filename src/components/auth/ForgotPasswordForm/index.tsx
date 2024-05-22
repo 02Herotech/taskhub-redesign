@@ -52,7 +52,7 @@ const ForgotPasswordForm = () => {
     };
 
     return (
-        <section className='w-full xl:w-[554px] mx-auto max-lg:p-10'>
+        <section className='w-full xl:w-[554px] mx-auto max-lg:p-5'>
             <div className='space-y-10'>
                 <div className="space-y-4 font-clashDisplay">
                     <h1 className='text-2xl lg:text-4xl text-[#190E3F] font-medium'>

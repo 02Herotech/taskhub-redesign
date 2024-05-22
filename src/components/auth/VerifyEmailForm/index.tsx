@@ -7,7 +7,7 @@ const VerifyEmailForm = ({ email }: { email: string }) => {
 
     return (
         <Suspense>
-            <section className='w-full xl:w-[554px] mx-auto max-lg:p-10 h-[60vh] flex items-center justify-center'>
+            <section className='w-full xl:w-[554px] mx-auto max-lg:p-5 h-[60vh] flex items-center justify-center'>
                 <div className="space-y-4">
                     <h1 className='text-2xl lg:text-4xl text-[#190E3F] font-medium'>
                         Verify Email Address
