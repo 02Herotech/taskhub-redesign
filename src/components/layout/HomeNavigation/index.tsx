@@ -50,7 +50,9 @@ const HomeNavigation = () => {
     <>
       <nav className="fixed left-0 right-0 top-0 z-50 w-full bg-[#F5E2FC]">
         <div className="container flex items-center justify-between px-7 py-4 lg:px-12 lg:py-5">
-          <Logo />
+          <Link href="/marketplace">
+            <Logo />
+          </Link>
           <ul className="hidden items-center space-x-20 lg:flex">
             {links.map((link) => {
               return (
