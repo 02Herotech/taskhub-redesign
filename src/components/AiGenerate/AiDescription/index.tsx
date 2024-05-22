@@ -16,27 +16,29 @@ interface Message {
 }
 
 interface FormData {
-    describe: string;
+    lisitingTitle: string;
     availability: string;
-    taskDescription: string;
+    
+    listingDescription: string;
     planDetails: string;
+    planDetails1: string;
+    planDetails2: string;
     taskImage: File | defaultImage | null;
     taskImage1?: File | defaultImage | null;
     taskImage2?: File | defaultImage | null;
     taskImage3?: File | defaultImage | null;
-    taskTime: string;
-    taskDate: string;
     taskType: string;
-    customerBudget: string;
-    hubTime: string;
-    taskAddress: string[];
-    category: string;
-    subCategory: string;
-}
+    price: string;
+    price1: string;
+    price2: string;
+    userAddress: string[];
+    categoryId: number | null;
+    subCategoryId: number | null;
+  }
 
 type defaultImage = string;
 interface AiGenerateProps {
-    setTask: React.Dispatch<React.SetStateAction<FormData>>;
+    setTask: React.Dispatch<React.SetStateAction<FormData>> | any;
     task: FormData;
 }
 
@@ -101,7 +103,7 @@ const AiDesciption: React.FC<AiGenerateProps> = ({ task, setTask }) => {
 
     const setServiceDetails = (index: any) => {
         const description = conversation[index]?.text
-        setTask({ ...task, taskDescription: description })
+        setTask({ ...task, listingDescription: description })
         AiChatView()
     }
 
