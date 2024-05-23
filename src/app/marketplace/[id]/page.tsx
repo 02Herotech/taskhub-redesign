@@ -105,17 +105,22 @@ const Page = () => {
           </div>
         ) : displayData ? (
           <main className="pt-16 text-[#221354]">
-            <header className=" mx-auto bg-slate-200  p-4 lg:rounded-bl-[5rem] lg:rounded-br-[5rem] lg:px-10 lg:py-10 ">
-              <Image
-                src={
-                  displayData?.businessPictures[0] ??
-                  "/images/marketplace/singleTask/marketPlace banner.png"
-                }
-                alt="banner"
-                width={800}
-                height={500}
-                className="mx-auto max-h-[400px] w-full max-w-screen-xl object-cover lg:rounded-bl-[5rem] lg:rounded-br-[5rem] "
-              />
+            <header className=" mx-auto bg-slate-200  p-4 lg:rounded-bl-[2rem] lg:rounded-br-[2rem] lg:px-10 lg:py-10 ">
+              <div className=" no-scrollbar flex items-center gap-4 overflow-x-auto py-10 lg:gap-10  ">
+                {displayData?.businessPictures.map((item, index) => (
+                  <Image
+                    key={index}
+                    src={
+                      item ??
+                      "/images/marketplace/singleTask/marketPlace banner.png"
+                    }
+                    alt="banner"
+                    width={800}
+                    height={500}
+                    className="mx-auto max-h-[400px] min-h-64 w-full max-w-screen-xl  rounded-lg object-cover "
+                  />
+                ))}
+              </div>
             </header>
             <section className="mx-auto grid max-w-screen-xl gap-4 p-4 lg:grid-cols-12 lg:gap-16 lg:p-10 ">
               <article className="space-y-4 lg:col-span-6">
@@ -200,13 +205,13 @@ const Page = () => {
                 planThreeDescription={displayData?.planThreeDescription}
               />
             </section>
-            <section className="mx-auto p-4 lg:p-10 ">
+            <section className="mx-auto w-full p-4 lg:p-10 ">
               <Image
                 src="/assets/images/marketplace/singleTask/googlemap.png"
                 alt="googlemap"
                 width={800}
                 height={500}
-                className="w-full max-w-screen-xl "
+                className="mx-auto w-full max-w-screen-xl "
               />
             </section>
 
