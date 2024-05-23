@@ -320,8 +320,8 @@ const Tasks = () => {
                     Reset
                 </Button>
             </div>
-            <div className=" flex items-center justify-center w-full">
-                <div className="lg:hidden mt-10">
+            <div className="flex items-center justify-center w-full">
+                <div className="lg:hidden mt-5">
                     <Dropdown
                         trigger={() => (
                             <Button theme="outline" className="flex items-center space-x-4 rounded-full w-[250px]">
