@@ -29,13 +29,10 @@ const locationData = [
 ];
 
 interface props {
-  search1: any;
-  handleSearch1: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  handleClearSearch: () => void;
   categoryHeader: any;
 }
 
-const MarketPlaceFilter = ({ handleClearSearch, categoryHeader }: props) => {
+const MarketPlaceFilter = ({ categoryHeader }: props) => {
   const dispatch = useDispatch();
   const {
     currentFilterStatus: { category, subCategory, location, pricing, search },
@@ -358,13 +355,13 @@ const MarketPlaceFilter = ({ handleClearSearch, categoryHeader }: props) => {
               placeholder="Search"
             />
 
-            {search && (
+            {/* {search && (
               <IoClose
                 size={15}
                 className=" text-grey6 cursor-pointer hover:text-[#C1BADB] "
                 onClick={handleClearSearch}
               />
-            )}
+            )} */}
           </div>
 
           <button

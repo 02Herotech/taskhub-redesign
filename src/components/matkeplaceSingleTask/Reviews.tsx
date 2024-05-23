@@ -18,7 +18,12 @@ const Reviews = () => {
           Add Review
         </button>
       </form>
-      <article className="flex flex-wrap items-center justify-center gap-8">
+      <div className="flex min-h-40 items-center justify-center">
+        <p className="animate-pulse text-lg font-medium">
+          No current review ...
+        </p>
+      </div>
+      {/* <article className="flex flex-wrap items-center justify-center gap-8">
         <div className="flex w-full max-w-lg flex-col gap-6 ">
           <div className="flex items-center gap-2">
             <FaStar fill="gold" />
@@ -75,7 +80,7 @@ const Reviews = () => {
             </div>
           </div>
         </div>
-      </article>
+      </article> */}
     </section>
   );
 };

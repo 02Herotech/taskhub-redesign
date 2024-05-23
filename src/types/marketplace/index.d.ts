@@ -91,8 +91,8 @@ declare interface ListingDataType2 {
   postCode: string;
   availableDays: string[];
   createdAt: number[];
-  available: true;
-  deleted: false;
+  available: boolean;
+  deleted: boolean;
   stripeId: string;
   businessPictures: string[];
 }

@@ -126,12 +126,7 @@ const MareketPlace = () => {
     <main className="font-satoshi">
       <MarketPlaceHeader />
       <div className="mx-auto flex flex-col px-6 md:max-w-7xl md:px-20">
-        <MarketPlaceFilter
-          search1={search1}
-          handleSearch1={handleSearch1}
-          handleClearSearch={handleClearSearch}
-          categoryHeader={categoryHeader}
-        />
+        <MarketPlaceFilter categoryHeader={categoryHeader} />
         <div>
           {searching ? (
             <SearchResult

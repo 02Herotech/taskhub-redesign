@@ -2,8 +2,36 @@ import React, { useState } from "react";
 import { BsTriangleFill } from "react-icons/bs";
 import PricingModal from "./PricingModal";
 
-const PricingPlan = () => {
+interface PricingPlanProps {
+  planOnePrice: number;
+  planTwoPrice: number;
+  planThreePrice: number;
+  planOneDescription: string;
+  planTwoDescription: string;
+  planThreeDescription: string;
+}
+
+const PricingPlan = ({
+  planOneDescription,
+  planOnePrice,
+  planTwoPrice,
+  planTwoDescription,
+  planThreePrice,
+  planThreeDescription,
+}: PricingPlanProps) => {
   const [isModalShown, setIsModalShown] = useState(false);
+  const [isTextExpanded, setIsTextExpanded] = useState({
+    index: 1,
+    state: false,
+  });
+
+  const handleExpandText = (index: number) => {
+    if (isTextExpanded.index === index) {
+      setIsTextExpanded({ index: index, state: !isTextExpanded.state });
+    } else {
+      setIsTextExpanded({ index: index, state: true });
+    }
+  };
 
   return (
     <article className="relative lg:col-span-5 lg:col-start-8 ">
@@ -19,10 +47,10 @@ const PricingPlan = () => {
         <div className="space-y-2 py-6">
           <div className="flex items-center justify-between">
             <h2 className="flex flex-col  text-3xl font-extrabold ">
-              A$ 30
-              <span className="text-base font-normal text-slate-500  ">
+              A$ {planOnePrice}
+              {/* <span className="text-base font-normal text-slate-500  ">
                 1.5 hours
-              </span>
+              </span> */}
             </h2>
             <button
               onClick={() => setIsModalShown(true)}
@@ -32,10 +60,13 @@ const PricingPlan = () => {
             </button>
           </div>
           <button
-            onClick={() => setIsModalShown(true)}
+            onClick={() => handleExpandText(1)}
             className="flex w-full justify-between gap-2 font-normal text-slate-500  "
           >
-            Lorem ipsum dolor sit amet elit jkl aols ...
+            {isTextExpanded.index === 1 && isTextExpanded.state
+              ? planOneDescription
+              : planOneDescription.split(" ").slice(0, 20).join(" ") + "..."}
+
             <span className="pt-2">
               <BsTriangleFill
                 size={12}
@@ -48,10 +79,10 @@ const PricingPlan = () => {
         <div className="space-y-2 py-6">
           <div className="flex items-center justify-between">
             <h2 className="flex flex-col  text-3xl font-extrabold ">
-              A$ 30
-              <span className="text-base font-normal text-slate-500  ">
+              A$ {planTwoPrice}
+              {/* <span className="text-base font-normal text-slate-500  ">
                 1.5 hours
-              </span>
+              </span> */}
             </h2>
             <button
               onClick={() => setIsModalShown(true)}
@@ -60,8 +91,13 @@ const PricingPlan = () => {
               Book Task
             </button>
           </div>
-          <button className="flex w-full justify-between gap-2 font-normal text-slate-500  ">
-            Lorem ipsum dolor sit amet elit jkl aols ...
+          <button
+            onClick={() => handleExpandText(2)}
+            className="flex w-full justify-between gap-2 font-normal text-slate-500  "
+          >
+            {isTextExpanded.index === 2 && isTextExpanded.state
+              ? planTwoDescription
+              : planTwoDescription.split(" ").slice(0, 20).join(" ") + "..."}
             <span className="pt-2">
               <BsTriangleFill
                 size={12}
@@ -74,17 +110,22 @@ const PricingPlan = () => {
         <div className="space-y-2 py-4">
           <div className="flex items-center justify-between">
             <h2 className="flex flex-col  text-3xl font-extrabold ">
-              A$ 30
-              <span className="text-base font-normal text-slate-500  ">
+              A$ {planThreePrice}
+              {/* <span className="text-base font-normal text-slate-500  ">
                 1.5 hours
-              </span>
+              </span> */}
             </h2>
             <button className="rounded-full bg-[#381F8C] px-6 py-3 text-white hover:opacity-90 ">
               Book Task
             </button>
           </div>
-          <button className="flex w-full justify-between gap-2 font-normal text-slate-500  ">
-            Lorem ipsum dolor sit amet elit jkl aols ...
+          <button
+            onClick={() => handleExpandText(3)}
+            className="flex w-full justify-between gap-2 font-normal text-slate-500  "
+          >
+            {isTextExpanded.index === 1 && isTextExpanded.state
+              ? planThreeDescription
+              : planThreeDescription.split(" ").slice(0, 20).join(" ") + "..."}
             <span className="pt-2">
               <BsTriangleFill
                 size={12}
