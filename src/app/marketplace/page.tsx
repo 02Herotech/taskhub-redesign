@@ -21,6 +21,8 @@ import { useSession } from "next-auth/react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store";
 import Loading from "@/shared/loading";
+import Toast from "@/components/global/Toast";
+import Link from "next/link";
 
 const categoryIcons = [
   FaHome,
@@ -36,6 +38,9 @@ const categoryIcons = [
 const MareketPlace = () => {
   const dispatch = useDispatch();
   const { categories } = useSelector((state: RootState) => state.market);
+  const session = useSession();
+  const isAuth = session.status === "authenticated";
+  const isComplete = session.data?.user.user.enabled;
 
   const [filterData, setFilterData] = useState<ListingDataType[]>([]);
   const [viewMoreListing, setViewMoreListing] = useState<ListingDataType[]>([]);
@@ -54,6 +59,7 @@ const MareketPlace = () => {
   const [firstName, setFirstName] = useState<{ [key: number]: string }>({});
   const [lastName, setLastName] = useState<{ [key: number]: string }>({});
   const [imgErrMsg, setImgErrMsg] = useState("");
+  const [showToast, setShowToast] = useState(false);
 
   const handleSearch1 = (e: any) => {
     setSearch1(e.target.value);
@@ -122,8 +128,44 @@ const MareketPlace = () => {
     }
   }, [filterData]);
 
+  useEffect(() => {
+    if (isAuth && !isComplete) {
+      setShowToast(true);
+      const timer = setTimeout(() => {
+        setShowToast(false);
+      }, 8000); // Hide toast after 8 seconds
+
+      return () => clearTimeout(timer); // Cleanup timer on unmount
+    }
+  }, [isAuth, isComplete]);
+
   return (
     <main className="font-satoshi">
+      {showToast && (
+        <Toast
+          body={
+            <div className="font-satoshi space-y-4">
+              <h3 className="font-bold text-base text-primary">
+                Complete your profile!!
+              </h3>
+              <p className="font-normal text-sm text-primary">
+                Please complete your profile to get access to all the features
+                on TaskHub.
+              </p>
+              <div className="flex items-center justify-end">
+                <Link
+                  href="/service-provider/dashboard"
+                  className="text-tc-orange text-base font-bold underline underline-offset-2"
+                >
+                  Go To Profile
+                </Link>
+              </div>
+            </div>
+          }
+          isVisible={showToast}
+          onClose={() => setShowToast(false)}
+        />
+      )}
       <MarketPlaceHeader />
       <div className="mx-auto flex flex-col px-6 md:max-w-7xl md:px-20">
         <MarketPlaceFilter
