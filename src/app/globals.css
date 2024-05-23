@@ -71,3 +71,50 @@
 .small-scrollbar {
   scrollbar-width: thin; /* Set scrollbar width for Firefox */
 }
+
+@layer base {
+  @font-face {
+    font-family: Clash;
+    src: url("/fonts/ClashDisplayRegular.woff2") format("woff2");
+    font-display: swap;
+    font-style: normal;
+  }
+  @font-face {
+    font-family: ClashMedium;
+    src: url("/fonts/ClashDisplayMedium.woff2") format("woff2");
+    font-display: swap;
+    font-style: normal;
+  }
+  @font-face {
+    font-family: ClashSemiBold;
+    src: url("/fonts/ClashDisplaySemibold.woff2") format("woff2");
+    font-display: swap;
+    font-style: normal;
+  }
+  @font-face {
+    font-family: ClashBold;
+    src: url("/fonts/ClashDisplayBold.woff2") format("woff2");
+    font-display: swap;
+    font-style: normal;
+  }
+
+  @font-face {
+    font-family: Satoshi;
+    src: url("/fonts/SatoshiRegular.woff2") format("woff2");
+    font-display: swap;
+    font-style: normal;
+  }
+  @font-face {
+    font-family: SatoshiMedium;
+    src: url("/fonts/SatoshiMedium.woff2") format("woff2");
+    font-display: swap;
+    font-style: normal;
+  }
+  @font-face {
+    font-family: Satoshi;
+    src: url("/fonts/SatoshiRegular.woff2") format("woff2");
+    font-display: swap;
+    font-weight: 700;
+    font-style: normal;
+  }
+}
