@@ -94,7 +94,7 @@ const Footer = () => {
                             <Logo/>
                         </Link>
                         <div className=" xl:mt-0 lg:mt-[-100px] font-satoshi">
-                            <p className="text-primary font-bold max-lg:text-[13px] mt-5 font-satoshi ">Need Help? If you have any questions or encounter issues, our support team is here to assist you. 
+                            <p className="text-primary font-medium max-lg:text-[13px] mt-5 font-satoshi ">Need Help? If you have any questions or encounter issues, our support team is here to assist you. 
                             Reach out to us at {' '}
                                 <a href="mailto:info@taskhub.org.au" className="text-primary underline">
                                     info@taskhub.org.au
