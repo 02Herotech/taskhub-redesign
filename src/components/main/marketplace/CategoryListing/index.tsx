@@ -61,7 +61,6 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
       }
       const response = await axios.get(url);
       dispatch(updateListingArray(response.data.content));
-      console.log(response.data.content);
       setDisplayListing(response.data.content);
     } catch (error) {
       setErrorMsg("Error searching listing");

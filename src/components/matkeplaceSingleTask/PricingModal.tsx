@@ -7,6 +7,7 @@ import DatePicker from "react-datepicker";
 interface ModalProps {
   setIsModalShown: Dispatch<SetStateAction<boolean>>;
   isModalShown: boolean;
+  modalData: { pricing: number };
 }
 
 const PricingModal = ({ isModalShown, setIsModalShown }: ModalProps) => {

@@ -15,6 +15,10 @@ interface ListingCardProps {
   pricing: number;
 }
 
+const handlestoreListingId = (id: number) => {
+  localStorage.setItem("listingId", JSON.stringify(id));
+};
+
 const SingleListingCard = ({
   listingId,
   posterId,
@@ -28,6 +32,7 @@ const SingleListingCard = ({
   return (
     <Link
       href={`/marketplace/${listingId}?listingId=${listingId}&posterId=${posterId}`}
+      onClick={() => handlestoreListingId(listingId)}
       className="group transition-transform duration-300 hover:-translate-y-2 "
     >
       <div className=" my-3 flex w-full justify-center">

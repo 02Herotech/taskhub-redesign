@@ -9,7 +9,7 @@ import { FaStar } from "react-icons/fa";
 
 import PricingPlan from "@/components/matkeplaceSingleTask/PricingPlan";
 import Reviews from "@/components/matkeplaceSingleTask/Reviews";
-import { useParams } from "next/navigation";
+import { useParams, usePathname } from "next/navigation";
 import axios from "axios";
 import Loading from "@/shared/loading";
 
@@ -20,16 +20,23 @@ const Page = () => {
 
   // marketplaceDummyData;
 
-  const params = useParams();
-  const id = params.listingId;
+  // const params = useParams();
+  // const pathname = usePathname();
+  // const path = pathname.split("/")[2];
+  // console.log(path);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        setIsDataFetched(false);
-        const url = "https://smp.jacinthsolutions.com.au/api/v1/listing/1";
-        const { data } = await axios.get(url);
-        setDisplayData(data);
+        const tempList = localStorage.getItem("listingId");
+        if (tempList) {
+          const id = JSON.parse(tempList);
+          setIsDataFetched(false);
+          const url =
+            "https://smp.jacinthsolutions.com.au/api/v1/listing/" + id;
+          const { data } = await axios.get(url);
+          setDisplayData(data);
+        }
       } catch (error) {
         setError("Error Fetching Data");
       } finally {
@@ -39,8 +46,6 @@ const Page = () => {
 
     fetchData();
   }, []);
-
-  console.log(displayData);
 
   function formatDate(dateArray: number[]) {
     const [year, month, day] = dateArray;

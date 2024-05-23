@@ -13,6 +13,7 @@ interface MarketSliceTypes {
   categories: CategoryType[];
   listing: ListingDataType2[];
   isFiltering: boolean;
+  filteredData: ListingDataType2[];
 }
 
 const initialState: MarketSliceTypes = {
@@ -26,6 +27,7 @@ const initialState: MarketSliceTypes = {
   categories: [],
   listing: [],
   isFiltering: false,
+  filteredData: [],
 };
 
 export const marketSlice = createSlice({
@@ -39,8 +41,8 @@ export const marketSlice = createSlice({
         currentFilterStatus: {
           ...state.currentFilterStatus,
           [title]: value,
-          isFiltering: true,
         },
+        isFiltering: true,
       };
     },
     updateCategories: (state, action) => {
@@ -51,10 +53,50 @@ export const marketSlice = createSlice({
       const listing = action.payload;
       return { ...state, listing };
     },
+    updateFilterData: (state, action) => {
+      const { data, section, value } = action.payload;
+      const prevFilter = state.filteredData || [];
+      let newFilter = [];
+
+      if (!prevFilter.length) {
+        return { ...state, filteredData: data };
+      }
+      switch (section) {
+        case "category":
+          newFilter = prevFilter.filter(
+            (item) => item.category.categoryName === value,
+          );
+          break;
+        case "subCategory":
+          newFilter = prevFilter.filter(
+            (item) => item.subCategory.name === value,
+          );
+          break;
+        case "location":
+          newFilter = prevFilter.filter(
+            (item) => item.suburb === value || item.state === value,
+          );
+          break;
+        // case "price":
+        //   newFilter = prevFilter.filter(
+        //     (item) =>
+        //       item.price >= value.minPrice && item.price <= value.maxPrice,
+        //   );
+        //   break;
+        default:
+          newFilter = prevFilter;
+          break;
+      }
+      return { ...state, filteredData: newFilter };
+    },
   },
 });
 
-export const { updateFilterStatus, updateCategories, updateListingArray } =
-  marketSlice.actions;
+export const {
+  updateFilterStatus,
+  updateCategories,
+  updateListingArray,
+  updateFilterData,
+} = marketSlice.actions;
 
 export default marketSlice.reducer;

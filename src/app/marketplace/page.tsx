@@ -23,6 +23,7 @@ import { RootState } from "@/store";
 import Loading from "@/shared/loading";
 import Toast from "@/components/global/Toast";
 import Link from "next/link";
+import { updateFilterData } from "@/store/Features/marketplace";
 
 const categoryIcons = [
   FaHome,
@@ -37,21 +38,14 @@ const categoryIcons = [
 
 const MareketPlace = () => {
   const dispatch = useDispatch();
-  const { categories } = useSelector((state: RootState) => state.market);
+  const { categories, isFiltering, filteredData, currentFilterStatus } =
+    useSelector((state: RootState) => state.market);
   const session = useSession();
   const isAuth = session.status === "authenticated";
   const isComplete = session.data?.user.user.enabled;
 
   const [filterData, setFilterData] = useState<ListingDataType[]>([]);
-  const [viewMoreListing, setViewMoreListing] = useState<ListingDataType[]>([]);
-  const [selectedCategory, setSelectedCategory] = useState("");
-  const [selectedSubCategory, setSelectedSubCategory] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [searching, setSearching] = useState(false);
-  const [viewMore, setViewMore] = useState(false);
-  const [location, setLocation] = useState("");
-  const [search1, setSearch1] = useState("");
-  const [errorMsg, setErrorMsg] = useState("");
   const [categoryHeader, setCategoryHeader] = useState("");
   const [profileImages, setProfileImages] = useState<{ [key: number]: string }>(
     {},
@@ -61,72 +55,44 @@ const MareketPlace = () => {
   const [imgErrMsg, setImgErrMsg] = useState("");
   const [showToast, setShowToast] = useState(false);
 
-  const handleSearch1 = (e: any) => {
-    setSearch1(e.target.value);
-  };
-  const handleClearSearch = () => {
-    setSearch1("");
-  };
+  useEffect(() => {
+    const { category, subCategory, pricing, search, location } =
+      currentFilterStatus;
+    const filterData = async () => {
+      const page = 0;
+      try {
+        if (isFiltering) {
+          if (category) {
+            const id = categories.filter(
+              (item) => item.categoryName === category,
+            )[0].id;
+            const url =
+              "https://smp.jacinthsolutions.com.au/api/v1/listing/listing-by-category/" +
+              id +
+              "?pageNumber=" +
+              page;
+            const { data } = await axios.get(url);
+            console.log(data);
+            dispatch(
+              updateFilterData({ data, section: "category", value: category }),
+            );
+            // handle filterby category
+          } else if (subCategory) {
+            // handle filter by sub category
+          } else if (pricing) {
+          } else if (search) {
+          } else if (location) {
+          }
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    filterData();
+    // eslint-disable-next-line
+  }, [filteredData, isFiltering, currentFilterStatus]);
 
-  // const handleUserProfile = async (posterId: number) => {
-  //   try {
-  //     const response = await axios.get(
-  //       `${process.env.NEXT_PUBLIC_API_URL}/user/user-profile/${posterId}`,
-  //     );
-  //     if (response.status === 200) {
-  //       setProfileImages((prevProfileImages) => ({
-  //         ...prevProfileImages,
-  //         [posterId]: response.data.profileImage,
-  //       }));
-
-  //       setFirstName((prevFirstName) => ({
-  //         ...prevFirstName,
-  //         [posterId]: response.data.firstName,
-  //       }));
-
-  //       setLastName((prevLastName) => ({
-  //         ...prevLastName,
-  //         [posterId]: response.data.lastName,
-  //       }));
-  //     }
-  //   } catch (error) {
-  //     setImgErrMsg("Error loading image");
-  //   }
-  // };
-
-  // const handleFilterByCatAndSubCatAndLocation = async () => {
-  //   setIsLoading(true);
-  //   setSearching(true);
-
-  //   try {
-  //     const response = await axios.post(
-  //       `${process.env.NEXT_PUBLIC_API_URL}/listing/marketplace-search?businessName=${selectedCategory}&location=${location}&subcategory=${selectedSubCategory}`,
-  //     );
-  //     if (response.status === 200) {
-  //       setFilterData(response.data);
-  //     }
-  //   } catch (error) {
-  //     console.error(error);
-  //     setErrorMsg("Error searching listing");
-  //   } finally {
-  //     setIsLoading(false);
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   if (selectedCategory || selectedSubCategory || location) {
-  //     handleFilterByCatAndSubCatAndLocation();
-  //   }
-  //   // eslint-disable-next-line
-  // }, [selectedCategory, selectedSubCategory, location]);
-
-  // useEffect(() => {
-  //   if (filterData.length > 0) {
-  //     filterData.forEach((task) => {
-  //       handleUserProfile(task.posterId);
-  //     });
-  //   }
-  // }, [filterData]);
+  // console.log(filteredData)
 
   useEffect(() => {
     if (isAuth && !isComplete) {
@@ -144,18 +110,18 @@ const MareketPlace = () => {
       {showToast && (
         <Toast
           body={
-            <div className="font-satoshi space-y-4">
-              <h3 className="font-bold text-base text-primary">
+            <div className="space-y-4 font-satoshi">
+              <h3 className="text-base font-bold text-primary">
                 Complete your profile!!
               </h3>
-              <p className="font-normal text-sm text-primary">
+              <p className="text-sm font-normal text-primary">
                 Please complete your profile to get access to all the features
                 on TaskHub.
               </p>
               <div className="flex items-center justify-end">
                 <Link
                   href="/service-provider/dashboard"
-                  className="text-tc-orange text-base font-bold underline underline-offset-2"
+                  className="text-base font-bold text-tc-orange underline underline-offset-2"
                 >
                   Go To Profile
                 </Link>
@@ -170,7 +136,7 @@ const MareketPlace = () => {
       <div className="mx-auto flex flex-col px-6 md:max-w-7xl md:px-20">
         <MarketPlaceFilter categoryHeader={categoryHeader} />
         <div>
-          {searching ? (
+          {currentFilterStatus.search ? (
             <SearchResult
               isLoading={isLoading}
               filterData={filterData}
@@ -179,6 +145,10 @@ const MareketPlace = () => {
               firstName={firstName}
               lastName={lastName}
             />
+          ) : isFiltering ? (
+            <div>
+              <CategoryListing category="All" />
+            </div>
           ) : (
             <div>
               {categories.length < 1 ? (
