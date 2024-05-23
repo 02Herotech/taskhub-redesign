@@ -8,9 +8,11 @@ interface MarketSliceTypes {
     subCategory: string;
     location: string;
     pricing: { minPrice: number; maxPrice: number };
+    search: string;
   };
   categories: CategoryType[];
-  listing: ListingDataType[];
+  listing: ListingDataType2[];
+  isFiltering: boolean;
 }
 
 const initialState: MarketSliceTypes = {
@@ -18,10 +20,12 @@ const initialState: MarketSliceTypes = {
     category: "",
     subCategory: "",
     location: "",
-    pricing: { minPrice: 0, maxPrice: 0 },
+    pricing: { minPrice: 5, maxPrice: 1000 },
+    search: "",
   },
   categories: [],
   listing: [],
+  isFiltering: false,
 };
 
 export const marketSlice = createSlice({
@@ -32,7 +36,11 @@ export const marketSlice = createSlice({
       const { title, value } = action.payload;
       return {
         ...state,
-        currentFilterStatus: { ...state.currentFilterStatus, [title]: value },
+        currentFilterStatus: {
+          ...state.currentFilterStatus,
+          [title]: value,
+          isFiltering: true,
+        },
       };
     },
     updateCategories: (state, action) => {

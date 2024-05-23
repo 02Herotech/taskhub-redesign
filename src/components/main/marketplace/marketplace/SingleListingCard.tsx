@@ -28,16 +28,17 @@ const SingleListingCard = ({
   return (
     <Link
       href={`/marketplace/${listingId}?listingId=${listingId}&posterId=${posterId}`}
+      className="group transition-transform duration-300 hover:-translate-y-2 "
     >
       <div className=" my-3 flex w-full justify-center">
-        <div className="flex  w-[320px] flex-col rounded-2xl  bg-[#EBE9F4] p-3  md:w-[250px]">
-          <div className="w-[295px]  md:w-[225px] ">
+        <div className="flex w-full max-w-sm flex-col rounded-2xl  bg-[#EBE9F4] p-3 ">
+          <div className="">
             <Image
               src={displayImage}
               alt="user"
               width={200}
               height={200}
-              className="h-full w-full rounded-xl border-[1.5px] border-[#D9D9D9] object-cover"
+              className="h-40  w-full rounded-xl border border-[#D9D9D9] object-cover transition-all  duration-300 group-hover:scale-105"
             />
           </div>
           <div className="mt-2 flex h-full flex-col justify-between">

@@ -2,7 +2,7 @@ import { FiSearch } from "react-icons/fi";
 import { IoClose } from "react-icons/io5";
 import Link from "next/link";
 import { BsTriangle, BsTriangleFill } from "react-icons/bs";
-import { useEffect, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import {
   fetchAllMarketplaseCategories,
   fetchMarketplaceSubCategoryById,
@@ -35,32 +35,23 @@ interface props {
   categoryHeader: any;
 }
 
-const MarketPlaceFilter = ({
-  search1,
-  handleSearch1,
-  handleClearSearch,
-  categoryHeader,
-}: props) => {
+const MarketPlaceFilter = ({ handleClearSearch, categoryHeader }: props) => {
   const dispatch = useDispatch();
-  const session = useSession();
-  const router = useRouter();
   const {
-    currentFilterStatus: { category, subCategory, location, pricing },
+    currentFilterStatus: { category, subCategory, location, pricing, search },
     categories,
   } = useSelector((state: RootState) => state.market);
-
-  const token = session?.data?.user?.accessToken;
 
   const [isDropdownOpen, setIsDropdownOpen] = useState({
     isOpened: false,
     category: "",
   });
 
-  const [priceValues, setPriceValues] = useState<[number, number]>([5, 10000]);
-
   const [subCategories, setSubCategories] = useState<SubCategoryType[]>([]);
-  const handleSubmit = (e: any) => {
-    e.preventDefault;
+
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    handleShowDropdown("search");
   };
 
   const handleReload = () => {
@@ -76,6 +67,22 @@ const MarketPlaceFilter = ({
     fetchData();
     // eslint-disable-next-line
   }, []);
+
+  const handleFilerByPricing = (title: string) => {
+    handleShowDropdown(title);
+  };
+  const handleCanelFilterByPricing = (title: string) => {
+    handleShowDropdown(title);
+    dispatch(
+      updateFilterStatus({
+        title: "pricing",
+        value: {
+          minPrice: 5,
+          maxPrice: 1000,
+        },
+      }),
+    );
+  };
 
   const handleFetchSubCategory = async (
     id: number,
@@ -144,6 +151,7 @@ const MarketPlaceFilter = ({
               All
             </button>
 
+            {/* -------------------------------- */}
             {/* Category */}
             <div className="relative">
               <button
@@ -179,6 +187,7 @@ const MarketPlaceFilter = ({
               </div>
             </div>
 
+            {/* ----------------------------------- */}
             {/* SubCategory */}
             <div className="relative">
               <button
@@ -210,7 +219,7 @@ const MarketPlaceFilter = ({
                         handleFilterDataBySubcategory(
                           item.id,
                           item.name,
-                          "sub-category",
+                          "subCategory",
                         )
                       }
                     >
@@ -221,6 +230,7 @@ const MarketPlaceFilter = ({
               </div>
             </div>
 
+            {/* -------------------------------- */}
             {/* location */}
             <div className="relative">
               <button
@@ -249,6 +259,7 @@ const MarketPlaceFilter = ({
                 ))}
               </div>
             </div>
+            {/* ----------------------------------------- */}
             {/* Pricing */}
             <div className="relative">
               <button
@@ -269,26 +280,40 @@ const MarketPlaceFilter = ({
                 <div className="space-y-4 p-4">
                   <div className="min-w-64 p-4">
                     <div className="mb-6 text-center text-2xl font-bold text-violet-normal">
-                      ${priceValues[0]} - ${priceValues[1]}
+                      ${pricing.minPrice} - ${pricing.maxPrice}
                     </div>
                     <ReactSlider
                       className="relative h-2 w-full rounded-md bg-[#FE9B07]"
                       thumbClassName="absolute h-6 w-6 bg-[#FE9B07] rounded-full cursor-grab transform -translate-y-1/2 top-1/2"
                       trackClassName="top-1/2 bg-[#FE9B07]"
-                      value={priceValues}
+                      value={[pricing.minPrice, pricing.maxPrice]}
                       min={5}
-                      max={10000}
+                      max={1000}
                       step={5}
-                      onChange={(newValues) =>
-                        setPriceValues(newValues as [number, number])
+                      onChange={(newValues: number[]) =>
+                        dispatch(
+                          updateFilterStatus({
+                            title: "pricing",
+                            value: {
+                              minPrice: newValues[0],
+                              maxPrice: newValues[1],
+                            },
+                          }),
+                        )
                       }
                     />
                   </div>
                   <div className="flex items-center gap-4 ">
-                    <button className=" rounded-full  bg-violet-normal px-4 py-2 text-left text-sm text-white transition-opacity duration-300 hover:opacity-90 ">
+                    <button
+                      onClick={() => handleFilerByPricing("pricing")}
+                      className=" rounded-full  bg-violet-normal px-4 py-2 text-left text-sm text-white transition-opacity duration-300 hover:opacity-90 "
+                    >
                       Apply
                     </button>
-                    <button className=" rounded-full border border-violet-normal  bg-violet-light px-4 py-2 text-left text-sm text-violet-normal transition-all duration-300  hover:bg-violet-100">
+                    <button
+                      onClick={() => handleCanelFilterByPricing("pricing")}
+                      className=" rounded-full  bg-violet-light px-4 py-2 text-left text-sm text-violet-normal transition-all duration-300  hover:bg-violet-200"
+                    >
                       Cancel
                     </button>
                   </div>
@@ -320,13 +345,20 @@ const MarketPlaceFilter = ({
 
             <input
               type="text"
-              value={search1}
+              value={search}
               className=" w-full px-2 py-4 text-[16px] focus:border-white focus:outline-none  "
-              onChange={handleSearch1}
+              onChange={(event) =>
+                dispatch(
+                  updateFilterStatus({
+                    title: "search",
+                    value: event.target.value,
+                  }),
+                )
+              }
               placeholder="Search"
             />
 
-            {search1 && (
+            {search && (
               <IoClose
                 size={15}
                 className=" text-grey6 cursor-pointer hover:text-[#C1BADB] "

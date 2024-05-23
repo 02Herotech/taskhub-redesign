@@ -62,65 +62,65 @@ const MareketPlace = () => {
     setSearch1("");
   };
 
-  const handleUserProfile = async (posterId: number) => {
-    try {
-      const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_URL}/user/user-profile/${posterId}`,
-      );
-      if (response.status === 200) {
-        setProfileImages((prevProfileImages) => ({
-          ...prevProfileImages,
-          [posterId]: response.data.profileImage,
-        }));
+  // const handleUserProfile = async (posterId: number) => {
+  //   try {
+  //     const response = await axios.get(
+  //       `${process.env.NEXT_PUBLIC_API_URL}/user/user-profile/${posterId}`,
+  //     );
+  //     if (response.status === 200) {
+  //       setProfileImages((prevProfileImages) => ({
+  //         ...prevProfileImages,
+  //         [posterId]: response.data.profileImage,
+  //       }));
 
-        setFirstName((prevFirstName) => ({
-          ...prevFirstName,
-          [posterId]: response.data.firstName,
-        }));
+  //       setFirstName((prevFirstName) => ({
+  //         ...prevFirstName,
+  //         [posterId]: response.data.firstName,
+  //       }));
 
-        setLastName((prevLastName) => ({
-          ...prevLastName,
-          [posterId]: response.data.lastName,
-        }));
-      }
-    } catch (error) {
-      setImgErrMsg("Error loading image");
-    }
-  };
+  //       setLastName((prevLastName) => ({
+  //         ...prevLastName,
+  //         [posterId]: response.data.lastName,
+  //       }));
+  //     }
+  //   } catch (error) {
+  //     setImgErrMsg("Error loading image");
+  //   }
+  // };
 
-  const handleFilterByCatAndSubCatAndLocation = async () => {
-    setIsLoading(true);
-    setSearching(true);
+  // const handleFilterByCatAndSubCatAndLocation = async () => {
+  //   setIsLoading(true);
+  //   setSearching(true);
 
-    try {
-      const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/listing/marketplace-search?businessName=${selectedCategory}&location=${location}&subcategory=${selectedSubCategory}`,
-      );
-      if (response.status === 200) {
-        setFilterData(response.data);
-      }
-    } catch (error) {
-      console.error(error);
-      setErrorMsg("Error searching listing");
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  //   try {
+  //     const response = await axios.post(
+  //       `${process.env.NEXT_PUBLIC_API_URL}/listing/marketplace-search?businessName=${selectedCategory}&location=${location}&subcategory=${selectedSubCategory}`,
+  //     );
+  //     if (response.status === 200) {
+  //       setFilterData(response.data);
+  //     }
+  //   } catch (error) {
+  //     console.error(error);
+  //     setErrorMsg("Error searching listing");
+  //   } finally {
+  //     setIsLoading(false);
+  //   }
+  // };
 
-  useEffect(() => {
-    if (selectedCategory || selectedSubCategory || location) {
-      handleFilterByCatAndSubCatAndLocation();
-    }
-    // eslint-disable-next-line
-  }, [selectedCategory, selectedSubCategory, location]);
+  // useEffect(() => {
+  //   if (selectedCategory || selectedSubCategory || location) {
+  //     handleFilterByCatAndSubCatAndLocation();
+  //   }
+  //   // eslint-disable-next-line
+  // }, [selectedCategory, selectedSubCategory, location]);
 
-  useEffect(() => {
-    if (filterData.length > 0) {
-      filterData.forEach((task) => {
-        handleUserProfile(task.posterId);
-      });
-    }
-  }, [filterData]);
+  // useEffect(() => {
+  //   if (filterData.length > 0) {
+  //     filterData.forEach((task) => {
+  //       handleUserProfile(task.posterId);
+  //     });
+  //   }
+  // }, [filterData]);
 
   return (
     <main className="font-satoshi">
@@ -132,68 +132,57 @@ const MareketPlace = () => {
           handleClearSearch={handleClearSearch}
           categoryHeader={categoryHeader}
         />
-        {viewMore ? (
-          <ViewMore
-            isLoading={isLoading}
-            viewMoreListing={viewMoreListing}
-            profileImages={profileImages}
-            imgErrMsg={imgErrMsg}
-            firstName={firstName}
-            lastName={lastName}
-          />
-        ) : (
-          <div>
-            {searching ? (
-              <SearchResult
-                isLoading={isLoading}
-                filterData={filterData}
-                profileImages={profileImages}
-                imgErrMsg={imgErrMsg}
-                firstName={firstName}
-                lastName={lastName}
-              />
-            ) : (
-              <div>
+        <div>
+          {searching ? (
+            <SearchResult
+              isLoading={isLoading}
+              filterData={filterData}
+              profileImages={profileImages}
+              imgErrMsg={imgErrMsg}
+              firstName={firstName}
+              lastName={lastName}
+            />
+          ) : (
+            <div>
+              {categories.length < 1 ? (
+                <Loading />
+              ) : (
+                <div>
+                  <CategoryListing category="All" />
+                  <CategoryListing category={categories[1]?.categoryName} />
+                  <CategoryListing category={categories[2]?.categoryName} />
+                </div>
+              )}
+
+              <div className="my-10 md:my-0">
+                <h1 className=" text-[20px] font-bold text-violet-darkHover md:text-[28px]  ">
+                  Browse by category
+                </h1>
+                <div className="my-5 flex w-[350px] flex-wrap md:w-[700px] lg:w-full">
+                  {categories.map((item, index) => (
+                    <BoxFilter
+                      key={item.id}
+                      category={item.categoryName}
+                      Icon={categoryIcons[index]}
+                    />
+                  ))}
+                </div>
+              </div>
+
+              <div className="lg:hidden">
                 {categories.length < 1 ? (
                   <Loading />
                 ) : (
                   <div>
-                    <CategoryListing category="All" />
+                    <CategoryListing category={"All"} />
                     <CategoryListing category={categories[1]?.categoryName} />
                     <CategoryListing category={categories[2]?.categoryName} />
                   </div>
                 )}
-
-                <div className="my-10 md:my-0">
-                  <h1 className=" text-[20px] font-bold text-violet-darkHover md:text-[28px]  ">
-                    Browse by category
-                  </h1>
-                  <div className="my-5 flex w-[350px] flex-wrap md:w-[700px] lg:w-full">
-                    {categories.map((item, index) => (
-                      <BoxFilter
-                        key={item.id}
-                        category={item.categoryName}
-                        Icon={categoryIcons[index]}
-                      />
-                    ))}
-                  </div>
-                </div>
-
-                <div className="lg:hidden">
-                  {categories.length < 1 ? (
-                    <Loading />
-                  ) : (
-                    <div>
-                      <CategoryListing category={"All"} />
-                      {/* <CategoryListing category={categories[1]?.categoryName} />
-                      <CategoryListing category={categories[2]?.categoryName} /> */}
-                    </div>
-                  )}
-                </div>
               </div>
-            )}
-          </div>
-        )}
+            </div>
+          )}
+        </div>
       </div>
     </main>
   );

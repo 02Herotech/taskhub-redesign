@@ -1,4 +1,34 @@
-const marketplaceDummyData = [
+interface ListingDataType2 {
+  id: number;
+  category: {
+    id: number;
+    categoryName: string;
+  };
+  subCategory: {
+    id: number;
+    name: string;
+  };
+  listingTitle: string;
+  listingDescription: string;
+  planOneDescription: string;
+  planOnePrice: number;
+  planTwoDescription: string;
+  planTwoPrice: number;
+  planThreeDescription: string;
+  planThreePrice: number;
+  price: number | null;
+  taskType: string;
+  suburb: string;
+  state: string;
+  postCode: string;
+  availableDays: string[];
+  createdAt: number[];
+  available: true;
+  deleted: false;
+  stripeId: string;
+  businessPictures: string[];
+}
+const marketplaceDummyData: ListingDataType2[] = [
   {
     id: 1,
     category: {

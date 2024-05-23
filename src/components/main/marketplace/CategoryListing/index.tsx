@@ -14,6 +14,7 @@ import Image from "next/image";
 import { number } from "zod";
 import Link from "next/link";
 import SingleListingCard from "../marketplace/SingleListingCard";
+import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 
 interface CategoryListingProps {
   category: string;
@@ -38,6 +39,7 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
   const [IdCategoryValue, setIdCategoryValue] = useState(0);
   const [isViewMore, setIsViewMore] = useState({ state: false });
   const [displayListing, setDisplayListing] = useState<ListingDataType[]>([]);
+  const [page, setPage] = useState(0);
 
   const handleFetchCategory = async () => {
     setIsLoading(true);
@@ -46,20 +48,17 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
         return;
       }
       let url;
-      const page = 0;
-      // if (category === "All") {
-      //   // url =
-      //   //   "https://smp.jacinthsolutions.com.au/api/v1/listing/all-active-listings/" +
-      //   //   page;
-      // } else {
-      //   url =
-      //   "https://smp.jacinthsolutions.com.au/api/v1/listing/listing-by-category/" +
-      //   IdCategoryValue +
-      //   "?pageNumber= " +
-      //   page;
-      // }
-      url =
-        "https://smp.jacinthsolutions.com.au/api/v1/listing/all-active-listings/0";
+      if (category === "All") {
+        url =
+          "https://smp.jacinthsolutions.com.au/api/v1/listing/all-active-listings/" +
+          page;
+      } else {
+        url =
+          "https://smp.jacinthsolutions.com.au/api/v1/listing/listing-by-category/" +
+          IdCategoryValue +
+          "?pageNumber= " +
+          page;
+      }
       const response = await axios.get(url);
       dispatch(updateListingArray(response.data.content));
       console.log(response.data.content);
@@ -73,7 +72,7 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
   useEffect(() => {
     handleFetchCategory();
     // eslint-disable-next-line
-  }, []);
+  }, [page]);
 
   const [posterProfiles, setPosterProfiles] = useState<PosterProfileTypes[]>(
     [],
@@ -128,7 +127,7 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
           <h1 className=" text-lg font-bold text-violet-dark md:text-2xl">
             {category}
           </h1>
-          {listing.length > 0 && (
+          {displayListing.length > 4 && (
             <button
               className="flex items-center gap-2 border-b-2 border-violet-normal text-sm font-bold  text-violet-normal"
               onClick={() =>
@@ -155,8 +154,8 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
             height={200}
             className="mx-auto h-full max-h-40"
           />
-          <p className="sm:text[13px] text-center text-red-500 md:text-[16px]">
-            Kindly Check Your Connection And Try Again
+          <p className="sm:text[13px] text-center font-semibold text-violet-normal md:text-[16px]">
+            No listing Available
           </p>
         </div>
       )}
@@ -164,15 +163,13 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
       {isLoading ? (
         <Loading />
       ) : (
-        displayListing.map((item, index) => {
-          const currentPosterProfile: PosterProfileTypes =
-            posterProfiles.filter((poster) => poster.id === item.id)[0];
-          return (
-            <div
-              key={index}
-              className="my-2 grid grid-cols-1 gap-x-4 gap-y-4 md:grid-cols-2 lg:grid-cols-4  lg:gap-2"
-            >
+        <div className="my-2 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
+          {displayListing.map((item, index) => {
+            const currentPosterProfile: PosterProfileTypes =
+              posterProfiles.filter((poster) => poster.id === item.id)[0];
+            return (
               <SingleListingCard
+                key={index}
                 posterId={item.posterId}
                 listingId={item.id}
                 businessName={item.businessName}
@@ -182,9 +179,36 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
                 profileImage={currentPosterProfile?.profileImage}
                 lastName={currentPosterProfile?.lastName}
               />
-            </div>
-          );
-        })
+            );
+          })}
+        </div>
+      )}
+      {isViewMore.state && (
+        <div className="mt-10 flex w-full items-center justify-center space-x-7">
+          <button
+            className="rounded-md bg-status-lightViolet p-2 hover:bg-primary disabled:bg-status-lightViolet disabled:opacity-50"
+            // onClick={handlePreviousPage}
+            // disabled={currentPage === 1}
+          >
+            <IoIosArrowBack />
+          </button>
+          {/* {Array.from({ length: totalPages }, (_, index) => (
+            <button
+              key={index + 1}
+              className={`rounded-md px-3 py-[6px] ${currentPage === index + 1 ? "bg-primary text-white" : "border border-black  hover:bg-status-lightViolet"} text-[11px] font-bold`}
+              // onClick={() => handlePageClick(index + 1)}
+            >
+              {index + 1}
+            </button>
+          ))} */}
+          <button
+            className="rounded-md bg-status-lightViolet p-2 hover:bg-primary disabled:bg-status-lightViolet disabled:opacity-50"
+            // onClick={handleNextPage}
+            // disabled={currentPage === totalPages}
+          >
+            <IoIosArrowForward />
+          </button>
+        </div>
       )}
     </div>
   );
