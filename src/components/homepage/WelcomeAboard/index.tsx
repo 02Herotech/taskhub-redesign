@@ -5,9 +5,8 @@ import icon1 from "../../../../public/assets/images/homepage/welcomeAboard/welco
 import icon2 from "../../../../public/assets/images/homepage/welcomeAboard/welcomeIcon2.png";
 import icon3 from "../../../../public/assets/images/homepage/welcomeAboard/welcomeIcon3.png";
 import styles from "./styles.module.css";
-import { BiArrowFromRight, BiArrowToRight } from "react-icons/bi";
-import { BsArrowRight } from "react-icons/bs";
 import { FaArrowRight } from "react-icons/fa6";
+import Link from "next/link";
 
 const WelcomeAboard = () => {
     return (
@@ -111,7 +110,10 @@ const WelcomeAboard = () => {
                         </div>
                     </div>
                 </div>
-                <p className="text-[#FE9B07] text-[16px]  font-bold md:px-8 flex items-center space-x-2 lg:mt-0 mt-4"><span>Learn how TASKhub works</span> <span> <FaArrowRight size={15}/></span></p>
+                <Link href={'how-taskhub-works'}>
+                    <p className="text-[#FE9B07] hover:underline text-[16px]  font-bold md:px-8 flex items-center space-x-2 lg:mt-0 mt-4"><span>Learn how TASKhub works</span> <span> <FaArrowRight size={15} /></span></p>
+                </Link>
+
             </div>
         </div>
     );
