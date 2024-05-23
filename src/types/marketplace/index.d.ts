@@ -5,11 +5,11 @@ declare interface CategoryType {
 
 declare interface PosterType {
   id: number;
-  address: null;
+  address: string | null;
   enabled: boolean;
   firstName: string;
   lastName: string;
-  profileImage: null;
+  profileImage: string | null;
   emailAddress: string;
   stripeId: string;
   roles: string[];
@@ -64,4 +64,35 @@ declare interface ListingDataType {
   deleted: boolean;
   stripeId: string;
   businessPictures: string[]; // Updated to an array of strings
+}
+
+declare interface ListingDataType2 {
+  id: number;
+  category: {
+    id: number;
+    categoryName: string;
+  };
+  subCategory: {
+    id: number;
+    name: string;
+  };
+  listingTitle: string;
+  listingDescription: string;
+  planOneDescription: string;
+  planOnePrice: number;
+  planTwoDescription: string;
+  planTwoPrice: number;
+  planThreeDescription: string;
+  planThreePrice: number;
+  price: number | null;
+  taskType: string;
+  suburb: string;
+  state: string;
+  postCode: string;
+  availableDays: string[];
+  createdAt: number[];
+  available: boolean;
+  deleted: boolean;
+  stripeId: string;
+  businessPictures: string[];
 }

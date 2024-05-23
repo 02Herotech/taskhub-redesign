@@ -15,8 +15,6 @@ const MarketPlaceHeader = () => {
   const isServiceProvider = userRole && userRole[0] === "SERVICE_PROVIDER";
   const userState = isServiceProvider ? "Service" : "Task";
 
-  console.log(userState);
-
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     console.log(description);
