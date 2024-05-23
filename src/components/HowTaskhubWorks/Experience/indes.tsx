@@ -34,7 +34,7 @@ const Experiences = () => {
                 </div>
             </div>
 
-            <div className='lg:hidden flex flex-col  my-5 space-y-5 w-[90%] m-auto'>
+            <div className='lg:hidden flex flex-col  my-5 space-y-5 w-[80%] m-auto'>
                 <h2 className=' text-[24px] text-center font-semibold    my-5 text-primary'>
                     Get the best experience whether you “add a task” or “perform a service”.
                 </h2>

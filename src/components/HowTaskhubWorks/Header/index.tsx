@@ -36,16 +36,22 @@ const Header = () => {
     const currentImageIndex3 = useImageTransition(images3, 3000);
 
     return (
-        <div className='relative lg:h-[600px] h-[450px] rounded-[25px] mx-auto w-[90%] lg:w-full  flex justify-between items-center  my-20 mt-20'>
+        <div className='header1 lg:h-[600px] h-[450px] rounded-[25px] mx-auto w-[90%] lg:w-full  flex justify-between items-center  my-20 mt-20'>
 
-            <Image
-                src={bannerImage}
-                alt="Banner Image"
-                fill
-                className="object-cover rounded-[25px]"
-            />
+            <style jsx>{`
+              .header1 {
+                background-image: url(${bannerImage.src});
+                background-size: cover;
+                background-repeat: no-repeat;
+              }
 
-            <div className='absolute  '>
+              @media (max-width: 468px) {
+                .header1 {
+                }
+              }
+            `}</style>
+
+           
                 <div className='hidden lg:flex justify-between items-center px-20'>
                     <div className='text-white font-medium  xl:text-[65px] text-[35px] w-[50%] '>
 
@@ -116,58 +122,58 @@ xl:px-7 lg:px-1 py-2 text-[#EBE9F4] hover:bg-[#25135f] w-[250px] xl:w-[190px] lg
                     </div>
                 </div>
 
-                <div className='lg:hidden absolute flex flex-col justify-between items-center   '>
-
-                    {/* <div className='relative'>
-                        <div className='absolute px-[28px]'>
-
-                            <div className='relative  w-[110px] z-10 mb-[-80px] ml-[-30px]'>
+                <div className='lg:hidden md:mx-auto   flex flex-col justify-between items-center px-5  h-[330px] '>
 
 
-                                <div className="h-[100px] w-[100px] ml-[10px] bg-[#FE9B07] rounded-[15px] ">
+                    <div className=''>
 
-                                </div>
+                        <div className='relative  w-[60px] z-10 mb-[-30px] ml-[-30px]'>
 
-                                <div className='absolute h-[100px] w-[100px] rounded-[15px] mt-[-110px] ' >
-                                    <Image
-                                        src={images1[currentImageIndex1]}
-                                        alt=""
-                                        fill
-                                        className=" rounded-[15px]"
-                                    />
-                                </div>
+
+                            <div className="h-[52px] w-[57px] ml-[5px] bg-[#FE9B07] rounded-[10px] ">
 
                             </div>
 
-                            <div className='relative  w-[360px] h-[200px] rounded-[15px]' >
+                            <div className='absolute h-[52px] w-[57px] rounded-[10px] mt-[-58px] ' >
                                 <Image
-                                    src={images2[currentImageIndex2]}
+                                    src={images1[currentImageIndex1]}
                                     alt=""
                                     fill
-                                    className=" rounded-[15px]"
+                                    className=" rounded-[10px]"
                                 />
                             </div>
 
-                            <div className='relative  w-[110px] left-[75%] z-10  '>
+                        </div>
+
+                        <div className='relative md:w-[266px] md:h-[157px] w-[226px] h-[117px] rounded-[15px]' >
+                            <Image
+                                src={images2[currentImageIndex2]}
+                                alt=""
+                                fill
+                                className=" rounded-[15px]"
+                            />
+                        </div>
+
+                        <div className='relative  w-[60px] md:left-[85%] left-[75%] z-10 mt-[-35px]  '>
 
 
-                                <div className="h-[100px] w-[100px] ml-[10px] bg-[#FE9B07] rounded-[15px] ">
-
-                                </div>
-
-                                <div className='absolute h-[100px] w-[100px] rounded-[15px] ml-[15px] !mt-[-110px] ' >
-                                    <Image
-                                        src={images3[currentImageIndex3]}
-                                        alt=""
-                                        fill
-                                        className=" rounded-[15px]"
-                                    />
-                                </div>
+                            <div className="h-[52px] w-[57px] ml-[10px] bg-[#FE9B07] rounded-[10px] ">
 
                             </div>
 
+                            <div className='absolute h-[52px] w-[57px] rounded-[10px] ml-[15px] !mt-[-47px] ' >
+                                <Image
+                                    src={images3[currentImageIndex3]}
+                                    alt=""
+                                    fill
+                                    className=" rounded-[10px]"
+                                />
+                            </div>
+
                         </div>
-                    </div> */}
+
+                    </div>
+
 
 
                     <div className='text-white font-medium space-y-3   text-[20px]  '>
@@ -176,11 +182,11 @@ xl:px-7 lg:px-1 py-2 text-[#EBE9F4] hover:bg-[#25135f] w-[250px] xl:w-[190px] lg
                             GET IT DONE!
                         </h2>
 
-                        <p className='text-[16px] w-full'>
+                        <p className='text-[16px] w-[80%]'>
                             A place where you can share task and connect with service providers.
                         </p>
 
-                        <div className="">
+                        <div className="flex justify-center items-center">
                             <button
                                 className=" rounded-[50px] bg-[#FE9B07] text-[16px]
 xl:px-7 lg:px-1 py-2 text-[#EBE9F4] hover:bg-[#25135f] w-[250px] xl:w-[190px] lg:w-[165px]  "
@@ -196,7 +202,7 @@ xl:px-7 lg:px-1 py-2 text-[#EBE9F4] hover:bg-[#25135f] w-[250px] xl:w-[190px] lg
 
 
                 </div>
-            </div>
+      
         </div>
     )
 }
