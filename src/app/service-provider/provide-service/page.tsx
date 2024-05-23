@@ -89,7 +89,7 @@ const ProvideService: React.FC = () => {
     suburb: "",
     postCode: "",
     state: "",
-    available: true,
+    available: false,
     categoryId: null,
     subCategoryId: null,
   });
@@ -435,7 +435,7 @@ const ProvideService: React.FC = () => {
           suburb: "",
           postCode: "",
           state: "",
-          available: true,
+          available: false,
           categoryId: null,
           subCategoryId: null,
         });
