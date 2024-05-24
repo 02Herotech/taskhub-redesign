@@ -1,8 +1,8 @@
 import Image from "next/image";
 
 import styles from "./styles.module.css"
-import image1 from "../../../public/assets/images/about/image1.png"
 import image1a from "../../../public/assets/images/about/image1a.png"
+import image1b from "../../../public/assets/images/about/image1b.png"
 import image2 from "../../../public/assets/images/about/image2.png"
 import icon1 from "../../../public/assets/images/about/icon1.png"
 import icon2 from "../../../public/assets/images/about/icon2.png"
@@ -17,16 +17,16 @@ const About = () => {
         <main className="mt-16 font-satoshi">
             <div className={` w-full md:bg-gradient-to-b from-[#F5E2FC] via-[#FBEAFF] to-[#fdf3ff] m-0  `}>
 
-                <div className="mx-auto flex flex-col lg:flex-row px-8 pt-10 lg:max-w-7xl lg:px-20 justify-between items-center pb-10  lg:pb-20">
+                <div className="mx-auto flex flex-col lg:flex-row px-8 pt-10 lg:max-w-7xl lg:px-20 justify-between items-center pb-10  lg:pb-20 space-y-10 lg:space-y-0">
 
                     <div className=" w-full md:w-[47%] bg-[#F8EBFE] border-b-2 border-black py-10 px-5 shadow-md">
                         <h3 className="text-[16px] md:text-[20px] lg:text-[26px] font-[500] font-satoshiMedium ">ABOUT TASKHUB</h3>
                         <h1 className="text-[30px] md:text-[50px] lg:text-[64px] font-bold font-clashSemiBold leading-tight my-3 text-[#2A1769]">We make the <span className="text-[#FE9B07]">B</span>usiness Life <span className="text-[#FE9B07]">E</span>asy and <span className="text-[#FE9B07]">S</span>afe</h1>
-                        <p className="lg:text-[18px] md:text-[16px] text-[14px] font-[400] text-justify text-[#140B31]">Excellent customer service, top-notch service providers, and easy-to-use technology. That's our recipe for brewing you a stress-free life.</p>
+                        <p className="lg:text-[18px] md:text-[16px] text-[14px] font-[400] text-justify text-[#140B31]">Excellent customer service, top-notch service providers, and easy-to-use technology. That is our recipe for brewing you a stress-free life.</p>
                     </div>
                     <div className=" lg:w-[47%]  w-full flex lg:justify-end justify-center items-center">
-                        {/* <div className="w-[315px] lg:h-[500px] h:h-[200px] bg-[#381F8C] rounded-r-3xl lg:relative"></div> */}
-                        <Image src={image1a} width={450} alt="" className="" />
+                        <Image src={image1a} width={450} alt="" className="hidden lg:block" />
+                        <Image src={image1b} width={400} alt="" className="lg:hidden" />
                     </div>
                 </div>
             </div>
@@ -37,7 +37,7 @@ const About = () => {
                         <h1 className="lg:text-[36px] md:text-[30px] text-[25px] font-[600] font-clashSemiBold  text-[#140B31] mb-2">Our Mission</h1>
                         <p className="text-[#2A1769] md:text-[18px] text-[15px] font-[400] text-justify">At TaskHub our mission is to connect talented service providers with customers and businesses in need. We facilitate a seamless and trustworthy platform for meaningful service exchange. We believe in the power of skill-sharing and collaboration to transform lives and businesses.</p>
                     </div>
-                    <div className="lg:w-[30%] w-full h-full flex lg:items-end items-center">
+                    <div className="lg:w-[30%] w-full h-full flex lg:items-end justify-center items-center">
                         <Image src={image2} width={400} alt="" />
                     </div>
                     <div className="lg:w-[30%] w-full h-full flex flex-col justify-end">
