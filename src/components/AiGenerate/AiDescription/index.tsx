@@ -129,8 +129,6 @@ const AiDesciption: React.FC<AiGenerateProps> = ({ task, setTask }) => {
   ]
 
   const getAiSuggestions = async (index: number) => {
-    console.log(index)
-
     setAiLoading(true);
     setCurrentQuery(AiSuggestions[index]);
     const newConversation: Message[] = [
