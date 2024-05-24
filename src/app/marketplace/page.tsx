@@ -29,6 +29,7 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { updateFilterData } from "@/store/Features/marketplace";
+import { setCookie, getCookie } from 'cookies-next';
 
 const categoryIcons = [
   FaHome,
