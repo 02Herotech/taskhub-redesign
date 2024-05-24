@@ -60,7 +60,7 @@ const HomeNavigation = () => {
                   <Link
                     href={link.url as string}
                     className={cn("text-balck text-md", {
-                      "font-semibold":
+                      "font-semibold text-tc-orange":
                         link.url === "/" && pathname === "/"
                           ? true
                           : link.url !== "/" && pathname.includes(link.url)

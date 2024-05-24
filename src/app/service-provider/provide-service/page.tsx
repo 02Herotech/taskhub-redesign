@@ -21,19 +21,19 @@ import { useSession } from "next-auth/react";
 import { GrFormCheckmark } from "react-icons/gr";
 
 interface FormData {
-  lisitingTitle: string;
+  listingTitle: string;
   listingDescription: string;
   planOneDescription: string;
   planTwoDescription: string;
   planThreeDescription: string;
-  image1: File | defaultImage | null;
-  image2?: File | defaultImage | null;
-  image3?: File | defaultImage | null;
-  image4?: File | defaultImage | null;
+  image1: File | null;
+  image2?: File | null;
+  image3?: File | null;
+  image4?: File | null;
   taskType: string;
-  planOnePrice: string;
-  planTwoPrice: string;
-  planThreePrice: string;
+  planOnePrice: number | null;
+  planTwoPrice: number | null;
+  planThreePrice: number | null;
   availableDays: string[];
   suburb: string;
   postCode: string;
@@ -63,16 +63,13 @@ interface Subcategory {
   name: string;
 }
 
-type defaultImage = string;
-
 const ProvideService: React.FC = () => {
   const session = useSession();
-  const token = session?.data?.user.accessToken;
   const id = session?.data?.user.user.id;
   const authenticated = session?.data?.user.user.enabled;
   const [currentPage, setCurrentPage] = useState(1);
   const [task, setTask] = useState<FormData>({
-    lisitingTitle: "",
+    listingTitle: "",
     listingDescription: "",
     planOneDescription: "",
     planTwoDescription: "",
@@ -82,9 +79,9 @@ const ProvideService: React.FC = () => {
     image3: null,
     image4: null,
     taskType: "",
-    planOnePrice: "",
-    planTwoPrice: "",
-    planThreePrice: "",
+    planOnePrice: null,
+    planTwoPrice: null,
+    planThreePrice: null,
     availableDays: [],
     suburb: "",
     postCode: "",
@@ -174,7 +171,7 @@ const ProvideService: React.FC = () => {
       errors.category = "Please select a category.";
     } else if (!selectedSubCategory) {
       errors.subCategory = "Please select a subcategory.";
-    } else if (!task.lisitingTitle) {
+    } else if (!task.listingTitle) {
       errors.lisitingTitle = "Please lisitingTitle with a short title";
     } else if (!task.listingDescription) {
       errors.description = "Please give a detailed description";
@@ -234,7 +231,6 @@ const ProvideService: React.FC = () => {
   ) => {
     const selectedId = parseInt(event.target.value);
     setSelectedSubCategory(selectedId);
-    console.log(selectedCategory);
     setTask({
       ...task,
       subCategoryId: selectedCategory,
@@ -267,29 +263,36 @@ const ProvideService: React.FC = () => {
     setSelectedDay("");
   };
 
-  const handleRemoveDay = (day: any) => {
+  const handleRemoveDay = (day: string) => {
     setSelectedDays(selectedDays.filter((d) => d !== day));
   };
 
   const nextPage = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setCurrentPage(currentPage + 1);
     if (validateFields()) {
-      // setCurrentPage(currentPage + 1);
+      setCurrentPage(currentPage + 1);
       console.log(selectedCategory, selectedSubCategory);
     }
   };
 
   const nextPages = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setCurrentPage(currentPage + 1);
     if (validateField1()) {
-      // setCurrentPage(currentPage + 1);
+      setCurrentPage(currentPage + 1);
     }
   };
 
   const prevPage = () => {
     setCurrentPage(currentPage - 1);
+  };
+
+  const handlePrice = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target;
+    const numberValue = value === "" ? 0 : parseFloat(value);
+    setTask({
+      ...task,
+      [name]: numberValue,
+    });
   };
 
   const handleChange = (
@@ -298,28 +301,32 @@ const ProvideService: React.FC = () => {
     setTask({ ...task, [event.target.name]: event.target.value });
   };
 
-  const handlePictureUpload = (
-    event: React.ChangeEvent<HTMLInputElement>,
-    imageIndex: number,
-  ) => {
+  const handlePictureUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const uploadedFile = event.target.files?.[0];
     if (uploadedFile) {
-      switch (imageIndex) {
-        case 1:
-          setTask({ ...task, image2: uploadedFile });
-          break;
-        case 2:
-          setTask({ ...task, image3: uploadedFile });
-          break;
-        case 3:
-          setTask({ ...task, image4: uploadedFile });
-          break;
-        default:
-          setTask({ ...task, image1: uploadedFile });
-      }
+      setTask({ ...task, image1: uploadedFile });
+    }
+  };
+  const handlePictureUpload1 = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const uploadedFile = event.target.files?.[0];
+    if (uploadedFile) {
+      setTask({ ...task, image2: uploadedFile });
     }
   };
 
+  const handlePictureUpload2 = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const uploadedFile = event.target.files?.[0];
+    if (uploadedFile) {
+      setTask({ ...task, image3: uploadedFile });
+    }
+  };
+
+  const handlePictureUpload3 = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const uploadedFile = event.target.files?.[0];
+    if (uploadedFile) {
+      setTask({ ...task, image4: uploadedFile });
+    }
+  };
   const getImageURL = (imageIndex: number) => {
     switch (imageIndex) {
       case 1:
@@ -350,7 +357,7 @@ const ProvideService: React.FC = () => {
     const requiredFields = [
       task.listingDescription,
       task.planOnePrice,
-      task.lisitingTitle,
+      task.listingTitle,
       selectedDay,
       task.planOneDescription,
       task.image1,
@@ -389,48 +396,47 @@ const ProvideService: React.FC = () => {
             taskType: "PHYSICAL_SERVICE",
             suburb: selectedCity,
             postCode: selectedCode,
-            state: "Queensland",
+            state: postalCodeData[0].state.name,
           };
-        }
-
-        if (!task.image2 || !task.image3 || !task.image4) {
-          const defaultImage = "google-map.png";
-          setTask({
-            ...task,
-            image2: defaultImage,
-            image3: defaultImage,
-            image4: defaultImage,
-          });
         }
 
         if (selectedDays) {
           finalTask = { ...finalTask, availableDays: selectedDays };
         }
+
+        if (!task.image2 || !task.image3 || !task.image4) {
+          finalTask = {
+            ...finalTask,
+            image2: task.image1,
+            image3: task.image1,
+            image4: task.image1,
+          };
+        }
         console.log(finalTask);
+
         await axios.post(
           `https://smp.jacinthsolutions.com.au/api/v1/listing/create-listing?userId=${id}`,
           finalTask,
           {
             headers: {
-              Authorization: `Bearer ${token}`,
               "Content-Type": "multipart/form-data",
             },
           },
         );
         setTask({
-          lisitingTitle: "",
+          listingTitle: "",
           listingDescription: "",
           planOneDescription: "",
           planTwoDescription: "",
           planThreeDescription: "",
-          image1: "",
-          image2: "",
-          image3: "",
-          image4: "",
+          image1: null,
+          image2: null,
+          image3: null,
+          image4: null,
           taskType: "",
-          planOnePrice: "",
-          planTwoPrice: "",
-          planThreePrice: "",
+          planOnePrice: null,
+          planTwoPrice: null,
+          planThreePrice: null,
           availableDays: [],
           suburb: "",
           postCode: "",
@@ -440,8 +446,9 @@ const ProvideService: React.FC = () => {
           subCategoryId: null,
         });
         setIsSuccessPopupOpen(true);
-      } catch (error) {
+      } catch (error: any) {
         console.error("Error submitting form:", error);
+        console.log(error.message);
         setIsSuccessPopupOpen(false);
       }
     }
@@ -463,8 +470,8 @@ const ProvideService: React.FC = () => {
                   </label>
                   <input
                     type="text"
-                    name="lisitingTitle"
-                    value={task.lisitingTitle}
+                    name="listingTitle"
+                    value={task.listingTitle}
                     onChange={handleChange}
                     placeholder="Casual Babysitting"
                     className="rounded-2xl bg-[#EBE9F4] p-3 text-[13px]  outline-none"
@@ -581,8 +588,12 @@ const ProvideService: React.FC = () => {
                           <input
                             type="text"
                             name="planOnePrice"
-                            value={task.planOnePrice}
-                            onChange={handleChange}
+                            value={
+                              task.planOnePrice !== null
+                                ? task.planOnePrice
+                                : ""
+                            }
+                            onChange={handlePrice}
                             placeholder="$500"
                             className="w-1/3 rounded-2xl bg-[#EBE9F4] p-3 text-[13px] outline-none"
                           />
@@ -622,9 +633,13 @@ const ProvideService: React.FC = () => {
                         <div className="flex items-center space-x-2 pl-2">
                           <input
                             type="text"
-                            name="planOnePrice"
-                            value={task.planOnePrice}
-                            onChange={handleChange}
+                            name="planTwoPrice"
+                            value={
+                              task.planTwoPrice !== null
+                                ? task.planTwoPrice
+                                : ""
+                            }
+                            onChange={handlePrice}
                             placeholder="$500"
                             className="w-1/3 rounded-2xl bg-[#EBE9F4] p-3 text-[13px] outline-none"
                           />
@@ -665,8 +680,12 @@ const ProvideService: React.FC = () => {
                           <input
                             type="text"
                             name="planThreePrice"
-                            value={task.planThreePrice}
-                            onChange={handleChange}
+                            value={
+                              task.planThreePrice !== null
+                                ? task.planThreePrice
+                                : ""
+                            }
+                            onChange={handlePrice}
                             placeholder="$500"
                             className="w-1/3 rounded-2xl bg-[#EBE9F4] p-3 text-[13px] outline-none"
                           />
@@ -794,7 +813,7 @@ const ProvideService: React.FC = () => {
                   value={selectedDay}
                   onChange={handleTickChange}
                   name="availableDays"
-                  className="h-10 w-1/2 appearance-none rounded-2xl border border-tc-gray bg-[#EBE9F4] px-3 py-1 text-[14px] text-status-purpleBase outline-none"
+                  className="h-10 w-full appearance-none rounded-2xl border border-tc-gray bg-[#EBE9F4] px-3 py-1 text-[14px] outline-none lg:w-1/2"
                 >
                   <option value="">Available Days</option>
                   <option value="MONDAY">Monday</option>
@@ -805,25 +824,23 @@ const ProvideService: React.FC = () => {
                   <option value="SATURDAY">Saturday</option>
                   <option value="SUNDAY">Sunday</option>
                 </select>
-                <IoMdArrowDropdown className="absolute right-96 top-3 cursor-pointer text-status-purpleBase" />
-                <div className="mt-4 w-1/2 rounded-2xl border bg-[#EBE9F4] p-4">
-                  <h3 className="text-[14px] text-status-purpleBase">
-                    Selected Days:
-                  </h3>
-                  <ul>
+                <IoMdArrowDropdown className="absolute right-96 top-3 cursor-pointer" />
+                <div className="mt-4 rounded-2xl border bg-[#EBE9F4] p-4 lg:w-2/3">
+                  <ul className="flex flex-wrap gap-2">
                     {selectedDays.map((day) => (
                       <li
                         key={day}
-                        className="flex justify-between text-[13px]"
+                        className="relative h-[40px] w-[105px] rounded-3xl border-2 border-[#FE9B07] bg-[#FFF0DA]
+p-3 text-center text-[12px] text-[#fe9b07]"
                         style={{ textTransform: "capitalize" }}
                       >
                         {day}
                         <button
                           type="button"
                           onClick={() => handleRemoveDay(day)}
-                          className="ml-2 text-red-500"
+                          className="absolute -top-1 right-0.5 ml-2 rounded-3xl border-[1px] border-[#4E5158] bg-[#EBE9F4] text-[#4E5158]"
                         >
-                          Remove
+                          <IoMdClose />
                         </button>
                       </li>
                     ))}
@@ -850,9 +867,9 @@ const ProvideService: React.FC = () => {
                         type="file"
                         readOnly
                         disabled
-                        name="image"
+                        name="image1"
                         className="hidden"
-                        onChange={(e) => handlePictureUpload(e, 0)}
+                        onChange={handlePictureUpload}
                       />
                     </div>
                     <button
@@ -878,8 +895,8 @@ const ProvideService: React.FC = () => {
                       type="file"
                       accept=".png, .jpg, .jpeg, .gif"
                       className="hidden"
-                      onChange={(e) => handlePictureUpload(e, 0)}
-                      name="image"
+                      onChange={handlePictureUpload}
+                      name="image1"
                     />
                   </label>
                 )}
@@ -904,9 +921,9 @@ const ProvideService: React.FC = () => {
                             type="file"
                             readOnly
                             disabled
-                            name="image"
+                            name="image2"
                             className="hidden"
-                            onChange={(e) => handlePictureUpload(e, 1)}
+                            onChange={handlePictureUpload1}
                           />
                         </div>
                         <button
@@ -931,7 +948,8 @@ const ProvideService: React.FC = () => {
                           type="file"
                           accept=".png, .jpg, .jpeg, .gif"
                           className="hidden"
-                          onChange={(e) => handlePictureUpload(e, 1)}
+                          name="image2"
+                          onChange={handlePictureUpload1}
                         />
                       </label>
                     )}
@@ -953,9 +971,9 @@ const ProvideService: React.FC = () => {
                             type="file"
                             readOnly
                             disabled
-                            name="image"
+                            name="image3"
                             className="hidden"
-                            onChange={(e) => handlePictureUpload(e, 2)}
+                            onChange={handlePictureUpload2}
                           />
                         </div>
                         <button
@@ -979,7 +997,8 @@ const ProvideService: React.FC = () => {
                           type="file"
                           accept=".png, .jpg, .jpeg, .gif"
                           className="hidden"
-                          onChange={(e) => handlePictureUpload(e, 2)}
+                          name="image3"
+                          onChange={handlePictureUpload2}
                         />
                       </label>
                     )}
@@ -1001,9 +1020,9 @@ const ProvideService: React.FC = () => {
                             type="file"
                             readOnly
                             disabled
-                            name="image"
+                            name="image4"
                             className="hidden"
-                            onChange={(e) => handlePictureUpload(e, 3)}
+                            onChange={handlePictureUpload3}
                           />
                         </div>
                         <button
@@ -1027,7 +1046,8 @@ const ProvideService: React.FC = () => {
                           type="file"
                           accept=".png, .jpg, .jpeg, .gif"
                           className="hidden"
-                          onChange={(e) => handlePictureUpload(e, 3)}
+                          name="image4"
+                          onChange={handlePictureUpload3}
                         />
                       </label>
                     )}
@@ -1054,12 +1074,12 @@ const ProvideService: React.FC = () => {
   };
 
   return (
-    <div className="mt-24 flex min-h-screen flex-col items-center justify-center">
+    <div className="mt-4 flex min-h-screen flex-col items-center justify-center">
       <Head>
         <title>TaskHub | Provide Service</title>
       </Head>
       <div className="w-full">
-        <div className="mb-3 flex justify-center space-x-5">
+        <div className="mb-3 flex justify-center md:space-x-5">
           <div
             className={`${
               currentPage === 1
@@ -1067,7 +1087,7 @@ const ProvideService: React.FC = () => {
                 : "text-status-purpleBase"
             }`}
           >
-            <p className="flex items-center gap-2 text-[12px] md:text-[16px] lg:gap-3">
+            <p className="flex items-center  text-[12px] md:text-[16px] lg:gap-3">
               <span
                 className={`${
                   currentPage === 1
@@ -1195,11 +1215,11 @@ const ProvideService: React.FC = () => {
                   <GrFormCheckmark className="h-[50px] w-[50px] rounded-full bg-[#FE9B07] p-2 lg:h-[60px] lg:w-[60px]" />
                 </div>
                 <p className="text-center font-clashDisplay text-[25px] font-extrabold text-[#2A1769] lg:text-[37px] ">
-                  Task posted
+                  Service created
                 </p>
                 <p className="lg:text-[20px]">
-                  Your task has been posted! please click <br /> on the button
-                  to proceed to marketplace
+                  Your Service Listing has been created!
+                  <br /> please click on the button to proceed to marketplace
                 </p>
                 <Image
                   src={image}

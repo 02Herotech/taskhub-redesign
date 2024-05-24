@@ -13,6 +13,7 @@ import Button from "@/components/global/Button";
 import ReactSlider from "react-slider";
 import axios from "axios";
 import { Task } from "@/types/services/tasks";
+import { useSession } from "next-auth/react";
 
 type Category = {
     id: number;
@@ -20,6 +21,7 @@ type Category = {
 };
 
 const Tasks = () => {
+    const session = useSession()
     const [priceValues, setPriceValues] = useState<[number, number]>([5, 10000]);
     const [locationValues, setLocationValues] = useState<[number, number]>([1, 50]);
     const [selectedService, setSelectedService] = useState<"REMOTE_SERVICE" | "PHYSICAL_SERVICE">("PHYSICAL_SERVICE");
@@ -154,6 +156,8 @@ const Tasks = () => {
             onClick: () => { },
         },
     ];
+
+    console.log(session)
 
     return (
         <section className="pt-7 container">
