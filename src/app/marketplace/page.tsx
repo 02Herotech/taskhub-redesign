@@ -29,6 +29,7 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { updateFilterData } from "@/store/Features/marketplace";
+import { setCookie, getCookie } from "cookies-next";
 
 const categoryIcons = [
   FaHome,
@@ -59,16 +60,14 @@ const MareketPlace = () => {
   const [firstName, setFirstName] = useState<{ [key: number]: string }>({});
   const [lastName, setLastName] = useState<{ [key: number]: string }>({});
   const [imgErrMsg, setImgErrMsg] = useState("");
-  const [showPopup, setShowPopup] = useState(true);
+
+  const [showPopup, setShowPopup] = useState(false);
 
   useEffect(() => {
-    if (isAuth && !isComplete) {
+    const popupCookie = getCookie("showPopup");
+    if (!popupCookie && isAuth && isComplete) {
+      setCookie("showPopup", true, { maxAge: 60 * 2 });
       setShowPopup(true);
-      // const timer = setTimeout(() => {
-      //   setShowPopup(false);
-      // }, 8000); // Hide Popup after 8 seconds
-
-      // return () => clearTimeout(timer); // Cleanup timer on unmount
     }
   }, [isAuth, isComplete]);
 
@@ -76,7 +75,7 @@ const MareketPlace = () => {
     <main className="font-satoshi">
       {showPopup && (
         <Popup isOpen={showPopup} onClose={() => setShowPopup(false)}>
-          <div className="relative h-[312px] lg:w-[577px]">
+          <div className="relative h-[312px] max-lg:mx-10 lg:w-[577px]">
             <div className="flex h-full flex-col items-center justify-center space-y-7 text-center">
               <h1 className="font-clashDisplay text-4xl font-semibold text-[#2A1769]">
                 Welcome to TaskHUB
