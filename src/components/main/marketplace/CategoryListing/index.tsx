@@ -211,6 +211,18 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
             })}
           </div>
         )
+      ) : displayListing.length === 0 ? (
+        <div className="flex min-h-40 flex-col items-center justify-center gap-4">
+          <Image
+            src={"/assets/images/marketplace/undraw_void_-3-ggu.svg"}
+            alt="void"
+            width={200}
+            height={200}
+          />
+          <p className="text-lg text-violet-normal">
+            No Listing Available at the moment
+          </p>
+        </div>
       ) : (
         <div className="my-2 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
           {displayListing.map((item, index) => {
