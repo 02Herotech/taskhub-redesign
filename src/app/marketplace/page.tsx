@@ -29,6 +29,7 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { updateFilterData } from "@/store/Features/marketplace";
+import { setCookie, getCookie } from 'cookies-next';
 
 const categoryIcons = [
   FaHome,
@@ -59,16 +60,14 @@ const MareketPlace = () => {
   const [firstName, setFirstName] = useState<{ [key: number]: string }>({});
   const [lastName, setLastName] = useState<{ [key: number]: string }>({});
   const [imgErrMsg, setImgErrMsg] = useState("");
-  const [showPopup, setShowPopup] = useState(true);
+
+  const [showPopup, setShowPopup] = useState(false);
 
   useEffect(() => {
-    if (isAuth && !isComplete) {
+    const popupCookie = getCookie('showPopup');
+    if (!popupCookie && isAuth && isComplete) {
+      setCookie('showPopup', true, { maxAge: 60 * 2 });
       setShowPopup(true);
-      // const timer = setTimeout(() => {
-      //   setShowPopup(false);
-      // }, 8000); // Hide Popup after 8 seconds
-
-      // return () => clearTimeout(timer); // Cleanup timer on unmount
     }
   }, [isAuth, isComplete]);
 
@@ -79,7 +78,7 @@ const MareketPlace = () => {
           isOpen={showPopup}
           onClose={() => setShowPopup(false)}
         >
-          <div className="lg:w-[577px] h-[312px] relative">
+          <div className="lg:w-[577px] max-lg:mx-10 h-[312px] relative">
             <div className="text-center space-y-7 flex flex-col items-center justify-center h-full">
               <h1 className="font-clashDisplay text-[#2A1769] text-4xl font-semibold">Welcome to TaskHUB</h1>
               <p className="text-black font-satoshi font-medium text-xl mb-8">We are thrilled to have you! Please complete your profile to get access to all our features.</p>

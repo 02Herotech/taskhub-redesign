@@ -29,8 +29,6 @@ const SignUpForm = () => {
     const searchParams = useSearchParams();
     const userType = searchParams.get('userType') || getCookie('userType');
 
-    console.log(getCookie('firstName'))
-
     // Read cookies and set default values
     const methods = useForm({
         mode: "onChange",
