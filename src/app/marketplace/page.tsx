@@ -60,16 +60,14 @@ const MareketPlace = () => {
   const [firstName, setFirstName] = useState<{ [key: number]: string }>({});
   const [lastName, setLastName] = useState<{ [key: number]: string }>({});
   const [imgErrMsg, setImgErrMsg] = useState("");
-  const [showPopup, setShowPopup] = useState(true);
+
+  const [showPopup, setShowPopup] = useState(false);
 
   useEffect(() => {
-    if (isAuth && !isComplete) {
+    const popupCookie = getCookie('showPopup');
+    if (!popupCookie && isAuth && isComplete) {
+      setCookie('showPopup', true, { maxAge: 60 * 2 });
       setShowPopup(true);
-      // const timer = setTimeout(() => {
-      //   setShowPopup(false);
-      // }, 8000); // Hide Popup after 8 seconds
-
-      // return () => clearTimeout(timer); // Cleanup timer on unmount
     }
   }, [isAuth, isComplete]);
 
