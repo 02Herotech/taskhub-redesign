@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useRef, useEffect } from "react";
 import { IoMdClose } from "react-icons/io";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface PopupProps {
     isOpen: boolean;
@@ -8,23 +9,66 @@ interface PopupProps {
 }
 
 const Popup: React.FC<PopupProps> = ({ isOpen, onClose, children }) => {
+    const popupRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (popupRef.current && !popupRef.current.contains(event.target as Node)) {
+                onClose();
+            }
+        };
+
+        if (isOpen) {
+            document.addEventListener("mousedown", handleClickOutside);
+        } else {
+            document.removeEventListener("mousedown", handleClickOutside);
+        }
+
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, [isOpen, onClose]);
+
+    const popupVariants = {
+        hidden: { opacity: 0, scale: 0.9 },
+        visible: { opacity: 1, scale: 1, transition: { duration: 0.3 } },
+        exit: { opacity: 0, scale: 0.9, transition: { duration: 0.3 } },
+    };
+
+    const backdropVariants = {
+        hidden: { opacity: 0 },
+        visible: { opacity: 1, transition: { duration: 0.3 } },
+        exit: { opacity: 0, transition: { duration: 0.3 } },
+    };
+
     return (
-        <div
-            className={`fixed  left-0 top-0 flex h-full w-full items-center justify-center bg-black bg-opacity-60 ${isOpen ? "" : "hidden"
-                }`}
-        >
-            <div className="relative flex justify-center rounded-lg bg-white p-2 md:p-6 shadow-lg">
-                <div className="absolute right-4 top-4  p-2 ">
-                    <button
-                        onClick={onClose}
-                        className="text-gray-600 hover:text-gray-800  bg-[#EBE9F4] rounded-3xl p-2"
+        <AnimatePresence>
+            {isOpen && (
+                <motion.div
+                    className="fixed left-0 top-0 z-50 flex h-full w-full items-center justify-center bg-black bg-opacity-60"
+                    initial="hidden"
+                    animate="visible"
+                    exit="exit"
+                    variants={backdropVariants}
+                >
+                    <motion.div
+                        ref={popupRef}
+                        className="relative flex justify-center z-10 rounded-xl bg-white p-1 shadow-lg"
+                        variants={popupVariants}
                     >
-                        <IoMdClose  className="w-[24px] h-[24px] border-2 border-[#5A5960] rounded-3xl"/>
-                    </button>
-                </div>
-                {children}
-            </div>
-        </div>
+                        <div className="absolute right-4 top-4 p-2 cursor-pointer z-10">
+                            <button
+                                onClick={onClose}
+                                className="text-primary hover:text-gray-800 bg-[#EBE9F4] rounded-3xl p-2"
+                            >
+                                <IoMdClose className="w-[24px] h-[24px] border-2 border-[#5A5960] rounded-3xl" />
+                            </button>
+                        </div>
+                        {children}
+                    </motion.div>
+                </motion.div>
+            )}
+        </AnimatePresence>
     );
 };
 
