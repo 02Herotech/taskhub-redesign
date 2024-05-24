@@ -34,8 +34,6 @@ const PricingModal = ({
     time: "",
   });
 
-  console.log(formState.pricing);
-
   useEffect(() => {
     setFormState((prev) => ({ ...prev, pricing: modalData.pricing }));
   }, [modalData.pricing]);
@@ -68,8 +66,6 @@ const PricingModal = ({
   const serviceProviderParams = new URLSearchParams({
     userType: "serviceProvider",
   });
-
-  console.log(modalData.isAuthenticated, "auth check");
 
   const handleFectchLocationByPostcode = async () => {
     try {
