@@ -65,14 +65,9 @@ interface Subcategory {
 
 const ProvideService: React.FC = () => {
   const session = useSession();
-  const token = session?.data?.user.accessToken;
   const id = session?.data?.user.user.id;
   const authenticated = session?.data?.user.user.enabled;
-  const defaultImageUrl =
-    "https://upaychattask.netlify.app/static/media/phone.25262f22bc2e0134d5d5.25262f22bc2e0134d5d5.png";
   const [currentPage, setCurrentPage] = useState(1);
-  const defaultImage =
-    "../../../../public/assets/images/customer/Task management.png";
   const [task, setTask] = useState<FormData>({
     listingTitle: "",
     listingDescription: "",
@@ -830,22 +825,22 @@ const ProvideService: React.FC = () => {
                   <option value="SUNDAY">Sunday</option>
                 </select>
                 <IoMdArrowDropdown className="absolute right-96 top-3 cursor-pointer" />
-                <div className="mt-4 rounded-2xl border bg-[#EBE9F4] p-4 lg:w-1/2">
-                  <h3 className="text-[14px]">Selected Days:</h3>
-                  <ul>
+                <div className="mt-4 rounded-2xl border bg-[#EBE9F4] p-4 lg:w-2/3">
+                  <ul className="flex flex-wrap gap-2">
                     {selectedDays.map((day) => (
                       <li
                         key={day}
-                        className="flex justify-between text-[13px]"
+                        className="relative h-[40px] w-[105px] rounded-3xl border-2 border-[#FE9B07] bg-[#FFF0DA]
+p-3 text-center text-[12px] text-[#fe9b07]"
                         style={{ textTransform: "capitalize" }}
                       >
                         {day}
                         <button
                           type="button"
                           onClick={() => handleRemoveDay(day)}
-                          className="ml-2 text-red-500"
+                          className="absolute -top-1 right-0.5 ml-2 rounded-3xl border-[1px] border-[#4E5158] bg-[#EBE9F4] text-[#4E5158]"
                         >
-                          Remove
+                          <IoMdClose />
                         </button>
                       </li>
                     ))}
@@ -1079,12 +1074,12 @@ const ProvideService: React.FC = () => {
   };
 
   return (
-    <div className="mt-24 flex min-h-screen flex-col items-center justify-center">
+    <div className="mt-4 flex min-h-screen flex-col items-center justify-center">
       <Head>
         <title>TaskHub | Provide Service</title>
       </Head>
       <div className="w-full">
-        <div className="mb-3 flex justify-center space-x-5">
+        <div className="mb-3 flex justify-center md:space-x-5">
           <div
             className={`${
               currentPage === 1
@@ -1092,7 +1087,7 @@ const ProvideService: React.FC = () => {
                 : "text-status-purpleBase"
             }`}
           >
-            <p className="flex items-center gap-2 text-[12px] md:text-[16px] lg:gap-3">
+            <p className="flex items-center  text-[12px] md:text-[16px] lg:gap-3">
               <span
                 className={`${
                   currentPage === 1
@@ -1220,11 +1215,11 @@ const ProvideService: React.FC = () => {
                   <GrFormCheckmark className="h-[50px] w-[50px] rounded-full bg-[#FE9B07] p-2 lg:h-[60px] lg:w-[60px]" />
                 </div>
                 <p className="text-center font-clashDisplay text-[25px] font-extrabold text-[#2A1769] lg:text-[37px] ">
-                  Task posted
+                  Service created
                 </p>
                 <p className="lg:text-[20px]">
-                  Your task has been posted! please click <br /> on the button
-                  to proceed to marketplace
+                  Your Service Listing has been created!
+                  <br /> please click on the button to proceed to marketplace
                 </p>
                 <Image
                   src={image}

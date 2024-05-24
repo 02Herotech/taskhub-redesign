@@ -14,6 +14,7 @@ import Popup from "@/components/global/Popup";
 import Button from "@/components/global/Button";
 import { useSession } from "next-auth/react";
 import image from "../../../../../public/assets/images/customer/Task management.png";
+import img from "../../../../../public/assets/images/blend.png";
 import Image from "next/image";
 import Link from "next/link";
 interface FormData {
@@ -40,6 +41,7 @@ interface PostalCodeData {
 const AddTaskForm: React.FC = () => {
   const session = useSession();
   const token = session?.data?.user.accessToken;
+  const authenticated = session?.data?.user.user.enabled;
   const [currentPage, setCurrentPage] = useState(1);
   const defaultImageSrc =
     "https://static.wixstatic.com/media/7d1889_ab302adc66e943f9b6be9de260cbc40f~mv2.png";
@@ -380,10 +382,10 @@ const AddTaskForm: React.FC = () => {
                 ) : (
                   <label
                     htmlFor="file-upload"
-                    className="flex h-48 w-1/2 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-[#EBE9F4] p-4 "
+                    className="flex h-48 w-1/2 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-[#a3a1ac] p-4 "
                   >
-                    <PiFileArrowDownDuotone className="text-xl text-[#EBE9F4]" />
-                    <span className="text-center font-bold text-[#EBE9F4]">
+                    <PiFileArrowDownDuotone className="text-xl text-[#a3a1ac]" />
+                    <span className="text-center font-bold text-[#a3a1ac]">
                       File Upload supports: JPG, PDF, PNG.
                     </span>
                     <input
@@ -591,10 +593,10 @@ const AddTaskForm: React.FC = () => {
                   name="customerBudget"
                   value={task.customerBudget}
                   onChange={handleChange}
-                  placeholder="$500"
-                  className="rounded-2xl bg-[#EBE9F4] p-3 text-[13px] outline-none  placeholder:font-bold"
+                  placeholder="500"
+                  className="rounded-2xl bg-[#EBE9F4] p-3 pl-6 text-[13px] outline-none  placeholder:font-bold"
                 />
-                <p className="absolute">$</p>
+                <p className="absolute left-3 top-8">$</p>
               </div>
               <div className="text-[#FF0000]">
                 {Object.keys(errors).map((key, index) => (
@@ -705,39 +707,82 @@ const AddTaskForm: React.FC = () => {
           </div>
         </div>
       </div>
-      <Popup
-        isOpen={isSuccessPopupOpen}
-        onClose={() => {
-          setIsSuccessPopupOpen(false);
-        }}
-      >
-        <div className="p-5 lg:px-20">
-          <div className="relative grid items-center justify-center space-y-5">
-            <div className="flex justify-center text-[1px] text-white">
-              <GrFormCheckmark className="h-[50px] w-[50px] rounded-full bg-[#FE9B07] p-2 lg:h-[60px] lg:w-[60px]" />
-            </div>
-            <p className="text-center font-clashDisplay text-[25px] font-extrabold text-[#2A1769] lg:text-[37px] ">
-              Task posted
-            </p>
-            <p className="lg:text-[20px]">
-              Your task has been posted! please click <br /> on the button to
-              proceed to marketplace
-            </p>
-            <Image
-              src={image}
-              alt="image"
-              className="absolute -right-8 top-40 w-20 lg:-right-20 lg:top-2/3 lg:w-32"
-            />
-            <div className="flex justify-center">
-              <Link href="/marketplace">
-                <button className="w-[100px] rounded-2xl bg-status-purpleBase p-2 text-[14px] text-white outline-none">
-                  Go Home
-                </button>
-              </Link>
+      {authenticated === true ? (
+        <Popup
+          isOpen={isSuccessPopupOpen}
+          onClose={() => {
+            setIsSuccessPopupOpen(false);
+          }}
+        >
+          <div className="p-5 lg:px-20">
+            <div className="relative grid items-center justify-center space-y-5">
+              <div className="flex justify-center text-[1px] text-white">
+                <GrFormCheckmark className="h-[50px] w-[50px] rounded-full bg-[#FE9B07] p-2 lg:h-[60px] lg:w-[60px]" />
+              </div>
+              <p className="text-center font-clashDisplay text-[25px] font-extrabold text-[#2A1769] lg:text-[37px] ">
+                Task posted
+              </p>
+              <p className="lg:text-[20px]">
+                Your task has been posted! please click <br /> on the button to
+                proceed to marketplace
+              </p>
+              <Image
+                src={image}
+                alt="image"
+                className="absolute -right-8 top-40 w-20 lg:-right-20 lg:top-2/3 lg:w-32"
+              />
+              <div className="flex justify-center">
+                <Link href="/marketplace">
+                  <button className="w-[100px] rounded-2xl bg-status-purpleBase p-2 text-[14px] text-white outline-none">
+                    Go Home
+                  </button>
+                </Link>
+              </div>
             </div>
           </div>
-        </div>
-      </Popup>
+        </Popup>
+      ) : (
+        <Popup
+          isOpen={isSuccessPopupOpen}
+          onClose={() => {
+            setIsSuccessPopupOpen(false);
+          }}
+        >
+          <div className="p-10 lg:px-12">
+            <div className="relative grid items-center justify-center space-y-5">
+              <p className="text-center font-clashDisplay text-[20px] font-extrabold text-[#2A1769] md:text-[36px] lg:text-[37px] ">
+                You are almost done!!!
+              </p>
+              <p className="text-center text-[14px] lg:text-[20px]">
+                Please proceed to update your profile
+                <br /> before your Task can be posted
+              </p>
+              <Image
+                src={image}
+                alt="image"
+                className="absolute -right-12 top-28 w-24 lg:-right-20 lg:top-1/2 lg:w-36"
+              />
+              <Image
+                src={img}
+                alt="image"
+                className="absolute -left-12 top-12 w-12 lg:-left-[73px] lg:top-2 lg:w-24"
+              />
+              <div className="flex justify-center space-x-3 md:justify-around">
+                <Link href="/marketplace">
+                  <button className="rounded-2xl border-2 border-status-purpleBase p-2 text-[14px] font-semibold text-status-purpleBase outline-none md:w-[100px]">
+                    Back
+                  </button>
+                </Link>
+                <Link href="/marketplace">
+                  <button className="rounded-2xl bg-status-purpleBase p-2 text-[14px] text-white outline-none md:w-[100px]">
+                    Go to profile
+                  </button>
+                </Link>
+              </div>
+            </div>
+          </div>
+        </Popup>
+      )}
     </div>
   );
 };
