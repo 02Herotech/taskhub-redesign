@@ -248,14 +248,6 @@ const Tasks = () => {
                                 Physical
                             </button>
                         </div>
-                        <div className="flex items-center justify-between w-full">
-                            <Button theme="outline" className="rounded-full">
-                                Cancel
-                            </Button>
-                            <Button className="rounded-full" onClick={() => handleFilterByType(selectedService)}>
-                                Apply
-                            </Button>
-                        </div>
                     </div>
                 </Dropdown>
 

@@ -41,8 +41,8 @@ const ServiceProvideMobileNav = ({
             Provide a service
           </Link>
           <Link
-            href="/service-provider/explore-task"
-            className={`rounded-md  px-6 py-3 font-clashDisplay text-lg font-bold hover:opacity-90 ${pathname === "/service-provider/explore-task" ? "bg-yellow-500 text-white " : "bg-violet-100 text-[#2A1769] "} `}
+            href="/explore"
+            className={`rounded-md  px-6 py-3 font-clashDisplay text-lg font-bold hover:opacity-90 ${pathname === "/explore" ? "bg-yellow-500 text-white " : "bg-violet-100 text-[#2A1769] "} `}
           >
             Explore Task
           </Link>
