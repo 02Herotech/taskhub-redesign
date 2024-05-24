@@ -34,9 +34,9 @@ const MarketPlaceHeader = () => {
             <h1 className="text-[27px] font-bold md:text-[39px]">
               Put up a {userState}.
             </h1>
-            <h1 className="text-[27px] font-bold md:text-[39px] ">
+            {/* <h1 className="text-[27px] font-bold md:text-[39px] ">
               Complete the {userState} at hand.
-            </h1>
+            </h1> */}
           </div>
           <p className="font-bold sm:text-start sm:text-[16px] md:text-[18px] lg:text-[20px]">
             Publish a {userState} Complete it.

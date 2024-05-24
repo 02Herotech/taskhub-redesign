@@ -7,6 +7,8 @@ import React, { useState } from "react";
 import { IoChatbubbleOutline, IoTriangle } from "react-icons/io5";
 import ServiceProviderNotificationModal from "./ServiceProviderNotificationModal";
 import { BiBell } from "react-icons/bi";
+import { BsChat } from "react-icons/bs";
+import { LuBell } from "react-icons/lu";
 
 const ServiceProviderUserNav = () => {
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
@@ -19,20 +21,20 @@ const ServiceProviderUserNav = () => {
         href="/service-provider/message"
         className="relative z-10 rounded-lg  p-2 hover:shadow-md "
       >
-        <span className=" absolute -right-0 -top-0 z-10 rounded-full bg-yellow-400 p-1 text-[8px] text-white ">
+        {/* <span className=" absolute -right-0 -top-0 z-10 rounded-full bg-yellow-400 p-1 text-[8px] text-white ">
           12
-        </span>
-        <IoChatbubbleOutline className="size-5 lg:size-6" />
+        </span> */}
+        <BsChat className="size-5 lg:size-6" />
       </Link>
       <div className="relative z-10">
         <button
           className="relative z-10 rounded-lg  p-2 hover:shadow-md "
           onClick={() => setIsNotificationOpen((prev) => !prev)}
         >
-          <span className=" z-10-right-0 absolute -top-0 rounded-full bg-yellow-400 p-1 text-[8px] text-white ">
+          {/* <span className=" z-10-right-0 absolute -top-0 rounded-full bg-yellow-400 p-1 text-[8px] text-white ">
             12
-          </span>
-          <BiBell className="size-6 lg:size-7" />
+          </span> */}
+          <LuBell className="size-6 lg:size-7" />
         </button>
         <ServiceProviderNotificationModal
           setIsNotificationOpen={setIsNotificationOpen}
