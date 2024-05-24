@@ -46,11 +46,11 @@ const MareketPlace = () => {
   const { categories, isFiltering, filteredData, currentFilterStatus } =
     useSelector((state: RootState) => state.market);
   const session = useSession();
-  const router = useRouter()
+  const router = useRouter();
   const isAuth = session.status === "authenticated";
-  const isComplete = session.data?.user.user.enabled;
+  const isComplete = session?.data?.user?.user?.enabled;
 
-  const [filterData, setFilterData] = useState<ListingDataType[]>([]);
+  const [filterData, setFilterData] = useState<ListingDataType2[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [categoryHeader, setCategoryHeader] = useState("");
   const [profileImages, setProfileImages] = useState<{ [key: number]: string }>(
@@ -75,25 +75,32 @@ const MareketPlace = () => {
   return (
     <main className="font-satoshi">
       {showPopup && (
-        <Popup
-          isOpen={showPopup}
-          onClose={() => setShowPopup(false)}
-        >
-          <div className="lg:w-[577px] h-[312px] relative">
-            <div className="text-center space-y-7 flex flex-col items-center justify-center h-full">
-              <h1 className="font-clashDisplay text-[#2A1769] text-4xl font-semibold">Welcome to TaskHUB</h1>
-              <p className="text-black font-satoshi font-medium text-xl mb-8">We are thrilled to have you! Please complete your profile to get access to all our features.</p>
-              <Button className="w-[151px] rounded-full py-6" onClick={() => router.push("/service-provider/dashboard")}>Go to Profile</Button>
+        <Popup isOpen={showPopup} onClose={() => setShowPopup(false)}>
+          <div className="relative h-[312px] lg:w-[577px]">
+            <div className="flex h-full flex-col items-center justify-center space-y-7 text-center">
+              <h1 className="font-clashDisplay text-4xl font-semibold text-[#2A1769]">
+                Welcome to TaskHUB
+              </h1>
+              <p className="mb-8 font-satoshi text-xl font-medium text-black">
+                We are thrilled to have you! Please complete your profile to get
+                access to all our features.
+              </p>
+              <Button
+                className="w-[151px] rounded-full py-6"
+                onClick={() => router.push("/service-provider/dashboard")}
+              >
+                Go to Profile
+              </Button>
             </div>
             <Image
               src={ModalImage2}
               alt="image"
-              className="absolute left-0 bottom-0 size-[120px] lg:size-[160px]"
+              className="absolute bottom-0 left-0 size-[120px] lg:size-[160px]"
             />
             <Image
               src={ModalImage1}
               alt="image"
-              className="absolute -right-1 -bottom-1 size-[90px] lg:size-[110px]"
+              className="absolute -bottom-1 -right-1 size-[90px] lg:size-[110px]"
             />
           </div>
         </Popup>

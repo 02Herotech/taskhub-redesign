@@ -25,6 +25,8 @@ const PricingPlan = ({
   const isAuthenticated = session?.data?.user?.accessToken;
   const isServiceProvider =
     session?.data?.user?.user?.roles[0] === "SERVICE_PROVIDER";
+
+  console.log(isAuthenticated, "is authenticated");
   const [isModalShown, setIsModalShown] = useState(false);
   const [isTextExpanded, setIsTextExpanded] = useState({
     index: 1,

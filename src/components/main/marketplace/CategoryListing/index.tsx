@@ -29,6 +29,7 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
   );
 
   const [isLoading, setIsLoading] = useState(false);
+  const [allListsting, setallListsting] = useState<ListingDataType2[]>([]);
   const [ErrorMsg, setErrorMsg] = useState("");
   const [imgErrMsg, setImgErrMsg] = useState("");
   const [IdCategoryValue, setIdCategoryValue] = useState(0);
@@ -51,13 +52,14 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
         url =
           "https://smp.jacinthsolutions.com.au/api/v1/listing/listing-by-category/" +
           IdCategoryValue +
-          "?pageNumber= " +
+          "?pn=0" +
           page;
       }
       const response = await axios.get(url);
       dispatch(updateListingArray(response.data.content));
+      setallListsting(response.data.content);
+
       setDisplayListing(response.data.content);
-      console.log(response.data.content[0]);
     } catch (error) {
       setErrorMsg("Error searching listing");
     } finally {
@@ -75,6 +77,7 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
 
   const handleFetchUserProfile = async (posterId: number) => {
     try {
+      console.log(posterId);
       const url =
         "https://smp.jacinthsolutions.com.au/api/v1/user/user-profile/" +
         posterId;
@@ -91,19 +94,35 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
   };
 
   useEffect(() => {
-    if (displayListing.length > 0) {
-      setDisplayListing((prev) => [...prev.slice(0, 4)]);
-      displayListing.forEach((task) => {
-        handleFetchUserProfile(task.serviceProvider.id);
-      });
-    }
-    if (isViewMore.state) {
-      displayListing.forEach((task) => {
-        handleFetchUserProfile(task.serviceProvider.id);
-      });
-    }
+    const fetchData = async () => {
+      if (displayListing.length > 0) {
+        setDisplayListing((prev) => [...prev.slice(0, 4)]);
+        // for (let i = 0; i < displayListing.length; i++) {
+        //   const id = displayListing[i].serviceProvider.id;
+        //   if (id) {
+        //     await handleFetchUserProfile(id);
+        //   }
+        // }
+        // displayListing.forEach((task) => {
+        //   handleFetchUserProfile(task.serviceProvider.id);
+        // });
+      }
+      if (isViewMore.state) {
+        setDisplayListing(allListsting);
+        // displayListing.forEach((task) => {
+        //   handleFetchUserProfile(task.serviceProvider.id);
+        // });
+        // for (let i = 0; i < displayListing.length; i++) {
+        //   const id = displayListing[i].serviceProvider.id;
+        //   if (id) {
+        //     await handleFetchUserProfile(id);
+        //   }
+        // }
+      }
+    };
+    fetchData();
     // eslint-disable-next-line
-  }, [isViewMore, category]);
+  }, [listing, category, isViewMore]);
 
   useEffect(() => {
     if (category) {
@@ -121,7 +140,7 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
           <h1 className=" text-lg font-bold text-violet-dark md:text-2xl">
             {isFiltering ? "Filtering" : category}
           </h1>
-          {displayListing.length > 4 && (
+          {displayListing.length > 3 && (
             <button
               className="flex items-center gap-2 border-b-2 border-violet-normal text-sm font-bold  text-violet-normal"
               onClick={() =>
@@ -173,7 +192,9 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
           <div className="my-2 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
             {filteredData.map((item, index) => {
               const currentPosterProfile: PosterProfileTypes =
-                posterProfiles.filter((poster) => poster.id === item.id)[0];
+                posterProfiles.filter(
+                  (poster) => poster.id === item.serviceProvider.id,
+                )[0];
               return (
                 <SingleListingCard
                   key={index}
@@ -181,7 +202,7 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
                   listingId={item.id}
                   businessName={item.listingTitle}
                   displayImage={item.businessPictures[0]}
-                  pricing={item.price ?? 0}
+                  pricing={item.planOnePrice ?? 0}
                   firstName={currentPosterProfile?.firstName}
                   profileImage={currentPosterProfile?.profileImage}
                   lastName={currentPosterProfile?.lastName}
@@ -202,7 +223,7 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
                 listingId={item.id}
                 businessName={item.listingTitle}
                 displayImage={item.businessPictures[0]}
-                pricing={item.price ?? 0}
+                pricing={item.planOnePrice ?? 0}
                 firstName={currentPosterProfile?.firstName}
                 profileImage={currentPosterProfile?.profileImage}
                 lastName={currentPosterProfile?.lastName}
