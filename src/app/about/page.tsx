@@ -70,7 +70,7 @@ const About = () => {
 
             <div className={` w-full bg-gradient-to-b from-[#F5E2FC] via-[#FFFFFF] to-[rgb(245,226,252)] m-0  `}>
                 <div className="mx-auto flex flex-col px-6 py-20 md:max-w-[1350px] md:px-20">
-                    <div className="flex justify-center text-[36px] font-[600] text-[#2A1769] font-clashMedium">
+                    <div className="flex justify-center lg:text-[36px] md:text-[30px] text-[25px]  font-[600] text-[#2A1769] font-clashMedium">
                         <h2>What Sets Us Apart</h2>
                     </div>
                     <div className="lg:flex w-full justify-between items-center mt-10 hidden">
@@ -108,10 +108,10 @@ const About = () => {
                 <div className="mx-auto px-8 lg:py-20 md:py-16 py-10 md:max-w-7xl md:px-20 flex lg:justify-end justify-center items-center">
                     <div className="flex flex-col items-center lg:items-start lg:w-[600px] w-full space-y-5">
                         <h3 className="text-[#E1DDEE] md:text-[36px] text-[20px] font-clashSemiBold">Join Our Community</h3>
-                        <p className="text-[#EBE9F4] md:text-[20px] text-[12px] font-satoshi text-center">Join our growing TaskHub Service Marketplace Platform community today and experience the future of service exchange. Whether you’re looking to find skilled professionals or showcase your expertise, we’re here to help you succeed.</p>
+                        <p className="text-[#EBE9F4] md:text-[20px] text-[12px] font-satoshi text-center lg:text-start">Join our growing TaskHub Service Marketplace Platform community today and experience the future of service exchange. Whether you’re looking to find skilled professionals or showcase your expertise, we’re here to help you succeed.</p>
                         <button
                             type="button"
-                            className="bg-[#FE9B07] rounded-2xl py-2 px-10 text-white text-[16px]"
+                            className="bg-[#FE9B07] rounded-2xl py-2 px-12 text-white text-[16px]"
                         >
                             Join now
                         </button>
