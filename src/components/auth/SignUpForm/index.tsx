@@ -69,27 +69,25 @@ const SignUpForm = () => {
             setCookie('password', payload.password, { maxAge: 60 * 2 });
             setCookie('userType', userType);
 
-            if (userType === 'Service Provider') {
-                await serviceProviderSignUpApiCall(data).unwrap();
-                setIsLoading(false);
-                router.push(`/auth/verify-email?email=${payload.emailAddress}`);
-                return;
-            }
+            const timeoutPromise = new Promise((_, reject) =>
+                setTimeout(() => reject(setError('Request timed out')), 15000)
+            );
 
-            if (userType === 'Customer') {
-                await customerSignUpApiCall(data).unwrap();
-                setIsLoading(false);
-                router.push(`/auth/verify-email?email=${payload.emailAddress}`);
-                return;
-            }
+            const signUpPromise = userType === 'Service Provider'
+                ? serviceProviderSignUpApiCall(data).unwrap()
+                : customerSignUpApiCall(data).unwrap();
+
+            await Promise.race([signUpPromise, timeoutPromise]);
+
+            setIsLoading(false);
+            router.push(`/auth/verify-email?email=${payload.emailAddress}`);
 
         } catch (err: any) {
             console.log("Error:", err);
-            setError(err?.data.message);
+            setError(err.message || 'An unexpected error occurred');
             setIsLoading(false);
         }
     };
-
     return (
         <section className='w-full lg:w-[554px] mx-auto max-lg:p-5'>
             <div className='space-y-6 lg:space-y-10 w-full max-lg:container lg:max-w-[550px] lg:px-4'>
