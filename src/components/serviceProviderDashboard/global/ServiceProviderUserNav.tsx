@@ -6,7 +6,6 @@ import Link from "next/link";
 import React, { useState } from "react";
 import { IoChatbubbleOutline, IoTriangle } from "react-icons/io5";
 import ServiceProviderNotificationModal from "./ServiceProviderNotificationModal";
-import { BiBell } from "react-icons/bi";
 import { BsChat } from "react-icons/bs";
 import { LuBell } from "react-icons/lu";
 

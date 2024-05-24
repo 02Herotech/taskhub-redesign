@@ -33,7 +33,7 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
   const [imgErrMsg, setImgErrMsg] = useState("");
   const [IdCategoryValue, setIdCategoryValue] = useState(0);
   const [isViewMore, setIsViewMore] = useState({ state: false });
-  const [displayListing, setDisplayListing] = useState<ListingDataType[]>([]);
+  const [displayListing, setDisplayListing] = useState<ListingDataType2[]>([]);
   const [page, setPage] = useState(0);
 
   const handleFetchCategory = async () => {
@@ -57,6 +57,7 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
       const response = await axios.get(url);
       dispatch(updateListingArray(response.data.content));
       setDisplayListing(response.data.content);
+      console.log(response.data.content[0]);
     } catch (error) {
       setErrorMsg("Error searching listing");
     } finally {
@@ -75,9 +76,8 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
   const handleFetchUserProfile = async (posterId: number) => {
     try {
       const url =
-        "https://smp.jacinthsolutions.com.au/api/v1/user/user-profile/1";
-      // "https://smp.jacinthsolutions.com.au/api/v1/user/user-profile/" +
-      // posterId;
+        "https://smp.jacinthsolutions.com.au/api/v1/user/user-profile/" +
+        posterId;
       const {
         data: { profileImage, firstName, lastName },
       } = await axios.get(url);
@@ -93,17 +93,17 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
   useEffect(() => {
     if (displayListing.length > 0) {
       setDisplayListing((prev) => [...prev.slice(0, 4)]);
-      displayListing.forEach((task: any) => {
-        handleFetchUserProfile(task.posterId);
+      displayListing.forEach((task) => {
+        handleFetchUserProfile(task.serviceProvider.id);
       });
     }
     if (isViewMore.state) {
-      displayListing.forEach((task: any) => {
-        handleFetchUserProfile(task.posterId);
+      displayListing.forEach((task) => {
+        handleFetchUserProfile(task.serviceProvider.id);
       });
     }
     // eslint-disable-next-line
-  }, [isViewMore]);
+  }, [isViewMore, category]);
 
   useEffect(() => {
     if (category) {
@@ -198,11 +198,11 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
             return (
               <SingleListingCard
                 key={index}
-                posterId={item.posterId}
+                posterId={item.id}
                 listingId={item.id}
-                businessName={item.businessName}
+                businessName={item.listingTitle}
                 displayImage={item.businessPictures[0]}
-                pricing={item.pricing}
+                pricing={item.price ?? 0}
                 firstName={currentPosterProfile?.firstName}
                 profileImage={currentPosterProfile?.profileImage}
                 lastName={currentPosterProfile?.lastName}
