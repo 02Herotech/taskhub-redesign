@@ -133,16 +133,16 @@ const MareketPlace = () => {
   //   }
   // }, [filterData]);
 
-  // useEffect(() => {
-  //   if (isAuth && !isComplete) {
-  //     setShowPopup(true);
-  //     const timer = setTimeout(() => {
-  //       setShowPopup(false);
-  //     }, 8000); // Hide Popup after 8 seconds
+  useEffect(() => {
+    if (isAuth && !isComplete) {
+      setShowPopup(true);
+      // const timer = setTimeout(() => {
+      //   setShowPopup(false);
+      // }, 8000); // Hide Popup after 8 seconds
 
-  //     return () => clearTimeout(timer); // Cleanup timer on unmount
-  //   }
-  // }, [isAuth, isComplete]);
+      // return () => clearTimeout(timer); // Cleanup timer on unmount
+    }
+  }, [isAuth, isComplete]);
 
   return (
     <main className="font-satoshi">
