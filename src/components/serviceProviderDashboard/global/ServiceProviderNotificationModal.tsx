@@ -26,39 +26,45 @@ const ServiceProviderNotificationModal = ({
         <h2 className="pb-4 text-2xl font-bold text-violet-normal">
           Notification
         </h2>
-        <div className="flex h-screen max-h-80 flex-col gap-4 overflow-y-scroll pb-4 ">
-          {notificationData.map((item, index) => (
-            <Link
-              href="/service-provider/dashboard/notification"
-              key={index}
-              className="grid w-full cursor-pointer grid-cols-12 gap-4 transition-shadow duration-300 hover:shadow-md"
-              onClick={() => setIsNotificationOpen((prev) => !prev)}
-            >
-              <div className="col-span-9 flex gap-2">
-                <Image
-                  src={item.image}
-                  alt={item.jobLabel}
-                  width={40}
-                  height={40}
-                  className="size-8 rounded-full"
-                />
-                <div>
-                  <p className="cursor-pointer font-bold text-violet-normal">
-                    {item.description}
-                  </p>
-                  <p className="cursor-pointer text-sm text-slate-500">
-                    {item.jobLabel}
-                  </p>
+        <div className="flex h-screen max-h-80 flex-col gap-4 overflow-y-auto pb-4 ">
+          {notificationData.length > 0 ? (
+            notificationData.map((item, index) => (
+              <Link
+                href="/service-provider/dashboard/notification"
+                key={index}
+                className="grid w-full cursor-pointer grid-cols-12 gap-4 transition-shadow duration-300 hover:shadow-md"
+                onClick={() => setIsNotificationOpen((prev) => !prev)}
+              >
+                <div className="col-span-9 flex gap-2">
+                  <Image
+                    src={item.image}
+                    alt={item.jobLabel}
+                    width={40}
+                    height={40}
+                    className="size-8 rounded-full"
+                  />
+                  <div>
+                    <p className="cursor-pointer font-bold text-violet-normal">
+                      {item.description}
+                    </p>
+                    <p className="cursor-pointer text-sm text-slate-500">
+                      {item.jobLabel}
+                    </p>
+                  </div>
                 </div>
-              </div>
-              <p className="col-span-3 cursor-pointer text-sm text-slate-500">
-                {item.time}
-              </p>
-            </Link>
-          ))}
+                <p className="col-span-3 cursor-pointer text-sm text-slate-500">
+                  {item.time}
+                </p>
+              </Link>
+            ))
+          ) : (
+            <div className="no-scrollbar flex min-h-20 items-center justify-center">
+              <h2 className="text-violet-normal">No current Notification</h2>
+            </div>
+          )}
         </div>
         <button
-          className="absolute right-4 top-2"
+          className="absolute right-4 top-4"
           onClick={() => setIsNotificationOpen((prev) => !prev)}
         >
           <BiXCircle className="size-6 text-violet-normal " />

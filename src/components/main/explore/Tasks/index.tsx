@@ -13,6 +13,7 @@ import Button from "@/components/global/Button";
 import ReactSlider from "react-slider";
 import axios from "axios";
 import { Task } from "@/types/services/tasks";
+import { useSession } from "next-auth/react";
 
 type Category = {
     id: number;
@@ -20,6 +21,7 @@ type Category = {
 };
 
 const Tasks = () => {
+    const session = useSession()
     const [priceValues, setPriceValues] = useState<[number, number]>([5, 10000]);
     const [locationValues, setLocationValues] = useState<[number, number]>([1, 50]);
     const [selectedService, setSelectedService] = useState<"REMOTE_SERVICE" | "PHYSICAL_SERVICE">("PHYSICAL_SERVICE");
@@ -155,6 +157,8 @@ const Tasks = () => {
         },
     ];
 
+    console.log(session)
+
     return (
         <section className="pt-7 container">
             <div className="hidden lg:flex lg:space-x-4 mt-14 items-center">
@@ -243,14 +247,6 @@ const Tasks = () => {
                             >
                                 Physical
                             </button>
-                        </div>
-                        <div className="flex items-center justify-between w-full">
-                            <Button theme="outline" className="rounded-full">
-                                Cancel
-                            </Button>
-                            <Button className="rounded-full" onClick={() => handleFilterByType(selectedService)}>
-                                Apply
-                            </Button>
                         </div>
                     </div>
                 </Dropdown>

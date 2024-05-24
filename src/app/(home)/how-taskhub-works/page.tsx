@@ -7,17 +7,13 @@ import Experiences from '@/components/HowTaskhubWorks/Experience/indes'
 
 const HowTaskhubWorks = () => {
     return (
-        <div className='py-10 bg-gradient-to-b from-[#f3dcfc]  via-[#FFFFFF] to-[#F5DDFD]'>
-
+        <div className='py-10 bg-gradient-to-b from-[#f3dcfc] via-[#FFFFFF] to-[#F5DDFD]'>
             <div className='mx-auto max-w-7xl xl:mx-[120px] lg:mx-[48px]'>
                 <Header />
                 <PostTasks />
                 <PostService/>
-                 <Experiences/>
+                <Experiences/>
             </div>
-
-
-
         </div>
     )
 }

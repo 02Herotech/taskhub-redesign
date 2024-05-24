@@ -10,11 +10,7 @@ import { BiSearch } from "react-icons/bi";
 const ChatNavigation = () => {
   const [currentCategory, setCurrentCategory] = useState("All");
   const param = useSearchParams();
-
   const id = param.get("id");
-
-  console.log(id);
-
   const handleChangeCategory = (category: string) => {
     setCurrentCategory(category);
   };
@@ -32,7 +28,7 @@ const ChatNavigation = () => {
           className={`rounded-md px-4  py-2 font-medium transition-all duration-300 hover:opacity-90 ${currentCategory === "Unread" ? "bg-violet-normal text-white" : "bg-violet-light text-violet-normal hover:bg-violet-200"} `}
           onClick={() => handleChangeCategory("Unread")}
         >
-          All Messages
+          Unread Messages
         </button>
       </div>
       <form className="flex items-center gap-3">
@@ -46,42 +42,50 @@ const ChatNavigation = () => {
       </form>
 
       <article className="flex max-h-[55vh] flex-col gap-4 overflow-y-auto">
-        {chatData.map((item, index) => (
-          <Link
-            href={{
-              pathname: "/service-provider/message/" + item.id,
-              query: "id=" + item.id,
-            }}
-            key={index}
-            className={`flex cursor-pointer gap-3 rounded-lg border border-slate-100 p-3 transition-all  duration-300 ${id === item.id ? "bg-violet-100 hover:bg-opacity-90" : "hover:bg-violet-50"}`}
-          >
-            <Image
-              src={item.image}
-              alt={item.name}
-              width={60}
-              height={60}
-              className="size-16 rounded-full"
-            />
-            <div className="w-full space-y-4">
-              <div className="flex w-full cursor-pointer items-center justify-between">
-                <p className="cursor-pointer font-medium text-violet-normal">
-                  {item.name}
-                </p>
-                <p className="cursor-pointer text-sm text-slate-500 ">
-                  {item.date}
-                </p>
+        {chatData.length > 0 ? (
+          chatData.map((item, index) => (
+            <Link
+              href={{
+                pathname: "/service-provider/message/" + item.id,
+                query: "id=" + item.id,
+              }}
+              key={index}
+              className={`flex cursor-pointer gap-3 rounded-lg border border-slate-100 p-3 transition-all  duration-300 ${id === item.id ? "bg-violet-100 hover:bg-opacity-90" : "hover:bg-violet-50"}`}
+            >
+              <Image
+                src={item.image}
+                alt={item.name}
+                width={60}
+                height={60}
+                className="size-16 rounded-full"
+              />
+              <div className="w-full space-y-4">
+                <div className="flex w-full cursor-pointer items-center justify-between">
+                  <p className="cursor-pointer font-medium text-violet-normal">
+                    {item.name}
+                  </p>
+                  <p className="cursor-pointer text-sm text-slate-500 ">
+                    {item.date}
+                  </p>
+                </div>
+                <div className="flex w-full cursor-pointer items-center justify-between">
+                  <p className="cursor-pointer text-sm font-medium text-violet-dark ">
+                    {item.lastMessage}
+                  </p>
+                  <p className="cursor-pointer rounded-md bg-violet-light p-1 text-xs">
+                    {item.chatNo}
+                  </p>
+                </div>
               </div>
-              <div className="flex w-full cursor-pointer items-center justify-between">
-                <p className="cursor-pointer text-sm font-medium text-violet-dark ">
-                  {item.lastMessage}
-                </p>
-                <p className="cursor-pointer rounded-md bg-violet-light p-1 text-xs">
-                  {item.chatNo}
-                </p>
-              </div>
-            </div>
-          </Link>
-        ))}
+            </Link>
+          ))
+        ) : (
+          <div className="flex h-full min-h-20 items-center justify-center">
+            <p className="text-lg font-medium text-violet-normal">
+              No Chat available
+            </p>
+          </div>
+        )}
       </article>
     </section>
   );
