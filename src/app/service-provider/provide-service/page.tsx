@@ -20,7 +20,7 @@ import AiDesciption from "@/components/AiGenerate/AiDescription";
 import { useSession } from "next-auth/react";
 import { GrFormCheckmark } from "react-icons/gr";
 
-interface FormData {
+interface ProvideServiceData {
   listingTitle: string;
   listingDescription: string;
   planOneDescription: string;
@@ -68,7 +68,7 @@ const ProvideService: React.FC = () => {
   const id = session?.data?.user.user.id;
   const authenticated = session?.data?.user.user.enabled;
   const [currentPage, setCurrentPage] = useState(1);
-  const [task, setTask] = useState<FormData>({
+  const [task, setTask] = useState<ProvideServiceData>({
     listingTitle: "",
     listingDescription: "",
     planOneDescription: "",

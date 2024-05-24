@@ -15,7 +15,7 @@ interface Message {
   text: string;
 }
 
-interface FormData {
+interface ProvideServiceData {
   listingTitle: string;
   listingDescription: string;
   planOneDescription: string;
@@ -39,8 +39,8 @@ interface FormData {
 }
 
 interface AiGenerateProps {
-  setTask: React.Dispatch<React.SetStateAction<FormData>> | any;
-  task: FormData | any;
+  setTask: React.Dispatch<React.SetStateAction<ProvideServiceData>> | any;
+  task: ProvideServiceData | any;
 }
 
 const AiDesciption: React.FC<AiGenerateProps> = ({ task, setTask }) => {
@@ -167,6 +167,10 @@ const AiDesciption: React.FC<AiGenerateProps> = ({ task, setTask }) => {
             </div>
 
             <div className="conversation h-[65%] space-y-4 overflow-y-scroll lg:h-[65%] ">
+
+              <div>
+                Hello
+              </div>
               {conversation.map((entry, index) => (
                 <div key={index}>
                   <div
