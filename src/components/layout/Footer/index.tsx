@@ -90,7 +90,7 @@ const Footer = () => {
             <footer className='pt-10 lg:pt-20 bg-status-lightViolet font-satoshi hidden lg:block'>
                 <div className='container w-full grid grid-cols-1 lg:grid-cols-5 gap-10 lg:gap-20 pb-10 '>
                     <div className='grid lg:col-span-2'>
-                        <Link href='/marketplace' className='w-[67px] h-[50px] lg:w-[109px] relative'>
+                        <Link href='/marketplace' className='w-[67px] h-[50px] lg:w-[109px] mt-[-20px] relative'>
                             <Logo />
                         </Link>
                         <div className=" xl:mt-0 lg:mt-[-100px] font-satoshi">
@@ -120,7 +120,7 @@ const Footer = () => {
                                 </h3>
                                 {group.links.map((link, index) => {
                                     return (
-                                        <li key={index} className='text-primary font-medium hover:underline text-sm lg:text-base'>
+                                        <li key={index} className='text-primary !font-medium hover:underline text-sm lg:text-base'>
                                             <Link href={link.url}>{link.label}</Link>
                                         </li>
                                     );

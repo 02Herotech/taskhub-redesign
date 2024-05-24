@@ -523,6 +523,7 @@ const ProvideService: React.FC = () => {
                 </div>
 
                 <div className="lg:hidden">
+                {/* @ts-ignore */}
                   <AiDesciption setTask={setTask} task={task} />
                 </div>
                 <div className="grid space-y-3">
@@ -1174,6 +1175,7 @@ p-3 text-center text-[12px] text-[#fe9b07]"
         <div className="mt-8 lg:flex">
           {currentPage === 1 && (
             <div className="mr-[50px] hidden lg:ml-[10%] lg:block lg:w-[390px] xl:ml-[15%] ">
+                {/* @ts-ignore */}
               <AiDesciption setTask={setTask} task={task} />
             </div>
           )}
