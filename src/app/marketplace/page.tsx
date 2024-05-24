@@ -161,12 +161,12 @@ const MareketPlace = () => {
             <Image
               src={ModalImage2}
               alt="image"
-              className="absolute left-0 bottom-0 size-[160px]"
+              className="absolute left-0 bottom-0 size-[120px] lg:size-[160px]"
             />
             <Image
               src={ModalImage1}
               alt="image"
-              className="absolute -right-1 -bottom-1 size-[110px]"
+              className="absolute -right-1 -bottom-1 size-[90px] lg:size-[110px]"
             />
           </div>
         </Popup>
