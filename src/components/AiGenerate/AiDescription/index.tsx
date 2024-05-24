@@ -40,7 +40,7 @@ interface FormData {
 
 interface AiGenerateProps {
   setTask: React.Dispatch<React.SetStateAction<FormData>> | any;
-  task: FormData;
+  task: FormData | any;
 }
 
 const AiDesciption: React.FC<AiGenerateProps> = ({ task, setTask }) => {
