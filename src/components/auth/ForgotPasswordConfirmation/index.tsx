@@ -141,7 +141,7 @@ const PasswordConfirmationForm = ({ email }: { email: string }) => {
                             <span className='w-full flex items-center text-sm text-left leading-5 mb-2'>
                                 <label htmlFor="" className='capitalize text-[#5B5B66]'>Enter verification code</label>
                             </span>
-                            <div className="flex items-center space-x-4 pb-8">
+                            <div className="flex items-center space-x-4 pb-4">
                                 {otp.map((data, index) => (
                                     <input
                                         type="text"
@@ -160,20 +160,19 @@ const PasswordConfirmationForm = ({ email }: { email: string }) => {
                             </div>
                         </div>
                         {error && (
-                            <div className="text-status-error-100 text-base text-center capitalize font-semibold my-5">{error}</div>
+                            <div className="text-status-error-100 text-base text-start capitalize font-semibold mt-1 mb-4">{error}</div>
                         )}
                         <div className='pt-1 space-y-5'>
                             <Button
                                 type='submit'
                                 loading={isLoading}
                                 disabled={isDisabled}
-                                className='w-full lg:w-[170px] rounded-full font-normal'
+                                className='w-full lg:w-[170px] my-4 rounded-full font-normal'
                             >
                                 Verify
                             </Button>
-                            <div className="text-xl font-bold">Haven’t gotten the code?
-                                <Button theme='plain' onClick={() => resendOtp()} className="text-primary">Resend code</Button>
-                            </div>
+                            <span className="text-xl font-bold my-2">Haven’t gotten the code? <span onClick={() => resendOtp()} className="text-primary cursor-pointer hover:underline">Resend code</span> 
+                            </span>
                         </div>
                     </form>
                 </div>
