@@ -10,6 +10,8 @@ import { FaBabyCarriage } from "react-icons/fa";
 import { MdSecurity } from "react-icons/md";
 import { MdLocalGroceryStore } from "react-icons/md";
 import axios from "axios";
+import ModalImage1 from "../../../public/assets/images/marketplace/complete-profile-1.png";
+import ModalImage2 from "../../../public/assets/images/marketplace/complete-profile-2.png";
 
 import MarketPlaceFilter from "@/components/main/marketplace/MarketPlaceFilter";
 import MarketPlaceHeader from "@/components/main/marketplace/MarketPlaceHeader";
@@ -21,7 +23,10 @@ import { useSession } from "next-auth/react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store";
 import Loading from "@/shared/loading";
-import Toast from "@/components/global/Toast";
+import Popup from "@/components/global/Popup";
+import Button from "@/components/global/Button";
+import { useRouter } from "next/navigation";
+import Image from "next/image";
 import Link from "next/link";
 import { updateFilterData } from "@/store/Features/marketplace";
 
@@ -41,6 +46,7 @@ const MareketPlace = () => {
   const { categories, isFiltering, filteredData, currentFilterStatus } =
     useSelector((state: RootState) => state.market);
   const session = useSession();
+  const router = useRouter()
   const isAuth = session.status === "authenticated";
   const isComplete = session.data?.user.user.enabled;
 
@@ -53,85 +59,46 @@ const MareketPlace = () => {
   const [firstName, setFirstName] = useState<{ [key: number]: string }>({});
   const [lastName, setLastName] = useState<{ [key: number]: string }>({});
   const [imgErrMsg, setImgErrMsg] = useState("");
-  const [showToast, setShowToast] = useState(false);
-
-  useEffect(() => {
-    const { category, subCategory, pricing, search, location } =
-      currentFilterStatus;
-    const filterData = async () => {
-      const page = 0;
-      try {
-        if (isFiltering) {
-          if (category) {
-            const id = categories.filter(
-              (item) => item.categoryName === category,
-            )[0].id;
-            const url =
-              "https://smp.jacinthsolutions.com.au/api/v1/listing/listing-by-category/" +
-              id +
-              "?pageNumber=" +
-              page;
-            const { data } = await axios.get(url);
-            console.log(data);
-            dispatch(
-              updateFilterData({ data, section: "category", value: category }),
-            );
-            // handle filterby category
-          } else if (subCategory) {
-            // handle filter by sub category
-          } else if (pricing) {
-          } else if (search) {
-          } else if (location) {
-          }
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    filterData();
-    // eslint-disable-next-line
-  }, [filteredData, isFiltering, currentFilterStatus]);
-
-  // console.log(filteredData)
+  const [showPopup, setShowPopup] = useState(true);
 
   useEffect(() => {
     if (isAuth && !isComplete) {
-      setShowToast(true);
-      const timer = setTimeout(() => {
-        setShowToast(false);
-      }, 8000); // Hide toast after 8 seconds
+      setShowPopup(true);
+      // const timer = setTimeout(() => {
+      //   setShowPopup(false);
+      // }, 8000); // Hide Popup after 8 seconds
 
-      return () => clearTimeout(timer); // Cleanup timer on unmount
+      // return () => clearTimeout(timer); // Cleanup timer on unmount
     }
   }, [isAuth, isComplete]);
 
   return (
     <main className="font-satoshi">
-      {showToast && (
-        <Toast
-          body={
-            <div className="space-y-4 font-satoshi">
-              <h3 className="text-base font-bold text-primary">
-                Complete your profile!!
-              </h3>
-              <p className="text-sm font-normal text-primary">
-                Please complete your profile to get access to all the features
-                on TaskHub.
-              </p>
-              <div className="flex items-center justify-end">
-                <Link
-                  href="/service-provider/dashboard"
-                  className="text-base font-bold text-tc-orange underline underline-offset-2"
-                >
-                  Go To Profile
-                </Link>
-              </div>
+      {showPopup && (
+        <Popup
+          isOpen={showPopup}
+          onClose={() => setShowPopup(false)}
+        >
+          <div className="lg:w-[577px] h-[312px] relative">
+            <div className="text-center space-y-7 flex flex-col items-center justify-center h-full">
+              <h1 className="font-clashDisplay text-[#2A1769] text-4xl font-semibold">Welcome to TaskHUB</h1>
+              <p className="text-black font-satoshi font-medium text-xl mb-8">We are thrilled to have you! Please complete your profile to get access to all our features.</p>
+              <Button className="w-[151px] rounded-full py-6" onClick={() => router.push("/service-provider/dashboard")}>Go to Profile</Button>
             </div>
-          }
-          isVisible={showToast}
-          onClose={() => setShowToast(false)}
-        />
+            <Image
+              src={ModalImage2}
+              alt="image"
+              className="absolute left-0 bottom-0 size-[120px] lg:size-[160px]"
+            />
+            <Image
+              src={ModalImage1}
+              alt="image"
+              className="absolute -right-1 -bottom-1 size-[90px] lg:size-[110px]"
+            />
+          </div>
+        </Popup>
       )}
+
       <MarketPlaceHeader />
       <div className="mx-auto flex flex-col px-6 md:max-w-7xl md:px-20">
         <MarketPlaceFilter categoryHeader={categoryHeader} />

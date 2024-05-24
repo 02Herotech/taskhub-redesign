@@ -1,6 +1,11 @@
 import { FiSearch } from "react-icons/fi";
 import { IoClose } from "react-icons/io5";
 import Link from "next/link";
+import axios from "axios";
+import {
+  tempUpdateFilterData,
+  updateFilterData,
+} from "@/store/Features/marketplace";
 import { BsTriangle, BsTriangleFill } from "react-icons/bs";
 import { FormEvent, useEffect, useState } from "react";
 import {
@@ -37,6 +42,8 @@ const MarketPlaceFilter = ({ categoryHeader }: props) => {
   const {
     currentFilterStatus: { category, subCategory, location, pricing, search },
     categories,
+    filteredData,
+    isFiltering,
   } = useSelector((state: RootState) => state.market);
 
   const [isDropdownOpen, setIsDropdownOpen] = useState({
@@ -79,6 +86,12 @@ const MarketPlaceFilter = ({ categoryHeader }: props) => {
         },
       }),
     );
+    dispatch(
+      tempUpdateFilterData({
+        section: "pricing",
+        value: { minPrice: pricing.minPrice, maxPrice: pricing.maxPrice },
+      }),
+    );
   };
 
   const handleFetchSubCategory = async (
@@ -91,20 +104,40 @@ const MarketPlaceFilter = ({ categoryHeader }: props) => {
       await fetchMarketplaceSubCategoryById(id);
     setSubCategories(subcategoryData);
     handleShowDropdown(title);
+    // ----------------
+    // filter by category
+    const url =
+      "https://smp.jacinthsolutions.com.au/api/v1/listing/listing-by-category/1?pageNumber=0";
+
+    // const { data } = await axios.get(url);
+    // dispatch(updateFilterData({ data, section: "category", value: category }));
+    dispatch(tempUpdateFilterData({ section: "category", value: category }));
   };
 
-  const handleFilterDataBySubcategory = (
+  const handleFilterDataBySubcategory = async (
     id: number,
-    subCategory: string,
+    subCategory: { id: number; name: string },
     title: string,
   ) => {
     dispatch(updateFilterStatus({ title, value: subCategory }));
     handleShowDropdown(title);
+    // ----------------
+    // const url =
+    //   "https://smp.jacinthsolutions.com.au/api/v1/listing/listing-by-sub-category/" +
+    //   subCategory.id;
+    // const { data } = await axios.get(url);
+    // dispatch(
+    //   updateFilterData({ data, section: "subCategory", value: category }),
+    // );
+    dispatch(
+      tempUpdateFilterData({ section: "subCategory", value: subCategory }),
+    );
   };
 
   const handleFilterbyLocation = (location: string, title: string) => {
     dispatch(updateFilterStatus({ title, value: location }));
     handleShowDropdown(title);
+    dispatch(tempUpdateFilterData({ section: "location", value: location }));
   };
 
   const handleShowDropdown = (category: string) => {
@@ -191,7 +224,7 @@ const MarketPlaceFilter = ({ categoryHeader }: props) => {
                 className=" flex items-center gap-2 rounded-3xl border border-violet-normal  bg-violet-light px-4 py-2 text-base font-bold text-violet-normal transition-colors duration-300 hover:bg-violet-200 "
                 onClick={() => handleShowDropdown("sub-category")}
               >
-                {subCategory === "" ? "Subcategory" : subCategory}
+                {subCategory.name === "" ? "Subcategory" : subCategory.name}
 
                 <span>
                   <BsTriangleFill
@@ -215,7 +248,7 @@ const MarketPlaceFilter = ({ categoryHeader }: props) => {
                       onClick={() =>
                         handleFilterDataBySubcategory(
                           item.id,
-                          item.name,
+                          { id: item.id, name: item.name },
                           "subCategory",
                         )
                       }

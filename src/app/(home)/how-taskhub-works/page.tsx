@@ -13,11 +13,8 @@ const HowTaskhubWorks = () => {
                 <Header />
                 <PostTasks />
                 <PostService/>
-                 <Experiences/>
+                <Experiences/>
             </div>
-
-
-
         </div>
     )
 }

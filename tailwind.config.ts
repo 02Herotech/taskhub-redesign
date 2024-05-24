@@ -57,8 +57,12 @@ const config: Config = {
         },
       },
       fontFamily: {
-        satoshi: ["satoshi", "sans-serif"],
-        clashDisplay: ["clashDisplay", "sans-serif"],
+        satoshi: "Satoshi, sans-serif",
+        satoshiMedium: "SatoshiMedium, sans-serif",
+        clash: "Clash, sans-serif",
+        clashMedium: "ClashMedium, sans-serif",
+        clashSemiBold: "ClashSemiBold, sans-serif",
+        clashBold: "ClashBold, sans-serif",
       },
       container: {
         center: true,

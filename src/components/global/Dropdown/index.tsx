@@ -20,7 +20,7 @@ const Dropdown = ({
     closeOnClick = true,
     triggerStyle = "click",
     onTrigger,
-}: Props) => {
+}: Props) => { 
     const [showDropdown, setShowDropdown] = useState(false);
 
     const menuRef = useRef(null);
