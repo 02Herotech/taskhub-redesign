@@ -2,17 +2,12 @@
 
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { FaArrowRight, FaRegUser } from "react-icons/fa6";
-
 import Loading from "@/shared/loading";
-import Listing from "../Listing";
 import { FaArrowUp } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store";
 import { updateListingArray } from "@/store/Features/marketplace";
 import Image from "next/image";
-import { number } from "zod";
-import Link from "next/link";
 import SingleListingCard from "../marketplace/SingleListingCard";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 
@@ -29,7 +24,7 @@ interface PosterProfileTypes {
 
 const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
   const dispatch = useDispatch();
-  const { categories, listing } = useSelector(
+  const { categories, listing, isFiltering, filteredData } = useSelector(
     (state: RootState) => state.market,
   );
 
@@ -124,7 +119,7 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
       <div className="mb-5 flex items-center justify-between">
         <div className="flex w-full items-center justify-between">
           <h1 className=" text-lg font-bold text-violet-dark md:text-2xl">
-            {category}
+            {isFiltering ? "Filtering" : category}
           </h1>
           {displayListing.length > 4 && (
             <button
@@ -161,6 +156,40 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
 
       {isLoading ? (
         <Loading />
+      ) : isFiltering ? (
+        filteredData.length === 0 ? (
+          <div className="flex min-h-40 flex-col items-center justify-center gap-4">
+            <Image
+              src={"/assets/images/marketplace/undraw_void_-3-ggu.svg"}
+              alt="void"
+              width={200}
+              height={200}
+            />
+            <p className="text-lg text-violet-normal">
+              No Listing Available at the moment
+            </p>
+          </div>
+        ) : (
+          <div className="my-2 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
+            {filteredData.map((item, index) => {
+              const currentPosterProfile: PosterProfileTypes =
+                posterProfiles.filter((poster) => poster.id === item.id)[0];
+              return (
+                <SingleListingCard
+                  key={index}
+                  posterId={item.id}
+                  listingId={item.id}
+                  businessName={item.listingTitle}
+                  displayImage={item.businessPictures[0]}
+                  pricing={item.price ?? 0}
+                  firstName={currentPosterProfile?.firstName}
+                  profileImage={currentPosterProfile?.profileImage}
+                  lastName={currentPosterProfile?.lastName}
+                />
+              );
+            })}
+          </div>
+        )
       ) : (
         <div className="my-2 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
           {displayListing.map((item, index) => {

@@ -56,45 +56,6 @@ const MareketPlace = () => {
   const [showToast, setShowToast] = useState(false);
 
   useEffect(() => {
-    const { category, subCategory, pricing, search, location } =
-      currentFilterStatus;
-    const filterData = async () => {
-      const page = 0;
-      try {
-        if (isFiltering) {
-          if (category) {
-            const id = categories.filter(
-              (item) => item.categoryName === category,
-            )[0].id;
-            const url =
-              "https://smp.jacinthsolutions.com.au/api/v1/listing/listing-by-category/" +
-              id +
-              "?pageNumber=" +
-              page;
-            const { data } = await axios.get(url);
-            console.log(data);
-            dispatch(
-              updateFilterData({ data, section: "category", value: category }),
-            );
-            // handle filterby category
-          } else if (subCategory) {
-            // handle filter by sub category
-          } else if (pricing) {
-          } else if (search) {
-          } else if (location) {
-          }
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    filterData();
-    // eslint-disable-next-line
-  }, [filteredData, isFiltering, currentFilterStatus]);
-
-  // console.log(filteredData)
-
-  useEffect(() => {
     if (isAuth && !isComplete) {
       setShowToast(true);
       const timer = setTimeout(() => {
