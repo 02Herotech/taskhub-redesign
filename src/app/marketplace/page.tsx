@@ -27,6 +27,8 @@ import Popup from "@/components/global/Popup";
 import Button from "@/components/global/Button";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import Link from "next/link";
+import { updateFilterData } from "@/store/Features/marketplace";
 
 const categoryIcons = [
   FaHome,
@@ -41,22 +43,15 @@ const categoryIcons = [
 
 const MareketPlace = () => {
   const dispatch = useDispatch();
-  const { categories } = useSelector((state: RootState) => state.market);
+  const { categories, isFiltering, filteredData, currentFilterStatus } =
+    useSelector((state: RootState) => state.market);
   const session = useSession();
   const router = useRouter()
   const isAuth = session.status === "authenticated";
   const isComplete = session.data?.user.user.enabled;
 
   const [filterData, setFilterData] = useState<ListingDataType[]>([]);
-  const [viewMoreListing, setViewMoreListing] = useState<ListingDataType[]>([]);
-  const [selectedCategory, setSelectedCategory] = useState("");
-  const [selectedSubCategory, setSelectedSubCategory] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [searching, setSearching] = useState(false);
-  const [viewMore, setViewMore] = useState(false);
-  const [location, setLocation] = useState("");
-  const [search1, setSearch1] = useState("");
-  const [errorMsg, setErrorMsg] = useState("");
   const [categoryHeader, setCategoryHeader] = useState("");
   const [profileImages, setProfileImages] = useState<{ [key: number]: string }>(
     {},
@@ -65,73 +60,6 @@ const MareketPlace = () => {
   const [lastName, setLastName] = useState<{ [key: number]: string }>({});
   const [imgErrMsg, setImgErrMsg] = useState("");
   const [showPopup, setShowPopup] = useState(true);
-
-  const handleSearch1 = (e: any) => {
-    setSearch1(e.target.value);
-  };
-  const handleClearSearch = () => {
-    setSearch1("");
-  };
-
-  // const handleUserProfile = async (posterId: number) => {
-  //   try {
-  //     const response = await axios.get(
-  //       `${process.env.NEXT_PUBLIC_API_URL}/user/user-profile/${posterId}`,
-  //     );
-  //     if (response.status === 200) {
-  //       setProfileImages((prevProfileImages) => ({
-  //         ...prevProfileImages,
-  //         [posterId]: response.data.profileImage,
-  //       }));
-
-  //       setFirstName((prevFirstName) => ({
-  //         ...prevFirstName,
-  //         [posterId]: response.data.firstName,
-  //       }));
-
-  //       setLastName((prevLastName) => ({
-  //         ...prevLastName,
-  //         [posterId]: response.data.lastName,
-  //       }));
-  //     }
-  //   } catch (error) {
-  //     setImgErrMsg("Error loading image");
-  //   }
-  // };
-
-  // const handleFilterByCatAndSubCatAndLocation = async () => {
-  //   setIsLoading(true);
-  //   setSearching(true);
-
-  //   try {
-  //     const response = await axios.post(
-  //       `${process.env.NEXT_PUBLIC_API_URL}/listing/marketplace-search?businessName=${selectedCategory}&location=${location}&subcategory=${selectedSubCategory}`,
-  //     );
-  //     if (response.status === 200) {
-  //       setFilterData(response.data);
-  //     }
-  //   } catch (error) {
-  //     console.error(error);
-  //     setErrorMsg("Error searching listing");
-  //   } finally {
-  //     setIsLoading(false);
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   if (selectedCategory || selectedSubCategory || location) {
-  //     handleFilterByCatAndSubCatAndLocation();
-  //   }
-  //   // eslint-disable-next-line
-  // }, [selectedCategory, selectedSubCategory, location]);
-
-  // useEffect(() => {
-  //   if (filterData.length > 0) {
-  //     filterData.forEach((task) => {
-  //       handleUserProfile(task.posterId);
-  //     });
-  //   }
-  // }, [filterData]);
 
   useEffect(() => {
     if (isAuth && !isComplete) {
@@ -146,7 +74,6 @@ const MareketPlace = () => {
 
   return (
     <main className="font-satoshi">
-
       {showPopup && (
         <Popup
           isOpen={showPopup}
@@ -176,7 +103,7 @@ const MareketPlace = () => {
       <div className="mx-auto flex flex-col px-6 md:max-w-7xl md:px-20">
         <MarketPlaceFilter categoryHeader={categoryHeader} />
         <div>
-          {searching ? (
+          {currentFilterStatus.search ? (
             <SearchResult
               isLoading={isLoading}
               filterData={filterData}
@@ -185,6 +112,10 @@ const MareketPlace = () => {
               firstName={firstName}
               lastName={lastName}
             />
+          ) : isFiltering ? (
+            <div>
+              <CategoryListing category="All" />
+            </div>
           ) : (
             <div>
               {categories.length < 1 ? (
