@@ -34,8 +34,8 @@ const ContactUsPage = () => {
                 </h1>
             </section>
             <div className="bg-white lg:bg-gradient-to-b from-[#F8E9FE] via-[#FFFFFF] to-[#FBEAFF] w-full">
-                <div className="flex flex-col lg:flex-row lg:justify-between lg:space-x-10 max-lg:py-14 max-lg:px-5 lg:p-14 font-satoshi container">
-                    <div className="w-full lg:w-[70%] max-lg:mb-10">
+                <div className="flex flex-col lg:flex-row lg:justify-between lg:space-x-20 max-lg:py-14 max-lg:px-5 lg:p-14 font-satoshi container">
+                    <div className="w-full lg:w-[65%] max-lg:mb-10">
                         <form className="lg:space-y-10">
                             <div className="mb-4 lg:flex items-center">
                                 <label className="lg:text-black text-[#333236] font-medium lg:font-bold text-sm lg:text-xl lg:w-[25%]">Subject category:</label>
