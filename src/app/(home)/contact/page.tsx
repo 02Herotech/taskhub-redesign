@@ -38,7 +38,7 @@ const ContactUsPage = () => {
                     <div className="w-full lg:w-[70%] max-lg:mb-10">
                         <form className="lg:space-y-10">
                             <div className="mb-4 lg:flex items-center">
-                                <label className="lg:text-black text-[#333236] font-medium lg:font-bold text-sm lg:text-xl lg:w-[170px]">Subject category:</label>
+                                <label className="lg:text-black text-[#333236] font-medium lg:font-bold text-sm lg:text-xl lg:w-[25%]">Subject category:</label>
                                 <select
                                     className="w-full mt-2 py-3 px-5 placeholder:text-[#D3D2D5] border border-gray-300 rounded-2xl bg-white"
                                     value={selectedCategory || ""}
@@ -53,15 +53,15 @@ const ContactUsPage = () => {
                                 </select>
                             </div>
                             <div className="mb-4 lg:flex items-center">
-                                <label className="lg:text-black text-[#333236] font-medium lg:font-bold text-sm lg:text-xl lg:w-[170px]">Full name:</label>
+                                <label className="lg:text-black text-[#333236] font-medium lg:font-bold text-sm lg:text-xl lg:w-[25%]">Full name:</label>
                                 <input type="text" className="w-full mt-2 p-3 border border-gray-300 rounded-2xl placeholder:text-[#D3D2D5]" placeholder="Enter full name" />
                             </div>
                             <div className="mb-4 lg:flex items-center">
-                                <label className="lg:text-black text-[#333236] font-medium lg:font-bold text-sm lg:text-xl lg:w-[170px]">Email address:</label>
+                                <label className="lg:text-black text-[#333236] font-medium lg:font-bold text-sm lg:text-xl lg:w-[25%]">Email address:</label>
                                 <input type="email" className="w-full mt-2 p-3 border border-gray-300 rounded-2xl placeholder:text-[#D3D2D5]" placeholder="JohnDoe@gmail.com" />
                             </div>
                             <div className="mb-4 lg:flex items-center">
-                                <label className="lg:text-black text-[#333236] font-medium lg:font-bold text-sm lg:text-xl lg:w-[170px]">Topic category:</label>
+                                <label className="lg:text-black text-[#333236] font-medium lg:font-bold text-sm lg:text-xl lg:w-[25%]">Topic category:</label>
                                 <select
                                     className="w-full mt-2 py-3 px-5 placeholder:text-[#D3D2D5] border border-gray-300 rounded-2xl bg-white"
                                     value={selectedTopic || ""}
@@ -76,7 +76,7 @@ const ContactUsPage = () => {
                                 </select>
                             </div>
                             <div className="mb-4 lg:flex items-start">
-                                <label className="lg:text-black text-[#333236] font-medium lg:font-bold text-sm lg:text-xl lg:w-[170px]">Message:</label>
+                                <label className="lg:text-black text-[#333236] font-medium lg:font-bold text-sm lg:text-xl lg:w-[25%]">Message:</label>
                                 <textarea className="w-full mt-2 p-3 border border-gray-300 rounded-2xl placeholder:text-[#D3D2D5]" placeholder="Write your message here..." rows={8}></textarea>
                             </div>
                             <div className="flex items-center justify-center lg:justify-end mt-8">
