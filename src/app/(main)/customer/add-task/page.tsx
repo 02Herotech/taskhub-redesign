@@ -16,10 +16,9 @@ import { useSession } from "next-auth/react";
 import image from "../../../../../public/assets/images/customer/Task management.png";
 import Image from "next/image";
 import Link from "next/link";
-
 interface FormData {
   taskDescription: string;
-  taskImage?: File | defaultImage | null;
+  taskImage?: File | null | Blob;
   taskTime: string;
   taskDate: string;
   taskType: string;
@@ -27,6 +26,7 @@ interface FormData {
   hubTime: string;
   taskAddress: string[];
 }
+
 interface PostalCodeData {
   name: string;
   postcode: string;
@@ -37,12 +37,12 @@ interface PostalCodeData {
   locality: string;
 }
 
-type defaultImage = string;
-
 const AddTaskForm: React.FC = () => {
   const session = useSession();
   const token = session?.data?.user.accessToken;
   const [currentPage, setCurrentPage] = useState(1);
+  const defaultImageSrc =
+    "https://static.wixstatic.com/media/7d1889_ab302adc66e943f9b6be9de260cbc40f~mv2.png";
   const [task, setTask] = useState<FormData>({
     taskDescription: "",
     taskImage: null,
@@ -174,7 +174,16 @@ const AddTaskForm: React.FC = () => {
     const uploadedFile = event.target.files?.[0];
     if (uploadedFile) {
       setTask({ ...task, taskImage: uploadedFile });
+
+      const reader = new FileReader();
+      reader.readAsDataURL(uploadedFile);
     }
+  };
+
+  const convertUrlToBlob = async (url: string): Promise<Blob> => {
+    const response = await fetch(url);
+    const blob = await response.blob();
+    return blob;
   };
 
   const getImageURL = () => {
@@ -280,11 +289,13 @@ const AddTaskForm: React.FC = () => {
           };
         }
 
+        // If no image is provided, use the default image
         if (!task.taskImage) {
-          const defaultImage = "google-map.png";
-          setTask({ ...task, taskImage: defaultImage });
+          const defaultImageBlob = await convertUrlToBlob(defaultImageSrc);
+          finalTask = { ...finalTask, taskImage: defaultImageBlob };
         }
 
+        console.log(finalTask);
         await axios.post(
           "https://smp.jacinthsolutions.com.au/api/v1/task/post",
           finalTask,
@@ -297,7 +308,7 @@ const AddTaskForm: React.FC = () => {
         );
         setTask({
           taskDescription: "",
-          taskImage: "",
+          taskImage: null,
           taskTime: "",
           taskDate: "",
           taskType: "",
