@@ -79,7 +79,7 @@ const MareketPlace = () => {
           isOpen={showPopup}
           onClose={() => setShowPopup(false)}
         >
-          <div className="lg:w-[577px] h-[312px] relative">
+          <div className="lg:w-[577px] max-lg:mx-10 h-[312px] relative">
             <div className="text-center space-y-7 flex flex-col items-center justify-center h-full">
               <h1 className="font-clashDisplay text-[#2A1769] text-4xl font-semibold">Welcome to TaskHUB</h1>
               <p className="text-black font-satoshi font-medium text-xl mb-8">We are thrilled to have you! Please complete your profile to get access to all our features.</p>
