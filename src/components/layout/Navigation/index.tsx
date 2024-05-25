@@ -14,8 +14,9 @@ import Dropdown from "@/components/global/Dropdown";
 import { signOut, useSession } from "next-auth/react";
 import Logo from "../Logo";
 import axios from "axios";
-import ServiceProviderNavbar from "@/components/serviceProviderDashboard/global/ServiceProviderNavbar";
 import PlaceholderImage from "../../../../public/assets/images/placeholder.jpeg"
+import { customerLinks, homeLinks, serviceProviderLinks } from "@/lib/links";
+import Button from "@/components/global/Button";
 
 const Navigation = () => {
   const router = useRouter();
@@ -26,7 +27,7 @@ const Navigation = () => {
   const handleLogout = async () => {
     try {
       await signOut();
-      
+
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_API_URL}/auth/logout`,
       );
@@ -35,21 +36,6 @@ const Navigation = () => {
       console.log(error);
     }
   };
-
-  const links = [
-    {
-      label: "Add a task",
-      url: "/customer/add-task",
-    },
-    {
-      label: "Explore Tasks",
-      url: "/explore",
-    },
-    {
-      label: "Marketplace",
-      url: "/marketplace",
-    },
-  ];
 
   const dropdownItems = [
     {
@@ -70,55 +56,69 @@ const Navigation = () => {
   const profileImage = session?.data?.user.user.profileImage;
   const userRole = session?.data?.user.user.roles;
   const isServiceProvider = userRole && userRole[0] === "SERVICE_PROVIDER";
-
+  const isAuth = session.status === "authenticated";
+  // const isCustomer = userRole && userRole[0] === "CUSTOMER";
   const notificationLength = session.data?.user.user.appNotificationList.length
+
+  const currentLinks = !isAuth ? homeLinks : isServiceProvider ? serviceProviderLinks : customerLinks;
+  const notificationRoute = isServiceProvider ? "/service-provider/dashbaord/notification" : "/customer/notifications";
+  const messagesRoute = isServiceProvider ? "/service-provider/dashbaord/messages" : "/customer/messages";
 
   return (
     <>
-      {isServiceProvider ? (
-        <ServiceProviderNavbar />
-      ) : (
-        <>
-          <nav className="fixed left-0 right-0 top-0 z-50 w-full bg-white drop-shadow-sm">
-            <div className="container flex items-center justify-between px-7 py-4 lg:px-14 lg:py-5">
-              <Link href="/marketplace">
-                <Logo />
-              </Link>
-              <button
-                onClick={() => setShowMobileNav((state) => !state)}
-                className="lg:hidden"
-              >
-                <RiMenu3Fill className="h-9 w-9 text-primary" />
-              </button>
-              <ul className="hidden items-center space-x-8 lg:flex">
-                {links.map((link) => {
-                  return (
-                    <li key={link.url} className="relative">
-                      <Link
-                        href={link.url as string}
-                        className={cn("text-xl font-semibold text-primary", {
-                          "text-tc-orange":
-                            link.url === "/" && pathname === "/"
-                              ? true
-                              : link.url !== "/" && pathname.includes(link.url)
-                                ? true
-                                : false,
-                        })}
-                      >
-                        {link.label}
-                      </Link>
-                    </li>
-                  );
-                })}
-              </ul>
+      <nav className={`fixed left-0 right-0 top-0 z-50 w-full ${currentLinks === homeLinks ? `bg-[#F5E2FC]` : `bg-white`} drop-shadow-sm`}>
+        <div className="container flex items-center justify-between px-7 py-4 lg:px-14 lg:py-5">
+          <Link href="/marketplace">
+            <Logo />
+          </Link>
+          <button
+            onClick={() => setShowMobileNav((state) => !state)}
+            className="lg:hidden"
+          >
+            <RiMenu3Fill className="h-9 w-9 text-primary" />
+          </button>
+          <ul className="hidden items-center space-x-8 lg:flex">
+            {currentLinks.map((link) => {
+              return (
+                <li key={link.url} className="relative">
+                  <Link
+                    href={link.url as string}
+                    className={cn("text-xl font-semibold text-primary", {
+                      "text-tc-orange":
+                        link.url === "/" && pathname === "/"
+                          ? true
+                          : link.url !== "/" && pathname.includes(link.url!)
+                            ? true
+                            : false,
+                    })}
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
+          <div className="hidden items-center space-x-5 lg:flex">
+            {!isAuth ? (
               <div className="hidden items-center space-x-5 lg:flex">
-                <div className="relative cursor-pointer">
+                <Link href="/auth">
+                  <Button className="rounded-full">Sign Up</Button>
+                </Link>
+                <Link href="/auth/login">
+                  <Button theme="outline" className="rounded-full bg-transparent">
+                    Log in
+                  </Button>
+                </Link>
+              </div>
+            ) : (
+              <>
+                <div className="relative cursor-pointer" onClick={() => router.push(messagesRoute)}>
                   <BsChat className="size-[22px] text-black" />
                   <div className="absolute -right-1 -top-1 flex size-5 items-center justify-center rounded-full bg-tc-orange text-xs text-white">
                     2
                   </div>
                 </div>
-                <div className="relative cursor-pointer">
+                <div className="relative cursor-pointer" onClick={() => router.push(notificationRoute)}>
                   <IoMdNotificationsOutline className="size-[24px] text-black" />
                   <div className="absolute -right-1 -top-1 flex size-5 items-center justify-center rounded-full bg-tc-orange text-xs text-white">
                     {notificationLength}
@@ -149,22 +149,21 @@ const Navigation = () => {
                     ))}
                   </div>
                 </Dropdown>
-              </div>
-            </div>
-          </nav>
-          <AnimatePresence initial={false}>
-            {showMobileNav && (
-              <MobileNavigation
-                setShowMobileNav={setShowMobileNav}
-                showMobileNav={showMobileNav}
-                links={links}
-              />
+              </>
             )}
-          </AnimatePresence>
-        </>
-      )}
+          </div>
+        </div>
+      </nav>
+      <AnimatePresence initial={false}>
+        {showMobileNav && (
+          <MobileNavigation
+            setShowMobileNav={setShowMobileNav}
+            showMobileNav={showMobileNav}
+          />
+        )}
+      </AnimatePresence>
     </>
   );
-};
+}
 
 export default Navigation;
