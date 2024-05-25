@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Footer from "@/components/layout/Footer";
-import HomeNavigation from "@/components/layout/HomeNavigation";
+import Navigation from "@/components/layout/Navigation";
 
 export const metadata: Metadata = {
     title: "Taskhub",
@@ -14,7 +14,7 @@ export default function RootLayout({
 }>) {
     return (
         <main>
-            <HomeNavigation />
+            <Navigation />
             <div className="min-h-[70vh]">
                 {children}
             </div>

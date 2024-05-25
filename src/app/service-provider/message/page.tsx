@@ -1,6 +1,6 @@
 "use client";
 
-import ChatNavigation from "@/components/serviceProviderDashboard/message/ChatNavigation";
+import ChatNavigation from "@/components/main/message/ChatNavigation";
 import Image from "next/image";
 import Link from "next/link";
 import React, { useState } from "react";

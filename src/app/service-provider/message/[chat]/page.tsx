@@ -1,5 +1,5 @@
 import { chatData } from "@/app/data/service-provider/user";
-import ChatNavigation from "@/components/serviceProviderDashboard/message/ChatNavigation";
+import ChatNavigation from "@/components/main/message/ChatNavigation";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
@@ -60,7 +60,7 @@ const dummyChat = [
 ];
 
 const ServiceProviderChat = () => {
-  const handleReschedule = () => {};
+  const handleReschedule = () => { };
   return (
     <main className="min-h-[calc(100vh-4rem)] space-y-5  p-4 lg:p-8 ">
       <section className="grid gap-10 divide-slate-400 lg:grid-cols-12 lg:divide-x ">
@@ -106,7 +106,7 @@ const ServiceProviderChat = () => {
               </Link>
               <button
                 className={`rounded-full border border-violet-normal bg-violet-light px-4 py-2 text-sm font-medium text-violet-normal transition-all duration-300 hover:bg-violet-200 hover:opacity-90 `}
-                // onClick={() => handleReschedule()}
+              // onClick={() => handleReschedule()}
               >
                 Reschedule
               </button>
