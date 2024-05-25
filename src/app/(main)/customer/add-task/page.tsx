@@ -322,7 +322,7 @@ const AddTaskForm: React.FC = () => {
         setIsSuccessPopupOpen(true);
       } catch (error) {
         console.error("Error submitting form:", error);
-        setIsSuccessPopupOpen(false);
+        setIsSuccessPopupOpen(true);
       }
     }
   };
@@ -707,41 +707,7 @@ const AddTaskForm: React.FC = () => {
           </div>
         </div>
       </div>
-      {authenticated === true ? (
-        <Popup
-          isOpen={isSuccessPopupOpen}
-          onClose={() => {
-            setIsSuccessPopupOpen(false);
-          }}
-        >
-          <div className="p-5 lg:px-20">
-            <div className="relative grid items-center justify-center space-y-5">
-              <div className="flex justify-center text-[1px] text-white">
-                <GrFormCheckmark className="h-[50px] w-[50px] rounded-full bg-[#FE9B07] p-2 lg:h-[60px] lg:w-[60px]" />
-              </div>
-              <p className="text-center font-clashDisplay text-[25px] font-extrabold text-[#2A1769] lg:text-[37px] ">
-                Task posted
-              </p>
-              <p className="lg:text-[20px]">
-                Your task has been posted! please click <br /> on the button to
-                proceed to marketplace
-              </p>
-              <Image
-                src={image}
-                alt="image"
-                className="absolute -right-8 top-40 w-20 lg:-right-20 lg:top-2/3 lg:w-32"
-              />
-              <div className="flex justify-center">
-                <Link href="/marketplace">
-                  <button className="w-[100px] rounded-2xl bg-status-purpleBase p-2 text-[14px] text-white outline-none">
-                    Go Home
-                  </button>
-                </Link>
-              </div>
-            </div>
-          </div>
-        </Popup>
-      ) : (
+      {authenticated === false ? (
         <Popup
           isOpen={isSuccessPopupOpen}
           onClose={() => {
@@ -776,6 +742,40 @@ const AddTaskForm: React.FC = () => {
                 <Link href="/marketplace">
                   <button className="rounded-2xl bg-status-purpleBase p-2 text-[14px] text-white outline-none md:w-[100px]">
                     Go to profile
+                  </button>
+                </Link>
+              </div>
+            </div>
+          </div>
+        </Popup>
+      ) : (
+        <Popup
+          isOpen={isSuccessPopupOpen}
+          onClose={() => {
+            setIsSuccessPopupOpen(false);
+          }}
+        >
+          <div className="p-5 lg:px-20">
+            <div className="relative grid items-center justify-center space-y-5">
+              <div className="flex justify-center text-[1px] text-white">
+                <GrFormCheckmark className="h-[50px] w-[50px] rounded-full bg-[#FE9B07] p-2 lg:h-[60px] lg:w-[60px]" />
+              </div>
+              <p className="text-center font-clashDisplay text-[25px] font-extrabold text-[#2A1769] lg:text-[37px] ">
+                Task posted
+              </p>
+              <p className="lg:text-[20px]">
+                Your task has been posted! please click <br /> on the button to
+                proceed to marketplace
+              </p>
+              <Image
+                src={image}
+                alt="image"
+                className="absolute -right-8 top-40 w-20 lg:-right-20 lg:top-2/3 lg:w-32"
+              />
+              <div className="flex justify-center">
+                <Link href="/marketplace">
+                  <button className="w-[100px] rounded-2xl bg-status-purpleBase p-2 text-[14px] text-white outline-none">
+                    Go Home
                   </button>
                 </Link>
               </div>

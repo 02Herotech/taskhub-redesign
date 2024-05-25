@@ -56,7 +56,7 @@ const Popup: React.FC<PopupProps> = ({ isOpen, onClose, children }) => {
                         className="relative flex justify-center z-10 rounded-xl bg-white p-1 shadow-lg"
                         variants={popupVariants}
                     >
-                        <div className="absolute right-4 top-4 p-2 cursor-pointer z-10">
+                        <div className="absolute top-1 right-1 lg:right-4 lg:top-4 p-2 cursor-pointer z-10">
                             <button
                                 onClick={onClose}
                                 className="text-primary hover:text-gray-800 bg-[#EBE9F4] rounded-3xl p-2"

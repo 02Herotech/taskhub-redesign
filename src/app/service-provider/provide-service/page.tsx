@@ -564,7 +564,7 @@ const ProvideService: React.FC = () => {
                       activePlanIndex === 0
                         ? " disabled bg-transparent p-1 text-lg font-bold text-status-darkViolet"
                         : "bg-[#EBE9F4] p-4 hover:bg-status-darkViolet hover:text-white "
-                    } text-left outline-none placeholder:text-[#2A1769] hover:placeholder:text-white`}
+                    } cursor-pointer text-left outline-none placeholder:text-[#2A1769] hover:placeholder:text-white`}
                     name="physical"
                     onClick={() => handlePlan(0)}
                     placeholder="Plan 1"
@@ -585,7 +585,7 @@ const ProvideService: React.FC = () => {
                           onChange={handleChange}
                         ></textarea>
                         <label className="pl-2 font-medium">Price</label>
-                        <div className="flex items-center space-x-2 pl-2">
+                        <div className="relative flex items-center space-x-2 pl-2">
                           <input
                             type="text"
                             name="planOnePrice"
@@ -595,9 +595,10 @@ const ProvideService: React.FC = () => {
                                 : ""
                             }
                             onChange={handlePrice}
-                            placeholder="$500"
-                            className="w-1/3 rounded-2xl bg-[#EBE9F4] p-3 text-[13px] outline-none"
+                            placeholder="500"
+                            className="w-1/3 rounded-2xl bg-[#EBE9F4] p-3 pl-5 text-[13px] outline-none"
                           />
+                          <p className="absolute left-3 top-3">$</p>
                           <p className="text-xs font-bold text-status-lightViolet">
                             Minimum AUD$25 + 10% GST inclusive
                           </p>
@@ -610,7 +611,7 @@ const ProvideService: React.FC = () => {
                       activePlanIndex === 1
                         ? " disabled bg-transparent p-1 text-lg font-bold text-status-darkViolet"
                         : "bg-[#EBE9F4] p-4 hover:bg-status-darkViolet hover:text-white"
-                    } text-left outline-none placeholder:text-[#2A1769] hover:placeholder:text-white`}
+                    } cursor-pointer text-left outline-none placeholder:text-[#2A1769] hover:placeholder:text-white`}
                     name="physical"
                     onClick={() => handlePlan(1)}
                     placeholder="Plan 2  (Optional)"
@@ -631,7 +632,7 @@ const ProvideService: React.FC = () => {
                           onChange={handleChange}
                         ></textarea>
                         <label className="pl-2 font-medium">Price</label>
-                        <div className="flex items-center space-x-2 pl-2">
+                        <div className="relative flex items-center space-x-2 pl-2">
                           <input
                             type="text"
                             name="planTwoPrice"
@@ -641,9 +642,10 @@ const ProvideService: React.FC = () => {
                                 : ""
                             }
                             onChange={handlePrice}
-                            placeholder="$500"
-                            className="w-1/3 rounded-2xl bg-[#EBE9F4] p-3 text-[13px] outline-none"
+                            placeholder="500"
+                            className="w-1/3 rounded-2xl bg-[#EBE9F4] p-3 pl-5 text-[13px] outline-none"
                           />
+                          <p className="absolute left-3 top-3">$</p>
                           <p className="text-xs font-bold text-status-lightViolet">
                             Minimum AUD$25 + 10% GST inclusive
                           </p>
@@ -656,7 +658,7 @@ const ProvideService: React.FC = () => {
                       activePlanIndex === 2
                         ? " disabled bg-transparent p-1 text-lg font-bold text-status-darkViolet"
                         : "bg-[#EBE9F4] p-4 hover:bg-status-darkViolet hover:text-white"
-                    } text-left outline-none placeholder:text-[#2A1769] hover:placeholder:text-white`}
+                    } cursor-pointer text-left outline-none placeholder:text-[#2A1769] hover:placeholder:text-white`}
                     name="physical"
                     onClick={() => handlePlan(2)}
                     placeholder="Plan 3  (Optional)"
@@ -677,7 +679,7 @@ const ProvideService: React.FC = () => {
                           onChange={handleChange}
                         ></textarea>
                         <label className="pl-2 font-medium">Price</label>
-                        <div className="flex items-center space-x-2 pl-2">
+                        <div className="relative flex items-center space-x-2 pl-2">
                           <input
                             type="text"
                             name="planThreePrice"
@@ -687,9 +689,10 @@ const ProvideService: React.FC = () => {
                                 : ""
                             }
                             onChange={handlePrice}
-                            placeholder="$500"
-                            className="w-1/3 rounded-2xl bg-[#EBE9F4] p-3 text-[13px] outline-none"
+                            placeholder="500"
+                            className="w-1/3 rounded-2xl bg-[#EBE9F4] p-3 pl-5 text-[13px] outline-none"
                           />
+                          <p className="absolute left-3 top-3">$</p>
                           <p className="text-xs font-bold text-status-lightViolet">
                             Minimum AUD$25 + 10% GST inclusive
                           </p>
@@ -826,7 +829,7 @@ const ProvideService: React.FC = () => {
                   <option value="SUNDAY">Sunday</option>
                 </select>
                 <IoMdArrowDropdown className="absolute right-96 top-3 cursor-pointer" />
-                <div className="mt-4 rounded-2xl border bg-[#EBE9F4] p-4 lg:w-2/3">
+                <div className="mt-4 h-[100px] rounded-2xl border bg-[#EBE9F4] p-4 lg:w-2/3">
                   <ul className="flex flex-wrap gap-2">
                     {selectedDays.map((day) => (
                       <li
@@ -1204,41 +1207,7 @@ p-3 text-center text-[12px] text-[#fe9b07]"
         </div>
       </div>
       <div>
-        {authenticated === true ? (
-          <Popup
-            isOpen={isSuccessPopupOpen}
-            onClose={() => {
-              setIsSuccessPopupOpen(false);
-            }}
-          >
-            <div className="p-5 lg:px-20">
-              <div className="relative grid items-center justify-center space-y-5">
-                <div className="flex justify-center text-[1px] text-white">
-                  <GrFormCheckmark className="h-[50px] w-[50px] rounded-full bg-[#FE9B07] p-2 lg:h-[60px] lg:w-[60px]" />
-                </div>
-                <p className="text-center font-clashDisplay text-[25px] font-extrabold text-[#2A1769] lg:text-[37px] ">
-                  Service created
-                </p>
-                <p className="lg:text-[20px]">
-                  Your Service Listing has been created!
-                  <br /> please click on the button to proceed to marketplace
-                </p>
-                <Image
-                  src={image}
-                  alt="image"
-                  className="absolute -right-8 top-40 w-20 lg:-right-20 lg:top-2/3 lg:w-32"
-                />
-                <div className="flex justify-center">
-                  <Link href="/marketplace">
-                    <button className="w-[100px] rounded-2xl bg-status-purpleBase p-2 text-[14px] text-white outline-none">
-                      Go Home
-                    </button>
-                  </Link>
-                </div>
-              </div>
-            </div>
-          </Popup>
-        ) : (
+        {authenticated === false ? (
           <Popup
             isOpen={isSuccessPopupOpen}
             onClose={() => {
@@ -1273,6 +1242,40 @@ p-3 text-center text-[12px] text-[#fe9b07]"
                   <Link href="/marketplace">
                     <button className="rounded-2xl bg-status-purpleBase p-2 text-[14px] text-white outline-none md:w-[100px]">
                       Go to profile
+                    </button>
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </Popup>
+        ) : (
+          <Popup
+            isOpen={isSuccessPopupOpen}
+            onClose={() => {
+              setIsSuccessPopupOpen(false);
+            }}
+          >
+            <div className="p-5 lg:px-20">
+              <div className="relative grid items-center justify-center space-y-5">
+                <div className="flex justify-center text-[1px] text-white">
+                  <GrFormCheckmark className="h-[50px] w-[50px] rounded-full bg-[#FE9B07] p-2 lg:h-[60px] lg:w-[60px]" />
+                </div>
+                <p className="text-center font-clashDisplay text-[25px] font-extrabold text-[#2A1769] lg:text-[37px] ">
+                  Service created
+                </p>
+                <p className="lg:text-[20px]">
+                  Your Service Listing has been created!
+                  <br /> please click on the button to proceed to marketplace
+                </p>
+                <Image
+                  src={image}
+                  alt="image"
+                  className="absolute -right-8 top-40 w-20 lg:-right-20 lg:top-2/3 lg:w-32"
+                />
+                <div className="flex justify-center">
+                  <Link href="/marketplace">
+                    <button className="w-[100px] rounded-2xl bg-status-purpleBase p-2 text-[14px] text-white outline-none">
+                      Go Home
                     </button>
                   </Link>
                 </div>
