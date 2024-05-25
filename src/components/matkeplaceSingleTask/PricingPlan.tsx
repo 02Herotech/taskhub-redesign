@@ -1,6 +1,8 @@
+"use client";
 import React, { useState } from "react";
 import { BsTriangleFill } from "react-icons/bs";
 import PricingModal from "./PricingModal";
+import { useSession } from "next-auth/react";
 
 interface PricingPlanProps {
   planOnePrice: number;
@@ -19,12 +21,26 @@ const PricingPlan = ({
   planThreePrice,
   planThreeDescription,
 }: PricingPlanProps) => {
+  const session = useSession();
+  const isAuthenticated = session?.data?.user?.accessToken;
+  const isServiceProvider =
+    session?.data?.user?.user?.roles[0] === "SERVICE_PROVIDER";
+
+  console.log(isAuthenticated, "is authenticated");
   const [isModalShown, setIsModalShown] = useState(false);
   const [isTextExpanded, setIsTextExpanded] = useState({
     index: 1,
     state: false,
   });
-  const [modalData, setModalData] = useState({ pricing: 0 });
+  const [modalData, setModalData] = useState<{
+    pricing: number;
+    isAuthenticated: string | undefined;
+    isServiceProvider: boolean;
+  }>({
+    pricing: 0,
+    isAuthenticated,
+    isServiceProvider,
+  });
 
   const handleExpandText = (index: number) => {
     if (isTextExpanded.index === index) {

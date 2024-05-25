@@ -47,10 +47,7 @@ const SingleListingCard = ({
             />
           </div>
           <div className="mt-2 flex h-full flex-col justify-between">
-            <h2 className="text-lg  font-bold md:text-lg">
-              {/* {businessName} */}
-              Football coaching
-            </h2>
+            <h2 className="text-lg  font-bold md:text-lg">{businessName}</h2>
             <div className="py-4 ">
               <p className="text-xs">4.5</p>
               <div className="flex items-center gap-1 ">
@@ -77,13 +74,11 @@ const SingleListingCard = ({
                 </div>
 
                 <p className="text-sm font-semibold text-violet-dark">
-                  {/* {firstName} {lastName} */}
-                  Daniels Oluchi
+                  {firstName} {lastName}
                 </p>
               </div>
               <p className="text-[16px] font-[600] text-violet-normal">
-                {/* From ${pricing} */}
-                From $100
+                From ${pricing}
               </p>
             </div>
           </div>

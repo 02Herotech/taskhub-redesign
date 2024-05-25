@@ -87,18 +87,18 @@ const Footer = () => {
 
     return (
         <>
-            <footer className='pt-10 lg:pt-20 bg-status-lightViolet font-satoshi hidden lg:block '>
+            <footer className='pt-10 lg:pt-20 bg-status-lightViolet font-satoshi hidden lg:block'>
                 <div className='container w-full grid grid-cols-1 lg:grid-cols-5 gap-10 lg:gap-20 pb-10 '>
                     <div className='grid lg:col-span-2'>
                         <Link href='/marketplace' className='w-[67px] h-[50px] lg:w-[109px] relative'>
-                            <Logo/>
+                            <Logo />
                         </Link>
                         <div className=" xl:mt-0 lg:mt-[-100px] font-satoshi">
-                            <p className="text-primary font-bold max-lg:text-[13px] mt-5 font-satoshi ">Need Help? If you have any questions or encounter issues, our support team is here to assist you. 
-                            Reach out to us at {' '}
+                            <p className="text-primary font-bold max-lg:text-[13px] mt-5 font-satoshi ">Need Help? If you have any questions or encounter issues, our support team is here to assist you.
+                                Reach out to us at {' '}
                                 <a href="mailto:info@taskhub.org.au" className="text-primary underline">
                                     info@taskhub.org.au
-                                </a>. 
+                                </a>.
                                 Stay Connected: Follow us on Instagram, facebook, and X for updates, tips, and community discussions.
                                 Thank you for choosing TaskHub! We look forward to enhancing your user experience.</p>
                             <div className="mt-[70px]">

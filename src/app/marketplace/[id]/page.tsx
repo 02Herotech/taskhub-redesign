@@ -9,7 +9,7 @@ import { FaStar } from "react-icons/fa";
 
 import PricingPlan from "@/components/matkeplaceSingleTask/PricingPlan";
 import Reviews from "@/components/matkeplaceSingleTask/Reviews";
-import { useParams, usePathname } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import axios from "axios";
 import Loading from "@/shared/loading";
 
@@ -17,13 +17,15 @@ const Page = () => {
   const [isDataFetched, setIsDataFetched] = useState(false);
   const [displayData, setDisplayData] = useState<ListingDataType2>();
   const [error, setError] = useState("");
+  const [posterInfo, setPosterInfo] = useState<{
+    profileImage: string;
+    firstName: string;
+    lastName: string;
+  }>({ profileImage: "", firstName: "", lastName: "" });
 
-  // marketplaceDummyData;
-
-  // const params = useParams();
-  // const pathname = usePathname();
-  // const path = pathname.split("/")[2];
-  // console.log(path);
+  const params = useSearchParams();
+  const listingId = params.get("listingId");
+  const posterId = params.get("posterId");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -35,7 +37,17 @@ const Page = () => {
           const url =
             "https://smp.jacinthsolutions.com.au/api/v1/listing/" + id;
           const { data } = await axios.get(url);
-          setDisplayData(data);
+          const postData: ListingDataType2 = data;
+          const posterId: number = postData.serviceProvider.id;
+          setDisplayData(postData);
+          const posterUrl =
+            "https://smp.jacinthsolutions.com.au/api/v1/user/user-profile/" +
+            posterId;
+          const {
+            data: { profileImage, firstName, lastName },
+          } = await axios.get(posterUrl);
+
+          setPosterInfo({ profileImage, firstName, lastName });
         }
       } catch (error) {
         setError("Error Fetching Data");
@@ -163,14 +175,19 @@ const Page = () => {
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-4">
                       <Image
-                        src="/assets/images/serviceProvider/user.jpg"
+                        src={
+                          posterInfo.profileImage ??
+                          "/assets/images/serviceProvider/user.jpg"
+                        }
                         alt="User"
                         width={80}
                         height={80}
                         className="rounded-full"
                       />
                       <div className="space-y-2">
-                        <p className="text-xl font-medium">Daniels Oluchi</p>
+                        <p className="text-xl font-medium">
+                          {posterInfo.firstName} {posterInfo.lastName}{" "}
+                        </p>
                         <div>
                           <p className="text-xs text-slate-300 "> 4.5 </p>
                           <div className="flex items-center gap-2">
