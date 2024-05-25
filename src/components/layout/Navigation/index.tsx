@@ -61,6 +61,8 @@ const Navigation = () => {
   const notificationLength = session.data?.user.user.appNotificationList.length
 
   const currentLinks = !isAuth ? homeLinks : isServiceProvider ? serviceProviderLinks : customerLinks;
+  const notificationRoute = isServiceProvider ? "/service-provider/dashbaord/notification" : "/customer/notifications";
+  const messagesRoute = isServiceProvider ? "/service-provider/dashbaord/messages" : "/customer/messages";
 
   return (
     <>
@@ -85,7 +87,7 @@ const Navigation = () => {
                       "text-tc-orange":
                         link.url === "/" && pathname === "/"
                           ? true
-                          : link.url !== "/" && pathname.includes(link.url)
+                          : link.url !== "/" && pathname.includes(link.url!)
                             ? true
                             : false,
                     })}
@@ -98,27 +100,25 @@ const Navigation = () => {
           </ul>
           <div className="hidden items-center space-x-5 lg:flex">
             {!isAuth ? (
-              <>
-                <div className="hidden items-center space-x-5 lg:flex">
-                  <Link href="/auth">
-                    <Button className="rounded-full">Sign Up</Button>
-                  </Link>
-                  <Link href="/auth/login">
-                    <Button theme="outline" className="rounded-full bg-transparent">
-                      Log in
-                    </Button>
-                  </Link>
-                </div>
-              </>
+              <div className="hidden items-center space-x-5 lg:flex">
+                <Link href="/auth">
+                  <Button className="rounded-full">Sign Up</Button>
+                </Link>
+                <Link href="/auth/login">
+                  <Button theme="outline" className="rounded-full bg-transparent">
+                    Log in
+                  </Button>
+                </Link>
+              </div>
             ) : (
               <>
-                <div className="relative cursor-pointer">
+                <div className="relative cursor-pointer" onClick={() => router.push(messagesRoute)}>
                   <BsChat className="size-[22px] text-black" />
                   <div className="absolute -right-1 -top-1 flex size-5 items-center justify-center rounded-full bg-tc-orange text-xs text-white">
                     2
                   </div>
                 </div>
-                <div className="relative cursor-pointer">
+                <div className="relative cursor-pointer" onClick={() => router.push(notificationRoute)}>
                   <IoMdNotificationsOutline className="size-[24px] text-black" />
                   <div className="absolute -right-1 -top-1 flex size-5 items-center justify-center rounded-full bg-tc-orange text-xs text-white">
                     {notificationLength}
@@ -159,7 +159,6 @@ const Navigation = () => {
           <MobileNavigation
             setShowMobileNav={setShowMobileNav}
             showMobileNav={showMobileNav}
-            links={currentLinks}
           />
         )}
       </AnimatePresence>
