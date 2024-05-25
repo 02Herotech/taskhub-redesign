@@ -1,5 +1,4 @@
 "use client";
-
 import { useState, useEffect } from "react";
 import axios from "axios";
 import Loading from "@/shared/loading";
@@ -14,14 +13,12 @@ import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 interface CategoryListingProps {
   category: string;
 }
-
 interface PosterProfileTypes {
   id: number;
   profileImage: string;
   firstName: string;
   lastName: string;
 }
-
 const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
   const dispatch = useDispatch();
   const { categories, listing, isFiltering, filteredData } = useSelector(
@@ -55,11 +52,10 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
           "?pn=0" +
           page;
       }
-      const response = await axios.get(url);
-      dispatch(updateListingArray(response.data.content));
-      setallListsting(response.data.content);
-
-      setDisplayListing(response.data.content);
+      const { data } = await axios.get(url);
+      dispatch(updateListingArray(data.content));
+      setallListsting(data.content);
+      setDisplayListing(data.content);
     } catch (error) {
       setErrorMsg("Error searching listing");
     } finally {
@@ -77,7 +73,6 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
 
   const handleFetchUserProfile = async (posterId: number) => {
     try {
-      console.log(posterId);
       const url =
         "https://smp.jacinthsolutions.com.au/api/v1/user/user-profile/" +
         posterId;
@@ -99,9 +94,7 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
         setDisplayListing((prev) => [...prev.slice(0, 4)]);
         // for (let i = 0; i < displayListing.length; i++) {
         //   const id = displayListing[i].serviceProvider.id;
-        //   if (id) {
         //     await handleFetchUserProfile(id);
-        //   }
         // }
         // displayListing.forEach((task) => {
         //   handleFetchUserProfile(task.serviceProvider.id);
@@ -114,9 +107,7 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
         // });
         // for (let i = 0; i < displayListing.length; i++) {
         //   const id = displayListing[i].serviceProvider.id;
-        //   if (id) {
         //     await handleFetchUserProfile(id);
-        //   }
         // }
       }
     };

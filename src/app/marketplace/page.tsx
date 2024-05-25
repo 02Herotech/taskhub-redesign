@@ -43,26 +43,23 @@ const categoryIcons = [
 ];
 
 const MareketPlace = () => {
-  const dispatch = useDispatch();
-  const { categories, isFiltering, filteredData, currentFilterStatus } =
-    useSelector((state: RootState) => state.market);
+  // set states for market place
+  const {
+    categories,
+    isFiltering,
+    currentFilterStatus: { search },
+  } = useSelector((state: RootState) => state.market);
+
+  // Getting session and router for pop up and user anthentication state
   const session = useSession();
   const router = useRouter();
   const isAuth = session.status === "authenticated";
   const isComplete = session?.data?.user?.user?.enabled;
-
-  const [filterData, setFilterData] = useState<ListingDataType2[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [categoryHeader, setCategoryHeader] = useState("");
-  const [profileImages, setProfileImages] = useState<{ [key: number]: string }>(
-    {},
-  );
-  const [firstName, setFirstName] = useState<{ [key: number]: string }>({});
-  const [lastName, setLastName] = useState<{ [key: number]: string }>({});
-  const [imgErrMsg, setImgErrMsg] = useState("");
-
   const [showPopup, setShowPopup] = useState(false);
 
+  // Figure out what this is used for
+
+  // Setting user popup state
   useEffect(() => {
     const popupCookie = getCookie("showPopup");
     if (!popupCookie && isAuth && isComplete) {
@@ -72,7 +69,7 @@ const MareketPlace = () => {
   }, [isAuth, isComplete]);
 
   return (
-    <main className="font-satoshi">
+    <main>
       {showPopup && (
         <Popup isOpen={showPopup} onClose={() => setShowPopup(false)}>
           <div className="relative h-[312px] max-lg:mx-10 lg:w-[577px]">
@@ -107,18 +104,19 @@ const MareketPlace = () => {
 
       <MarketPlaceHeader />
       <div className="mx-auto flex flex-col px-6 md:max-w-7xl md:px-20">
-        <MarketPlaceFilter categoryHeader={categoryHeader} />
+        <MarketPlaceFilter />
         <div>
-          {currentFilterStatus.search ? (
-            <SearchResult
-              isLoading={isLoading}
-              filterData={filterData}
-              profileImages={profileImages}
-              imgErrMsg={imgErrMsg}
-              firstName={firstName}
-              lastName={lastName}
-            />
-          ) : isFiltering ? (
+          {search && search.length !== 0 ? (
+            <div>Show search Results</div>
+          ) : // <SearchResult
+          //   isLoading={isLoading}
+          //   filterData={filterData}
+          //   profileImages={profileImages}
+          //   imgErrMsg={imgErrMsg}
+          //   firstName={firstName}
+          //   lastName={lastName}
+          // />
+          isFiltering ? (
             <div>
               <CategoryListing category="All" />
             </div>
