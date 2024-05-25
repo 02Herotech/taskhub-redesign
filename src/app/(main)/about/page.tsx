@@ -1,13 +1,14 @@
 import Image from "next/image";
 
 import styles from "./styles.module.css"
-import desktop from "../../../public/assets/images/about/desktop.png"
-import mobile from "../../../public/assets/images/about/mobile.png"
-import image2 from "../../../public/assets/images/about/image2.png"
-import icon1 from "../../../public/assets/images/about/icon1.png"
-import icon2 from "../../../public/assets/images/about/icon2.png"
-import icon3 from "../../../public/assets/images/about/icon3.png"
-import icon4 from "../../../public/assets/images/about/icon4.png"
+
+import desktop from "../../../../public/assets/images/about/desktop.png"
+import mobile from "../../../../public/assets/images/about/mobile.png"
+import image2 from "../../../../public/assets/images/about/image2.png"
+import icon1 from "../../../../public/assets/images/about/icon1.png"
+import icon2 from "../../../../public/assets/images/about/icon2.png"
+import icon3 from "../../../../public/assets/images/about/icon3.png"
+import icon4 from "../../../../public/assets/images/about/icon4.png"
 import Link from "next/link";
 import Slider from "@/components/about/slider";
 
