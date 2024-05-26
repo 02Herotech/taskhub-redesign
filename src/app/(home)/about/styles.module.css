@@ -1,6 +1,6 @@
 .headerCover {
   position: relative;
-  background-image: url("../../../public/assets/images/about/aboutCoverImg.png");
+  background-image: url("../../../../public/assets//images/about/aboutCoverImg.png");
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;
