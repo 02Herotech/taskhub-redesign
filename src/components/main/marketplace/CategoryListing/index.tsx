@@ -28,13 +28,16 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [allListsting, setallListsting] = useState<ListingDataType2[]>([]);
   const [ErrorMsg, setErrorMsg] = useState("");
-  const [imgErrMsg, setImgErrMsg] = useState("");
-  const [IdCategoryValue, setIdCategoryValue] = useState(0);
+  // const [IdCategoryValue, setIdCategoryValue] = useState(0);
   const [isViewMore, setIsViewMore] = useState({ state: false });
   const [displayListing, setDisplayListing] = useState<ListingDataType2[]>([]);
-  const [page, setPage] = useState(0);
+  const [page, setPage] = useState({ totalPages: 1, currentPage: 0 });
 
   const handleFetchCategory = async () => {
+    const categoryId = categories.find(
+      (item) => item.categoryName === category,
+    );
+    const currentPage = page.currentPage;
     setIsLoading(true);
     try {
       if (!category) {
@@ -44,18 +47,21 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
       if (category === "All") {
         url =
           "https://smp.jacinthsolutions.com.au/api/v1/listing/all-active-listings/" +
-          page;
-      } else {
+          currentPage;
+      } else if (categoryId) {
         url =
           "https://smp.jacinthsolutions.com.au/api/v1/listing/listing-by-category/" +
-          IdCategoryValue +
-          "?pn=0" +
-          page;
+          categoryId.id +
+          "?pn=" +
+          currentPage;
       }
-      const { data } = await axios.get(url);
-      dispatch(updateListingArray(data.content));
-      setallListsting(data.content);
-      setDisplayListing(data.content);
+      if (url) {
+        const { data } = await axios.get(url);
+        const content = data.content;
+        dispatch(updateListingArray(content));
+        setallListsting(content);
+        setDisplayListing(content);
+      }
     } catch (error) {
       setErrorMsg("Error searching listing");
     } finally {
@@ -84,9 +90,31 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
         { id: posterId, profileImage, firstName, lastName },
       ]);
     } catch (error) {
-      setImgErrMsg("Error loading image");
+      console.log(error);
     }
   };
+
+  const getButtonNumbers = () => {
+    const half = Math.floor(5 / 2);
+    let start = Math.max(page.currentPage - half, 1);
+    let end = start + 4;
+
+    // Adjust start and end if they exceed boundaries
+    if (end > page.totalPages) {
+      end = page.totalPages;
+      start = Math.max(end - 4, 1);
+    }
+    if (start < 0) {
+      start == 0;
+    }
+    const numbers = [];
+    for (let i = start; i <= end; i++) {
+      numbers.push(i);
+    }
+    return numbers;
+  };
+
+  const buttonNumbers = getButtonNumbers();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -115,21 +143,12 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
     // eslint-disable-next-line
   }, [listing, category, isViewMore]);
 
-  useEffect(() => {
-    if (category) {
-      setIdCategoryValue(
-        categories?.filter((item) => item.categoryName === category)[0]?.id,
-      );
-    }
-    // eslint-disable-next-line
-  }, [category]);
-
   return (
-    <div className="my-14 h-full w-full font-satoshi">
-      <div className="mb-5 flex items-center justify-between">
+    <div className="h-full w-full py-4 ">
+      <div className="mb-3 flex items-center justify-between">
         <div className="flex w-full items-center justify-between">
-          <h1 className=" text-lg font-bold text-violet-dark md:text-2xl">
-            {isFiltering ? "Filtering" : category}
+          <h1 className=" text-xl font-bold text-violet-darkHover md:text-2xl">
+            {isFiltering ? "Filtering..." : category}
           </h1>
           {displayListing.length > 3 && (
             <button
@@ -238,25 +257,22 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
       {isViewMore.state && (
         <div className="mt-10 flex w-full items-center justify-center space-x-7">
           <button
-            className="rounded-md bg-status-lightViolet p-2 hover:bg-primary disabled:bg-status-lightViolet disabled:opacity-50"
+            className="rounded-md bg-status-lightViolet p-2 transition-all duration-300 hover:bg-primary hover:text-white disabled:bg-status-lightViolet disabled:opacity-50 disabled:hover:bg-transparent"
             // onClick={handlePreviousPage}
-            // disabled={currentPage === 1}
+            disabled={page.currentPage === 1}
           >
             <IoIosArrowBack />
           </button>
-          {/* {Array.from({ length: totalPages }, (_, index) => (
-            <button
-              key={index + 1}
-              className={`rounded-md px-3 py-[6px] ${currentPage === index + 1 ? "bg-primary text-white" : "border border-black  hover:bg-status-lightViolet"} text-[11px] font-bold`}
-              // onClick={() => handlePageClick(index + 1)}
-            >
-              {index + 1}
+          {buttonNumbers.map((item) => (
+            <button key={item} className="">
+              {item}
             </button>
-          ))} */}
+          ))}
+
           <button
-            className="rounded-md bg-status-lightViolet p-2 hover:bg-primary disabled:bg-status-lightViolet disabled:opacity-50"
+            className="rounded-md bg-status-lightViolet p-2 hover:bg-primary disabled:bg-status-lightViolet disabled:opacity-50 disabled:hover:bg-transparent"
             // onClick={handleNextPage}
-            // disabled={currentPage === totalPages}
+            disabled={page.currentPage === page.totalPages}
           >
             <IoIosArrowForward />
           </button>

@@ -44,8 +44,6 @@ const MobileFilterModal = ({
     });
   };
 
-  console.log(filterState);
-
   return (
     <section
       className={`fixed left-0 top-0 z-40 flex h-screen w-screen items-center justify-center bg-black bg-opacity-70 transition-all duration-300 ${isMobileFilterModalShown ? "pointer-events-auto opacity-100 " : " pointer-events-none opacity-0"} `}

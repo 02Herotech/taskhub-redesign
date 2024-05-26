@@ -57,8 +57,6 @@ const MareketPlace = () => {
   const isComplete = session?.data?.user?.user?.enabled;
   const [showPopup, setShowPopup] = useState(false);
 
-  // Figure out what this is used for
-
   // Setting user popup state
   useEffect(() => {
     const popupCookie = getCookie("showPopup");
@@ -136,7 +134,7 @@ const MareketPlace = () => {
                 <h1 className=" text-[20px] font-bold text-violet-darkHover md:text-[28px]  ">
                   Browse by category
                 </h1>
-                <div className="my-5 flex w-[350px] flex-wrap md:w-[700px] lg:w-full">
+                <div className="my-5 flex flex-wrap gap-3 ">
                   {categories.map((item, index) => (
                     <BoxFilter
                       key={item.id}
@@ -147,14 +145,14 @@ const MareketPlace = () => {
                 </div>
               </div>
 
-              <div className="lg:hidden">
+              <div>
                 {categories.length < 1 ? (
                   <Loading />
                 ) : (
                   <div>
-                    <CategoryListing category={"All"} />
-                    <CategoryListing category={categories[1]?.categoryName} />
-                    <CategoryListing category={categories[2]?.categoryName} />
+                    <CategoryListing category={categories[3]?.categoryName} />
+                    <CategoryListing category={categories[4]?.categoryName} />
+                    <CategoryListing category={categories[5]?.categoryName} />
                   </div>
                 )}
               </div>

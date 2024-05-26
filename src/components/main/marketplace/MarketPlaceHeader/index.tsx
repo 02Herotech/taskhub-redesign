@@ -33,13 +33,13 @@ const MarketPlaceHeader = () => {
           <div className=" mt-10 flex w-full flex-col flex-wrap items-start justify-center gap-3 md:mt-0 md:flex-row md:items-center md:justify-center ">
             <h1 className="text-[27px] font-bold md:text-[39px]">
               {isServiceProvider
-                ? "Can provide a Service. Get Connected."
+                ? "Can provide a Service? Get Connected."
                 : "Post it. We Fix it"}
             </h1>
           </div>
           <p className="font-medium sm:text-start sm:text-base  md:text-lg ">
             {isServiceProvider
-              ? "Let users know you can Get it done!"
+              ? "Let users know you can get it done!"
               : "Publish a task. Complete it."}
           </p>
         </div>
@@ -55,7 +55,7 @@ const MarketPlaceHeader = () => {
             value={addDescription}
             onChange={(e) => setAddDescription(e.target.value)}
             name="description"
-            className="w-full max-w-lg rounded-xl bg-white px-4 py-3 focus:outline-none "
+            className="w-full max-w-lg rounded-xl bg-white px-4 py-3 text-slate-600 focus:outline-none "
           />
           <button
             type="submit"
