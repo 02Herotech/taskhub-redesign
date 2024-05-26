@@ -19,8 +19,8 @@ export const data = {
 
 const ProfilePieChart = () => {
   return (
-    <div className="relative h-fit">
-      <p className="text-orange-normal absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-[calc(50%+0.5rem)] text-xl font-bold ">
+    <div className="relative">
+      <p className="text-orange-normal absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-[calc(50%+0.5rem)] text-xl font-bold">
         60%
       </p>
       <Pie data={data} />;
