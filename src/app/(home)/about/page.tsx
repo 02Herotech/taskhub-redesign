@@ -25,8 +25,8 @@ const About = () => {
                         <p className="lg:text-[18px] md:text-[16px] text-[14px] font-[400] text-justify text-[#140B31]">Excellent customer service, top-notch service providers, and easy-to-use technology. That is our recipe for brewing you a stress-free life.</p>
                     </div>
                     <div className=" lg:w-[47%]  w-full flex lg:justify-end justify-center items-center">
-                        <Image src={image1a} width={450} alt="" className="hidden lg:block" />
-                        <Image src={image1b} width={400} alt="" className="lg:hidden" />
+                        <Image src="/assets/images/about/image1a.png" width={450} alt="" className="hidden lg:block" />
+                        <Image src="/assets/images/about/image1b.png" width={400} alt="" className="lg:hidden" />
                     </div>
                 </div>
             </div>
@@ -38,7 +38,7 @@ const About = () => {
                         <p className="text-[#2A1769] md:text-[18px] text-[15px] font-[400] text-justify">At TaskHub our mission is to connect talented service providers with customers and businesses in need. We facilitate a seamless and trustworthy platform for meaningful service exchange. We believe in the power of skill-sharing and collaboration to transform lives and businesses.</p>
                     </div>
                     <div className="lg:w-[30%] w-full h-full flex lg:items-end justify-center items-center">
-                        <Image src={image2} width={400} alt="" />
+                        <Image src="/assets/images/about/image2.png" width={400} alt="" />
                     </div>
                     <div className="lg:w-[30%] w-full h-full flex flex-col justify-end">
                         <h1 className="lg:text-[36px] md:text-[30px] text-[25px] font-[600] font-clashSemiBold  text-[#2A1769]">Our Story</h1>
@@ -75,27 +75,27 @@ const About = () => {
                     </div>
                     <div className="lg:flex w-full justify-between items-center mt-10 hidden">
                         <div className="bg-[#221354] w-[218px] h-[225px] flex flex-col items-center text-[#EBE9F4] p-4 rounded-lg shadow-lg space-y-3 hover:bg-[#FE9B07] transition-colors duration-500">
-                            <Image src={icon1} width={18} alt="" />
+                            <Image src="/assets/images/about/icon1.png" width={18} alt="" />
                             <p className="font-[700] text-[18px] text-center font-satoshiMedium">User Friendly<br />Interface</p>
                             <p className="text-justify font-[300] text-[13px]">Our platform is designed with simplicity in mind, making it easy for service providers and seekers to connect and transact.</p>
                         </div>
                         <div className="bg-[#221354] w-[218px] h-[225px] flex flex-col items-center text-[#EBE9F4] p-4 rounded-lg shadow-lg space-y-3 hover:bg-[#FE9B07] transition-colors duration-500">
-                            <Image src={icon2} width={18} alt="" />
+                            <Image src="/assets/images/about/icon2.png" width={18} alt="" />
                             <p className="font-[700] text-[18px] text-center font-satoshiMedium">Verified Service Providers</p>
                             <p className="text-justify font-[300] text-[13px]">We carefully vet and verify all service providers to ensure their skills and qualifications meet our standards.</p>
                         </div>
                         <div className="bg-[#221354] w-[218px] h-[225px] flex flex-col items-center text-[#EBE9F4] p-4 rounded-lg shadow-lg space-y-3 hover:bg-[#FE9B07] transition-colors duration-500">
-                            <Image src={icon3} width={18} alt="" />
+                            <Image src="/assets/images/about/icon3.png" width={18} alt="" />
                             <p className="font-[700] text-[18px] text-center font-satoshiMedium">Ratings and <br /> Reviews</p>
                             <p className="text-justify font-[300] text-[13px]">Users can provide feedback and ratings, helping others make informed decisions.</p>
                         </div>
                         <div className="bg-[#221354] w-[218px] h-[225px] flex flex-col items-center text-[#EBE9F4] p-4 rounded-lg shadow-lg space-y-3 hover:bg-[#FE9B07] transition-colors duration-500">
-                            <Image src={icon2} width={18} alt="" />
+                            <Image src="/assets/images/about/icon2.png" width={18} alt="" />
                             <p className="font-[700] text-[18px] text-center font-satoshiMedium">Secure <br /> Payments</p>
                             <p className="text-justify font-[300] text-[13px]">Our secure payment system protects your transactions.</p>
                         </div>
                         <div className="bg-[#221354] w-[218px] h-[225px] flex flex-col items-center text-[#EBE9F4] p-4 rounded-lg shadow-lg space-y-3 hover:bg-[#FE9B07] transition-colors duration-500">
-                            <Image src={icon4} width={18} alt="" />
+                            <Image src="/assets/images/about/icon4.png" width={18} alt="" />
                             <p className="font-[700] text-[18px] text-center font-satoshiMedium">Wide range of<br />Services</p>
                             <p className="text-justify font-[300] text-[13px]">From Home services to electronics, we offer a diverse array of services to meet your needs.</p>
                         </div>
