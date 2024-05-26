@@ -1,15 +1,5 @@
 import Image from "next/image";
-
 import styles from "./styles.module.css"
-import image1a from "../../../public/assets/images/about/image1a.png"
-import image1b from "../../../public/assets/images/about/image1b.png"
-import image2 from "../../../public/assets/images/about/image2.png"
-import icon1 from "../../../public/assets/images/about/icon1.png"
-import icon2 from "../../../public/assets/images/about/icon2.png"
-import icon3 from "../../../public/assets/images/about/icon3.png"
-import icon4 from "../../../public/assets/images/about/icon4.png"
-
-
 
 const About = () => {
     return (
