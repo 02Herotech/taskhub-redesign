@@ -1,7 +1,5 @@
 import type { Metadata } from "next";
-import { clashDisplay, satoshi } from "@/fonts";
 import "./globals.css";
-import { cn } from "@/lib/utils";
 import Provider from "@/store/Provider";
 
 export const metadata: Metadata = {
@@ -16,7 +14,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={cn(clashDisplay.className, satoshi.className)}>
+      <body>
         <Provider>
           <main className=''>
             {children}

@@ -74,11 +74,11 @@ const ResetPasswordForm = () => {
             />
             <section className='w-full xl:w-[554px] h-[50vh] flex items-center justify-center mx-auto'>
                 <div className='space-y-10'>
-                    <div className="space-y-4 font-clashDisplay">
-                        <h1 className='text-2xl lg:text-4xl text-[#190E3F] font-medium'>
+                    <div className="space-y-4">
+                        <h1 className='text-2xl lg:text-4xl text-[#190E3F] font-clashSemiBold'>
                             Reset your Password?
                         </h1>
-                        <p className='text-sm lg:text-lg text-tc-gray font-medium'>
+                        <p className='text-sm lg:text-lg text-tc-gray font-clashMedium'>
                             Please enter a password you will remember and do not share with others.
                         </p>
                     </div>
