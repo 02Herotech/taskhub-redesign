@@ -81,3 +81,28 @@ export const serviceProviderDashboardLinks: DashboardLinks[] = [
   //   ),
   // },
 ];
+
+export const customerDashboardDropdown = [
+  {
+    label: "Payment",
+    link: "/customer/payment",
+  },
+  {
+    label: "Password",
+    link: "/customer/password",
+  },
+  {
+    label: "Notification",
+    link: "/customer/notification",
+  },
+];
+export const serviceProviderDashboardDropdown = [
+  {
+    label: "Password",
+    link: "/service-provider/password",
+  },
+  {
+    label: "Notification",
+    link: "/service-provider/notification",
+  },
+];
