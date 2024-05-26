@@ -74,14 +74,14 @@ const LoginForm = () => {
   return (
     <section className="w-full xl:w-[554px] mx-auto max-lg:p-5">
       <div className="space-y-10">
-        <div className="space-y-4 font-clashDisplay">
-          <h1 className="text-2xl lg:text-4xl text-[#190E3F] font-medium">
+        <div className="space-y-4">
+          <h1 className="text-2xl lg:text-4xl text-[#190E3F] font-clashSemiBold">
             Welcome to{" "}
             <span className="text-primary">
               <b>Task</b>hub
             </span>
           </h1>
-          <p className="text-xl lg:text-2xl text-tc-gray font-medium">
+          <p className="text-xl lg:text-2xl text-tc-gray font-clashMedium">
             Join us for exclusive access to our services
           </p>
         </div>
@@ -108,7 +108,7 @@ const LoginForm = () => {
               type="password"
             />
             {error && (
-              <div className="text-status-error-100 text-base text-center font-semibold my-5">{error}</div>
+              <div className="text-status-error-100 text-base font-semibold my-1">{error}</div>
             )}
             <div className="space-y-8 lg:space-y-5">
               <div className="flex items-center justify-end">
@@ -127,7 +127,7 @@ const LoginForm = () => {
                   className="w-[170px] rounded-full font-normal">
                   Login
                 </Button>
-                <h3 className="text-xl mt-8 font-bold text-[#190E3F]">
+                <h3 className="text-xl mt-8 font-satoshiBold text-[#190E3F]">
                   Don’t have an account?
                   <Link href="/auth" className="text-primary">
                     {" "}

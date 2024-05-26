@@ -89,11 +89,11 @@ const SignUpForm = () => {
     return (
         <section className='w-full lg:w-[554px] mx-auto max-lg:p-5'>
             <div className='space-y-6 lg:space-y-10 w-full max-lg:container lg:max-w-[550px] lg:px-4'>
-                <div className="space-y-4 !font-clashDisplay">
-                    <h1 className='text-2xl lg:text-4xl text-status-darkViolet font-medium'>
+                <div className="space-y-4">
+                    <h1 className='text-2xl lg:text-4xl text-status-darkViolet font-clashSemiBold'>
                         Create Account
                     </h1>
-                    <p className='text-xl lg:text-2xl text-tc-gray font-medium'>
+                    <p className='text-xl lg:text-2xl text-tc-gray font-clashMedium'>
                         Join us for exclusive access to our services
                     </p>
                 </div>
@@ -201,7 +201,7 @@ const SignUpForm = () => {
                                 className='w-[170px] rounded-full font-normal'>
                                 Create account
                             </Button>
-                            <h3 className="text-xl font-bold text-[#190E3F] text-center">Have an existing account?
+                            <h3 className="text-xl font-satoshi font-bold text-[#190E3F] text-center">Have an existing account?
                                 <Link href="/auth/login" className="text-primary"> Login</Link>
                             </h3>
                             {/* <div className="border w-full" />
