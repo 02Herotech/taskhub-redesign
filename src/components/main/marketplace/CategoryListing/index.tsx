@@ -13,12 +13,7 @@ import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 interface CategoryListingProps {
   category: string;
 }
-interface PosterProfileTypes {
-  id: number;
-  profileImage: string;
-  firstName: string;
-  lastName: string;
-}
+
 const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
   const dispatch = useDispatch();
   const { categories, listing, isFiltering, filteredData } = useSelector(
@@ -28,7 +23,6 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [allListsting, setallListsting] = useState<ListingDataType2[]>([]);
   const [ErrorMsg, setErrorMsg] = useState("");
-  // const [IdCategoryValue, setIdCategoryValue] = useState(0);
   const [isViewMore, setIsViewMore] = useState({ state: false });
   const [displayListing, setDisplayListing] = useState<ListingDataType2[]>([]);
   const [page, setPage] = useState({ totalPages: 1, currentPage: 0 });
@@ -52,7 +46,7 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
         url =
           "https://smp.jacinthsolutions.com.au/api/v1/listing/listing-by-category/" +
           categoryId.id +
-          "?pn=" +
+          "?pageNumber=" +
           currentPage;
       }
       if (url) {
@@ -72,27 +66,6 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
     handleFetchCategory();
     // eslint-disable-next-line
   }, [page]);
-
-  const [posterProfiles, setPosterProfiles] = useState<PosterProfileTypes[]>(
-    [],
-  );
-
-  const handleFetchUserProfile = async (posterId: number) => {
-    try {
-      const url =
-        "https://smp.jacinthsolutions.com.au/api/v1/user/user-profile/" +
-        posterId;
-      const {
-        data: { profileImage, firstName, lastName },
-      } = await axios.get(url);
-      setPosterProfiles((prev) => [
-        ...prev,
-        { id: posterId, profileImage, firstName, lastName },
-      ]);
-    } catch (error) {
-      console.log(error);
-    }
-  };
 
   const getButtonNumbers = () => {
     const half = Math.floor(5 / 2);
@@ -120,23 +93,9 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
     const fetchData = async () => {
       if (displayListing.length > 0) {
         setDisplayListing((prev) => [...prev.slice(0, 4)]);
-        // for (let i = 0; i < displayListing.length; i++) {
-        //   const id = displayListing[i].serviceProvider.id;
-        //     await handleFetchUserProfile(id);
-        // }
-        // displayListing.forEach(async (task) => {
-        //   await handleFetchUserProfile(task.serviceProvider.id);
-        // });
       }
       if (isViewMore.state) {
         setDisplayListing(allListsting);
-        // displayListing.forEach(async (task) => {
-        //   await handleFetchUserProfile(task.serviceProvider.id);
-        // });
-        // for (let i = 0; i < displayListing.length; i++) {
-        //   const id = displayListing[i].serviceProvider.id;
-        //     await handleFetchUserProfile(id);
-        // }
       }
     };
     fetchData();
@@ -170,15 +129,8 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
 
       {ErrorMsg && (
         <div className="flex min-h-64 w-full flex-col items-center justify-center gap-4 md:h-[100px]">
-          <Image
-            src="/assets/images/marketplace/undraw_void_-3-ggu.svg"
-            alt="nothing illustration"
-            width={200}
-            height={200}
-            className="mx-auto h-full max-h-40"
-          />
-          <p className="sm:text[13px] text-center font-semibold text-violet-normal md:text-[16px]">
-            No listing Available
+          <p className="sm:text[13px] text-center font-semibold text-red-500 md:text-[16px]">
+            Kindly check your connection
           </p>
         </div>
       )}
@@ -186,7 +138,7 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
       {isLoading ? (
         <Loading />
       ) : isFiltering ? (
-        filteredData.length === 0 ? (
+        !ErrorMsg && filteredData.length === 0 ? (
           <div className="flex min-h-40 flex-col items-center justify-center gap-4">
             <Image
               src={"/assets/images/marketplace/undraw_void_-3-ggu.svg"}
@@ -201,21 +153,14 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
         ) : (
           <div className="my-2 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
             {filteredData.map((item, index) => {
-              const currentPosterProfile: PosterProfileTypes =
-                posterProfiles.filter(
-                  (poster) => poster.id === item.serviceProvider.id,
-                )[0];
               return (
                 <SingleListingCard
                   key={index}
-                  posterId={item.id}
                   listingId={item.id}
+                  posterId={item?.serviceProvider?.id}
                   businessName={item.listingTitle}
                   displayImage={item.businessPictures[0]}
                   pricing={item.planOnePrice ?? 0}
-                  firstName={currentPosterProfile?.firstName}
-                  profileImage={currentPosterProfile?.profileImage}
-                  lastName={currentPosterProfile?.lastName}
                 />
               );
             })}
@@ -236,19 +181,14 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
       ) : (
         <div className="my-2 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
           {displayListing.map((item, index) => {
-            const currentPosterProfile: PosterProfileTypes =
-              posterProfiles.filter((poster) => poster.id === item.id)[0];
             return (
               <SingleListingCard
                 key={index}
-                posterId={item.id}
                 listingId={item.id}
+                posterId={item?.serviceProvider?.id}
                 businessName={item.listingTitle}
                 displayImage={item.businessPictures[0]}
                 pricing={item.planOnePrice ?? 0}
-                firstName={currentPosterProfile?.firstName}
-                profileImage={currentPosterProfile?.profileImage}
-                lastName={currentPosterProfile?.lastName}
               />
             );
           })}
