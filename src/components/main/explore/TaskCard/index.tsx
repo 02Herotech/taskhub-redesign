@@ -91,7 +91,11 @@ const TaskCard = ({ task }: TaskCardProps) => {
   return (
     <motion.div
       className="lg:rounded-4xl cursor-pointer rounded-xl bg-[#EBE9F4] p-5"
-      whileHover={{ scale: 1.02 }}
+      whileHover={{
+        scale: 1.02,
+        transition: { duration: 0.2 },
+
+      }}
       onClick={() => router.push(`/explore/task-details/${task.id}`)}
     >
       <div className="flex w-full items-center justify-between">

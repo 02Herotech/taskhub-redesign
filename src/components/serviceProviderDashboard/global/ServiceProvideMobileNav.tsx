@@ -29,9 +29,9 @@ const ServiceProvideMobileNav = ({
       >
         <button
           onClick={() => setIsLeftSidebarOpen((prev) => !prev)}
-          className={`absolute right-4 top-4 rotate-0 transition-all duration-1000 ease-in-out ${isLeftSidebarOpen ? "rotate-0 " : "rotate-[540deg]"}  `}
+          className={`absolute right-4 top-4 rotate-0 transition-all border border-white duration-1000 ease-in-out ${isLeftSidebarOpen ? "rotate-0 " : "rotate-[360deg]"}  `}
         >
-          <FaX className="size-8 text-red-500 transition-all duration-300 hover:scale-105 " />
+          <FaX className="size-8 text-white transition-all duration-300 hover:scale-105 " />
         </button>
         <nav className=" flex flex-col gap-10">
           <Link
