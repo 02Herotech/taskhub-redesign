@@ -54,11 +54,11 @@ const ForgotPasswordForm = () => {
     return (
         <section className='w-full xl:w-[554px] mx-auto max-lg:p-5'>
             <div className='space-y-10'>
-                <div className="space-y-4 font-clashDisplay">
-                    <h1 className='text-2xl lg:text-4xl text-[#190E3F] font-medium'>
+                <div className="space-y-4">
+                    <h1 className='text-2xl lg:text-4xl text-[#190E3F] font-clashSemiBold'>
                         Forgot Password?
                     </h1>
-                    <p className='text-xl lg:text-2xl text-tc-gray font-medium'>
+                    <p className='text-xl lg:text-2xl text-tc-gray font-clashMedium'>
                         Please enter your email address and we will send you an instruction to reset your password.
                     </p>
                 </div>
@@ -76,7 +76,7 @@ const ForgotPasswordForm = () => {
                             type='email'
                         />
                         {error && (
-                            <div className="text-status-error-100 text-base text-center font-semibold my-5">{error}</div>
+                            <div className="text-status-error-100 text-base font-semibold my-2">{error}</div>
                         )}
                         <div className='pt-1 space-y-5'>
                             <Button
