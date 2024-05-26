@@ -58,13 +58,13 @@ const GeneralSidbarNavigation = () => {
     : customerDashboardLinks;
 
   return (
-    <nav className="flex h-full flex-col justify-between gap-6 px-2 py-8 lg:px-6">
+    <nav className="flex h-full flex-col justify-between gap-6 px-2 py-8 lg:px-6 font-clashMedium">
       <div className="flex flex-col gap-4">
         {currentDashboardLink.map((item) => (
           <Link
             key={item.label}
             href={item.link}
-            className={`flex items-center  rounded-md px-4 py-3 text-sm font-medium text-white  transition-all duration-300 max-md:text-sm ${isServiceProvider ? "gap-4" : "gap-8"}  ${
+            className={`flex items-center rounded-md px-4 py-3 text-sm font-medium text-white  transition-all duration-300 max-md:text-sm ${isServiceProvider ? "gap-4" : "gap-8"}  ${
               pathname.includes(item.link)
                 ? "bg-yellow-500 hover:bg-opacity-90"
                 : "hover:bg-violet-950"
@@ -78,7 +78,7 @@ const GeneralSidbarNavigation = () => {
         {/* Settings Dropdown section */}
         <button
           onClick={() => setShowSettings((prev) => !prev)}
-          className={`flex items-center gap-4 rounded-md px-4 py-3 text-sm font-medium  text-white transition-all duration-300 max-md:text-sm ${
+          className={`flex items-center gap-7 rounded-md px-4 py-3 text-sm font-clashMedium text-white transition-all duration-300 max-md:text-sm ${
             pathname.includes("/service-provider/dashboard/settings")
               ? "bg-yellow-500 hover:bg-opacity-90"
               : "bg-violet-normal hover:bg-violet-950"
@@ -95,7 +95,7 @@ const GeneralSidbarNavigation = () => {
             <Link
               key={item.label}
               href={item.link}
-              className={`flex items-center gap-4 rounded-md px-4 py-3 text-sm font-medium  text-white transition-all duration-300 max-md:text-sm ${
+              className={`flex items-center gap-4 rounded-md px-4 py-3 text-sm font-clashMedium text-white transition-all duration-300 max-md:text-sm ${
                 pathname === item.link
                   ? "bg-yellow-500 hover:bg-opacity-90"
                   : "hover:bg-violet-950"
@@ -110,7 +110,7 @@ const GeneralSidbarNavigation = () => {
       <div>
         <button
           onClick={handleLogUserOut}
-          className="flex   w-full items-center gap-4 rounded-md px-4 py-3 font-medium  text-white transition-all duration-300 hover:bg-violet-950 max-md:text-sm"
+          className="flex   w-full items-center gap-4 rounded-md px-4 py-3 font-clashMedium text-white transition-all duration-300 hover:bg-violet-950 max-md:text-sm"
         >
           <span>
             <BiLogOut className="size-7" />

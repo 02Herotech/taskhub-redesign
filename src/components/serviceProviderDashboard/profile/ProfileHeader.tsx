@@ -7,8 +7,9 @@ import React from "react";
 const ProfileHeader = () => {
   const session = useSession();
   const user = session?.data?.user?.user;
+  const isServiceProvider = user?.roles[0] === "SERVICE_PROVIDER";
+  const editProfileLink = isServiceProvider ? "/service-provider/dashboard/profile/edit-profile" : "/customer/profile/edit-profile";
 
-  console.log(user?.registeredAt);
   return (
     <>
       {!user ? (
@@ -29,7 +30,7 @@ const ProfileHeader = () => {
               height={160}
               className="max-siz-40 size-40 rounded-full object-cover max-md:size-24 max-md:max-w-24"
             />
-            <div className="flex flex-col gap-2  ">
+            <div className="flex flex-col gap-2">
               <h1 className="text-3xl font-bold text-[#140B31] lg:text-4xl">
                 Welcome {user?.firstName} {user?.lastName}
               </h1>
@@ -39,13 +40,16 @@ const ProfileHeader = () => {
             </div>
           </div>
 
-          <div className="flex gap-4 max-md:justify-between max-md:py-4 lg:flex-col lg:items-end">
+          <div className="flex gap-4 max-md:justify-between max-md:py-4 flex-row lg:flex-col lg:items-end">
             <Link
-              href="/service-provider/dashboard/profile/edit-profile"
+              href={editProfileLink}
               className="border-b text-sm font-medium text-[#381F8C] "
             >
               Edit Account Details
             </Link>
+            <p className="text-sm font-medium text-[#140B31] ">
+              A member since ""
+            </p>
             <p className="text-sm font-medium text-[#140B31] ">
               {user?.address?.state}
             </p>
