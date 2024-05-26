@@ -9,26 +9,19 @@ import { GiStoneCrafting } from "react-icons/gi";
 import { FaBabyCarriage } from "react-icons/fa";
 import { MdSecurity } from "react-icons/md";
 import { MdLocalGroceryStore } from "react-icons/md";
-import axios from "axios";
-import ModalImage1 from "../../../public/assets/images/marketplace/complete-profile-1.png";
-import ModalImage2 from "../../../public/assets/images/marketplace/complete-profile-2.png";
 
 import MarketPlaceFilter from "@/components/main/marketplace/MarketPlaceFilter";
 import MarketPlaceHeader from "@/components/main/marketplace/MarketPlaceHeader";
 import CategoryListing from "@/components/main/marketplace/CategoryListing";
 import BoxFilter from "@/components/main/marketplace/BoxFilter";
-import SearchResult from "@/components/main/marketplace/SearchResult";
-import ViewMore from "@/components/main/marketplace/view-more";
 import { useSession } from "next-auth/react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { RootState } from "@/store";
 import Loading from "@/shared/loading";
 import Popup from "@/components/global/Popup";
 import Button from "@/components/global/Button";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import Link from "next/link";
-import { updateFilterData } from "@/store/Features/marketplace";
 import { setCookie, getCookie } from "cookies-next";
 
 const categoryIcons = [
@@ -87,14 +80,18 @@ const MareketPlace = () => {
               </Button>
             </div>
             <Image
-              src={ModalImage2}
+              src="/assets/images/marketplace/complete-profile-2.png"
               alt="image"
               className="absolute bottom-0 left-0 size-[120px] lg:size-[160px]"
+              width={160}
+              height={160}
             />
             <Image
-              src={ModalImage1}
+              src="/assets/images/marketplace/complete-profile-1.png"
               alt="image"
               className="absolute -bottom-1 -right-1 size-[90px] lg:size-[110px]"
+              width={110}
+              height={110}
             />
           </div>
         </Popup>
