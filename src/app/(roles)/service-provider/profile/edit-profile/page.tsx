@@ -4,30 +4,40 @@ import EditProfileModal from "@/components/serviceProviderDashboard/profile/Edit
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import { z } from "zod";
-import { useForm, SubmitHandler } from "react-hook-form";
+import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useSession } from "next-auth/react";
 import { PiFileArrowDownDuotone } from "react-icons/pi";
+import { BsPencilSquare } from "react-icons/bs";
+import { BiCheck } from "react-icons/bi";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 const EditProfile = () => {
   const [isEditingEnabled, setIsEditingEnabled] = useState(false);
   const [isFormModalShown, setIsFormModalShown] = useState(false);
+  const [isEditProfilePictureModalOpen, setIsEditProfilePictureModalOpen] =
+    useState(false);
   const [documentImage, setDocumentImage] = useState<{ image: File | null }>({
     image: null,
   });
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+  const handleDateChange = (date: Date | null) => {
+    setSelectedDate(date);
+  };
 
   const session = useSession();
   const user = session?.data?.user?.user;
 
   const userDataSchema = z.object({
-    firstName: z.string().nullable().optional(),
-    lastName: z.string().nullable().optional(),
-    dateOfBirth: z.string(),
-    phoneNumber: z.string().nullable().optional(),
-    emailNumber: z.string().nullable().optional(),
-    postcode: z.string().nullable().optional(),
-    suburb: z.string().nullable().optional(),
-    state: z.string().nullable().optional(),
+    firstName: z.string().min(2),
+    lastName: z.string().min(2),
+    dateOfBirth: z.date().nullable(),
+    phoneNumber: z.string(),
+    emailNumber: z.string(),
+    postcode: z.string(),
+    suburb: z.string(),
+    state: z.string(),
     medicareId: z.string(),
     driverLicence: z.string(),
   });
@@ -36,24 +46,32 @@ const EditProfile = () => {
 
   const {
     register,
+    control,
     handleSubmit,
     formState: { errors },
     reset,
+    watch,
   } = useForm({
     resolver: zodResolver(userDataSchema),
     defaultValues: {
-      firstName: user?.firstName ?? "",
-      lastName: user?.lastName ?? "",
-      dateOfBirth: "",
-      phoneNumber: user?.phoneNumber ?? "",
-      emailNumber: user?.emailAddress ?? "",
-      postcode: user?.address?.postCode ?? "",
-      suburb: user?.address?.suburb ?? "",
-      state: user?.address?.state ?? "",
+      firstName: "",
+      lastName: "",
+      dateOfBirth: null,
+      phoneNumber: "",
+      emailNumber: "",
+      postcode: "",
+      suburb: "",
+      state: "",
       medicareId: "",
       driverLicence: "",
     },
   });
+
+  const watchField = watch();
+
+  useEffect(() => {
+    console.log("Watched", watchField);
+  }, [watchField]);
 
   const handleSetDocumentImage = (
     event: React.ChangeEvent<HTMLInputElement>,
@@ -73,7 +91,7 @@ const EditProfile = () => {
       reset({
         firstName: user?.firstName ?? "",
         lastName: user?.lastName ?? "",
-        dateOfBirth: "",
+        dateOfBirth: null,
         phoneNumber: user?.phoneNumber ?? "",
         emailNumber: user?.emailAddress ?? "",
         postcode: user?.address?.postCode ?? "",
@@ -86,23 +104,27 @@ const EditProfile = () => {
   }, [user, reset]);
 
   const handleSubmitUserData: SubmitHandler<userDataType> = (data) => {
-    // console.log(data);
     setIsFormModalShown(true);
     setIsEditingEnabled(false);
-
     const newUserData = { ...data, documentImage: documentImage.image };
   };
 
   return (
     <main className=" relative p-4 lg:p-8">
+      {/* Top profile Image section */}
       <section className="flex flex-col items-center justify-center gap-1 pb-8 ">
-        <Image
-          src={user?.profileImage ?? "/assets/images/serviceProvider/user.jpg"}
-          alt="user"
-          width={80}
-          height={80}
-          className="size-20 rounded-full object-cover"
-        />
+        <button className="relative mx-auto size-28 overflow-hidden rounded-full hover:shadow-md">
+          <BsPencilSquare className="absolute right-6 top-2/3 z-10 size-5 text-slate-700" />
+          <Image
+            src={
+              user?.profileImage ?? "/assets/images/serviceProvider/user.jpg"
+            }
+            alt="user"
+            width={80}
+            height={80}
+            className="h-full w-full rounded-full object-cover"
+          />
+        </button>
         <h2 className="text-xl font-bold text-slate-900">
           {user?.firstName} {user?.lastName}
         </h2>
@@ -116,67 +138,68 @@ const EditProfile = () => {
           {isEditingEnabled ? "Editing ..." : " Edit Profile"}
         </button>
       </section>
+
+      {/* Form modal section */}
       <form
         onSubmit={handleSubmit(handleSubmitUserData)}
         className="space-y-10 lg:space-y-20"
       >
         {/* Personal information */}
-        <section className="flex flex-col flex-wrap justify-between gap-4  lg:grid lg:grid-cols-12">
-          <div className=" space-y-4 lg:col-span-4 ">
-            <h3 className="text-base font-bold text-slate-800">
-              Personal Information
-            </h3>
-            <p className="text-sm text-slate-500">
-              Update your personal information to keep your account safe.
-            </p>
-          </div>
-          <div className="flex flex-wrap gap-6 lg:col-span-8">
-            <div className="flex w-full flex-col gap-3 lg:max-w-64 ">
-              <label htmlFor="firstName" className="text-sm text-slate-500">
-                First Name
-              </label>
-              <input
-                // type="text"
-                id="firstName"
-                className="rounded-xl border border-slate-100 p-2 text-slate-700 shadow  outline-none transition-shadow duration-300 hover:shadow-md lg:max-w-sm "
-                {...register("firstName")}
-                disabled
-              />
-              {errors.firstName && (
-                <p className="text-red-600">{errors.firstName.message}</p>
-              )}
-            </div>
-            <div className="flex w-full flex-col gap-3 lg:max-w-64 ">
-              <label htmlFor="lastName" className="text-sm text-slate-500">
-                Last Name
-              </label>
+        <section className="flex flex-col gap-4 ">
+          <h3 className="text-xl font-bold text-violet-dark lg:text-center">
+            Personal Information
+          </h3>
+          <div className="flex flex-wrap justify-between gap-6 lg:col-span-8">
+            {/* First name */}
+            <label className="flex w-full flex-col gap-3 text-lg  text-violet-normal lg:max-w-64 ">
+              <span className="flex items-center justify-between">
+                <span>First Name</span>
+                {!errors.firstName && watchField.firstName?.length >= 3 && (
+                  <BiCheck className="size-5 rounded-full bg-green-500 p-1 text-white" />
+                )}
+              </span>
               <input
                 type="text"
-                id="lastName"
+                className="rounded-xl border border-slate-100 p-2 text-slate-700 shadow  outline-none transition-shadow duration-300 hover:shadow-md lg:max-w-sm "
+                {...register("firstName")}
+              />
+            </label>
+            {/* Last name */}
+            <label className="flex w-full flex-col gap-3 text-lg  text-violet-normal lg:max-w-64 ">
+              <span className="flex items-center justify-between">
+                <span>Last Name</span>
+                {!errors.firstName && watchField.lastName?.length >= 3 && (
+                  <BiCheck className="size-5 rounded-full bg-green-500 p-1 text-white" />
+                )}
+              </span>
+              <input
+                type="text"
                 className="rounded-xl border border-slate-100 p-2 text-slate-700 shadow  outline-none transition-shadow duration-300 hover:shadow-md lg:max-w-sm "
                 {...register("lastName")}
-                disabled
               />
-              {errors.lastName && (
-                <p className="text-red-600">{errors.lastName.message}</p>
-              )}
-            </div>
-            <div className="flex w-full flex-col gap-3 lg:max-w-64 ">
-              <label htmlFor="dateOfBirth" className="text-sm text-slate-500">
-                Date of Birth
-              </label>
-              <input
-                type="date"
-                id="dateOfBirth"
-                placeholder=""
-                className="rounded-xl border border-slate-100 p-2 text-slate-700 shadow  outline-none transition-shadow duration-300 hover:shadow-md lg:max-w-sm "
-                {...register("dateOfBirth")}
-                disabled={!isEditingEnabled}
+            </label>
+            {/* Date of birth */}
+            <label className="flex w-full flex-col gap-3 text-lg  text-violet-normal lg:max-w-64 ">
+              <span className="flex items-center justify-between">
+                <span> Date of Birth</span>
+                {!errors.firstName && watchField.dateOfBirth !== null && (
+                  <BiCheck className="size-5 rounded-full bg-green-500 p-1 text-white" />
+                )}
+              </span>
+              <Controller
+                control={control}
+                name="dateOfBirth"
+                render={({ field: { onChange, onBlur, value } }) => (
+                  <DatePicker
+                    selected={value}
+                    onChange={onChange}
+                    onBlur={onBlur}
+                    className="w-full rounded-xl border border-slate-100 p-2 text-slate-700 shadow outline-none transition-shadow duration-300 hover:shadow-md lg:max-w-sm"
+                    dateFormat="dd/MM/yyyy"
+                  />
+                )}
               />
-              {errors.dateOfBirth && (
-                <p className="text-red-600">{errors.dateOfBirth.message}</p>
-              )}
-            </div>
+            </label>
           </div>
         </section>
 

@@ -124,14 +124,14 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
         //   const id = displayListing[i].serviceProvider.id;
         //     await handleFetchUserProfile(id);
         // }
-        // displayListing.forEach((task) => {
-        //   handleFetchUserProfile(task.serviceProvider.id);
+        // displayListing.forEach(async (task) => {
+        //   await handleFetchUserProfile(task.serviceProvider.id);
         // });
       }
       if (isViewMore.state) {
         setDisplayListing(allListsting);
-        // displayListing.forEach((task) => {
-        //   handleFetchUserProfile(task.serviceProvider.id);
+        // displayListing.forEach(async (task) => {
+        //   await handleFetchUserProfile(task.serviceProvider.id);
         // });
         // for (let i = 0; i < displayListing.length; i++) {
         //   const id = displayListing[i].serviceProvider.id;

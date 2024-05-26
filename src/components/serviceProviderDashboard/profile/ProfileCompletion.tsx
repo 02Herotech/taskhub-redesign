@@ -1,9 +1,8 @@
-"use clien";
+"use client";
 
 import React from "react";
 import { BiCheck, BiPlus } from "react-icons/bi";
 import ProfilePieChart from "./ProfilePieChart";
-import { useSession } from "next-auth/react";
 import Link from "next/link";
 
 const profileProgressData = [
@@ -16,7 +15,7 @@ const profileProgressData = [
     status: "activated",
   },
   {
-    title: "Email Address",
+    title: "Home Address",
     status: "activated",
   },
   {
@@ -34,8 +33,6 @@ const profileProgressData = [
 ];
 
 const ProfileCompletion = () => {
-  const session = useSession();
-  const user = session?.data?.user?.user;
   return (
     <section className=" flex h-full flex-col gap-3 rounded-lg bg-[#EBE9F4] p-4 md:grid md:grid-cols-12">
       <div className="col-span-4 max-md:max-w-40 ">
@@ -57,10 +54,14 @@ const ProfileCompletion = () => {
               return 0;
             })
             .map((item, index) => (
-              <button
+              <Link
+                href={
+                  item.status === "activated"
+                    ? "#"
+                    : "/service-provider/profile/edit-profile"
+                }
                 key={index}
                 className={`flex items-center gap-2 rounded-full px-4 py-2 text-xs font-medium  ${item.status == "activated" ? "bg-violet-normal text-white" : " bg-slate-300 text-slate-700"} `}
-                disabled={item.status === "activated"}
               >
                 <span
                   className={`rounded-full ${item.status === "activated" ? "bg-white" : "bg-slate-600"} p-1`}
@@ -72,7 +73,7 @@ const ProfileCompletion = () => {
                   )}
                 </span>
                 <span> {item.title} </span>
-              </button>
+              </Link>
             ))}
         </div>
       </div>

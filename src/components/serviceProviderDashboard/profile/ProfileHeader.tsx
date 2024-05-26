@@ -41,7 +41,7 @@ const ProfileHeader = () => {
 
           <div className="flex gap-4 max-md:justify-between max-md:py-4 lg:flex-col lg:items-end">
             <Link
-              href="/service-provider/dashboard/profile/edit-profile"
+              href="/service-provider/profile/edit-profile"
               className="border-b text-sm font-medium text-[#381F8C] "
             >
               Edit Account Details
