@@ -14,9 +14,10 @@ import Dropdown from "@/components/global/Dropdown";
 import { signOut, useSession } from "next-auth/react";
 import Logo from "../Logo";
 import axios from "axios";
-import PlaceholderImage from "../../../../public/assets/images/placeholder.jpeg"
+import PlaceholderImage from "../../../../public/assets/images/placeholder.jpeg";
 import { customerLinks, homeLinks, serviceProviderLinks } from "@/lib/links";
 import Button from "@/components/global/Button";
+import Image from "next/image";
 
 const Navigation = () => {
   const router = useRouter();
@@ -37,14 +38,30 @@ const Navigation = () => {
     }
   };
 
+  const session = useSession();
+  const profileImage = session?.data?.user.user.profileImage;
+  const userRole = session?.data?.user.user.roles;
+  const isServiceProvider = userRole && userRole[0] === "SERVICE_PROVIDER";
+  const isAuth = session.status === "authenticated";
+
   const dropdownItems = [
     {
       label: "Profile",
-      onClick: () => { },
+      onClick: () => {
+        router.push(
+          isServiceProvider ? "/service-provider/profile" : "/customer/profile",
+        );
+      },
     },
     {
       label: "Settings",
-      onClick: () => { },
+      onClick: () => {
+        router.push(
+          isServiceProvider
+            ? "/service-provider/settings"
+            : "/customer/settings",
+        );
+      },
     },
     {
       label: "Logout",
@@ -52,21 +69,22 @@ const Navigation = () => {
     },
   ];
 
-  const session = useSession();
-  const profileImage = session?.data?.user.user.profileImage;
-  const userRole = session?.data?.user.user.roles;
-  const isServiceProvider = userRole && userRole[0] === "SERVICE_PROVIDER";
-  const isAuth = session.status === "authenticated";
-  // const isCustomer = userRole && userRole[0] === "CUSTOMER";
-  const notificationLength = session.data?.user.user.appNotificationList.length
+  const notificationLength = session.data?.user.user.appNotificationList.length;
 
-  const currentLinks = !isAuth ? homeLinks : isServiceProvider ? serviceProviderLinks : customerLinks;
-  const notificationRoute = isServiceProvider ? "/service-provider/dashbaord/notification" : "/customer/notifications";
-  const messagesRoute = isServiceProvider ? "/service-provider/dashbaord/messages" : "/customer/messages";
+  const currentLinks = !isAuth
+    ? homeLinks
+    : isServiceProvider
+      ? serviceProviderLinks
+      : customerLinks;
+  const notificationRoute = isServiceProvider
+    ? "/service-provider/dashbaord/notification"
+    : "/customer/notifications";
 
   return (
     <>
-      <nav className={`fixed left-0 right-0 top-0 z-50 w-full ${currentLinks === homeLinks ? `bg-[#F5E2FC]` : `bg-white`} drop-shadow-sm`}>
+      <nav
+        className={`fixed left-0 right-0 top-0 z-50 w-full ${currentLinks === homeLinks ? `bg-[#F5E2FC]` : `bg-white`} drop-shadow-sm`}
+      >
         <div className="container flex items-center justify-between px-7 py-4 lg:px-14 lg:py-5">
           <Link href="/marketplace">
             <Logo />
@@ -105,20 +123,26 @@ const Navigation = () => {
                   <Button className="rounded-full">Sign Up</Button>
                 </Link>
                 <Link href="/auth/login">
-                  <Button theme="outline" className="rounded-full bg-transparent">
+                  <Button
+                    theme="outline"
+                    className="rounded-full bg-transparent"
+                  >
                     Log in
                   </Button>
                 </Link>
               </div>
             ) : (
               <>
-                <div className="relative cursor-pointer" onClick={() => router.push(messagesRoute)}>
+                <Link href="/message" className="relative cursor-pointer">
                   <BsChat className="size-[22px] text-black" />
-                  <div className="absolute -right-1 -top-1 flex size-5 items-center justify-center rounded-full bg-tc-orange text-xs text-white">
+                  <span className="absolute -right-1 -top-1 flex size-5 items-center justify-center rounded-full bg-tc-orange text-xs text-white">
                     2
-                  </div>
-                </div>
-                <div className="relative cursor-pointer" onClick={() => router.push(notificationRoute)}>
+                  </span>
+                </Link>
+                <div
+                  className="relative cursor-pointer"
+                  onClick={() => router.push(notificationRoute)}
+                >
                   <IoMdNotificationsOutline className="size-[24px] text-black" />
                   <div className="absolute -right-1 -top-1 flex size-5 items-center justify-center rounded-full bg-tc-orange text-xs text-white">
                     {notificationLength}
@@ -126,23 +150,25 @@ const Navigation = () => {
                 </div>
                 <Dropdown
                   trigger={() => (
-                    <div className="flex items-center space-x-1 cursor-pointer">
-                      <img
+                    <div className="flex cursor-pointer items-center space-x-1">
+                      <Image
                         src={profileImage || PlaceholderImage.src}
                         alt="Profile"
                         className="size-[46px] rounded-full object-cover"
+                        width={46}
+                        height={46}
                       />
                       <BiChevronDown className="size-6" />
                     </div>
                   )}
                   className="-left-32 top-20"
                 >
-                    <div className="w-[200px] rounded-md bg-white">
+                  <div className="w-[200px] rounded-md bg-white">
                     {dropdownItems.map((button, index) => (
                       <button
                         key={index}
                         onClick={button.onClick}
-                        className="dropdown-item text-md flex w-full items-center text-primary font-semibold justify-between p-3 transition-all hover:opacity-80"
+                        className="dropdown-item text-md flex w-full items-center justify-between p-3 font-semibold text-primary transition-all hover:opacity-80"
                       >
                         {button.label}
                       </button>
@@ -164,6 +190,6 @@ const Navigation = () => {
       </AnimatePresence>
     </>
   );
-}
+};
 
 export default Navigation;
