@@ -190,7 +190,7 @@ const SignUpForm = () => {
                                 </label>
                             </div>
                             {error && (
-                                <div className="text-status-error-100 text-base text-center font-semibold my-5">{error}</div>
+                                <div className="text-status-error-100 text-base font-semibold my-2">{error}</div>
                             )}
                         </div>
                         <div className='pt-10 space-y-5 max-lg:flex max-lg:flex-col max-lg:items-center max-lg:justify-center'>

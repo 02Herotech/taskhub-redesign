@@ -96,3 +96,7 @@
     font-style: normal;
   }
 }
+
+body {
+	@apply text-dark font-satoshi;
+}
