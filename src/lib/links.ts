@@ -4,6 +4,10 @@ type Link = {
     sublinks?: {
         label: string;
         url: string;
+        sublinks?: {
+            label: string;
+            url: string;
+        }[];
     }[];
 };
 
@@ -91,6 +95,20 @@ export const mobileServiceProviderLinks: Link[] = [
             {
                 label: "Settings",
                 url: "/service-provider/dashbaord/settings",
+                sublinks: [
+                    {
+                        label: "General",
+                        url: "/service-provider/dashboard/settings/general",
+                    },
+                    {
+                        label: "Security",
+                        url: "/service-provider/dashboard/settings/security",
+                    },
+                    {
+                        label: "Privacy",
+                        url: "/service-provider/dashboard/settings/privacy",
+                    },
+                ]
             },
         ]
     }
@@ -114,15 +132,15 @@ export const mobileCustomerLinks: Link[] = [
             },
             {
                 label: "My Tasks",
-                url: "/customer/my-tasks",
+                url: "/customer/tasks",
             },
             {
                 label: "My Notifications",
-                url: "/customer/my-notifications",
+                url: "/customer/notifications",
             },
             {
                 label: "Payments settings",
-                url: "/customer/payments-and-wallet",
+                url: "/customer/payments",
             },
             {
                 label: "Settings",

@@ -68,7 +68,7 @@ const SignUpForm = () => {
             setCookie('userType', userType);
 
             const timeoutPromise = new Promise((_, reject) =>
-                setTimeout(() => reject(setError('Something went wrong, please try again')), 15000)
+                setTimeout(() => reject(setError('Something went wrong, please try again')), 30000)
             );
 
             const signUpPromise = userType === 'Service Provider'
@@ -82,7 +82,7 @@ const SignUpForm = () => {
 
         } catch (err: any) {
             console.log("Error:", err);
-            setError(err.message || 'An unexpected error occurred');
+            setError(err.data.message || 'An unexpected error occurred');
             setIsLoading(false);
         }
     };
@@ -201,7 +201,7 @@ const SignUpForm = () => {
                                 className='w-[170px] rounded-full font-normal'>
                                 Create account
                             </Button>
-                            <h3 className="text-xl font-satoshi font-bold text-[#190E3F] text-center">Have an existing account?
+                            <h3 className="text-xl font-satoshi font-bold text-[#190E3F]">Have an existing account?
                                 <Link href="/auth/login" className="text-primary"> Login</Link>
                             </h3>
                             {/* <div className="border w-full" />
