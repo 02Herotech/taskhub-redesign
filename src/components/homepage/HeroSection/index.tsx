@@ -162,7 +162,6 @@ const HeroSection = () => {
                   className=" rounded-[50px] w-[250px] bg-[#FE9B07] text-[#FFF5E6] xl:text-[16px] 
                           px-3 py-2    hover:bg-[#e79823]  "
                 >
-                  
                     <Link
                     href={`/auth/sign-up?${serviceProviderParams.toString()}`}
                       className="flex items-center justify-center"

@@ -6,7 +6,7 @@ import {
   tempUpdateFilterData,
   updateFilterData,
 } from "@/store/Features/marketplace";
-import { BsTriangle, BsTriangleFill } from "react-icons/bs";
+import { BsFilterSquare, BsTriangle, BsTriangleFill } from "react-icons/bs";
 import { FormEvent, useEffect, useState } from "react";
 import {
   fetchAllMarketplaseCategories,
@@ -21,6 +21,8 @@ import {
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import ReactSlider from "react-slider";
+import { GiSettingsKnobs } from "react-icons/gi";
+import MobileFilterModal from "../MobileFilterModal";
 
 const locationData = [
   "Western Australia",
@@ -33,11 +35,7 @@ const locationData = [
   "Australian Capital Territory",
 ];
 
-interface props {
-  categoryHeader: any;
-}
-
-const MarketPlaceFilter = ({ categoryHeader }: props) => {
+const MarketPlaceFilter = () => {
   const dispatch = useDispatch();
   const {
     currentFilterStatus: { category, subCategory, location, pricing, search },
@@ -50,6 +48,11 @@ const MarketPlaceFilter = ({ categoryHeader }: props) => {
     isOpened: false,
     category: "",
   });
+
+  // figure out the use of the category header
+  const [categoryHeader, setCategoryHeader] = useState("");
+  const [isMobileFilterModalShown, setIsMobileFilterModalShown] =
+    useState(false);
 
   const [subCategories, setSubCategories] = useState<SubCategoryType[]>([]);
 
@@ -149,7 +152,7 @@ const MarketPlaceFilter = ({ categoryHeader }: props) => {
   };
 
   return (
-    <div className="my-12 flex flex-col space-y-16">
+    <div className=" flex flex-col space-y-4 pt-5 lg:space-y-8 lg:py-10">
       <div className=" flex flex-col space-y-8">
         <div className="flex flex-col space-y-2">
           <h1 className="text-2xl font-bold text-violet-darkHover md:text-3xl">
@@ -160,19 +163,23 @@ const MarketPlaceFilter = ({ categoryHeader }: props) => {
           </p>
         </div>
 
-        <div className="flex justify-center lg:hidden">
-          <select
-            name="filterBy"
-            id="filterBy"
-            className="w-[180px] rounded-3xl border-[1.5px] border-[#381F8C] bg-[#F1F1F2] px-8 py-4 text-center text-[16px] font-[700] text-[#381F8C] focus:outline-none"
+        <div className="relative flex justify-center md:hidden ">
+          <MobileFilterModal
+            isMobileFilterModalShown={isMobileFilterModalShown}
+            setIsMobileFilterModalShown={setIsMobileFilterModalShown}
+          />
+          <button
+            className="flex w-full items-center justify-center gap-3 rounded-full border border-violet-normal bg-violet-light px-6 py-2 font-bold  text-violet-normal"
+            onClick={() => setIsMobileFilterModalShown(true)}
           >
-            <option value="" className="rounded-3xl">
-              Filter By
-            </option>
-          </select>
+            <span>
+              <GiSettingsKnobs />
+            </span>
+            Filter By
+          </button>
         </div>
 
-        <div className="hidden lg:block">
+        <div className=" max-md:hidden ">
           <div className="flex space-x-2 text-xs lg:space-x-6 ">
             <button
               className="cursor-pointer rounded-3xl bg-violet-normal px-4 py-2 text-base  font-bold text-white"
@@ -354,10 +361,10 @@ const MarketPlaceFilter = ({ categoryHeader }: props) => {
         </div>
       </div>
 
-      <div className="my-10 flex w-full flex-col space-y-10 lg:flex-row lg:items-center  lg:justify-between">
-        <div className="flex w-[350px] flex-col space-y-2 md:w-full lg:w-full">
+      <div className="flex justify-between gap-4 py-4 max-md:flex-col md:gap-8  lg:items-center  ">
+        <div className="">
           <h1 className="text-xl font-bold text-violet-dark md:text-3xl">
-            {categoryHeader ? categoryHeader : "Get a Specialist Directly"}
+            Get a Specialist Directly
           </h1>
           <p className="text-base font-[400] text-violet-darkHover md:text-lg">
             {categoryHeader
@@ -368,15 +375,13 @@ const MarketPlaceFilter = ({ categoryHeader }: props) => {
 
         <form
           onSubmit={(event) => handleSubmit(event)}
-          className="flex w-full items-center justify-center lg:justify-end "
+          className="flex w-full items-center gap-2  lg:max-w-sm"
         >
-          <div className="flex w-full items-center rounded-xl border-[1.5px] border-[#C1BADB] px-3 md:w-[400px]">
-            <FiSearch size={15} className="text-[#C1BADB]" />
-
+          <div className="relative w-full">
             <input
               type="text"
               value={search}
-              className=" w-full px-2 py-4 text-[16px] focus:border-white focus:outline-none  "
+              className="w-full rounded-xl border border-violet-normal px-4 py-3   text-lg text-slate-500 shadow  placeholder-shown:border-slate-300 placeholder-shown:outline-none focus:outline-none "
               onChange={(event) =>
                 dispatch(
                   updateFilterStatus({
@@ -387,19 +392,11 @@ const MarketPlaceFilter = ({ categoryHeader }: props) => {
               }
               placeholder="Search"
             />
-
-            {/* {search && (
-              <IoClose
-                size={15}
-                className=" text-grey6 cursor-pointer hover:text-[#C1BADB] "
-                onClick={handleClearSearch}
-              />
-            )} */}
           </div>
 
           <button
             type="submit"
-            className="ml-2 rounded-xl bg-primary px-5 py-5 text-[12px] text-white hover:bg-status-darkViolet focus:outline-none"
+            className="rounded-xl bg-primary p-3 text-[12px] text-white hover:bg-status-darkViolet focus:outline-none"
           >
             <FiSearch size={20} />
           </button>

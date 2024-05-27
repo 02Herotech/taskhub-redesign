@@ -59,6 +59,7 @@ const config: Config = {
       fontFamily: {
         satoshi: "Satoshi, sans-serif",
         satoshiMedium: "SatoshiMedium, sans-serif",
+        satoshiBold: "SatoshiBold, sans-serif",
         clash: "Clash, sans-serif",
         clashMedium: "ClashMedium, sans-serif",
         clashSemiBold: "ClashSemiBold, sans-serif",

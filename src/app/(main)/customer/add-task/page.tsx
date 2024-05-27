@@ -26,6 +26,12 @@ interface FormData {
   customerBudget: string;
   hubTime: string;
   taskAddress: string[];
+  categoryId: number | null;
+}
+
+interface Item {
+  id: string;
+  categoryName: string;
 }
 
 interface PostalCodeData {
@@ -54,6 +60,7 @@ const AddTaskForm: React.FC = () => {
     taskAddress: [],
     customerBudget: "",
     hubTime: "",
+    categoryId: null,
   });
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [selectedTime, setSelectedTime] = useState<Date | null>(null);
@@ -70,6 +77,8 @@ const AddTaskForm: React.FC = () => {
   const [error, setError] = useState<any>({});
   const [isSuccessPopupOpen, setIsSuccessPopupOpen] = useState(false);
   const [postalCodeData, setPostalCodeData] = useState<PostalCodeData[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
+   const [items, setItems] = useState<Item[]>([]);
 
   useEffect(() => {
     const fetchPostalCodeData = async () => {
@@ -88,6 +97,21 @@ const AddTaskForm: React.FC = () => {
       fetchPostalCodeData();
     }
   }, [selectedCode]);
+   useEffect(() => {
+     const fetchItems = async () => {
+       try {
+         const response = await axios.get(
+           "https://smp.jacinthsolutions.com.au/api/v1/util/all-categories",
+         );
+         const data: Item[] = response.data;
+         setItems(data);
+       } catch (error) {
+         console.error("Error fetching items:", error);
+       }
+     };
+
+     fetchItems();
+   }, []);
 
   const validateFields = () => {
     const errors: any = {};
@@ -152,6 +176,17 @@ const AddTaskForm: React.FC = () => {
     const selectedValue = event.target.value;
     setIsSelectedTime(selectedValue);
   };
+
+    const handleCategoryChange = (
+      event: React.ChangeEvent<HTMLSelectElement>,
+    ) => {
+      const selectedId = parseInt(event.target.value);
+      setSelectedCategory(selectedId);
+      setTask({
+        ...task,
+        categoryId: selectedId,
+      });
+    };
 
   const nextPage = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -237,6 +272,7 @@ const AddTaskForm: React.FC = () => {
       task.customerBudget,
       selectedDate,
       selectedTime,
+      selectedCategory,
     ];
 
     if (isOpen && activeButtonIndex === 1) {
@@ -249,7 +285,7 @@ const AddTaskForm: React.FC = () => {
     ).length;
 
     // Calculate the total number of fields that need to be filled
-    const totalFields = isOpen && activeButtonIndex === 0 ? 6 : 5;
+    const totalFields = isOpen && activeButtonIndex === 0 ? 7 : 6;
 
     return Math.round((filledFields / totalFields) * 100);
   };
@@ -317,6 +353,7 @@ const AddTaskForm: React.FC = () => {
           hubTime: "",
           taskAddress: [],
           customerBudget: "",
+          categoryId: null,
         });
         console.log(finalTask);
         setIsSuccessPopupOpen(true);
@@ -334,7 +371,7 @@ const AddTaskForm: React.FC = () => {
           <div className="mb-10 grid items-center justify-center space-y-10">
             <form className="space-y-10 font-medium" onSubmit={nextPage}>
               <div className="grid space-y-3">
-                <label className="text-status-darkpurple">
+                <label className="font-satoshiBold font-bold text-black">
                   Briefly tell us what you need done?
                 </label>
                 <textarea
@@ -346,8 +383,31 @@ const AddTaskForm: React.FC = () => {
                   style={{ resize: "none", overflow: "hidden" }}
                 ></textarea>
               </div>
+              <div className="relative grid space-y-4">
+                <label className="font-semibold">
+                  What category best describes your task?
+                </label>
+                <select
+                  value={selectedCategory || ""}
+                  name="category"
+                  onChange={handleCategoryChange}
+                  className="w-full h-full cursor-pointer appearance-none rounded-2xl bg-[#EBE9F4] p-3 text-[13px] outline-none"
+                >
+                  <option value="">Category</option>
+                  {items.map((item) => (
+                    <option
+                      key={item.id}
+                      value={item.id}
+                      className="text-[12px] text-[#221354]"
+                    >
+                      {item.categoryName}
+                    </option>
+                  ))}
+                </select>
+                <IoMdArrowDropdown className="absolute right-5 top-10 cursor-pointer text-status-purpleBase" />
+              </div>
               <div className=" space-y-3">
-                <label className="text-status-darkpurple">
+                <label className="font-satoshiBold font-bold text-black">
                   Upload an Image (Optional)
                 </label>
                 {task.taskImage ? (
@@ -400,7 +460,10 @@ const AddTaskForm: React.FC = () => {
               </div>
 
               <div className="space-y-5">
-                <label htmlFor="taskTime" className="text-status-darkpurple">
+                <label
+                  htmlFor="taskTime"
+                  className="test-[20px] font-satoshiBold font-bold text-black"
+                >
                   Set number of working (Day/Time):
                 </label>
                 <div className="flex space-x-3">
@@ -434,47 +497,47 @@ const AddTaskForm: React.FC = () => {
 
                     <IoMdArrowDropdown className="absolute right-5 top-2 cursor-pointer text-status-purpleBase" />
                   </div>
-                </div>
-              </div>
-              <div>
-                <div className="flex items-center">
-                  <input
-                    type="checkbox"
-                    name="check"
-                    checked={termsAccepted}
-                    onChange={handleCheckboxChange}
-                    className="mr-2"
-                  />
-                  <span className="text-status-darkpurple">
-                    I need a certain time of day.
-                  </span>
-                </div>
-                {termsAccepted && (
-                  <div className="relative mt-2">
-                    <select
-                      value={isSelectedTime}
-                      onChange={handleTickChange}
-                      name="hubTime"
-                      className="w-full appearance-none rounded-2xl border border-tc-gray bg-[#EBE9F4] px-3 py-1 text-[14px] text-status-purpleBase   outline-none"
-                    >
-                      <option value="">Select Time Of The Day</option>
-                      <option value="MORNING_BEFORE_10AM">
-                        Morning, Before 10am
-                      </option>
-                      <option value="MIDDAY_10AM_to_12PM">
-                        Midday, 10am to 12pm
-                      </option>
-                      <option value="AFTERNOON_12PM_to_2PM">
-                        Afternoon, 12pm to 2pm
-                      </option>
-                      <option value="EVENING_2PM_to_5PM">
-                        Evening, 2pm to 5pm
-                      </option>
-                    </select>
-                    <IoMdArrowDropdown className="absolute right-5 top-2 cursor-pointer text-status-purpleBase" />
+                  <div>
+                    <div className="flex items-center">
+                      <input
+                        type="checkbox"
+                        name="check"
+                        checked={termsAccepted}
+                        onChange={handleCheckboxChange}
+                        className="mr-2"
+                      />
+                      <span className="text-status-darkpurple">
+                        I’m Flexible
+                      </span>
+                    </div>
                   </div>
-                )}
+                </div>
               </div>
+              {termsAccepted && (
+                <div className="relative mt-2">
+                  <select
+                    value={isSelectedTime}
+                    onChange={handleTickChange}
+                    name="hubTime"
+                    className="w-full appearance-none rounded-2xl border border-tc-gray bg-[#EBE9F4] px-3 py-1 text-[14px] text-status-purpleBase   outline-none"
+                  >
+                    <option value="">Select Time Of The Day</option>
+                    <option value="MORNING_BEFORE_10AM">
+                      Morning, Before 10am
+                    </option>
+                    <option value="MIDDAY_10AM_to_12PM">
+                      Midday, 10am to 12pm
+                    </option>
+                    <option value="AFTERNOON_12PM_to_2PM">
+                      Afternoon, 12pm to 2pm
+                    </option>
+                    <option value="EVENING_2PM_to_5PM">
+                      Evening, 2pm to 5pm
+                    </option>
+                  </select>
+                  <IoMdArrowDropdown className="absolute right-5 top-2 cursor-pointer text-status-purpleBase" />
+                </div>
+              )}
               <div className="text-[#FF0000]">
                 {Object.keys(error).map((key, index) => (
                   <div key={index}>{error[key]}</div>
@@ -493,7 +556,7 @@ const AddTaskForm: React.FC = () => {
         return (
           <div className="mb-10 space-y-10">
             <div className="space-y-4">
-              <h2 className="font-medium text-status-darkpurple">
+              <h2 className="font-satoshiBold font-bold text-black">
                 Type of Service
               </h2>
               <div className="flex space-x-4 text-[13px] text-[#221354]">
@@ -716,7 +779,7 @@ const AddTaskForm: React.FC = () => {
         >
           <div className="p-10 lg:px-12">
             <div className="relative grid items-center justify-center space-y-5">
-              <p className="text-center font-clashDisplay text-[20px] font-extrabold text-[#2A1769] md:text-[36px] lg:text-[37px] ">
+              <p className="font-clashDisplay text-center text-[20px] font-extrabold text-[#2A1769] md:text-[36px] lg:text-[37px] ">
                 You are almost done!!!
               </p>
               <p className="text-center text-[14px] lg:text-[20px]">
@@ -760,8 +823,8 @@ const AddTaskForm: React.FC = () => {
               <div className="flex justify-center text-[1px] text-white">
                 <GrFormCheckmark className="h-[50px] w-[50px] rounded-full bg-[#FE9B07] p-2 lg:h-[60px] lg:w-[60px]" />
               </div>
-              <p className="text-center font-clashDisplay text-[25px] font-extrabold text-[#2A1769] lg:text-[37px] ">
-                Task posted
+              <p className="font-clashDisplay text-center text-[25px] font-extrabold text-[#2A1769] lg:text-[37px] ">
+                Congratulations
               </p>
               <p className="lg:text-[20px]">
                 Your task has been posted! please click <br /> on the button to

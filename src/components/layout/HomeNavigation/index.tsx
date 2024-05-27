@@ -2,22 +2,15 @@
 
 import { cn } from "@/lib/utils";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import React, { useState } from "react";
 import { AnimatePresence } from "framer-motion";
-import Image from "next/image";
-import { BsChat } from "react-icons/bs";
-import { IoMdNotificationsOutline } from "react-icons/io";
-import { BiChevronDown } from "react-icons/bi";
 import { RiMenu3Fill } from "react-icons/ri";
 import HomeMobileNavigation from "../HomeMobileNavigation";
 import Button from "@/components/global/Button";
 import Logo from "../Logo";
-import { useSession } from "next-auth/react";
-import ServiceProviderUserNav from "@/components/serviceProviderDashboard/global/ServiceProviderUserNav";
 
 const HomeNavigation = () => {
-  const router = useRouter();
   const [showMobileNav, setShowMobileNav] = useState(false);
 
   const pathname = usePathname();
@@ -25,7 +18,7 @@ const HomeNavigation = () => {
   const links = [
     {
       label: "Home",
-      url: "/",
+      url: "/home",
     },
     {
       label: "About",
@@ -40,11 +33,6 @@ const HomeNavigation = () => {
       url: "/contact",
     },
   ];
-  const session = useSession();
-  const userRole: string[] | undefined = session?.data?.user?.user?.roles;
-
-  const isServiceProvider = userRole && userRole[0] === "SERVICE_PROVIDER";
-  const isCustomer = userRole && userRole[0] === "CUSTOMER";
 
   return (
     <>
@@ -75,20 +63,16 @@ const HomeNavigation = () => {
             })}
           </ul>
 
-          {isServiceProvider ? (
-            <ServiceProviderUserNav />
-          ) : (
-            <div className="hidden items-center space-x-5 lg:flex">
-              <Link href="/auth">
-                <Button className="rounded-full">Sign Up</Button>
-              </Link>
-              <Link href="/auth/login">
-                <Button theme="outline" className="rounded-full bg-transparent">
-                  Log in
-                </Button>
-              </Link>
-            </div>
-          )}
+          <div className="hidden items-center space-x-5 lg:flex">
+            <Link href="/auth">
+              <Button className="rounded-full">Sign Up</Button>
+            </Link>
+            <Link href="/auth/login">
+              <Button theme="outline" className="rounded-full bg-transparent">
+                Log in
+              </Button>
+            </Link>
+          </div>
           <button
             onClick={() => setShowMobileNav((state) => !state)}
             className="lg:hidden"

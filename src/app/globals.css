@@ -9,34 +9,6 @@
   box-shadow: none !important;
 }
 
-.Toastify__toast-container {
-  min-width: 388px !important;
-  z-index: 9999999999999 !important;
-}
-
-.Toastify__toast.Toastify__toast--success {
-  @apply border border-primary bg-primary/25 text-base font-normal text-white;
-  min-height: 56px;
-}
-
-.Toastify__toast-icon {
-  @apply hidden;
-}
-
-.Toastify__toast.Toastify__toast--error {
-  @apply border border-status-error-100 bg-status-error-10 text-base font-normal text-status-error-100;
-  min-height: 56px;
-}
-
-.Toastify__toast.Toastify__toast--info {
-  @apply border border-status-information-100 bg-status-information-10 text-base font-normal text-status-information-100;
-  min-height: 56px;
-}
-
-.Toastify__toast.Toastify__toast--warning {
-  @apply border border-status-warning-100 bg-status-warning-10 text-base font-normal text-status-warning-100;
-  min-height: 56px;
-}
 
 .Toastify__progress-bar {
   opacity: 0 !important;
@@ -109,12 +81,22 @@
     src: url("/fonts/SatoshiMedium.woff2") format("woff2");
     font-display: swap;
     font-style: normal;
+    font-weight: 600;
   }
   @font-face {
     font-family: Satoshi;
     src: url("/fonts/SatoshiRegular.woff2") format("woff2");
     font-display: swap;
-    font-weight: 700;
     font-style: normal;
   }
+  @font-face {
+    font-family: SatoshiBold;
+    src: url("/fonts/Satoshi-Bold.otf") format("otf");
+    font-display: swap;
+    font-style: normal;
+  }
+}
+
+body {
+	@apply text-dark font-satoshi;
 }

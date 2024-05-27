@@ -3,25 +3,15 @@
 import Button from "@/components/global/Button"
 import { FaLocationDot, FaEnvelope } from "react-icons/fa6";
 import { IoCallSharp } from "react-icons/io5";
-import { FaCaretDown } from "react-icons/fa";
 import { useState } from "react";
 
 const ContactUsPage = () => {
     const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-    const [selectedTopic, setSelectedTopic] = useState<string | null>(null);
 
     const subjectCategoriesData = [
         "General Inquiry",
         "Technical Support",
         "Billing",
-        "Feedback",
-        "Other",
-    ];
-
-    const topicCategoriesData = [
-        "Account",
-        "Billing",
-        "Technical Support",
         "Feedback",
         "Other",
     ];
@@ -59,21 +49,6 @@ const ContactUsPage = () => {
                             <div className="mb-4 lg:flex items-center">
                                 <label className="lg:text-black text-[#333236] font-medium lg:font-bold text-sm lg:text-xl lg:w-[25%]">Email address:</label>
                                 <input type="email" className="w-full mt-2 p-3 border border-gray-300 rounded-2xl placeholder:text-[#D3D2D5]" placeholder="JohnDoe@gmail.com" />
-                            </div>
-                            <div className="mb-4 lg:flex items-center">
-                                <label className="lg:text-black text-[#333236] font-medium lg:font-bold text-sm lg:text-xl lg:w-[25%]">Topic category:</label>
-                                <select
-                                    className="w-full mt-2 py-3 px-5 placeholder:text-[#D3D2D5] border border-gray-300 rounded-2xl bg-white"
-                                    value={selectedTopic || ""}
-                                    onChange={(e) => setSelectedTopic(e.target.value)}
-                                >
-                                    <option value="" disabled>Enter topic category</option>
-                                    {topicCategoriesData.map((topic, index) => (
-                                        <option key={index} value={topic}>
-                                            {topic}
-                                        </option>
-                                    ))}
-                                </select>
                             </div>
                             <div className="mb-4 lg:flex items-start">
                                 <label className="lg:text-black text-[#333236] font-medium lg:font-bold text-sm lg:text-xl lg:w-[25%]">Message:</label>
