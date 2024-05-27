@@ -37,10 +37,16 @@ export default withAuth(
     },
   },
 );
+
 export const config = {
     matcher: [
         "/explore/:path*",
-        "/customer/:path*",
+        "/customer/notifications/:path*",
+        "/customer/password/:path*",
+        "/customer/payments/:path*",
+        "/customer/profile/:path*",
+        "/customer/settings/:path*",
+        "/customer/tasks/:path*",
         "/service-provider/:path*",
     ],
 };
