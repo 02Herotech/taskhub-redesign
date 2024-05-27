@@ -1,3 +1,6 @@
+import DashboardSidebar from "@/components/dashboard/layout/DashboardSidebar";
+import Navigation from "@/components/layout/Navigation";
+import { Suspense } from "react";
   import Navigation from "@/components/layout/Navigation";
   import ServiceProviderSidebar from "@/components/serviceProviderDashboard/global/ServiceProviderSidebar";
   import { Suspense } from "react";
