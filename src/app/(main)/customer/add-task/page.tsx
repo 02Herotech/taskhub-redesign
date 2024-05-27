@@ -15,6 +15,7 @@ import Button from "@/components/global/Button";
 import { useSession } from "next-auth/react";
 import image from "../../../../../public/assets/images/customer/Task management.png";
 import img from "../../../../../public/assets/images/blend.png";
+import tick from "../../../../../public/assets/icons/tick.svg";
 import Image from "next/image";
 import Link from "next/link";
 interface FormData {
@@ -27,6 +28,7 @@ interface FormData {
   hubTime: string;
   taskAddress: string[];
   categoryId: number | null;
+  listingDescription: string;
 }
 
 interface Item {
@@ -47,6 +49,7 @@ interface PostalCodeData {
 const AddTaskForm: React.FC = () => {
   const session = useSession();
   const token = session?.data?.user.accessToken;
+  const auth = session?.status;
   const authenticated = session?.data?.user.user.enabled;
   const [currentPage, setCurrentPage] = useState(1);
   const defaultImageSrc =
@@ -61,6 +64,7 @@ const AddTaskForm: React.FC = () => {
     customerBudget: "",
     hubTime: "",
     categoryId: null,
+    listingDescription: ""
   });
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [selectedTime, setSelectedTime] = useState<Date | null>(null);
@@ -78,7 +82,9 @@ const AddTaskForm: React.FC = () => {
   const [isSuccessPopupOpen, setIsSuccessPopupOpen] = useState(false);
   const [postalCodeData, setPostalCodeData] = useState<PostalCodeData[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
-   const [items, setItems] = useState<Item[]>([]);
+  const [items, setItems] = useState<Item[]>([]);
+  const [wordCount, setWordCount] = useState(0);
+  const [wordCounts, setWordCounts] = useState(0);
 
   useEffect(() => {
     const fetchPostalCodeData = async () => {
@@ -202,7 +208,20 @@ const AddTaskForm: React.FC = () => {
   const handleChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
-    setTask({ ...task, [event.target.name]: event.target.value });
+    setTask({
+      ...task,
+      [event.target.name]: event.target.value,
+    });
+      setWordCount(event.target.value.split(/\s+/).filter(Boolean).length);
+  };
+
+  const handleDescription = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
+    setTask({
+      ...task,
+      listingDescription: event.target.value,
+    });
+   setWordCounts(event.target.value.split(/\s+/).filter(Boolean).length);
   };
 
   const handletaskImageUpload = (
@@ -354,6 +373,7 @@ const AddTaskForm: React.FC = () => {
           taskAddress: [],
           customerBudget: "",
           categoryId: null,
+          listingDescription: "",
         });
         console.log(finalTask);
         setIsSuccessPopupOpen(true);
@@ -371,27 +391,37 @@ const AddTaskForm: React.FC = () => {
           <div className="mb-10 grid items-center justify-center space-y-10">
             <form className="space-y-10 font-medium" onSubmit={nextPage}>
               <div className="grid space-y-3">
-                <label className="font-satoshiBold font-bold text-black">
+                <label className="font-satoshiBold font-bold text-black flex justify-between">
                   Briefly tell us what you need done?
+                  {wordCount > 5 && (
+                    <div className="text-[24px] font-extrabold text-green-800">
+                      <img src={tick} alt="tick" />
+                    </div>
+                  )}
                 </label>
-                <textarea
-                  className="h-full rounded-2xl bg-[#EBE9F4] p-3 outline-none placeholder:font-bold"
-                  placeholder="e.g, i need a junior league coach."
-                  name="taskDescription"
-                  value={task.taskDescription}
-                  onChange={handleChange}
-                  style={{ resize: "none", overflow: "hidden" }}
-                ></textarea>
+                  <textarea
+                    className="h-full w-full rounded-2xl bg-[#EBE9F4] p-3 outline-none placeholder:font-bold"
+                    placeholder="e.g, I need a junior league coach."
+                    name="taskDescription"
+                    value={task.taskDescription}
+                    onChange={handleChange}
+                    style={{ resize: "none", overflow: "hidden" }}
+                  ></textarea>
               </div>
               <div className="relative grid space-y-4">
-                <label className="font-semibold">
+                <label className="font-semibold flex justify-between">
                   What category best describes your task?
+                  {selectedCategory && (
+                    <div className="text-[24px] font-extrabold text-green-800">
+                      <img src={tick} alt="tick" />
+                    </div>
+                  )}
                 </label>
                 <select
                   value={selectedCategory || ""}
                   name="category"
                   onChange={handleCategoryChange}
-                  className="w-full h-full cursor-pointer appearance-none rounded-2xl bg-[#EBE9F4] p-3 text-[13px] outline-none"
+                  className="h-full w-full cursor-pointer appearance-none rounded-2xl bg-[#EBE9F4] p-3 text-[13px] outline-none"
                 >
                   <option value="">Category</option>
                   {items.map((item) => (
@@ -405,6 +435,23 @@ const AddTaskForm: React.FC = () => {
                   ))}
                 </select>
                 <IoMdArrowDropdown className="absolute right-5 top-10 cursor-pointer text-status-purpleBase" />
+              </div>
+              <div className="relative grid space-y-3">
+                <label className="flex justify-between font-semibold">
+                  Give a description of your task
+                  {wordCounts > 10 && (
+                    <div className="text-[24px] font-extrabold text-green-800">
+                      <img src={tick} alt="tick" />
+                    </div>
+                  )}
+                </label>
+                <textarea
+                  className=" h-[150px] rounded-2xl bg-[#EBE9F4] p-3 outline-none"
+                  placeholder="Arts and Craft"
+                  name="description"
+                  value={task.listingDescription}
+                  onChange={handleDescription}
+                ></textarea>
               </div>
               <div className=" space-y-3">
                 <label className="font-satoshiBold font-bold text-black">
@@ -667,7 +714,13 @@ const AddTaskForm: React.FC = () => {
                 ))}
               </div>
               <div className="flex justify-between">
-                <Button type="submit">Confirm Task</Button>
+                {auth === "authenticated" ? (
+                  <Button type="submit">Confirm Task</Button>
+                ) : (
+                  <Link href="/auth/login?from/customer/add-task">
+                    <Button type="button">Confirm Task</Button>
+                  </Link>
+                )}
                 <button
                   type="button"
                   onClick={prevPage}

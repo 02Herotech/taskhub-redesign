@@ -148,7 +148,7 @@ const HeroSection = () => {
           lg:px-3 py-2 text-[#EBE9F4] hover:bg-[#25135f] w-[250px] xl:w-[190px] lg:w-[155px]  "
                 >
 
-                  <Link href={`/auth/sign-up?${customerParams.toString()}`}>
+                  <Link href="/customer/add-task">
                   Post at no cost today
                   </Link>
 
