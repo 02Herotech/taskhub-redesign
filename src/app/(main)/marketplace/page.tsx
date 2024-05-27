@@ -96,11 +96,10 @@ const MareketPlace = () => {
           </div>
         </Popup>
       )}
-
       {!isFiltering && !isSearching && <MarketPlaceHeader />}
 
       <div
-        className={`mx-auto flex flex-col px-6 md:max-w-screen-2xl  ${(isFiltering || isSearching) && "pt-12"} `}
+        className={`mx-auto flex max-w-screen-2xl flex-col px-6 md:px-16  ${(isFiltering || isSearching) && "pt-12"} `}
       >
         <MarketPlaceFilter />
         <div>
@@ -128,6 +127,7 @@ const MareketPlace = () => {
                   {categories.map((item, index) => (
                     <BoxFilter
                       key={item.id}
+                      id={item.id}
                       category={item.categoryName}
                       Icon={categoryIcons[index]}
                     />

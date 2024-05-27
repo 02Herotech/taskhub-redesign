@@ -170,7 +170,7 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
             })}
           </div>
         )
-      ) : displayListing.length === 0 ? (
+      ) : displayListing.length === 0 && !ErrorMsg ? (
         <div className="flex min-h-40 flex-col items-center justify-center gap-4">
           <Image
             src={"/assets/images/marketplace/undraw_void_-3-ggu.svg"}

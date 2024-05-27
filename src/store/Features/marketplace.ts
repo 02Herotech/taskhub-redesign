@@ -63,20 +63,20 @@ export const marketSlice = createSlice({
     },
     updateFilterData: (state, action) => {
       const { data, section, value } = action.payload;
-      const prevFilter = state.filteredData || [];
+      const totalListing = state.listing;
+      let prevFilter = state.filteredData || [];
       let newFilter = [];
       if (!prevFilter.length) {
         return { ...state, filteredData: data };
       }
       switch (section) {
         case "category":
-          newFilter = prevFilter.filter(
-            (item) => item.category.categoryName === value,
-          );
+          newFilter = data;
           break;
         case "subCategory":
           newFilter = prevFilter.filter(
-            (item) => item.subCategory.name === value,
+            (item, index) =>
+              item.subCategory.name === data[index].subCategory.name,
           );
           break;
         case "location":
@@ -84,12 +84,15 @@ export const marketSlice = createSlice({
             (item) => item.suburb === value || item.state === value,
           );
           break;
-        // case "price":
-        //   newFilter = prevFilter.filter(
-        //     (item) =>
-        //       item.price >= value.minPrice && item.price <= value.maxPrice,
-        //   );
-        //   break;
+        case "price":
+          if (value) {
+            newFilter = prevFilter.filter(
+              (item) =>
+                item.planOnePrice >= value.minPrice &&
+                item.planOnePrice <= value.maxPrice,
+            );
+          }
+          break;
         default:
           newFilter = prevFilter;
           break;

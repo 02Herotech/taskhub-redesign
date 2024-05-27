@@ -1,14 +1,18 @@
-import Image from "next/image";
-import React from "react";
-import { FaStar } from "react-icons/fa";
+"use client";
+
+import { useSession } from "next-auth/react";
+import React, { useState } from "react";
 
 const Reviews = () => {
+  const session = useSession();
+  const isAuth = session?.data?.user?.accessToken;
+
   return (
     <section className="space-y-8 bg-status-lightViolet p-4 lg:p-10  ">
       <h1 className="mx-auto text-center text-2xl font-bold lg:text-4xl">
         Reviews/Testimonials from Satisfied Customer
       </h1>
-      <form className="flex items-center justify-center gap-4  ">
+      {/* <form className="flex items-center justify-center gap-4  ">
         <input
           type="text"
           placeholder="Let the provider know you feel..."
@@ -17,7 +21,7 @@ const Reviews = () => {
         <button className=" whitespace-nowrap rounded-xl bg-violet-normal px-4 py-3 text-white transition-colors duration-300 hover:opacity-90 max-md:text-sm lg:rounded-full">
           Add Review
         </button>
-      </form>
+      </form> */}
       <div className="flex min-h-40 items-center justify-center">
         <p className="animate-pulse text-lg font-medium">
           No current review ...
@@ -81,6 +85,17 @@ const Reviews = () => {
           </div>
         </div>
       </article> */}
+
+      {/* <section className="fixed left-0 top-0 flex h-screen w-screen items-center justify-center bg-black bg-opacity-70">
+        {
+          !isAuth && 
+            <div className="p-6 rounded-lg flex items-center justify-center flex-col gap-5">
+              <p>Kindly signin to leave a review</p>
+            </div>
+
+          
+        }
+      </section> */}
     </section>
   );
 };
