@@ -135,10 +135,17 @@ const ContactUsPage = () => {
                         {/* <p className="text-[#190E3F] text-xs lg:text-lg">Use the form below to send a message to Taskhub. We aim to answer all inquiries within 1-2 days, depending on the nature of the inquiry.</p> */}
 
                         <div className="flex items-center space-x-3">
-                            <FaLocationDot className="text-tc-orange w-[29px] h-[39px] lg:w-[35px] lg:h-[46px]" />
+                            <FaLocationDot className="text-tc-orange w-[29px] h-[39px] lg:w-[35px] lg:h/[46px]" />
                             <div className="">
                                 <h4 className="font-bold text-base lg:text-xl text-primary">Sydney Australia</h4>
-                                <p className="text-[#190E3F] text-xs lg:text-base font-medium">290 Maryam Springs 260, Courbevoie</p>
+                                <a
+                                    href="https://www.google.com/maps/search/?api=1&query=290+Maryam+Springs+260%2C+Courbevoie%2C+Sydney+Australia"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="text-[#190E3F] text-xs lg:text-base font-medium hover:underline"
+                                >
+                                    290 Maryam Springs 260, Courbevoie
+                                </a>
                             </div>
                         </div>
 
