@@ -41,7 +41,7 @@ const ServiceNotification = () => {
           >
             <div className="col-span-9 flex items-center gap-2">
               <Image
-                src={item.image}
+                src={item.image || "/assets/images/placeholder.jpeg"}
                 alt={item.jobLabel}
                 width={100}
                 height={100}

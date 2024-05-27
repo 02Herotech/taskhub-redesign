@@ -9,6 +9,8 @@ const ProfileHeader = () => {
   const user = session?.data?.user?.user;
   const isServiceProvider = user?.roles[0] === "SERVICE_PROVIDER";
   const editProfileLink = isServiceProvider ? "/service-provider/dashboard/profile/edit-profile" : "/customer/profile/edit-profile";
+  const createdAt = user?.registeredAt
+  console.log(createdAt)
 
   return (
     <>
