@@ -18,6 +18,22 @@ import img from "../../../../../public/assets/images/blend.png";
 import tick from "../../../../../public/assets/icons/tick.svg";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { setCookie, getCookie } from 'cookies-next'; // For setting and getting cookies 
+
+// defaultValues: {
+//   firstName: getCookie('firstName') || "",
+//     lastName: getCookie('lastName') || "",
+//       emailAddress: "",
+//         password: getCookie('password') || "",
+//           phoneNumber: getCookie('phoneNumber') || "",
+//             confirmPassword: getCookie('password') || "",
+//         },
+
+// HOW TO SET THE COOKIES, max age is 120 seconds i.e 
+// setCookie('firstName', payload.firstName, { maxAge: 60 * 10 });
+// setCookie('lastName', payload.lastName, { maxAge: 60 * 10 });
+
 interface FormData {
   taskDescription: string;
   taskImage?: File | null | Blob;
@@ -48,8 +64,9 @@ interface PostalCodeData {
 
 const AddTaskForm: React.FC = () => {
   const session = useSession();
+  const router = useRouter()
   const token = session?.data?.user.accessToken;
-  const auth = session?.status;
+  const isAuthenticated = session?.status === "authenticated";
   const authenticated = session?.data?.user.user.enabled;
   const [currentPage, setCurrentPage] = useState(1);
   const defaultImageSrc =
@@ -86,6 +103,10 @@ const AddTaskForm: React.FC = () => {
   const [wordCount, setWordCount] = useState(0);
   const [wordCounts, setWordCounts] = useState(0);
 
+  const handleLoginNavigation = () => {
+    router.push("/auth/login?from=/customer/add-task");
+  }
+
   useEffect(() => {
     const fetchPostalCodeData = async () => {
       try {
@@ -103,21 +124,21 @@ const AddTaskForm: React.FC = () => {
       fetchPostalCodeData();
     }
   }, [selectedCode]);
-   useEffect(() => {
-     const fetchItems = async () => {
-       try {
-         const response = await axios.get(
-           "https://smp.jacinthsolutions.com.au/api/v1/util/all-categories",
-         );
-         const data: Item[] = response.data;
-         setItems(data);
-       } catch (error) {
-         console.error("Error fetching items:", error);
-       }
-     };
+  useEffect(() => {
+    const fetchItems = async () => {
+      try {
+        const response = await axios.get(
+          "https://smp.jacinthsolutions.com.au/api/v1/util/all-categories",
+        );
+        const data: Item[] = response.data;
+        setItems(data);
+      } catch (error) {
+        console.error("Error fetching items:", error);
+      }
+    };
 
-     fetchItems();
-   }, []);
+    fetchItems();
+  }, []);
 
   const validateFields = () => {
     const errors: any = {};
@@ -183,16 +204,16 @@ const AddTaskForm: React.FC = () => {
     setIsSelectedTime(selectedValue);
   };
 
-    const handleCategoryChange = (
-      event: React.ChangeEvent<HTMLSelectElement>,
-    ) => {
-      const selectedId = parseInt(event.target.value);
-      setSelectedCategory(selectedId);
-      setTask({
-        ...task,
-        categoryId: selectedId,
-      });
-    };
+  const handleCategoryChange = (
+    event: React.ChangeEvent<HTMLSelectElement>,
+  ) => {
+    const selectedId = parseInt(event.target.value);
+    setSelectedCategory(selectedId);
+    setTask({
+      ...task,
+      categoryId: selectedId,
+    });
+  };
 
   const nextPage = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -608,22 +629,20 @@ const AddTaskForm: React.FC = () => {
               </h2>
               <div className="flex space-x-4 text-[13px] text-[#221354]">
                 <button
-                  className={`rounded-2xl p-2 ${
-                    activeButtonIndex === 0
-                      ? "bg-status-purpleBase text-white"
-                      : "bg-[#EBE9F4] hover:bg-status-purpleBase hover:text-white"
-                  } outline-none`}
+                  className={`rounded-2xl p-2 ${activeButtonIndex === 0
+                    ? "bg-status-purpleBase text-white"
+                    : "bg-[#EBE9F4] hover:bg-status-purpleBase hover:text-white"
+                    } outline-none`}
                   name="physical"
                   onClick={() => handleClick(0)}
                 >
                   Physical Service
                 </button>
                 <button
-                  className={`rounded-2xl p-2 ${
-                    activeButtonIndex === 1
-                      ? "bg-status-purpleBase text-white"
-                      : "bg-[#EBE9F4] hover:bg-status-purpleBase hover:text-white"
-                  } outline-none`}
+                  className={`rounded-2xl p-2 ${activeButtonIndex === 1
+                    ? "bg-status-purpleBase text-white"
+                    : "bg-[#EBE9F4] hover:bg-status-purpleBase hover:text-white"
+                    } outline-none`}
                   name="remote"
                   onClick={() => {
                     handleClick(1);
@@ -714,13 +733,8 @@ const AddTaskForm: React.FC = () => {
                 ))}
               </div>
               <div className="flex justify-between">
-                {auth === "authenticated" ? (
-                  <Button type="submit">Confirm Task</Button>
-                ) : (
-                  <Link href="/auth/login?from/customer/add-task">
-                    <Button type="button">Confirm Task</Button>
-                  </Link>
-                )}
+                {isAuthenticated && <Button type="submit">Confirm Task</Button>}
+                {!isAuthenticated && <Button type="button" onClick={handleLoginNavigation}>Confirmmmm Task</Button>}
                 <button
                   type="button"
                   onClick={prevPage}
@@ -744,19 +758,17 @@ const AddTaskForm: React.FC = () => {
       <div className="w-full">
         <div className="mb-3 flex justify-center space-x-5">
           <div
-            className={`${
-              currentPage === 1
-                ? "text-status-purpleBase"
-                : "text-status-purpleBase"
-            }`}
+            className={`${currentPage === 1
+              ? "text-status-purpleBase"
+              : "text-status-purpleBase"
+              }`}
           >
             <p className="flex items-center gap-2 text-[12px] md:text-[16px] lg:gap-3">
               <span
-                className={`${
-                  currentPage === 1
-                    ? "bg-status-purpleBase text-white"
-                    : "bg-status-purpleBase text-white"
-                } rounded-2xl border-none px-3 py-2`}
+                className={`${currentPage === 1
+                  ? "bg-status-purpleBase text-white"
+                  : "bg-status-purpleBase text-white"
+                  } rounded-2xl border-none px-3 py-2`}
               >
                 01
               </span>{" "}
@@ -767,17 +779,15 @@ const AddTaskForm: React.FC = () => {
             </p>
           </div>
           <div
-            className={`${
-              currentPage === 2 ? "text-status-purpleBase" : " text-[#716F78]"
-            }`}
+            className={`${currentPage === 2 ? "text-status-purpleBase" : " text-[#716F78]"
+              }`}
           >
             <p className="flex items-center gap-2 text-[12px] md:text-[16px] lg:gap-3">
               <span
-                className={`${
-                  currentPage === 2
-                    ? "bg-status-purpleBase text-white"
-                    : "bg-[#EAE9EB] text-[#716F78]"
-                } rounded-2xl border-none px-3 py-2`}
+                className={`${currentPage === 2
+                  ? "bg-status-purpleBase text-white"
+                  : "bg-[#EAE9EB] text-[#716F78]"
+                  } rounded-2xl border-none px-3 py-2`}
               >
                 02
               </span>{" "}
@@ -795,13 +805,12 @@ const AddTaskForm: React.FC = () => {
               {/* Progress bar */}
               <div className="h-1 w-2/3 overflow-hidden bg-[#EAE9EB]">
                 <div
-                  className={`h-full ${
-                    currentPage === 1
+                  className={`h-full ${currentPage === 1
+                    ? "bg-status-purpleBase"
+                    : currentPage === 2
                       ? "bg-status-purpleBase"
-                      : currentPage === 2
-                        ? "bg-status-purpleBase"
-                        : "bg-status-purpleBase"
-                  }`}
+                      : "bg-status-purpleBase"
+                    }`}
                   style={{ width: `${progress}%` }}
                 />
               </div>

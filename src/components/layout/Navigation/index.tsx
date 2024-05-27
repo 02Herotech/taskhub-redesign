@@ -32,7 +32,7 @@ const Navigation = () => {
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_API_URL}/auth/logout`,
       );
-      router.push("/marketplace");
+      router.push("/home");
     } catch (error: any) {
       console.log(error);
     }
