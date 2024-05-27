@@ -16,9 +16,13 @@ interface CategoryListingProps {
 
 const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
   const dispatch = useDispatch();
-  const { categories, listing, isFiltering, filteredData } = useSelector(
-    (state: RootState) => state.market,
-  );
+  const {
+    categories,
+    listing,
+    isFiltering,
+    filteredData,
+    search: { isSearching, searchData },
+  } = useSelector((state: RootState) => state.market);
 
   const [isLoading, setIsLoading] = useState(false);
   const [allListsting, setallListsting] = useState<ListingDataType2[]>([]);

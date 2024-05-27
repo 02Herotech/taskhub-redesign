@@ -2,7 +2,13 @@
 
 import EditProfileModal from "@/components/serviceProviderDashboard/profile/EditProfileModal";
 import Image from "next/image";
-import React, { useEffect, useState } from "react";
+import React, {
+  useEffect,
+  useState,
+  useRef,
+  useCallback,
+  ChangeEvent,
+} from "react";
 import { z } from "zod";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -12,6 +18,8 @@ import { BsPencilSquare } from "react-icons/bs";
 import { BiCheck } from "react-icons/bi";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import axios from "axios";
+import Webcam from "react-webcam";
 
 const EditProfile = () => {
   const [isEditingEnabled, setIsEditingEnabled] = useState(false);
@@ -21,10 +29,7 @@ const EditProfile = () => {
   const [documentImage, setDocumentImage] = useState<{ image: File | null }>({
     image: null,
   });
-  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
-  const handleDateChange = (date: Date | null) => {
-    setSelectedDate(date);
-  };
+  const [suburbList, setSuburbList] = useState<string[]>([]);
 
   const session = useSession();
   const user = session?.data?.user?.user;
@@ -33,8 +38,8 @@ const EditProfile = () => {
     firstName: z.string().min(2),
     lastName: z.string().min(2),
     dateOfBirth: z.date().nullable(),
-    phoneNumber: z.string(),
-    emailNumber: z.string(),
+    phoneNumber: z.string().min(10),
+    emailAddress: z.string().email(),
     postcode: z.string(),
     suburb: z.string(),
     state: z.string(),
@@ -51,6 +56,7 @@ const EditProfile = () => {
     formState: { errors },
     reset,
     watch,
+    setValue,
   } = useForm({
     resolver: zodResolver(userDataSchema),
     defaultValues: {
@@ -58,7 +64,7 @@ const EditProfile = () => {
       lastName: "",
       dateOfBirth: null,
       phoneNumber: "",
-      emailNumber: "",
+      emailAddress: "",
       postcode: "",
       suburb: "",
       state: "",
@@ -93,7 +99,7 @@ const EditProfile = () => {
         lastName: user?.lastName ?? "",
         dateOfBirth: null,
         phoneNumber: user?.phoneNumber ?? "",
-        emailNumber: user?.emailAddress ?? "",
+        emailAddress: user?.emailAddress ?? "",
         postcode: user?.address?.postCode ?? "",
         suburb: user?.address?.suburb ?? "",
         state: user?.address?.state ?? "",
@@ -108,6 +114,27 @@ const EditProfile = () => {
     setIsEditingEnabled(false);
     const newUserData = { ...data, documentImage: documentImage.image };
   };
+
+  useEffect(() => {
+    const handleFectchLocationByPostcode = async () => {
+      try {
+        const url =
+          "https://smp.jacinthsolutions.com.au/api/v1/util/locations/search?postcode=" +
+          watchField.postcode;
+        const { data } = await axios.get(url);
+        const suburb = data.map((item: any) => item.name);
+        setSuburbList(suburb);
+        const state = data[0].state.name;
+        setValue("state", state);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    handleFectchLocationByPostcode();
+    // eslint-disable-next-line
+  }, [watchField.postcode]);
+
+  console.log(watchField.suburb);
 
   return (
     <main className=" relative p-4 lg:p-8">
@@ -160,6 +187,7 @@ const EditProfile = () => {
               </span>
               <input
                 type="text"
+                disabled={!isEditingEnabled}
                 className="rounded-xl border border-slate-100 p-2 text-slate-700 shadow  outline-none transition-shadow duration-300 hover:shadow-md lg:max-w-sm "
                 {...register("firstName")}
               />
@@ -168,12 +196,13 @@ const EditProfile = () => {
             <label className="flex w-full flex-col gap-3 text-lg  text-violet-normal lg:max-w-64 ">
               <span className="flex items-center justify-between">
                 <span>Last Name</span>
-                {!errors.firstName && watchField.lastName?.length >= 3 && (
+                {!errors.lastName && watchField.lastName?.length >= 3 && (
                   <BiCheck className="size-5 rounded-full bg-green-500 p-1 text-white" />
                 )}
               </span>
               <input
                 type="text"
+                disabled={!isEditingEnabled}
                 className="rounded-xl border border-slate-100 p-2 text-slate-700 shadow  outline-none transition-shadow duration-300 hover:shadow-md lg:max-w-sm "
                 {...register("lastName")}
               />
@@ -182,7 +211,7 @@ const EditProfile = () => {
             <label className="flex w-full flex-col gap-3 text-lg  text-violet-normal lg:max-w-64 ">
               <span className="flex items-center justify-between">
                 <span> Date of Birth</span>
-                {!errors.firstName && watchField.dateOfBirth !== null && (
+                {!errors.dateOfBirth && watchField.dateOfBirth !== null && (
                   <BiCheck className="size-5 rounded-full bg-green-500 p-1 text-white" />
                 )}
               </span>
@@ -191,6 +220,7 @@ const EditProfile = () => {
                 name="dateOfBirth"
                 render={({ field: { onChange, onBlur, value } }) => (
                   <DatePicker
+                    disabled={!isEditingEnabled}
                     selected={value}
                     onChange={onChange}
                     onBlur={onBlur}
@@ -204,133 +234,160 @@ const EditProfile = () => {
         </section>
 
         {/* contact details */}
-        <section className="flex flex-col flex-wrap justify-between gap-4  lg:grid lg:grid-cols-12">
-          <div className=" space-y-4 lg:col-span-4 ">
-            <h3 className="text-base font-bold text-slate-800">
-              Contact Information
-            </h3>
-            <p className="text-sm text-slate-500">
-              Updating your personal information is important to keep your
-              account secure
-            </p>
-          </div>
+        <section className="flex flex-col gap-4 ">
+          <h3 className="text-xl font-bold text-violet-dark lg:text-center">
+            Contact Information
+          </h3>
           <div className="flex flex-wrap gap-6 lg:col-span-8">
-            <div className="flex w-full flex-col gap-3 lg:max-w-64 ">
-              <label htmlFor="phoneNumber" className="text-sm text-slate-500">
-                Phone Number
-              </label>
+            {/* Phone number */}
+            <label className="flex w-full flex-col gap-3 text-lg  text-violet-normal lg:max-w-64 ">
+              <span className="flex items-center justify-between">
+                <span> Phone Number</span>
+                {!errors.phoneNumber && watchField.phoneNumber.length >= 12 && (
+                  <BiCheck className="size-5 rounded-full bg-green-500 p-1 text-white" />
+                )}
+              </span>
               <input
-                // type="text"
+                type="text"
                 id="phoneNumber"
                 className="rounded-xl border border-slate-100 p-2 text-slate-700 shadow  outline-none transition-shadow duration-300 hover:shadow-md lg:max-w-sm "
                 {...register("phoneNumber")}
                 disabled={!isEditingEnabled}
               />
-              {errors.phoneNumber && (
-                <p className="text-red-600">{errors.phoneNumber.message}</p>
-              )}
-            </div>
-
-            <div className="flex w-full flex-col gap-3 lg:max-w-64 ">
-              <label htmlFor="emailAddress" className="text-sm text-slate-500">
-                Email Address
-              </label>
+            </label>
+            {/* Email Address */}
+            <label className="flex w-full flex-col gap-3 text-lg  text-violet-normal lg:max-w-64 ">
+              <span className="flex items-center justify-between">
+                <span>Email Address</span>
+                {!errors.emailAddress &&
+                  watchField.emailAddress.length >= 2 && (
+                    <BiCheck className="size-5 rounded-full bg-green-500 p-1 text-white" />
+                  )}
+              </span>
               <input
-                // type="text"
-                id="emailAddress"
+                type="email"
+                readOnly
                 className="rounded-xl border border-slate-100 p-2 text-slate-700 shadow  outline-none transition-shadow duration-300 hover:shadow-md lg:max-w-sm "
-                {...register("emailNumber")}
-                disabled={!isEditingEnabled}
+                {...register("emailAddress")}
               />
-              {errors.emailNumber && (
-                <p className="text-red-600">{errors.emailNumber.message}</p>
-              )}
-            </div>
+            </label>
           </div>
         </section>
         {/* Address Information */}
-        <section className="flex flex-col flex-wrap justify-between gap-4  lg:grid lg:grid-cols-12">
-          <div className=" space-y-4 lg:col-span-4 ">
-            <h3 className="text-base font-bold text-slate-800">
-              Address Information
-            </h3>
-            <p className="text-sm text-slate-500">
-              Update your address information so customers around can find you.
-            </p>
-          </div>
+        <section className="flex flex-col gap-4 ">
+          <h3 className="text-xl font-bold text-violet-dark lg:text-center">
+            Address Information
+          </h3>
+
           <div className="flex flex-wrap gap-6 lg:col-span-8">
-            <div className="flex w-full flex-col gap-3 lg:max-w-64 ">
-              <label htmlFor="postalCode" className="text-sm text-slate-500">
-                Postal Code
-              </label>
+            {/* postcode */}
+            <label className="flex w-full flex-col gap-3 text-lg  text-violet-normal lg:max-w-64 ">
+              <span className="flex items-center justify-between">
+                <span>Postal Code</span>
+                {suburbList.length > 0 && watchField.postcode.length > 0 && (
+                  <BiCheck className="size-5 rounded-full bg-green-500 p-1 text-white" />
+                )}
+              </span>
               <input
-                // type="text"
-                id="postalCode"
+                type="text"
                 className="rounded-xl border border-slate-100 p-2 text-slate-700 shadow  outline-none transition-shadow duration-300 hover:shadow-md lg:max-w-sm "
                 {...register("postcode")}
-                disabled
+                disabled={!isEditingEnabled}
               />
-              {errors.postcode && (
-                <p className="text-red-600">{errors.postcode.message}</p>
-              )}
-            </div>
-            <div className="flex w-full flex-col gap-3 lg:max-w-64 ">
-              <label htmlFor="suburb" className="text-sm text-slate-500">
-                Suburb
-              </label>
-              <input
-                // type="text"
-                id="suburb"
-                className="rounded-xl border border-slate-100 p-2 text-slate-700 shadow  outline-none transition-shadow duration-300 hover:shadow-md lg:max-w-sm "
+            </label>
+
+            {/* suburb */}
+            <label className="flex w-full flex-col gap-3 text-lg  text-violet-normal lg:max-w-64 ">
+              <span className="flex items-center justify-between">
+                <span> Suburb</span>
+                {!errors.suburb && watchField.suburb.length > 0 && (
+                  <BiCheck className="size-5 rounded-full bg-green-500 p-1 text-white" />
+                )}
+              </span>
+              <select
                 {...register("suburb")}
-                disabled
-              />
-              {errors.suburb && (
-                <p className="text-red-600">{errors.suburb.message}</p>
-              )}
-            </div>
-            <div className="flex w-full flex-col gap-3 lg:max-w-64 ">
-              <label htmlFor="state" className="text-sm text-slate-500">
-                State
-              </label>
+                className="rounded-xl border border-slate-100 p-2 py-2.5 text-slate-700 shadow  outline-none transition-shadow duration-300 hover:shadow-md lg:max-w-sm "
+                disabled={!isEditingEnabled || suburbList.length === 0}
+              >
+                {suburbList.map((item) => (
+                  <option value={item} key={item}>
+                    {item}
+                  </option>
+                ))}
+              </select>
+            </label>
+
+            {/* State */}
+            <label className="flex w-full flex-col gap-3 text-lg  text-violet-normal lg:max-w-64 ">
+              <span className="flex items-center justify-between">
+                <span> State</span>
+                {!errors.state && watchField.state.length > 0 && (
+                  <BiCheck className="size-5 rounded-full bg-green-500 p-1 text-white" />
+                )}
+              </span>
               <input
-                id="state"
+                readOnly
                 className="rounded-xl border border-slate-100 p-2 text-slate-700 shadow  outline-none transition-shadow duration-300 hover:shadow-md lg:max-w-sm "
                 {...register("state")}
-                disabled
               />
-              {errors.state && (
-                <p className="text-red-600">{errors.state.message}</p>
-              )}
-            </div>
+            </label>
           </div>
         </section>
         {/* Identification Document */}
-        <section className="flex flex-col flex-wrap justify-between gap-4  lg:grid lg:grid-cols-12">
-          <div className=" space-y-4 lg:col-span-4 ">
-            <h3 className="text-base font-bold text-slate-800">
-              Identification Document
-            </h3>
-            <p className="text-sm text-slate-500">
-              You can upload one or multiple documents as proof od identity.
-            </p>
-          </div>
-          <div className="flex flex-wrap gap-6 lg:col-span-8">
-            <div className="flex w-full flex-col gap-3 lg:max-w-64 ">
-              <label htmlFor="medicareId" className="text-sm text-slate-500">
-                Medicare 1D Number
-              </label>
-              <input
-                // type="text"
-                id="medicareId"
-                className="rounded-xl border border-slate-100 p-2 text-slate-700 shadow  outline-none transition-shadow duration-300 hover:shadow-md lg:max-w-sm "
-                {...register("medicareId")}
-                disabled={!isEditingEnabled}
-              />
-              {errors.medicareId && (
-                <p className="text-red-600">{errors.medicareId.message}</p>
-              )}
-            </div>
+        <section className="flex flex-col gap-4 ">
+          <h3 className="text-xl font-bold text-violet-dark lg:text-center">
+            Identification Document
+          </h3>
+          <div className="flex flex-wrap gap-2 lg:col-span-8">
+            {/* Upload Identification Document */}
+            <label className="flex w-full flex-col gap-3 text-lg  text-violet-normal lg:max-w-64 ">
+              <span className="flex items-center justify-between">
+                <span>Means of ID</span>
+              </span>
+              <div>
+                {documentImage.image ? (
+                  <div className="flex items-end justify-center space-x-2">
+                    {/* Display a disabled input with message */}
+                    <label
+                      htmlFor="file-upload"
+                      className="flex h-48 w-1/2 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-slate-200 p-4"
+                    >
+                      <PiFileArrowDownDuotone className="text-xl text-tc-gray" />
+                      <span className="text-center text-tc-gray">
+                        Image Uploaded
+                      </span>
+                    </label>
+                    <button
+                      className="rounded-lg bg-tc-gray px-3 py-1 text-white"
+                      onClick={handleRemoveDocumentImage}
+                      type="button"
+                    >
+                      Remove
+                    </button>
+                  </div>
+                ) : (
+                  // If no taskImage is uploaded, render the file input
+                  <label
+                    htmlFor="file-upload"
+                    className="flex h-48 w-1/2 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-slate-500 p-4"
+                  >
+                    <PiFileArrowDownDuotone className="text-xl text-tc-gray" />
+                    <span className="text-center text-tc-gray">
+                      Choose a File Upload supports: JPG, PDF, PNG.
+                    </span>
+                    <input
+                      id="file-upload"
+                      type="file"
+                      accept=".png, .jpg, .jpeg, .gif"
+                      className="hidden"
+                      onChange={(e) => handleSetDocumentImage(e)}
+                      disabled={!isEditingEnabled}
+                    />
+                  </label>
+                )}
+              </div>
+            </label>
+
             <div className="flex w-full flex-col gap-3 lg:max-w-64 ">
               <label htmlFor="driverlicence" className="text-sm text-slate-500">
                 Driver’s Licence Number
@@ -344,52 +401,6 @@ const EditProfile = () => {
               />
               {errors.driverLicence && (
                 <p className="text-red-600">{errors.driverLicence.message}</p>
-              )}
-            </div>
-            <div className="grid space-y-3">
-              <label className="text-sm text-slate-500">
-                Upload identification document
-              </label>
-              {/* Check if taskImage is uploaded */}
-              {documentImage.image ? (
-                <div className="flex items-end justify-center space-x-2">
-                  {/* Display a disabled input with message */}
-                  <label
-                    htmlFor="file-upload"
-                    className="flex h-48 w-1/2 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-slate-200 p-4"
-                  >
-                    <PiFileArrowDownDuotone className="text-xl text-tc-gray" />
-                    <span className="text-center text-tc-gray">
-                      Image Uploaded
-                    </span>
-                  </label>
-                  <button
-                    className="rounded-lg bg-tc-gray px-3 py-1 text-white"
-                    onClick={handleRemoveDocumentImage}
-                    type="button"
-                  >
-                    Remove
-                  </button>
-                </div>
-              ) : (
-                // If no taskImage is uploaded, render the file input
-                <label
-                  htmlFor="file-upload"
-                  className="flex h-48 w-1/2 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-slate-500 p-4"
-                >
-                  <PiFileArrowDownDuotone className="text-xl text-tc-gray" />
-                  <span className="text-center text-tc-gray">
-                    Choose a File Upload supports: JPG, PDF, PNG.
-                  </span>
-                  <input
-                    id="file-upload"
-                    type="file"
-                    accept=".png, .jpg, .jpeg, .gif"
-                    className="hidden"
-                    onChange={(e) => handleSetDocumentImage(e)}
-                    disabled={!isEditingEnabled}
-                  />
-                </label>
               )}
             </div>
           </div>

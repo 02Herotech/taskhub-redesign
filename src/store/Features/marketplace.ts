@@ -8,12 +8,16 @@ interface MarketSliceTypes {
     subCategory: SubCategoryType;
     location: string;
     pricing: { minPrice: number; maxPrice: number };
-    search: string;
+  };
+  search: {
+    isSearching: boolean;
+    searchData: string;
   };
   categories: CategoryType[];
   listing: ListingDataType2[];
   isFiltering: boolean;
   filteredData: ListingDataType2[];
+  isFilteringLoading: boolean;
 }
 
 const initialState: MarketSliceTypes = {
@@ -22,12 +26,16 @@ const initialState: MarketSliceTypes = {
     subCategory: { id: 0, name: "" },
     location: "",
     pricing: { minPrice: 5, maxPrice: 1000 },
-    search: "",
+  },
+  search: {
+    isSearching: false,
+    searchData: "",
   },
   categories: [],
   listing: [],
   isFiltering: false,
   filteredData: [],
+  isFilteringLoading: false,
 };
 
 export const marketSlice = createSlice({
@@ -49,11 +57,6 @@ export const marketSlice = createSlice({
       const categories = action.payload;
       return { ...state, categories };
     },
-    // updateCurrentCategories: (state, action) => {
-    //   const currentSubCate = action.payload;
-    //   return { ...state, categories };
-    // },
-
     updateListingArray: (state, action) => {
       const listing = action.payload;
       return { ...state, listing };
@@ -92,6 +95,18 @@ export const marketSlice = createSlice({
           break;
       }
       return { ...state, filteredData: newFilter };
+    },
+    resetFilter: (state, action) => {
+      return {
+        ...state,
+        isFiltering: false,
+        currentFilterStatus: {
+          category: "",
+          subCategory: { id: 0, name: "" },
+          location: "",
+          pricing: { minPrice: 5, maxPrice: 1000 },
+        },
+      };
     },
     tempUpdateFilterData: (state, action) => {
       const { section, value } = action.payload;
@@ -132,6 +147,10 @@ export const marketSlice = createSlice({
       }
       return { ...state, filteredData: newFilter };
     },
+    updateSearchListing: (state, action) => {
+      const searchData = action.payload;
+      return { ...state, search: { isSearching: true, searchData } };
+    },
   },
 });
 
@@ -140,7 +159,9 @@ export const {
   updateCategories,
   updateListingArray,
   updateFilterData,
+  resetFilter,
   tempUpdateFilterData,
+  updateSearchListing,
 } = marketSlice.actions;
 
 export default marketSlice.reducer;

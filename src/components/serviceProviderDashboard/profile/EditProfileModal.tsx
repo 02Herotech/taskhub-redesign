@@ -1,8 +1,17 @@
 "use client";
 
-import React, { Dispatch, SetStateAction, useState } from "react";
+import Image from "next/image";
+import React, {
+  ChangeEvent,
+  Dispatch,
+  SetStateAction,
+  useCallback,
+  useRef,
+  useState,
+} from "react";
 import { BiCheck, BiXCircle } from "react-icons/bi";
 import { PiFileArrowDownDuotone } from "react-icons/pi";
+import Webcam from "react-webcam";
 
 type ModalPropsTypes = {
   setIsFormModalShown: Dispatch<SetStateAction<boolean>>;
@@ -18,6 +27,32 @@ const EditProfileModal = ({
   const [documentImage, setDocumentImage] = useState<{ image: File | null }>({
     image: null,
   });
+
+  // handlig image upload
+  const [imageSrc, setImageSrc] = useState<string | null>(null);
+  const [cameraActive, setCameraActive] = useState<boolean>(false);
+  const webcamRef = useRef<Webcam>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const capture = useCallback(() => {
+    if (webcamRef.current) {
+      const imageSrc = webcamRef.current.getScreenshot();
+      setImageSrc(imageSrc);
+      setCameraActive(false);
+    }
+  }, [webcamRef]);
+
+  const handleFileInputChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImageSrc(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+  //  ----------------------
 
   const handleSetDocumentImage = (
     event: React.ChangeEvent<HTMLInputElement>,
@@ -46,80 +81,84 @@ const EditProfileModal = ({
     // setDocumentImage({ image: null });
   };
 
+  const handleFileUpload = () => {
+    setCameraActive(false);
+    fileInputRef.current?.click();
+  };
+
   return (
     <section
-      className={`fixed left-0 top-0 z-40 flex h-screen w-screen items-center justify-center bg-black bg-opacity-60 transition-opacity duration-500 ${isFormModalShown ? "pointer-events-auto opacity-100 " : "pointer-events-none opacity-0"} `}
+      className={`fixed left-0 top-0 z-50 flex h-screen w-screen items-center justify-center bg-black bg-opacity-60 transition-opacity duration-500 ${isFormModalShown ? "pointer-events-auto opacity-100 " : "pointer-events-none opacity-0"} `}
     >
-      <div className="relative w-[90%] max-w-xl  space-y-10 rounded-3xl bg-white p-4  lg:p-10 ">
+      <div className="relative w-[90%] max-w-xl rounded-3xl bg-white p-4  lg:p-10 ">
+        {/* close modal button */}
         <button
           className="absolute right-6 top-3 rounded-full bg-violet-light p-2"
           onClick={handleCloseModal}
         >
           <BiXCircle className=" h-6 w-6 text-violet-normal" />
         </button>
+
         {isUploadInitiated ? (
-          isUploadCompleted ? (
-            <div className="min-h-89 flex flex-col items-center justify-center gap-4">
-              <h2 className="text-center text-3xl font-bold text-violet-normal">
-                Document Recieved and Awaiting validation
-              </h2>
-              <p className="text-center text-violet-normal">
-                We will get back to you shortly
-              </p>
-            </div>
-          ) : (
-            <div className=" flex flex-col items-center justify-center space-y-3">
-              <label className=" text-slate-500">Upload Profile Picture</label>
-              {/* Check if taskImage is uploaded */}
-              {documentImage.image ? (
-                <div className="flex flex-col items-center justify-center gap-2">
-                  {/* Display a disabled input with message */}
-                  <label
-                    htmlFor="file-upload"
-                    className="flex h-48 w-1/2 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-slate-200 p-4"
-                  >
-                    <PiFileArrowDownDuotone className="text-xl text-tc-gray" />
-                    <span className="w-full min-w-80 text-center text-tc-gray">
-                      Image Uploaded
-                    </span>
-                  </label>
-                  <button
-                    className="rounded-lg bg-tc-gray px-3 py-1 text-white"
-                    onClick={handleRemoveDocumentImage}
-                    type="button"
-                  >
-                    Remove
-                  </button>
-                </div>
-              ) : (
-                // If no taskImage is uploaded, render the file input
-                <label
-                  htmlFor="file-upload"
-                  className="flex h-48 w-1/2 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-slate-500 p-4"
+          <div className=" flex flex-col items-center justify-center gap-5 space-y-3">
+            <label className=" text-slate-500">Upload Profile Picture</label>
+            <div className="space-y-4">
+              <div className="flex items-center gap-4">
+                <button
+                  className=" rounded-full bg-violet-light px-4 py-2 font-medium text-violet-normal transition-all duration-300 hover:bg-violet-200"
+                  onClick={() => setCameraActive(true)}
                 >
+                  Take a Picture
+                </button>
+                <button
+                  className=" rounded-full bg-violet-light px-4 py-2 font-medium text-violet-normal transition-all duration-300 hover:bg-violet-200"
+                  onClick={handleFileUpload}
+                >
+                  Choose from Documents
+                </button>
+                <label className=" hidden h-48 w-1/2 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-slate-500 p-4">
                   <PiFileArrowDownDuotone className="text-xl text-tc-gray" />
                   <span className="text-center text-tc-gray">
                     Choose a File Upload supports: JPG, PDF, PNG.
                   </span>
                   <input
-                    id="file-upload"
+                    ref={fileInputRef}
                     type="file"
                     accept=".png, .jpg, .jpeg, .gif"
                     className="hidden"
-                    onChange={(e) => handleSetDocumentImage(e)}
-                    disabled={!isUploadInitiated}
+                    onChange={handleFileInputChange}
                   />
                 </label>
+              </div>
+              {cameraActive && !imageSrc && (
+                <div>
+                  <Webcam
+                    audio={false}
+                    ref={webcamRef}
+                    screenshotFormat="image/jpeg"
+                  />
+                  <button onClick={capture}>Capture</button>
+                </div>
               )}
-              <button
-                onClick={handleUploadAllDocument}
-                className="my-3 rounded-full bg-violet-normal px-4 py-2 text-white transition-opacity duration-300 hover:opacity-90 "
-                disabled={!documentImage.image}
-              >
-                Upload Document
-              </button>
+              {imageSrc && (
+                <div>
+                  <Image
+                    src={imageSrc}
+                    alt="Captured or Selected"
+                    width={400}
+                    height={400}
+                  />
+                </div>
+              )}
             </div>
-          )
+            <button
+              onClick={handleUploadAllDocument}
+              className="my-3 rounded-full bg-violet-normal px-4 py-2 text-white transition-opacity duration-300 hover:opacity-90 "
+              disabled={!documentImage.image}
+            >
+              Upload Document
+            </button>
+          </div>
         ) : (
           <div className="space-y-4">
             <h1 className="text-2xl font-bold text-violet-dark">

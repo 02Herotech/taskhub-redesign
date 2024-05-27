@@ -1,12 +1,11 @@
 import { FiSearch } from "react-icons/fi";
-import { IoClose } from "react-icons/io5";
-import Link from "next/link";
 import axios from "axios";
 import {
+  resetFilter,
   tempUpdateFilterData,
   updateFilterData,
 } from "@/store/Features/marketplace";
-import { BsFilterSquare, BsTriangle, BsTriangleFill } from "react-icons/bs";
+import { BsTriangleFill } from "react-icons/bs";
 import { FormEvent, useEffect, useState } from "react";
 import {
   fetchAllMarketplaseCategories,
@@ -17,9 +16,8 @@ import { RootState } from "@/store";
 import {
   updateCategories,
   updateFilterStatus,
+  updateSearchListing,
 } from "@/store/Features/marketplace";
-import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
 import ReactSlider from "react-slider";
 import { GiSettingsKnobs } from "react-icons/gi";
 import MobileFilterModal from "../MobileFilterModal";
@@ -38,10 +36,9 @@ const locationData = [
 const MarketPlaceFilter = () => {
   const dispatch = useDispatch();
   const {
-    currentFilterStatus: { category, subCategory, location, pricing, search },
+    currentFilterStatus: { category, subCategory, location, pricing },
     categories,
-    filteredData,
-    isFiltering,
+    search: { searchData },
   } = useSelector((state: RootState) => state.market);
 
   const [isDropdownOpen, setIsDropdownOpen] = useState({
@@ -61,10 +58,6 @@ const MarketPlaceFilter = () => {
     handleShowDropdown("search");
   };
 
-  const handleReload = () => {
-    window.location.reload();
-  };
-
   useEffect(() => {
     const fetchData = async () => {
       const categoryData: CategoryType[] =
@@ -75,10 +68,48 @@ const MarketPlaceFilter = () => {
     // eslint-disable-next-line
   }, []);
 
-  const handleFilerByPricing = (title: string) => {
-    handleShowDropdown(title);
+  const handleFilterByPricing = async (minPrice: number, maxPrice: number) => {
+    console.log(minPrice, maxPrice);
+    dispatch(
+      updateFilterStatus({
+        title: "pricing",
+        value: { minPrice, maxPrice },
+      }),
+    );
+    // delay the slider request for some seconds
+    function debounce<T extends (...args: any[]) => void>(
+      func: T,
+      wait: number,
+    ): (...args: Parameters<T>) => void {
+      let timeout: NodeJS.Timeout;
+      return function (this: any, ...args: Parameters<T>): void {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => {
+          func.apply(this, args);
+        }, wait);
+      };
+    }
+    // fetch user data by price
+    const fetchSliderResult = async () => {
+      const url =
+        "https://smp.jacinthsolutions.com.au/api/v1/listing/price/0?minPrice=" +
+        minPrice +
+        "&maxPrice=" +
+        maxPrice;
+      const { data } = await axios.get(url);
+      dispatch(
+        updateFilterData({
+          data: data.content,
+          section: "subCategory",
+          value: category,
+        }),
+      );
+    };
+    const debouncedHandleFilterByPricing = debounce(fetchSliderResult, 300);
+    debouncedHandleFilterByPricing();
   };
-  const handleCanelFilterByPricing = (title: string) => {
+
+  const handleCanelFilterByPricing = async (title: string) => {
     handleShowDropdown(title);
     dispatch(
       updateFilterStatus({
@@ -89,14 +120,9 @@ const MarketPlaceFilter = () => {
         },
       }),
     );
-    dispatch(
-      tempUpdateFilterData({
-        section: "pricing",
-        value: { minPrice: pricing.minPrice, maxPrice: pricing.maxPrice },
-      }),
-    );
   };
 
+  // Filter by category
   const handleFetchSubCategory = async (
     id: number,
     category: string,
@@ -107,14 +133,20 @@ const MarketPlaceFilter = () => {
       await fetchMarketplaceSubCategoryById(id);
     setSubCategories(subcategoryData);
     handleShowDropdown(title);
-    // ----------------
+
     // filter by category
     const url =
-      "https://smp.jacinthsolutions.com.au/api/v1/listing/listing-by-category/1?pageNumber=0";
-
-    // const { data } = await axios.get(url);
-    // dispatch(updateFilterData({ data, section: "category", value: category }));
-    dispatch(tempUpdateFilterData({ section: "category", value: category }));
+      "https://smp.jacinthsolutions.com.au/api/v1/listing/listing-by-category/" +
+      id +
+      "?pageNumber=0";
+    const { data } = await axios.get(url);
+    dispatch(
+      updateFilterData({
+        data: data.content,
+        section: "subCategory",
+        value: category,
+      }),
+    );
   };
 
   const handleFilterDataBySubcategory = async (
@@ -125,15 +157,17 @@ const MarketPlaceFilter = () => {
     dispatch(updateFilterStatus({ title, value: subCategory }));
     handleShowDropdown(title);
     // ----------------
-    // const url =
-    //   "https://smp.jacinthsolutions.com.au/api/v1/listing/listing-by-sub-category/" +
-    //   subCategory.id;
-    // const { data } = await axios.get(url);
-    // dispatch(
-    //   updateFilterData({ data, section: "subCategory", value: category }),
-    // );
+    const url =
+      "https://smp.jacinthsolutions.com.au/api/v1/listing/listing-by-sub-category/1" +
+      subCategory.id +
+      "?pageNumber=0";
+    const { data } = await axios.get(url);
     dispatch(
-      tempUpdateFilterData({ section: "subCategory", value: subCategory }),
+      updateFilterData({
+        data: data.content,
+        section: "subCategory",
+        value: category,
+      }),
     );
   };
 
@@ -149,6 +183,21 @@ const MarketPlaceFilter = () => {
     } else {
       setIsDropdownOpen((prev) => ({ ...prev, isOpened: true, category }));
     }
+  };
+
+  const handleFilterBySearch = async (searchData: string) => {
+    dispatch(updateSearchListing(searchData));
+    const url =
+      "https://smp.jacinthsolutions.com.au/api/v1/listing/text/0?text=" +
+      searchData;
+    const { data } = await axios.get(url);
+    dispatch(
+      updateFilterData({
+        data: data.content,
+        section: "search",
+        value: searchData,
+      }),
+    );
   };
 
   return (
@@ -183,7 +232,7 @@ const MarketPlaceFilter = () => {
           <div className="flex space-x-2 text-xs lg:space-x-6 ">
             <button
               className="cursor-pointer rounded-3xl bg-violet-normal px-4 py-2 text-base  font-bold text-white"
-              onClick={handleReload}
+              onClick={() => dispatch(resetFilter(""))}
             >
               All
             </button>
@@ -298,7 +347,7 @@ const MarketPlaceFilter = () => {
             </div>
             {/* ----------------------------------------- */}
             {/* Pricing */}
-            <div className="relative">
+            <div className="relative z-20">
               <button
                 className="flex items-center gap-2 rounded-3xl border border-violet-normal  bg-violet-light px-4 py-2 text-base font-bold text-violet-normal transition-colors duration-300 hover:bg-violet-200 "
                 onClick={() => handleShowDropdown("pricing")}
@@ -312,7 +361,7 @@ const MarketPlaceFilter = () => {
                 </span>
               </button>
               <div
-                className={`small-scrollbar absolute top-[calc(100%+1rem)] flex max-h-0 min-w-full flex-col rounded-md bg-violet-50 transition-all duration-300 ${isDropdownOpen.category === "pricing" && isDropdownOpen.isOpened ? "max-h-64 overflow-y-auto border border-slate-200 " : "max-h-0  overflow-hidden "} `}
+                className={`small-scrollbar absolute top-[calc(100%+1rem)] z-50 flex max-h-0 min-w-full flex-col rounded-md bg-violet-50 transition-all duration-300 ${isDropdownOpen.category === "pricing" && isDropdownOpen.isOpened ? "max-h-64 overflow-y-auto border border-slate-200 " : "max-h-0  overflow-hidden "} `}
               >
                 <div className="space-y-4 p-4">
                   <div className="min-w-64 p-4">
@@ -327,22 +376,24 @@ const MarketPlaceFilter = () => {
                       min={5}
                       max={1000}
                       step={5}
-                      onChange={(newValues: number[]) =>
-                        dispatch(
-                          updateFilterStatus({
-                            title: "pricing",
-                            value: {
-                              minPrice: newValues[0],
-                              maxPrice: newValues[1],
-                            },
-                          }),
-                        )
+                      onChange={
+                        (newValues: number[]) =>
+                          handleFilterByPricing(newValues[0], newValues[1])
+                        // dispatch(
+                        //   updateFilterStatus({
+                        //     title: "pricing",
+                        //     value: {
+                        //       minPrice: newValues[0],
+                        //       maxPrice: newValues[1],
+                        //     },
+                        //   }),
+                        // )
                       }
                     />
                   </div>
                   <div className="flex items-center gap-4 ">
                     <button
-                      onClick={() => handleFilerByPricing("pricing")}
+                      // onClick={() => handleFilterByPricing("")}
                       className=" rounded-full  bg-violet-normal px-4 py-2 text-left text-sm text-white transition-opacity duration-300 hover:opacity-90 "
                     >
                       Apply
@@ -361,6 +412,7 @@ const MarketPlaceFilter = () => {
         </div>
       </div>
 
+      {/* Search form */}
       <div className="flex justify-between gap-4 py-4 max-md:flex-col md:gap-8  lg:items-center  ">
         <div className="">
           <h1 className="text-xl font-bold text-violet-dark md:text-3xl">
@@ -377,19 +429,12 @@ const MarketPlaceFilter = () => {
           onSubmit={(event) => handleSubmit(event)}
           className="flex w-full items-center gap-2  lg:max-w-sm"
         >
-          <div className="relative w-full">
+          <div className="w-full">
             <input
               type="text"
-              value={search}
+              value={searchData}
               className="w-full rounded-xl border border-violet-normal px-4 py-3   text-lg text-slate-500 shadow  placeholder-shown:border-slate-300 placeholder-shown:outline-none focus:outline-none "
-              onChange={(event) =>
-                dispatch(
-                  updateFilterStatus({
-                    title: "search",
-                    value: event.target.value,
-                  }),
-                )
-              }
+              onChange={(event) => handleFilterBySearch(event.target.value)}
               placeholder="Search"
             />
           </div>

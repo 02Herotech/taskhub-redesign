@@ -9,7 +9,6 @@ import { FaStar } from "react-icons/fa";
 
 import PricingPlan from "@/components/matkeplaceSingleTask/PricingPlan";
 import Reviews from "@/components/matkeplaceSingleTask/Reviews";
-import { useSearchParams } from "next/navigation";
 import axios from "axios";
 import Loading from "@/shared/loading";
 
@@ -23,26 +22,22 @@ const Page = () => {
     lastName: string;
   }>({ profileImage: "", firstName: "", lastName: "" });
 
-  const params = useSearchParams();
-  const listingId = params.get("listingId");
-  const posterId = params.get("posterId");
-
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const tempList = localStorage.getItem("listingId");
+        const tempList = localStorage.getItem("content");
         if (tempList) {
-          const id = JSON.parse(tempList);
+          const content: { a: number; b: number } = JSON.parse(tempList);
           setIsDataFetched(false);
           const url =
-            "https://smp.jacinthsolutions.com.au/api/v1/listing/" + id;
+            "https://smp.jacinthsolutions.com.au/api/v1/listing/" + content.a;
           const { data } = await axios.get(url);
           const postData: ListingDataType2 = data;
           const posterId: number = postData.serviceProvider.id;
           setDisplayData(postData);
           const posterUrl =
             "https://smp.jacinthsolutions.com.au/api/v1/user/user-profile/" +
-            posterId;
+            content.b;
           const {
             data: { profileImage, firstName, lastName },
           } = await axios.get(posterUrl);

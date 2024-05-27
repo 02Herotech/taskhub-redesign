@@ -40,7 +40,7 @@ const MareketPlace = () => {
   const {
     categories,
     isFiltering,
-    currentFilterStatus: { search },
+    search: { isSearching },
   } = useSelector((state: RootState) => state.market);
 
   // Getting session and router for pop up and user anthentication state
@@ -97,21 +97,14 @@ const MareketPlace = () => {
         </Popup>
       )}
 
-      <MarketPlaceHeader />
-      <div className="mx-auto flex flex-col px-6 md:max-w-7xl md:px-20">
+      {!isFiltering && !isSearching && <MarketPlaceHeader />}
+
+      <div
+        className={`mx-auto flex flex-col px-6 md:max-w-screen-2xl  ${(isFiltering || isSearching) && "pt-12"} `}
+      >
         <MarketPlaceFilter />
         <div>
-          {search && search.length !== 0 ? (
-            <div>Show search Results</div>
-          ) : // <SearchResult
-          //   isLoading={isLoading}
-          //   filterData={filterData}
-          //   profileImages={profileImages}
-          //   imgErrMsg={imgErrMsg}
-          //   firstName={firstName}
-          //   lastName={lastName}
-          // />
-          isFiltering ? (
+          {isFiltering || isSearching ? (
             <div>
               <CategoryListing category="All" />
             </div>
