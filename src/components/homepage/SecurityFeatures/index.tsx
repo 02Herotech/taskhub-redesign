@@ -45,7 +45,7 @@ const SecurityFeatures = () => {
             >
                 <div className="flex justify-between items-center">
                     <div className="flex w-[400px] flex-col gap-5 space-y-8 xl:w-1/2">
-                        <h1 className="hidden xl:text-[50px] text-[40px] font-[900] text-[#381F8C] lg:block font-SatoshiBlack ">
+                        <h1 className="hidden xl:text-[50px] text-[40px] font-[900] text-[#381F8C] lg:block font-clashMedium ">
                             Security features ensuring your trust and safety
                         </h1>
                         <div className="flex flex-col gap-5 lg:space-y-6">
@@ -53,19 +53,19 @@ const SecurityFeatures = () => {
                                 <span className="text-[20px] text-[#FE9B07]">
                                     <BiSolidBadgeDollar />
                                 </span>
-                                <p className="font-semibold lg:text-[24px] text-[16px]">Payments with Enhanced Security</p>
+                                <p className="font-semibold lg:text-[24px] text-[16px] font-satoshiMedium">Payments with Enhanced Security</p>
                             </div>
                             <div className="flex items-center space-x-3">
                                 <span className="text-[20px] text-[#FE9B07]">
                                     <BsFillPatchCheckFill />
                                 </span>
-                                <p className="font-semibold  lg:text-[24px] text-[16px]">Reliable ratings and reviews</p>
+                                <p className="font-semibold  lg:text-[24px] text-[16px] font-satoshiMedium">Reliable ratings and reviews</p>
                             </div>
                             <div className="flex items-center space-x-3">
                                 <span className="text-[20px] text-[#FE9B07]">
                                     <BsShieldFillCheck />
                                 </span>
-                                <p className="font-semibold lg:text-[24px] text-[16px]">Coverage for peace of mind</p>
+                                <p className="font-semibold lg:text-[24px] text-[16px] font-satoshiMedium">Coverage for peace of mind</p>
                             </div>
                         </div>
 
@@ -80,12 +80,14 @@ const SecurityFeatures = () => {
             </div>
 
             <div className="lg:hidden px-12">
-                <h1 className=" text-[20px] text-center pt-10  font-[900] text-[#381F8C] block font-SatoshiBold">
+                <h1 className=" text-[20px] text-center pt-10  font-[900] text-[#381F8C] block font-clashMedium">
                     Security features ensuring your trust and safety
                 </h1>
 
-                <div className="h-[250px] w-[250px] my-5 relative rounded-[150px]">
-                    <Image src={image1} fill alt="" className="absolute rounded-[150px]" />
+                <div className="flex justify-center">
+                    <div className="h-[250px] w-[250px] my-5 relative rounded-[150px]">
+                        <Image src={image1} fill alt="" className="absolute rounded-[150px]" />
+                    </div>
                 </div>
 
                 <div className="flex flex-col gap-5 pb-10 ">

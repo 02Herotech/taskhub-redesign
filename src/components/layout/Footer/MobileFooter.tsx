@@ -114,7 +114,7 @@ const MobileFooter = () => {
                     {links1.map((group, index) => {
                         return (
                             <ul key={index} className='space-y-5'>
-                                <h3 className='text-primary text-base font-extrabold'>
+                                <h3 className='text-primary text-base font-clashMedium'>
                                     {group.groupName}
                                 </h3>
                                 {group.links.map((link, index) => {
