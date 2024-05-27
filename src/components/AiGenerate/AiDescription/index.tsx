@@ -1,9 +1,7 @@
 "use client";
 
-import Button from "@/components/global/Button";
 import axios from "axios";
 import { useSession } from "next-auth/react";
-import Image from "next/image";
 import React, { useEffect, useRef, useState } from "react";
 import { BiSend } from "react-icons/bi";
 import { IoCloseCircleOutline } from "react-icons/io5";
@@ -15,7 +13,7 @@ interface Message {
   text: string;
 }
 
-interface FormData {
+interface ProvideServiceData {
   listingTitle: string;
   listingDescription: string;
   planOneDescription: string;
@@ -39,8 +37,8 @@ interface FormData {
 }
 
 interface AiGenerateProps {
-  setTask: React.Dispatch<React.SetStateAction<FormData>> | any;
-  task: FormData;
+  setTask: React.Dispatch<React.SetStateAction<ProvideServiceData>> | any;
+  task: ProvideServiceData | any;
 }
 
 const AiDesciption: React.FC<AiGenerateProps> = ({ task, setTask }) => {
@@ -49,6 +47,7 @@ const AiDesciption: React.FC<AiGenerateProps> = ({ task, setTask }) => {
 
   const [aiQuery, setAiQuery] = useState("");
   const [currentQuery, setCurrentQuery] = useState("");
+
   const handleInputChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
@@ -123,6 +122,33 @@ const AiDesciption: React.FC<AiGenerateProps> = ({ task, setTask }) => {
     }
   };
 
+  const AiSuggestions = [
+    'Give a service description for a makeup artist that does sfx makeup.',
+    'Give a service description for an event planner with 2 years experience who specializes in kids parties.',
+    'Give a service description for a makeup artist that does sfx makeup. '
+  ]
+
+  const getAiSuggestions = async (index: number) => {
+    setAiLoading(true);
+    setCurrentQuery(AiSuggestions[index]);
+    const newConversation: Message[] = [
+      ...conversation,
+      { type: "user", text: AiSuggestions[index] },
+    ];
+    setConversation(newConversation);
+    try {
+      const url = `${process.env.NEXT_PUBLIC_API_URL}/listing/create-listing/category/content-generate?category=${encodeURIComponent(AiSuggestions[index])}`;
+      const response = await axios.get(url);
+      const data = await response.data[0]?.message?.content;
+      setConversation([...newConversation, { type: "ai", text: data }]);
+    } catch (error) {
+      console.error("Error fetching AI response:", error);
+    } finally {
+      setAiQuery("");
+      setAiLoading(false);
+    }
+  }
+
   return (
     <div>
       <div className="mb-5 flex flex-col space-y-6 rounded-[20px] bg-[#381F8C] p-4">
@@ -139,7 +165,7 @@ const AiDesciption: React.FC<AiGenerateProps> = ({ task, setTask }) => {
             onClick={AiChatView}
             type="button"
             className={` text-10px w-[160px] transform rounded-[20px] bg-[#FE9B07]  p-2
-       px-4 text-white transition-transform duration-300 ease-in-out hover:scale-110
+       px-4 text-white transition-transform duration-300 ease-in-out hover:scale-105
       `}
           >
             {/* <Image alt='' src={icon3} width={10} height={10}/>  */}
@@ -167,6 +193,20 @@ const AiDesciption: React.FC<AiGenerateProps> = ({ task, setTask }) => {
             </div>
 
             <div className="conversation h-[65%] space-y-4 overflow-y-scroll lg:h-[65%] ">
+
+              <div className="lg:flex justify-between w-[90%] mx-auto space-y-3 lg:space-y-0">
+                {AiSuggestions.map((entry, index) => (
+
+                  <p
+                    key={index}
+                    className="p-2 text-[15px] rounded-[12px] bg-white text-[#2A1769] lg:w-[30%] w-[85%] hover:cursor-pointer hover:transform hover:translate-x-1 hover:translate-y-1 transition-all duration-500 "
+                    onClick={() => getAiSuggestions(index)}
+                  >
+                    {entry}
+                  </p>
+
+                ))}
+              </div>
               {conversation.map((entry, index) => (
                 <div key={index}>
                   <div
@@ -174,7 +214,7 @@ const AiDesciption: React.FC<AiGenerateProps> = ({ task, setTask }) => {
                     className={` ${entry.type === "user" ? "flex justify-end" : ""}`}
                   >
                     <p
-                      className={` p-2 text-[15px] ${entry.type === "user" ? "mr-[5%] rounded-[12px] bg-white text-[#2A1769] lg:w-[50%] " : "w-[85%]"}`}
+                      className={` p-2 text-[15px] ${entry.type === "user" ? "mr-[5%] rounded-[12px] bg-[#EBE9F4] text-[#2A1769] lg:w-[50%] " : "w-[85%]"}`}
                     >
                       {entry.text}
                     </p>

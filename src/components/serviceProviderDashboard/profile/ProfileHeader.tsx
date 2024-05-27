@@ -8,9 +8,11 @@ const ProfileHeader = () => {
   const session = useSession();
   const user = session?.data?.user?.user;
   const isServiceProvider = user?.roles[0] === "SERVICE_PROVIDER";
-  const editProfileLink = isServiceProvider ? "/service-provider/dashboard/profile/edit-profile" : "/customer/profile/edit-profile";
-  const createdAt = user?.registeredAt
-  console.log(createdAt)
+  const editProfileLink = isServiceProvider
+    ? "/service-provider/dashboard/profile/edit-profile"
+    : "/customer/profile/edit-profile";
+  const createdAt = user?.registeredAt;
+  console.log(createdAt);
 
   return (
     <>
@@ -42,7 +44,7 @@ const ProfileHeader = () => {
             </div>
           </div>
 
-          <div className="flex gap-4 max-md:justify-between max-md:py-4 flex-row lg:flex-col lg:items-end">
+          <div className="flex flex-row gap-4 max-md:justify-between max-md:py-4 lg:flex-col lg:items-end">
             <Link
               href={editProfileLink}
               className="border-b text-sm font-medium text-[#381F8C] "
@@ -50,7 +52,7 @@ const ProfileHeader = () => {
               Edit Account Details
             </Link>
             <p className="text-sm font-medium text-[#140B31] ">
-              A member since 
+              A member since
             </p>
             <p className="text-sm font-medium text-[#140B31] ">
               {user?.address?.state}

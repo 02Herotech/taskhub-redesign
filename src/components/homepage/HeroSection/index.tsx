@@ -19,6 +19,7 @@ import tested from "../../../../public/assets/images/homepage/hero/tested.jpg";
 import { signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
+import { FaArrowRight } from "react-icons/fa6";
 
 const useImageTransition = (images: any, transitionDuration: any) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -107,38 +108,35 @@ const HeroSection = () => {
       >
         <div className={`flex lg:w-[45%] flex-col justify-around text-black `}>
           <div className={`flex flex-col`}>
-          <h1
-              className={ `hidden lg:block text-primary font-medium mb-5 lg:mt-[3rem] text-center lg:text-left lg:text-[65px] text-[35px]  leading-tight lg:w-[500px] w-full !font-clashDisplay
+            <h1
+              className={`hidden lg:block text-primary font-medium mb-5 lg:mt-[3rem] text-center lg:text-left lg:text-[65px] text-[35px]  leading-tight lg:w-[500px] w-full font-clashMedium
              `}
             >
-              <span className="flex items-center gap-4">FIND <div className="rounded-full w-2 h-2 bg-primary "></div></span>
+              <span className="flex items-center gap-4">FIND</span>
 
 
-              <span className="flex items-center gap-4">CONNECT <div className="rounded-full w-2 h-2 bg-primary "></div></span>
+              <span className="flex items-center gap-4">CONNECT </span>
 
-              <span className="flex items-center gap-4">GET IT DONE <div className="rounded-full w-2 h-2 bg-primary "></div></span>
+              <span className="flex items-center gap-4">GET IT DONE </span>
             </h1>
 
             <h1
-              className={`lg:hidden text-primary font-medium mb-5 lg:mt-[3rem] text-center lg:text-left lg:text-[65px] text-[35px]  leading-tight lg:w-[500px] w-full !font-clashDisplay
+              className={`lg:hidden text-primary font-medium mb-5 lg:mt-[3rem] text-center lg:text-left lg:text-[65px] text-[35px]  leading-tight lg:w-[500px] w-full !font-clashMedium
              flex flex-col justify-center items-center`}
             >
-              <span className="flex items-center gap-4">FIND <div className="rounded-full w-2 h-2 bg-primary "></div></span>
+              <span className="flex items-center gap-4">FIND</span>
 
 
-              <span className="flex items-center gap-4">CONNECT <div className="rounded-full w-2 h-2 bg-primary "></div></span>
+              <span className="flex items-center gap-4">CONNECT</span>
 
-              <span className="flex items-center gap-4">GET IT DONE <div className="rounded-full w-2 h-2 bg-primary "></div></span>
+              <span className="flex items-center gap-4">GET IT DONE</span>
             </h1>
 
 
 
-            <p className={` text-center lg:text-left lg:w-[400px] font-[500] lg:text-[20px] text-[15px] text-[#190E3F] `}
+            <p className={` text-center lg:text-left lg:w-[400px] font-[500] lg:text-[20px] text-[15px] text-[#190E3F] font-satoshiMedium `}
             >
-              Our user-friendly platform ensures a seamless
-              experience, allowing you to effortlessly find,
-              connect, and engage with the perfect service
-              professionals.<br className="lg:hidden"/>  <span className="border-[1px] border-[#FE9B07] text-[#FE9B07] bg-[#FFF5E6] rounded-[50px] text-[10px] px-3 py-1"> Beta Version</span>
+              Our user-friendly <span className="text-[#FE9B07]">AI</span> enabled platform ensures a seamless experience, allowing you to effortlessly find, connect, and engage with the perfect service professionals.<br className="lg:hidden" />  <span className=" text-[#ffffff] bg-[#4CAF50] rounded-[50px] text-[10px] px-3 py-1 font-satoshiMedium"> Beta</span>
             </p>
           </div>
 
@@ -147,41 +145,48 @@ const HeroSection = () => {
               <div className="">
                 <button
                   className=" rounded-[50px] bg-primary xl:text-[16px]
-           xl:px-7 lg:px-3 py-2 text-[#EBE9F4] hover:bg-[#25135f] w-[250px] xl:w-[190px] lg:w-[155px]  "
+          lg:px-3 py-2 text-[#EBE9F4] hover:bg-[#25135f] w-[250px] xl:w-[190px] lg:w-[155px]  "
                 >
                 
                   <Link href="/customer/add-task">
                       Post your first task
                     </Link>
                 
+
                 </button>
               </div>
 
               <div>
                 <button
                   className=" rounded-[50px] w-[250px] bg-[#FE9B07] text-[#FFF5E6] xl:text-[16px] 
-                          px-3 py-2    hover:bg-[#e79823]  "
+                      lg:px-2    px-3 py-2    hover:bg-[#e79823]  "
                 >
-                    <Link
+                  <Link
                     href={`/auth/sign-up?${serviceProviderParams.toString()}`}
-                      className="flex items-center justify-center"
-                    >
-                      <p className="">Become a Service Provider</p>
+                    className="flex items-center justify-center"
+                  >
+                    <p className="">Become a Service Provider</p>
 
-                    </Link>
-             
+                  </Link>
+
                 </button>
               </div>
 
 
             </div>
 
+            <Link href={'how-taskhub-works'}>
+              <p className="text-[#FE9B07] hover:underline text-[16px]  font-bold flex items-center lg:pl-4 lg:mb-6 space-x-2 mb-3 font-satoshiMedium "><span>Learn how Taskhub works</span>
+                <span className="-rotate-45"> <FaArrowRight size={15} /></span>
+              </p>
+            </Link>
+
             <div className="flex gap-3">
               <span>
-                <Image src={tested} height={25} width={25} alt="tested"/>
+                <Image src={tested} height={25} width={25} alt="tested" />
               </span>
-              <p className=" text-[#321C7E] font-medium ">
-              Tested and Trusted.
+              <p className=" text-[#321C7E] font-medium font-clashMedium ">
+                Tested and Trusted.
               </p>
             </div>
           </div>

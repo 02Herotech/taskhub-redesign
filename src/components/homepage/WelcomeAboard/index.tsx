@@ -110,10 +110,6 @@ const WelcomeAboard = () => {
                         </div>
                     </div>
                 </div>
-                <Link href={'how-taskhub-works'}>
-                    <p className="text-[#FE9B07] hover:underline text-[16px]  font-bold md:px-8 flex items-center space-x-2 lg:mt-0 mt-4"><span>Learn how TASKhub works</span> <span> <FaArrowRight size={15} /></span></p>
-                </Link>
-
             </div>
         </div>
     );

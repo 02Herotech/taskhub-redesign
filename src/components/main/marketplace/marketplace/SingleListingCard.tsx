@@ -1,6 +1,9 @@
+"use client";
+
+import axios from "axios";
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { BsStarFill } from "react-icons/bs";
 import { FaRegUser } from "react-icons/fa6";
 
@@ -9,10 +12,13 @@ interface ListingCardProps {
   posterId: number;
   displayImage: string;
   businessName: string;
+  pricing: number;
+}
+interface PosterProfileTypes {
+  id: number;
   profileImage: string;
   firstName: string;
   lastName: string;
-  pricing: number;
 }
 
 const handlestoreListingId = (id: number) => {
@@ -24,11 +30,32 @@ const SingleListingCard = ({
   posterId,
   displayImage,
   businessName,
-  profileImage,
-  firstName,
-  lastName,
   pricing,
 }: ListingCardProps) => {
+  const [posterProfile, setPosterProfile] = useState<PosterProfileTypes>({
+    id: 0,
+    profileImage: "",
+    firstName: "",
+    lastName: "",
+  });
+
+  useEffect(() => {
+    const handleFetchUserProfile = async (posterId: number) => {
+      try {
+        const url =
+          "https://smp.jacinthsolutions.com.au/api/v1/user/user-profile/" +
+          posterId;
+        const {
+          data: { profileImage, firstName, lastName },
+        } = await axios.get(url);
+        setPosterProfile({ id: posterId, profileImage, firstName, lastName });
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    handleFetchUserProfile(posterId);
+  }, [posterId]);
+
   return (
     <Link
       href={`/marketplace/${listingId}?listingId=${listingId}&posterId=${posterId}`}
@@ -59,27 +86,23 @@ const SingleListingCard = ({
               </div>
             </div>
 
-            <div className="flex items-center justify-between">
-              <div className="flex items-center justify-between gap-2">
-                <div className="flex items-center gap-2">
-                  <Image
-                    src={
-                      profileImage ?? "/assets/images/serviceProvider/user.jpg"
-                    }
-                    alt={firstName}
-                    width={200}
-                    height={200}
-                    className="size-8 rounded-full object-cover "
-                  />
-                </div>
-
+            <div className="flex items-center justify-between gap-5">
+              <div className="flex items-center gap-2">
+                <Image
+                  src={
+                    posterProfile?.profileImage ??
+                    "/assets/images/serviceProvider/user.jpg"
+                  }
+                  alt={posterProfile?.firstName}
+                  width={200}
+                  height={200}
+                  className="size-8 rounded-full object-cover "
+                />
                 <p className="text-sm font-semibold text-violet-dark">
-                  {firstName} {lastName}
+                  {posterProfile?.firstName} {posterProfile?.lastName}
                 </p>
               </div>
-              <p className="text-[16px] font-[600] text-violet-normal">
-                From ${pricing}
-              </p>
+              <p className="font-bold text-violet-normal">From ${pricing}</p>
             </div>
           </div>
         </div>

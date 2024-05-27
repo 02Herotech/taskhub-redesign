@@ -90,12 +90,12 @@ const Footer = () => {
             <footer className='pt-10 lg:pt-20 bg-status-lightViolet font-satoshi hidden lg:block'>
                 <div className='container w-full grid grid-cols-1 lg:grid-cols-5 gap-10 lg:gap-20 pb-10 '>
                     <div className='grid lg:col-span-2'>
-                        <Link href='/marketplace' className='w-[67px] h-[50px] lg:w-[109px] relative'>
+                        <Link href='/marketplace' className='w-[67px] h-[50px] lg:w-[109px] mt-[-20px] relative'>
                             <Logo />
                         </Link>
                         <div className=" xl:mt-0 lg:mt-[-100px] font-satoshi">
-                            <p className="text-primary font-bold max-lg:text-[13px] mt-5 font-satoshi ">Need Help? If you have any questions or encounter issues, our support team is here to assist you.
-                                Reach out to us at {' '}
+                            <p className="text-primary font-medium max-lg:text-[13px] mt-5 font-satoshi ">Need Help? If you have any questions or encounter issues, our support team is here to assist you. 
+                            Reach out to us at {' '}
                                 <a href="mailto:info@taskhub.org.au" className="text-primary underline">
                                     info@taskhub.org.au
                                 </a>.
@@ -115,12 +115,12 @@ const Footer = () => {
                     {links.map((group, index) => {
                         return (
                             <ul key={index} className='space-y-5'>
-                                <h3 className='text-primary text-base font-extrabold'>
+                                <h3 className='text-[#381F8C] text-base  font-clashMedium' style={{fontWeight: 700}}>
                                     {group.groupName}
                                 </h3>
                                 {group.links.map((link, index) => {
                                     return (
-                                        <li key={index} className='text-primary font-medium hover:underline text-sm lg:text-base'>
+                                        <li key={index} className='text-primary !font-medium hover:underline text-sm lg:text-base'>
                                             <Link href={link.url}>{link.label}</Link>
                                         </li>
                                     );
