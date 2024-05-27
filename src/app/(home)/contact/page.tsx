@@ -69,7 +69,7 @@ const ContactUsPage = () => {
     return (
         <div className="">
             <section className='bg-cover bg-center bg-no-repeat background max-lg:mt-20 h-[157px] lg:h-[378px] flex items-center justify-center bg-[url("/assets/images/contact/contactBanner.png")]'>
-                <h1 className='max-lg:text-3xl lg:text-5xl font-bold lg:max-w-[757px] text-white font-clashDisplay'>
+                <h1 className='max-lg:text-3xl lg:text-5xl font-bold lg:max-w-[757px] text-white font-clashSemiBold'>
                     Contact us
                 </h1>
             </section>
@@ -130,7 +130,7 @@ const ContactUsPage = () => {
                         </form>
                     </div>
                     <div className="w-full lg:col-span-1 p-8 space-y-5 font-satoshi drop-shadow-xl bg-white rounded-[20px]">
-                        <h3 className="text-xs lg:text-base font-medium text-primary">Let us know how we can help you</h3>
+                        <h3 className="text-xs lg:text-base font-medium text-primary">How we can help you</h3>
                         <h2 className="text-[33px] lg:text-[45px] text-primary font-bold">Get in <span className="text-tc-orange">Touch.</span></h2>
                         {/* <p className="text-[#190E3F] text-xs lg:text-lg">Use the form below to send a message to Taskhub. We aim to answer all inquiries within 1-2 days, depending on the nature of the inquiry.</p> */}
 
