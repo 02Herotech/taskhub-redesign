@@ -1,20 +1,70 @@
-"use client"
+"use client";
 
-import Button from "@/components/global/Button"
+import Button from "@/components/global/Button";
 import { FaLocationDot, FaEnvelope } from "react-icons/fa6";
 import { IoCallSharp } from "react-icons/io5";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import axios from "axios";
+
+type Category = {
+    id: number;
+    categoryName: string;
+};
 
 const ContactUsPage = () => {
-    const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+    const [categoriesData, setCategoriesData] = useState<Category[]>([]);
+    const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
+    const [fullName, setFullName] = useState<string>('');
+    const [emailAddress, setEmailAddress] = useState<string>('');
+    const [message, setMessage] = useState<string>('');
+    const [successMessage, setSuccessMessage] = useState<string>('');
+    const [errorMessage, setErrorMessage] = useState<string>('');
 
-    const subjectCategoriesData = [
-        "General Inquiry",
-        "Technical Support",
-        "Billing",
-        "Feedback",
-        "Other",
-    ];
+    useEffect(() => {
+        const fetchCategoriesData = async () => {
+            try {
+                const response = await axios.get(
+                    `${process.env.NEXT_PUBLIC_API_URL}/util/all-categories`,
+                );
+                setCategoriesData(response.data);
+            } catch (error) {
+                console.log(error);
+            }
+        };
+
+        fetchCategoriesData();
+    }, []);
+
+    const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+
+        if (selectedCategory === null) {
+            setErrorMessage('Please select a subject category.');
+            return;
+        }
+
+        try {
+            const response = await axios.post(
+                `${process.env.NEXT_PUBLIC_API_URL}/util/contact-us`,
+                {
+                    subjectCategoryId: selectedCategory,
+                    fullName,
+                    emailAddress,
+                    message,
+                }
+            );
+            setSuccessMessage('Form submitted successfully');
+            setErrorMessage('');
+            console.log('Form submitted', response.data);
+            // Reset the form fields
+            setSelectedCategory(null);
+            setFullName('');
+            setEmailAddress('');
+            setMessage('');
+        } catch (error) {
+            console.log(error);
+        }
+    };
 
     return (
         <div className="">
@@ -24,45 +74,65 @@ const ContactUsPage = () => {
                 </h1>
             </section>
             <div className="bg-white lg:bg-gradient-to-b from-[#F8E9FE] via-[#FFFFFF] to-[#FBEAFF] w-full">
-                <div className="flex flex-col lg:flex-row lg:justify-between lg:space-x-20 max-lg:py-14 max-lg:px-5 lg:p-14 font-satoshi container">
-                    <div className="w-full lg:w-[65%] max-lg:mb-10">
-                        <form className="lg:space-y-10">
+                <div className="flex flex-col lg:grid lg:grid-cols-3 lg:justify-between lg:space-x-20 max-lg:py-14 max-lg:px-5 lg:p-28 font-satoshi">
+                    <div className="w-full lg:col-span-2 max-lg:mb-10">
+                        <form className="lg:space-y-10" onSubmit={handleFormSubmit}>
                             <div className="mb-4 lg:flex items-center">
                                 <label className="lg:text-black text-[#333236] font-medium lg:font-bold text-sm lg:text-xl lg:w-[25%]">Subject category:</label>
                                 <select
                                     className="w-full mt-2 py-3 px-5 placeholder:text-[#D3D2D5] border border-gray-300 rounded-2xl bg-white"
-                                    value={selectedCategory || ""}
-                                    onChange={(e) => setSelectedCategory(e.target.value)}
+                                    value={selectedCategory ?? ''}
+                                    onChange={(e) => setSelectedCategory(parseInt(e.target.value))}
                                 >
                                     <option value="" disabled>Enter subject category</option>
-                                    {subjectCategoriesData.map((category, index) => (
-                                        <option key={index} value={category}>
-                                            {category}
+                                    {categoriesData.map((category, index) => (
+                                        <option key={index} value={category.id}>
+                                            {category.categoryName}
                                         </option>
                                     ))}
                                 </select>
                             </div>
                             <div className="mb-4 lg:flex items-center">
                                 <label className="lg:text-black text-[#333236] font-medium lg:font-bold text-sm lg:text-xl lg:w-[25%]">Full name:</label>
-                                <input type="text" className="w-full mt-2 p-3 border border-gray-300 rounded-2xl placeholder:text-[#D3D2D5]" placeholder="Enter full name" />
+                                <input
+                                    type="text"
+                                    className="w-full mt-2 p-3 border border-gray-300 rounded-2xl placeholder:text-[#D3D2D5]"
+                                    value={fullName}
+                                    onChange={(e) => setFullName(e.target.value)}
+                                    placeholder="Enter full name"
+                                />
                             </div>
                             <div className="mb-4 lg:flex items-center">
                                 <label className="lg:text-black text-[#333236] font-medium lg:font-bold text-sm lg:text-xl lg:w-[25%]">Email address:</label>
-                                <input type="email" className="w-full mt-2 p-3 border border-gray-300 rounded-2xl placeholder:text-[#D3D2D5]" placeholder="JohnDoe@gmail.com" />
+                                <input
+                                    type="email"
+                                    className="w-full mt-2 p-3 border border-gray-300 rounded-2xl placeholder:text-[#D3D2D5]"
+                                    value={emailAddress}
+                                    onChange={(e) => setEmailAddress(e.target.value)}
+                                    placeholder="JohnDoe@gmail.com"
+                                />
                             </div>
                             <div className="mb-4 lg:flex items-start">
                                 <label className="lg:text-black text-[#333236] font-medium lg:font-bold text-sm lg:text-xl lg:w-[25%]">Message:</label>
-                                <textarea className="w-full mt-2 p-3 border border-gray-300 rounded-2xl placeholder:text-[#D3D2D5]" placeholder="Write your message here..." rows={8}></textarea>
+                                <textarea
+                                    className="w-full mt-2 p-3 border border-gray-300 rounded-2xl placeholder:text-[#D3D2D5]"
+                                    value={message}
+                                    onChange={(e) => setMessage(e.target.value)}
+                                    placeholder="Write your message here..."
+                                    rows={8}
+                                ></textarea>
                             </div>
-                            <div className="flex items-center justify-center lg:justify-end mt-8">
+                            <div className="flex items-center justify-end">
                                 <Button type="submit" className="w-full lg:w-[231px] font-medium py-6 text-xl rounded-full">Send message</Button>
                             </div>
+                            {errorMessage && <p className="text-md text-red-500 my-2 lg:text-center lg:text-base">{errorMessage}</p>}
+                            {successMessage && <p className="text-md text-green-500 my-2 lg:text-center lg:text-base">{successMessage}</p>}
                         </form>
                     </div>
-                    <div className="w-full lg:w-1/3 p-8 space-y-5 font-satoshi drop-shadow-xl bg-white rounded-[20px]">
+                    <div className="w-full lg:col-span-1 p-8 space-y-5 font-satoshi drop-shadow-xl bg-white rounded-[20px]">
                         <h3 className="text-xs lg:text-base font-medium text-primary">Let us know how we can help you</h3>
                         <h2 className="text-[33px] lg:text-[45px] text-primary font-bold">Get in <span className="text-tc-orange">Touch.</span></h2>
-                        <p className="text-[#190E3F] text-xs lg:text-lg">Use the form below to send a message to Taskhub. We aim to answer all inquiries within 1-2 days, depending on the nature of the inquiry.</p>
+                        {/* <p className="text-[#190E3F] text-xs lg:text-lg">Use the form below to send a message to Taskhub. We aim to answer all inquiries within 1-2 days, depending on the nature of the inquiry.</p> */}
 
                         <div className="flex items-center space-x-3">
                             <FaLocationDot className="text-tc-orange w-[29px] h-[39px] lg:w-[35px] lg:h-[46px]" />
@@ -81,7 +151,7 @@ const ContactUsPage = () => {
                         </div>
 
                         <div className="flex items-center space-x-3">
-                            <FaEnvelope className="text-tc-orange w-[29px] h-[39px] lg:w-[35px] lg:h-[46px]" />
+                            <FaEnvelope className="text-tc-orange w-[29px] h-[39px] lg:w-[35px] lg:h/[46px]" />
                             <div className="">
                                 <h4 className="font-bold text-base lg:text-xl text-primary">Send us an Email</h4>
                                 <a href="mailto:privacy@taskhub.com.au" className="text-[#190E3F] hover:underline text-xs lg:text-base font-medium">privacy@taskhub.com.au</a>
@@ -91,7 +161,7 @@ const ContactUsPage = () => {
                 </div>
             </div>
         </div>
-    )
+    );
 }
 
-export default ContactUsPage
+export default ContactUsPage;
