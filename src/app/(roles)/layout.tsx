@@ -11,7 +11,7 @@ const DashboardLayout = ({ children }: AuthLayoutProps) => {
     <div className="relative mx-auto ">
       <Navigation />
       <DashboardSidebar />
-      <main className="mt-20 lg:ml-72 ">
+      <main className="mt-20 lg:ml-72">
         <Suspense>{children}</Suspense>
       </main>
     </div>
