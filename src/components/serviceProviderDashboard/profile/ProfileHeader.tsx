@@ -9,6 +9,8 @@ const ProfileHeader = () => {
   const user = session?.data?.user?.user;
   const isServiceProvider = user?.roles[0] === "SERVICE_PROVIDER";
   const editProfileLink = isServiceProvider ? "/service-provider/dashboard/profile/edit-profile" : "/customer/profile/edit-profile";
+  const createdAt = user?.registeredAt
+  console.log(createdAt)
 
   return (
     <>
@@ -48,7 +50,7 @@ const ProfileHeader = () => {
               Edit Account Details
             </Link>
             <p className="text-sm font-medium text-[#140B31] ">
-              A member since ""
+              A member since 
             </p>
             <p className="text-sm font-medium text-[#140B31] ">
               {user?.address?.state}

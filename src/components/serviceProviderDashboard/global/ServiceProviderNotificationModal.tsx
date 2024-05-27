@@ -37,7 +37,11 @@ const ServiceProviderNotificationModal = ({
               >
                 <div className="col-span-9 flex gap-2">
                   <Image
-                    src={item.image}
+                    src={
+                      item.image
+                        ? item.image
+                        : "/assets/images/serviceProvider/user.jpg"
+                    }
                     alt={item.jobLabel}
                     width={40}
                     height={40}
