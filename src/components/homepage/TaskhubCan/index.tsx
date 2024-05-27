@@ -43,7 +43,7 @@ const Taskhub = () => {
     return (
         <div className={` w-full bg-[#CEFDF930] `}>
 
-            <h1 className="lg:hidden text-[20px] text-center py-10 px-12 font-[900] text-[#381F8C] block font-SatoshiBold">
+            <h1 className="lg:hidden text-[20px] text-center py-10 px-12 font-[900] text-[#381F8C] block font-clashMedium">
             WITH TASKHUB, YOU CAN:
             </h1>
 
@@ -53,33 +53,33 @@ const Taskhub = () => {
 
 
                 <div className="flex w-[400px] flex-col gap-5 space-y-8 xl:w-1/2">
-                    <h1 className="hidden xl:text-[55px] lg:text-[45px] font-[900] text-[#381F8C] lg:block font-SatoshiBlack ">
-                    WITH TASKHUB, <br/> YOU CAN:
+                    <h1 className="hidden xl:text-[55px] lg:text-[45px] font-[900] text-[#381F8C] lg:block font-clashMedium ">
+                    WITH <span className="text-[#FE9B07]">TASKHUB,</span><br/> YOU CAN:
                     </h1>
                     <div className="flex flex-col gap-5 lg:space-y-6">
                         <div className="flex items-center space-x-3">
                             <span className="text-[20px] text-[#FE9B07]">
                             <BsFillPatchCheckFill />
                             </span>
-                            <p className="font-semibold lg:text-[24px] text-[16px]">Find the right professional in one place.</p>
+                            <p className="font-semibold lg:text-[24px] text-[16px] font-satoshiMedium">Find the right professional in one place.</p>
                         </div>
                         <div className="flex items-center space-x-3">
                             <span className="text-[20px] text-[#FE9B07]">
                                 <BsFillPatchCheckFill />
                             </span>
-                            <p className="font-semibold  lg:text-[24px] text-[16px]">Choose from a range of services and experts.</p>
+                            <p className="font-semibold  lg:text-[24px] text-[16px] font-satoshiMedium">Choose from a range of services and experts.</p>
                         </div>
                         <div className="flex items-center space-x-3">
                             <span className="text-[20px] text-[#FE9B07]">
                             <BsFillPatchCheckFill />
                             </span>
-                            <p className="font-semibold lg:text-[24px] text-[16px]">Ensure quality work with ratings and reviews.</p>
+                            <p className="font-semibold lg:text-[24px] text-[16px] font-satoshiMedium">Leverage AI to create a listing for you in seconds.</p>
                         </div>
                         <div className="flex items-center space-x-3">
                             <span className="text-[20px] text-[#FE9B07]">
                             <BsFillPatchCheckFill />
                             </span>
-                            <p className="font-semibold lg:text-[24px] text-[16px]">Save time and money with multiple bids.</p>
+                            <p className="font-semibold lg:text-[24px] text-[16px] font-satoshiMedium">Save time and money with multiple bids.</p>
                         </div>
                     </div>
                     <div className="">
@@ -89,10 +89,10 @@ const Taskhub = () => {
                         >
                             
                             {session?.user?.user?.roles[0] === "SERVICE_PROVIDER" ? (
-                                <p onClick={handlePostTask}>Start posting task for free</p>
+                                <p onClick={handlePostTask}>Post at no cost today</p>
                             ) : (
                                 <Link href="customer/add-task">
-                                    Start posting task for free
+                                   Post at no cost today
                                 </Link>
                             )}
                         </button>

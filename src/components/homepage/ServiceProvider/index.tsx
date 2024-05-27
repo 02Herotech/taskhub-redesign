@@ -43,7 +43,7 @@ const SPHomepage = () => {
 
     return (
         <div
-            className={`w-full bg-gradient-to-b from-[#FAF2FD] via-[#FDF7FE] to-[#F6E1FD] `}
+            className={`w-full bg-[#EBE9F4] `}
         >
             <div
                 className={`mx-auto lg:flex max-w-7xl  items-start justify-between p-5 px-12 pb-20 lg:py-[80px] xl:pb-[170px] pt-[50px] xl:px-8 `}
@@ -58,8 +58,8 @@ const SPHomepage = () => {
 
                 <div className="lg:hidden ">
                     <div className="  space-y-3 text-center mb-5">
-                        <h1 className="text-[24px] font-extrabold">SERVICE PROVIDERS</h1>
-                        <h4 className="text-[16px] leading-tight font-bold">
+                        <h1 className="text-[24px] font-clashMedium font-extrabold">SERVICE PROVIDERS</h1>
+                        <h4 className="text-[16px] leading-tight font-satoshiMedium">
                             Our service provider gives you Quality <br />
                             you Expect, the service you Deserve!
                         </h4>
@@ -77,8 +77,8 @@ const SPHomepage = () => {
                 <div className="hidden lg:flex flex-col space-y-7 lg:w-[600px]">
                     <div className="ml-16 flex flex-col space-y-7">
                         <div className="hidden lg:flex flex-col space-y-3">
-                            <h1 className="text-[40px] font-extrabold">SERVICE PROVIDERS</h1>
-                            <h4 className="text-[25px] leading-tight font-bold">
+                            <h1 className="text-[40px] font-clashMedium font-extrabold">SERVICE PROVIDERS</h1>
+                            <h4 className="text-[25px] leading-tight font-satoshiMedium">
                                 Our service provider gives you Quality <br />
                                 you Expect, the service you Deserve!
                             </h4>
@@ -95,7 +95,7 @@ const SPHomepage = () => {
                     <div className=" flex flex-col space-y-5">
                         <div className="flex items-center justify-between lg:px-7 ">
                             <Image src={icon2} width={60} alt=""></Image>
-                            <p className="text-left lg:w-[450px]">
+                            <p className="text-left lg:w-[450px] font-satoshi">
                                 At TaskHub, we understand the importance of being there for our{" "}
                                 customers whenever they need us. That&apos;s why we are proud to
                                 offer round-the-clock availability, ensuring that assistance and

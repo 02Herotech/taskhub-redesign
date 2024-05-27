@@ -1178,7 +1178,7 @@ p-3 text-center text-[12px] text-[#fe9b07]"
         <div className="mt-8 lg:flex">
           {currentPage === 1 && (
             <div className="mr-[50px] hidden lg:ml-[10%] lg:block lg:w-[390px] xl:ml-[15%] ">
-                {/* @ts-ignore */}
+              {/* @ts-ignore */}
               <AiDesciption setTask={setTask} task={task} />
             </div>
           )}
@@ -1216,7 +1216,7 @@ p-3 text-center text-[12px] text-[#fe9b07]"
           >
             <div className="p-10 lg:px-12">
               <div className="relative grid items-center justify-center space-y-5">
-                <p className="text-center font-clashDisplay text-[20px] font-extrabold text-[#2A1769] md:text-[36px] lg:text-[37px] ">
+                <p className="font-clashDisplay text-center text-[20px] font-extrabold text-[#2A1769] md:text-[36px] lg:text-[37px] ">
                   You are almost done!!!
                 </p>
                 <p className="text-center text-[14px] lg:text-[20px]">
@@ -1226,12 +1226,12 @@ p-3 text-center text-[12px] text-[#fe9b07]"
                 <Image
                   src={image}
                   alt="image"
-                  className="absolute -right-12 top-28 w-24 lg:-right-20 lg:top-1/2 lg:w-36"
+                  className="absolute -right-12 top-28 w-24 lg:-right-12 lg:top-2/3 lg:w-24 "
                 />
                 <Image
                   src={img}
                   alt="image"
-                  className="absolute -left-12 top-12 w-12 lg:-left-[73px] lg:top-2 lg:w-24"
+                  className="absolute -left-12 top-12 w-12 lg:-left-[53px] lg:top-8 lg:w-16"
                 />
                 <div className="flex justify-center space-x-3 md:justify-around">
                   <Link href="/marketplace">
@@ -1260,7 +1260,7 @@ p-3 text-center text-[12px] text-[#fe9b07]"
                 <div className="flex justify-center text-[1px] text-white">
                   <GrFormCheckmark className="h-[50px] w-[50px] rounded-full bg-[#FE9B07] p-2 lg:h-[60px] lg:w-[60px]" />
                 </div>
-                <p className="text-center font-clashDisplay text-[25px] font-extrabold text-[#2A1769] lg:text-[37px] ">
+                <p className="font-clashDisplay text-center text-[25px] font-extrabold text-[#2A1769] lg:text-[37px] ">
                   Service created
                 </p>
                 <p className="lg:text-[20px]">

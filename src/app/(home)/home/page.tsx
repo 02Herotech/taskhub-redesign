@@ -10,7 +10,7 @@ const HomePage = () => {
     <main className="min-h-screen">
       <HeroSection />
       <Taskhub />
-      <WelcomeAboard />
+      {/* <WelcomeAboard /> */}
       <SPHomepage />
       <SecurityFeatures />
       {/* <Testimonials /> */}

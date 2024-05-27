@@ -165,7 +165,7 @@ const AiDesciption: React.FC<AiGenerateProps> = ({ task, setTask }) => {
             onClick={AiChatView}
             type="button"
             className={` text-10px w-[160px] transform rounded-[20px] bg-[#FE9B07]  p-2
-       px-4 text-white transition-transform duration-300 ease-in-out hover:scale-110
+       px-4 text-white transition-transform duration-300 ease-in-out hover:scale-105
       `}
           >
             {/* <Image alt='' src={icon3} width={10} height={10}/>  */}
@@ -199,7 +199,7 @@ const AiDesciption: React.FC<AiGenerateProps> = ({ task, setTask }) => {
 
                   <p
                     key={index}
-                    className="p-2 text-[15px] rounded-[12px] bg-white text-[#2A1769] lg:w-[30%] w-[85%] hover:cursor-pointer hover:transform hover:translate-x-2 hover:translate-y-2 transition-all duration-500 "
+                    className="p-2 text-[15px] rounded-[12px] bg-white text-[#2A1769] lg:w-[30%] w-[85%] hover:cursor-pointer hover:transform hover:translate-x-1 hover:translate-y-1 transition-all duration-500 "
                     onClick={() => getAiSuggestions(index)}
                   >
                     {entry}

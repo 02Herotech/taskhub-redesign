@@ -15,10 +15,14 @@ import Button from "@/components/global/Button";
 import { useSession } from "next-auth/react";
 import image from "../../../../../public/assets/images/customer/Task management.png";
 import img from "../../../../../public/assets/images/blend.png";
+import tick from "../../../../../public/assets/icons/tick.svg";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { setCookie, getCookie } from 'cookies-next'; 
+
 interface FormData {
-  taskDescription: string;
+  taskBriefDescription: string;
   taskImage?: File | null | Blob;
   taskTime: string;
   taskDate: string;
@@ -27,6 +31,7 @@ interface FormData {
   hubTime: string;
   taskAddress: string[];
   categoryId: number | null;
+  taskDescription: string;
 }
 
 interface Item {
@@ -46,21 +51,26 @@ interface PostalCodeData {
 
 const AddTaskForm: React.FC = () => {
   const session = useSession();
+  const router = useRouter()
   const token = session?.data?.user.accessToken;
+  const isAuthenticated = session?.status === "authenticated";
   const authenticated = session?.data?.user.user.enabled;
   const [currentPage, setCurrentPage] = useState(1);
   const defaultImageSrc =
     "https://static.wixstatic.com/media/7d1889_ab302adc66e943f9b6be9de260cbc40f~mv2.png";
   const [task, setTask] = useState<FormData>({
-    taskDescription: "",
+    taskBriefDescription: getCookie("taskBriefDescription") || "",
     taskImage: null,
-    taskTime: "",
-    taskDate: "",
-    taskType: "",
+    taskTime: getCookie("taskTime") || "",
+    taskDate: getCookie("taskDate") || "",
+    taskType: getCookie("taskType") || "",
     taskAddress: [],
-    customerBudget: "",
-    hubTime: "",
-    categoryId: null,
+    customerBudget: getCookie("customerBudget") || "",
+    hubTime: getCookie("hubTime") || "",
+    categoryId: getCookie("categoryId")
+      ? parseInt(getCookie("categoryId") as string)
+      : null,
+    taskDescription: getCookie("taskDescription") || "",
   });
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [selectedTime, setSelectedTime] = useState<Date | null>(null);
@@ -78,7 +88,28 @@ const AddTaskForm: React.FC = () => {
   const [isSuccessPopupOpen, setIsSuccessPopupOpen] = useState(false);
   const [postalCodeData, setPostalCodeData] = useState<PostalCodeData[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
-   const [items, setItems] = useState<Item[]>([]);
+  const [items, setItems] = useState<Item[]>([]);
+  const [wordCount, setWordCount] = useState(0);
+  const [wordCounts, setWordCounts] = useState(0);
+
+  const handleLoginNavigation = () => {
+    router.push("/auth/login?from=/customer/add-task");
+  }
+
+   useEffect(() => {
+     // Save task data to cookies whenever it changes
+     setCookie("taskBriefDescription", task.taskBriefDescription, { maxAge: 120 });
+     setCookie("taskTime", task.taskTime, { maxAge: 120 });
+     setCookie("taskDate", task.taskDate, { maxAge: 120 });
+     setCookie("taskType", task.taskType, { maxAge: 120 });
+     setCookie("taskAddress", JSON.stringify(task.taskAddress), {
+       maxAge: 120,
+     });
+     setCookie("customerBudget", task.customerBudget, { maxAge: 120 });
+     setCookie("hubTime", task.hubTime, { maxAge: 120 });
+     setCookie("categoryId", task.categoryId?.toString(), { maxAge: 120 });
+     setCookie("taskDescription", task.taskDescription, { maxAge: 120 });
+   }, [task]);
 
   useEffect(() => {
     const fetchPostalCodeData = async () => {
@@ -97,21 +128,21 @@ const AddTaskForm: React.FC = () => {
       fetchPostalCodeData();
     }
   }, [selectedCode]);
-   useEffect(() => {
-     const fetchItems = async () => {
-       try {
-         const response = await axios.get(
-           "https://smp.jacinthsolutions.com.au/api/v1/util/all-categories",
-         );
-         const data: Item[] = response.data;
-         setItems(data);
-       } catch (error) {
-         console.error("Error fetching items:", error);
-       }
-     };
+  useEffect(() => {
+    const fetchItems = async () => {
+      try {
+        const response = await axios.get(
+          "https://smp.jacinthsolutions.com.au/api/v1/util/all-categories",
+        );
+        const data: Item[] = response.data;
+        setItems(data);
+      } catch (error) {
+        console.error("Error fetching items:", error);
+      }
+    };
 
-     fetchItems();
-   }, []);
+    fetchItems();
+  }, []);
 
   const validateFields = () => {
     const errors: any = {};
@@ -131,8 +162,12 @@ const AddTaskForm: React.FC = () => {
 
   const validateField1 = () => {
     const error: any = {};
+    if (!task.taskBriefDescription) {
+      error.taskBriefDescription = "please write down a brief description";
+    }
+
     if (!task.taskDescription) {
-      error.taskDescription = "please write down a brief description";
+      error.taskDescription = "please write down a description";
     }
 
     if (!selectedDate) {
@@ -177,16 +212,16 @@ const AddTaskForm: React.FC = () => {
     setIsSelectedTime(selectedValue);
   };
 
-    const handleCategoryChange = (
-      event: React.ChangeEvent<HTMLSelectElement>,
-    ) => {
-      const selectedId = parseInt(event.target.value);
-      setSelectedCategory(selectedId);
-      setTask({
-        ...task,
-        categoryId: selectedId,
-      });
-    };
+  const handleCategoryChange = (
+    event: React.ChangeEvent<HTMLSelectElement>,
+  ) => {
+    const selectedId = parseInt(event.target.value);
+    setSelectedCategory(selectedId);
+    setTask({
+      ...task,
+      categoryId: selectedId,
+    });
+  };
 
   const nextPage = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -202,7 +237,20 @@ const AddTaskForm: React.FC = () => {
   const handleChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
-    setTask({ ...task, [event.target.name]: event.target.value });
+    setTask({
+      ...task,
+      [event.target.name]: event.target.value,
+    });
+      setWordCount(event.target.value.split(/\s+/).filter(Boolean).length);
+  };
+
+  const handleDescription = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
+    setTask({
+      ...task,
+      taskDescription: event.target.value,
+    });
+   setWordCounts(event.target.value.split(/\s+/).filter(Boolean).length);
   };
 
   const handletaskImageUpload = (
@@ -266,7 +314,7 @@ const AddTaskForm: React.FC = () => {
 
   const calculateProgress = () => {
     const requiredFields = [
-      task.taskDescription,
+      task.taskBriefDescription,
       task.taskTime,
       task.taskDate,
       task.customerBudget,
@@ -327,7 +375,6 @@ const AddTaskForm: React.FC = () => {
           };
         }
 
-        // If no image is provided, use the default image
         if (!task.taskImage) {
           const defaultImageBlob = await convertUrlToBlob(defaultImageSrc);
           finalTask = { ...finalTask, taskImage: defaultImageBlob };
@@ -345,7 +392,7 @@ const AddTaskForm: React.FC = () => {
           },
         );
         setTask({
-          taskDescription: "",
+          taskBriefDescription: "",
           taskImage: null,
           taskTime: "",
           taskDate: "",
@@ -354,6 +401,7 @@ const AddTaskForm: React.FC = () => {
           taskAddress: [],
           customerBudget: "",
           categoryId: null,
+          taskDescription: "",
         });
         console.log(finalTask);
         setIsSuccessPopupOpen(true);
@@ -369,29 +417,46 @@ const AddTaskForm: React.FC = () => {
       case 1:
         return (
           <div className="mb-10 grid items-center justify-center space-y-10">
-            <form className="space-y-10 font-medium" onSubmit={nextPage}>
+            <form
+              className="space-y-10 font-medium text-status-darkpurple"
+              onSubmit={nextPage}
+            >
               <div className="grid space-y-3">
-                <label className="font-satoshiBold font-bold text-black">
-                  Briefly tell us what you need done?
-                </label>
+                <div className="flex items-center justify-between">
+                  <label className="font-semibold text-status-darkpurple">
+                    Briefly tell us what you need done?
+                  </label>
+                  {wordCount > 5 && (
+                    <div className="h-[16px] w-[16px] rounded-3xl bg-[#4CAF50] text-[16px] font-extrabold text-white">
+                      <GrFormCheckmark />
+                    </div>
+                  )}
+                </div>
                 <textarea
-                  className="h-full rounded-2xl bg-[#EBE9F4] p-3 outline-none placeholder:font-bold"
-                  placeholder="e.g, i need a junior league coach."
-                  name="taskDescription"
-                  value={task.taskDescription}
+                  className="h-full w-full rounded-2xl bg-[#EBE9F4] p-3 outline-none placeholder:font-bold"
+                  placeholder="e.g, I need a junior league coach."
+                  name="taskBriefDescription"
+                  value={task.taskBriefDescription}
                   onChange={handleChange}
                   style={{ resize: "none", overflow: "hidden" }}
                 ></textarea>
               </div>
               <div className="relative grid space-y-4">
-                <label className="font-semibold">
-                  What category best describes your task?
-                </label>
+                <div className="flex items-center justify-between">
+                  <label className="font-semibold">
+                    What category best describes your task?
+                  </label>
+                  {selectedCategory && (
+                    <div className="h-[16px] w-[16px] rounded-3xl bg-[#4CAF50] text-[16px] font-extrabold text-white">
+                      <GrFormCheckmark />
+                    </div>
+                  )}
+                </div>
                 <select
                   value={selectedCategory || ""}
                   name="category"
                   onChange={handleCategoryChange}
-                  className="w-full h-full cursor-pointer appearance-none rounded-2xl bg-[#EBE9F4] p-3 text-[13px] outline-none"
+                  className="h-full w-full cursor-pointer appearance-none rounded-2xl bg-[#EBE9F4] p-3 text-[13px] outline-none"
                 >
                   <option value="">Category</option>
                   {items.map((item) => (
@@ -406,8 +471,27 @@ const AddTaskForm: React.FC = () => {
                 </select>
                 <IoMdArrowDropdown className="absolute right-5 top-10 cursor-pointer text-status-purpleBase" />
               </div>
+              <div className="relative grid space-y-3">
+                <div className="flex items-center justify-between">
+                  <label className="flex justify-between font-semibold">
+                    Give a description of your task
+                  </label>
+                  {wordCounts > 10 && (
+                    <div className="h-[16px] w-[16px] rounded-3xl bg-[#4CAF50] text-[16px] font-extrabold text-white">
+                      <GrFormCheckmark />
+                    </div>
+                  )}
+                </div>
+                <textarea
+                  className=" h-[150px] rounded-2xl bg-[#EBE9F4] p-3 outline-none"
+                  placeholder="Arts and Craft"
+                  name="description"
+                  value={task.taskDescription}
+                  onChange={handleDescription}
+                ></textarea>
+              </div>
               <div className=" space-y-3">
-                <label className="font-satoshiBold font-bold text-black">
+                <label className="font-satoshiBold font-bold text-status-darkpurple">
                   Upload an Image (Optional)
                 </label>
                 {task.taskImage ? (
@@ -459,14 +543,14 @@ const AddTaskForm: React.FC = () => {
                 )}
               </div>
 
-              <div className="space-y-5">
+              <div className="space-y-5 ">
                 <label
                   htmlFor="taskTime"
-                  className="test-[20px] font-satoshiBold font-bold text-black"
+                  className="test-[20px] font-satoshiBold font-bold text-status-darkpurple"
                 >
                   Set number of working (Day/Time):
                 </label>
-                <div className="flex space-x-3">
+                <div className="flex items-center space-x-3">
                   <div className="relative">
                     <DatePicker
                       selected={selectedTime}
@@ -667,7 +751,12 @@ const AddTaskForm: React.FC = () => {
                 ))}
               </div>
               <div className="flex justify-between">
-                <Button type="submit">Confirm Task</Button>
+                {isAuthenticated && <Button type="submit">Confirm Task</Button>}
+                {!isAuthenticated && (
+                  <Button type="button" onClick={handleLoginNavigation}>
+                    Confirm Task
+                  </Button>
+                )}
                 <button
                   type="button"
                   onClick={prevPage}
@@ -691,19 +780,17 @@ const AddTaskForm: React.FC = () => {
       <div className="w-full">
         <div className="mb-3 flex justify-center space-x-5">
           <div
-            className={`${
-              currentPage === 1
-                ? "text-status-purpleBase"
-                : "text-status-purpleBase"
-            }`}
+            className={`${currentPage === 1
+              ? "text-status-purpleBase"
+              : "text-status-purpleBase"
+              }`}
           >
             <p className="flex items-center gap-2 text-[12px] md:text-[16px] lg:gap-3">
               <span
-                className={`${
-                  currentPage === 1
-                    ? "bg-status-purpleBase text-white"
-                    : "bg-status-purpleBase text-white"
-                } rounded-2xl border-none px-3 py-2`}
+                className={`${currentPage === 1
+                  ? "bg-status-purpleBase text-white"
+                  : "bg-status-purpleBase text-white"
+                  } rounded-2xl border-none px-3 py-2`}
               >
                 01
               </span>{" "}
@@ -714,17 +801,15 @@ const AddTaskForm: React.FC = () => {
             </p>
           </div>
           <div
-            className={`${
-              currentPage === 2 ? "text-status-purpleBase" : " text-[#716F78]"
-            }`}
+            className={`${currentPage === 2 ? "text-status-purpleBase" : " text-[#716F78]"
+              }`}
           >
             <p className="flex items-center gap-2 text-[12px] md:text-[16px] lg:gap-3">
               <span
-                className={`${
-                  currentPage === 2
-                    ? "bg-status-purpleBase text-white"
-                    : "bg-[#EAE9EB] text-[#716F78]"
-                } rounded-2xl border-none px-3 py-2`}
+                className={`${currentPage === 2
+                  ? "bg-status-purpleBase text-white"
+                  : "bg-[#EAE9EB] text-[#716F78]"
+                  } rounded-2xl border-none px-3 py-2`}
               >
                 02
               </span>{" "}
@@ -742,13 +827,12 @@ const AddTaskForm: React.FC = () => {
               {/* Progress bar */}
               <div className="h-1 w-2/3 overflow-hidden bg-[#EAE9EB]">
                 <div
-                  className={`h-full ${
-                    currentPage === 1
+                  className={`h-full ${currentPage === 1
+                    ? "bg-status-purpleBase"
+                    : currentPage === 2
                       ? "bg-status-purpleBase"
-                      : currentPage === 2
-                        ? "bg-status-purpleBase"
-                        : "bg-status-purpleBase"
-                  }`}
+                      : "bg-status-purpleBase"
+                    }`}
                   style={{ width: `${progress}%` }}
                 />
               </div>
@@ -770,7 +854,7 @@ const AddTaskForm: React.FC = () => {
           </div>
         </div>
       </div>
-      {authenticated === false ? (
+      {authenticated === false  ? (
         <Popup
           isOpen={isSuccessPopupOpen}
           onClose={() => {
@@ -789,12 +873,12 @@ const AddTaskForm: React.FC = () => {
               <Image
                 src={image}
                 alt="image"
-                className="absolute -right-12 top-28 w-24 lg:-right-20 lg:top-1/2 lg:w-36"
+                className="absolute -right-12 top-28 w-24 lg:-right-12 lg:top-2/3 lg:w-24 "
               />
               <Image
                 src={img}
                 alt="image"
-                className="absolute -left-12 top-12 w-12 lg:-left-[73px] lg:top-2 lg:w-24"
+                className="absolute -left-12 top-12 w-12 lg:-left-[53px] lg:top-8 lg:w-16"
               />
               <div className="flex justify-center space-x-3 md:justify-around">
                 <Link href="/marketplace">
