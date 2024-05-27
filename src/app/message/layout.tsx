@@ -1,5 +1,4 @@
 import Navigation from "@/components/layout/Navigation";
-import ServiceProviderNavbar from "@/components/serviceProviderDashboard/global/ServiceProviderNavbar";
 import { Suspense } from "react";
 
 type AuthLayoutProps = {
