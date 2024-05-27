@@ -143,10 +143,10 @@ const ContactUsPage = () => {
                         </div>
 
                         <div className="flex items-center space-x-3">
-                            <IoCallSharp className="text-tc-orange w-[29px] h-[39px] lg:w-[35px] lg:h-[46px]" />
+                            <IoCallSharp className="text-tc-orange w-[29px] h/[39px] lg:w/[35px] lg:h/[46px]" />
                             <div className="">
                                 <h4 className="font-bold text-base lg:text-xl text-primary">Call Us</h4>
-                                <p className="text-[#190E3F] text-xs lg:text-base font-medium">(+61) 245-673-890</p>
+                                <a href="tel:+61245673890" className="text-[#190E3F] text-xs lg:text-base font-medium">(+61) 245-673-890</a>
                             </div>
                         </div>
 
