@@ -48,7 +48,7 @@ const ProfileHeader = () => {
               Edit Account Details
             </Link>
             <p className="text-sm font-medium text-[#140B31] ">
-              A member since ""
+              A member since 
             </p>
             <p className="text-sm font-medium text-[#140B31] ">
               {user?.address?.state}
