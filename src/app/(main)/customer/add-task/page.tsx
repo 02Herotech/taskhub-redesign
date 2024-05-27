@@ -35,7 +35,7 @@ import { setCookie, getCookie } from 'cookies-next'; // For setting and getting 
 // setCookie('lastName', payload.lastName, { maxAge: 60 * 10 });
 
 interface FormData {
-  taskDescription: string;
+  taskBriefDescription: string;
   taskImage?: File | null | Blob;
   taskTime: string;
   taskDate: string;
@@ -44,7 +44,7 @@ interface FormData {
   hubTime: string;
   taskAddress: string[];
   categoryId: number | null;
-  listingDescription: string;
+  taskDescription: string;
 }
 
 interface Item {
@@ -72,16 +72,18 @@ const AddTaskForm: React.FC = () => {
   const defaultImageSrc =
     "https://static.wixstatic.com/media/7d1889_ab302adc66e943f9b6be9de260cbc40f~mv2.png";
   const [task, setTask] = useState<FormData>({
-    taskDescription: "",
+    taskBriefDescription: getCookie("taskBriefDescription") || "",
     taskImage: null,
-    taskTime: "",
-    taskDate: "",
-    taskType: "",
+    taskTime: getCookie("taskTime") || "",
+    taskDate: getCookie("taskDate") || "",
+    taskType: getCookie("taskType") || "",
     taskAddress: [],
-    customerBudget: "",
-    hubTime: "",
-    categoryId: null,
-    listingDescription: ""
+    customerBudget: getCookie("customerBudget") || "",
+    hubTime: getCookie("hubTime") || "",
+    categoryId: getCookie("categoryId")
+      ? parseInt(getCookie("categoryId") as string)
+      : null,
+    taskDescription: getCookie("taskDescription") || "",
   });
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [selectedTime, setSelectedTime] = useState<Date | null>(null);
@@ -106,6 +108,21 @@ const AddTaskForm: React.FC = () => {
   const handleLoginNavigation = () => {
     router.push("/auth/login?from=/customer/add-task");
   }
+
+   useEffect(() => {
+     // Save task data to cookies whenever it changes
+     setCookie("taskBriefDescription", task.taskBriefDescription, { maxAge: 120 });
+     setCookie("taskTime", task.taskTime, { maxAge: 120 });
+     setCookie("taskDate", task.taskDate, { maxAge: 120 });
+     setCookie("taskType", task.taskType, { maxAge: 120 });
+     setCookie("taskAddress", JSON.stringify(task.taskAddress), {
+       maxAge: 120,
+     });
+     setCookie("customerBudget", task.customerBudget, { maxAge: 120 });
+     setCookie("hubTime", task.hubTime, { maxAge: 120 });
+     setCookie("categoryId", task.categoryId?.toString(), { maxAge: 120 });
+     setCookie("taskDescription", task.taskDescription, { maxAge: 120 });
+   }, [task]);
 
   useEffect(() => {
     const fetchPostalCodeData = async () => {
@@ -158,8 +175,8 @@ const AddTaskForm: React.FC = () => {
 
   const validateField1 = () => {
     const error: any = {};
-    if (!task.taskDescription) {
-      error.taskDescription = "please write down a brief description";
+    if (!task.taskBriefDescription) {
+      error.taskBriefDescription = "please write down a brief description";
     }
 
     if (!selectedDate) {
@@ -240,7 +257,7 @@ const AddTaskForm: React.FC = () => {
   ) => {
     setTask({
       ...task,
-      listingDescription: event.target.value,
+      taskDescription: event.target.value,
     });
    setWordCounts(event.target.value.split(/\s+/).filter(Boolean).length);
   };
@@ -306,7 +323,7 @@ const AddTaskForm: React.FC = () => {
 
   const calculateProgress = () => {
     const requiredFields = [
-      task.taskDescription,
+      task.taskBriefDescription,
       task.taskTime,
       task.taskDate,
       task.customerBudget,
@@ -385,7 +402,7 @@ const AddTaskForm: React.FC = () => {
           },
         );
         setTask({
-          taskDescription: "",
+          taskBriefDescription: "",
           taskImage: null,
           taskTime: "",
           taskDate: "",
@@ -394,7 +411,7 @@ const AddTaskForm: React.FC = () => {
           taskAddress: [],
           customerBudget: "",
           categoryId: null,
-          listingDescription: "",
+          taskDescription: "",
         });
         console.log(finalTask);
         setIsSuccessPopupOpen(true);
@@ -423,8 +440,8 @@ const AddTaskForm: React.FC = () => {
                   <textarea
                     className="h-full w-full rounded-2xl bg-[#EBE9F4] p-3 outline-none placeholder:font-bold"
                     placeholder="e.g, I need a junior league coach."
-                    name="taskDescription"
-                    value={task.taskDescription}
+                    name="taskBriefDescription"
+                    value={task.taskBriefDescription}
                     onChange={handleChange}
                     style={{ resize: "none", overflow: "hidden" }}
                   ></textarea>
@@ -470,7 +487,7 @@ const AddTaskForm: React.FC = () => {
                   className=" h-[150px] rounded-2xl bg-[#EBE9F4] p-3 outline-none"
                   placeholder="Arts and Craft"
                   name="description"
-                  value={task.listingDescription}
+                  value={task.taskDescription}
                   onChange={handleDescription}
                 ></textarea>
               </div>
@@ -629,20 +646,22 @@ const AddTaskForm: React.FC = () => {
               </h2>
               <div className="flex space-x-4 text-[13px] text-[#221354]">
                 <button
-                  className={`rounded-2xl p-2 ${activeButtonIndex === 0
-                    ? "bg-status-purpleBase text-white"
-                    : "bg-[#EBE9F4] hover:bg-status-purpleBase hover:text-white"
-                    } outline-none`}
+                  className={`rounded-2xl p-2 ${
+                    activeButtonIndex === 0
+                      ? "bg-status-purpleBase text-white"
+                      : "bg-[#EBE9F4] hover:bg-status-purpleBase hover:text-white"
+                  } outline-none`}
                   name="physical"
                   onClick={() => handleClick(0)}
                 >
                   Physical Service
                 </button>
                 <button
-                  className={`rounded-2xl p-2 ${activeButtonIndex === 1
-                    ? "bg-status-purpleBase text-white"
-                    : "bg-[#EBE9F4] hover:bg-status-purpleBase hover:text-white"
-                    } outline-none`}
+                  className={`rounded-2xl p-2 ${
+                    activeButtonIndex === 1
+                      ? "bg-status-purpleBase text-white"
+                      : "bg-[#EBE9F4] hover:bg-status-purpleBase hover:text-white"
+                  } outline-none`}
                   name="remote"
                   onClick={() => {
                     handleClick(1);
@@ -734,7 +753,11 @@ const AddTaskForm: React.FC = () => {
               </div>
               <div className="flex justify-between">
                 {isAuthenticated && <Button type="submit">Confirm Task</Button>}
-                {!isAuthenticated && <Button type="button" onClick={handleLoginNavigation}>Confirmmmm Task</Button>}
+                {!isAuthenticated && (
+                  <Button type="button" onClick={handleLoginNavigation}>
+                    Confirm Task
+                  </Button>
+                )}
                 <button
                   type="button"
                   onClick={prevPage}
