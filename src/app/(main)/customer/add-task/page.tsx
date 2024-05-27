@@ -19,20 +19,7 @@ import tick from "../../../../../public/assets/icons/tick.svg";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { setCookie, getCookie } from 'cookies-next'; // For setting and getting cookies 
-
-// defaultValues: {
-//   firstName: getCookie('firstName') || "",
-//     lastName: getCookie('lastName') || "",
-//       emailAddress: "",
-//         password: getCookie('password') || "",
-//           phoneNumber: getCookie('phoneNumber') || "",
-//             confirmPassword: getCookie('password') || "",
-//         },
-
-// HOW TO SET THE COOKIES, max age is 120 seconds i.e 
-// setCookie('firstName', payload.firstName, { maxAge: 60 * 10 });
-// setCookie('lastName', payload.lastName, { maxAge: 60 * 10 });
+import { setCookie, getCookie } from 'cookies-next'; 
 
 interface FormData {
   taskBriefDescription: string;
@@ -384,7 +371,6 @@ const AddTaskForm: React.FC = () => {
           };
         }
 
-        // If no image is provided, use the default image
         if (!task.taskImage) {
           const defaultImageBlob = await convertUrlToBlob(defaultImageSrc);
           finalTask = { ...finalTask, taskImage: defaultImageBlob };
@@ -427,34 +413,41 @@ const AddTaskForm: React.FC = () => {
       case 1:
         return (
           <div className="mb-10 grid items-center justify-center space-y-10">
-            <form className="space-y-10 font-medium" onSubmit={nextPage}>
+            <form
+              className="space-y-10 font-medium text-status-darkpurple"
+              onSubmit={nextPage}
+            >
               <div className="grid space-y-3">
-                <label className="font-satoshiBold font-bold text-black flex justify-between">
-                  Briefly tell us what you need done?
+                <div className="flex items-center justify-between">
+                  <label className="font-semibolds text-status-darkpurple">
+                    Briefly tell us what you need done?
+                  </label>
                   {wordCount > 5 && (
-                    <div className="text-[24px] font-extrabold text-green-800">
-                      <img src={tick} alt="tick" />
+                    <div className="h-[16px] w-[16px] rounded-3xl bg-[#4CAF50] text-[16px] font-extrabold text-white">
+                      <GrFormCheckmark />
                     </div>
                   )}
-                </label>
-                  <textarea
-                    className="h-full w-full rounded-2xl bg-[#EBE9F4] p-3 outline-none placeholder:font-bold"
-                    placeholder="e.g, I need a junior league coach."
-                    name="taskBriefDescription"
-                    value={task.taskBriefDescription}
-                    onChange={handleChange}
-                    style={{ resize: "none", overflow: "hidden" }}
-                  ></textarea>
+                </div>
+                <textarea
+                  className="h-full w-full rounded-2xl bg-[#EBE9F4] p-3 outline-none placeholder:font-bold"
+                  placeholder="e.g, I need a junior league coach."
+                  name="taskBriefDescription"
+                  value={task.taskBriefDescription}
+                  onChange={handleChange}
+                  style={{ resize: "none", overflow: "hidden" }}
+                ></textarea>
               </div>
               <div className="relative grid space-y-4">
-                <label className="font-semibold flex justify-between">
-                  What category best describes your task?
+                <div className="flex items-center justify-between">
+                  <label className="font-semibold">
+                    What category best describes your task?
+                  </label>
                   {selectedCategory && (
-                    <div className="text-[24px] font-extrabold text-green-800">
-                      <img src={tick} alt="tick" />
+                    <div className="h-[16px] w-[16px] rounded-3xl bg-[#4CAF50] text-[16px] font-extrabold text-white">
+                      <GrFormCheckmark />
                     </div>
                   )}
-                </label>
+                </div>
                 <select
                   value={selectedCategory || ""}
                   name="category"
@@ -475,14 +468,16 @@ const AddTaskForm: React.FC = () => {
                 <IoMdArrowDropdown className="absolute right-5 top-10 cursor-pointer text-status-purpleBase" />
               </div>
               <div className="relative grid space-y-3">
-                <label className="flex justify-between font-semibold">
-                  Give a description of your task
+                <div className="flex items-center justify-between">
+                  <label className="flex justify-between font-semibold">
+                    Give a description of your task
+                  </label>
                   {wordCounts > 10 && (
-                    <div className="text-[24px] font-extrabold text-green-800">
-                      <img src={tick} alt="tick" />
+                    <div className="h-[16px] w-[16px] rounded-3xl bg-[#4CAF50] text-[16px] font-extrabold text-white">
+                      <GrFormCheckmark />
                     </div>
                   )}
-                </label>
+                </div>
                 <textarea
                   className=" h-[150px] rounded-2xl bg-[#EBE9F4] p-3 outline-none"
                   placeholder="Arts and Craft"
@@ -492,7 +487,7 @@ const AddTaskForm: React.FC = () => {
                 ></textarea>
               </div>
               <div className=" space-y-3">
-                <label className="font-satoshiBold font-bold text-black">
+                <label className="font-satoshiBold font-bold text-status-darkpurple">
                   Upload an Image (Optional)
                 </label>
                 {task.taskImage ? (
@@ -544,14 +539,14 @@ const AddTaskForm: React.FC = () => {
                 )}
               </div>
 
-              <div className="space-y-5">
+              <div className="space-y-5 ">
                 <label
                   htmlFor="taskTime"
-                  className="test-[20px] font-satoshiBold font-bold text-black"
+                  className="test-[20px] font-satoshiBold font-bold text-status-darkpurple"
                 >
                   Set number of working (Day/Time):
                 </label>
-                <div className="flex space-x-3">
+                <div className="flex items-center space-x-3">
                   <div className="relative">
                     <DatePicker
                       selected={selectedTime}
@@ -855,7 +850,7 @@ const AddTaskForm: React.FC = () => {
           </div>
         </div>
       </div>
-      {authenticated === false ? (
+      {authenticated === false  ? (
         <Popup
           isOpen={isSuccessPopupOpen}
           onClose={() => {
@@ -874,12 +869,12 @@ const AddTaskForm: React.FC = () => {
               <Image
                 src={image}
                 alt="image"
-                className="absolute -right-12 top-28 w-24 lg:-right-20 lg:top-1/2 lg:w-36"
+                className="absolute -right-12 top-28 w-24 lg:-right-12 lg:top-2/3 lg:w-24 "
               />
               <Image
                 src={img}
                 alt="image"
-                className="absolute -left-12 top-12 w-12 lg:-left-[73px] lg:top-2 lg:w-24"
+                className="absolute -left-12 top-12 w-12 lg:-left-[53px] lg:top-8 lg:w-16"
               />
               <div className="flex justify-center space-x-3 md:justify-around">
                 <Link href="/marketplace">
