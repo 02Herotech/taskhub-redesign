@@ -166,6 +166,10 @@ const AddTaskForm: React.FC = () => {
       error.taskBriefDescription = "please write down a brief description";
     }
 
+    if (!task.taskDescription) {
+      error.taskDescription = "please write down a description";
+    }
+
     if (!selectedDate) {
       error.taskTime = "please choose a Date";
     } else if (!selectedTime) {
@@ -419,7 +423,7 @@ const AddTaskForm: React.FC = () => {
             >
               <div className="grid space-y-3">
                 <div className="flex items-center justify-between">
-                  <label className="font-semibolds text-status-darkpurple">
+                  <label className="font-semibold text-status-darkpurple">
                     Briefly tell us what you need done?
                   </label>
                   {wordCount > 5 && (
