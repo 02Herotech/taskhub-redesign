@@ -1,6 +1,6 @@
 import DashboardSidebar from "@/components/dashboard/layout/DashboardSidebar";
-import Navigation from "@/components/layout/Navigation";
 import { Suspense } from "react";
+import Navigation from "@/components/layout/Navigation";
 
   type AuthLayoutProps = {
     children: React.ReactNode;
