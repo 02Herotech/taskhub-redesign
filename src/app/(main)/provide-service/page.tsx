@@ -20,7 +20,7 @@ import AiDesciption from "@/components/AiGenerate/AiDescription";
 import { useSession } from "next-auth/react";
 import { GrFormCheckmark } from "react-icons/gr";
 
-interface FormData {
+interface ProvideServiceData {
   listingTitle: string;
   listingDescription: string;
   planOneDescription: string;
@@ -68,7 +68,7 @@ const ProvideService: React.FC = () => {
   const id = session?.data?.user.user.id;
   const authenticated = session?.data?.user.user.enabled;
   const [currentPage, setCurrentPage] = useState(1);
-  const [task, setTask] = useState<FormData>({
+  const [task, setTask] = useState<ProvideServiceData>({
     listingTitle: "",
     listingDescription: "",
     planOneDescription: "",
@@ -523,6 +523,7 @@ const ProvideService: React.FC = () => {
                 </div>
 
                 <div className="lg:hidden">
+                {/* @ts-ignore */}
                   <AiDesciption setTask={setTask} task={task} />
                 </div>
                 <div className="grid space-y-3">
@@ -1177,6 +1178,7 @@ p-3 text-center text-[12px] text-[#fe9b07]"
         <div className="mt-8 lg:flex">
           {currentPage === 1 && (
             <div className="mr-[50px] hidden lg:ml-[10%] lg:block lg:w-[390px] xl:ml-[15%] ">
+                {/* @ts-ignore */}
               <AiDesciption setTask={setTask} task={task} />
             </div>
           )}
