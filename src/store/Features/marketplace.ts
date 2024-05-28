@@ -63,7 +63,6 @@ export const marketSlice = createSlice({
     },
     updateFilterData: (state, action) => {
       const { data, section, value } = action.payload;
-      const totalListing = state.listing;
       let prevFilter = state.filteredData || [];
       let newFilter = [];
       if (!prevFilter.length) {
@@ -74,10 +73,14 @@ export const marketSlice = createSlice({
           newFilter = data;
           break;
         case "subCategory":
-          newFilter = prevFilter.filter(
-            (item, index) =>
-              item.subCategory.name === data[index].subCategory.name,
-          );
+          if (data) {
+            newFilter = prevFilter.filter(
+              (item, index) =>
+                item.subCategory.name === data[index].subCategory.name,
+            );
+            break;
+          }
+          newFilter = [];
           break;
         case "location":
           newFilter = prevFilter.filter(
@@ -97,12 +100,13 @@ export const marketSlice = createSlice({
           newFilter = prevFilter;
           break;
       }
-      return { ...state, filteredData: newFilter };
+      return { ...state, isFiltering: true, filteredData: newFilter };
     },
     resetFilter: (state, action) => {
       return {
         ...state,
         isFiltering: false,
+        filteredData: [],
         currentFilterStatus: {
           category: "",
           subCategory: { id: 0, name: "" },

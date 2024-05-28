@@ -100,10 +100,11 @@ const MarketPlaceFilter = () => {
     handleShowDropdown(title);
     // ----------------
     const url =
-      "https://smp.jacinthsolutions.com.au/api/v1/listing/listing-by-sub-category/1" +
+      "https://smp.jacinthsolutions.com.au/api/v1/listing/listing-by-sub-category/" +
       subCategory.id +
       "?pageNumber=0";
     const { data } = await axios.get(url);
+    console.log("subCategories", data.content);
     dispatch(
       updateFilterData({
         data: data.content,
@@ -161,7 +162,6 @@ const MarketPlaceFilter = () => {
     handleShowDropdown(title);
     dispatch(tempUpdateFilterData({ section: "location", value: location }));
   };
-
   // handled and working
   const handleFilterBySearch = async (searchData: string) => {
     dispatch(updateSearchListing(searchData));
