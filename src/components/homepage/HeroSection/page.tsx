@@ -37,51 +37,8 @@ const useImageTransition = (images: any, transitionDuration: any) => {
   return currentImageIndex;
 };
 
-interface searchListing {
-  id: number;
-  posterId: number;
-  businessName: string;
-  serviceCategory: string;
-  subCategory: string;
-  serviceDescription: string;
-  serviceName: string;
-  pricing: number;
-  availableDays: [string];
-  available: boolean;
-  startHour: number;
-  closeMinute: number;
-  closeHour: number;
-  startMinute: number;
-  availableFrom: {
-    hour: number;
-    minute: number;
-    second: number;
-    nano: number;
-  };
-  availableTo: {
-    hour: number;
-    minute: number;
-    second: number;
-    nano: number;
-  };
-  userAddress: {
-    id: number;
-    streetNumber: string;
-    streetName: string;
-    unitNumber: string;
-    suburb: string;
-    state: string;
-    postCode: string;
-  };
-  deleted: boolean;
-  stripeId: string;
-  businessPictures: [""];
-}
-
 const HeroSection = () => {
-  const { data: session } = useSession();
-  const router = useRouter();
-  const customerParams = new URLSearchParams({ userType: "customer" });
+
   const serviceProviderParams = new URLSearchParams({ userType: "serviceProvider" });
 
   // Image1 transition
@@ -100,29 +57,28 @@ const HeroSection = () => {
   const images4 = [heroImage4, heroImage4a];
   const currentImageIndex4 = useImageTransition(images4, 3000);
 
-  let find = ['F', 'I', 'N', 'D']
-  let connect = ['C', 'O', 'N', 'N', 'E', 'C', 'T']
-  let get = ['G', 'E', 'T']
-  let it = ['I', 'T']
-  let done = ['D', 'O', 'N', 'E']
 
-  // const AnimatedText = ({ text, delay }: any) => {
-  //   return (
-  //     <span className="flex">
-  //       {text.split("").map((letter: any, i: number) => (
-  //         <motion.span
-  //           key={i}
-  //           className="flex items-center gap-4"
-  //           initial={{ opacity: 0, translateY: 100 }}
-  //           animate={{ opacity: 1, translateY: 0 }}
-  //           transition={{ duration: 0.3, delay: i * 0.08 + delay }}
-  //         >
-  //           {letter}
-  //         </motion.span>
-  //       ))}
-  //     </span>
-  //   )
-  // };
+  const AnimatedText = ({ text, delay }: any) => {
+
+    return (
+      <span className="flex">
+        {text.split("").map((letter: any, i: number) => (
+          <motion.span
+            key={i}
+            className="flex items-center gap-4"
+            initial={{ opacity: 0, translateY: 100 }}
+            animate={{ opacity: 1, translateY: 0 }}
+            transition={{ duration: 0.3, delay: i * 0.08 + delay }}
+          >
+            {letter}
+          </motion.span>
+        ))}
+      </span>
+    )
+  };
+
+
+
   return (
     <div
       className={` w-full bg-gradient-to-b from-[#f3dcfc] via-[#f5f1f7] to-[#FFFFFF] m-0`}
@@ -137,78 +93,30 @@ const HeroSection = () => {
              `}
             >
               <span className="flex">
-                {find.map((eachLetter, i) => (
-                  <motion.span className="flex items-center gap-4"
-                    key={i}
-                    initial={{ opacity: 0, translateY: 100 }}
-                    animate={{ opacity: 1, translateY: 0 }}
-                    transition={{ duration: 0.3, delay: i * 0.08 }}>
-
-                    {eachLetter}
-
-                  </motion.span>
-                ))}
+                <AnimatedText text="FIND" delay={0} />
               </span>
-
 
               <span className="flex">
-                {connect.map((eachLetter, i) => (
-                  <motion.span className="flex items-center gap-4"
-                    key={i}
-                    initial={{ opacity: 0, translateY: 100 }}
-                    animate={{ opacity: 1, translateY: 0 }}
-                    transition={{ duration: 0.3, delay: i * 0.08 + 1 }}>
-
-                    {eachLetter}
-
-                  </motion.span>
-                ))}
+                <AnimatedText text="CONNECT" delay={1} />
               </span>
 
-              <span className="flex space-x-3">
-                <span className="flex">
-                  {get.map((eachLetter, i) => (
-                    <motion.span className="flex items-center gap-4"
-                      key={i}
-                      initial={{ opacity: 0, translateY: 100 }}
-                      animate={{ opacity: 1, translateY: 0 }}
-                      transition={{ duration: 0.3, delay: i * 0.08 + 2 }}>
+              <span className="flex space-x-2">
+                <span className="flex"> <AnimatedText text="GET" delay={2} /></span>
+                <span className="flex"> <AnimatedText text="IT" delay={2.2} /></span>
+                <span className="flex"> <AnimatedText text="DONE" delay={2.3} /></span>
 
-                      {eachLetter}
-
-                    </motion.span>
-                  ))}
-                </span>
-                <span className="flex">   {it.map((eachLetter, i) => (
-                  <motion.span className="flex items-center gap-4"
-                    key={i}
-                    initial={{ opacity: 0, translateY: 100 }}
-                    animate={{ opacity: 1, translateY: 0 }}
-                    transition={{ duration: 0.3, delay: i * 0.08 + 2.2 }}>
-
-                    {eachLetter}
-
-                  </motion.span>
-                ))}</span>
-                <span className="flex">
-                  {done.map((eachLetter, i) => (
-                    <motion.span className="flex items-center gap-4"
-                      key={i}
-                      initial={{ opacity: 0, translateY: 100 }}
-                      animate={{ opacity: 1, translateY: 0 }}
-                      transition={{ duration: 0.3, delay: i * 0.08 + 2.3 }}>
-
-                      {eachLetter}
-
-                    </motion.span>
-                  ))}
-                </span>
               </span>
+
 
 
             </h1>
 
-            <h1
+
+
+
+
+
+            {/* <h1
               className={`lg:hidden text-primary font-medium mb-5 lg:mt-[3rem] text-center lg:text-left lg:text-[65px] text-[35px]  leading-tight lg:w-[500px] w-full !font-clashMedium
              flex flex-col justify-center items-center`}
             >
@@ -218,7 +126,7 @@ const HeroSection = () => {
               <span className="flex items-center gap-4">CONNECT</span>
 
               <span className="flex items-center gap-4">GET IT DONE</span>
-            </h1>
+            </h1> */}
 
 
 
