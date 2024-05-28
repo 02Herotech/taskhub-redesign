@@ -1,48 +1,41 @@
 "use client";
 
 import React from "react";
-import NewTasksCard, { NewTaskProps } from "../NewTasksCard";
-
-const sampleTasks: NewTaskProps[] = [
-  {
-    taskTitle: 'Grocery Shopping',
-    location: '123 Main St, Springfield',
-    time: new Date('2024-06-01T09:00:00'),
-    price: 25.50,
-  },
-  {
-    taskTitle: 'Dog Walking',
-    location: '456 Elm St, Shelbyville',
-    time: new Date('2024-06-01T10:00:00'),
-    price: 15.00,
-  },
-  {
-    taskTitle: 'House Cleaning',
-    location: '789 Oak St, Ogdenville',
-    time: new Date('2024-06-02T13:00:00'),
-    price: 50.00,
-  },
-  {
-    taskTitle: 'Gardening',
-    location: '101 Pine St, Capital City',
-    time: new Date('2024-06-03T08:00:00'),
-    price: 30.00,
-  },
-  {
-    taskTitle: 'Babysitting',
-    location: '202 Maple St, North Haverbrook',
-    time: new Date('2024-06-03T18:00:00'),
-    price: 40.00,
-  },
-];
+import { useGetTaskByCustomerIdQuery } from "@/services/tasks";
+import NewTasksCard from "../NewTasksCard";
+import { useSession } from "next-auth/react";
+import Loading from "@/shared/loading";
+import Link from "next/link";
+import Button from "@/components/global/Button";
 
 const TaskList: React.FC = () => {
+  const session = useSession();
+  const userId = session.data?.user?.user.id;
+
+  const { data: tasksData, isLoading, refetch } = useGetTaskByCustomerIdQuery(userId!, {
+    skip: !userId, // This will skip the query if userId is not available
+  });
+
+  if (!userId || isLoading) {
+    return <Loading />; // Or any other loading indication while waiting for the userId
+  }
+
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-      {sampleTasks.map((task, index) => (
-        <NewTasksCard key={index} task={task} />
-      ))}
-    </div>
+    <>
+      {!tasksData?.content?.length && (
+        <div className="flex flex-col items-center justify-center space-y-5 h-[50vh]">
+          <h2 className="text-2xl font-bold text-primary text-center">No tasks available, please click to button below to add a new task.</h2>
+          <Link href="/customer/add-task">
+            <Button className="rounded-full">Add new task</Button>
+          </Link>
+        </div>
+      )}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+        {tasksData?.content?.map((task, index) => (
+          <NewTasksCard key={index} task={task} />
+        ))}
+      </div>
+    </>
   );
 };
 

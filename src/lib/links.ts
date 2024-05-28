@@ -29,7 +29,7 @@ export const customerLinks: Link[] = [
 export const serviceProviderLinks: Link[] = [
     {
         label: "Provide a service",
-        url: "/service-provider/provide-service",
+        url: "/provide-service",
     },
     {
         label: "Explore Tasks",

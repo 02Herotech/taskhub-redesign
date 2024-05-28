@@ -21,7 +21,7 @@ const ProfileHeader = () => {
     Number(dateArray[1]) - 1,
     Number(dateArray[2])
   );
-  const location = user?.address?.state || "N/A";
+  const location = user?.address?.state || "Australia";
 
   return (
     <>
