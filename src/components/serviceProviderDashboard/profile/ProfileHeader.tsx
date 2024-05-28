@@ -2,7 +2,6 @@ import Loading from "@/shared/loading";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
 
 const ProfileHeader = () => {
   const session = useSession();
@@ -11,13 +10,23 @@ const ProfileHeader = () => {
   const editProfileLink = isServiceProvider
     ? "/service-provider/dashboard/profile/edit-profile"
     : "/customer/profile/edit-profile";
-  const createdAt = user?.registeredAt;
-  console.log(createdAt);
+  const currentDateTime = new Date();
+  const dateArray = user?.registeredAt || [
+    currentDateTime.getFullYear(),
+    currentDateTime.getMonth() + 1,
+    currentDateTime.getDate(),
+  ];
+  const date = new Date(
+    Number(dateArray[0]),
+    Number(dateArray[1]) - 1,
+    Number(dateArray[2])
+  );
+  const location = user?.address?.state || "N/A";
 
   return (
     <>
       {!user ? (
-        <div className="flex min-h-40 items-center justify-center ">
+        <div className="flex min-h-40 items-center justify-center">
           <Loading />
         </div>
       ) : (
@@ -38,7 +47,7 @@ const ProfileHeader = () => {
               <h1 className="text-3xl font-bold text-[#140B31] lg:text-4xl">
                 Welcome {user?.firstName} {user?.lastName}
               </h1>
-              <p className="font-clashDisplay text-[#140B31] ">
+              <p className="font-clashDisplay text-[#140B31]">
                 {user?.emailAddress}
               </p>
             </div>
@@ -47,15 +56,15 @@ const ProfileHeader = () => {
           <div className="flex flex-row gap-4 max-md:justify-between max-md:py-4 lg:flex-col lg:items-end">
             <Link
               href={editProfileLink}
-              className="border-b text-sm font-medium text-[#381F8C] "
+              className="underline text-md font-satoshi font-semibold text-primary"
             >
               Edit Account Details
             </Link>
-            <p className="text-sm font-medium text-[#140B31] ">
-              A member since
+            <p className="text-sm font-medium text-[#140B31]">
+              A member since {date.toDateString()}
             </p>
-            <p className="text-sm font-medium text-[#140B31] ">
-              {user?.address?.state}
+            <p className="text-sm font-medium text-[#140B31]">
+              {location}
             </p>
           </div>
         </header>

@@ -1,20 +1,22 @@
 "use client";
 
 import React, { useState } from "react";
-import { PiWarningDiamond } from "react-icons/pi";
 import { BsEye } from "react-icons/bs";
+import { FiAlertTriangle } from "react-icons/fi";
 
 const ChangePassword = () => {
     const [isPasswordVerified, setIsPasswordVerified] = useState(true);
 
     return (
-        <>
+        <div className="p-4 lg:px-14 mt-20">
+            <div className="mt-14 mb-8 space-y-8">
+                <h4 className='text-[#140B31] font-satoshiBold font-bold text-3xl lg:text-5xl'>Change Password</h4>
+                <div className='border-2 border-primary' />
+            </div>
             {!isPasswordVerified ? (
-                <main className="space-y-8 p-4 lg:p-8 mt-28">
+                <main className="space-y-8">
                     <p className=" flex items-center gap-2 rounded-xl bg-orange-normal p-5 font-normal text-white">
-                        <span>
-                            <PiWarningDiamond className="size-5" />
-                        </span>
+                        <FiAlertTriangle className="size-8" />
                         <span>
                             When you change your password, please know that you will have to
                             wait for about 3months before you can change it again.
@@ -42,11 +44,9 @@ const ChangePassword = () => {
                     </form>
                 </main>
             ) : (
-                <main className="space-y-8 p-4 lg:p-8">
+                    <main className="space-y-8">
                     <p className=" flex items-center gap-2 rounded-xl bg-orange-normal p-5 font-normal text-white">
-                        <span>
-                            <PiWarningDiamond className="size-5" />
-                        </span>
+                        <FiAlertTriangle className="size-8" />
                         <span>
                             When you change your password, please know that you will have to
                             wait for about 3months before you can change it again. please
@@ -116,7 +116,7 @@ const ChangePassword = () => {
                     </form>
                 </main>
             )}
-        </>
+        </div>
     );
 };
 

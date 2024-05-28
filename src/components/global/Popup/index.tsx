@@ -53,15 +53,15 @@ const Popup: React.FC<PopupProps> = ({ isOpen, onClose, children }) => {
                 >
                     <motion.div
                         ref={popupRef}
-                        className="relative flex justify-center z-10 rounded-xl bg-white p-1 shadow-lg"
+                        className="relative flex justify-center z-10 rounded-xl bg-white shadow-lg"
                         variants={popupVariants}
                     >
-                        <div className="absolute top-1 right-1 lg:right-4 lg:top-4 p-2 cursor-pointer z-10">
+                        <div className="absolute top-1 right-1 lg:right-2 lg:top-2 p-2 cursor-pointer z-10">
                             <button
                                 onClick={onClose}
                                 className="text-primary hover:text-gray-800 bg-[#EBE9F4] rounded-3xl p-2"
                             >
-                                <IoMdClose className="w-[24px] h-[24px] border-2 border-[#5A5960] rounded-3xl" />
+                                <IoMdClose className="w-[24px] h-[24px] border-2 border-primary rounded-3xl" />
                             </button>
                         </div>
                         {children}

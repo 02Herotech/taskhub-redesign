@@ -3,36 +3,39 @@
 import React from "react";
 import { BiCheck, BiPlus } from "react-icons/bi";
 import ProfilePieChart from "@/components/serviceProviderDashboard/profile/ProfilePieChart";
-
-const profileProgressData = [
-    {
-        title: "Profile Picture",
-        status: "notactivated",
-    },
-    {
-        title: "Email Address",
-        status: "activated",
-    },
-    {
-        title: "Home Address",
-        status: "activated",
-    },
-    {
-        title: "Mobile Number",
-        status: "activated",
-    },
-    {
-        title: "Identification Document",
-        status: "notactivated",
-    },
-    {
-        title: "Date of Birth",
-        status: "notactivated",
-    },
-];
+import { useSession } from "next-auth/react";
 
 const CustomerProfileCompletion = () => {
-    
+    const session = useSession();
+    const user = session?.data?.user?.user;
+
+    const profileProgressData = [
+        {
+            title: "Profile Picture",
+            status: user?.profileImage ? "activated" : "notactivated",
+        },
+        {
+            title: "Email Address",
+            status: user?.emailAddress ? "activated" : "notactivated",
+        },
+        {
+            title: "Home Address",
+            status: user?.address?.state ? "activated" : "notactivated",
+        },
+        {
+            title: "Mobile Number",
+            status: user?.phoneNumber ? "activated" : "notactivated",
+        },
+        {
+            title: "Identification Document",
+            status: "notactivated",
+        },
+        {
+            title: "Date of Birth",
+            status: "notactivated",
+        },
+    ];
+
     return (
         <section className="flex items-center gap-3 rounded-lg bg-[#EBE9F4] p-4">
             <div className="size-48">

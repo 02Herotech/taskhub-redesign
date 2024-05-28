@@ -93,7 +93,7 @@ export const customerDashboardDropdown = [
   },
   {
     label: "Notification",
-    link: "/customer/notification",
+    link: "/customer/notification-settings",
   },
 ];
 export const serviceProviderDashboardDropdown = [
