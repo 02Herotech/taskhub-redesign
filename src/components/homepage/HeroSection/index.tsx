@@ -149,7 +149,7 @@ const HeroSection = () => {
                 >
                 
                   <Link href="/customer/add-task">
-                      Post your first task
+                      Post at no cost today
                     </Link>
                 
 

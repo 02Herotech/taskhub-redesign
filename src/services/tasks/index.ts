@@ -113,6 +113,18 @@ export const task = createApi({
       query: (pageNumber) => getRequest(`/task-price-desc/${pageNumber}`),
       providesTags: ["Task"],
     }),
+    getTaskByCustomerId: builder.query<GetTasksResponse, number>({
+      query: (customerId) => getRequest(`/tasks-by-customerId/${customerId}`),
+      providesTags: ["Task"],
+    }),
+    getCustomerOngoingTasks: builder.query<GetTasksResponse, number>({
+      query: (customerId) => getRequest(`/customer-ongoing-tasks/${customerId}`),
+      providesTags: ["Task"],
+    }),
+    getCustomerCompletedTasks: builder.query<GetTasksResponse, number>({
+      query: (customerId) => getRequest(`/customer-completed-tasks/${customerId}`),
+      providesTags: ["Task"],
+    }),
   }),
 });
 
@@ -125,4 +137,7 @@ export const {
   useFilterTaskByLatestDateQuery,
   useFilterTaskByPriceAscQuery,
   useFilterTaskByPriceDescQuery,
+  useGetTaskByCustomerIdQuery,
+  useGetCustomerOngoingTasksQuery,
+  useGetCustomerCompletedTasksQuery,
 } = task;
