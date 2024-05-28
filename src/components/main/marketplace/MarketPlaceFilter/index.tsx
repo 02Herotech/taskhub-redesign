@@ -240,9 +240,13 @@ const MarketPlaceFilter = () => {
               {/* Category */}
               <div className="relative">
                 <button
-                  className=" flex items-center gap-2 rounded-3xl border border-violet-normal  bg-violet-light px-4 py-2 text-base font-bold text-violet-normal transition-colors duration-300 hover:bg-violet-200 "
+                  className="flex items-center gap-2 rounded-3xl border border-violet-normal bg-violet-light px-4 py-2 text-base font-bold text-violet-normal transition-colors duration-300 hover:bg-violet-200 "
                   onClick={() => handleShowDropdown("category")}
                 >
+                  <div
+                    className={`fixed left-0 top-0 h-screen w-screen ${isDropdownOpen.isOpened && isDropdownOpen.category === "category" ? "block" : "hidden"} `}
+                    onClick={() => handleShowDropdown("category")}
+                  ></div>
                   {category === "" ? "Category" : category}
                   <span>
                     <BsTriangleFill
@@ -256,7 +260,7 @@ const MarketPlaceFilter = () => {
                 >
                   {categories.map((item) => (
                     <button
-                      className="whitespace-nowrap px-8 py-3 text-left text-base text-violet-normal transition-colors duration-300 hover:bg-violet-100 "
+                      className=" relative whitespace-nowrap px-8 py-3 text-left text-base text-violet-normal transition-colors duration-300 hover:bg-violet-100 "
                       key={item.id}
                       onClick={() =>
                         handleFetchSubCategory(
@@ -279,6 +283,10 @@ const MarketPlaceFilter = () => {
                   className=" flex items-center gap-2 rounded-3xl border border-violet-normal  bg-violet-light px-4 py-2 text-base font-bold text-violet-normal transition-colors duration-300 hover:bg-violet-200 "
                   onClick={() => handleShowDropdown("sub-category")}
                 >
+                  <div
+                    className={`fixed left-0 top-0 h-screen w-screen ${isDropdownOpen.isOpened && isDropdownOpen.category === "sub-category" ? "block" : "hidden"} `}
+                    onClick={() => handleShowDropdown("subCategory")}
+                  ></div>
                   {subCategory.name === "" ? "Subcategory" : subCategory.name}
 
                   <span>
@@ -322,6 +330,10 @@ const MarketPlaceFilter = () => {
                   className=" flex items-center gap-2 rounded-3xl border border-violet-normal  bg-violet-light px-4 py-2 text-base font-bold text-violet-normal transition-colors duration-300 hover:bg-violet-200 "
                   onClick={() => handleShowDropdown("location")}
                 >
+                  <div
+                    className={`fixed left-0 top-0 h-screen w-screen ${isDropdownOpen.isOpened && isDropdownOpen.category === "location" ? "block" : "hidden"} `}
+                    onClick={() => handleShowDropdown("subCategory")}
+                  ></div>
                   {location === "" ? "Location" : location}
                   <span>
                     <BsTriangleFill
@@ -351,6 +363,10 @@ const MarketPlaceFilter = () => {
                   className="flex items-center gap-2 rounded-3xl border border-violet-normal  bg-violet-light px-4 py-2 text-base font-bold text-violet-normal transition-colors duration-300 hover:bg-violet-200 "
                   onClick={() => handleShowDropdown("pricing")}
                 >
+                  <div
+                    className={`fixed left-0 top-0 h-screen w-screen ${isDropdownOpen.isOpened && isDropdownOpen.category === "sub-category" ? "block" : "hidden"} `}
+                    onClick={() => handleShowDropdown("subCategory")}
+                  ></div>
                   Pricing
                   <span>
                     <BsTriangleFill
