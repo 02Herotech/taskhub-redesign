@@ -98,3 +98,12 @@ export function formatNumber(number: number): string {
 
 	return scaled.toFixed() + suffix;
 }
+
+export const monthNames = [
+	"January", "February", "March", "April", "May", "June",
+	"July", "August", "September", "October", "November", "December",
+];
+
+export const dayOfWeekNames = [
+	"Sun", "Mon", "Tue", "Wed", "Thur", "Fri", "Sat",
+];

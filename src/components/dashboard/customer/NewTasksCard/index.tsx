@@ -30,7 +30,7 @@ const NewTasksCard: React.FC<NewTasksProps> = ({ task }) => {
         "July", "August", "September", "October", "November", "December",
     ];
     const dayOfWeekNames = [
-        "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday",
+        "Sun", "Mon", "Tue", "Wed", "Thur", "Fri", "Sat",
     ];
     const formattedDate = `On ${dayOfWeekNames[date.getDay()]}, ${monthNames[date.getMonth()]} ${day}${daySuffix}`;
 

@@ -1,6 +1,6 @@
+import React, { createContext, useContext, useEffect, useRef, useState } from "react";
 import { cn, listenForOutsideClicks } from "@/lib/utils";
 import { AnimatePresence, motion } from "framer-motion";
-import { useEffect, useRef, useState } from "react";
 
 type Props = {
     children: React.ReactNode;
@@ -12,6 +12,12 @@ type Props = {
     onTrigger?: () => void;
 };
 
+type DropdownContextType = {
+    closeDropdown: () => void;
+};
+
+const DropdownContext = createContext<DropdownContextType | undefined>(undefined);
+
 const Dropdown = ({
     children,
     className,
@@ -20,67 +26,60 @@ const Dropdown = ({
     closeOnClick = true,
     triggerStyle = "click",
     onTrigger,
-}: Props) => { 
+}: Props) => {
     const [showDropdown, setShowDropdown] = useState(false);
-
     const menuRef = useRef(null);
-
     const [listening, setListening] = useState(false);
 
     useEffect(
         listenForOutsideClicks(listening, setListening, menuRef, setShowDropdown)
     );
 
-    useEffect(() => {
-        const handleClick = () => {
-            closeOnClick && setShowDropdown(false);
-        };
-
-        const dropdownItems = document.querySelectorAll(".dropdown-item");
-        dropdownItems.forEach((item) => {
-            item.addEventListener("click", handleClick);
-        });
-
-        return () => {
-            dropdownItems.forEach((item) => {
-                item.removeEventListener("click", handleClick);
-            });
-        };
-    }, [showDropdown]);
+    const closeDropdown = () => setShowDropdown(false);
 
     return (
-        <div
-            className='relative w-full'
-            ref={menuRef}
-            onMouseEnter={() => triggerStyle === "hover" && setShowDropdown(true)}
-            onMouseLeave={() => triggerStyle === "hover" && setShowDropdown(false)}>
+        <DropdownContext.Provider value={{ closeDropdown }}>
             <div
-                onClick={() => {
-                    triggerStyle === "click" && setShowDropdown(!showDropdown);
-                    !showDropdown && onTrigger && onTrigger();
-                }}>
-                {trigger && trigger(showDropdown)}
+                className="relative w-full"
+                ref={menuRef}
+                onMouseEnter={() => triggerStyle === "hover" && setShowDropdown(true)}
+                onMouseLeave={() => triggerStyle === "hover" && setShowDropdown(false)}>
+                <div
+                    onClick={() => {
+                        triggerStyle === "click" && setShowDropdown(!showDropdown);
+                        !showDropdown && onTrigger && onTrigger();
+                    }}>
+                    {trigger && trigger(showDropdown)}
+                </div>
+                <div>
+                    <AnimatePresence>
+                        {showDropdown && (
+                            <motion.div
+                                initial={{ scale: 0.5, opacity: 0 }}
+                                animate={{ scale: 1, opacity: 1 }}
+                                transition={{ duration: 0.1 }}
+                                exit={{ scale: 0.5, opacity: 0 }}
+                                className={cn(
+                                    "absolute z-[100] drop-shadow-2xl rounded overflow-hidden",
+                                    position === "bottom" ? "top-[38px]" : "bottom-[23px]",
+                                    className
+                                )}>
+                                <div>{children}</div>
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
+                </div>
             </div>
-            <div>
-                <AnimatePresence>
-                    {showDropdown && (
-                        <motion.div
-                            initial={{ scale: 0.5, opacity: 0 }}
-                            animate={{ scale: 1, opacity: 1 }}
-                            transition={{ duration: 0.1 }}
-                            exit={{ scale: 0.5, opacity: 0 }}
-                            className={cn(
-                                "absolute z-[100] drop-shadow-2xl rounded overflow-hidden",
-                                position === "bottom" ? "top-[38px]" : "bottom-[23px]",
-                                className
-                            )}>
-                            <div>{children}</div>
-                        </motion.div>
-                    )}
-                </AnimatePresence>
-            </div>
-        </div>
+        </DropdownContext.Provider>
     );
+};
+
+export const useDropdown = () => {
+    const context = useContext(DropdownContext);
+    if (!context) {
+        throw new Error("useDropdown must be used within a Dropdown");
+    }
+    return context;
 };
 
 export default Dropdown;
