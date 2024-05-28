@@ -20,10 +20,7 @@ const config: Config = {
           orange: "#FE9B07",
         },
         status: {
-          success: {
-            "10": "#F3FEF3",
-            "100": "#008000",
-          },
+          success: "#4CAF50",
           warning: {
             10: "#FFA5001A",
             100: "#F7D4C3",

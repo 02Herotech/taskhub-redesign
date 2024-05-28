@@ -11,8 +11,18 @@ const ProfileHeader = () => {
   const editProfileLink = isServiceProvider
     ? "/service-provider/dashboard/profile/edit-profile"
     : "/customer/profile/edit-profile";
-  const createdAt = user?.registeredAt;
-  console.log(createdAt);
+  const currentDateTime = new Date();
+  const dateArray = user?.registeredAt || [
+    currentDateTime.getFullYear(),
+    currentDateTime.getMonth() + 1,
+    currentDateTime.getDate(),
+  ];
+  const date = new Date(
+    Number(dateArray[0]),
+    Number(dateArray[1]) - 1,
+    Number(dateArray[2])
+  );
+  const location = user?.address?.state || "N/A";
 
   return (
     <>
@@ -47,15 +57,15 @@ const ProfileHeader = () => {
           <div className="flex flex-row gap-4 max-md:justify-between max-md:py-4 lg:flex-col lg:items-end">
             <Link
               href={editProfileLink}
-              className="border-b text-sm font-medium text-[#381F8C] "
+              className="underline text-md font-satoshi font-semibold text-primary"
             >
               Edit Account Details
             </Link>
             <p className="text-sm font-medium text-[#140B31] ">
-              A member since
+              A member since {date.toDateString()}
             </p>
             <p className="text-sm font-medium text-[#140B31] ">
-              {user?.address?.state}
+              {location}
             </p>
           </div>
         </header>
