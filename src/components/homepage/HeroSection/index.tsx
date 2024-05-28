@@ -165,7 +165,7 @@ const HeroSection = () => {
                 ))}
               </span>
 
-              <span className="flex space-x-3">
+              <span className="flex space-x-3 xl:space-x-4">
                 <span className="flex">
                   {get.map((eachLetter, i) => (
                     <motion.span className="flex items-center gap-4"
@@ -204,20 +204,79 @@ const HeroSection = () => {
                   ))}
                 </span>
               </span>
-
-
             </h1>
 
             <h1
               className={`lg:hidden text-primary font-medium mb-5 lg:mt-[3rem] text-center lg:text-left lg:text-[65px] text-[35px]  leading-tight lg:w-[500px] w-full !font-clashMedium
              flex flex-col justify-center items-center`}
             >
-              <span className="flex items-center gap-4">FIND</span>
+              <span className="flex">
+                {find.map((eachLetter, i) => (
+                  <motion.span className="flex items-center gap-4"
+                    key={i}
+                    initial={{ opacity: 0, translateY: 100 }}
+                    animate={{ opacity: 1, translateY: 0 }}
+                    transition={{ duration: 0.3, delay: i * 0.08 }}>
 
+                    {eachLetter}
 
-              <span className="flex items-center gap-4">CONNECT</span>
+                  </motion.span>
+                ))}
+              </span>
 
-              <span className="flex items-center gap-4">GET IT DONE</span>
+              <span className="flex">
+                {connect.map((eachLetter, i) => (
+                  <motion.span className="flex items-center gap-4"
+                    key={i}
+                    initial={{ opacity: 0, translateY: 100 }}
+                    animate={{ opacity: 1, translateY: 0 }}
+                    transition={{ duration: 0.3, delay: i * 0.08 + 1 }}>
+
+                    {eachLetter}
+
+                  </motion.span>
+                ))}
+              </span>
+
+              <span className="flex space-x-2">
+                <span className="flex">
+                  {get.map((eachLetter, i) => (
+                    <motion.span className="flex items-center gap-4"
+                      key={i}
+                      initial={{ opacity: 0, translateY: 100 }}
+                      animate={{ opacity: 1, translateY: 0 }}
+                      transition={{ duration: 0.3, delay: i * 0.08 + 2 }}>
+
+                      {eachLetter}
+
+                    </motion.span>
+                  ))}
+                </span>
+                <span className="flex">   {it.map((eachLetter, i) => (
+                  <motion.span className="flex items-center gap-4"
+                    key={i}
+                    initial={{ opacity: 0, translateY: 100 }}
+                    animate={{ opacity: 1, translateY: 0 }}
+                    transition={{ duration: 0.3, delay: i * 0.08 + 2.2 }}>
+
+                    {eachLetter}
+
+                  </motion.span>
+                ))}</span>
+                <span className="flex">
+                  {done.map((eachLetter, i) => (
+                    <motion.span className="flex items-center gap-4"
+                      key={i}
+                      initial={{ opacity: 0, translateY: 100 }}
+                      animate={{ opacity: 1, translateY: 0 }}
+                      transition={{ duration: 0.3, delay: i * 0.08 + 2.3 }}>
+
+                      {eachLetter}
+
+                    </motion.span>
+                  ))}
+                </span>
+              </span>
             </h1>
 
 
@@ -233,11 +292,11 @@ const HeroSection = () => {
               <div className="">
                 <button
                   className=" rounded-[50px] bg-primary xl:text-[16px]
-          lg:px-3 py-2 text-[#EBE9F4] hover:bg-[#25135f] w-[250px] xl:w-[190px] lg:w-[155px]  "
+                  xl:px-3   lg:px-3 py-2 text-[#EBE9F4] hover:bg-[#25135f] w-[250px] xl:w-[190px] lg:w-[175px]  "
                 >
 
                   <Link href="/customer/add-task">
-                    Post your first task
+                    Post at no cost today
                   </Link>
 
 
@@ -246,7 +305,7 @@ const HeroSection = () => {
 
               <div>
                 <button
-                  className=" rounded-[50px] w-[250px] bg-[#FE9B07] text-[#FFF5E6] xl:text-[16px] 
+                  className=" rounded-[50px] w-[250px] lg:w-[230px] xl:w-[250px] bg-[#FE9B07] text-[#FFF5E6] xl:text-[16px] 
                       lg:px-2    px-3 py-2    hover:bg-[#e79823]  "
                 >
                   <Link

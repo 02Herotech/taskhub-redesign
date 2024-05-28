@@ -8,7 +8,7 @@ const ProfileHeader = () => {
   const user = session?.data?.user?.user;
   const isServiceProvider = user?.roles[0] === "SERVICE_PROVIDER";
   const editProfileLink = isServiceProvider
-    ? "/service-provider/dashboard/profile/edit-profile"
+    ? "/service-provider/profile/edit-profile"
     : "/customer/profile/edit-profile";
   const currentDateTime = new Date();
   const dateArray = user?.registeredAt || [
@@ -19,9 +19,9 @@ const ProfileHeader = () => {
   const date = new Date(
     Number(dateArray[0]),
     Number(dateArray[1]) - 1,
-    Number(dateArray[2])
+    Number(dateArray[2]),
   );
-  const location = user?.address?.state || "N/A";
+  const location = user?.address?.state || "Australia";
 
   return (
     <>
@@ -56,16 +56,14 @@ const ProfileHeader = () => {
           <div className="flex flex-row gap-4 max-md:justify-between max-md:py-4 lg:flex-col lg:items-end">
             <Link
               href={editProfileLink}
-              className="underline text-md font-satoshi font-semibold text-primary"
+              className="text-md font-satoshi font-semibold text-primary underline"
             >
               Edit Account Details
             </Link>
             <p className="text-sm font-medium text-[#140B31]">
               A member since {date.toDateString()}
             </p>
-            <p className="text-sm font-medium text-[#140B31]">
-              {location}
-            </p>
+            <p className="text-sm font-medium text-[#140B31]">{location}</p>
           </div>
         </header>
       )}
