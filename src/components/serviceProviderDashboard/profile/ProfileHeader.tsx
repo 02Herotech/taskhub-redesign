@@ -26,7 +26,7 @@ const ProfileHeader = () => {
   return (
     <>
       {!user ? (
-        <div className="flex min-h-40 items-center justify-center ">
+        <div className="flex min-h-40 items-center justify-center">
           <Loading />
         </div>
       ) : (
@@ -47,7 +47,7 @@ const ProfileHeader = () => {
               <h1 className="text-3xl font-bold text-[#140B31] lg:text-4xl">
                 Welcome {user?.firstName} {user?.lastName}
               </h1>
-              <p className="font-clashDisplay text-[#140B31] ">
+              <p className="font-clashDisplay text-[#140B31]">
                 {user?.emailAddress}
               </p>
             </div>
@@ -60,10 +60,10 @@ const ProfileHeader = () => {
             >
               Edit Account Details
             </Link>
-            <p className="text-sm font-medium text-[#140B31] ">
+            <p className="text-sm font-medium text-[#140B31]">
               A member since {date.toDateString()}
             </p>
-            <p className="text-sm font-medium text-[#140B31] ">
+            <p className="text-sm font-medium text-[#140B31]">
               {location}
             </p>
           </div>
