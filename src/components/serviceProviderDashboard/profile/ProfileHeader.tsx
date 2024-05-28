@@ -2,7 +2,6 @@ import Loading from "@/shared/loading";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
 
 const ProfileHeader = () => {
   const session = useSession();
