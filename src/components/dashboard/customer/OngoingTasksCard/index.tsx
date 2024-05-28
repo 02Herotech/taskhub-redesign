@@ -1,9 +1,10 @@
 "use client";
 
-import { formatAmount } from "@/lib/utils";
+import { dayOfWeekNames, formatAmount, monthNames } from "@/lib/utils";
 import Image from "next/image";
 import { useSession } from "next-auth/react";
 import Button from "@/components/global/Button";
+import Link from "next/link";
 
 export type OngoingTasksProps = {
     taskTitle: string;
@@ -26,13 +27,6 @@ const OngoingTasksCard: React.FC<OngoingTasksCardProps> = ({ task }) => {
     const day = date.getDate();
     const suffixes = ["st", "nd", "rd", "th"];
     const daySuffix = suffixes[(day - 1) % 10] || suffixes[3];
-    const monthNames = [
-        "January", "February", "March", "April", "May", "June",
-        "July", "August", "September", "October", "November", "December",
-    ];
-    const dayOfWeekNames = [
-        "Sun", "Mon", "Tue", "Wed", "Thur", "Fri", "Sat",
-    ];
     const formattedDate = `On ${dayOfWeekNames[date.getDay()]}, ${monthNames[date.getMonth()]} ${day}${daySuffix}`;
 
     return (
@@ -50,14 +44,11 @@ const OngoingTasksCard: React.FC<OngoingTasksCardProps> = ({ task }) => {
                     <h2 className="overflow-hidden truncate text-ellipsis whitespace-nowrap py-4 text-base font-satoshi text-primary">
                         {task.taskTitle}
                     </h2>
-                    <div className="flex items-center space-x-5">
+                    <Link href={`/customer/tasks/ongoing-task-details/${task.taskTitle}`}>
                         <Button theme="outline" className="rounded-full">
                             View Service
                         </Button>
-                        <Button className="rounded-full">
-                            Complete Task
-                        </Button>
-                    </div>
+                    </Link>
                 </div>
             </div>
             <div className="flex flex-col justify-between">
@@ -65,7 +56,6 @@ const OngoingTasksCard: React.FC<OngoingTasksCardProps> = ({ task }) => {
                 <h2 className="font-bold capitalize text-[#28272A] text-base">
                     Total Cost: {formatAmount(task.price, "USD", false)}
                 </h2>
-                <h5 className="text-[#E10909] font-satoshiBold font-bold">Report task</h5>
             </div>
         </div>
     );
