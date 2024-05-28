@@ -125,7 +125,6 @@ const MarketPlaceFilter = () => {
   // pending,
   const handleFilterByPricing = async () => {
     const { minPrice, maxPrice } = pricing;
-    console.log(minPrice, maxPrice);
     const url =
       "https://smp.jacinthsolutions.com.au/api/v1/listing/price/0?minPrice=" +
       minPrice +

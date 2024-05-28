@@ -15,31 +15,56 @@ import Webcam from "react-webcam";
 
 type ModalPropsTypes = {
   setIsFormModalShown: Dispatch<SetStateAction<boolean>>;
+  setDocumentImage: Dispatch<SetStateAction<string | null>>;
   isFormModalShown: boolean;
+  setisEditingProfilePicture: React.Dispatch<
+    React.SetStateAction<{
+      isEditing: boolean;
+      image: string | null;
+    }>
+  >;
+  isEditingProfilePicture: {
+    isEditing: boolean;
+    image: string | null;
+  };
+  isSubmitting: boolean;
+  setIsSubmitting: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 const EditProfileModal = ({
   setIsFormModalShown,
   isFormModalShown,
+  setDocumentImage,
+  isEditingProfilePicture,
+  setisEditingProfilePicture,
+  isSubmitting,
+  setIsSubmitting,
 }: ModalPropsTypes) => {
+  // set initial state value
   const [isUploadInitiated, setIsUploadInitiated] = useState(false);
-  const [isUploadCompleted, setIsUploadCompleted] = useState(false);
-  const [documentImage, setDocumentImage] = useState<{ image: File | null }>({
-    image: null,
-  });
+  // const [isUploadCompleted, setIsUploadCompleted] = useState(false);
 
   // handlig image upload
   const [imageSrc, setImageSrc] = useState<string | null>(null);
   const [cameraActive, setCameraActive] = useState<boolean>(false);
+
   const webcamRef = useRef<Webcam>(null);
+
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const capture = useCallback(() => {
     if (webcamRef.current) {
       const imageSrc = webcamRef.current.getScreenshot();
       setImageSrc(imageSrc);
+      isEditingProfilePicture.isEditing
+        ? setisEditingProfilePicture((prev) => ({
+            ...prev,
+            image: imageSrc,
+          }))
+        : setDocumentImage(imageSrc);
       setCameraActive(false);
     }
+    // eslint-disable-next-line
   }, [webcamRef]);
 
   const handleFileInputChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -48,37 +73,35 @@ const EditProfileModal = ({
       const reader = new FileReader();
       reader.onloadend = () => {
         setImageSrc(reader.result as string);
+
+        isEditingProfilePicture.isEditing
+          ? setisEditingProfilePicture((prev) => ({
+              ...prev,
+              image: reader.result as string,
+            }))
+          : setDocumentImage(reader.result as string);
       };
       reader.readAsDataURL(file);
     }
   };
   //  ----------------------
 
-  const handleSetDocumentImage = (
-    event: React.ChangeEvent<HTMLInputElement>,
-  ) => {
-    const uploadedFile = event.target.files?.[0];
-    if (uploadedFile) {
-      setDocumentImage({ image: uploadedFile });
-    }
-  };
-
   const handleCloseModal = () => {
     setIsFormModalShown(false);
     setIsUploadInitiated(false);
-    setDocumentImage({ image: null });
-    setIsUploadCompleted(false);
+    setIsSubmitting(false);
+    setisEditingProfilePicture((prev) => ({ ...prev, isEditing: false }));
   };
 
   const handleRemoveDocumentImage = () => {
-    setDocumentImage({ image: null });
+    setImageSrc(null);
+    setCameraActive(false);
+    setDocumentImage(null);
   };
 
   const handleUploadAllDocument = () => {
-    setIsUploadCompleted(true);
-    // setIsFormModalShown(false);
-    // setIsUploadInitiated(false);
-    // setDocumentImage({ image: null });
+    setIsFormModalShown(false);
+    setIsUploadInitiated(false);
   };
 
   const handleFileUpload = () => {
@@ -99,14 +122,21 @@ const EditProfileModal = ({
           <BiXCircle className=" h-6 w-6 text-violet-normal" />
         </button>
 
-        {isUploadInitiated ? (
+        {isSubmitting ? (
+          <div>
+            <h1 className="text-center text-lg font-medium text-violet-darkHover">
+              Your Update is received and awaiting Approval
+            </h1>
+          </div>
+        ) : isEditingProfilePicture.isEditing || isUploadInitiated ? (
           <div className=" flex flex-col items-center justify-center gap-5 space-y-3">
-            <label className=" text-slate-500">Upload Profile Picture</label>
             <div className="space-y-4">
               <div className="flex items-center gap-4">
                 <button
                   className=" rounded-full bg-violet-light px-4 py-2 font-medium text-violet-normal transition-all duration-300 hover:bg-violet-200"
-                  onClick={() => setCameraActive(true)}
+                  onClick={() => {
+                    setCameraActive(true);
+                  }}
                 >
                   Take a Picture
                 </button>
@@ -137,7 +167,12 @@ const EditProfileModal = ({
                     ref={webcamRef}
                     screenshotFormat="image/jpeg"
                   />
-                  <button onClick={capture}>Capture</button>
+                  <button
+                    onClick={capture}
+                    className="my-2 rounded-md bg-violet-darkHover p-1 text-sm text-white"
+                  >
+                    Capture
+                  </button>
                 </div>
               )}
               {imageSrc && (
@@ -148,18 +183,26 @@ const EditProfileModal = ({
                     width={400}
                     height={400}
                   />
+                  <button
+                    onClick={handleRemoveDocumentImage}
+                    className="my-2 rounded-md bg-violet-darkHover p-1 text-sm text-white"
+                  >
+                    Remove
+                  </button>
                 </div>
               )}
             </div>
             <button
               onClick={handleUploadAllDocument}
               className="my-3 rounded-full bg-violet-normal px-4 py-2 text-white transition-opacity duration-300 hover:opacity-90 "
-              disabled={!documentImage.image}
+              disabled={!imageSrc}
+              // disabled={!documentFile.image}
             >
               Upload Document
             </button>
           </div>
         ) : (
+          // display this when user sees the modal the first time and
           <div className="space-y-4">
             <h1 className="text-2xl font-bold text-violet-dark">
               Upload a Selfie Image with ID

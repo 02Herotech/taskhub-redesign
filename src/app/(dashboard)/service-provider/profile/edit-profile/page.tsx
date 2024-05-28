@@ -2,13 +2,7 @@
 
 import EditProfileModal from "@/components/serviceProviderDashboard/profile/EditProfileModal";
 import Image from "next/image";
-import React, {
-  useEffect,
-  useState,
-  useRef,
-  useCallback,
-  ChangeEvent,
-} from "react";
+import React, { useEffect, useState } from "react";
 import { z } from "zod";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -24,11 +18,12 @@ import Webcam from "react-webcam";
 const EditProfile = () => {
   const [isEditingEnabled, setIsEditingEnabled] = useState(false);
   const [isFormModalShown, setIsFormModalShown] = useState(false);
-  const [isEditProfilePictureModalOpen, setIsEditProfilePictureModalOpen] =
-    useState(false);
-  const [documentImage, setDocumentImage] = useState<{ image: File | null }>({
-    image: null,
-  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isEditingProfilePicture, setisEditingProfilePicture] = useState<{
+    isEditing: boolean;
+    image: string | null;
+  }>({ isEditing: false, image: null });
+  const [documentImage, setDocumentImage] = useState<string | null>(null);
   const [suburbList, setSuburbList] = useState<string[]>([]);
 
   const session = useSession();
@@ -79,19 +74,6 @@ const EditProfile = () => {
     console.log("Watched", watchField);
   }, [watchField]);
 
-  const handleSetDocumentImage = (
-    event: React.ChangeEvent<HTMLInputElement>,
-  ) => {
-    const uploadedFile = event.target.files?.[0];
-    if (uploadedFile) {
-      setDocumentImage({ image: uploadedFile });
-    }
-  };
-
-  const handleRemoveDocumentImage = () => {
-    setDocumentImage({ image: null });
-  };
-
   useEffect(() => {
     if (user) {
       reset({
@@ -110,9 +92,19 @@ const EditProfile = () => {
   }, [user, reset]);
 
   const handleSubmitUserData: SubmitHandler<userDataType> = (data) => {
+    setIsSubmitting(true);
     setIsFormModalShown(true);
     setIsEditingEnabled(false);
-    const newUserData = { ...data, documentImage: documentImage.image };
+    const newUserData = { ...data, documentImage: documentImage };
+  };
+
+  const handleChangeProfilePicture = () => {
+    setisEditingProfilePicture((prev) => ({
+      ...prev,
+      isEditing: true,
+      image: null,
+    }));
+    setIsFormModalShown(true);
   };
 
   useEffect(() => {
@@ -140,11 +132,16 @@ const EditProfile = () => {
     <main className=" relative p-4 lg:p-8">
       {/* Top profile Image section */}
       <section className="flex flex-col items-center justify-center gap-1 pb-8 ">
-        <button className="relative mx-auto size-28 overflow-hidden rounded-full hover:shadow-md">
+        <button
+          className="relative mx-auto size-28 overflow-hidden rounded-full hover:shadow-md"
+          onClick={handleChangeProfilePicture}
+        >
           <BsPencilSquare className="absolute right-6 top-2/3 z-10 size-5 text-slate-700" />
           <Image
             src={
-              user?.profileImage ?? "/assets/images/serviceProvider/user.jpg"
+              isEditingProfilePicture.image ??
+              user?.profileImage ??
+              "/assets/images/serviceProvider/user.jpg"
             }
             alt="user"
             width={80}
@@ -338,71 +335,63 @@ const EditProfile = () => {
           <h3 className="text-xl font-bold text-violet-dark lg:text-center">
             Identification Document
           </h3>
-          <div className="flex flex-wrap gap-2 lg:col-span-8">
+          <div className="flex flex-wrap lg:col-span-8 lg:gap-8">
             {/* Upload Identification Document */}
             <label className="flex w-full flex-col gap-3 text-lg  text-violet-normal lg:max-w-64 ">
               <span className="flex items-center justify-between">
-                <span>Means of ID</span>
+                <span className="flex items-center justify-between gap-9">
+                  <span>Means of ID</span>
+                  {documentImage && (
+                    <BiCheck className="size-5 rounded-full bg-green-500 p-1 text-white" />
+                  )}
+                </span>
               </span>
               <div>
-                {documentImage.image ? (
+                {documentImage ? (
                   <div className="flex items-end justify-center space-x-2">
                     {/* Display a disabled input with message */}
-                    <label
-                      htmlFor="file-upload"
-                      className="flex h-48 w-1/2 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-slate-200 p-4"
-                    >
-                      <PiFileArrowDownDuotone className="text-xl text-tc-gray" />
-                      <span className="text-center text-tc-gray">
-                        Image Uploaded
-                      </span>
-                    </label>
-                    <button
-                      className="rounded-lg bg-tc-gray px-3 py-1 text-white"
-                      onClick={handleRemoveDocumentImage}
-                      type="button"
-                    >
-                      Remove
-                    </button>
+                    <Image
+                      src={documentImage}
+                      alt="Captured or Selected"
+                      width={300}
+                      height={300}
+                      className="rounded-xl"
+                    />
                   </div>
                 ) : (
                   // If no taskImage is uploaded, render the file input
-                  <label
-                    htmlFor="file-upload"
-                    className="flex h-48 w-1/2 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-slate-500 p-4"
+                  <button
+                    type="button"
+                    className="flex h-48 w-48 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-slate-500 p-4"
+                    onClick={() => setIsFormModalShown(true)}
                   >
                     <PiFileArrowDownDuotone className="text-xl text-tc-gray" />
                     <span className="text-center text-tc-gray">
                       Choose a File Upload supports: JPG, PDF, PNG.
                     </span>
-                    <input
-                      id="file-upload"
-                      type="file"
-                      accept=".png, .jpg, .jpeg, .gif"
-                      className="hidden"
-                      onChange={(e) => handleSetDocumentImage(e)}
-                      disabled={!isEditingEnabled}
-                    />
-                  </label>
+                  </button>
                 )}
               </div>
             </label>
 
-            <div className="flex w-full flex-col gap-3 lg:max-w-64 ">
-              <label htmlFor="driverlicence" className="text-sm text-slate-500">
-                Driver’s Licence Number
-              </label>
+            <label className="flex w-full flex-col gap-3 text-lg  text-violet-normal lg:max-w-64 ">
+              <span className="flex items-center justify-between">
+                <span className="flex items-center justify-between gap-9">
+                  <span> Driver’s Licence Number</span>
+                  {!errors.driverLicence &&
+                    watchField.driverLicence.length >= 8 && (
+                      <BiCheck className="size-5 rounded-full bg-green-500 p-1 text-white" />
+                    )}
+                </span>
+              </span>
               <input
-                // type="text"
+                type="text"
                 id="suburb"
                 className="rounded-xl border border-slate-100 p-2 text-slate-700 shadow  outline-none transition-shadow duration-300 hover:shadow-md lg:max-w-sm "
                 {...register("driverLicence")}
                 disabled={!isEditingEnabled}
               />
-              {errors.driverLicence && (
-                <p className="text-red-600">{errors.driverLicence.message}</p>
-              )}
-            </div>
+            </label>
           </div>
         </section>
         <div className="flex lg:items-end lg:justify-end lg:px-24">
@@ -413,7 +402,12 @@ const EditProfile = () => {
       </form>
       <EditProfileModal
         setIsFormModalShown={setIsFormModalShown}
+        setDocumentImage={setDocumentImage}
         isFormModalShown={isFormModalShown}
+        isEditingProfilePicture={isEditingProfilePicture}
+        setisEditingProfilePicture={setisEditingProfilePicture}
+        isSubmitting={isSubmitting}
+        setIsSubmitting={setIsSubmitting}
       />
     </main>
   );
