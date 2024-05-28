@@ -9,7 +9,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useSession } from "next-auth/react";
 import { PiFileArrowDownDuotone } from "react-icons/pi";
 import { BsPencilSquare } from "react-icons/bs";
-import { BiCheck } from "react-icons/bi";
+import { BiCamera, BiCheck } from "react-icons/bi";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import axios from "axios";
@@ -136,7 +136,9 @@ const EditProfile = () => {
           className="relative mx-auto size-28 overflow-hidden rounded-full hover:shadow-md"
           onClick={handleChangeProfilePicture}
         >
-          <BsPencilSquare className="absolute right-6 top-2/3 z-10 size-5 text-slate-700" />
+          <span className="absolute right-3 top-2/3 z-10 rounded-full bg-white p-1 text-violet-normal">
+            <BiCamera className=" size-5" />
+          </span>
           <Image
             src={
               isEditingProfilePicture.image ??

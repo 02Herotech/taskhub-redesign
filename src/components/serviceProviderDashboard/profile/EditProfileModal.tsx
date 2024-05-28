@@ -72,14 +72,14 @@ const EditProfileModal = ({
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        setImageSrc(reader.result as string);
-
+        const img = reader.result as string;
+        setImageSrc(img);
         isEditingProfilePicture.isEditing
           ? setisEditingProfilePicture((prev) => ({
               ...prev,
-              image: reader.result as string,
+              image: img,
             }))
-          : setDocumentImage(reader.result as string);
+          : setDocumentImage(img);
       };
       reader.readAsDataURL(file);
     }
