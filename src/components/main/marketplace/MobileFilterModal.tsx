@@ -1,8 +1,13 @@
 "use client";
 
 import { RootState } from "@/store";
-import React, { Dispatch, SetStateAction, useState } from "react";
-import { useSelector } from "react-redux";
+import {
+  updateFilterData,
+  updateFilterStatus,
+} from "@/store/Features/marketplace";
+import axios from "axios";
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import ReactSlider from "react-slider";
 
 interface ModalProp {
@@ -14,7 +19,10 @@ const MobileFilterModal = ({
   isMobileFilterModalShown,
   setIsMobileFilterModalShown,
 }: ModalProp) => {
-  const { categories } = useSelector((state: RootState) => state.market);
+  const dispatch = useDispatch();
+  const { categories, listing } = useSelector(
+    (state: RootState) => state.market,
+  );
   const [filterState, setFilterState] = useState({
     availbleTask: false,
     taskWithNoOffers: false,
@@ -44,6 +52,42 @@ const MobileFilterModal = ({
     });
   };
 
+  const handleFetchByAvailability = () => {
+    dispatch(
+      updateFilterData({
+        data: listing,
+        section: "available",
+        value: filterState.availbleTask,
+      }),
+    );
+  };
+
+  useEffect(() => {
+    handleFetchByAvailability();
+    // eslint-disable-next-line
+  }, [filterState.availbleTask]);
+
+  const handleFilterbyCategory = async (
+    id: number,
+    category: string,
+    title: string,
+  ) => {
+    dispatch(updateFilterStatus({ title, value: category }));
+
+    // filter by category
+    const url =
+      "https://smp.jacinthsolutions.com.au/api/v1/listing/listing-by-category/" +
+      id +
+      "?pageNumber=0";
+    const { data } = await axios.get(url);
+    dispatch(
+      updateFilterData({
+        data: data.content,
+        section: "subCategory",
+        value: category,
+      }),
+    );
+  };
   return (
     <section
       className={`fixed left-0 top-0 z-40 flex h-screen w-screen items-center justify-center bg-black bg-opacity-70 transition-all duration-300 ${isMobileFilterModalShown ? "pointer-events-auto opacity-100 " : " pointer-events-none opacity-0"} `}
@@ -58,6 +102,7 @@ const MobileFilterModal = ({
           <h2 className="text-2xl font-semibold text-violet-normal">
             Filter By
           </h2>
+          {/* Filter by available */}
           <div className="space-y-2 px-4 ">
             <label className="flex items-center gap-2 font-medium text-violet-normal">
               <input
@@ -75,7 +120,7 @@ const MobileFilterModal = ({
             <label className="flex items-center gap-2 font-medium text-violet-normal">
               <input
                 type="checkbox"
-                name="available"
+                name="aroundavailable"
                 onChange={() =>
                   setFilterState({
                     ...filterState,
@@ -108,6 +153,11 @@ const MobileFilterModal = ({
                           ...filterState,
                           category: item.categoryName,
                         });
+                    handleFilterbyCategory(
+                      item.id,
+                      item.categoryName,
+                      "category",
+                    );
                   }}
                 >
                   <span className="h-fit w-fit rounded-full bg-orange-normal p-2 "></span>

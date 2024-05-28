@@ -104,7 +104,6 @@ const MarketPlaceFilter = () => {
       subCategory.id +
       "?pageNumber=0";
     const { data } = await axios.get(url);
-    console.log("subCategories", data.content);
     dispatch(
       updateFilterData({
         data: data.content,
@@ -126,6 +125,7 @@ const MarketPlaceFilter = () => {
   // pending,
   const handleFilterByPricing = async () => {
     const { minPrice, maxPrice } = pricing;
+    console.log(minPrice, maxPrice);
     const url =
       "https://smp.jacinthsolutions.com.au/api/v1/listing/price/0?minPrice=" +
       minPrice +
@@ -133,6 +133,7 @@ const MarketPlaceFilter = () => {
       maxPrice;
     const { data } = await axios.get(url);
     const content = data.content;
+    console.log(content);
     dispatch(
       updateFilterData({
         data: content,

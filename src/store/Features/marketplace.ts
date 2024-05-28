@@ -74,7 +74,6 @@ export const marketSlice = createSlice({
           break;
         case "subCategory":
           if (data.length > 0) {
-            console.log(data);
             newFilter = prevFilter.filter(
               (item, index) =>
                 item.subCategory.name === data[index].subCategory.name,
@@ -96,6 +95,13 @@ export const marketSlice = createSlice({
                 item.planOnePrice <= value.maxPrice,
             );
           }
+          break;
+        case "available":
+          if (value === "available") {
+            prevFilter = state.listing;
+            break;
+          }
+          prevFilter = [];
           break;
         default:
           newFilter = prevFilter;
