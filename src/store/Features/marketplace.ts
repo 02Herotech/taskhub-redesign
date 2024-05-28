@@ -73,7 +73,8 @@ export const marketSlice = createSlice({
           newFilter = data;
           break;
         case "subCategory":
-          if (data) {
+          if (data.length > 0) {
+            console.log(data);
             newFilter = prevFilter.filter(
               (item, index) =>
                 item.subCategory.name === data[index].subCategory.name,
