@@ -1,6 +1,6 @@
 "use client";
 
-import { formatAmount } from "@/lib/utils";
+import { dayOfWeekNames, formatAmount, monthNames } from "@/lib/utils";
 import { Task } from "@/types/services/tasks";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
@@ -29,34 +29,9 @@ const TaskCard = ({ task }: TaskCardProps) => {
   const day = date.getDate();
   const daySuffix = suffixes[(day - 1) % 10] || suffixes[3];
 
-  // Define month names
-  const monthNames = [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December",
-  ];
   const month = date.getMonth();
   const monthName = monthNames[month];
 
-  // Define day of the week names
-  const dayOfWeekNames = [
-    "Sunday",
-    "Monday",
-    "Tuesday",
-    "Wednesday",
-    "Thursday",
-    "Friday",
-    "Saturday",
-  ];
   const dayOfWeek = date.getDay();
   const dayOfWeekName = dayOfWeekNames[dayOfWeek];
 
@@ -102,13 +77,15 @@ const TaskCard = ({ task }: TaskCardProps) => {
         <h2 className="overflow-hidden truncate text-ellipsis whitespace-nowrap py-4 text-2xl font-bold text-primary lg:text-[32px]">
           {task.taskDescription}
         </h2>
-        <img
+        <Image
           src={
             task?.taskImage ??
             "../../../../../public/assets/images/placeholder.png"
           }
           alt="Logo"
-          className="h-[46px] w-[46px] rounded-full border object-cover"
+          width={46}
+          height={46}
+          className="size-[46px] rounded-full border object-cover"
         />
       </div>
       <div className="my-4 space-y-2">

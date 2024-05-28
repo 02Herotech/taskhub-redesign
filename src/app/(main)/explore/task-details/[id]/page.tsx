@@ -5,7 +5,7 @@ import { HiOutlineLocationMarker } from 'react-icons/hi'
 import { FiCalendar, FiClock } from "react-icons/fi";
 import Image from 'next/image';
 import { useGetTaskByIdQuery } from '@/services/tasks';
-import { formatAmount } from '@/lib/utils';
+import { dayOfWeekNames, formatAmount, monthNames } from '@/lib/utils';
 
 const TaskDetailsPage = ({ params }: { params: { id: string } }) => {
 
@@ -30,13 +30,9 @@ const TaskDetailsPage = ({ params }: { params: { id: string } }) => {
     const day = date.getDate();
     const daySuffix = suffixes[(day - 1) % 10] || suffixes[3];
 
-    // Define month names
-    const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
     const month = date.getMonth();
     const monthName = monthNames[month];
 
-    // Define day of the week names
-    const dayOfWeekNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
     const dayOfWeek = date.getDay();
     const dayOfWeekName = dayOfWeekNames[dayOfWeek];
 
