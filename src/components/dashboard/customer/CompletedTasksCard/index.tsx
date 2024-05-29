@@ -129,6 +129,7 @@ const CompletedTasksCard = ({ task }: TaskCardProps) => {
                                         onClick={() => {
                                             setDropReviewPopup(false)
                                             setReviewSent(false) 
+
                                         }}
                                     >
                                         Cancel

@@ -26,6 +26,7 @@ const OnogoingTaskDetailsPage = ({ params }: { params: { id: string } }) => {
         "I need time to inspect task",
         "I’m dissatisfied with the service",
         "I didn’t receive any service",
+
         "Others"
     ];
 
@@ -93,6 +94,7 @@ const OnogoingTaskDetailsPage = ({ params }: { params: { id: string } }) => {
                                             ))}
                                         </div>
                                     )}
+
                                     {selectedRevision === "Others" && (
                                         <div className="space-y-2">
                                             <label className="font-bold text-[#140B31] text-lg">Others</label>
@@ -144,6 +146,7 @@ const OnogoingTaskDetailsPage = ({ params }: { params: { id: string } }) => {
                     </div>
                 </Popup>
             )}
+
             <div className='p-4 lg:px-14 mt-20'>
                 <div className="mt-14 mb-8 space-y-8">
                     <h4 className='text-[#140B31] font-satoshiBold font-bold text-3xl lg:text-5xl'>My Tasks</h4>
@@ -213,6 +216,7 @@ const OnogoingTaskDetailsPage = ({ params }: { params: { id: string } }) => {
                         <div className="flex items-center justify-end space-x-10 lg:text-xl">
                             <button className='text-tc-orange' onClick={() => setRequestRevisionPopup(true)}>Request Revision</button>
                             <button className='text-[#34A853]' onClick={() => setApprovePaymentPopup(true)}>Approve payment</button>
+
                         </div>
                     </div>
                 </div>
