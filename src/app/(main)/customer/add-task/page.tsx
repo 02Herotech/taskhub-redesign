@@ -28,7 +28,7 @@ interface FormData {
   taskDate: string;
   taskType: string;
   customerBudget: number | null;
-  hubTime: string;
+  termsAccepted: boolean;
   taskAddress: string[];
   categoryId: number | null;
   taskDescription: string;
@@ -68,7 +68,7 @@ const AddTaskForm: React.FC = () => {
     customerBudget: getCookie("categoryId")
       ? parseInt(getCookie("categoryId") as string)
       : null,
-    hubTime: getCookie("hubTime") || "",
+    termsAccepted: false,
     categoryId: getCookie("categoryId")
       ? parseInt(getCookie("categoryId") as string)
       : null,
@@ -108,7 +108,7 @@ const AddTaskForm: React.FC = () => {
        maxAge: 120,
      });
      setCookie("customerBudget", task.customerBudget, { maxAge: 120 });
-     setCookie("hubTime", task.hubTime, { maxAge: 120 });
+     setCookie("hubTime", task.termsAccepted, { maxAge: 120 });
      setCookie("categoryId", task.categoryId?.toString(), { maxAge: 120 });
      setCookie("taskDescription", task.taskDescription, { maxAge: 120 });
    }, [task]);
@@ -176,7 +176,7 @@ const AddTaskForm: React.FC = () => {
       error.message =  "please select date";
     }
 
-    if (!selectedTime && !isSelectedTime) {
+    if ((!selectedTime && !selectedDate) || termsAccepted) {
       error.message = "please select a time"
     }
 
@@ -205,11 +205,7 @@ const AddTaskForm: React.FC = () => {
     }
   };
 
-  const handleTickChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedValue = event.target.value;
-    setIsSelectedTime(selectedValue);
-  };
-
+ 
   const handleCategoryChange = (
     event: React.ChangeEvent<HTMLSelectElement>,
   ) => {
@@ -325,7 +321,6 @@ const AddTaskForm: React.FC = () => {
       task.customerBudget,
       task.taskDescription,
       selectedCategory,
-      selectedDate,
     ];
 
     if (isOpen && activeButtonIndex === 1) {
@@ -333,17 +328,13 @@ const AddTaskForm: React.FC = () => {
     } else {
       requiredFields.push(selectedCode, selectedCity);
     }
-    if (termsAccepted) {
-      requiredFields.push(isSelectedTime)
-    } else {
-      requiredFields.push(task.taskTime);
-    }
+    
     const filledFields = requiredFields.filter(
       (value) => value !== "" && value !== null,
     ).length;
 
     // Calculate the total number of fields that need to be filled
-    const totalFields = isOpen && activeButtonIndex === 0 ? 7 : 6;
+    const totalFields = isOpen && activeButtonIndex === 0 ? 6 : 5;
 
     return Math.round((filledFields / totalFields) * 100);
   };
@@ -359,18 +350,15 @@ const AddTaskForm: React.FC = () => {
         if (termsAccepted) {
           finalTask = { ...finalTask };
         }
-        if (termsAccepted) {
-          const hub = isSelectedTime;
-          finalTask = { ...finalTask, hubTime: hub };
-        }
-        if ( selectedDate) {
+        
+        if (selectedDate && selectedTime) {
           const date = dateString;
-          finalTask = { ...finalTask, taskDate: date, };
+          const time = timeString;
+          finalTask = { ...finalTask, taskDate: date, taskTime: time };
+        } else if (termsAccepted) {
+          finalTask = { ...finalTask, termsAccepted: true };
         }
-        if (selectedTime) {
-           const time = timeString;
-           finalTask = { ...finalTask,  taskTime: time };
-        }
+
         if (isOpen && activeButtonIndex === 1) {
           const type = "REMOTE_SERVICE";
           finalTask = { ...finalTask, taskType: type };
@@ -409,7 +397,7 @@ const AddTaskForm: React.FC = () => {
           taskTime: "",
           taskDate: "",
           taskType: "",
-          hubTime: "",
+          termsAccepted: false,
           taskAddress: [],
           customerBudget: null,
           categoryId: null,
@@ -575,6 +563,7 @@ const AddTaskForm: React.FC = () => {
                       placeholderText="Choose Time"
                       id="taskTime"
                       name="taskTime"
+                      disabled={termsAccepted}
                       className="w-full cursor-pointer rounded-2xl border  border-tc-gray  bg-[#EBE9F4] px-2 py-1 outline-none placeholder:text-[14px] placeholder:font-bold "
                     />
                     <IoMdArrowDropdown className="absolute right-5 top-2 cursor-pointer text-status-purpleBase" />
@@ -588,6 +577,7 @@ const AddTaskForm: React.FC = () => {
                       placeholderText="Choose Date"
                       id="taskDate"
                       name="taskDate"
+                      disabled={termsAccepted}
                       className="w-full cursor-pointer rounded-2xl  border border-tc-gray bg-[#EBE9F4] px-2 py-1 outline-none placeholder:text-[14px] placeholder:font-bold "
                     />
 
@@ -609,31 +599,7 @@ const AddTaskForm: React.FC = () => {
                   </div>
                 </div>
               </div>
-              {termsAccepted && (
-                <div className="relative mt-2">
-                  <select
-                    value={isSelectedTime}
-                    onChange={handleTickChange}
-                    name="hubTime"
-                    className="w-full appearance-none rounded-2xl border border-tc-gray bg-[#EBE9F4] px-3 py-1 text-[14px] text-status-purpleBase   outline-none"
-                  >
-                    <option value="">Select Time Of The Day</option>
-                    <option value="MORNING_BEFORE_10AM">
-                      Morning, Before 10am
-                    </option>
-                    <option value="MIDDAY_10AM_to_12PM">
-                      Midday, 10am to 12pm
-                    </option>
-                    <option value="AFTERNOON_12PM_to_2PM">
-                      Afternoon, 12pm to 2pm
-                    </option>
-                    <option value="EVENING_2PM_to_5PM">
-                      Evening, 2pm to 5pm
-                    </option>
-                  </select>
-                  <IoMdArrowDropdown className="absolute right-5 top-2 cursor-pointer text-status-purpleBase" />
-                </div>
-              )}
+
               <div className="text-[#FF0000]">
                 {Object.keys(error).map((key, index) => (
                   <div key={index}>{error[key]}</div>
