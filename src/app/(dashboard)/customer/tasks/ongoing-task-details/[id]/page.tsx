@@ -19,6 +19,7 @@ const OnogoingTaskDetailsPage = ({ params }: { params: { id: string } }) => {
     const [requestRevisionPopup, setRequestRevisionPopup] = useState(false);
     const [revisionSent, setRevisionSent] = useState(false);
     const [selectedRevision, setSelectedRevision] = useState('');
+    const [approvePaymentPopup, setApprovePaymentPopup] = useState(false);
 
     const revisions = [
         "I need the service redone",
@@ -40,8 +41,7 @@ const OnogoingTaskDetailsPage = ({ params }: { params: { id: string } }) => {
         )
     }
 
-    const handleReviewSubmission = (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
+    const handleRevisionSubmission = () => {
         setRevisionSent(true);
     }
 
@@ -77,7 +77,7 @@ const OnogoingTaskDetailsPage = ({ params }: { params: { id: string } }) => {
                                     <div className="bg-[#140B31] p-1 rounded-full size-9 flex items-center justify-center text-white">{RevisionSvg}</div>
                                     <h2 className="text-primary font-bold lg:text-2xl">Request Revision</h2>
                                 </div>
-                                <form onSubmit={handleReviewSubmission} className="max-lg:p-5 lg:py-5 lg:px-8">
+                                <form onSubmit={handleRevisionSubmission} className="max-lg:p-5 lg:py-5 lg:px-8">
                                     <p className='mb-5 text-lg font-satoshiMedium text-[#140B31]'>We are committed to making sure you have the best experience. Why aren’t you ready to approve payment?</p>
                                     {selectedRevision !== "Others" && (
                                         <div className="mb-8 font-satoshi text-xl font-medium text-black space-y-5">
@@ -113,6 +113,34 @@ const OnogoingTaskDetailsPage = ({ params }: { params: { id: string } }) => {
                                 </form>
                             </>
                         )}
+                    </div>
+                </Popup>
+            )}
+            {approvePaymentPopup && (
+                <Popup isOpen={approvePaymentPopup} onClose={() => setApprovePaymentPopup(false)}>
+                    <div className="relative bg-[#EBE9F4] rounded-2xl min-h-[200px] lg:w-[577px] font-satoshi overflow-y-auto">
+                        <div className="flex items-center justify-center h-full font-satoshi py-10 px-20">
+                            <div className="flex flex-col items-center space-y-5">
+                                <div className="bg-[#140B31] p-1 rounded-full size-14 flex items-center justify-center text-white">{SuccessfulSvg}</div>
+                                <h1 className="font-black text-4xl text-[#2A1769]">
+                                    Approve payment
+                                </h1>
+                                <p className="mb-8 font-satoshiMedium text-center text-xl font-medium text-[#140B31]">
+                                    Satisfied with the service? Great! Once you approve this payment, your service will be marked as complete. Any revision after this step may attract extra charges.
+                                </p>
+                                <div className="flex items-center justify-center space-x-4">
+                                    <Button
+                                        className="w-[151px] max-lg:text-sm rounded-full py-6"
+                                        theme='outline'
+                                    >
+                                        Cancel
+                                    </Button>
+                                    <Button className="w-[151px] max-lg:text-sm rounded-full py-6">
+                                        Approve
+                                    </Button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </Popup>
             )}
@@ -184,7 +212,7 @@ const OnogoingTaskDetailsPage = ({ params }: { params: { id: string } }) => {
                         </h2>
                         <div className="flex items-center justify-end space-x-10 lg:text-xl">
                             <button className='text-tc-orange' onClick={() => setRequestRevisionPopup(true)}>Request Revision</button>
-                            <button className='text-[#34A853]'>Approve payment</button>
+                            <button className='text-[#34A853]' onClick={() => setApprovePaymentPopup(true)}>Approve payment</button>
                         </div>
                     </div>
                 </div>
