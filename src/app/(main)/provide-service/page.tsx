@@ -523,8 +523,8 @@ const ProvideService: React.FC = () => {
                 </div>
 
                 <div className="lg:hidden">
-                {/* @ts-ignore */}
-                  <AiDesciption setTask={setTask} task={task} />
+                  {/* @ts-ignore */}
+                  <AiDesciption setTask={setTask} task={task} displayType={'card'} />
                 </div>
                 <div className="grid space-y-3">
                   <label className="font-semibold">
@@ -541,6 +541,9 @@ const ProvideService: React.FC = () => {
                       setTask({ ...task, listingDescription: e.target.value })
                     }
                   ></textarea>
+                </div>
+                <div className="!mt-[-1px]">
+                  <AiDesciption setTask={setTask} task={task} displayType={'text'} />
                 </div>
                 {Object.keys(errors).map((key, index) => (
                   <div key={index} className="text-red-500">
@@ -560,11 +563,10 @@ const ProvideService: React.FC = () => {
                 <h2 className="font-bold">Choose the pricing plans.</h2>
                 <div className="grid space-y-4 text-[13px] text-[#221354]">
                   <input
-                    className={`rounded-2xl ${
-                      activePlanIndex === 0
+                    className={`rounded-2xl ${activePlanIndex === 0
                         ? " disabled bg-transparent p-1 text-lg font-bold text-status-darkViolet"
                         : "bg-[#EBE9F4] p-4 hover:bg-status-darkViolet hover:text-white "
-                    } cursor-pointer text-left outline-none placeholder:text-[#2A1769] hover:placeholder:text-white`}
+                      } cursor-pointer text-left outline-none placeholder:text-[#2A1769] hover:placeholder:text-white`}
                     name="physical"
                     onClick={() => handlePlan(0)}
                     placeholder="Plan 1"
@@ -607,11 +609,10 @@ const ProvideService: React.FC = () => {
                     </div>
                   )}
                   <input
-                    className={`rounded-2xl ${
-                      activePlanIndex === 1
+                    className={`rounded-2xl ${activePlanIndex === 1
                         ? " disabled bg-transparent p-1 text-lg font-bold text-status-darkViolet"
                         : "bg-[#EBE9F4] p-4 hover:bg-status-darkViolet hover:text-white"
-                    } cursor-pointer text-left outline-none placeholder:text-[#2A1769] hover:placeholder:text-white`}
+                      } cursor-pointer text-left outline-none placeholder:text-[#2A1769] hover:placeholder:text-white`}
                     name="physical"
                     onClick={() => handlePlan(1)}
                     placeholder="Plan 2  (Optional)"
@@ -654,11 +655,10 @@ const ProvideService: React.FC = () => {
                     </div>
                   )}
                   <input
-                    className={`rounded-2xl ${
-                      activePlanIndex === 2
+                    className={`rounded-2xl ${activePlanIndex === 2
                         ? " disabled bg-transparent p-1 text-lg font-bold text-status-darkViolet"
                         : "bg-[#EBE9F4] p-4 hover:bg-status-darkViolet hover:text-white"
-                    } cursor-pointer text-left outline-none placeholder:text-[#2A1769] hover:placeholder:text-white`}
+                      } cursor-pointer text-left outline-none placeholder:text-[#2A1769] hover:placeholder:text-white`}
                     name="physical"
                     onClick={() => handlePlan(2)}
                     placeholder="Plan 3  (Optional)"
@@ -706,11 +706,10 @@ const ProvideService: React.FC = () => {
                 <h2 className="text-xl font-bold">Type of Service</h2>
                 <div className="flex space-x-4 text-[13px] text-[#221354]">
                   <input
-                    className={`rounded-2xl p-2 ${
-                      activeButtonIndex === 0
+                    className={`rounded-2xl p-2 ${activeButtonIndex === 0
                         ? "bg-status-purpleBase text-white"
                         : "bg-[#EBE9F4] placeholder:text-white hover:bg-status-purpleBase hover:text-white"
-                    } cursor-pointer outline-none placeholder:font-bold`}
+                      } cursor-pointer outline-none placeholder:font-bold`}
                     name="physical"
                     onClick={() => handleClick(0)}
                     placeholder="Physical Services"
@@ -718,11 +717,10 @@ const ProvideService: React.FC = () => {
                     readOnly
                   />
                   <input
-                    className={`rounded-2xl p-2 ${
-                      activeButtonIndex === 1
+                    className={`rounded-2xl p-2 ${activeButtonIndex === 1
                         ? "bg-status-purpleBase text-white"
                         : "bg-[#EBE9F4] placeholder:text-white hover:bg-status-purpleBase hover:text-white "
-                    } cursor-pointer outline-none placeholder:font-bold`}
+                      } cursor-pointer outline-none placeholder:font-bold`}
                     name="remote"
                     onClick={() => {
                       handleClick(1);
@@ -1085,19 +1083,17 @@ p-3 text-center text-[12px] text-[#fe9b07]"
       <div className="w-full">
         <div className="mb-3 flex justify-center md:space-x-5">
           <div
-            className={`${
-              currentPage === 1
+            className={`${currentPage === 1
                 ? "text-status-purpleBase"
                 : "text-status-purpleBase"
-            }`}
+              }`}
           >
             <p className="flex items-center  text-[12px] md:text-[16px] lg:gap-3">
               <span
-                className={`${
-                  currentPage === 1
+                className={`${currentPage === 1
                     ? "bg-status-purpleBase text-white"
                     : "bg-status-purpleBase text-white"
-                } rounded-2xl border-none px-3 py-2`}
+                  } rounded-2xl border-none px-3 py-2`}
               >
                 01
               </span>{" "}
@@ -1108,19 +1104,17 @@ p-3 text-center text-[12px] text-[#fe9b07]"
             </p>
           </div>
           <div
-            className={`${
-              currentPage === 2 || currentPage === 3
+            className={`${currentPage === 2 || currentPage === 3
                 ? "text-status-purpleBase"
                 : " text-[#716F78]"
-            }`}
+              }`}
           >
             <p className="flex items-center gap-2 text-[12px] md:text-[16px] lg:gap-3">
               <span
-                className={`${
-                  currentPage === 2 || currentPage === 3
+                className={`${currentPage === 2 || currentPage === 3
                     ? "bg-status-purpleBase text-white"
                     : "bg-[#EAE9EB] text-[#716F78]"
-                } rounded-2xl border-none px-3 py-2`}
+                  } rounded-2xl border-none px-3 py-2`}
               >
                 02
               </span>{" "}
@@ -1131,17 +1125,15 @@ p-3 text-center text-[12px] text-[#fe9b07]"
             </p>
           </div>
           <div
-            className={`${
-              currentPage === 3 ? "text-status-purpleBase" : " text-[#716F78]"
-            }`}
+            className={`${currentPage === 3 ? "text-status-purpleBase" : " text-[#716F78]"
+              }`}
           >
             <p className="flex items-center gap-2 text-[12px] md:text-[16px] lg:gap-3">
               <span
-                className={`${
-                  currentPage === 3
+                className={`${currentPage === 3
                     ? "bg-status-purpleBase text-white"
                     : "bg-[#EAE9EB] text-[#716F78]"
-                } rounded-2xl border-none px-3 py-2`}
+                  } rounded-2xl border-none px-3 py-2`}
               >
                 03
               </span>{" "}
@@ -1159,13 +1151,12 @@ p-3 text-center text-[12px] text-[#fe9b07]"
               {/* Progress bar */}
               <div className="h-1 w-2/3 overflow-hidden bg-[#EAE9EB]">
                 <div
-                  className={`h-full ${
-                    currentPage === 1
+                  className={`h-full ${currentPage === 1
                       ? "bg-status-purpleBase"
                       : currentPage === 2
                         ? "bg-status-purpleBase"
                         : "bg-status-purpleBase"
-                  }`}
+                    }`}
                   style={{ width: `${progress}%` }}
                 />
               </div>
@@ -1179,7 +1170,7 @@ p-3 text-center text-[12px] text-[#fe9b07]"
           {currentPage === 1 && (
             <div className="mr-[50px] hidden lg:ml-[10%] lg:block lg:w-[390px] xl:ml-[15%] ">
               {/* @ts-ignore */}
-              <AiDesciption setTask={setTask} task={task} />
+              <AiDesciption setTask={setTask} task={task} displayType={'card'} />
             </div>
           )}
 

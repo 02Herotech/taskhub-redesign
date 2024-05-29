@@ -37,51 +37,7 @@ const useImageTransition = (images: any, transitionDuration: any) => {
   return currentImageIndex;
 };
 
-interface searchListing {
-  id: number;
-  posterId: number;
-  businessName: string;
-  serviceCategory: string;
-  subCategory: string;
-  serviceDescription: string;
-  serviceName: string;
-  pricing: number;
-  availableDays: [string];
-  available: boolean;
-  startHour: number;
-  closeMinute: number;
-  closeHour: number;
-  startMinute: number;
-  availableFrom: {
-    hour: number;
-    minute: number;
-    second: number;
-    nano: number;
-  };
-  availableTo: {
-    hour: number;
-    minute: number;
-    second: number;
-    nano: number;
-  };
-  userAddress: {
-    id: number;
-    streetNumber: string;
-    streetName: string;
-    unitNumber: string;
-    suburb: string;
-    state: string;
-    postCode: string;
-  };
-  deleted: boolean;
-  stripeId: string;
-  businessPictures: [""];
-}
-
 const HeroSection = () => {
-  const { data: session } = useSession();
-  const router = useRouter();
-  const customerParams = new URLSearchParams({ userType: "customer" });
   const serviceProviderParams = new URLSearchParams({ userType: "serviceProvider" });
 
   // Image1 transition

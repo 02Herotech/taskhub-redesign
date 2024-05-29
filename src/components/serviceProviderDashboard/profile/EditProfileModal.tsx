@@ -1,5 +1,7 @@
 "use client";
 
+import axios from "axios";
+import { useSession } from "next-auth/react";
 import Image from "next/image";
 import React, {
   ChangeEvent,
@@ -42,15 +44,17 @@ const EditProfileModal = ({
 }: ModalPropsTypes) => {
   // set initial state value
   const [isUploadInitiated, setIsUploadInitiated] = useState(false);
-  // const [isUploadCompleted, setIsUploadCompleted] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  // handlig image upload
   const [imageSrc, setImageSrc] = useState<string | null>(null);
   const [cameraActive, setCameraActive] = useState<boolean>(false);
-
+  const [profileImage, setProfileImage] = useState<File>();
   const webcamRef = useRef<Webcam>(null);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const session = useSession();
+  const token = session?.data?.user?.accessToken;
 
   const capture = useCallback(() => {
     if (webcamRef.current) {
@@ -67,10 +71,28 @@ const EditProfileModal = ({
     // eslint-disable-next-line
   }, [webcamRef]);
 
+  const convertUrlToBlob = async (url: string): Promise<Blob> => {
+    const response = await fetch(url);
+    const blob = await response.blob();
+    return blob;
+  };
+
+  const getImageURL = () => {
+    if (profileImage instanceof File) {
+      return URL.createObjectURL(profileImage);
+    }
+    return "";
+  };
+
+  const imageURL = getImageURL();
+
   const handleFileInputChange = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
+    setProfileImage(file);
     if (file) {
+      setProfileImage(file);
       const reader = new FileReader();
+      // const defaultImageBlob = await convertUrlToBlob(defaultImageSrc);
       reader.onloadend = () => {
         const img = reader.result as string;
         setImageSrc(img);
@@ -99,9 +121,24 @@ const EditProfileModal = ({
     setDocumentImage(null);
   };
 
-  const handleUploadAllDocument = () => {
-    setIsFormModalShown(false);
-    setIsUploadInitiated(false);
+  const handleUploadAllDocument = async () => {
+    try {
+      setLoading(true);
+      const url =
+        "https://smp.jacinthsolutions.com.au/api/v1/service_provider/profile_picture";
+      const { data } = await axios.post(url, profileImage, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+      console.log(data);
+      setIsFormModalShown(false);
+      setIsUploadInitiated(false);
+    } catch (error) {
+      console.log(error);
+      console.log("there is an error");
+    }
   };
 
   const handleFileUpload = () => {
