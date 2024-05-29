@@ -35,7 +35,7 @@ const MobileNavigation = ({ setShowMobileNav }: Props) => {
 
 	const handleLogout = async () => {
 		try {
-			router.push("/");
+			router.push("/home");
 			await signOut();
 
 			const response = await axios.post(
