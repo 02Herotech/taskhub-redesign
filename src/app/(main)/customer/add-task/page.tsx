@@ -19,7 +19,7 @@ import tick from "../../../../../public/assets/icons/tick.svg";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { setCookie, getCookie } from 'cookies-next'; 
+import { setCookie, getCookie } from "cookies-next";
 
 interface FormData {
   taskBriefDescription: string;
@@ -51,7 +51,7 @@ interface PostalCodeData {
 
 const AddTaskForm: React.FC = () => {
   const session = useSession();
-  const router = useRouter()
+  const router = useRouter();
   const token = session?.data?.user.accessToken;
   const isAuthenticated = session?.status === "authenticated";
   const authenticated = session?.data?.user.user.enabled;
@@ -96,22 +96,24 @@ const AddTaskForm: React.FC = () => {
 
   const handleLoginNavigation = () => {
     router.push("/auth/login?from=/customer/add-task");
-  }
+  };
 
-   useEffect(() => {
-     // Save task data to cookies whenever it changes
-     setCookie("taskBriefDescription", task.taskBriefDescription, { maxAge: 120 });
-     setCookie("taskTime", task.taskTime, { maxAge: 120 });
-     setCookie("taskDate", task.taskDate, { maxAge: 120 });
-     setCookie("taskType", task.taskType, { maxAge: 120 });
-     setCookie("taskAddress", JSON.stringify(task.taskAddress), {
-       maxAge: 120,
-     });
-     setCookie("customerBudget", task.customerBudget, { maxAge: 120 });
-     setCookie("hubTime", task.hubTime, { maxAge: 120 });
-     setCookie("categoryId", task.categoryId?.toString(), { maxAge: 120 });
-     setCookie("taskDescription", task.taskDescription, { maxAge: 120 });
-   }, [task]);
+  useEffect(() => {
+    // Save task data to cookies whenever it changes
+    setCookie("taskBriefDescription", task.taskBriefDescription, {
+      maxAge: 120,
+    });
+    setCookie("taskTime", task.taskTime, { maxAge: 120 });
+    setCookie("taskDate", task.taskDate, { maxAge: 120 });
+    setCookie("taskType", task.taskType, { maxAge: 120 });
+    setCookie("taskAddress", JSON.stringify(task.taskAddress), {
+      maxAge: 120,
+    });
+    setCookie("customerBudget", task.customerBudget, { maxAge: 120 });
+    setCookie("hubTime", task.hubTime, { maxAge: 120 });
+    setCookie("categoryId", task.categoryId?.toString(), { maxAge: 120 });
+    setCookie("taskDescription", task.taskDescription, { maxAge: 120 });
+  }, [task]);
 
   useEffect(() => {
     const fetchPostalCodeData = async () => {
@@ -172,12 +174,12 @@ const AddTaskForm: React.FC = () => {
       error.taskDescription = "please write down a description";
     }
 
-    if (!selectedDate ) {
-      error.message =  "please select date";
+    if (!selectedDate) {
+      error.message = "please select date";
     }
 
     if (!selectedTime && !isSelectedTime) {
-      error.message = "please select a time"
+      error.message = "please select a time";
     }
 
     setError(error);
@@ -232,7 +234,7 @@ const AddTaskForm: React.FC = () => {
     setCurrentPage(currentPage - 1);
   };
 
- const handlePrice = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handlePrice = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
     const numberValue = value === "" ? 0 : parseFloat(value);
     setTask({
@@ -248,16 +250,17 @@ const AddTaskForm: React.FC = () => {
       ...task,
       [event.target.name]: event.target.value,
     });
-      setWordCount(event.target.value.split(/\s+/).filter(Boolean).length);
+    setWordCount(event.target.value.split(/\s+/).filter(Boolean).length);
   };
 
-  const handleDescription = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  const handleDescription = (
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     setTask({
       ...task,
       taskDescription: event.target.value,
     });
-   setWordCounts(event.target.value.split(/\s+/).filter(Boolean).length);
+    setWordCounts(event.target.value.split(/\s+/).filter(Boolean).length);
   };
 
   const handletaskImageUpload = (
@@ -284,6 +287,7 @@ const AddTaskForm: React.FC = () => {
     }
     return "";
   };
+  const imageUrl = getImageURL();
 
   const imageURL = getImageURL();
 
@@ -334,7 +338,7 @@ const AddTaskForm: React.FC = () => {
       requiredFields.push(selectedCode, selectedCity);
     }
     if (termsAccepted) {
-      requiredFields.push(isSelectedTime)
+      requiredFields.push(isSelectedTime);
     } else {
       requiredFields.push(task.taskTime);
     }
@@ -363,13 +367,13 @@ const AddTaskForm: React.FC = () => {
           const hub = isSelectedTime;
           finalTask = { ...finalTask, hubTime: hub };
         }
-        if ( selectedDate) {
+        if (selectedDate) {
           const date = dateString;
-          finalTask = { ...finalTask, taskDate: date, };
+          finalTask = { ...finalTask, taskDate: date };
         }
         if (selectedTime) {
-           const time = timeString;
-           finalTask = { ...finalTask,  taskTime: time };
+          const time = timeString;
+          finalTask = { ...finalTask, taskTime: time };
         }
         if (isOpen && activeButtonIndex === 1) {
           const type = "REMOTE_SERVICE";
@@ -791,17 +795,19 @@ const AddTaskForm: React.FC = () => {
       <div className="w-full">
         <div className="mb-3 flex justify-center space-x-5">
           <div
-            className={`${currentPage === 1
-              ? "text-status-purpleBase"
-              : "text-status-purpleBase"
-              }`}
+            className={`${
+              currentPage === 1
+                ? "text-status-purpleBase"
+                : "text-status-purpleBase"
+            }`}
           >
             <p className="flex items-center gap-2 text-[12px] md:text-[16px] lg:gap-3">
               <span
-                className={`${currentPage === 1
-                  ? "bg-status-purpleBase text-white"
-                  : "bg-status-purpleBase text-white"
-                  } rounded-2xl border-none px-3 py-2`}
+                className={`${
+                  currentPage === 1
+                    ? "bg-status-purpleBase text-white"
+                    : "bg-status-purpleBase text-white"
+                } rounded-2xl border-none px-3 py-2`}
               >
                 01
               </span>{" "}
@@ -812,15 +818,17 @@ const AddTaskForm: React.FC = () => {
             </p>
           </div>
           <div
-            className={`${currentPage === 2 ? "text-status-purpleBase" : " text-[#716F78]"
-              }`}
+            className={`${
+              currentPage === 2 ? "text-status-purpleBase" : " text-[#716F78]"
+            }`}
           >
             <p className="flex items-center gap-2 text-[12px] md:text-[16px] lg:gap-3">
               <span
-                className={`${currentPage === 2
-                  ? "bg-status-purpleBase text-white"
-                  : "bg-[#EAE9EB] text-[#716F78]"
-                  } rounded-2xl border-none px-3 py-2`}
+                className={`${
+                  currentPage === 2
+                    ? "bg-status-purpleBase text-white"
+                    : "bg-[#EAE9EB] text-[#716F78]"
+                } rounded-2xl border-none px-3 py-2`}
               >
                 02
               </span>{" "}
@@ -838,12 +846,13 @@ const AddTaskForm: React.FC = () => {
               {/* Progress bar */}
               <div className="h-1 w-2/3 overflow-hidden bg-[#EAE9EB]">
                 <div
-                  className={`h-full ${currentPage === 1
-                    ? "bg-status-purpleBase"
-                    : currentPage === 2
+                  className={`h-full ${
+                    currentPage === 1
                       ? "bg-status-purpleBase"
-                      : "bg-status-purpleBase"
-                    }`}
+                      : currentPage === 2
+                        ? "bg-status-purpleBase"
+                        : "bg-status-purpleBase"
+                  }`}
                   style={{ width: `${progress}%` }}
                 />
               </div>
@@ -865,7 +874,7 @@ const AddTaskForm: React.FC = () => {
           </div>
         </div>
       </div>
-      {authenticated === false  ? (
+      {authenticated === false ? (
         <Popup
           isOpen={isSuccessPopupOpen}
           onClose={() => {
