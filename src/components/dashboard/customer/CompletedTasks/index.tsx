@@ -10,7 +10,7 @@ const TaskList: React.FC = () => {
     const session = useSession();
     const userId = session.data?.user?.user.id;
 
-    const { data: tasksData, isLoading, refetch } = useGetCustomerCompletedTasksQuery(userId!, {
+    const { data: tasksData, isLoading } = useGetCustomerCompletedTasksQuery(userId!, {
         skip: !userId, // This will skip the query if userId is not available
     });
 
