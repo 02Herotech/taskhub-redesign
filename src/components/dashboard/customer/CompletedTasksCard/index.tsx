@@ -147,8 +147,6 @@ const CompletedTasksCard = ({ task }: TaskCardProps) => {
                                 </button>
                             )}
                             className="-left-32 top-20"
-                            showDropdown={showDropdown}
-                            setShowDropdown={setShowDropdown}
                         >
                             <div className="w-[200px] bg-[#EBE9F4] space-y-4 border border-primary rounded-xl p-3">
                                 {dropDownItems.map((item, index) => (
