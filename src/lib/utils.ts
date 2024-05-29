@@ -107,3 +107,5 @@ export const monthNames = [
 export const dayOfWeekNames = [
 	"Sun", "Mon", "Tue", "Wed", "Thur", "Fri", "Sat",
 ];
+
+export const suffixes = ["th", "st", "nd", "rd"];
