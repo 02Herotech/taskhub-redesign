@@ -27,14 +27,14 @@ const Navigation = () => {
 
   const handleLogout = async () => {
     try {
-      router.push("/home");
       await signOut();
 
-      const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/auth/logout`,
-      );
+      await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/logout`);
+      router.push("/home");
     } catch (error: any) {
       console.log(error);
+    } finally {
+      router.push("/home");
     }
   };
 

@@ -11,6 +11,7 @@ import Dropdown from "@/components/global/Dropdown";
 import { DeleteTaskSvg, DropReviewSvg, RebookSvg } from "@/lib/svgIcons";
 import Popup from "@/components/global/Popup";
 import Button from "@/components/global/Button";
+import { useDeleteTaskMutation } from "@/services/tasks";
 
 interface TaskCardProps {
     task: Task;
@@ -24,8 +25,10 @@ type DropDownItem = {
 
 const CompletedTasksCard = ({ task }: TaskCardProps) => {
     const [dropReviewPopup, setDropReviewPopup] = useState(false);
-    const [showDropdown, setShowDropdown] = useState(false);
+    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const [selectedReview, setSelectedReview] = useState<string | null>(null);
+    const [reviewSent, setReviewSent] = useState(false);
+    const [deleteTaskPopup, setDeleteTaskPopup] = useState(false);
 
     const dateArray = task.taskDate;
     const date = new Date(dateArray[0], dateArray[1] - 1, dateArray[2]);
@@ -41,11 +44,13 @@ const CompletedTasksCard = ({ task }: TaskCardProps) => {
         "Others"
     ];
 
+    const [deleteTask] = useDeleteTaskMutation();
+
     const dropDownItems: DropDownItem[] = [
         {
             title: "Drop a Review",
             onClick: () => {
-                setShowDropdown(false);
+                setIsDropdownOpen(false);
                 setDropReviewPopup(true);
             },
             icon: DropReviewSvg,
@@ -57,58 +62,121 @@ const CompletedTasksCard = ({ task }: TaskCardProps) => {
         },
         {
             title: "Delete Task",
-            onClick: () => { },
+            onClick: () => {
+                setIsDropdownOpen(false);
+                setDeleteTaskPopup(true);
+            },
             icon: DeleteTaskSvg,
         },
     ];
 
+    const handleReviewSubmission = () => {
+        if (selectedReview) {
+            setReviewSent(true);
+        }
+    }
+
     return (
         <>
-            {dropReviewPopup && (
-                <Popup isOpen={dropReviewPopup} onClose={() => setDropReviewPopup(false)}>
+            {deleteTaskPopup && (
+                <Popup isOpen={deleteTaskPopup} onClose={() => setDeleteTaskPopup(false)}>
                     <div className="relative bg-[#EBE9F4] rounded-2xl min-h-[200px] lg:w-[577px] font-satoshi">
                         <div className="border-b border-primary flex items-center space-x-5 px-5 py-4">
-                            <div className="bg-[#140B31] p-1 rounded-full size-9 flex items-center justify-center text-white">{DropReviewSvg}</div>
-                            <h2 className="text-primary font-satoshiBold lg:text-2xl">Drop a review</h2>
+                            <div className="bg-[#140B31] p-1 rounded-full size-14 flex items-center justify-center text-white">{DeleteTaskSvg}</div>
+                            <h2 className="text-primary font-bold lg:text-2xl">Delete Task</h2>
                         </div>
                         <div className="max-lg:p-5 lg:py-5 lg:px-8">
-                            {selectedReview !== "Others" && (
-                                <div className="mb-8 font-satoshi text-xl font-medium text-black space-y-5">
-                                    {reviews.map((review, index) => (
-                                        <div key={index} className="flex items-center space-x-5">
-                                            <input
-                                                type="radio"
-                                                name="review"
-                                                value={review}
-                                                checked={selectedReview === review}
-                                                onChange={() => setSelectedReview(review)}
-                                            />
-                                            <h4>{review}</h4>
-                                        </div>
-                                    ))}
-                                </div>
-                            )}
-                            {selectedReview === "Others" && (
-                                <div className="space-y-2">
-                                    <label className="font-bold text-[#140B31] text-lg">Describe your review</label>
-                                    <textarea
-                                        placeholder="Please provide additional feedback"
-                                        className="w-full h-24 p-2 border border-[#381F8C] rounded"
-                                    />
-                                </div>
-                            )}
-                            <div className="flex items-center justify-center w-full mt-10">
+                            <p className="mb-8 font-satoshiMedium text-xl font-medium text-[#140B31]">
+                                Are you sure you want to delete this task? Once you delete, it will be erased from your list of task and will be gone immediately.
+                            </p>
+                            <div className="flex items-center justify-end my-4 space-x-5">
+                                <Button
+                                    className="w-[151px] max-lg:text-sm rounded-full py-6 bg-[#E1DDEE]"
+                                    onClick={() => setDeleteTaskPopup(false)}
+                                    theme="outline"
+                                >
+                                    Cancel
+                                </Button>
                                 <Button
                                     className="w-[151px] max-lg:text-sm rounded-full py-6"
                                     onClick={() => {
-                                        setDropReviewPopup(false);
-                                        // Add functionality to handle review submission
+                                        setDeleteTaskPopup(false)
+                                        deleteTask(task.id)
                                     }}
                                 >
-                                    Submit
+                                    Delete
                                 </Button>
                             </div>
                         </div>
+                    </div>
+                </Popup>
+            )}
+            {dropReviewPopup && (
+                <Popup isOpen={dropReviewPopup} onClose={() => setDropReviewPopup(false)}>
+                    <div className="relative bg-[#EBE9F4] rounded-2xl min-h-[200px] lg:w-[577px] font-satoshi">
+                        {reviewSent ? (
+                            <div className="flex items-center justify-center h-full font-satoshi py-10 px-20">
+                                <div className="flex flex-col items-center space-y-5">
+                                    <div className="bg-[#140B31] p-1 rounded-full size-14 flex items-center justify-center text-white">{DropReviewSvg}</div>
+                                    <h1 className="font-black text-4xl text-[#2A1769]">
+                                        Review Sent
+                                    </h1>
+                                    <p className="mb-8 font-satoshiMedium text-center text-xl font-medium text-[#140B31]">
+                                        Thank you for your review, we will look into it and get back to you as soon as possible
+                                    </p>
+                                    <Button
+                                        className="w-[151px] max-lg:text-sm rounded-full py-6"
+                                        onClick={() => {
+                                            setDropReviewPopup(false)
+                                            setReviewSent(false)
+                                        }}
+                                    >
+                                        Cancel
+                                    </Button>
+                                </div>
+                            </div>
+                        ) : (
+                            <>
+                                <div className="border-b border-primary flex items-center space-x-5 px-5 py-4">
+                                    <div className="bg-[#140B31] p-1 rounded-full size-9 flex items-center justify-center text-white">{DropReviewSvg}</div>
+                                    <h2 className="text-primary font-bold lg:text-2xl">Drop a review</h2>
+                                </div>
+                                <form onSubmit={handleReviewSubmission} className="max-lg:p-5 lg:py-5 lg:px-8">
+                                    <div className="mb-8 font-satoshi text-xl font-medium text-black space-y-5">
+                                        {reviews.map((review, index) => (
+                                            <div key={index} className="flex items-center space-x-5">
+                                                <input
+                                                    type="radio"
+                                                    name="review"
+                                                    required
+                                                    value={review}
+                                                    checked={selectedReview === review}
+                                                    onChange={() => setSelectedReview(review)}
+                                                />
+                                                <h4>{review}</h4>
+                                            </div>
+                                        ))}
+                                    </div>
+                                    {selectedReview === "Others" && (
+                                        <div className="space-y-2">
+                                            <label className="font-bold text-[#140B31] text-lg">Describe your review</label>
+                                            <textarea
+                                                placeholder="Please provide additional feedback"
+                                                className="w-full h-24 p-2 border border-[#381F8C] rounded"
+                                            />
+                                        </div>
+                                    )}
+                                    <div className="flex items-center justify-center w-full mt-10">
+                                        <Button
+                                            className="w-[151px] max-lg:text-sm rounded-full py-6"
+                                            type="submit"
+                                        >
+                                            Submit
+                                        </Button>
+                                    </div>
+                                </form>
+                            </>
+                        )}
                     </div>
                 </Popup>
             )}
@@ -139,16 +207,14 @@ const CompletedTasksCard = ({ task }: TaskCardProps) => {
                     </div>
                 </div>
                 <div className="flex flex-col items-end justify-between">
-                    <div className="">
-                        <Dropdown
-                            trigger={() => (
-                                <button className="p-3 flex items-center space-x-3 bg-primary text-white rounded-lg">
-                                    <BsThreeDotsVertical />
-                                </button>
-                            )}
-                            className="-left-32 top-20"
+                    <div className="relative">
+                        <button onClick={() => setIsDropdownOpen(!isDropdownOpen)} className="p-3 flex items-center space-x-3 bg-primary text-white rounded-lg">
+                            <BsThreeDotsVertical />
+                        </button>
+                        <div
+                            className={`small-scrollbar right-0 absolute top-[calc(100%+0.2rem)] flex max-h-0 w-[190px] flex-col rounded-md bg-[#EBE9F4] transition-all duration-300 ${isDropdownOpen ? "max-h-64 overflow-y-auto border border-primary" : "max-h-0  overflow-hidden"} `}
                         >
-                            <div className="w-[200px] bg-[#EBE9F4] space-y-4 border border-primary rounded-xl p-3">
+                            <div className="p-5 space-y-3 w-full">
                                 {dropDownItems.map((item, index) => (
                                     <button key={index} onClick={item.onClick} className="flex items-center space-x-3">
                                         <span className="bg-[#140B31] p-1 rounded-full size-9 flex items-center justify-center text-white">{item.icon}</span>
@@ -156,7 +222,7 @@ const CompletedTasksCard = ({ task }: TaskCardProps) => {
                                     </button>
                                 ))}
                             </div>
-                        </Dropdown>
+                        </div>
                     </div>
                     <h2 className="text-2xl font-bold capitalize text-primary lg:text-[22px]">
                         {formatAmount(task.customerBudget, "USD", false)}

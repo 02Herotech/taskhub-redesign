@@ -14,7 +14,7 @@ const TaskList: React.FC = () => {
     });
 
     if (!userId || isLoading) {
-        return <Loading />; // Or any other loading indication while waiting for the userId
+        return <Loading />; 
     }
 
     return (
