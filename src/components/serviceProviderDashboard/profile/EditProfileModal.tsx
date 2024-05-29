@@ -93,6 +93,7 @@ const EditProfileModal = ({
       setProfileImage(file);
       const reader = new FileReader();
       // const defaultImageBlob = await convertUrlToBlob(defaultImageSrc);
+      console.log(profileImage);
       reader.onloadend = () => {
         const img = reader.result as string;
         setImageSrc(img);

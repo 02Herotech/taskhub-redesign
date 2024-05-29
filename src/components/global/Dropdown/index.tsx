@@ -10,6 +10,10 @@ type Props = {
     closeOnClick?: boolean;
     triggerStyle?: "click" | "hover";
     onTrigger?: () => void;
+    value?: string | number | null;
+    name?: string;
+    onChange?: () => void;
+    
 };
 
 type DropdownContextType = {
