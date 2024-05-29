@@ -137,6 +137,19 @@ const EditProfileModal = ({
     }
   };
 
+  const handleCloseModal = () => {
+    setIsFormModalShown(false);
+    setIsUploadInitiated(false);
+    setIsSubmitting(false);
+    setisEditingProfilePicture((prev) => ({ ...prev, isEditing: false }));
+  };
+
+  const handleRemoveDocumentImage = () => {
+    setImageSrc(null);
+    setCameraActive(false);
+    setDocumentImage(null);
+  };
+
   const handleUploadAllDocument = async () => {
     try {
       // if (!profileImage) {
