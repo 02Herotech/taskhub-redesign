@@ -12,6 +12,7 @@ import {
 } from "@/lib/dashboardLinks";
 import Link from "next/link";
 import { SettingsIcon } from "@/lib/svgIcons";
+import axios from "axios";
 
 const DashboardSidebar = () => {
   const [showSettings, setShowSettings] = useState(false);
@@ -22,8 +23,16 @@ const DashboardSidebar = () => {
   const router = useRouter();
 
   const handleLogUserOut = async () => {
-    await signOut();
-    router.push("/");
+    try {
+      router.push("/home");
+      await signOut();
+
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/auth/logout`,
+      );
+    } catch (error: any) {
+      console.log(error);
+    }
   };
 
   const currentDropDownLink = isServiceProvider

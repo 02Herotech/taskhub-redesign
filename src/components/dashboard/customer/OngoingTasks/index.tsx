@@ -1,40 +1,45 @@
 "use client";
 
-import React from "react";
-import { useGetCustomerOngoingTasksQuery } from "@/services/tasks";
+import { useGetTaskByCustomerIdQuery } from "@/services/tasks";
+import NewTasksCard from "../NewTasksCard";
 import { useSession } from "next-auth/react";
 import Loading from "@/shared/loading";
 import Link from "next/link";
 import Button from "@/components/global/Button";
 import OngoingTasksCard from "../OngoingTasksCard";
 
-const TaskList: React.FC = () => {
-    const session = useSession();
-    const userId = session.data?.user?.user.id;
+const TaskList = () => {
+    const { data: sessionData, status: sessionStatus } = useSession();
+    const userId = sessionData?.user?.user.id;
 
-    const { data: tasksData, isLoading, refetch } = useGetCustomerOngoingTasksQuery(userId!, {
-        skip: !userId, // This will skip the query if userId is not available
+    // Make the query only when the userId is available
+    const { data: tasksData, isLoading, error } = useGetTaskByCustomerIdQuery(userId!, {
+        skip: !userId,
     });
 
-    if (!userId || isLoading) {
-        return <Loading />; // Or any other loading indication while waiting for the userId
+    // Return loading indicator while the session is loading or if the query is loading
+    if (sessionStatus === "loading" || !userId || isLoading) {
+        return <Loading />;
     }
 
     return (
         <>
-            {!tasksData?.content?.length && (
+            {tasksData?.length === 0 ? (
                 <div className="flex flex-col items-center justify-center space-y-5 h-[50vh]">
-                    <h2 className="text-2xl font-bold text-primary text-center">No tasks in progress, please click to button below to add a new task.</h2>
+                    <h2 className="text-2xl font-bold text-primary text-center">
+                        No tasks available, please click the button below to add a new task.
+                    </h2>
                     <Link href="/customer/add-task">
                         <Button className="rounded-full">Add new task</Button>
                     </Link>
                 </div>
+            ) : (
+                <div className="space-y-5">
+                    {tasksData?.map((task, index) => (
+                        <OngoingTasksCard key={index} task={task} />
+                    ))}
+                </div>
             )}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-                {tasksData?.content?.map((task, index) => (
-                    <OngoingTasksCard key={index} task={task} />
-                ))}
-            </div>
         </>
     );
 };

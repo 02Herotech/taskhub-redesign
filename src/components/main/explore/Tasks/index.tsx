@@ -14,6 +14,7 @@ import ReactSlider from "react-slider";
 import axios from "axios";
 import { Task } from "@/types/services/tasks";
 import { useSession } from "next-auth/react";
+import Loading from "@/shared/loading";
 
 type Category = {
     id: number;
@@ -119,7 +120,7 @@ const Tasks = () => {
         if (isLoading) {
             return (
                 <div className="w-full flex items-center justify-center h-[300px]">
-                    <Image src={loader} alt="loader" width={80} />
+                    <Loading />
                 </div>
             );
         } else if (dataToRender.length === 0) {

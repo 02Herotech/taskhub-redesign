@@ -45,7 +45,7 @@ const MarketPlaceFilter = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState({
     isOpened: false,
     category: "",
-  });
+  }); 
 
   const [subCategories, setSubCategories] = useState<SubCategoryType[]>([]);
   const [categoryHeader, setCategoryHeader] = useState("");
