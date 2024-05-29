@@ -1,15 +1,20 @@
 "use client";
 
 import axios from "axios";
+import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 import { BiLoaderCircle } from "react-icons/bi";
+import Button from "../global/Button";
+import { BeatLoader } from "react-spinners";
 
 interface ModalProps {
   setIsModalShown: Dispatch<SetStateAction<boolean>>;
   isModalShown: boolean;
+  listingId: number;
   modalData: {
     pricing: number;
     isAuthenticated: string | undefined;
@@ -21,18 +26,36 @@ const PricingModal = ({
   isModalShown,
   setIsModalShown,
   modalData,
+  listingId,
 }: ModalProps) => {
   const router = useRouter();
-  const [isSubmitted, setIsSubmitted] = useState({ state: false, error: "" });
+
+  const [submitSatus, setSubmitStatus] = useState({
+    state: false,
+    error: "",
+    isSubmtting: false,
+    message: "",
+  });
+
   const [stateLists, setStateLists] = useState([]);
-  const [formState, setFormState] = useState({
+  const [formState, setFormState] = useState<{
+    postcode: number | string;
+    date: Date;
+    suburb: string;
+    pricing: number;
+    description: string;
+    time: string;
+  }>({
     postcode: "",
-    date: "",
+    date: new Date(),
     suburb: "",
     pricing: modalData.pricing,
     description: "",
     time: "",
   });
+
+  const session = useSession();
+  const token = session?.data?.user?.accessToken;
 
   useEffect(() => {
     setFormState((prev) => ({ ...prev, pricing: modalData.pricing }));
@@ -45,23 +68,61 @@ const PricingModal = ({
     setFormState((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const formatDate = (date: Date): string => {
+    const day = String(date.getDate()).padStart(2, "0");
+    const month = String(date.getMonth() + 1).padStart(2, "0"); // Months are zero-based
+    const year = date.getFullYear();
+    return `${day}-${month}-${year}`;
+  };
+
+  const formatTime = (time: string): string => {
+    const [hour, minute] = time.split(":");
+    let hourNum = parseInt(hour, 10);
+    const ampm = hourNum >= 12 ? "PM" : "AM";
+    hourNum = hourNum % 12 || 12; // Convert to 12-hour format and handle midnight (0 becomes 12)
+    const hourString = String(hourNum).padStart(2, "0"); // Ensure the hour has two digits
+    const minuteString = String(minute).padStart(2, "0"); // Ensure the minute has two digits
+    return `${hourString}:${minuteString} ${ampm}`;
+  };
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    // if (
-    //   !formState.postcode ||
-    //   !formState.date ||
-    //   !formState.suburb ||
-    //   !formState.pricing ||
-    //   !formState.description ||
-    //   !formState.time
-    // ) {
-    //   setIsSubmitted((prev) => ({ ...prev, error: "All fields are required" }));
-    // } else {
-    setIsSubmitted({ state: true, error: "" });
-    setTimeout(() => {
-      router.push("/marketplace");
-    }, 2000);
-    // }
+    try {
+      setSubmitStatus((prev) => ({ ...prev, isSubmtting: true, error: "" }));
+      const uploadData = {
+        listingId,
+        startDate: formatDate(formState.date),
+        startTime: formatTime(formState.time),
+        postCode: formState.postcode,
+        suburb: formState.suburb,
+        price: formState.pricing,
+        bookingDescription: formState.description,
+      };
+      const url = "https://smp.jacinthsolutions.com.au/api/v1/booking";
+      const { data } = await axios.post(url, uploadData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+      setSubmitStatus((prev) => ({
+        ...prev,
+        message: data.message,
+      }));
+      setTimeout(() => {
+        router.push("/marketplace");
+      }, 2000);
+    } catch (error) {
+      setSubmitStatus((prev) => ({
+        ...prev,
+        error: "Kindly check your network connection",
+      }));
+    } finally {
+      setSubmitStatus((prev) => ({
+        ...prev,
+        isSubmtting: false,
+      }));
+    }
   };
   const serviceProviderParams = new URLSearchParams({
     userType: "serviceProvider",
@@ -135,33 +196,37 @@ const PricingModal = ({
             </p>
           </div>
           <div className="grid w-full grid-cols-2  items-end justify-end gap-4 ">
+            {/* Date */}
             <div className="flex flex-col justify-between space-y-1">
               <label htmlFor="" className="font-medium text-violet-dark">
                 Date
               </label>
-              <input
-                className="w-full  rounded-lg p-3 outline-none"
-                type="date"
-                name="date"
-                // value={formState.date}
-                onChange={(event) =>
+              <DatePicker
+                selected={formState.date}
+                minDate={formState.date}
+                required
+                onChange={(date: Date) =>
                   setFormState((prev) => ({
                     ...prev,
-                    data: event.target.value,
+                    date: date,
                   }))
                 }
+                className="w-full rounded-xl border border-slate-100 p-2 text-slate-700 shadow outline-none transition-shadow duration-300 hover:shadow-md lg:max-w-sm"
+                dateFormat="dd/MM/yyyy"
               />
             </div>
+            {/* Time */}
             <div className="flex flex-col space-y-1">
               <label htmlFor="" className="font-medium text-violet-dark">
                 Time
               </label>
+
               <input
                 type="time"
                 name="time"
-                // value={formState.time}
-                // @ts-ignore
-                onchange={(event) =>
+                required
+                value={formState.time}
+                onChange={(event) =>
                   setFormState((prev) => ({
                     ...prev,
                     time: event.target.value,
@@ -170,6 +235,7 @@ const PricingModal = ({
                 className="w-full  rounded-lg p-3 outline-none"
               />
             </div>
+            {/* Location */}
             <div className="flex flex-col space-y-1">
               <label htmlFor="" className="font-medium text-violet-dark">
                 Location
@@ -177,12 +243,14 @@ const PricingModal = ({
               <input
                 type="number"
                 name="postcode"
+                required
                 value={formState.postcode}
                 onChange={(event) => handleUpdateFormState(event)}
                 placeholder="Postcode"
                 className="w-full max-w-60 rounded-lg p-3 outline-none"
               />
             </div>
+            {/* State  */}
             <div className="flex flex-col space-y-1">
               <label htmlFor="" className="font-medium text-violet-dark">
                 State/Suburb
@@ -190,6 +258,7 @@ const PricingModal = ({
               <select
                 className="w-full max-w-60 rounded-lg p-3 outline-none"
                 disabled={stateLists.length === 0}
+                required
                 onChange={(event) =>
                   setFormState((prev) => ({
                     ...prev,
@@ -205,6 +274,7 @@ const PricingModal = ({
               </select>
             </div>
           </div>
+          {/* Price  */}
           <div className="flex flex-col space-y-1">
             <label htmlFor="" className="font-medium text-violet-dark">
               Price
@@ -224,7 +294,12 @@ const PricingModal = ({
                 }))
               }
             />
+            <p className="text-sm font-semibold text-violet-dark">
+              Price is in the range of A${modalData.pricing - 10} - A$
+              {modalData.pricing + 10}
+            </p>
           </div>
+          {/* Description */}
           <div className="flex flex-col space-y-1">
             <label htmlFor="" className="font-medium text-violet-dark">
               Description
@@ -244,20 +319,24 @@ const PricingModal = ({
           </div>
           <button
             className="flex w-full items-center justify-center rounded-lg bg-violet-normal p-3 text-center text-white"
-            disabled={isSubmitted.state}
+            disabled={submitSatus.state}
           >
-            {isSubmitted.state ? (
-              <BiLoaderCircle className="animate-spin" />
+            {submitSatus.isSubmtting ? (
+              <BeatLoader
+                color={"white"}
+                loading={submitSatus.isSubmtting}
+                size={14}
+              />
             ) : (
               "Continue / Send enquiry"
             )}
           </button>
-          {isSubmitted.error && (
-            <p className="text-center  text-red-800">{isSubmitted.error}</p>
+          {submitSatus.error && (
+            <p className="text-center  text-red-800">{submitSatus.error}</p>
           )}
-          {isSubmitted.state && (
+          {submitSatus.message && (
             <p className="text-center  text-emerald-800">
-              Request Successfully Sent to the service provider
+              {submitSatus.message}
             </p>
           )}
         </form>

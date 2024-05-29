@@ -16,6 +16,7 @@ const Page = () => {
   const [isDataFetched, setIsDataFetched] = useState(false);
   const [displayData, setDisplayData] = useState<ListingDataType2>();
   const [error, setError] = useState("");
+  const [listingId, setListingId] = useState(0);
   const [posterInfo, setPosterInfo] = useState<{
     profileImage: string;
     firstName: string;
@@ -29,6 +30,7 @@ const Page = () => {
         if (tempList) {
           const content: { a: number; b: number } = JSON.parse(tempList);
           setIsDataFetched(false);
+          setListingId(content.a);
           const url =
             "https://smp.jacinthsolutions.com.au/api/v1/listing/" + content.a;
           const { data } = await axios.get(url);
@@ -215,6 +217,7 @@ const Page = () => {
                 planOneDescription={displayData?.planOneDescription}
                 planTwoDescription={displayData?.planTwoDescription}
                 planThreeDescription={displayData?.planThreeDescription}
+                listingId={listingId}
               />
             </section>
             <section className="mx-auto w-full p-4 lg:p-10 ">
