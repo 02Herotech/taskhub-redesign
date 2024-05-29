@@ -50,6 +50,7 @@ const MareketPlace = () => {
   const isComplete = session?.data?.user?.user?.enabled;
   const [showPopup, setShowPopup] = useState(false);
 
+  const token = session?.data?.user?.accessToken;
   // Setting user popup state
   useEffect(() => {
     const popupCookie = getCookie("showPopup");

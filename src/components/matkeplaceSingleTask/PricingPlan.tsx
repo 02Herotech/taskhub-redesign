@@ -11,6 +11,7 @@ interface PricingPlanProps {
   planOneDescription: string;
   planTwoDescription: string;
   planThreeDescription: string;
+  listingId: number;
 }
 
 const PricingPlan = ({
@@ -20,13 +21,13 @@ const PricingPlan = ({
   planTwoDescription,
   planThreePrice,
   planThreeDescription,
+  listingId,
 }: PricingPlanProps) => {
   const session = useSession();
   const isAuthenticated = session?.data?.user?.accessToken;
   const isServiceProvider =
     session?.data?.user?.user?.roles[0] === "SERVICE_PROVIDER";
 
-  console.log(isAuthenticated, "is authenticated");
   const [isModalShown, setIsModalShown] = useState(false);
   const [isTextExpanded, setIsTextExpanded] = useState({
     index: 1,
@@ -61,6 +62,7 @@ const PricingPlan = ({
         setIsModalShown={setIsModalShown}
         isModalShown={isModalShown}
         modalData={modalData}
+        listingId={listingId}
       />
       <div className=" rounded-2xl border-2 border-[#381F8C] p-2 text-[#381F8C] lg:p-8">
         <div className="border-b-2 border-[#381F8C] py-4">
