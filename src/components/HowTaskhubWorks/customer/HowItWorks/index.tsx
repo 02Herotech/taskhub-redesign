@@ -1,4 +1,5 @@
-import React from 'react'
+'use client'
+import React, { useEffect, useState } from 'react'
 import PostTasks from '../../PostTasks'
 import PostService from '../../PostService'
 import Experiences from '../../Experience/indes'
@@ -7,10 +8,27 @@ import Image from 'next/image'
 import Customer1 from "../../../../../public/assets/images/homepage/howTaskhubWorks/customer/customer1.jpg";
 import Customer2 from "../../../../../public/assets/images/homepage/howTaskhubWorks/customer/customer2.jpg";
 import Customer3 from "../../../../../public/assets/images/homepage/howTaskhubWorks/customer/customer3.jpg";
+
 import icon1 from "../../../../../public/assets/images/homepage/howTaskhubWorks/customer/getStartedIcon2.png";
+import Task1 from "../../../../../public/assets/images/homepage/howTaskhubWorks/customer/task1.png";
+import Task2 from "../../../../../public/assets/images/homepage/howTaskhubWorks/customer/task2.png";
 
 
 const HowItWorks = () => {
+
+    const useImageTransition = (images: any, transitionDuration: any) => {
+        const [currentImageIndex, setCurrentImageIndex] = useState(0);
+        useEffect(() => {
+            const interval = setInterval(() => {
+                setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
+            }, transitionDuration);
+            return () => clearInterval(interval);
+        }, [images.length, transitionDuration]);
+        return currentImageIndex;
+    };
+
+    const images1 = [Task1, Task2];
+    const currentImageIndex1 = useImageTransition(images1, 2000);
     return (
         <div>
             <div className='flex flex-col items-center'>
@@ -44,8 +62,18 @@ const HowItWorks = () => {
                         </div>
                     </div>
 
-                    <div className='h-[400px] w-full bg-[#2A1769] rounded-[30px] '>
+                    <div className='h-[400px] w-full bg-[#2A1769] rounded-[30px] flex items-center justify-center '>
 
+                        <div>
+                            <div className='relative h-[300px] w-[350px] rounded-[15px] ' >
+                                <Image
+                                    src={images1[currentImageIndex1]}
+                                    alt=""
+                                    fill
+                                    className="absolute rounded-[15px]"
+                                />
+                            </div>
+                        </div>
                     </div>
 
                 </div>
