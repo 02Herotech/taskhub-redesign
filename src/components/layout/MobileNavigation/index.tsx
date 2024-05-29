@@ -77,7 +77,6 @@ const MobileNavigation = ({ setShowMobileNav }: Props) => {
 									className="flex items-center justify-center"
 								>
 									<p className="">Become a Service Provider</p>
-
 								</Link>
 							</button>
 						</div>
