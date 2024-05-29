@@ -269,17 +269,18 @@ const ProvideService: React.FC = () => {
 
   const nextPage = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (validateFields()) {
-      setCurrentPage(currentPage + 1);
-      console.log(selectedCategory, selectedSubCategory);
-    }
+    setCurrentPage(currentPage + 1);
+    // if (validateFields()) {
+    //   setCurrentPage(currentPage + 1);
+    // }
   };
 
   const nextPages = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (validateField1()) {
-      setCurrentPage(currentPage + 1);
-    }
+    setCurrentPage(currentPage + 1);
+    // if (validateField1()) {
+    //   setCurrentPage(currentPage + 1);
+    // }
   };
 
   const prevPage = () => {
@@ -474,7 +475,7 @@ const ProvideService: React.FC = () => {
                     value={task.listingTitle}
                     onChange={handleChange}
                     placeholder="Casual Babysitting"
-                    className="rounded-2xl bg-[#EBE9F4] p-3 text-[13px]  outline-none"
+                    className="rounded-2xl bg-[#EBE9F4] p-3 text-[13px]  outline-none placeholder:font-medium placeholder:text-status-darkpurple"
                   />
                 </div>
                 <div className="relative grid space-y-4">
@@ -487,12 +488,17 @@ const ProvideService: React.FC = () => {
                     onChange={handleCategoryChange}
                     className="w-full cursor-pointer appearance-none rounded-2xl bg-[#EBE9F4] p-3 text-[13px] outline-none"
                   >
-                    <option value="">Category</option>
+                    <option
+                      value=""
+                      className="font-medium text-status-darkpurple"
+                    >
+                      Category
+                    </option>
                     {items.map((item) => (
                       <option
                         key={item.id}
                         value={item.id}
-                        className="text-[12px] text-[#221354]"
+                        className="text-[12px] font-medium text-status-darkpurple"
                       >
                         {item.categoryName}
                       </option>
@@ -523,7 +529,7 @@ const ProvideService: React.FC = () => {
                 </div>
 
                 <div className="lg:hidden">
-                {/* @ts-ignore */}
+                  {/* @ts-ignore */}
                   <AiDesciption setTask={setTask} task={task} />
                 </div>
                 <div className="grid space-y-3">
@@ -531,7 +537,7 @@ const ProvideService: React.FC = () => {
                     Please give a detailed description of the service
                   </label>
                   <textarea
-                    className=" h-[350px] rounded-2xl bg-[#EBE9F4] p-3 outline-none"
+                    className=" h-[350px] rounded-2xl bg-[#EBE9F4] p-3 outline-none placeholder:font-medium placeholder:text-status-darkpurple"
                     placeholder="Casual Babysitting"
                     name="description"
                     value={task.listingDescription}
@@ -547,7 +553,9 @@ const ProvideService: React.FC = () => {
                     {errors[key]}
                   </div>
                 ))}
-                <Button type="submit">Next</Button>
+                <Button className="rounded-3xl" type="submit">
+                  Next
+                </Button>
               </form>
             </div>
           </div>
@@ -558,7 +566,7 @@ const ProvideService: React.FC = () => {
             <form onSubmit={nextPages} className="space-y-10">
               <div className="space-y-4">
                 <h2 className="font-bold">Choose the pricing plans.</h2>
-                <div className="grid space-y-4 text-[13px] text-[#221354]">
+                <div className="relative grid space-y-4 text-[13px] text-[#221354]">
                   <input
                     className={`rounded-2xl ${
                       activePlanIndex === 0
@@ -571,6 +579,7 @@ const ProvideService: React.FC = () => {
                     value="Plan 1"
                     readOnly
                   />
+                  <IoMdArrowDropdown className="absolute right-5 top-1 cursor-pointer text-[14px] text-status-purpleBase" />
                   {isOpen && activePlanIndex === 0 && (
                     <div>
                       <label className="font-semibold">
@@ -618,6 +627,7 @@ const ProvideService: React.FC = () => {
                     value="Plan 2  (Optional)"
                     readOnly
                   />
+                  <IoMdArrowDropdown className="absolute right-5 top-[4.5rem] cursor-pointer text-[14px] text-status-purpleBase" />
                   {isOpen && activePlanIndex === 1 && (
                     <div>
                       <label className="font-bold">
@@ -665,6 +675,7 @@ const ProvideService: React.FC = () => {
                     value="Plan 3  (Optional)"
                     readOnly
                   />
+                  <IoMdArrowDropdown className="absolute right-5 top-36 cursor-pointer text-[14px] text-status-purpleBase" />
                   {isOpen && activePlanIndex === 2 && (
                     <div>
                       <label className="font-bold">
@@ -800,10 +811,17 @@ const ProvideService: React.FC = () => {
                 ))}
               </div>
               <div className="flex justify-between">
-                <Button type="button" theme="outline" onClick={prevPage}>
-                  Previous
+                <Button
+                  className="rounded-3xl"
+                  type="button"
+                  theme="outline"
+                  onClick={prevPage}
+                >
+                  Back
                 </Button>
-                <Button type="submit">Next</Button>
+                <Button className="rounded-3xl" type="submit">
+                  Next
+                </Button>
               </div>
             </form>
           </div>
@@ -829,7 +847,7 @@ const ProvideService: React.FC = () => {
                   <option value="SUNDAY">Sunday</option>
                 </select>
                 <IoMdArrowDropdown className="absolute right-96 top-3 cursor-pointer" />
-                <div className="mt-4 h-[100px] rounded-2xl border bg-[#EBE9F4] p-4 lg:w-2/3">
+                <div className="mt-4 rounded-2xl border bg-[#EBE9F4] p-4 lg:w-2/3">
                   <ul className="flex flex-wrap gap-2">
                     {selectedDays.map((day) => (
                       <li
@@ -1064,10 +1082,17 @@ p-3 text-center text-[12px] text-[#fe9b07]"
                 ))}
               </div>
               <div className="flex justify-between">
-                <Button theme="outline" type="button" onClick={prevPage}>
+                <Button
+                  className="rounded-3xl"
+                  theme="outline"
+                  type="button"
+                  onClick={prevPage}
+                >
                   Back
                 </Button>
-                <Button type="submit">Post Listing</Button>
+                <Button className="rounded-3xl" type="submit">
+                  Post Listing
+                </Button>
               </div>
             </form>
           </div>
@@ -1078,12 +1103,12 @@ p-3 text-center text-[12px] text-[#fe9b07]"
   };
 
   return (
-    <div className="mt-4 flex min-h-screen flex-col items-center justify-center">
+    <div className="mt-24 flex min-h-screen flex-col items-center justify-center">
       <Head>
         <title>TaskHub | Provide Service</title>
       </Head>
       <div className="w-full">
-        <div className="mb-3 flex justify-center md:space-x-5">
+        <div className="mb-3 flex justify-center md:space-x-5 font-bold">
           <div
             className={`${
               currentPage === 1
