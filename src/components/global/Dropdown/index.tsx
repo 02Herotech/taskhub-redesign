@@ -10,6 +10,8 @@ type Props = {
     closeOnClick?: boolean;
     triggerStyle?: "click" | "hover";
     onTrigger?: () => void;
+    showDropdown: boolean;
+    setShowDropdown: (show: boolean) => void;
 };
 
 type DropdownContextType = {
@@ -26,8 +28,9 @@ const Dropdown = ({
     closeOnClick = true,
     triggerStyle = "click",
     onTrigger,
+    showDropdown,
+    setShowDropdown
 }: Props) => {
-    const [showDropdown, setShowDropdown] = useState(false);
     const menuRef = useRef(null);
     const [listening, setListening] = useState(false);
 
@@ -82,4 +85,5 @@ export const useDropdown = () => {
     return context;
 };
 
+export { DropdownContext };
 export default Dropdown;

@@ -27,18 +27,18 @@ const OngoingTasksCard = ({ task }: TaskCardProps) => {
     const formattedDate = `On ${dayOfWeekNames[date.getDay()]}, ${monthNames[date.getMonth()]} ${day}${daySuffix}`;
 
     return (
-        <div className="lg:rounded-4xl font-satoshi bg-white p-5 mb-4 flex lg:justify-between border-b">
-            <div className="flex items-center space-x-3">
+        <div className="lg:rounded-4xl font-satoshi bg-white p-5 mb-4 flex flex-col lg:flex-row lg:justify-between border-b">
+            <div className="flex items-center lg:items-start space-x-3 mb-4 lg:mb-0">
                 <Image
                     src={profileImage || "/assets/images/placeholder.jpeg"}
                     alt="Profile"
-                    className="size-[90px] rounded-full object-cover"
+                    className="rounded-full object-cover"
                     width={90}
                     height={90}
                 />
-                <div className="space-y-2">
+                <div className="space-y-2 max-w-full lg:max-w-[60%]">
                     <h2 className="font-satoshiMedium text-primary text-xl">{fullName}</h2>
-                    <h2 className="overflow-hidden truncate text-ellipsis whitespace-nowrap py-4 text-base font-satoshi text-primary">
+                    <h2 className="py-4 text-base font-satoshi text-primary break-words">
                         {task.taskBriefDescription}
                     </h2>
                     <Link href={`/customer/tasks/ongoing-task-details/${task.id}`}>
@@ -48,7 +48,7 @@ const OngoingTasksCard = ({ task }: TaskCardProps) => {
                     </Link>
                 </div>
             </div>
-            <div className="flex flex-col justify-between">
+            <div className="flex flex-col justify-between lg:text-right text-center items-start lg:items-end">
                 <h5 className="text-base text-tc-orange">{formattedDate}</h5>
                 <h2 className="font-bold capitalize text-[#28272A] text-base">
                     Total Cost: {formatAmount(task.customerBudget, "USD", false)}
