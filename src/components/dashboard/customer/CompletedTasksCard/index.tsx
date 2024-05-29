@@ -128,7 +128,7 @@ const CompletedTasksCard = ({ task }: TaskCardProps) => {
                                         className="w-[151px] max-lg:text-sm rounded-full py-6"
                                         onClick={() => {
                                             setDropReviewPopup(false)
-                                            setReviewSent(false)
+                                            setReviewSent(false) 
                                         }}
                                     >
                                         Cancel

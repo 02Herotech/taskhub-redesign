@@ -48,6 +48,7 @@ const Tasks = () => {
         fetchCategoriesData();
     }, []);
 
+    console.log(tasksData)
 
     const totalPages = Math.ceil(tasksData?.totalElements! / itemsPerPage); // Calculate total pages
 

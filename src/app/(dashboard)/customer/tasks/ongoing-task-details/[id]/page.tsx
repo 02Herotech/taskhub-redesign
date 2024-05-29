@@ -2,7 +2,7 @@
 
 import Button from '@/components/global/Button';
 import Popup from '@/components/global/Popup';
-import { CautionSvg, RevisionSvg } from '@/lib/svgIcons';
+import { CautionSvg, RevisionSvg, SuccessfulSvg } from '@/lib/svgIcons';
 import { formatAmount } from '@/lib/utils';
 import { useGetTaskByIdQuery } from '@/services/tasks';
 import Loading from '@/shared/loading';
@@ -22,9 +22,9 @@ const OnogoingTaskDetailsPage = ({ params }: { params: { id: string } }) => {
 
     const revisions = [
         "I need the service redone",
-        "Disrespectful and Arrogant",
-        "Lazy and non reliable",
-        "I love the work",
+        "I need time to inspect task",
+        "I’m dissatisfied with the service",
+        "I didn’t receive any service",
         "Others"
     ];
 
@@ -49,16 +49,16 @@ const OnogoingTaskDetailsPage = ({ params }: { params: { id: string } }) => {
         <>
             {requestRevisionPopup && (
                 <Popup isOpen={requestRevisionPopup} onClose={() => setRequestRevisionPopup(false)}>
-                    <div className="relative bg-[#EBE9F4] rounded-2xl min-h-[200px] lg:w-[577px] font-satoshi">
+                    <div className="relative bg-[#EBE9F4] rounded-2xl min-h-[200px] lg:w-[577px] font-satoshi overflow-y-auto">
                         {revisionSent ? (
                             <div className="flex items-center justify-center h-full font-satoshi py-10 px-20">
                                 <div className="flex flex-col items-center space-y-5">
-                                    <div className="bg-[#140B31] p-1 rounded-full size-14 flex items-center justify-center text-white">{RevisionSvg}</div>
+                                    <div className="bg-[#140B31] p-1 rounded-full size-14 flex items-center justify-center text-white">{SuccessfulSvg}</div>
                                     <h1 className="font-black text-4xl text-[#2A1769]">
-                                        Review Sent
+                                        Request Successful
                                     </h1>
                                     <p className="mb-8 font-satoshiMedium text-center text-xl font-medium text-[#140B31]">
-                                        Thank you for your review, we will look into it and get back to you as soon as possible
+                                        Your request for revision has been sent, you will get a response shortly as to the date it’s starts and ends.
                                     </p>
                                     <Button
                                         className="w-[151px] max-lg:text-sm rounded-full py-6"
@@ -77,23 +77,22 @@ const OnogoingTaskDetailsPage = ({ params }: { params: { id: string } }) => {
                                     <div className="bg-[#140B31] p-1 rounded-full size-9 flex items-center justify-center text-white">{RevisionSvg}</div>
                                     <h2 className="text-primary font-bold lg:text-2xl">Request Revision</h2>
                                 </div>
-                                <p>We are committed to making sure you have the best experience. Why aren’t you ready to approve payment?</p>
                                 <form onSubmit={handleReviewSubmission} className="max-lg:p-5 lg:py-5 lg:px-8">
-                                    <div className="mb-8 font-satoshi text-xl font-medium text-black space-y-5">
-                                        {revisions.map((revision, index) => (
-                                            <div key={index} className="flex items-center space-x-5">
-                                                <input
-                                                    type="radio"
-                                                    name="revision"
-                                                    required
-                                                    value={revision}
-                                                    checked={selectedRevision === revision}
-                                                    onChange={() => setSelectedRevision(revision)}
-                                                />
-                                                <h4>{revision}</h4>
-                                            </div>
-                                        ))}
-                                    </div>
+                                    <p className='mb-5 text-lg font-satoshiMedium text-[#140B31]'>We are committed to making sure you have the best experience. Why aren’t you ready to approve payment?</p>
+                                    {selectedRevision !== "Others" && (
+                                        <div className="mb-8 font-satoshi text-xl font-medium text-black space-y-5">
+                                            {revisions.map((revision, index) => (
+                                                <div
+                                                    key={index}
+                                                    onClick={() => setSelectedRevision(revision)}
+                                                    className={`rounded-full cursor-pointer py-3 w-full px-5 text-center ${selectedRevision === revision ? 'bg-primary text-white' : 'bg-[#F1F1F2] text-[#716F78]'
+                                                        }`}
+                                                >
+                                                    <h4>{revision}</h4>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    )}
                                     {selectedRevision === "Others" && (
                                         <div className="space-y-2">
                                             <label className="font-bold text-[#140B31] text-lg">Others</label>
@@ -184,7 +183,7 @@ const OnogoingTaskDetailsPage = ({ params }: { params: { id: string } }) => {
                             {formatAmount(task.customerBudget, "USD", false)}
                         </h2>
                         <div className="flex items-center justify-end space-x-10 lg:text-xl">
-                            <button className='text-tc-orange'>Request Revision</button>
+                            <button className='text-tc-orange' onClick={() => setRequestRevisionPopup(true)}>Request Revision</button>
                             <button className='text-[#34A853]'>Approve payment</button>
                         </div>
                     </div>
@@ -195,3 +194,4 @@ const OnogoingTaskDetailsPage = ({ params }: { params: { id: string } }) => {
 }
 
 export default OnogoingTaskDetailsPage
+

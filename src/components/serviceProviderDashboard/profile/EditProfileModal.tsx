@@ -106,7 +106,6 @@ const EditProfileModal = ({
       reader.readAsDataURL(file);
     }
   };
-  //  ----------------------
 
   const handleCloseModal = () => {
     setIsFormModalShown(false);
