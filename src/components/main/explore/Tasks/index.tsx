@@ -5,8 +5,6 @@ import { FaChevronLeft, FaChevronRight, FaSortDown } from "react-icons/fa";
 import { useGetActiveTasksQuery } from "@/services/tasks";
 import Dropdown from "@/components/global/Dropdown";
 import TaskCard from "../TaskCard";
-import loader from "../../../../../public/assets/images/marketplace/taskhub-newloader.gif";
-import Image from "next/image";
 import Button from "@/components/global/Button";
 import ReactSlider from "react-slider";
 import axios from "axios";
