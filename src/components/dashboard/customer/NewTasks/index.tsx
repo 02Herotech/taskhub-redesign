@@ -6,7 +6,6 @@ import { useSession } from "next-auth/react";
 import Loading from "@/shared/loading";
 import Link from "next/link";
 import Button from "@/components/global/Button";
-import { useEffect } from "react";
 
 const TaskList = () => {
   const { data: sessionData, status: sessionStatus } = useSession();
