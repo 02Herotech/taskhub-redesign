@@ -35,21 +35,20 @@ const Tasks = () => {
 
     const { data: tasksData, isLoading, refetch } = useGetActiveTasksQuery(currentPage);
 
-    useEffect(() => {
-        const fetchCategoriesData = async () => {
-            try {
-                const response = await axios.get(
-                    `${process.env.NEXT_PUBLIC_API_URL}/util/all-categories`,
-                );
-                setCategoriesData(response.data);
-            } catch (error) {
-                console.log(error);
-            }
-        };
+  useEffect(() => {
+    const fetchCategoriesData = async () => {
+      try {
+        const response = await axios.get(
+          `${process.env.NEXT_PUBLIC_API_URL}/util/all-categories`,
+        );
+        setCategoriesData(response.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
 
-        fetchCategoriesData();
-    }, []);
-
+    fetchCategoriesData();
+  }, []);
 
     const totalPages = Math.ceil(tasksData?.totalElements! / itemsPerPage); // Calculate total pages
 

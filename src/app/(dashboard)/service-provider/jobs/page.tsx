@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 
-const jobsData = [
+const JobsData = [
   {
     id: "1",
     name: "Kelly Jane",
@@ -44,7 +44,7 @@ const Jobs = () => {
         View Jobs
       </button>
       <section className="mx-auto max-w-screen-lg space-y-3 ">
-        {jobsData.map((item, index) => (
+        {JobsData.map((item, index) => (
           <div
             key={index}
             className=" flex gap-3 border-b border-slate-200 p-4 lg:grid lg:grid-cols-12 lg:items-center lg:px-8 lg:py-4"
@@ -76,7 +76,7 @@ const Jobs = () => {
               <div className="flex flex-wrap gap-3">
                 <Link
                   href={"/service-provider/dashboard/jobs/" + item.id}
-                  className="bg-violet-light rounded-full border border-violet-normal px-6 py-3 text-sm font-medium text-violet-normal transition-colors duration-300 hover:bg-violet-200 max-md:px-4 max-md:py-2 max-md:text-sm "
+                  className="rounded-full border border-violet-normal bg-violet-light px-6 py-3 text-sm font-medium text-violet-normal transition-colors duration-300 hover:bg-violet-200 max-md:px-4 max-md:py-2 max-md:text-sm "
                 >
                   View Enquiry
                 </Link>

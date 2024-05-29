@@ -61,7 +61,7 @@ const MareketPlace = () => {
   }, [isAuth, isComplete]);
 
   return (
-    <main>
+    <main className="">
       {showPopup && (
         <Popup isOpen={showPopup} onClose={() => setShowPopup(false)}>
           <div className="relative h-[312px] max-lg:mx-5 lg:w-[577px]">
@@ -74,7 +74,7 @@ const MareketPlace = () => {
                 access to all our features.
               </p>
               <Button
-                className="w-[151px] max-lg:text-sm rounded-full py-6"
+                className="w-[151px] rounded-full py-6 max-lg:text-sm"
                 onClick={() => router.push("/service-provider/dashboard")}
               >
                 Go to Profile
@@ -103,7 +103,7 @@ const MareketPlace = () => {
         className={`mx-auto flex max-w-screen-2xl flex-col px-6 md:px-16  ${(isFiltering || isSearching) && "pt-12"} `}
       >
         <MarketPlaceFilter />
-        <div>
+        <div className="container">
           {isFiltering || isSearching ? (
             <div>
               <CategoryListing category="All" />

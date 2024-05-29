@@ -48,7 +48,7 @@ const EditProfileModal = ({
 
   const [imageSrc, setImageSrc] = useState<string | null>(null);
   const [cameraActive, setCameraActive] = useState<boolean>(false);
-  const [profileImage, setProfileImage] = useState<File>();
+  const [profileImage, setProfileImage] = useState<FormData | null>(null);
   const webcamRef = useRef<Webcam>(null);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -71,28 +71,58 @@ const EditProfileModal = ({
     // eslint-disable-next-line
   }, [webcamRef]);
 
-  const convertUrlToBlob = async (url: string): Promise<Blob> => {
-    const response = await fetch(url);
-    const blob = await response.blob();
-    return blob;
-  };
+  // const handleFileInputChange = (event: ChangeEvent<HTMLInputElement>) => {
+  //   const file = event.target.files?.[0];
+  //   setProfileImage(file);
+  //   if (file) {
+  //     const formData = new FormData();
+  //     formData.append("image", file, file.name);
+  //     const newword = formData.append("image", file, file.name);
+  //     console.log(newword);
+  //     setProfileImage(newword);
+  //     setProfileImage(formData);
+  //     const reader = new FileReader();
+  //     reader.onloadend = () => {
+  //       const img = reader.result as string;
+  //       setImageSrc(img);
+  //       // isEditingProfilePicture.isEditing
+  //       //   ? setisEditingProfilePicture((prev) => ({
+  //       //       ...prev,
+  //       //       image: img,
+  //       //     }))
+  //       //   : setDocumentImage(img);
+  //     };
+  //     reader.readAsDataURL(file);
+  //   }
+  // };
+  //  ----------------------
 
-  const getImageURL = () => {
-    if (profileImage instanceof File) {
-      return URL.createObjectURL(profileImage);
-    }
-    return "";
-  };
+  // const handleCloseModal = () => {
+  //   setIsFormModalShown(false);
+  //   setIsUploadInitiated(false);
+  //   setIsSubmitting(false);
+  //   setisEditingProfilePicture((prev) => ({ ...prev, isEditing: false }));
+  // };
 
-  const imageURL = getImageURL();
+  // const handleRemoveDocumentImage = () => {
+  //   setImageSrc(null);
+  //   setCameraActive(false);
+  //   setDocumentImage(null);
+  // };
+
+  // -------------------------------------------------------
+  // this is the part that needs to change
+  interface FormData {
+    image: File | null | Blob;
+  }
+  const [image, setImage] = useState<FormData>({ image: null });
 
   const handleFileInputChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    setProfileImage(file);
-    if (file) {
-      setProfileImage(file);
+    const uploadFile = event.target.files?.[0];
+    if (uploadFile) {
+      setImage({ image: uploadFile });
+
       const reader = new FileReader();
-      // const defaultImageBlob = await convertUrlToBlob(defaultImageSrc);
       reader.onloadend = () => {
         const img = reader.result as string;
         setImageSrc(img);
@@ -103,10 +133,9 @@ const EditProfileModal = ({
             }))
           : setDocumentImage(img);
       };
-      reader.readAsDataURL(file);
+      reader.readAsDataURL(uploadFile);
     }
   };
-  //  ----------------------
 
   const handleCloseModal = () => {
     setIsFormModalShown(false);
@@ -123,30 +152,32 @@ const EditProfileModal = ({
 
   const handleUploadAllDocument = async () => {
     try {
-      setLoading(true);
-      if (!imageURL) return;
-      const uploadBlob = convertUrlToBlob(imageURL);
-      if (uploadBlob) {
-        console.log(uploadBlob);
-      } else {
-        console.log("no image to Upload");
-      }
+      // if (!profileImage) {
+      //   console.log("No file selected");
+      //   return;
+      // }
+
+      // console.log(profileImage, "Uploading profile image");
       const url =
         "https://smp.jacinthsolutions.com.au/api/v1/service_provider/profile_picture";
-      const { data } = await axios.post(url, profileImage, {
+      const { data } = await axios.post(url, image.image, {
         headers: {
           Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
+          "Content-Type": "multipart/form-data",
         },
       });
       console.log(data);
-      setIsFormModalShown(false);
-      setIsUploadInitiated(false);
+
+      // setIsFormModalShown(false);
+      // setIsUploadInitiated(false);
     } catch (error) {
       console.log(error);
       console.log("there is an error");
     }
   };
+
+  // --------------------------------------------------------------------------
+  // the code changes ends here
 
   const handleFileUpload = () => {
     setCameraActive(false);

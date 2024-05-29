@@ -126,6 +126,10 @@ export const task = createApi({
       query: (customerId) => getRequest(`/customer-completed-tasks/${customerId}`),
       providesTags: ["Task"],
     }),
+    deleteTask: builder.mutation<void, number>({
+      query: (id) => postRequest(`/delete-task/${id}`,{}),
+      invalidatesTags: ["Task"],
+    }),
   }),
 });
 
@@ -141,4 +145,5 @@ export const {
   useGetTaskByCustomerIdQuery,
   useGetCustomerOngoingTasksQuery,
   useGetCustomerCompletedTasksQuery,
+  useDeleteTaskMutation,
 } = task;
