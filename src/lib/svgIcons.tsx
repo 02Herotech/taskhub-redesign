@@ -552,3 +552,10 @@ export const marketPlaceModalIcon = (
     />
   </svg>
 );
+
+export const RebookSvg = (
+  <svg width="14" height="18" viewBox="0 0 14 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M11.9499 2.6001H1.55C1.10817 2.6001 0.75 2.95827 0.75 3.40009V16.2C0.75 16.6418 1.10817 17 1.55 17H11.9499C12.3918 17 12.7499 16.6418 12.7499 16.2V3.40009C12.7499 2.95827 12.3918 2.6001 11.9499 2.6001Z" stroke="white" stroke-width="1.5" stroke-linejoin="round" />
+    <path d="M4.35078 1V3.39999M9.15075 1V3.39999M3.55078 6.99996H9.95074M3.55078 10.1999H8.35075M3.55078 13.3999H6.75076" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+  </svg>
+)
