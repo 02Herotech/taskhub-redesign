@@ -179,7 +179,7 @@ const PricingModal = ({
         onClick={() => setIsModalShown(false)}
       ></div>
       {!modalData.isAuthenticated ? (
-        <div className=" relative z-10 flex w-[90vw] max-w-lg flex-col items-center justify-center gap-3 rounded-xl bg-violet-active p-3 lg:space-y-4 lg:p-10 ">
+        <div className=" relative z-10 flex w-[90vw] max-w-lg flex-col items-center justify-center gap-3 rounded-xl bg-violet-light p-3 lg:space-y-4 lg:p-10 ">
           <span className="size-32 lg:size-40">{marketPlaceModalIcon}</span>
           <p className="text-center text-3xl font-semibold text-violet-normal">
             Sorry! you are not logged in
@@ -195,7 +195,7 @@ const PricingModal = ({
           </Link>
         </div>
       ) : modalData.isServiceProvider ? (
-        <div className=" relative z-10 flex w-[90vw] max-w-lg flex-col items-center justify-center gap-3 rounded-xl bg-violet-active p-3 px-4 lg:space-y-4 lg:p-10  ">
+        <div className=" relative z-10 flex w-[90vw] max-w-lg flex-col items-center justify-center gap-3 rounded-xl bg-violet-light p-3 px-4 lg:space-y-4 lg:p-10  ">
           <span className="size-32 lg:size-40">{marketPlaceModalIcon}</span>
           <p className="text-center text-3xl font-semibold text-violet-normal">
             Sorry! You cannot access this as a service provider
@@ -213,18 +213,18 @@ const PricingModal = ({
       ) : (
         <form
           onSubmit={(event) => handleSubmit(event)}
-          className=" relative z-10 w-[90vw] max-w-lg space-y-6 rounded-xl bg-violet-active p-3 lg:space-y-4 lg:p-6 "
+          className=" relative z-10 w-[90vw] max-w-lg space-y-6 rounded-xl bg-violet-light p-3 lg:space-y-4 lg:p-6 "
         >
           <div className="">
-            <h1 className="text-3xl font-bold text-violet-dark">Book Task</h1>
-            <p className="text-violet-dark">
+            <h1 className="text-violet-darker text-3xl font-bold">Book Task</h1>
+            <p className="text-violet-darker">
               Please fill in a little details so you can get a quick response
             </p>
           </div>
           <div className="grid w-full grid-cols-2  items-end justify-end gap-4 ">
             {/* Date */}
             <div className="flex flex-col justify-between space-y-1">
-              <label htmlFor="" className="font-medium text-violet-dark">
+              <label htmlFor="" className="text-violet-darker font-medium">
                 Date
               </label>
               <DatePicker
@@ -243,7 +243,7 @@ const PricingModal = ({
             </div>
             {/* Time */}
             <div className="flex flex-col space-y-1">
-              <label htmlFor="" className="font-medium text-violet-dark">
+              <label htmlFor="" className="text-violet-darker font-medium">
                 Time
               </label>
 
@@ -263,7 +263,7 @@ const PricingModal = ({
             </div>
             {/* Location */}
             <div className="flex flex-col space-y-1">
-              <label htmlFor="" className="font-medium text-violet-dark">
+              <label htmlFor="" className="text-violet-darker font-medium">
                 Location
               </label>
               <input
@@ -278,7 +278,7 @@ const PricingModal = ({
             </div>
             {/* State  */}
             <div className="flex flex-col space-y-1">
-              <label htmlFor="" className="font-medium text-violet-dark">
+              <label htmlFor="" className="text-violet-darker font-medium">
                 State/Suburb
               </label>
               <select
@@ -302,7 +302,7 @@ const PricingModal = ({
           </div>
           {/* Price  */}
           <div className="flex flex-col space-y-1">
-            <label htmlFor="" className="font-medium text-violet-dark">
+            <label htmlFor="" className="text-violet-darker font-medium">
               Price
             </label>
             <input
@@ -320,14 +320,14 @@ const PricingModal = ({
                 }))
               }
             />
-            <p className="text-sm font-semibold text-violet-dark">
+            <p className="text-violet-darker text-sm font-semibold">
               Price is in the range of A${modalData.pricing - 10} - A$
               {modalData.pricing + 10}
             </p>
           </div>
           {/* Description */}
           <div className="flex flex-col space-y-1">
-            <label htmlFor="" className="font-medium text-violet-dark">
+            <label htmlFor="" className="text-violet-darker font-medium">
               Description
             </label>
             <textarea
