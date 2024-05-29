@@ -21,7 +21,7 @@ export default withAuth(
         from += req.nextUrl.search;
       }
       return NextResponse.redirect(
-        new URL(`/auth/login?from=${encodeURIComponent(from)}`, req.url),
+        new URL(`/auth/login`, req.url),
       );
     }
     
