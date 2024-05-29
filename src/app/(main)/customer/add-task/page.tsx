@@ -842,7 +842,7 @@ const AddTaskForm: React.FC = () => {
           </div>
         </div>
       </div>
-      {isAuthenticated ? (
+      {!isAuthenticated ? (
         <Popup
           isOpen={isSuccessPopupOpen}
           onClose={() => {
@@ -890,7 +890,7 @@ const AddTaskForm: React.FC = () => {
             setIsSuccessPopupOpen(false);
           }}
         >
-          <div className="p-5 lg:px-20">
+          <div className="px-24 py-10">
             <div className="relative grid items-center justify-center space-y-5">
               <div className="flex justify-center text-[1px] text-white">
                 <GrFormCheckmark className="h-[50px] w-[50px] rounded-full bg-[#FE9B07] p-2 lg:h-[60px] lg:w-[60px]" />
@@ -905,7 +905,7 @@ const AddTaskForm: React.FC = () => {
               <Image
                 src={image}
                 alt="image"
-                className="absolute -right-8 top-40 w-20 lg:-right-20 lg:top-2/3 lg:w-32"
+                className="absolute -right-24 top-36  w-32 font-satoshiMedium lg:-right-20 lg:top-2/3"
               />
               <div className="flex justify-center">
                 <Link href="/marketplace">
