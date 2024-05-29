@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 
-export const jobsData = [
+export const JobsData = [
   {
     id: "1",
     name: "Kelly Jane",
@@ -44,7 +44,7 @@ const Jobs = () => {
         View Jobs
       </button>
       <section className="mx-auto max-w-screen-lg space-y-3 ">
-        {jobsData.map((item, index) => (
+        {JobsData.map((item, index) => (
           <div
             key={index}
             className=" flex gap-3 border-b border-slate-200 p-4 lg:grid lg:grid-cols-12 lg:items-center lg:px-8 lg:py-4"
