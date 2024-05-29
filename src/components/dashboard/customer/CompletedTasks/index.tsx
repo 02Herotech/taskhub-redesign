@@ -1,6 +1,5 @@
 "use client";
 
-import React from "react";
 import { useGetCustomerCompletedTasksQuery } from "@/services/tasks";
 import { useSession } from "next-auth/react";
 import Loading from "@/shared/loading";
