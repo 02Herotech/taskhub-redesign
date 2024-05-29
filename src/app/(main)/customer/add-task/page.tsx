@@ -18,7 +18,7 @@ import img from "../../../../../public/assets/images/blend.png";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { setCookie, getCookie } from 'cookies-next'; 
+import { setCookie, getCookie } from "cookies-next";
 
 interface FormData {
   taskBriefDescription: string;
@@ -50,7 +50,7 @@ interface PostalCodeData {
 
 const AddTaskForm: React.FC = () => {
   const session = useSession();
-  const router = useRouter()
+  const router = useRouter();
   const token = session?.data?.user.accessToken;
   const isAuthenticated = session.status === "authenticated";
   const [currentPage, setCurrentPage] = useState(1);
@@ -94,7 +94,7 @@ const AddTaskForm: React.FC = () => {
 
   const handleLoginNavigation = () => {
     router.push("/auth/login?from=/customer/add-task");
-  }
+  };
 
    useEffect(() => {
      // Save task data to cookies whenever it changes
@@ -227,7 +227,7 @@ const AddTaskForm: React.FC = () => {
     setCurrentPage(currentPage - 1);
   };
 
- const handlePrice = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handlePrice = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
     const numberValue = value === "" ? 0 : parseFloat(value);
     setTask({
@@ -243,16 +243,17 @@ const AddTaskForm: React.FC = () => {
       ...task,
       [event.target.name]: event.target.value,
     });
-      setWordCount(event.target.value.split(/\s+/).filter(Boolean).length);
+    setWordCount(event.target.value.split(/\s+/).filter(Boolean).length);
   };
 
-  const handleDescription = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  const handleDescription = (
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     setTask({
       ...task,
       taskDescription: event.target.value,
     });
-   setWordCounts(event.target.value.split(/\s+/).filter(Boolean).length);
+    setWordCounts(event.target.value.split(/\s+/).filter(Boolean).length);
   };
 
   const handletaskImageUpload = (
@@ -279,6 +280,7 @@ const AddTaskForm: React.FC = () => {
     }
     return "";
   };
+  const imageUrl = getImageURL();
 
   const imageURL = getImageURL();
 

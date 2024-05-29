@@ -10,6 +10,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import { BiLoaderCircle } from "react-icons/bi";
 import Button from "../global/Button";
 import { BeatLoader } from "react-spinners";
+import { marketPlaceModalIcon } from "@/lib/svgIcons";
 
 interface ModalProps {
   setIsModalShown: Dispatch<SetStateAction<boolean>>;
@@ -42,7 +43,7 @@ const PricingModal = ({
     postcode: number | string;
     date: Date;
     suburb: string;
-    pricing: number;
+    pricing: number | string;
     description: string;
     time: string;
   }>({
@@ -89,6 +90,21 @@ const PricingModal = ({
     event.preventDefault();
     try {
       setSubmitStatus((prev) => ({ ...prev, isSubmtting: true, error: "" }));
+      if (
+        !formState.date ||
+        !formState.time ||
+        !formState.postcode ||
+        !formState.suburb ||
+        !formState.pricing ||
+        !formState.description
+      ) {
+        setSubmitStatus((prev) => ({
+          ...prev,
+          isSubmtting: false,
+          error: "Kindly fill all fields",
+        }));
+        return;
+      }
       const uploadData = {
         listingId,
         startDate: formatDate(formState.date),
@@ -128,6 +144,12 @@ const PricingModal = ({
     userType: "serviceProvider",
   });
 
+  useEffect(() => {
+    if (formState.pricing === 0) {
+      setFormState((prev) => ({ ...prev, pricing: "" }));
+    }
+  }, [formState.pricing]);
+
   const handleFectchLocationByPostcode = async () => {
     try {
       const url =
@@ -158,10 +180,13 @@ const PricingModal = ({
       ></div>
       {!modalData.isAuthenticated ? (
         <div className=" relative z-10 flex w-[90vw] max-w-lg flex-col items-center justify-center gap-3 rounded-xl bg-violet-active p-3 lg:space-y-4 lg:p-10 ">
+          <span className="size-32 lg:size-40">{marketPlaceModalIcon}</span>
           <p className="text-center text-3xl font-semibold text-violet-normal">
-            Sorry you are not logged in
+            Sorry! you are not logged in
           </p>
-          <p className="text-violet-darkHover">Kindly Login to Continue</p>
+          <p className="text-violet-darkHover">
+            Kindly Login as a customer to Continue
+          </p>
           <Link
             href={"/auth/login"}
             className="rounded-full bg-violet-normal px-6 py-3 font-bold text-white"
@@ -170,12 +195,13 @@ const PricingModal = ({
           </Link>
         </div>
       ) : modalData.isServiceProvider ? (
-        <div className=" relative z-10 flex w-[90vw] max-w-lg flex-col items-center justify-center gap-3 rounded-xl bg-violet-active p-3 lg:space-y-4 lg:p-10  ">
+        <div className=" relative z-10 flex w-[90vw] max-w-lg flex-col items-center justify-center gap-3 rounded-xl bg-violet-active p-3 px-4 lg:space-y-4 lg:p-10  ">
+          <span className="size-32 lg:size-40">{marketPlaceModalIcon}</span>
           <p className="text-center text-3xl font-semibold text-violet-normal">
-            Sorry you cannot access this as a service provider
+            Sorry! You cannot access this as a service provider
           </p>
           <p className="text-violet-darkHover">
-            Kindly sign up a customer to continue{" "}
+            Kindly sign up a customer to continue
           </p>
           <Link
             href={`/auth/sign-up?${serviceProviderParams.toString()}`}
