@@ -2,17 +2,38 @@
 export type Task = {
     id: number;
     posterId: number;
+    taskBriefDescription: string;
     taskDescription: string;
     taskImage: string;
     taskTime: string;
     taskDate: [number, number, number];
-    hubTime: string;
+    hubTime: string | null;
     taskType: string;
-    taskAddress: string;
+    taskStatus: string;
+    taskAddress: string | null;
     createdAt: [number, number, number];
     customerBudget: number;
     active: boolean;
 };
+
+export type CustomerTasks = {
+    id: number;
+    posterId: number;
+    taskBriefDescription: string;
+    taskDescription: string;
+    taskImage: string;
+    taskTime: string;
+    taskDate: [number, number, number];
+    hubTime: string | null;
+    taskType: string;
+    taskStatus: string;
+    taskAddress: string | null;
+    createdAt: [number, number, number];
+    customerBudget: number;
+    active: boolean;
+}
+
+export type GetCustomerTasksResponse = CustomerTasks[];
 
 export type GetTasksRequest =  number;
 

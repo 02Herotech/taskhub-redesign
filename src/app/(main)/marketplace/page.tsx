@@ -63,7 +63,7 @@ const MareketPlace = () => {
     <main>
       {showPopup && (
         <Popup isOpen={showPopup} onClose={() => setShowPopup(false)}>
-          <div className="relative h-[312px] max-lg:mx-10 lg:w-[577px]">
+          <div className="relative h-[312px] max-lg:mx-5 lg:w-[577px]">
             <div className="flex h-full flex-col items-center justify-center space-y-7 text-center">
               <h1 className="font-clashDisplay text-4xl font-semibold text-[#2A1769]">
                 Welcome to TaskHUB
@@ -73,7 +73,7 @@ const MareketPlace = () => {
                 access to all our features.
               </p>
               <Button
-                className="w-[151px] rounded-full py-6"
+                className="w-[151px] max-lg:text-sm rounded-full py-6"
                 onClick={() => router.push("/service-provider/dashboard")}
               >
                 Go to Profile
@@ -82,14 +82,14 @@ const MareketPlace = () => {
             <Image
               src="/assets/images/marketplace/complete-profile-2.png"
               alt="image"
-              className="absolute bottom-0 left-0 size-[120px] lg:size-[160px]"
+              className="absolute bottom-1 left-1 size-[100px] lg:size-[160px]"
               width={160}
               height={160}
             />
             <Image
               src="/assets/images/marketplace/complete-profile-1.png"
               alt="image"
-              className="absolute -bottom-1 -right-1 size-[90px] lg:size-[110px]"
+              className="absolute bottom-0 right-0 size-[70px] lg:size-[110px]"
               width={110}
               height={110}
             />

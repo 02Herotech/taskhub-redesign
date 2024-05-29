@@ -1,28 +1,33 @@
 "use client";
 
-import { dayOfWeekNames, formatAmount, monthNames } from "@/lib/utils";
+import { dayOfWeekNames, formatAmount, monthNames, suffixes } from "@/lib/utils";
 import Image from "next/image";
 import { useSession } from "next-auth/react";
 import Button from "@/components/global/Button";
 import Link from "next/link";
-import { Task } from "@/types/services/tasks";
+import { CustomerTasks } from "@/types/services/tasks";
 
 interface TaskCardProps {
-    task: Task;
+    task: CustomerTasks;
 }
 
 const OngoingTasksCard = ({ task }: TaskCardProps) => {
     const session = useSession();
     const profileImage = session?.data?.user.user.profileImage;
+    const firstName = session?.data?.user.user.firstName;
+    const lastName = session?.data?.user.user.lastName;
+    const fullName = `${firstName} ${lastName}`;
 
-    // const date = new Date(task.time);
-    // const day = date.getDate();
-    // const suffixes = ["st", "nd", "rd", "th"];
-    // const daySuffix = suffixes[(day - 1) % 10] || suffixes[3];
-    // const formattedDate = `On ${dayOfWeekNames[date.getDay()]}, ${monthNames[date.getMonth()]} ${day}${daySuffix}`;
+    const dateArray = task.taskDate;
+    const date = new Date(dateArray[0], dateArray[1] - 1, dateArray[2]);
+
+    const day = date.getDate();
+    const daySuffix = suffixes[(day % 10) - 1] || suffixes[0];
+
+    const formattedDate = `On ${dayOfWeekNames[date.getDay()]}, ${monthNames[date.getMonth()]} ${day}${daySuffix}`;
 
     return (
-        <div className="lg:rounded-4xl font-satoshi bg-white p-5 mb-4 flex justify-between border-b">
+        <div className="lg:rounded-4xl font-satoshi bg-white p-5 mb-4 flex lg:justify-between border-b">
             <div className="flex items-center space-x-3">
                 <Image
                     src={profileImage || "/assets/images/placeholder.jpeg"}
@@ -31,23 +36,23 @@ const OngoingTasksCard = ({ task }: TaskCardProps) => {
                     width={90}
                     height={90}
                 />
-                {/* <div className="space-y-2">
-                    <h2 className="font-satoshiMedium text-primary text-xl">{task.serviceProvider}</h2>
+                <div className="space-y-2">
+                    <h2 className="font-satoshiMedium text-primary text-xl">{fullName}</h2>
                     <h2 className="overflow-hidden truncate text-ellipsis whitespace-nowrap py-4 text-base font-satoshi text-primary">
-                        {task.taskTitle}
+                        {task.taskBriefDescription}
                     </h2>
-                    <Link href={`/customer/tasks/ongoing-task-details/${task.taskTitle}`}>
+                    <Link href={`/customer/tasks/ongoing-task-details/${task.id}`}>
                         <Button theme="outline" className="rounded-full">
                             View Service
                         </Button>
                     </Link>
-                </div> */}
+                </div>
             </div>
             <div className="flex flex-col justify-between">
-                {/* <h5 className="text-base text-tc-orange">{formattedDate}</h5>
+                <h5 className="text-base text-tc-orange">{formattedDate}</h5>
                 <h2 className="font-bold capitalize text-[#28272A] text-base">
-                    Total Cost: {formatAmount(task.price, "USD", false)}
-                </h2> */}
+                    Total Cost: {formatAmount(task.customerBudget, "USD", false)}
+                </h2>
             </div>
         </div>
     );
