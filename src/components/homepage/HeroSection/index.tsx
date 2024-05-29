@@ -20,6 +20,7 @@ import { signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import { FaArrowRight } from "react-icons/fa6";
+import { motion } from "framer-motion";
 
 const useImageTransition = (images: any, transitionDuration: any) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -99,6 +100,29 @@ const HeroSection = () => {
   const images4 = [heroImage4, heroImage4a];
   const currentImageIndex4 = useImageTransition(images4, 3000);
 
+  let find = ['F', 'I', 'N', 'D']
+  let connect = ['C', 'O', 'N', 'N', 'E', 'C', 'T']
+  let get = ['G', 'E', 'T']
+  let it = ['I', 'T']
+  let done = ['D', 'O', 'N', 'E']
+
+  // const AnimatedText = ({ text, delay }: any) => {
+  //   return (
+  //     <span className="flex">
+  //       {text.split("").map((letter: any, i: number) => (
+  //         <motion.span
+  //           key={i}
+  //           className="flex items-center gap-4"
+  //           initial={{ opacity: 0, translateY: 100 }}
+  //           animate={{ opacity: 1, translateY: 0 }}
+  //           transition={{ duration: 0.3, delay: i * 0.08 + delay }}
+  //         >
+  //           {letter}
+  //         </motion.span>
+  //       ))}
+  //     </span>
+  //   )
+  // };
   return (
     <div
       className={` w-full bg-gradient-to-b from-[#f3dcfc] via-[#f5f1f7] to-[#FFFFFF] m-0`}
@@ -112,24 +136,147 @@ const HeroSection = () => {
               className={`hidden lg:block text-primary font-medium mb-5 lg:mt-[3rem] text-center lg:text-left lg:text-[65px] text-[35px]  leading-tight lg:w-[500px] w-full font-clashMedium
              `}
             >
-              <span className="flex items-center gap-4">FIND</span>
+              <span className="flex">
+                {find.map((eachLetter, i) => (
+                  <motion.span className="flex items-center gap-4"
+                    key={i}
+                    initial={{ opacity: 0, translateY: 100 }}
+                    animate={{ opacity: 1, translateY: 0 }}
+                    transition={{ duration: 0.3, delay: i * 0.08 }}>
+
+                    {eachLetter}
+
+                  </motion.span>
+                ))}
+              </span>
 
 
-              <span className="flex items-center gap-4">CONNECT </span>
+              <span className="flex">
+                {connect.map((eachLetter, i) => (
+                  <motion.span className="flex items-center gap-4"
+                    key={i}
+                    initial={{ opacity: 0, translateY: 100 }}
+                    animate={{ opacity: 1, translateY: 0 }}
+                    transition={{ duration: 0.3, delay: i * 0.08 + 1 }}>
 
-              <span className="flex items-center gap-4">GET IT DONE </span>
+                    {eachLetter}
+
+                  </motion.span>
+                ))}
+              </span>
+
+              <span className="flex space-x-3 xl:space-x-4">
+                <span className="flex">
+                  {get.map((eachLetter, i) => (
+                    <motion.span className="flex items-center gap-4"
+                      key={i}
+                      initial={{ opacity: 0, translateY: 100 }}
+                      animate={{ opacity: 1, translateY: 0 }}
+                      transition={{ duration: 0.3, delay: i * 0.08 + 2 }}>
+
+                      {eachLetter}
+
+                    </motion.span>
+                  ))}
+                </span>
+                <span className="flex">   {it.map((eachLetter, i) => (
+                  <motion.span className="flex items-center gap-4"
+                    key={i}
+                    initial={{ opacity: 0, translateY: 100 }}
+                    animate={{ opacity: 1, translateY: 0 }}
+                    transition={{ duration: 0.3, delay: i * 0.08 + 2.2 }}>
+
+                    {eachLetter}
+
+                  </motion.span>
+                ))}</span>
+                <span className="flex">
+                  {done.map((eachLetter, i) => (
+                    <motion.span className="flex items-center gap-4"
+                      key={i}
+                      initial={{ opacity: 0, translateY: 100 }}
+                      animate={{ opacity: 1, translateY: 0 }}
+                      transition={{ duration: 0.3, delay: i * 0.08 + 2.3 }}>
+
+                      {eachLetter}
+
+                    </motion.span>
+                  ))}
+                </span>
+              </span>
             </h1>
 
             <h1
               className={`lg:hidden text-primary font-medium mb-5 lg:mt-[3rem] text-center lg:text-left lg:text-[65px] text-[35px]  leading-tight lg:w-[500px] w-full !font-clashMedium
              flex flex-col justify-center items-center`}
             >
-              <span className="flex items-center gap-4">FIND</span>
+              <span className="flex">
+                {find.map((eachLetter, i) => (
+                  <motion.span className="flex items-center gap-4"
+                    key={i}
+                    initial={{ opacity: 0, translateY: 100 }}
+                    animate={{ opacity: 1, translateY: 0 }}
+                    transition={{ duration: 0.3, delay: i * 0.08 }}>
 
+                    {eachLetter}
 
-              <span className="flex items-center gap-4">CONNECT</span>
+                  </motion.span>
+                ))}
+              </span>
 
-              <span className="flex items-center gap-4">GET IT DONE</span>
+              <span className="flex">
+                {connect.map((eachLetter, i) => (
+                  <motion.span className="flex items-center gap-4"
+                    key={i}
+                    initial={{ opacity: 0, translateY: 100 }}
+                    animate={{ opacity: 1, translateY: 0 }}
+                    transition={{ duration: 0.3, delay: i * 0.08 + 1 }}>
+
+                    {eachLetter}
+
+                  </motion.span>
+                ))}
+              </span>
+
+              <span className="flex space-x-2">
+                <span className="flex">
+                  {get.map((eachLetter, i) => (
+                    <motion.span className="flex items-center gap-4"
+                      key={i}
+                      initial={{ opacity: 0, translateY: 100 }}
+                      animate={{ opacity: 1, translateY: 0 }}
+                      transition={{ duration: 0.3, delay: i * 0.08 + 2 }}>
+
+                      {eachLetter}
+
+                    </motion.span>
+                  ))}
+                </span>
+                <span className="flex">   {it.map((eachLetter, i) => (
+                  <motion.span className="flex items-center gap-4"
+                    key={i}
+                    initial={{ opacity: 0, translateY: 100 }}
+                    animate={{ opacity: 1, translateY: 0 }}
+                    transition={{ duration: 0.3, delay: i * 0.08 + 2.2 }}>
+
+                    {eachLetter}
+
+                  </motion.span>
+                ))}</span>
+                <span className="flex">
+                  {done.map((eachLetter, i) => (
+                    <motion.span className="flex items-center gap-4"
+                      key={i}
+                      initial={{ opacity: 0, translateY: 100 }}
+                      animate={{ opacity: 1, translateY: 0 }}
+                      transition={{ duration: 0.3, delay: i * 0.08 + 2.3 }}>
+
+                      {eachLetter}
+
+                    </motion.span>
+                  ))}
+                </span>
+              </span>
             </h1>
 
 
@@ -145,20 +292,20 @@ const HeroSection = () => {
               <div className="">
                 <button
                   className=" rounded-[50px] bg-primary xl:text-[16px]
-          lg:px-3 py-2 text-[#EBE9F4] hover:bg-[#25135f] w-[250px] xl:w-[190px] lg:w-[155px]  "
+                  xl:px-3   lg:px-3 py-2 text-[#EBE9F4] hover:bg-[#25135f] w-[250px] xl:w-[190px] lg:w-[175px]  "
                 >
-                
+
                   <Link href="/customer/add-task">
-                      Post your first task
-                    </Link>
-                
+                    Post at no cost today
+                  </Link>
+
 
                 </button>
               </div>
 
               <div>
                 <button
-                  className=" rounded-[50px] w-[250px] bg-[#FE9B07] text-[#FFF5E6] xl:text-[16px] 
+                  className=" rounded-[50px] w-[250px] lg:w-[230px] xl:w-[250px] bg-[#FE9B07] text-[#FFF5E6] xl:text-[16px] 
                       lg:px-2    px-3 py-2    hover:bg-[#e79823]  "
                 >
                   <Link

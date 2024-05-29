@@ -91,7 +91,7 @@ const Taskhub = () => {
                             {session?.user?.user?.roles[0] === "SERVICE_PROVIDER" ? (
                                 <p onClick={handlePostTask}>Post at no cost today</p>
                             ) : (
-                                <Link href="customer/add-task">
+                                <Link href="/customer/add-task">
                                    Post at no cost today
                                 </Link>
                             )}

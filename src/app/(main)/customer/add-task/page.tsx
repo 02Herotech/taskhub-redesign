@@ -27,7 +27,7 @@ interface FormData {
   taskTime: string;
   taskDate: string;
   taskType: string;
-  customerBudget: string;
+  customerBudget: number | null;
   hubTime: string;
   taskAddress: string[];
   categoryId: number | null;
@@ -65,7 +65,9 @@ const AddTaskForm: React.FC = () => {
     taskDate: getCookie("taskDate") || "",
     taskType: getCookie("taskType") || "",
     taskAddress: [],
-    customerBudget: getCookie("customerBudget") || "",
+    customerBudget: getCookie("categoryId")
+      ? parseInt(getCookie("categoryId") as string)
+      : null,
     hubTime: getCookie("hubTime") || "",
     categoryId: getCookie("categoryId")
       ? parseInt(getCookie("categoryId") as string)
@@ -170,16 +172,12 @@ const AddTaskForm: React.FC = () => {
       error.taskDescription = "please write down a description";
     }
 
-    if (!selectedDate) {
-      error.taskTime = "please choose a Date";
-    } else if (!selectedTime) {
-      error.taskDate = "please choose a Time";
+    if (!selectedDate ) {
+      error.message =  "please select date";
     }
 
-    if (termsAccepted) {
-      if (!isSelectedTime) {
-        error.terms = "please choose a Time.";
-      }
+    if (!selectedTime && !isSelectedTime) {
+      error.message = "please select a time"
     }
 
     setError(error);
@@ -232,6 +230,15 @@ const AddTaskForm: React.FC = () => {
 
   const prevPage = () => {
     setCurrentPage(currentPage - 1);
+  };
+
+ const handlePrice = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target;
+    const numberValue = value === "" ? 0 : parseFloat(value);
+    setTask({
+      ...task,
+      [name]: numberValue,
+    });
   };
 
   const handleChange = (
@@ -315,18 +322,21 @@ const AddTaskForm: React.FC = () => {
   const calculateProgress = () => {
     const requiredFields = [
       task.taskBriefDescription,
-      task.taskTime,
-      task.taskDate,
       task.customerBudget,
-      selectedDate,
-      selectedTime,
+      task.taskDescription,
       selectedCategory,
+      selectedDate,
     ];
 
     if (isOpen && activeButtonIndex === 1) {
       requiredFields.push(isRemote);
     } else {
       requiredFields.push(selectedCode, selectedCity);
+    }
+    if (termsAccepted) {
+      requiredFields.push(isSelectedTime)
+    } else {
+      requiredFields.push(task.taskTime);
     }
     const filledFields = requiredFields.filter(
       (value) => value !== "" && value !== null,
@@ -353,12 +363,14 @@ const AddTaskForm: React.FC = () => {
           const hub = isSelectedTime;
           finalTask = { ...finalTask, hubTime: hub };
         }
-        if (selectedTime && selectedDate) {
+        if ( selectedDate) {
           const date = dateString;
-          const time = timeString;
-          finalTask = { ...finalTask, taskDate: date, taskTime: time };
+          finalTask = { ...finalTask, taskDate: date, };
         }
-
+        if (selectedTime) {
+           const time = timeString;
+           finalTask = { ...finalTask,  taskTime: time };
+        }
         if (isOpen && activeButtonIndex === 1) {
           const type = "REMOTE_SERVICE";
           finalTask = { ...finalTask, taskType: type };
@@ -399,7 +411,7 @@ const AddTaskForm: React.FC = () => {
           taskType: "",
           hubTime: "",
           taskAddress: [],
-          customerBudget: "",
+          customerBudget: null,
           categoryId: null,
           taskDescription: "",
         });
@@ -407,7 +419,7 @@ const AddTaskForm: React.FC = () => {
         setIsSuccessPopupOpen(true);
       } catch (error) {
         console.error("Error submitting form:", error);
-        setIsSuccessPopupOpen(true);
+        // setIsSuccessPopupOpen(true);
       }
     }
   };
@@ -548,7 +560,7 @@ const AddTaskForm: React.FC = () => {
                   htmlFor="taskTime"
                   className="test-[20px] font-satoshiBold font-bold text-status-darkpurple"
                 >
-                  Set number of working (Day/Time):
+                  Set Day and Time:
                 </label>
                 <div className="flex items-center space-x-3">
                   <div className="relative">
@@ -736,10 +748,9 @@ const AddTaskForm: React.FC = () => {
               <div className="relative grid space-y-4 font-medium text-status-darkpurple">
                 <label>Budget</label>
                 <input
-                  type="text"
+                  type="number"
                   name="customerBudget"
-                  value={task.customerBudget}
-                  onChange={handleChange}
+                  onChange={handlePrice}
                   placeholder="500"
                   className="rounded-2xl bg-[#EBE9F4] p-3 pl-6 text-[13px] outline-none  placeholder:font-bold"
                 />

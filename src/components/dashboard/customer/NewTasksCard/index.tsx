@@ -6,37 +6,32 @@ import { FiCalendar, FiClock } from "react-icons/fi";
 import { HiOutlineLocationMarker } from "react-icons/hi";
 import { motion } from "framer-motion";
 import React from "react";
+import { Task } from "@/types/services/tasks";
 
-export type NewTaskProps = {
-    taskTitle: string;
-    location: string;
-    time: Date;
-    price: number;
-};
-
-interface NewTasksProps {
-    task: NewTaskProps;
+interface TaskCardProps {
+    task: Task;
 }
 
-const NewTasksCard: React.FC<NewTasksProps> = ({ task }) => {
+const NewTasksCard = ({ task } :TaskCardProps) => {
     const router = useRouter();
 
-    const date = task.time;
-    const day = date.getDate();
-    const suffixes = ["st", "nd", "rd", "th"];
-    const daySuffix = suffixes[(day - 1) % 10] || suffixes[3];
-    const monthNames = [
-        "January", "February", "March", "April", "May", "June",
-        "July", "August", "September", "October", "November", "December",
-    ];
-    const dayOfWeekNames = [
-        "Sun", "Mon", "Tue", "Wed", "Thur", "Fri", "Sat",
-    ];
-    const formattedDate = `On ${dayOfWeekNames[date.getDay()]}, ${monthNames[date.getMonth()]} ${day}${daySuffix}`;
+    const date = task.taskTime;
+    console.log(task)
+    // const day = date.getDate();
+    // const suffixes = ["st", "nd", "rd", "th"];
+    // const daySuffix = suffixes[(day - 1) % 10] || suffixes[3];
+    // const monthNames = [
+    //     "January", "February", "March", "April", "May", "June",
+    //     "July", "August", "September", "October", "November", "December",
+    // ];
+    // const dayOfWeekNames = [
+    //     "Sun", "Mon", "Tue", "Wed", "Thur", "Fri", "Sat",
+    // ];
+    // const formattedDate = `On ${dayOfWeekNames[date.getDay()]}, ${monthNames[date.getMonth()]} ${day}${daySuffix}`;
 
-    const hours = date.getHours();
-    const minutes = date.getMinutes();
-    const formattedTime = `${hours % 12 || 12}:${minutes < 10 ? "0" : ""}${minutes} ${hours >= 12 ? "PM" : "AM"}`;
+    // const hours = date.getHours();
+    // const minutes = date.getMinutes();
+    // const formattedTime = `${hours % 12 || 12}:${minutes < 10 ? "0" : ""}${minutes} ${hours >= 12 ? "PM" : "AM"}`;
 
     return (
         <motion.div
@@ -49,12 +44,12 @@ const NewTasksCard: React.FC<NewTasksProps> = ({ task }) => {
         >
             <div className="w-2/3">
                 <div className="flex w-full items-center justify-between">
-                    <h2 className="overflow-hidden truncate text-ellipsis whitespace-nowrap py-4 text-2xl font-satoshiBold font-bold text-primary lg:text-[32px]">
+                    {/* <h2 className="overflow-hidden truncate text-ellipsis whitespace-nowrap py-4 text-2xl font-satoshiBold font-bold text-primary lg:text-[32px]">
                         {task.taskTitle}
-                    </h2>
+                    </h2> */}
                 </div>
                 <div className="space-y-2">
-                    <div className="flex w-full items-center space-x-2 font-medium text-[#716F78]">
+                    {/* <div className="flex w-full items-center space-x-2 font-medium text-[#716F78]">
                         <HiOutlineLocationMarker className="h-6 w-6 font-bold" />
                         <h5 className="overflow-hidden truncate text-ellipsis whitespace-nowrap py-1 text-[15px] lg:text-xl">
                             {task.location || `No location`}
@@ -63,7 +58,7 @@ const NewTasksCard: React.FC<NewTasksProps> = ({ task }) => {
                     <div className="flex w-full items-center space-x-2 font-medium text-[#716F78]">
                         <FiCalendar className="h-6 w-6 font-bold" />
                         <h5 className="text-[15px] lg:text-xl">{formattedDate}</h5>
-                    </div>
+                    </div> */}
                     {/* <div className="flex w-full items-center space-x-2 font-medium text-[#716F78]">
                     <FiClock className="h-6 w-6 font-bold" />
                     <h5 className="text-[15px] lg:text-xl">{formattedTime}</h5>
@@ -78,7 +73,7 @@ const NewTasksCard: React.FC<NewTasksProps> = ({ task }) => {
                     <h5>Edit task</h5>
                 </button>
                 <h2 className="text-2xl font-bold capitalize text-primary lg:text-[32px]">
-                    {formatAmount(task.price, "USD", false)}
+                    {/* {formatAmount(task.price, "USD", false)} */}
                 </h2>
             </div>
         </motion.div>
