@@ -15,7 +15,6 @@ import Button from "@/components/global/Button";
 import { useSession } from "next-auth/react";
 import image from "../../../../../public/assets/images/customer/Task management.png";
 import img from "../../../../../public/assets/images/blend.png";
-import tick from "../../../../../public/assets/icons/tick.svg";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -28,7 +27,7 @@ interface FormData {
   taskDate: string;
   taskType: string;
   customerBudget: number | null;
-  termsAccepted: boolean;
+  termAccepted: boolean;
   taskAddress: string[];
   categoryId: number | null;
   taskDescription: string;
@@ -53,8 +52,7 @@ const AddTaskForm: React.FC = () => {
   const session = useSession();
   const router = useRouter()
   const token = session?.data?.user.accessToken;
-  const isAuthenticated = session?.status === "authenticated";
-  const authenticated = session?.data?.user.user.enabled;
+  const isAuthenticated = session.status === "authenticated";
   const [currentPage, setCurrentPage] = useState(1);
   const defaultImageSrc =
     "https://static.wixstatic.com/media/7d1889_ab302adc66e943f9b6be9de260cbc40f~mv2.png";
@@ -68,7 +66,7 @@ const AddTaskForm: React.FC = () => {
     customerBudget: getCookie("categoryId")
       ? parseInt(getCookie("categoryId") as string)
       : null,
-    termsAccepted: false,
+    termAccepted: false,
     categoryId: getCookie("categoryId")
       ? parseInt(getCookie("categoryId") as string)
       : null,
@@ -78,7 +76,7 @@ const AddTaskForm: React.FC = () => {
   const [selectedTime, setSelectedTime] = useState<Date | null>(null);
   const [selectedCode, setSelectedCode] = useState("");
   const [selectedCity, setSelectedCity] = useState("");
-  const [termsAccepted, setTermsAccepted] = useState(false);
+  const [termAccepted, settermAccepted] = useState(false);
   const [isRemote, setIsRemote] = useState("");
   const [isSelectedTime, setIsSelectedTime] = useState("");
   const [isOpen, setIsOpen] = useState(false);
@@ -108,7 +106,7 @@ const AddTaskForm: React.FC = () => {
        maxAge: 120,
      });
      setCookie("customerBudget", task.customerBudget, { maxAge: 120 });
-     setCookie("hubTime", task.termsAccepted, { maxAge: 120 });
+     setCookie("hubTime", task.termAccepted, { maxAge: 120 });
      setCookie("categoryId", task.categoryId?.toString(), { maxAge: 120 });
      setCookie("taskDescription", task.taskDescription, { maxAge: 120 });
    }, [task]);
@@ -162,27 +160,28 @@ const AddTaskForm: React.FC = () => {
     return Object.keys(errors).length === 0;
   };
 
-  const validateField1 = () => {
-    const error: any = {};
-    if (!task.taskBriefDescription) {
-      error.taskBriefDescription = "please write down a brief description";
-    }
+ const validateField1 = () => {
+   const error: any = {};
 
-    if (!task.taskDescription) {
-      error.taskDescription = "please write down a description";
-    }
+   // Validate taskBriefDescription
+   if (!task.taskBriefDescription) {
+     error.taskBriefDescription = "Please write down a brief description.";
+   }
 
-    if (!selectedDate ) {
-      error.message =  "please select date";
-    }
+   // Validate taskDescription
+   if (!task.taskDescription) {
+     error.taskDescription = "Please write down a description.";
+   }
 
-    if ((!selectedTime && !selectedDate) || termsAccepted) {
-      error.message = "please select a time"
-    }
+   // Validate selectedTime and selectedDate or termAccepted
+   if (!(selectedTime && selectedDate) && !termAccepted) {
+     error.message = "Please select a time and date, or accept the terms.";
+   }
 
-    setError(error);
-    return Object.keys(error).length === 0;
-  };
+   setError(error);
+   return Object.keys(error).length === 0;
+ };
+
 
   const handleClick = (index: number) => {
     setActiveButtonIndex(index);
@@ -199,7 +198,7 @@ const AddTaskForm: React.FC = () => {
   };
 
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setTermsAccepted(event.target.checked);
+    settermAccepted(event.target.checked);
     if (!event.target.checked) {
       setIsSelectedTime("");
     }
@@ -328,18 +327,23 @@ const AddTaskForm: React.FC = () => {
     } else {
       requiredFields.push(selectedCode, selectedCity);
     }
-    
+
     const filledFields = requiredFields.filter(
       (value) => value !== "" && value !== null,
     ).length;
 
     // Calculate the total number of fields that need to be filled
-    const totalFields = isOpen && activeButtonIndex === 0 ? 6 : 5;
+    let totalFields = 5;
+
+    if (isOpen && activeButtonIndex === 0) {
+      totalFields = 6;
+    }
 
     return Math.round((filledFields / totalFields) * 100);
   };
 
   const progress = calculateProgress();
+
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -347,7 +351,7 @@ const AddTaskForm: React.FC = () => {
       try {
         let finalTask = { ...task };
 
-        if (termsAccepted) {
+        if (termAccepted) {
           finalTask = { ...finalTask };
         }
         
@@ -355,8 +359,8 @@ const AddTaskForm: React.FC = () => {
           const date = dateString;
           const time = timeString;
           finalTask = { ...finalTask, taskDate: date, taskTime: time };
-        } else if (termsAccepted) {
-          finalTask = { ...finalTask, termsAccepted: true };
+        } else if (termAccepted) {
+          finalTask = { ...finalTask, termAccepted: true };
         }
 
         if (isOpen && activeButtonIndex === 1) {
@@ -397,7 +401,7 @@ const AddTaskForm: React.FC = () => {
           taskTime: "",
           taskDate: "",
           taskType: "",
-          termsAccepted: false,
+          termAccepted: false,
           taskAddress: [],
           customerBudget: null,
           categoryId: null,
@@ -563,7 +567,7 @@ const AddTaskForm: React.FC = () => {
                       placeholderText="Choose Time"
                       id="taskTime"
                       name="taskTime"
-                      disabled={termsAccepted}
+                      disabled={termAccepted}
                       className="w-full cursor-pointer rounded-2xl border  border-tc-gray  bg-[#EBE9F4] px-2 py-1 outline-none placeholder:text-[14px] placeholder:font-bold "
                     />
                     <IoMdArrowDropdown className="absolute right-5 top-2 cursor-pointer text-status-purpleBase" />
@@ -577,7 +581,7 @@ const AddTaskForm: React.FC = () => {
                       placeholderText="Choose Date"
                       id="taskDate"
                       name="taskDate"
-                      disabled={termsAccepted}
+                      disabled={termAccepted}
                       className="w-full cursor-pointer rounded-2xl  border border-tc-gray bg-[#EBE9F4] px-2 py-1 outline-none placeholder:text-[14px] placeholder:font-bold "
                     />
 
@@ -588,7 +592,7 @@ const AddTaskForm: React.FC = () => {
                       <input
                         type="checkbox"
                         name="check"
-                        checked={termsAccepted}
+                        checked={termAccepted}
                         onChange={handleCheckboxChange}
                         className="mr-2"
                       />
@@ -718,7 +722,7 @@ const AddTaskForm: React.FC = () => {
                   name="customerBudget"
                   onChange={handlePrice}
                   placeholder="500"
-                  className="rounded-2xl bg-[#EBE9F4] p-3 pl-6 text-[13px] outline-none  placeholder:font-bold"
+                  className="rounded-2xl bg-[#EBE9F4] appearance-none p-3 pl-6 text-[13px] outline-none  placeholder:font-bold"
                 />
                 <p className="absolute left-3 top-8">$</p>
               </div>
@@ -757,17 +761,19 @@ const AddTaskForm: React.FC = () => {
       <div className="w-full">
         <div className="mb-3 flex justify-center space-x-5">
           <div
-            className={`${currentPage === 1
-              ? "text-status-purpleBase"
-              : "text-status-purpleBase"
-              }`}
+            className={`${
+              currentPage === 1
+                ? "text-status-purpleBase"
+                : "text-status-purpleBase"
+            }`}
           >
             <p className="flex items-center gap-2 text-[12px] md:text-[16px] lg:gap-3">
               <span
-                className={`${currentPage === 1
-                  ? "bg-status-purpleBase text-white"
-                  : "bg-status-purpleBase text-white"
-                  } rounded-2xl border-none px-3 py-2`}
+                className={`${
+                  currentPage === 1
+                    ? "bg-status-purpleBase text-white"
+                    : "bg-status-purpleBase text-white"
+                } rounded-2xl border-none px-3 py-2`}
               >
                 01
               </span>{" "}
@@ -778,15 +784,17 @@ const AddTaskForm: React.FC = () => {
             </p>
           </div>
           <div
-            className={`${currentPage === 2 ? "text-status-purpleBase" : " text-[#716F78]"
-              }`}
+            className={`${
+              currentPage === 2 ? "text-status-purpleBase" : " text-[#716F78]"
+            }`}
           >
             <p className="flex items-center gap-2 text-[12px] md:text-[16px] lg:gap-3">
               <span
-                className={`${currentPage === 2
-                  ? "bg-status-purpleBase text-white"
-                  : "bg-[#EAE9EB] text-[#716F78]"
-                  } rounded-2xl border-none px-3 py-2`}
+                className={`${
+                  currentPage === 2
+                    ? "bg-status-purpleBase text-white"
+                    : "bg-[#EAE9EB] text-[#716F78]"
+                } rounded-2xl border-none px-3 py-2`}
               >
                 02
               </span>{" "}
@@ -804,12 +812,13 @@ const AddTaskForm: React.FC = () => {
               {/* Progress bar */}
               <div className="h-1 w-2/3 overflow-hidden bg-[#EAE9EB]">
                 <div
-                  className={`h-full ${currentPage === 1
-                    ? "bg-status-purpleBase"
-                    : currentPage === 2
+                  className={`h-full ${
+                    currentPage === 1
                       ? "bg-status-purpleBase"
-                      : "bg-status-purpleBase"
-                    }`}
+                      : currentPage === 2
+                        ? "bg-status-purpleBase"
+                        : "bg-status-purpleBase"
+                  }`}
                   style={{ width: `${progress}%` }}
                 />
               </div>
@@ -831,14 +840,14 @@ const AddTaskForm: React.FC = () => {
           </div>
         </div>
       </div>
-      {authenticated === false  ? (
+      {isAuthenticated ? (
         <Popup
           isOpen={isSuccessPopupOpen}
           onClose={() => {
             setIsSuccessPopupOpen(false);
           }}
         >
-          <div className="p-10 lg:px-12">
+          <div className="px-24 py-10">
             <div className="relative grid items-center justify-center space-y-5">
               <p className="font-clashDisplay text-center text-[20px] font-extrabold text-[#2A1769] md:text-[36px] lg:text-[37px] ">
                 You are almost done!!!

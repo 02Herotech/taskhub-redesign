@@ -66,7 +66,7 @@ interface Subcategory {
 const ProvideService: React.FC = () => {
   const session = useSession();
   const id = session?.data?.user.user.id;
-  const authenticated = session?.data?.user.user.enabled;
+  const isAuthenticated = session?.data?.user.user.enabled === false;
   const [currentPage, setCurrentPage] = useState(1);
   const [task, setTask] = useState<ProvideServiceData>({
     listingTitle: "",
@@ -1106,19 +1106,21 @@ p-3 text-center text-[12px] text-[#fe9b07]"
         <title>TaskHub | Provide Service</title>
       </Head>
       <div className="w-full">
-        <div className="mb-3 flex justify-center md:space-x-5 font-bold">
+        <div className="mb-3 flex justify-center font-bold md:space-x-5">
           <div
-            className={`${currentPage === 1
+            className={`${
+              currentPage === 1
                 ? "text-status-purpleBase"
                 : "text-status-purpleBase"
-              }`}
+            }`}
           >
             <p className="flex items-center  text-[12px] md:text-[16px] lg:gap-3">
               <span
-                className={`${currentPage === 1
+                className={`${
+                  currentPage === 1
                     ? "bg-status-purpleBase text-white"
                     : "bg-status-purpleBase text-white"
-                  } rounded-2xl border-none px-3 py-2`}
+                } rounded-2xl border-none px-3 py-2`}
               >
                 01
               </span>{" "}
@@ -1129,17 +1131,19 @@ p-3 text-center text-[12px] text-[#fe9b07]"
             </p>
           </div>
           <div
-            className={`${currentPage === 2 || currentPage === 3
+            className={`${
+              currentPage === 2 || currentPage === 3
                 ? "text-status-purpleBase"
                 : " text-[#716F78]"
-              }`}
+            }`}
           >
             <p className="flex items-center gap-2 text-[12px] md:text-[16px] lg:gap-3">
               <span
-                className={`${currentPage === 2 || currentPage === 3
+                className={`${
+                  currentPage === 2 || currentPage === 3
                     ? "bg-status-purpleBase text-white"
                     : "bg-[#EAE9EB] text-[#716F78]"
-                  } rounded-2xl border-none px-3 py-2`}
+                } rounded-2xl border-none px-3 py-2`}
               >
                 02
               </span>{" "}
@@ -1150,15 +1154,17 @@ p-3 text-center text-[12px] text-[#fe9b07]"
             </p>
           </div>
           <div
-            className={`${currentPage === 3 ? "text-status-purpleBase" : " text-[#716F78]"
-              }`}
+            className={`${
+              currentPage === 3 ? "text-status-purpleBase" : " text-[#716F78]"
+            }`}
           >
             <p className="flex items-center gap-2 text-[12px] md:text-[16px] lg:gap-3">
               <span
-                className={`${currentPage === 3
+                className={`${
+                  currentPage === 3
                     ? "bg-status-purpleBase text-white"
                     : "bg-[#EAE9EB] text-[#716F78]"
-                  } rounded-2xl border-none px-3 py-2`}
+                } rounded-2xl border-none px-3 py-2`}
               >
                 03
               </span>{" "}
@@ -1176,12 +1182,13 @@ p-3 text-center text-[12px] text-[#fe9b07]"
               {/* Progress bar */}
               <div className="h-1 w-2/3 overflow-hidden bg-[#EAE9EB]">
                 <div
-                  className={`h-full ${currentPage === 1
+                  className={`h-full ${
+                    currentPage === 1
                       ? "bg-status-purpleBase"
                       : currentPage === 2
                         ? "bg-status-purpleBase"
                         : "bg-status-purpleBase"
-                    }`}
+                  }`}
                   style={{ width: `${progress}%` }}
                 />
               </div>
@@ -1195,7 +1202,11 @@ p-3 text-center text-[12px] text-[#fe9b07]"
           {currentPage === 1 && (
             <div className="mr-[50px] hidden lg:ml-[10%] lg:block lg:w-[390px] xl:ml-[15%] ">
               {/* @ts-ignore */}
-              <AiDesciption setTask={setTask} task={task} displayType={'card'} />
+              <AiDesciption
+                setTask={setTask}
+                task={task}
+                displayType={"card"}
+              />
             </div>
           )}
 
@@ -1223,14 +1234,14 @@ p-3 text-center text-[12px] text-[#fe9b07]"
         </div>
       </div>
       <div>
-        {authenticated === false ? (
+        {isAuthenticated ? (
           <Popup
             isOpen={isSuccessPopupOpen}
             onClose={() => {
               setIsSuccessPopupOpen(false);
             }}
           >
-            <div className="p-10 lg:px-12">
+            <div className="px-24 py-10">
               <div className="relative grid items-center justify-center space-y-5">
                 <p className="font-clashDisplay text-center text-[20px] font-extrabold text-[#2A1769] md:text-[36px] lg:text-[37px] ">
                   You are almost done!!!
@@ -1271,22 +1282,23 @@ p-3 text-center text-[12px] text-[#fe9b07]"
               setIsSuccessPopupOpen(false);
             }}
           >
-            <div className="p-5 lg:px-20">
-              <div className="relative grid items-center justify-center space-y-5">
+            <div className="px-24 py-10">
+              <div className="relative grid items-center justify-center space-y-3">
                 <div className="flex justify-center text-[1px] text-white">
                   <GrFormCheckmark className="h-[50px] w-[50px] rounded-full bg-[#FE9B07] p-2 lg:h-[60px] lg:w-[60px]" />
                 </div>
-                <p className="font-clashDisplay text-center text-[25px] font-extrabold text-[#2A1769] lg:text-[37px] ">
+                <p className=" text-center font-clashBold text-[32px] font-extrabold text-[#2A1769] lg:text-[42px]">
                   Service created
                 </p>
-                <p className="lg:text-[20px]">
+                <p className="text-center font-satoshiMedium lg:text-[20px]">
                   Your Service Listing has been created!
-                  <br /> please click on the button to proceed to marketplace
+                  <br /> please click on the button to proceed to <br />{" "}
+                  marketplace
                 </p>
                 <Image
                   src={image}
                   alt="image"
-                  className="absolute -right-8 top-40 w-20 lg:-right-20 lg:top-2/3 lg:w-32"
+                  className="absolute -right-24 top-36  w-32 font-satoshiMedium lg:-right-20 lg:top-2/3"
                 />
                 <div className="flex justify-center">
                   <Link href="/marketplace">
