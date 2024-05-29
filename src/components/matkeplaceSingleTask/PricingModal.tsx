@@ -43,7 +43,7 @@ const PricingModal = ({
     postcode: number | string;
     date: Date;
     suburb: string;
-    pricing: number;
+    pricing: number | string;
     description: string;
     time: string;
   }>({
@@ -90,6 +90,21 @@ const PricingModal = ({
     event.preventDefault();
     try {
       setSubmitStatus((prev) => ({ ...prev, isSubmtting: true, error: "" }));
+      if (
+        !formState.date ||
+        !formState.time ||
+        !formState.postcode ||
+        !formState.suburb ||
+        !formState.pricing ||
+        !formState.description
+      ) {
+        setSubmitStatus((prev) => ({
+          ...prev,
+          isSubmtting: false,
+          error: "Kindly fill all fields",
+        }));
+        return;
+      }
       const uploadData = {
         listingId,
         startDate: formatDate(formState.date),
@@ -128,6 +143,12 @@ const PricingModal = ({
   const serviceProviderParams = new URLSearchParams({
     userType: "serviceProvider",
   });
+
+  useEffect(() => {
+    if (formState.pricing === 0) {
+      setFormState((prev) => ({ ...prev, pricing: "" }));
+    }
+  }, [formState.pricing]);
 
   const handleFectchLocationByPostcode = async () => {
     try {

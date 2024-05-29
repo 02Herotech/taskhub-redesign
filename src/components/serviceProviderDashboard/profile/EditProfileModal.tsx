@@ -124,6 +124,13 @@ const EditProfileModal = ({
   const handleUploadAllDocument = async () => {
     try {
       setLoading(true);
+      if (!imageURL) return;
+      const uploadBlob = convertUrlToBlob(imageURL);
+      if (uploadBlob) {
+        console.log(uploadBlob);
+      } else {
+        console.log("no image to Upload");
+      }
       const url =
         "https://smp.jacinthsolutions.com.au/api/v1/service_provider/profile_picture";
       const { data } = await axios.post(url, profileImage, {
