@@ -10,7 +10,6 @@ import { BiCalendarWeek, BiCheck } from "react-icons/bi";
 import { HiLocationMarker } from "react-icons/hi";
 import { CiClock1 } from "react-icons/ci";
 import Link from "next/link";
-import { jobsData } from "../jobs/page";
 
 const myservices = [
   {
@@ -36,6 +35,41 @@ const myservices = [
     profileImage: "/assets/images/marketplace/singleTask/oluchi.png",
     profileName: "Drain Inspection",
     price: 100,
+  },
+];
+
+const jobsData = [
+  {
+    id: "1",
+    name: "Kelly Jane",
+    description: "Request for drain blockage fix service",
+    image: "/assets/images/serviceProvider/jobs/joe.png",
+    price: 450,
+    time: "Yesterday",
+  },
+  {
+    id: "2",
+    name: "Kelly Jane",
+    description: "Request for drain blockage fix service",
+    image: "/assets/images/serviceProvider/jobs/kelly.png",
+    price: 450,
+    time: "Yesterday",
+  },
+  {
+    id: "3",
+    name: "Kelly Jane",
+    description: "Request for drain blockage fix service",
+    image: "/assets/images/serviceProvider/jobs/man.png",
+    price: 450,
+    time: "Yesterday",
+  },
+  {
+    id: "3",
+    name: "Kelly Jane",
+    description: "Request for drain blockage fix service",
+    image: "/assets/images/serviceProvider/jobs/woman.png",
+    price: 450,
+    time: "Yesterday",
   },
 ];
 
