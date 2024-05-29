@@ -6,8 +6,9 @@ import React, { useEffect, useRef, useState } from "react";
 import { BiSend } from "react-icons/bi";
 import { IoCloseCircleOutline } from "react-icons/io5";
 import { BeatLoader } from "react-spinners";
-import icon3 from "../../../../public/assets/images/serviceProvider/AiButton.jpg";
-
+import icon1 from "../../../../public/assets/images/serviceProvider/AiButton.png";
+import icon2 from "../../../../public/assets/images/serviceProvider/AiButton2.png";
+import Image from "next/image";
 interface Message {
   type: "user" | "ai";
   text: string;
@@ -39,9 +40,10 @@ interface ProvideServiceData {
 interface AiGenerateProps {
   setTask: React.Dispatch<React.SetStateAction<ProvideServiceData>> | any;
   task: ProvideServiceData | any;
+  displayType: String
 }
 
-const AiDesciption: React.FC<AiGenerateProps> = ({ task, setTask }) => {
+const AiDesciption: React.FC<AiGenerateProps> = ({ task, setTask, displayType }) => {
   const session = useSession();
   const userName = session?.data?.user?.user?.firstName;
 
@@ -151,7 +153,7 @@ const AiDesciption: React.FC<AiGenerateProps> = ({ task, setTask }) => {
 
   return (
     <div>
-      <div className="mb-5 flex flex-col space-y-6 rounded-[20px] bg-[#381F8C] p-4">
+      {displayType === 'card' ? (<div className="mb-5 flex flex-col space-y-6 rounded-[20px] bg-[#381F8C] p-4">
         <h2 className="text-lg font-extrabold text-white">
           Get personalized AI help
         </h2>
@@ -164,15 +166,27 @@ const AiDesciption: React.FC<AiGenerateProps> = ({ task, setTask }) => {
           <button
             onClick={AiChatView}
             type="button"
-            className={` text-10px w-[160px] transform rounded-[20px] bg-[#FE9B07]  p-2
-       px-4 text-white transition-transform duration-300 ease-in-out hover:scale-105
+            className={` text-[] w-[200px] transform rounded-[20px] bg-[#FE9B07]  p-2
+       px-3 text-white transition-transform duration-300 ease-in-out hover:scale-105 flex items-center  space-x-4
       `}
           >
-            {/* <Image alt='' src={icon3} width={10} height={10}/>  */}
+            <span className="mr-2"><Image alt='' src={icon1} width={30} height={30} /></span>
             Generate with AI
           </button>{" "}
         </span>
-      </div>
+      </div>) : (
+        <button
+          onClick={AiChatView}
+          type="button"
+          className={` transform bg-none border-none
+       text-primary transition-transform duration-300 ease-in-out hover:scale-105 flex items-center  space-x-4 font-satoshiBold font-extrabold`}
+        >
+           Generate with AI
+
+           <span className="ml-2"><Image alt='' src={icon2} width={20} height={20} /></span>
+         
+        </button>
+      )}
 
       {aiChatView && (
         <div className="bg-opacity-84 fixed inset-0 z-50 flex items-center justify-center bg-black">
