@@ -97,18 +97,18 @@ const EditProfileModal = ({
   // };
   //  ----------------------
 
-  const handleCloseModal = () => {
-    setIsFormModalShown(false);
-    setIsUploadInitiated(false);
-    setIsSubmitting(false);
-    setisEditingProfilePicture((prev) => ({ ...prev, isEditing: false }));
-  };
+  // const handleCloseModal = () => {
+  //   setIsFormModalShown(false);
+  //   setIsUploadInitiated(false);
+  //   setIsSubmitting(false);
+  //   setisEditingProfilePicture((prev) => ({ ...prev, isEditing: false }));
+  // };
 
-  const handleRemoveDocumentImage = () => {
-    setImageSrc(null);
-    setCameraActive(false);
-    setDocumentImage(null);
-  };
+  // const handleRemoveDocumentImage = () => {
+  //   setImageSrc(null);
+  //   setCameraActive(false);
+  //   setDocumentImage(null);
+  // };
 
   // -------------------------------------------------------
   // this is the part that needs to change
