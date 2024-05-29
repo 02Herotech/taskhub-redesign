@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 
-const jobsData = [
+export const jobsData = [
   {
     id: "1",
     name: "Kelly Jane",
@@ -76,7 +76,7 @@ const Jobs = () => {
               <div className="flex flex-wrap gap-3">
                 <Link
                   href={"/service-provider/dashboard/jobs/" + item.id}
-                  className="bg-violet-light rounded-full border border-violet-normal px-6 py-3 text-sm font-medium text-violet-normal transition-colors duration-300 hover:bg-violet-200 max-md:px-4 max-md:py-2 max-md:text-sm "
+                  className="rounded-full border border-violet-normal bg-violet-light px-6 py-3 text-sm font-medium text-violet-normal transition-colors duration-300 hover:bg-violet-200 max-md:px-4 max-md:py-2 max-md:text-sm "
                 >
                   View Enquiry
                 </Link>

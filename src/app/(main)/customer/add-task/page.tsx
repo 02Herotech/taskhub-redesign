@@ -287,7 +287,6 @@ const AddTaskForm: React.FC = () => {
     }
     return "";
   };
-  const imageUrl = getImageURL();
 
   const imageURL = getImageURL();
 
