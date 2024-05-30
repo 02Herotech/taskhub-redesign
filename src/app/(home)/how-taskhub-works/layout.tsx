@@ -9,7 +9,6 @@ type LayoutProps = {
     children: React.ReactNode;
 };
 
-
 type SubLink = {
     href: string;
     label: string;
@@ -27,7 +26,6 @@ const taskhub_links: SubLink[] = [
         label: "Service provider",
 
     },
-
 ];
 
 
@@ -53,10 +51,8 @@ const MainLayout = ({ children }: LayoutProps) => {
 
     return (
         <main className='py-10 bg-white lg:bg-gradient-to-b from-[#f3dcfc]  via-[#FFFFFF] to-[#F5DDFD]'>
-
             <div className='mx-auto max-w-7xl xl:mx-[120px] lg:mx-[48px] m-[20px] my-0'>
                 <Header />
-
                 <nav className="flex space-x-10 my-10 ">
                     {taskhub_links.map((subLink) => (
                         <HowTaskhubWorkLinks
@@ -67,29 +63,11 @@ const MainLayout = ({ children }: LayoutProps) => {
                             onClick={() => handleLinkClick(subLink)}
                         />
                     ))}
-
                 </nav>
-
-
                 < >{children}</>
-
             </div>
         </main>
     );
 }
-
-
-// const MainLayout = ({ children }: LayoutProps) => {
-//     return (
-//         <main className='py-10 bg-white lg:bg-gradient-to-b from-[#f3dcfc]  via-[#FFFFFF] to-[#F5DDFD]'>
-
-//             <div className='mx-auto max-w-7xl xl:mx-[120px] lg:mx-[48px] m-[20px] my-0'>
-//                 <Header />
-//                 < >{children}</>
-
-//             </div>
-//         </main>
-//     );
-// };
 
 export default MainLayout;

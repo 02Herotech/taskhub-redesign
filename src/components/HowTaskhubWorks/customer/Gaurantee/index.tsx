@@ -1,5 +1,4 @@
 import React from 'react'
-import Experiences from '../../Experience/indes'
 import { BsFillPatchCheckFill } from 'react-icons/bs'
 import Image from 'next/image'
 import GauranteeImage from "../../../../../public/assets/images/homepage/howTaskhubWorks/customer/guarantee.png";
