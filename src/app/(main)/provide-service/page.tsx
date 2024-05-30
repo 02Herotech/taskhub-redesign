@@ -97,7 +97,7 @@ const ProvideService: React.FC = () => {
     null,
   );
   const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
-  const [selectedCity, setSelectedCity] = useState("");
+  const [selectedCity, setSelectedCity] = useState("Select City/Suburb");
   const [isRemote, setIsRemote] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const [activeButtonIndex, setActiveButtonIndex] = useState<number | null>(
@@ -249,10 +249,9 @@ const ProvideService: React.FC = () => {
   const handleCode = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSelectedCode(event.target.value);
   };
-  const handleCity = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedValue = event.target.value;
-    setSelectedCity(selectedValue);
-  };
+  const handleCity = (data: any) => {
+   setSelectedCity(data);
+ };
 
   const handleTickChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const value = event.target.value;
@@ -366,13 +365,13 @@ const ProvideService: React.FC = () => {
     if (isOpen && activeButtonIndex === 1) {
       requiredFields.push(isRemote);
     } else {
-      requiredFields.push(selectedCode, selectedCity);
+      requiredFields.push(selectedCode);
     }
     const filledFields = requiredFields.filter(
       (value) => value !== "" && value !== null,
     ).length;
 
-    const totalFields = isOpen && activeButtonIndex === 0 ? 9 : 8;
+    const totalFields = isOpen && activeButtonIndex === 0 ? 8 : 8;
 
     return Math.round((filledFields / totalFields) * 100);
   };
@@ -786,21 +785,27 @@ const ProvideService: React.FC = () => {
 
                     <div className="relative grid space-y-4">
                       <label>City/Suburb</label>
-                      <select
-                        value={selectedCity}
-                        onChange={handleCity}
-                        name="city"
-                        id="city"
-                        className="w-[180px] cursor-pointer appearance-none  rounded-2xl bg-[#EBE9F4] p-3 text-[13px] outline-none placeholder:font-bold lg:w-[155px]"
+                      <Dropdown
+                        trigger={() => (
+                          <div className="flex h-full w-[150px] cursor-pointer appearance-none justify-between rounded-2xl bg-[#EBE9F4] p-3 text-[13px] outline-none">
+                            <h2>{selectedCity}</h2>
+                            <FaSortDown />
+                          </div>
+                        )}
+                        className="left-0 right-0 top-14 mx-auto bg-white"
                       >
-                        <option value="">Select City/Suburb</option>
                         {postalCodeData.map((data, index) => (
-                          <option key={index} value={data.name}>
+                          <button
+                            type="button"
+                            className="block p-2 text-[12px] text-[#221354]"
+                            key={index}
+                            value={data.name}
+                            onClick={() => handleCity(data.name)}
+                          >
                             {data.name}
-                          </option>
+                          </button>
                         ))}
-                      </select>
-                      <IoMdArrowDropdown className="absolute right-2 top-9 cursor-pointer text-status-purpleBase" />
+                      </Dropdown>
                     </div>
                   </div>
                   <div className="grid space-y-4 ">
