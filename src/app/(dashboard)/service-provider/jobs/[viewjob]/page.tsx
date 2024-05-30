@@ -1,5 +1,6 @@
 "use client";
 
+import Congratulations from "@/components/dashboard/serviceProvider/jobs/Congratulations";
 import Invoice from "@/components/serviceProviderDashboard/jobs/Invoice";
 import Loading from "@/shared/loading";
 import axios from "axios";
@@ -18,6 +19,7 @@ const ViewJobs = () => {
     isRequesting: false,
     data: "",
   });
+  const [showCongratulations, setShowCongratulations] = useState(true);
 
   const router = useRouter();
   const session = useSession();
@@ -67,7 +69,7 @@ const ViewJobs = () => {
         },
       );
       setRequestStatus((prev) => ({ ...prev, data: response.data }));
-      setIsModalOpen((prev) => !prev);
+      setShowCongratulations(true);
     } catch (error) {
       console.error("An error occurred while fetching services:", error);
     } finally {
@@ -106,6 +108,13 @@ const ViewJobs = () => {
 
   return (
     <>
+      <Congratulations
+        setIsModalOpen={setIsModalOpen}
+        showCongratulations={showCongratulations}
+        setShowCongratulations={setShowCongratulations}
+      />
+      <Invoice isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
+
       {loading ? (
         <div className="flex min-h-96 items-center justify-center ">
           <Loading />
@@ -116,7 +125,6 @@ const ViewJobs = () => {
         </div>
       ) : (
         <main className=" relative flex min-h-[70vh] items-center justify-center space-y-8 p-4 lg:p-8">
-          <Invoice isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
           <section className="w-[90vw] max-w-2xl space-y-4 rounded-xl bg-violet-light p-4 lg:p-8 ">
             <div className="flex justify-between gap-2">
               <div className="space-y-8 text-violet-normal">
@@ -171,17 +179,26 @@ const ViewJobs = () => {
                 {currentBooking.bookingTitle}
               </p>
               <div className="flex flex-wrap gap-4">
-                <button
-                  onClick={handleAcceptBooking}
-                  className="rounded-full bg-violet-normal px-6 py-3 text-sm font-medium text-white transition-opacity duration-300 hover:opacity-90 max-md:px-4 max-md:py-2 max-md:text-sm"
-                >
-                  Confirm
-                </button>
+                {currentBooking.bookingStage === "PROPOSED" ? (
+                  <button
+                    onClick={handleAcceptBooking}
+                    className="rounded-full bg-violet-normal px-6 py-3 text-sm font-medium text-white transition-opacity duration-300 hover:opacity-90 max-md:px-4 max-md:py-2 max-md:text-sm"
+                  >
+                    Accept
+                  </button>
+                ) : (
+                  <button
+                    onClick={() => setIsModalOpen(true)}
+                    className="rounded-full bg-violet-normal px-6 py-3 text-sm font-medium text-white transition-opacity duration-300 hover:opacity-90 max-md:px-4 max-md:py-2 max-md:text-sm"
+                  >
+                    Generate Invoice
+                  </button>
+                )}
                 <button
                   onClick={handleCancelBooking}
                   className="rounded-full border border-violet-normal bg-violet-light px-6 py-3 text-sm font-medium  text-violet-normal transition-colors duration-300 hover:bg-violet-200 max-md:px-4 max-md:py-2 max-md:text-sm "
                 >
-                  Cancel
+                  Reject
                 </button>
                 <Link
                   href={{
