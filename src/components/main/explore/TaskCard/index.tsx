@@ -84,7 +84,7 @@ const TaskCard = ({ task }: TaskCardProps) => {
           className="size-[46px] rounded-full border object-cover"
         />
       </div>
-      <p className="my-2 text-[15px] text-primary overflow-hidden truncate text-ellipsis whitespace-nowrap">{task.taskDescription}</p>
+      <p className="my-2 text-[15px] text-primary font-medium overflow-hidden truncate text-ellipsis whitespace-nowrap">{task.taskDescription}</p>
       <div className="flex w-full my-3 items-center space-x-2 font-medium text-[#716F78]">
         <HiOutlineLocationMarker className="h-6 w-6 font-bold" />
         <h5 className="overflow-hidden truncate text-ellipsis whitespace-nowrap py-1 text-[14px]">

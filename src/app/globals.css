@@ -9,10 +9,6 @@
   box-shadow: none !important;
 }
 
-
-.Toastify__progress-bar {
-  opacity: 0 !important;
-}
 .no-scrollbar {
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */

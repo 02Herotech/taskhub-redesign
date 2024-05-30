@@ -171,7 +171,7 @@ const Tasks = () => {
                         </div>
                     )}
                     className='left-0 right-0 mx-auto top-14'>
-                    <form className='bg-white rounded-md py-4 px-2'>
+                    <form className='bg-white rounded-2xl py-4 px-2'>
                         {categoriesData.map((category, index) => (
                             <div
                                 key={index}
@@ -193,14 +193,14 @@ const Tasks = () => {
                         </div>
                     )}
                     className='-left-24 top-14'>
-                    <form className='bg-white min-w-[240px] rounded-md flex items-center p-4'>
+                    <form className='bg-white min-w-[240px] rounded-2xl flex items-center p-4'>
                         <div className="space-y-8 w-full p-3">
                             <h4 className="text-lg text-[#190E3F] font-medium">Distance</h4>
                             <div className="text-2xl text-black font-bold text-center mb-6">
                                 {locationValues[0]}km - {locationValues[1]}km
                             </div>
                             <ReactSlider
-                                className="relative w-full h-2 bg-[#FE9B07] rounded-md"
+                                className="relative w-full h-2 bg-[#FE9B07] rounded-2xl"
                                 thumbClassName="absolute h-6 w-6 bg-[#FE9B07] rounded-full cursor-grab transform -translate-y-1/2 top-1/2"
                                 trackClassName="top-1/2 bg-[#FE9B07]"
                                 value={locationValues}
@@ -209,7 +209,7 @@ const Tasks = () => {
                                 step={1}
                                 onChange={(newValues) => setLocationValues(newValues as [number, number])}
                             />
-                            <div className="flex items-center justify-between w-full">
+                            <div className="flex items-center justify-between space-x-4 w-full">
                                 <Button theme="outline" className="rounded-full" onClick={() => setLocationValues([1, 50])}>
                                     Cancel
                                 </Button>
@@ -230,7 +230,7 @@ const Tasks = () => {
                         </div>
                     )}
                     className='-left-24 top-14'>
-                    <div className='bg-white min-w-[240px] rounded-md p-4 space-y-8'>
+                    <div className='bg-white min-w-[240px] rounded-2xl p-4 space-y-8'>
                         <h4 className="text-xl text-[#190E3F] font-medium">Type of service</h4>
                         <div className="flex mb-6 w-full rounded-full bg-orange-100">
                             <button
@@ -245,7 +245,7 @@ const Tasks = () => {
                                     }`}
                                 onClick={() => handleFilterByType('PHYSICAL_SERVICE')}
                             >
-                                Physical
+                                In Person
                             </button>
                         </div>
                     </div>
@@ -255,19 +255,19 @@ const Tasks = () => {
                 <Dropdown
                     trigger={() => (
                         <div className="w-full border-2 border-primary text-primary bg-[#F1F1F2] flex items-center justify-between font-semibold py-2 px-4 rounded-full">
-                            <h2>Price</h2>
+                            <h2>Pricing</h2>
                             <FaSortDown />
                         </div>
                     )}
                     className='-left-24 top-14'>
-                    <form className='bg-white min-w-[240px] rounded-md flex items-center p-4'>
+                    <form className='bg-white min-w-[240px] rounded-2xl flex items-center p-4'>
                         <div className="space-y-8 w-full p-3">
                             <h4 className="text-xl text-[#190E3F] font-medium">Price</h4>
                             <div className="text-2xl text-black font-bold text-center mb-6">
                                 ${priceValues[0]} - ${priceValues[1]}
                             </div>
                             <ReactSlider
-                                className="relative w-full h-2 bg-[#FE9B07] rounded-md"
+                                className="relative w-full h-2 bg-[#FE9B07] rounded-2xl"
                                 thumbClassName="absolute h-6 w-6 bg-[#FE9B07] rounded-full cursor-grab transform -translate-y-1/2 top-1/2"
                                 trackClassName="top-1/2 bg-[#FE9B07]"
                                 value={priceValues}
@@ -297,13 +297,13 @@ const Tasks = () => {
                         </div>
                     )}
                     className='left-0 right-0 mx-auto top-14'>
-                    <form className='bg-white rounded-md p-4'>
-                        <h4 className="text-lg text-[#190E3F] font-medium mb-4">Others</h4>
+                    <form className='bg-white rounded-2xl p-4'>
+                        <h4 className="text-lg text-black font-medium mb-4 px-5">Others</h4>
                         {otherOptionsDropdown.map((option, index) => (
                             <div
                                 key={index}
                                 onClick={option.onClick}
-                                className='flex w-full transition-all text-status-darkViolet text-base font-bold hover:text-tc-orange cursor-pointer items-center justify-between py-3 px-5'>
+                                className='flex w-full transition-all text-[#140B31] text-base font-bold hover:text-tc-orange cursor-pointer items-center justify-between py-2 px-5'>
                                 <div className="">
                                     {option.label}
                                 </div>
@@ -328,7 +328,7 @@ const Tasks = () => {
                             </Button>
                         )}
                         className='left-0 right-0 mx-auto h-[500px] overflow-y-scroll top-14'>
-                        <div className='bg-white rounded-md px-5 py-10 space-y-8 font-satoshi'>
+                        <div className='bg-white rounded-2xl px-5 py-10 space-y-8 font-satoshi small-scrollbar overflow-y-auto'>
                             <h3 className="font-bold text-primary text-2xl">Filter by</h3>
 
                             <form action="" className="space-y-8">
@@ -377,7 +377,7 @@ const Tasks = () => {
                                 <div className="w-full space-y-6">
                                     <h4 className="text-md text-primary font-medium">Price range</h4>
                                     <ReactSlider
-                                        className="relative w-full h-2 bg-[#FE9B07] rounded-md"
+                                        className="relative w-full h-2 bg-[#FE9B07] rounded-2xl"
                                         thumbClassName="absolute h-6 w-6 bg-[#FE9B07] rounded-full cursor-grab transform -translate-y-1/2 top-1/2"
                                         trackClassName="top-1/2 bg-[#FE9B07]"
                                         value={priceValues}
