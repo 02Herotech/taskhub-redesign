@@ -1,5 +1,6 @@
 "use client";
 import { notificationData } from "@/app/data/service-provider/notification";
+import Button from "@/components/global/Button";
 import Image from "next/image";
 import React, { useState } from "react";
 
@@ -41,9 +42,9 @@ const ServiceNotification = () => {
         {notificationData.map((item, index) => (
           <div
             key={index}
-            className="pointer-events-auto grid w-full cursor-pointer grid-cols-12 items-center gap-4 transition-shadow duration-300"
+            className="pointer-events-auto flex items-center justify-between flex-1 w-full cursor-pointer transition-shadow duration-300"
           >
-            <div className="col-span-9 flex items-center gap-2">
+            <div className="flex items-center justify-between gap-x-3 py-2">
               <Image
                 src={item.image || "/assets/images/placeholder.jpeg"}
                 alt={item.jobLabel}
@@ -60,13 +61,18 @@ const ServiceNotification = () => {
                 </p>
               </div>
             </div>
-            <p className="col-span-3 cursor-pointer text-sm text-slate-500">
-              {item.time}
-            </p>
+            <div className="space-y-4">
+              <p className="col-span-3 cursor-pointer text-sm text-slate-500">
+                {item.time}
+              </p>
+              {item.type === "Invoice" && (
+                <Button className="rounded-full" size="sm">View Invoice</Button>
+              )}
+            </div>
           </div>
         ))}
       </div>
-    </main>
+    </main >
   );
 };
 
