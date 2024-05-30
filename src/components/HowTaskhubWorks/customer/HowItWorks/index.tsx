@@ -1,14 +1,10 @@
 'use client'
 import React, { useEffect, useState } from 'react'
-import PostTasks from '../../PostTasks'
-import PostService from '../../PostService'
-import Experiences from '../../Experience/indes'
 import Link from 'next/link'
 import Image from 'next/image'
 import Customer1 from "../../../../../public/assets/images/homepage/howTaskhubWorks/customer/customer1.jpg";
 import Customer2 from "../../../../../public/assets/images/homepage/howTaskhubWorks/customer/customer2.jpg";
 import Customer3 from "../../../../../public/assets/images/homepage/howTaskhubWorks/customer/customer3.jpg";
-
 import icon1 from "../../../../../public/assets/images/homepage/howTaskhubWorks/customer/getStartedIcon2.png";
 import Task1 from "../../../../../public/assets/images/homepage/howTaskhubWorks/customer/task1.png";
 import Task2 from "../../../../../public/assets/images/homepage/howTaskhubWorks/customer/task2.png";
@@ -36,13 +32,13 @@ const HowItWorks = () => {
                     How  it works ?
                 </h2>
 
-                <p className='text-center text-[35px] font-clashMedium text-primary w-1/2 my-6'>
+                <p className='text-center text-[35px] font-clashMedium text-primary xl:w-1/2 lg:w-[65%] my-6'>
                     Get your Task posted in few steps as a <span className='text-tc-orange'>Customer</span> with TaskHub
                 </p>
             </div>
 
-            <div className='flex justify-between '>
-                <div className='w-[46%] flex flex-col justify-between'>
+            <div className='flex justify-between mt-5 '>
+                <div className='w-[40%] flex flex-col space-y-14'>
 
                     <div className='relative w-full'>
                         <div className='relative w-full h-[300px] rounded-[30px]'>
@@ -78,7 +74,7 @@ const HowItWorks = () => {
 
                 </div>
 
-                <div className='w-[46%] space-y-5'>
+                <div className='w-[50%] space-y-6'>
                     <p className='text-tc-orange text-[32px] font-clashMedium'>
                         Input your Task details & Briefly tell us what task you need done.
                     </p>
@@ -96,8 +92,6 @@ const HowItWorks = () => {
                                 src={Customer2}
                                 alt="Customer 2"
                                 fill
-
-
                                 className="absolute rounded-[30px]"
                             />
                         </div>
@@ -111,7 +105,6 @@ const HowItWorks = () => {
                                     fill
                                     className="absolute rounded-[30px]"
                                 />
-
                             </div>
                         </div>
                     </div>
@@ -142,10 +135,6 @@ const HowItWorks = () => {
                 </div>
 
             </div>
-
-            <PostTasks />
-            <PostService />
-            <Experiences />
         </div>
     )
 }
