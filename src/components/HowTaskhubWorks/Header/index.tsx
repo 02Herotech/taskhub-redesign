@@ -36,7 +36,7 @@ const Header = () => {
     const currentImageIndex3 = useImageTransition(images3, 3000);
 
     return (
-        <div className='header1 lg:h-[600px] h-[450px] rounded-[25px] mx-auto w-[90%] lg:w-full  flex justify-between items-center  my-20 mt-20'>
+        <div className='header1 lg:h-[600px] h-[450px] rounded-[25px] mx-auto w-[90%] lg:w-full  flex justify-between items-center lg:my-0  my-20 lg:mt-20'>
 
             <style jsx>{`
               .header1 {

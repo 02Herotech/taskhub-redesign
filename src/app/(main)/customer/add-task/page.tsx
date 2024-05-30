@@ -19,6 +19,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { setCookie, getCookie } from "cookies-next";
+import { FaSortDown } from "react-icons/fa6";
+import Dropdown from "@/components/global/Dropdown";
 
 interface FormData {
   taskBriefDescription: string;
@@ -78,7 +80,7 @@ const AddTaskForm: React.FC = () => {
   const [selectedCity, setSelectedCity] = useState("");
   const [termAccepted, settermAccepted] = useState(false);
   const [isRemote, setIsRemote] = useState("");
-  const [isSelectedTime, setIsSelectedTime] = useState("");
+  const [selectedCategoryName, setSelectedCategoryName] = useState("Category");
   const [isOpen, setIsOpen] = useState(false);
   const [activeButtonIndex, setActiveButtonIndex] = useState<number | null>(
     null,
@@ -91,6 +93,11 @@ const AddTaskForm: React.FC = () => {
   const [items, setItems] = useState<Item[]>([]);
   const [wordCount, setWordCount] = useState(0);
   const [wordCounts, setWordCounts] = useState(0);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
+  const toggleDropdown = () => {
+    setIsDropdownOpen(!isDropdownOpen);
+  };
 
   const handleLoginNavigation = () => {
     router.push("/auth/login?from=/customer/add-task");
@@ -199,16 +206,13 @@ const AddTaskForm: React.FC = () => {
 
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     settermAccepted(event.target.checked);
-    if (!event.target.checked) {
-      setIsSelectedTime("");
-    }
   };
 
  
   const handleCategoryChange = (
-    event: React.ChangeEvent<HTMLSelectElement>,
+   item: any
   ) => {
-    const selectedId = parseInt(event.target.value);
+    const selectedId = parseInt(item);
     setSelectedCategory(selectedId);
     setTask({
       ...task,
@@ -280,7 +284,6 @@ const AddTaskForm: React.FC = () => {
     }
     return "";
   };
-
   const imageURL = getImageURL();
 
   const handleDateChange = (date: Date | null) => {
@@ -417,6 +420,8 @@ const AddTaskForm: React.FC = () => {
     }
   };
 
+  
+
   const renderPage = () => {
     switch (currentPage) {
       case 1:
@@ -457,24 +462,29 @@ const AddTaskForm: React.FC = () => {
                     </div>
                   )}
                 </div>
-                <select
-                  value={selectedCategory || ""}
-                  name="category"
-                  onChange={handleCategoryChange}
-                  className="h-full w-full cursor-pointer appearance-none rounded-2xl bg-[#EBE9F4] p-3 text-[13px] outline-none"
+                <Dropdown
+                  trigger={() => (
+                    <div className="flex h-full w-full cursor-pointer appearance-none justify-between rounded-2xl bg-[#EBE9F4] p-3 text-[13px] outline-none">
+                      <h2>{selectedCategoryName}</h2>
+                      <FaSortDown />
+                    </div>
+                  )}
+                  className="left-0 right-0 top-14 mx-auto bg-white"
                 >
-                  <option value="">Category</option>
                   {items.map((item) => (
-                    <option
+                    <button
                       key={item.id}
                       value={item.id}
-                      className="text-[12px] text-[#221354]"
+                      className="block p-2 text-[12px] text-[#221354]"
+                      onClick={() => {
+                        handleCategoryChange(item.id);
+                        setSelectedCategoryName(item.categoryName);
+                      }}
                     >
                       {item.categoryName}
-                    </option>
+                    </button>
                   ))}
-                </select>
-                <IoMdArrowDropdown className="absolute right-5 top-10 cursor-pointer text-status-purpleBase" />
+                </Dropdown>
               </div>
               <div className="relative grid space-y-3">
                 <div className="flex items-center justify-between">

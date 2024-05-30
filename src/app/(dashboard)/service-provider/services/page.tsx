@@ -40,6 +40,41 @@ export const myservices = [
   },
 ];
 
+const jobsData = [
+  {
+    id: "1",
+    name: "Kelly Jane",
+    description: "Request for drain blockage fix service",
+    image: "/assets/images/serviceProvider/jobs/joe.png",
+    price: 450,
+    time: "Yesterday",
+  },
+  {
+    id: "2",
+    name: "Kelly Jane",
+    description: "Request for drain blockage fix service",
+    image: "/assets/images/serviceProvider/jobs/kelly.png",
+    price: 450,
+    time: "Yesterday",
+  },
+  {
+    id: "3",
+    name: "Kelly Jane",
+    description: "Request for drain blockage fix service",
+    image: "/assets/images/serviceProvider/jobs/man.png",
+    price: 450,
+    time: "Yesterday",
+  },
+  {
+    id: "3",
+    name: "Kelly Jane",
+    description: "Request for drain blockage fix service",
+    image: "/assets/images/serviceProvider/jobs/woman.png",
+    price: 450,
+    time: "Yesterday",
+  },
+];
+
 const ServicesPage = () => {
   const [currentCategory, setCurrentCategory] = useState("services");
   const rounter = useRouter();

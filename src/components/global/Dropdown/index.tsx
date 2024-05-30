@@ -45,6 +45,12 @@ const Dropdown = ({
 
   const closeDropdown = () => setShowDropdown(false);
 
+  const handleChildClick = () => {
+    if (closeOnClick) {
+      closeDropdown();
+    }
+  };
+
   return (
     <DropdownContext.Provider value={{ closeDropdown }}>
       <div
@@ -74,6 +80,7 @@ const Dropdown = ({
                   position === "bottom" ? "top-[38px]" : "bottom-[23px]",
                   className,
                 )}
+                onClick={handleChildClick} 
               >
                 <div>{children}</div>
               </motion.div>

@@ -19,8 +19,10 @@ import img from "../../../../public/assets/images/blend.png";
 import AiDesciption from "@/components/AiGenerate/AiDescription";
 import { useSession } from "next-auth/react";
 import { GrFormCheckmark } from "react-icons/gr";
+import { FaSortDown } from "react-icons/fa6";
+import Dropdown from "@/components/global/Dropdown";
 
-interface ProvideServiceData {
+interface FormData {
   listingTitle: string;
   listingDescription: string;
   planOneDescription: string;
@@ -68,7 +70,7 @@ const ProvideService: React.FC = () => {
   const id = session?.data?.user.user.id;
   const isAuthenticated = session?.data?.user.user.enabled === false;
   const [currentPage, setCurrentPage] = useState(1);
-  const [task, setTask] = useState<ProvideServiceData>({
+  const [task, setTask] = useState<FormData>({
     listingTitle: "",
     listingDescription: "",
     planOneDescription: "",
@@ -101,6 +103,8 @@ const ProvideService: React.FC = () => {
   const [activeButtonIndex, setActiveButtonIndex] = useState<number | null>(
     null,
   );
+  const [selectedCategoryName, setSelectedCategoryName] = useState("Category");
+   const [selectedSubCategoryName, setSelectedSubCategoryName] = useState("Subcategory");
   const [activePlanIndex, setActivePlanIndex] = useState<number | null>(null);
   const [errors, setErrors] = useState<any>({});
   const [error, setError] = useState<any>({});
@@ -214,22 +218,17 @@ const ProvideService: React.FC = () => {
     return Object.keys(err).length === 0;
   };
 
-  const handleCategoryChange = (
-    event: React.ChangeEvent<HTMLSelectElement>,
-  ) => {
-    const selectedId = parseInt(event.target.value);
+  const handleCategoryChange = (item: any) => {
+    const selectedId = parseInt(item);
     setSelectedCategory(selectedId);
     setTask({
       ...task,
       categoryId: selectedId,
     });
-    setSubcategories([]);
   };
 
-  const handleSubCategoryChange = (
-    event: React.ChangeEvent<HTMLSelectElement>,
-  ) => {
-    const selectedId = parseInt(event.target.value);
+  const handleSubCategoryChange = (subcategory: any) => {
+    const selectedId = parseInt(subcategory);
     setSelectedSubCategory(selectedId);
     setTask({
       ...task,
@@ -269,18 +268,16 @@ const ProvideService: React.FC = () => {
 
   const nextPage = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setCurrentPage(currentPage + 1);
-    // if (validateFields()) {
-    //   setCurrentPage(currentPage + 1);
-    // }
+    if (validateFields()) {
+      setCurrentPage(currentPage + 1);
+    }
   };
 
   const nextPages = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setCurrentPage(currentPage + 1);
-    // if (validateField1()) {
-    //   setCurrentPage(currentPage + 1);
-    // }
+    if (validateField1()) {
+      setCurrentPage(currentPage + 1);
+    }
   };
 
   const prevPage = () => {
@@ -482,55 +479,64 @@ const ProvideService: React.FC = () => {
                   <label className="font-semibold">
                     Choose the best category for your listing.{" "}
                   </label>
-                  <select
-                    value={selectedCategory || ""}
-                    name="category"
-                    onChange={handleCategoryChange}
-                    className="w-full cursor-pointer appearance-none rounded-2xl bg-[#EBE9F4] p-3 text-[13px] outline-none"
+                  <Dropdown
+                    trigger={() => (
+                      <div className="flex h-full w-full cursor-pointer appearance-none justify-between rounded-2xl bg-[#EBE9F4] p-3 text-[13px] outline-none">
+                        <h2>{selectedCategoryName}</h2>
+                        <FaSortDown />
+                      </div>
+                    )}
+                    className="left-0 right-0 top-14 mx-auto bg-white"
                   >
-                    <option
-                      value=""
-                      className="font-medium text-status-darkpurple"
-                    >
-                      Category
-                    </option>
                     {items.map((item) => (
-                      <option
+                      <button
                         key={item.id}
                         value={item.id}
-                        className="text-[12px] font-medium text-status-darkpurple"
+                        className="block p-2 text-[12px] text-[#221354]"
+                        onClick={() => {
+                          handleCategoryChange(item.id);
+                          setSelectedCategoryName(item.categoryName);
+                        }}
                       >
                         {item.categoryName}
-                      </option>
+                      </button>
                     ))}
-                  </select>
-                  <IoMdArrowDropdown className="absolute right-5 top-10 cursor-pointer text-status-purpleBase" />
+                  </Dropdown>
                 </div>
                 <div className="relative grid space-y-4">
                   <label className="font-bold">Choose a subcategory. </label>
-                  <select
-                    value={selectedSubCategory || ""}
-                    name="subCategory"
-                    onChange={handleSubCategoryChange}
-                    className="w-full cursor-pointer appearance-none rounded-2xl bg-[#EBE9F4] p-3 text-[13px] outline-none"
+                  <Dropdown
+                    trigger={() => (
+                      <div className="flex h-full w-full cursor-pointer appearance-none justify-between rounded-2xl bg-[#EBE9F4] p-3 text-[13px] outline-none">
+                        <h2>{selectedSubCategoryName}</h2>
+                        <FaSortDown />
+                      </div>
+                    )}
+                    className="left-0 right-0 top-14 mx-auto bg-white"
                   >
-                    <option value="">Subcategory</option>
                     {subcategories.map((subcategory) => (
-                      <option
+                      <button
                         key={subcategory.id}
                         value={subcategory.id}
-                        className="text-[12px] text-[#221354]"
+                        className="block p-2 text-[12px] text-[#221354]"
+                        onClick={() => {
+                          handleSubCategoryChange(subcategory.id);
+                          setSelectedSubCategoryName(subcategory.name);
+                        }}
                       >
-                        <p>{subcategory.name}</p>
-                      </option>
+                        {subcategory.name}
+                      </button>
                     ))}
-                  </select>
-                  <IoMdArrowDropdown className="absolute right-5 top-10 cursor-pointer text-status-purpleBase" />
-                </div>
+                  </Dropdown>
+                  </div>
 
                 <div className="lg:hidden">
                   {/* @ts-ignore */}
-                  <AiDesciption setTask={setTask} task={task} displayType={'card'} />
+                  <AiDesciption
+                    setTask={setTask}
+                    task={task}
+                    displayType={"card"}
+                  />
                 </div>
                 <div className="grid space-y-3">
                   <label className="font-semibold">
@@ -549,7 +555,11 @@ const ProvideService: React.FC = () => {
                   ></textarea>
                 </div>
                 <div className="!mt-[-1px]">
-                  <AiDesciption setTask={setTask} task={task} displayType={'text'} />
+                  <AiDesciption
+                    setTask={setTask}
+                    task={task}
+                    displayType={"text"}
+                  />
                 </div>
                 {Object.keys(errors).map((key, index) => (
                   <div key={index} className="text-red-500">
@@ -566,22 +576,25 @@ const ProvideService: React.FC = () => {
       case 2:
         return (
           <div className="mb-10 space-y-10 lg:w-[470px]">
-            <form onSubmit={nextPages} className="space-y-10">
+            <form
+              onSubmit={nextPages}
+              className="space-y-10 font-satoshi font-medium "
+            >
               <div className="space-y-4">
                 <h2 className="font-bold">Choose the pricing plans.</h2>
                 <div className="relative grid space-y-4 text-[13px] text-[#221354]">
                   <input
-                    className={`rounded-2xl ${activePlanIndex === 0
+                    className={`rounded-2xl ${
+                      activePlanIndex === 0
                         ? " disabled bg-transparent p-1 text-lg font-bold text-status-darkViolet"
                         : "bg-[#EBE9F4] p-4 hover:bg-status-darkViolet hover:text-white "
-                      } cursor-pointer text-left outline-none placeholder:text-[#2A1769] hover:placeholder:text-white`}
+                    } cursor-pointer text-left outline-none placeholder:font-satoshi placeholder:font-medium placeholder:text-[#2A1769] hover:placeholder:text-white`}
                     name="physical"
                     onClick={() => handlePlan(0)}
                     placeholder="Plan 1"
                     value="Plan 1"
                     readOnly
                   />
-                  <IoMdArrowDropdown className="absolute right-5 top-1 cursor-pointer text-[14px] text-status-purpleBase" />
                   {isOpen && activePlanIndex === 0 && (
                     <div>
                       <label className="font-semibold">
@@ -589,7 +602,7 @@ const ProvideService: React.FC = () => {
                       </label>
                       <div className="grid space-y-3 rounded-2xl border-2 pb-5">
                         <textarea
-                          className="h-[200px] rounded-2xl bg-[#EBE9F4] p-3 outline-none placeholder:font-semibold"
+                          className="h-[200px] rounded-2xl bg-[#EBE9F4] p-3 outline-none placeholder:font-satoshi placeholder:font-semibold"
                           placeholder="Casual Babysitting"
                           name="planOneDescription"
                           value={task.planOneDescription}
@@ -618,17 +631,17 @@ const ProvideService: React.FC = () => {
                     </div>
                   )}
                   <input
-                    className={`rounded-2xl ${activePlanIndex === 1
+                    className={`rounded-2xl ${
+                      activePlanIndex === 1
                         ? " disabled bg-transparent p-1 text-lg font-bold text-status-darkViolet"
                         : "bg-[#EBE9F4] p-4 hover:bg-status-darkViolet hover:text-white"
-                      } cursor-pointer text-left outline-none placeholder:text-[#2A1769] hover:placeholder:text-white`}
+                    } cursor-pointer text-left outline-none placeholder:font-satoshi placeholder:font-medium placeholder:text-[#2A1769] hover:placeholder:text-white`}
                     name="physical"
                     onClick={() => handlePlan(1)}
                     placeholder="Plan 2  (Optional)"
                     value="Plan 2  (Optional)"
                     readOnly
                   />
-                  <IoMdArrowDropdown className="absolute right-5 top-[4.5rem] cursor-pointer text-[14px] text-status-purpleBase" />
                   {isOpen && activePlanIndex === 1 && (
                     <div>
                       <label className="font-bold">
@@ -636,7 +649,7 @@ const ProvideService: React.FC = () => {
                       </label>
                       <div className="grid space-y-3 rounded-2xl border-2 pb-5">
                         <textarea
-                          className="h-[200px] rounded-2xl bg-[#EBE9F4] p-3 outline-none placeholder:font-bold"
+                          className="h-[200px] rounded-2xl bg-[#EBE9F4] p-3 outline-none placeholder:font-satoshi placeholder:font-medium"
                           placeholder="Casual Babysitting"
                           name="planTwoDescription"
                           value={task.planTwoDescription}
@@ -665,17 +678,17 @@ const ProvideService: React.FC = () => {
                     </div>
                   )}
                   <input
-                    className={`rounded-2xl ${activePlanIndex === 2
+                    className={`rounded-2xl ${
+                      activePlanIndex === 2
                         ? " disabled bg-transparent p-1 text-lg font-bold text-status-darkViolet"
                         : "bg-[#EBE9F4] p-4 hover:bg-status-darkViolet hover:text-white"
-                      } cursor-pointer text-left outline-none placeholder:text-[#2A1769] hover:placeholder:text-white`}
+                    } cursor-pointer text-left outline-none placeholder:font-satoshi placeholder:font-medium placeholder:text-[#2A1769] hover:placeholder:text-white`}
                     name="physical"
                     onClick={() => handlePlan(2)}
                     placeholder="Plan 3  (Optional)"
                     value="Plan 3  (Optional)"
                     readOnly
                   />
-                  <IoMdArrowDropdown className="absolute right-5 top-36 cursor-pointer text-[14px] text-status-purpleBase" />
                   {isOpen && activePlanIndex === 2 && (
                     <div>
                       <label className="font-bold">
@@ -683,7 +696,7 @@ const ProvideService: React.FC = () => {
                       </label>
                       <div className="grid space-y-3 rounded-2xl border-2 pb-5">
                         <textarea
-                          className="h-[200px] rounded-2xl bg-[#EBE9F4] p-3 outline-none placeholder:font-bold"
+                          className="h-[200px] rounded-2xl bg-[#EBE9F4] p-3 outline-none placeholder:font-satoshi placeholder:font-medium"
                           placeholder="Casual Babysitting"
                           name="planThreeDescription"
                           value={task.planThreeDescription}
@@ -714,13 +727,16 @@ const ProvideService: React.FC = () => {
                 </div>
               </div>
               <div className="space-y-4">
-                <h2 className="text-xl font-bold">Type of Service</h2>
+                <h2 className="text-xl font-bold font-satoshi">
+                  Type of Service
+                </h2>
                 <div className="flex space-x-4 text-[13px] text-[#221354]">
                   <input
-                    className={`rounded-2xl p-2 ${activeButtonIndex === 0
+                    className={`rounded-2xl p-2 ${
+                      activeButtonIndex === 0
                         ? "bg-status-purpleBase text-white"
                         : "bg-[#EBE9F4] placeholder:text-white hover:bg-status-purpleBase hover:text-white"
-                      } cursor-pointer outline-none placeholder:font-bold`}
+                    } cursor-pointer outline-none placeholder:font-bold`}
                     name="physical"
                     onClick={() => handleClick(0)}
                     placeholder="Physical Services"
@@ -728,10 +744,11 @@ const ProvideService: React.FC = () => {
                     readOnly
                   />
                   <input
-                    className={`rounded-2xl p-2 ${activeButtonIndex === 1
+                    className={`rounded-2xl p-2 ${
+                      activeButtonIndex === 1
                         ? "bg-status-purpleBase text-white"
                         : "bg-[#EBE9F4] placeholder:text-white hover:bg-status-purpleBase hover:text-white "
-                      } cursor-pointer outline-none placeholder:font-bold`}
+                    } cursor-pointer outline-none placeholder:font-bold`}
                     name="remote"
                     onClick={() => {
                       handleClick(1);
@@ -833,7 +850,7 @@ const ProvideService: React.FC = () => {
                   value={selectedDay}
                   onChange={handleTickChange}
                   name="availableDays"
-                  className="h-10 w-full appearance-none rounded-2xl border border-tc-gray bg-[#EBE9F4] px-3 py-1 text-[14px] outline-none lg:w-1/2"
+                  className="h-10 w-full rounded-2xl border border-tc-gray bg-[#EBE9F4] px-3 py-1 text-[14px] outline-none lg:w-1/2"
                 >
                   <option value="">Available Days</option>
                   <option value="MONDAY">Monday</option>
@@ -844,14 +861,12 @@ const ProvideService: React.FC = () => {
                   <option value="SATURDAY">Saturday</option>
                   <option value="SUNDAY">Sunday</option>
                 </select>
-                <IoMdArrowDropdown className="absolute right-96 top-3 cursor-pointer" />
                 <div className="mt-4 rounded-2xl border bg-[#EBE9F4] p-4 lg:w-2/3">
                   <ul className="flex flex-wrap gap-2">
                     {selectedDays.map((day) => (
                       <li
                         key={day}
-                        className="relative h-[40px] w-[105px] rounded-3xl border-2 border-[#FE9B07] bg-[#FFF0DA]
-p-3 text-center text-[12px] text-[#fe9b07]"
+                        className="relative h-[40px] w-[105px] rounded-3xl border-2 border-[#FE9B07] bg-[#FFF0DA] p-3 text-center text-[12px] text-[#fe9b07]"
                         style={{ textTransform: "capitalize" }}
                       >
                         {day}
