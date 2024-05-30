@@ -88,6 +88,7 @@ const PricingModal = ({
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     try {
+      console.log(token);
       setSubmitStatus((prev) => ({ ...prev, isSubmtting: true, error: "" }));
       if (
         !formState.date ||
