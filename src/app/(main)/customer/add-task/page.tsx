@@ -352,7 +352,7 @@ const AddTaskForm: React.FC = () => {
     if (isOpen && activeButtonIndex === 1) {
       requiredFields.push(isRemote);
     } else {
-      requiredFields.push(selectedCode, selectedCity);
+      requiredFields.push(selectedCode);
     }
 
     const filledFields = requiredFields.filter(
@@ -361,10 +361,6 @@ const AddTaskForm: React.FC = () => {
 
     // Calculate the total number of fields that need to be filled
     let totalFields = 5;
-
-    if (isOpen && activeButtonIndex === 0) {
-      totalFields = 6;
-    }
 
     return Math.round((filledFields / totalFields) * 100);
   };

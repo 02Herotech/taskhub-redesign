@@ -249,7 +249,7 @@ const ProvideService: React.FC = () => {
   const handleCode = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSelectedCode(event.target.value);
   };
- const handleCity = (data: any) => {
+  const handleCity = (data: any) => {
    setSelectedCity(data);
  };
 
@@ -365,13 +365,13 @@ const ProvideService: React.FC = () => {
     if (isOpen && activeButtonIndex === 1) {
       requiredFields.push(isRemote);
     } else {
-      requiredFields.push(selectedCode, selectedCity);
+      requiredFields.push(selectedCode);
     }
     const filledFields = requiredFields.filter(
       (value) => value !== "" && value !== null,
     ).length;
 
-    const totalFields = isOpen && activeButtonIndex === 0 ? 9 : 8;
+    const totalFields = isOpen && activeButtonIndex === 0 ? 8 : 8;
 
     return Math.round((filledFields / totalFields) * 100);
   };
