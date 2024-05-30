@@ -37,10 +37,12 @@ const PricingPlan = ({
     pricing: number;
     isAuthenticated: string | undefined;
     isServiceProvider: boolean;
+    title: string;
   }>({
     pricing: 0,
     isAuthenticated,
     isServiceProvider,
+    title: "",
   });
 
   const handleExpandText = (index: number) => {
@@ -51,9 +53,15 @@ const PricingPlan = ({
     }
   };
 
-  const handleShowModal = (pricing: number) => {
+  const handleShowModal = ({
+    pricing,
+    title,
+  }: {
+    pricing: number;
+    title: string;
+  }) => {
     setIsModalShown(true);
-    setModalData((prev) => ({ ...prev, pricing }));
+    setModalData((prev) => ({ ...prev, pricing, title }));
   };
 
   return (
@@ -75,7 +83,12 @@ const PricingPlan = ({
               A$ {planOnePrice}
             </h2>
             <button
-              onClick={() => handleShowModal(planOnePrice)}
+              onClick={() =>
+                handleShowModal({
+                  pricing: planOnePrice,
+                  title: planOneDescription,
+                })
+              }
               className="rounded-full bg-[#381F8C] px-6 py-3 text-white hover:opacity-90 "
             >
               Book Task
@@ -83,11 +96,11 @@ const PricingPlan = ({
           </div>
           <button
             onClick={() => handleExpandText(1)}
-            className="flex w-full justify-between gap-2 font-normal text-slate-500  "
+            className="flex w-full justify-between gap-2 text-left font-normal text-slate-500  "
           >
             {isTextExpanded.index === 1 && isTextExpanded.state
               ? planOneDescription
-              : planOneDescription.split(" ").slice(0, 20).join(" ") + "..."}
+              : planOneDescription.split(" ").slice(0, 5).join(" ") + "..."}
 
             <span className="pt-2">
               <BsTriangleFill
@@ -105,7 +118,12 @@ const PricingPlan = ({
                 A$ {planTwoPrice}
               </h2>
               <button
-                onClick={() => handleShowModal(planTwoPrice)}
+                onClick={() =>
+                  handleShowModal({
+                    pricing: planTwoPrice,
+                    title: planTwoDescription,
+                  })
+                }
                 className="rounded-full bg-[#381F8C] px-6 py-3 text-white hover:opacity-90 "
               >
                 Book Task
@@ -113,11 +131,11 @@ const PricingPlan = ({
             </div>
             <button
               onClick={() => handleExpandText(2)}
-              className="flex w-full justify-between gap-2 font-normal text-slate-500  "
+              className="flex w-full justify-between gap-2 text-left font-normal text-slate-500  "
             >
               {isTextExpanded.index === 2 && isTextExpanded.state
                 ? planTwoDescription
-                : planTwoDescription.split(" ").slice(0, 20).join(" ") + "..."}
+                : planTwoDescription.split(" ").slice(0, 5).join(" ") + "..."}
               <span className="pt-2">
                 <BsTriangleFill
                   size={12}
@@ -136,7 +154,12 @@ const PricingPlan = ({
                 A$ {planThreePrice}
               </h2>
               <button
-                onClick={() => handleShowModal(planThreePrice)}
+                onClick={() =>
+                  handleShowModal({
+                    pricing: planThreePrice,
+                    title: planThreeDescription,
+                  })
+                }
                 className="rounded-full bg-[#381F8C] px-6 py-3 text-white hover:opacity-90 "
               >
                 Book Task
@@ -144,12 +167,11 @@ const PricingPlan = ({
             </div>
             <button
               onClick={() => handleExpandText(3)}
-              className="flex w-full justify-between gap-2 font-normal text-slate-500  "
+              className="f text-leftont-normal flex w-full justify-between gap-2 text-slate-500  "
             >
               {isTextExpanded.index === 1 && isTextExpanded.state
                 ? planThreeDescription
-                : planThreeDescription.split(" ").slice(0, 20).join(" ") +
-                  "..."}
+                : planThreeDescription.split(" ").slice(0, 5).join(" ") + "..."}
               <span className="pt-2">
                 <BsTriangleFill
                   size={12}

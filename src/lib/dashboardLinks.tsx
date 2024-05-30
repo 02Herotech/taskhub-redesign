@@ -30,11 +30,11 @@ export const customerDashboardLinks: DashboardLinks[] = [
     link: "/customer/notifications",
     icon: NotificationIcon,
   },
-  // {
-  //   label: "Payments Settings",
-  //   link: "/customer/payments",
-  //   icon: PaymentIcon,
-  // },
+  {
+    label: "Payments Settings",
+    link: "/customer/payment",
+    icon: PaymentIcon,
+  },
   // {
   //   label: "Settings",
   //   link: "/customer/settings",
@@ -83,10 +83,6 @@ export const serviceProviderDashboardLinks: DashboardLinks[] = [
 ];
 
 export const customerDashboardDropdown = [
-  {
-    label: "Payment",
-    link: "/customer/payment",
-  },
   {
     label: "Password",
     link: "/customer/password",
