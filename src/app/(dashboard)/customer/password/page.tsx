@@ -159,7 +159,6 @@ const ChangePassword = () => {
                             {/* ---------- */}
                             <div className="space-y-2">
                                 <label
-                                    htmlFor="checkPassword"
                                     className="text-xl font-bold text-violet-dark"
                                 >
                                     New Password
@@ -175,7 +174,6 @@ const ChangePassword = () => {
                             {/* ---------- */}
                             <div className="space-y-2">
                                 <label
-                                    htmlFor="checkPassword"
                                     className="text-xl font-bold text-violet-dark"
                                 >
                                     Confirm Password
@@ -190,9 +188,9 @@ const ChangePassword = () => {
                             {success && (
                                 <div className="text-status-success text-base font-semibold !my-5">{success}</div>
                             )}
-                            <button className="mx-auto w-fit rounded-full bg-violet-normal px-6 py-3 text-white  ">
+                            <Button type="submit" className="mx-auto w-fit rounded-full bg-violet-normal px-6 py-3 text-white">
                                 Update Password
-                            </button>
+                            </Button>
                         </form>
                     </FormProvider>
                 </main>
