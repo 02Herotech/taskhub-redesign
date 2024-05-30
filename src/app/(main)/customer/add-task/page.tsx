@@ -93,6 +93,11 @@ const AddTaskForm: React.FC = () => {
   const [items, setItems] = useState<Item[]>([]);
   const [wordCount, setWordCount] = useState(0);
   const [wordCounts, setWordCounts] = useState(0);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
+  const toggleDropdown = () => {
+    setIsDropdownOpen(!isDropdownOpen);
+  };
 
   const handleLoginNavigation = () => {
     router.push("/auth/login?from=/customer/add-task");
@@ -459,10 +464,8 @@ const AddTaskForm: React.FC = () => {
                 </div>
                 <Dropdown
                   trigger={() => (
-                    <div className="flex justify-between h-full w-full cursor-pointer appearance-none rounded-2xl bg-[#EBE9F4] p-3 text-[13px] outline-none">
-                      <h2>
-                        {selectedCategoryName}
-                      </h2>
+                    <div className="flex h-full w-full cursor-pointer appearance-none justify-between rounded-2xl bg-[#EBE9F4] p-3 text-[13px] outline-none">
+                      <h2>{selectedCategoryName}</h2>
                       <FaSortDown />
                     </div>
                   )}

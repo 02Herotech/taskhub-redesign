@@ -9,17 +9,13 @@ import { cn, listenForOutsideClicks } from "@/lib/utils";
 import { AnimatePresence, motion } from "framer-motion";
 
 type Props = {
-    children: React.ReactNode;
-    className?: string;
-    trigger?: (showDropdown: boolean) => React.ReactNode;
-    position?: "top" | "bottom";
-    closeOnClick?: boolean;
-    triggerStyle?: "click" | "hover";
-    onTrigger?: () => void;
-    value?: string | number | null;
-    name?: string;
-    onChange?: () => void;
-    
+  children: React.ReactNode;
+  className?: string;
+  trigger?: (showDropdown: boolean) => React.ReactNode;
+  position?: "top" | "bottom";
+  closeOnClick?: boolean;
+  triggerStyle?: "click" | "hover";
+  onTrigger?: () => void;
 };
 
 type DropdownContextType = {
@@ -48,6 +44,12 @@ const Dropdown = ({
   }, [listening, showDropdown, menuRef, setShowDropdown]);
 
   const closeDropdown = () => setShowDropdown(false);
+
+  const handleChildClick = () => {
+    if (closeOnClick) {
+      closeDropdown();
+    }
+  };
 
   return (
     <DropdownContext.Provider value={{ closeDropdown }}>
@@ -78,6 +80,7 @@ const Dropdown = ({
                   position === "bottom" ? "top-[38px]" : "bottom-[23px]",
                   className,
                 )}
+                onClick={handleChildClick} 
               >
                 <div>{children}</div>
               </motion.div>
