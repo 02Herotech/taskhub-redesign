@@ -473,6 +473,7 @@ const AddTaskForm: React.FC = () => {
                 >
                   {items.map((item) => (
                     <button
+                      type="button"
                       key={item.id}
                       value={item.id}
                       className="block p-2 text-[12px] text-[#221354]"
@@ -633,7 +634,7 @@ const AddTaskForm: React.FC = () => {
         return (
           <div className="mb-10 space-y-10">
             <div className="space-y-4">
-              <h2 className="font-satoshiBold font-bold text-black">
+              <h2 className="font-satoshiBold font-bold text-status-darkpurple">
                 Type of Service
               </h2>
               <div className="flex space-x-4 text-[13px] text-[#221354]">
@@ -675,7 +676,7 @@ const AddTaskForm: React.FC = () => {
                 />
               )}
               {isOpen && activeButtonIndex === 0 && (
-                <div className="space-y-10 font-medium text-status-darkpurple">
+                <div className="space-y-10 font-bold text-status-darkpurple ">
                   <div className="flex space-x-4">
                     <div className="grid space-y-4">
                       <label>Postal code</label>
@@ -743,16 +744,16 @@ const AddTaskForm: React.FC = () => {
                 ))}
               </div>
               <div className="flex justify-between">
-                {isAuthenticated && <Button type="submit">Confirm Task</Button>}
+                {isAuthenticated && <Button className="rounded-3xl" type="submit">Confirm Task</Button>}
                 {!isAuthenticated && (
-                  <Button type="button" onClick={handleLoginNavigation}>
+                  <Button className="rounded-3xl" type="button" onClick={handleLoginNavigation}>
                     Confirm Task
                   </Button>
                 )}
                 <button
                   type="button"
                   onClick={prevPage}
-                  className="hover:bg-purpleBase w-[100px] rounded-2xl bg-[#EBE9F4] p-2 text-[14px] outline-none hover:text-white"
+                  className="hover:bg-purpleBase w-[100px] rounded-3xl bg-[#EBE9F4] p-2 text-[14px] outline-none hover:text-white"
                 >
                   Back
                 </button>

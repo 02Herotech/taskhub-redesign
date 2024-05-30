@@ -472,7 +472,7 @@ const ProvideService: React.FC = () => {
                     value={task.listingTitle}
                     onChange={handleChange}
                     placeholder="Casual Babysitting"
-                    className="rounded-2xl bg-[#EBE9F4] p-3 text-[13px]  outline-none placeholder:font-medium placeholder:text-status-darkpurple"
+                    className="rounded-2xl bg-[#EBE9F4] p-3 text-[13px]  outline-none placeholder:font-satoshiMedium placeholder:font-medium placeholder:text-status-darkpurple"
                   />
                 </div>
                 <div className="relative grid space-y-4">
@@ -482,7 +482,9 @@ const ProvideService: React.FC = () => {
                   <Dropdown
                     trigger={() => (
                       <div className="flex h-full w-full cursor-pointer appearance-none justify-between rounded-2xl bg-[#EBE9F4] p-3 text-[13px] outline-none">
-                        <h2>{selectedCategoryName}</h2>
+                        <h2 className="font-satoshiMedium">
+                          {selectedCategoryName}
+                        </h2>
                         <FaSortDown />
                       </div>
                     )}
@@ -490,9 +492,10 @@ const ProvideService: React.FC = () => {
                   >
                     {items.map((item) => (
                       <button
+                        type="button"
                         key={item.id}
                         value={item.id}
-                        className="block p-2 text-[12px] text-[#221354]"
+                        className="block p-2 text-[12px] text-[#221354] font-satoshiMedium"
                         onClick={() => {
                           handleCategoryChange(item.id);
                           setSelectedCategoryName(item.categoryName);
@@ -516,9 +519,10 @@ const ProvideService: React.FC = () => {
                   >
                     {subcategories.map((subcategory) => (
                       <button
+                        type="button"
                         key={subcategory.id}
                         value={subcategory.id}
-                        className="block p-2 text-[12px] text-[#221354]"
+                        className="block p-2 text-[12px] text-[#221354] font-satoshiMedium"
                         onClick={() => {
                           handleSubCategoryChange(subcategory.id);
                           setSelectedSubCategoryName(subcategory.name);
@@ -528,7 +532,7 @@ const ProvideService: React.FC = () => {
                       </button>
                     ))}
                   </Dropdown>
-                  </div>
+                </div>
 
                 <div className="lg:hidden">
                   {/* @ts-ignore */}
@@ -547,8 +551,6 @@ const ProvideService: React.FC = () => {
                     placeholder="Casual Babysitting"
                     name="description"
                     value={task.listingDescription}
-                    // onChange={handleChange}
-
                     onChange={(e) =>
                       setTask({ ...task, listingDescription: e.target.value })
                     }
@@ -588,7 +590,7 @@ const ProvideService: React.FC = () => {
                       activePlanIndex === 0
                         ? " disabled bg-transparent p-1 text-lg font-bold text-status-darkViolet"
                         : "bg-[#EBE9F4] p-4 hover:bg-status-darkViolet hover:text-white "
-                    } cursor-pointer text-left outline-none placeholder:font-satoshi placeholder:font-medium placeholder:text-[#2A1769] hover:placeholder:text-white`}
+                    } cursor-pointer text-left outline-none placeholder:font-satoshiMedium placeholder:font-medium placeholder:text-[#2A1769] hover:placeholder:text-white`}
                     name="physical"
                     onClick={() => handlePlan(0)}
                     placeholder="Plan 1"
@@ -602,13 +604,13 @@ const ProvideService: React.FC = () => {
                       </label>
                       <div className="grid space-y-3 rounded-2xl border-2 pb-5">
                         <textarea
-                          className="h-[200px] rounded-2xl bg-[#EBE9F4] p-3 outline-none placeholder:font-satoshi placeholder:font-semibold"
+                          className="h-[200px] rounded-2xl bg-[#EBE9F4] p-3 font-satoshiMedium outline-none placeholder:font-satoshiMedium placeholder:font-semibold"
                           placeholder="Casual Babysitting"
                           name="planOneDescription"
                           value={task.planOneDescription}
                           onChange={handleChange}
                         ></textarea>
-                        <label className="pl-2 font-medium">Price</label>
+                        <label className="pl-2 font-satoshiMedium">Price</label>
                         <div className="relative flex items-center space-x-2 pl-2">
                           <input
                             type="text"
@@ -620,10 +622,10 @@ const ProvideService: React.FC = () => {
                             }
                             onChange={handlePrice}
                             placeholder="500"
-                            className="w-1/3 rounded-2xl bg-[#EBE9F4] p-3 pl-5 text-[13px] outline-none"
+                            className="w-1/3 rounded-2xl bg-[#EBE9F4] p-3 pl-5 font-satoshiMedium text-[13px] outline-none"
                           />
                           <p className="absolute left-3 top-3">$</p>
-                          <p className="text-xs font-bold text-status-lightViolet">
+                          <p className="font-extraBold text-xs text-status-lightViolet">
                             Minimum AUD$25 + 10% GST inclusive
                           </p>
                         </div>
@@ -635,7 +637,7 @@ const ProvideService: React.FC = () => {
                       activePlanIndex === 1
                         ? " disabled bg-transparent p-1 text-lg font-bold text-status-darkViolet"
                         : "bg-[#EBE9F4] p-4 hover:bg-status-darkViolet hover:text-white"
-                    } cursor-pointer text-left outline-none placeholder:font-satoshi placeholder:font-medium placeholder:text-[#2A1769] hover:placeholder:text-white`}
+                    } cursor-pointer text-left outline-none placeholder:font-satoshiMedium placeholder:font-medium placeholder:text-[#2A1769] hover:placeholder:text-white`}
                     name="physical"
                     onClick={() => handlePlan(1)}
                     placeholder="Plan 2  (Optional)"
@@ -649,13 +651,13 @@ const ProvideService: React.FC = () => {
                       </label>
                       <div className="grid space-y-3 rounded-2xl border-2 pb-5">
                         <textarea
-                          className="h-[200px] rounded-2xl bg-[#EBE9F4] p-3 outline-none placeholder:font-satoshi placeholder:font-medium"
+                          className="h-[200px] rounded-2xl bg-[#EBE9F4] p-3 font-satoshiMedium outline-none placeholder:font-satoshiMedium placeholder:font-medium"
                           placeholder="Casual Babysitting"
                           name="planTwoDescription"
                           value={task.planTwoDescription}
                           onChange={handleChange}
                         ></textarea>
-                        <label className="pl-2 font-medium">Price</label>
+                        <label className="pl-2 font-bold">Price</label>
                         <div className="relative flex items-center space-x-2 pl-2">
                           <input
                             type="text"
@@ -667,10 +669,10 @@ const ProvideService: React.FC = () => {
                             }
                             onChange={handlePrice}
                             placeholder="500"
-                            className="w-1/3 rounded-2xl bg-[#EBE9F4] p-3 pl-5 text-[13px] outline-none"
+                            className="w-1/3 rounded-2xl bg-[#EBE9F4] p-3 pl-5 font-satoshiMedium text-[13px] outline-none"
                           />
                           <p className="absolute left-3 top-3">$</p>
-                          <p className="text-xs font-bold text-status-lightViolet">
+                          <p className="font-extraBold text-xs text-status-lightViolet">
                             Minimum AUD$25 + 10% GST inclusive
                           </p>
                         </div>
@@ -682,7 +684,7 @@ const ProvideService: React.FC = () => {
                       activePlanIndex === 2
                         ? " disabled bg-transparent p-1 text-lg font-bold text-status-darkViolet"
                         : "bg-[#EBE9F4] p-4 hover:bg-status-darkViolet hover:text-white"
-                    } cursor-pointer text-left outline-none placeholder:font-satoshi placeholder:font-medium placeholder:text-[#2A1769] hover:placeholder:text-white`}
+                    } cursor-pointer text-left outline-none placeholder:font-satoshiMedium placeholder:font-medium placeholder:text-[#2A1769] hover:placeholder:text-white`}
                     name="physical"
                     onClick={() => handlePlan(2)}
                     placeholder="Plan 3  (Optional)"
@@ -696,13 +698,13 @@ const ProvideService: React.FC = () => {
                       </label>
                       <div className="grid space-y-3 rounded-2xl border-2 pb-5">
                         <textarea
-                          className="h-[200px] rounded-2xl bg-[#EBE9F4] p-3 outline-none placeholder:font-satoshi placeholder:font-medium"
+                          className="h-[200px] rounded-2xl bg-[#EBE9F4] p-3 font-satoshiMedium outline-none placeholder:font-satoshiMedium placeholder:font-medium"
                           placeholder="Casual Babysitting"
                           name="planThreeDescription"
                           value={task.planThreeDescription}
                           onChange={handleChange}
                         ></textarea>
-                        <label className="pl-2 font-medium">Price</label>
+                        <label className="pl-2 font-bold">Price</label>
                         <div className="relative flex items-center space-x-2 pl-2">
                           <input
                             type="text"
@@ -714,10 +716,10 @@ const ProvideService: React.FC = () => {
                             }
                             onChange={handlePrice}
                             placeholder="500"
-                            className="w-1/3 rounded-2xl bg-[#EBE9F4] p-3 pl-5 text-[13px] outline-none"
+                            className="w-1/3 rounded-2xl bg-[#EBE9F4] p-3 pl-5 font-satoshiMedium text-[13px] outline-none"
                           />
                           <p className="absolute left-3 top-3">$</p>
-                          <p className="text-xs font-bold text-status-lightViolet">
+                          <p className="font-extraBold text-xs text-status-lightViolet">
                             Minimum AUD$25 + 10% GST inclusive
                           </p>
                         </div>
@@ -727,7 +729,7 @@ const ProvideService: React.FC = () => {
                 </div>
               </div>
               <div className="space-y-4">
-                <h2 className="text-xl font-bold font-satoshi">
+                <h2 className="font-satoshiMedium text-xl font-bold">
                   Type of Service
                 </h2>
                 <div className="flex space-x-4 text-[13px] text-[#221354]">
@@ -736,7 +738,7 @@ const ProvideService: React.FC = () => {
                       activeButtonIndex === 0
                         ? "bg-status-purpleBase text-white"
                         : "bg-[#EBE9F4] placeholder:text-white hover:bg-status-purpleBase hover:text-white"
-                    } cursor-pointer outline-none placeholder:font-bold`}
+                    } cursor-pointer outline-none placeholder:font-satoshiMedium placeholder:font-bold`}
                     name="physical"
                     onClick={() => handleClick(0)}
                     placeholder="Physical Services"
@@ -748,7 +750,7 @@ const ProvideService: React.FC = () => {
                       activeButtonIndex === 1
                         ? "bg-status-purpleBase text-white"
                         : "bg-[#EBE9F4] placeholder:text-white hover:bg-status-purpleBase hover:text-white "
-                    } cursor-pointer outline-none placeholder:font-bold`}
+                    } cursor-pointer outline-none placeholder:font-satoshiMedium placeholder:font-bold`}
                     name="remote"
                     onClick={() => {
                       handleClick(1);
@@ -766,11 +768,11 @@ const ProvideService: React.FC = () => {
                   type="text"
                   value={isRemote}
                   readOnly
-                  className=" rounded-2xl bg-[#EBE9F4] p-3 "
+                  className="rounded-2xl bg-[#EBE9F4] p-3 font-satoshiMedium "
                 />
               )}
               {isOpen && activeButtonIndex === 0 && (
-                <div className="flex flex-col font-medium text-status-darkpurple lg:flex-row lg:space-x-3">
+                <div className="flex flex-col font-satoshiMedium font-medium text-status-darkpurple lg:flex-row lg:space-x-3">
                   <div className="flex space-x-4 lg:justify-normal">
                     <div className="grid space-y-4">
                       <label>Postal code</label>
@@ -861,7 +863,7 @@ const ProvideService: React.FC = () => {
                   <option value="SATURDAY">Saturday</option>
                   <option value="SUNDAY">Sunday</option>
                 </select>
-                <div className="mt-4 rounded-2xl border bg-[#EBE9F4] p-4 lg:w-2/3">
+                <div className="mt-4 rounded-2xl lg:w-2/3">
                   <ul className="flex flex-wrap gap-2">
                     {selectedDays.map((day) => (
                       <li
