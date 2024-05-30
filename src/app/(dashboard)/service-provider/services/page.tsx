@@ -10,9 +10,10 @@ import { BiCalendarWeek, BiCheck } from "react-icons/bi";
 import { HiLocationMarker } from "react-icons/hi";
 import { CiClock1 } from "react-icons/ci";
 import Link from "next/link";
-import { jobsData } from "../jobs/page";
+import { jobsDatas } from "../jobs/page";
+import AllServices from "@/components/dashboard/serviceProvider/services/AllServices";
 
-const myservices = [
+export const myservices = [
   {
     Jobimage: "/assets/images/serviceProvider/plumbing.png",
     category: "Plumbing",
@@ -43,13 +44,6 @@ const ServicesPage = () => {
   const [currentCategory, setCurrentCategory] = useState("services");
   const rounter = useRouter();
 
-  console.log(currentCategory);
-
-  const handleNavigateCard = (index: number) => {
-    const route = "/service-provider/services/" + index;
-    rounter.push(route);
-  };
-
   return (
     <main className="space-y-8 p-4 lg:p-8">
       <div className="flex flex-wrap gap-2 lg:gap-6">
@@ -73,62 +67,10 @@ const ServicesPage = () => {
         </button>
       </div>
       {currentCategory === "services" ? (
-        <section className="flex flex-wrap gap-4">
-          {myservices.map((item, index) => (
-            <motion.div
-              key={index}
-              className="mx-auto cursor-pointer space-y-8 rounded-xl bg-[#EBE9F4] p-2"
-              // onClick={() => handleNavigateCard(index)}
-              initial={{ opacity: 0, translateY: "5rem" }}
-              whileInView={{ opacity: 1, translateY: "0" }}
-              transition={{ duration: 0.5 }}
-            >
-              <div className="space-y-2">
-                <div className="h-52 w-72 overflow-hidden rounded-xl">
-                  <Image
-                    src={item.Jobimage}
-                    width={400}
-                    height={400}
-                    alt={item.category}
-                    className=" h-full w-full object-cover "
-                  />
-                </div>
-                <p className="px-2 text-3xl font-bold text-[#190E3F] ">
-                  {item.category}
-                </p>
-
-                <div className="px-2">
-                  <p className="text-xs"> {item.rating} </p>
-                  <div className="flex items-center gap-1">
-                    <FaStar size={10} color="gold" />
-                    <FaStar size={10} color="gold" />
-                    <FaStar size={10} color="gold" />
-                    <FaStar size={10} color="gold" />
-                    <FaStar size={10} color="grey" />
-                  </div>
-                  <div className="flex items-center justify-between gap-3">
-                    <div className="flex items-center gap-2 py-3">
-                      <Image
-                        src={item.profileImage}
-                        alt={item.profileName}
-                        width={20}
-                        height={20}
-                        className="rounded-full"
-                      />
-                      <p className="text-xs"> {item.profileName} </p>
-                    </div>
-                    <p className="font-bold text-[#381F8C] ">
-                      From ${item.price}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-          ))}
-        </section>
+        <AllServices />
       ) : currentCategory === "ongoing" ? (
         <div className="flex flex-col gap-8  pb-4">
-          {jobsData.map((item, index) => (
+          {jobsDatas.map((item, index) => (
             <div
               key={index}
               className=" flex gap-3 border-b border-slate-200 p-4 lg:grid lg:grid-cols-12 lg:items-center lg:px-8 lg:py-4"

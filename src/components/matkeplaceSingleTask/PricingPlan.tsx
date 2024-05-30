@@ -83,11 +83,11 @@ const PricingPlan = ({
           </div>
           <button
             onClick={() => handleExpandText(1)}
-            className="flex w-full justify-between gap-2 font-normal text-slate-500  "
+            className="flex w-full justify-between gap-2 text-left font-normal text-slate-500  "
           >
             {isTextExpanded.index === 1 && isTextExpanded.state
               ? planOneDescription
-              : planOneDescription.split(" ").slice(0, 20).join(" ") + "..."}
+              : planOneDescription.split(" ").slice(0, 5).join(" ") + "..."}
 
             <span className="pt-2">
               <BsTriangleFill
@@ -113,11 +113,11 @@ const PricingPlan = ({
             </div>
             <button
               onClick={() => handleExpandText(2)}
-              className="flex w-full justify-between gap-2 font-normal text-slate-500  "
+              className="flex w-full justify-between gap-2 text-left font-normal text-slate-500  "
             >
               {isTextExpanded.index === 2 && isTextExpanded.state
                 ? planTwoDescription
-                : planTwoDescription.split(" ").slice(0, 20).join(" ") + "..."}
+                : planTwoDescription.split(" ").slice(0, 5).join(" ") + "..."}
               <span className="pt-2">
                 <BsTriangleFill
                   size={12}
@@ -144,12 +144,11 @@ const PricingPlan = ({
             </div>
             <button
               onClick={() => handleExpandText(3)}
-              className="flex w-full justify-between gap-2 font-normal text-slate-500  "
+              className="f text-leftont-normal flex w-full justify-between gap-2 text-slate-500  "
             >
               {isTextExpanded.index === 1 && isTextExpanded.state
                 ? planThreeDescription
-                : planThreeDescription.split(" ").slice(0, 20).join(" ") +
-                  "..."}
+                : planThreeDescription.split(" ").slice(0, 5).join(" ") + "..."}
               <span className="pt-2">
                 <BsTriangleFill
                   size={12}

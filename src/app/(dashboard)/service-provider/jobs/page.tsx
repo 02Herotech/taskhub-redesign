@@ -1,8 +1,12 @@
+"use client";
+
+import axios from "axios";
+import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
+import React, { useState } from "react";
 
-export const jobsData = [
+export const jobsDatas = [
   {
     id: "1",
     name: "Kelly Jane",
@@ -38,13 +42,45 @@ export const jobsData = [
 ];
 
 const Jobs = () => {
+  const [bookingData, setBookingData] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  const session = useSession();
+  const token = session?.data?.user?.accessToken;
+
+  const fetchAllServices = async () => {
+    try {
+      setLoading(true);
+      if (!token) {
+        throw new Error("Authorization token is missing");
+      }
+      const url =
+        "https://smp.jacinthsolutions.com.au/api/v1/booking/service-provider";
+      const response = await axios.get(url, {
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      });
+      const data = response.data;
+      if (!data.content) {
+        throw new Error("Response content is missing");
+      }
+      console.log(data);
+      setBookingData(data.content);
+    } catch (error) {
+      console.error("An error occurred while fetching services:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <main className="space-y-8 p-4 lg:p-8">
       <button className="rounded-full bg-orange-normal px-6 py-3 text-white transition-all duration-300 hover:opacity-90">
         View Jobs
       </button>
       <section className="mx-auto max-w-screen-lg space-y-3 ">
-        {jobsData.map((item, index) => (
+        {jobsDatas.map((item, index) => (
           <div
             key={index}
             className=" flex gap-3 border-b border-slate-200 p-4 lg:grid lg:grid-cols-12 lg:items-center lg:px-8 lg:py-4"
