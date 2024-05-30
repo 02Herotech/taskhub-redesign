@@ -111,10 +111,7 @@ declare interface BookingType {
   bookingDescription: string;
   bookingStage: string;
   listing: ListingDataType;
-  user: {
-    name: string;
-    id: number;
-  };
+  user: { id: number; fullName: string; profileImage: string | null };
   bookedAt: string;
   invoiceSent: boolean;
   updatedAt: string;
