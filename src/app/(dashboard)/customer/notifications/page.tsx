@@ -19,8 +19,8 @@ const ServiceNotification = () => {
     <>
       {invoicePopup && (
         <Popup isOpen={invoicePopup} onClose={() => setInvoicePopup(false)}>
-          <div className="relative bg-[#EBE9F4] rounded-2xl min-h-[200px] lg:w-[577px] font-satoshi overflow-y-auto">
-            
+          <div className="relative bg-[#EBE9F4] rounded-2xl min-h-[200px] lg:w-[577px] font-satoshi p-5 lg:p-10">
+            <h3 className="text-3xl font-clashSemiBold text-[#060D1F]">Paid Invoice</h3>
           </div>
         </Popup>
       )}
