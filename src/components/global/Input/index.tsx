@@ -258,7 +258,7 @@ const Input = ({
 				</span> */}
 
 				{!rules.includes("password") && (error || customError) && (
-					<span className='text-sm text-left mt-2 text-[#E98282]'>
+					<span className='text-[18px] text-left mt-2 text-[#E98282]'>
 						*{customError || error?.message}
 					</span>
 				)}
@@ -295,10 +295,8 @@ const Input = ({
 				<button
 					type='button'
 					onClick={() => setShowPassword(!showPassword)}
-					className='absolute focus:border-primary focus:outline-primary flex items-center justify-center h-[44px] w-12 right-[2px] top-7 cursor-pointer'>
-					<div className='text-black font-bold pr-4'>
-						{!showPassword ? <IoMdEye className="w-7 h-7" /> : <IoMdEyeOff className="w-7 h-7" />}
-					</div>
+					className='absolute focus:border-primary focus:outline-primary flex items-center justify-center w-12 right-[2px] top-5 cursor-pointer'>
+					{!showPassword ? <IoMdEye className="w-7 h-7" /> : <IoMdEyeOff className="w-7 h-7" />}
 				</button>
 			)}
 
@@ -315,8 +313,9 @@ const Input = ({
 			)}
 
 			{!rules.includes("password") && (error || customError) && (
-				<span className='text-xs text-left mt-2 text-status-error-100'>
-					*{customError || error?.message}
+				<span className='text-sm flex items-center space-x-1 mt-2 text-status-error-100'>
+					<MdErrorOutline className="text-status-error-100 h-5 w-5" />
+					<h6>{customError || error?.message}</h6>
 				</span>
 			)}
 

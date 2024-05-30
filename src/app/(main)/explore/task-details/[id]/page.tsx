@@ -106,7 +106,7 @@ const TaskDetailsPage = ({ params }: { params: { id: string } }) => {
                                 </div>
                                 <div className="max-lg:text-xs flex items-center space-x-3 text-[#716F78]">
                                     <FiClock className="h-6 w-6" />
-                                    <h5>{task.taskTime}</h5>
+                                    <h5>{task.taskTime || "Flexible"}</h5>
                                 </div>
                             </div>
                         </div>
