@@ -7,8 +7,6 @@ import { useRouter } from "next/navigation";
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { BiLoaderCircle } from "react-icons/bi";
-import Button from "../global/Button";
 import { BeatLoader } from "react-spinners";
 import { marketPlaceModalIcon } from "@/lib/svgIcons";
 
@@ -20,6 +18,7 @@ interface ModalProps {
     pricing: number;
     isAuthenticated: string | undefined;
     isServiceProvider: boolean;
+    title: string;
   };
 }
 
@@ -113,6 +112,7 @@ const PricingModal = ({
         suburb: formState.suburb,
         price: formState.pricing,
         bookingDescription: formState.description,
+        bookingTitle: modalData.title,
       };
       const url = "https://smp.jacinthsolutions.com.au/api/v1/booking";
       const { data } = await axios.post(url, uploadData, {

@@ -37,10 +37,12 @@ const PricingPlan = ({
     pricing: number;
     isAuthenticated: string | undefined;
     isServiceProvider: boolean;
+    title: string;
   }>({
     pricing: 0,
     isAuthenticated,
     isServiceProvider,
+    title: "",
   });
 
   const handleExpandText = (index: number) => {
@@ -51,9 +53,15 @@ const PricingPlan = ({
     }
   };
 
-  const handleShowModal = (pricing: number) => {
+  const handleShowModal = ({
+    pricing,
+    title,
+  }: {
+    pricing: number;
+    title: string;
+  }) => {
     setIsModalShown(true);
-    setModalData((prev) => ({ ...prev, pricing }));
+    setModalData((prev) => ({ ...prev, pricing, title }));
   };
 
   return (
@@ -75,7 +83,12 @@ const PricingPlan = ({
               A$ {planOnePrice}
             </h2>
             <button
-              onClick={() => handleShowModal(planOnePrice)}
+              onClick={() =>
+                handleShowModal({
+                  pricing: planOnePrice,
+                  title: planOneDescription,
+                })
+              }
               className="rounded-full bg-[#381F8C] px-6 py-3 text-white hover:opacity-90 "
             >
               Book Task
@@ -105,7 +118,12 @@ const PricingPlan = ({
                 A$ {planTwoPrice}
               </h2>
               <button
-                onClick={() => handleShowModal(planTwoPrice)}
+                onClick={() =>
+                  handleShowModal({
+                    pricing: planTwoPrice,
+                    title: planTwoDescription,
+                  })
+                }
                 className="rounded-full bg-[#381F8C] px-6 py-3 text-white hover:opacity-90 "
               >
                 Book Task
@@ -136,7 +154,12 @@ const PricingPlan = ({
                 A$ {planThreePrice}
               </h2>
               <button
-                onClick={() => handleShowModal(planThreePrice)}
+                onClick={() =>
+                  handleShowModal({
+                    pricing: planThreePrice,
+                    title: planThreeDescription,
+                  })
+                }
                 className="rounded-full bg-[#381F8C] px-6 py-3 text-white hover:opacity-90 "
               >
                 Book Task
