@@ -217,17 +217,8 @@ const EditProfileModal = ({
               onClick={handleUploadAllDocument}
               className="my-3 rounded-full bg-violet-normal px-4 py-2 text-white transition-opacity duration-300 hover:opacity-90 "
               disabled={!imageSrc}
-              // disabled={!documentFile.image}
             >
-              {/* {isEditingProfilePicture.image && selectdF ? (
-                <BeatLoader
-                  color={"white"}
-                  loading={isEditingProfilePicture.isEditing}
-                  size={14}
-                />
-              ) : ( */}
               Upload Document
-              {/* )} */}
             </button>
           </div>
         ) : (

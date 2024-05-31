@@ -7,6 +7,8 @@ interface ModalPropType {
 }
 
 const Invoice = ({ isModalOpen, setIsModalOpen }: ModalPropType) => {
+  const generateInvoice = () => {};
+
   return (
     <section
       className={`fixed left-0 top-0 z-50 flex h-screen w-screen items-center justify-center bg-black bg-opacity-70 transition-opacity duration-300 ${isModalOpen ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-0"} `}

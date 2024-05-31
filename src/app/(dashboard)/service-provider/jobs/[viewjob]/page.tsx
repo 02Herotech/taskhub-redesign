@@ -4,22 +4,28 @@ import Congratulations from "@/components/dashboard/serviceProvider/jobs/Congrat
 import Invoice from "@/components/serviceProviderDashboard/jobs/Invoice";
 import Loading from "@/shared/loading";
 import axios from "axios";
+import { error } from "console";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { IoLocationOutline } from "react-icons/io5";
+import { BeatLoader } from "react-spinners";
 
 const ViewJobs = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [currentBooking, setCurrentBooking] = useState<BookingType>();
   const [requestStatus, setRequestStatus] = useState({
-    isRequesting: false,
+    isAcceptRequesting: false,
+    isRejectRequesting: false,
     data: "",
+    error: "",
   });
-  const [showCongratulations, setShowCongratulations] = useState(true);
+  const [showCongratulations, setShowCongratulations] = useState(false);
+
+  console.log(currentBooking);
 
   const router = useRouter();
   const session = useSession();
@@ -55,7 +61,7 @@ const ViewJobs = () => {
 
   const handleAcceptBooking = async () => {
     try {
-      setRequestStatus((prev) => ({ ...prev, isRequesting: true }));
+      setRequestStatus((prev) => ({ ...prev, isAcceptRequesting: true }));
       const url =
         "https://smp.jacinthsolutions.com.au/api/v1/booking/accept-proposal?bookingId=" +
         currentBooking?.id;
@@ -72,14 +78,18 @@ const ViewJobs = () => {
       setShowCongratulations(true);
     } catch (error) {
       console.error("An error occurred while fetching services:", error);
+      setRequestStatus((prev) => ({
+        ...prev,
+        error: "Check your network connection",
+      }));
     } finally {
-      setRequestStatus((prev) => ({ ...prev, isRequesting: false }));
+      setRequestStatus((prev) => ({ ...prev, isAcceptRequesting: false }));
     }
   };
 
   const handleCancelBooking = async () => {
     try {
-      setRequestStatus((prev) => ({ ...prev, isRequesting: true }));
+      setRequestStatus((prev) => ({ ...prev, isRejectRequesting: true }));
       console.log("Cancelling");
       const url =
         "https://smp.jacinthsolutions.com.au/api/v1/booking/reject-proposal?bookingId=" +
@@ -97,14 +107,54 @@ const ViewJobs = () => {
       router.push("/service-provider/profile");
     } catch (error) {
       console.error("An error occurred while fetching services:", error);
+      setRequestStatus((prev) => ({
+        ...prev,
+        error: "Check your network connection",
+      }));
     } finally {
-      setRequestStatus((prev) => ({ ...prev, isRequesting: false }));
+      setRequestStatus((prev) => ({ ...prev, isRejectRequesting: false }));
     }
   };
   useEffect(() => {
     fetchSingleBooking();
     // eslint-disable-next-line
-  }, [token]);
+  }, [token, requestStatus.data]);
+
+  function formatDate(dateArray: number[]) {
+    const [year, month, day] = dateArray;
+    const date = new Date(year, month - 1, day); // JavaScript Date object
+
+    const daySuffix = (day: number) => {
+      if (day > 3 && day < 21) return "th"; // because 11th, 12th, 13th
+      switch (day % 10) {
+        case 1:
+          return "st";
+        case 2:
+          return "nd";
+        case 3:
+          return "rd";
+        default:
+          return "th";
+      }
+    };
+
+    const monthNames = [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December",
+    ];
+
+    return `${day}${daySuffix(day)} ${monthNames[month - 1]} ${year}`;
+  }
 
   return (
     <>
@@ -132,7 +182,6 @@ const ViewJobs = () => {
                 <div>
                   <p className="text-lg font-bold uppercase">Posted by:</p>
                   <p className=" text-orange-normal">
-                    {" "}
                     {user?.firstName} {user?.lastName}
                   </p>
                 </div>
@@ -141,8 +190,11 @@ const ViewJobs = () => {
                   <p>Est. Budget: $ {currentBooking.price} </p>
                 </div>
                 <div>
-                  <p className="text-lg font-medium uppercase">To be done:</p>
-                  <p> {currentBooking.startDate} </p>
+                  <p className="text-lg font-medium uppercase">
+                    To be Started:
+                  </p>
+                  {/* @ts-ignore */}
+                  <p> {formatDate(currentBooking.startDate)} </p>
                 </div>
               </div>
               <div>
@@ -180,35 +232,65 @@ const ViewJobs = () => {
               </p>
               <div className="flex flex-wrap gap-4">
                 {currentBooking.bookingStage === "PROPOSED" ? (
-                  <button
-                    onClick={handleAcceptBooking}
-                    className="rounded-full bg-violet-normal px-6 py-3 text-sm font-medium text-white transition-opacity duration-300 hover:opacity-90 max-md:px-4 max-md:py-2 max-md:text-sm"
-                  >
-                    Accept
-                  </button>
-                ) : (
+                  <div className="flex flex-wrap gap-4">
+                    <button
+                      onClick={handleAcceptBooking}
+                      className="rounded-full bg-violet-normal px-6 py-3 text-sm font-medium text-white transition-opacity duration-300 hover:opacity-90 max-md:px-4 max-md:py-2 max-md:text-sm"
+                    >
+                      {requestStatus.isAcceptRequesting ? (
+                        <BeatLoader
+                          color={"white"}
+                          loading={requestStatus.isAcceptRequesting}
+                          size={14}
+                        />
+                      ) : (
+                        " Accept"
+                      )}
+                    </button>
+                    <button
+                      onClick={handleCancelBooking}
+                      className="rounded-full border border-violet-normal bg-violet-light px-6 py-3 text-sm font-medium  text-violet-normal transition-colors duration-300 hover:bg-violet-200 max-md:px-4 max-md:py-2 max-md:text-sm "
+                    >
+                      {requestStatus.isRejectRequesting ? (
+                        <BeatLoader
+                          color={"white"}
+                          loading={requestStatus.isRejectRequesting}
+                          size={14}
+                        />
+                      ) : (
+                        "Reject"
+                      )}
+                    </button>
+                  </div>
+                ) : currentBooking.bookingStage === "ACCEPTED" ? (
                   <button
                     onClick={() => setIsModalOpen(true)}
                     className="rounded-full bg-violet-normal px-6 py-3 text-sm font-medium text-white transition-opacity duration-300 hover:opacity-90 max-md:px-4 max-md:py-2 max-md:text-sm"
                   >
                     Generate Invoice
                   </button>
+                ) : (
+                  <p className="rounded-full bg-red-100 px-6 py-3 text-sm font-medium text-red-500  max-md:px-4 max-md:py-2 max-md:text-sm">
+                    Booking Rejected
+                  </p>
                 )}
-                <button
-                  onClick={handleCancelBooking}
-                  className="rounded-full border border-violet-normal bg-violet-light px-6 py-3 text-sm font-medium  text-violet-normal transition-colors duration-300 hover:bg-violet-200 max-md:px-4 max-md:py-2 max-md:text-sm "
-                >
-                  Reject
-                </button>
-                <Link
-                  href={{
-                    pathname: "/service-provider/message",
-                  }}
-                  className="rounded-full px-6 py-3 font-medium transition-colors duration-300 hover:bg-violet-900 max-md:px-4  max-md:py-2 max-md:text-sm"
-                >
-                  Chat with Customer
-                </Link>
+                {(currentBooking.bookingStage === "PROPOSED" ||
+                  currentBooking.bookingStage === "ACCEPTED") && (
+                  <Link
+                    href={{
+                      pathname: "/service-provider/message",
+                    }}
+                    className="rounded-full px-6 py-3 font-medium transition-colors duration-300 hover:bg-violet-100 max-md:px-4  max-md:py-2 max-md:text-sm"
+                  >
+                    Chat with Customer
+                  </Link>
+                )}
               </div>
+              {requestStatus.error && (
+                <p className="font-medium text-red-500">
+                  {requestStatus.error}
+                </p>
+              )}
             </div>
           </section>
         </main>
