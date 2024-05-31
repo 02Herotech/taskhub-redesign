@@ -45,7 +45,7 @@ const MarketPlaceFilter = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState({
     isOpened: false,
     category: "",
-  }); 
+  });
 
   const [subCategories, setSubCategories] = useState<SubCategoryType[]>([]);
   const [categoryHeader, setCategoryHeader] = useState("");
@@ -96,6 +96,7 @@ const MarketPlaceFilter = () => {
     subCategory: { id: number; name: string },
     title: string,
   ) => {
+    console.log("this is initiated");
     dispatch(updateFilterStatus({ title, value: subCategory }));
     handleShowDropdown(title);
     // ----------------
@@ -288,7 +289,6 @@ const MarketPlaceFilter = () => {
                     onClick={() => handleShowDropdown("subCategory")}
                   ></div>
                   {subCategory.name === "" ? "Subcategory" : subCategory.name}
-
                   <span>
                     <BsTriangleFill
                       fill="rgb(56 31 140)"
@@ -364,8 +364,8 @@ const MarketPlaceFilter = () => {
                   onClick={() => handleShowDropdown("pricing")}
                 >
                   <div
-                    className={`fixed left-0 top-0 h-screen w-screen ${isDropdownOpen.isOpened && isDropdownOpen.category === "sub-category" ? "block" : "hidden"} `}
-                    onClick={() => handleShowDropdown("subCategory")}
+                    className={`fixed left-0 top-0 h-screen w-screen ${isDropdownOpen.isOpened && isDropdownOpen.category === "pricing" ? "block" : "hidden"} `}
+                    onClick={() => handleShowDropdown("pricing")}
                   ></div>
                   Pricing
                   <span>
