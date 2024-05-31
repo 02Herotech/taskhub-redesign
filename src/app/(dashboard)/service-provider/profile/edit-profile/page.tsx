@@ -13,6 +13,7 @@ import { BiCamera, BiCheck } from "react-icons/bi";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import axios from "axios";
+import { defaultUserDetails } from "@/app/data/service-provider/user";
 
 const userDataSchema = z.object({
   firstName: z.string().min(2),
@@ -26,19 +27,6 @@ const userDataSchema = z.object({
   medicareId: z.string(),
   driverLicence: z.string(),
 });
-
-const defaultUserDetails = {
-  dateOfBirth: "",
-  firstName: "",
-  idImage: "",
-  idNumber: "",
-  idType: "",
-  lastName: "",
-  postalCode: "",
-  profileImage: "",
-  state: "",
-  suburbs: "",
-};
 
 const EditProfile = () => {
   const [isEditingEnabled, setIsEditingEnabled] = useState(false);
