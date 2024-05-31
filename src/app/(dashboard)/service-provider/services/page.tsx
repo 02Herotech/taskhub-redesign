@@ -12,7 +12,7 @@ import { CiClock1 } from "react-icons/ci";
 import Link from "next/link";
 import AllServices from "@/components/dashboard/serviceProvider/services/AllServices";
 
-export const myservices = [
+const myservices = [
   {
     Jobimage: "/assets/images/serviceProvider/plumbing.png",
     category: "Plumbing",

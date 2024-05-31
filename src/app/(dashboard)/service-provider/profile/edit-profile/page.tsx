@@ -27,7 +27,7 @@ const userDataSchema = z.object({
   driverLicence: z.string(),
 });
 
-export const defaultUserDetails = {
+const defaultUserDetails = {
   dateOfBirth: "",
   firstName: "",
   idImage: "",

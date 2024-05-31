@@ -11,17 +11,18 @@ import PricingPlan from "@/components/matkeplaceSingleTask/PricingPlan";
 import Reviews from "@/components/matkeplaceSingleTask/Reviews";
 import axios from "axios";
 import Loading from "@/shared/loading";
+import { formatDate } from "@/lib/utils";
 
 const Page = () => {
   const [isDataFetched, setIsDataFetched] = useState(false);
-  const [displayData, setDisplayData] = useState<ListingDataType2>();
+  const [displayData, setDisplayData] = useState<ListingDataType>();
   const [error, setError] = useState("");
   const [listingId, setListingId] = useState(0);
-  const [posterInfo, setPosterInfo] = useState<{
-    profileImage: string;
-    firstName: string;
-    lastName: string;
-  }>({ profileImage: "", firstName: "", lastName: "" });
+  // const [posterInfo, setPosterInfo] = useState<{
+  //   profileImage: string;
+  //   firstName: string;
+  //   lastName: string;
+  // }>({ profileImage: "", firstName: "", lastName: "" });
 
   useEffect(() => {
     const fetchData = async () => {
@@ -34,17 +35,17 @@ const Page = () => {
           const url =
             "https://smp.jacinthsolutions.com.au/api/v1/listing/" + content.a;
           const { data } = await axios.get(url);
-          const postData: ListingDataType2 = data;
-          const posterId: number = postData.serviceProvider.id;
+          const postData: ListingDataType = data;
+          // const posterId: number = postData.serviceProvider.id;
           setDisplayData(postData);
-          const posterUrl =
-            "https://smp.jacinthsolutions.com.au/api/v1/user/user-profile/" +
-            content.b;
-          const {
-            data: { profileImage, firstName, lastName },
-          } = await axios.get(posterUrl);
+          // const posterUrl =
+          //   "https://smp.jacinthsolutions.com.au/api/v1/user/user-profile/" +
+          //   content.b;
+          // const {
+          //   data: { profileImage, firstName, lastName },
+          // } = await axios.get(posterUrl);
 
-          setPosterInfo({ profileImage, firstName, lastName });
+          // setPosterInfo({ profileImage, firstName, lastName });
         }
       } catch (error) {
         setError("Error Fetching Data");
@@ -55,55 +56,6 @@ const Page = () => {
 
     fetchData();
   }, []);
-
-  function formatDate(dateArray: number[]) {
-    const [year, month, day] = dateArray;
-    const date = new Date(year, month - 1, day); // month is zero-based in JavaScript Date
-
-    // Helper functions
-    const getDayName = (date: Date) => {
-      const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-      return days[date.getDay()];
-    };
-
-    const getMonthName = (date: Date) => {
-      const months = [
-        "January",
-        "February",
-        "March",
-        "April",
-        "May",
-        "June",
-        "July",
-        "August",
-        "September",
-        "October",
-        "November",
-        "December",
-      ];
-      return months[date.getMonth()];
-    };
-
-    const getDayWithSuffix = (day: number) => {
-      if (day > 3 && day < 21) return `${day}th`; // Handle 11th, 12th, 13th
-      switch (day % 10) {
-        case 1:
-          return `${day}st`;
-        case 2:
-          return `${day}nd`;
-        case 3:
-          return `${day}rd`;
-        default:
-          return `${day}th`;
-      }
-    };
-
-    const dayName = getDayName(date);
-    const monthName = getMonthName(date);
-    const dayWithSuffix = getDayWithSuffix(day);
-
-    return `On ${dayName}, ${monthName} ${dayWithSuffix}`;
-  }
 
   return (
     <>
@@ -155,9 +107,9 @@ const Page = () => {
                     <BiCalendar />
                   </span>
                   <span>
-                    {" "}
                     {displayData?.createdAt &&
-                      formatDate(displayData.createdAt)}{" "}
+                      // @ts-ignore
+                      formatDate(displayData.createdAt)}
                   </span>
                 </p>
                 <p className="flex items-center gap-2 text-slate-500 ">
@@ -173,7 +125,7 @@ const Page = () => {
                     <div className="flex items-center gap-4">
                       <Image
                         src={
-                          posterInfo.profileImage ??
+                          displayData?.serviceProvider?.user.profileImage ??
                           "/assets/images/serviceProvider/user.jpg"
                         }
                         alt="User"
@@ -183,7 +135,7 @@ const Page = () => {
                       />
                       <div className="space-y-2">
                         <p className="text-xl font-medium">
-                          {posterInfo.firstName} {posterInfo.lastName}{" "}
+                          {displayData?.serviceProvider?.user?.profileImage}
                         </p>
                         <div>
                           <p className="text-xs text-slate-300 "> 4.5 </p>
