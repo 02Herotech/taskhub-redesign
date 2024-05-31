@@ -1,4 +1,3 @@
-import { myservices } from "@/app/(dashboard)/service-provider/services/page";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import { FaStar } from "react-icons/fa6";
