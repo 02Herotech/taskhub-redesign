@@ -125,7 +125,7 @@ const Page = () => {
                     <div className="flex items-center gap-4">
                       <Image
                         src={
-                          displayData?.serviceProvider?.user.profileImage ??
+                          // displayData?.serviceProvider?.user.profileImage ??
                           "/assets/images/serviceProvider/user.jpg"
                         }
                         alt="User"
