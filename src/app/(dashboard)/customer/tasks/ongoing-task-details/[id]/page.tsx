@@ -216,7 +216,6 @@ const OnogoingTaskDetailsPage = ({ params }: { params: { id: string } }) => {
                         <div className="flex items-center justify-end space-x-10 lg:text-xl">
                             <button className='text-tc-orange' onClick={() => setRequestRevisionPopup(true)}>Request Revision</button>
                             <button className='text-[#34A853]' onClick={() => setApprovePaymentPopup(true)}>Approve payment</button>
-
                         </div>
                     </div>
                 </div>
