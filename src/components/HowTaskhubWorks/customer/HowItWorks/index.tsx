@@ -80,10 +80,10 @@ const HowItWorks = () => {
                     </p>
 
                     <div className='flex  space-x-4'>
-                        <div className='rounded-[100%] h-3 w-6 bg-primary mt-5'>
+                        <div className='rounded-[100%] h-2 w-2 bg-primary mt-5'>
 
                         </div>
-                        <p className='text-primary text-[25px] font-satoshiMedium'>In a short sentence, tell us what you need to get done. Use simple and short words to get the best result.</p>
+                        <p className='text-primary text-[20px] font-satoshiMedium w-[95%]'>In a short sentence, tell us what you need to get done. Use simple and short words to get the best result.</p>
                     </div>
 
                     <div className='flex justify-between ml-6'>
@@ -112,10 +112,10 @@ const HowItWorks = () => {
 
 
                     <div className='flex  space-x-4'>
-                        <div className='rounded-[100%] h-3 w-6 bg-primary mt-5'>
+                        <div className='rounded-[100%] h-2 w-2 bg-primary mt-5'>
 
                         </div>
-                        <p className='text-primary text-[25px] font-satoshiMedium'>Choose your service type; remotely or in person. Add in your location details and budget and your first task has been created!</p>
+                        <p className='text-primary text-[20px] font-satoshiMedium w-[95%]'>Choose your service type; remotely or in person. Add in your location details and budget and your first task has been created!</p>
                     </div>
 
                     <div className="">

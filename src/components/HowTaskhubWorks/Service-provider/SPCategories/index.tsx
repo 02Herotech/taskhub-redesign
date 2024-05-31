@@ -1,0 +1,79 @@
+'use client'
+import BoxFilter from '@/components/main/marketplace/BoxFilter'
+import React from 'react'
+import { FaHome } from "react-icons/fa";
+import { MdPersonalInjury } from "react-icons/md";
+import { GrPersonalComputer } from "react-icons/gr";
+import { BsCalendar2EventFill } from "react-icons/bs";
+import { GiStoneCrafting } from "react-icons/gi";
+import { FaBabyCarriage } from "react-icons/fa";
+import { MdSecurity } from "react-icons/md";
+import { MdLocalGroceryStore } from "react-icons/md";
+import { useSelector } from 'react-redux';
+import { RootState } from "@/store";
+import { useRouter } from "next/navigation";
+
+const categoryIcons = [
+  FaHome,
+  MdPersonalInjury,
+  GrPersonalComputer,
+  BsCalendar2EventFill,
+  GiStoneCrafting,
+  FaBabyCarriage,
+  MdSecurity,
+  MdLocalGroceryStore,
+];
+
+
+
+const SPCategories = () => {
+const router = useRouter()
+  // const {
+  //   categories,
+  //   isFiltering,
+  //   search: { isSearching },
+  // } = useSelector((state: RootState) => state.market);
+
+  const categories = [
+
+
+
+    { id: 1, categoryName: 'Home Service' },
+
+    { id: 2, categoryName: 'Beauty' },
+
+    { id: 3, categoryName: 'Information and Technology' },
+
+    { id: 4, categoryName: 'Events' },
+
+    { id: 5, categoryName: 'Art and Craft' },
+
+    { id: 6, categoryName: 'Petcare' },
+
+    { id: 7, categoryName: 'Custodian' },
+    { id: 8, categoryName: 'Grocery' },
+
+  ]
+  return (
+    <div className="my-10 ">
+      <h1 className=" text-[25px] font-bold text-primary font-clashMedium   ">
+        Browse our Category
+      </h1>
+      <div className="my-5 flex flex-wrap gap-3 ">
+        {categories.map((item, index) => (
+          <span key={item.id} onClick={() => router.push('/marketplace')}>
+            <BoxFilter
+              key={item.id}
+              id={item.id}
+              category={item.categoryName}
+              Icon={categoryIcons[index]}
+
+            />
+          </span>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+export default SPCategories

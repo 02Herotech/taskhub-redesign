@@ -41,20 +41,6 @@ const Experience = () => {
             </div>
           ))
         }
-
-        {/* <div className="flex items-center space-x-3 bg-[#EBE9F4] w-[30%] xl:text-[24px] lg:[20px] p-5 rounded-[20px]">
-          <span className=" text-[#FE9B07]">
-            <BsFillPatchCheckFill size={70} />
-          </span>
-          <p className="font-semibold lg:text-[18px] xl:text-[24px] text-[16px] text-primary">Get connected to the right customer</p>
-        </div>
-
-        <div className="flex items-center space-x-3 bg-[#EBE9F4] w-[30%] xl:text-[24px] lg:[20px] p-5 rounded-[20px]">
-          <span className=" text-[#FE9B07]">
-            <BsShieldFillCheck size={70} />
-          </span>
-          <p className="font-semibold lg:text-[18px] xl:text-[24px] text-[16px] text-primary">Communicate with customers via instant messaging.</p>
-        </div> */}
       </div>
 
 
