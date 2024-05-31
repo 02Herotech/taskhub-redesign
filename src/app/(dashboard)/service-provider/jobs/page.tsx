@@ -8,17 +8,6 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
-export const jobsDatas = [
-  {
-    id: "1",
-    name: "Kelly Jane",
-    description: "Request for drain blockage fix service",
-    image: "/assets/images/serviceProvider/jobs/joe.png",
-    price: 450,
-    time: "Yesterday",
-  },
-];
-
 const Jobs = () => {
   const [bookingData, setBookingData] = useState<BookingType[]>([]);
   const [loading, setLoading] = useState(false);

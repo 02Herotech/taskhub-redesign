@@ -32,6 +32,7 @@ declare interface ListingDataType {
   suburb: string;
   serviceProvider: {
     id: number;
+    user: { id: number; fullName: string; profileImage: string };
   };
   category: {
     categoryName: string;
@@ -46,9 +47,9 @@ declare interface ListingDataType {
   planOneDescription: string;
   planOnePrice: number;
   planTwoDescription: string | null;
-  planTwoPrice: string | null;
+  planTwoPrice: number | null;
   planThreeDescription: string | null;
-  planThreePrice: string | null;
+  planThreePrice: number | null;
   available: boolean;
   taskType: string;
   subCategory: {

@@ -14,9 +14,9 @@ interface MarketSliceTypes {
     searchData: string;
   };
   categories: CategoryType[];
-  listing: ListingDataType2[];
+  listing: ListingDataType[];
   isFiltering: boolean;
-  filteredData: ListingDataType2[];
+  filteredData: ListingDataType[];
   isFilteringLoading: boolean;
 }
 
@@ -147,9 +147,10 @@ export const marketSlice = createSlice({
           break;
         case "pricing":
           newFilter = prevFilter.filter((item) => {
-            if (item.price) {
+            if (item.planOnePrice) {
               return (
-                item.price >= value.minPrice && item.price <= value.maxPrice
+                item.planOnePrice >= value.minPrice &&
+                item.planOnePrice <= value.maxPrice
               );
             }
             return;

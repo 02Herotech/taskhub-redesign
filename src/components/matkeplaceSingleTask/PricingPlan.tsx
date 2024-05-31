@@ -6,11 +6,11 @@ import { useSession } from "next-auth/react";
 
 interface PricingPlanProps {
   planOnePrice: number;
-  planTwoPrice: number;
-  planThreePrice: number;
+  planTwoPrice: number | null;
+  planThreePrice: number | null;
   planOneDescription: string;
-  planTwoDescription: string;
-  planThreeDescription: string;
+  planTwoDescription: string | null;
+  planThreeDescription: string | null;
   listingId: number;
 }
 
@@ -57,11 +57,13 @@ const PricingPlan = ({
     pricing,
     title,
   }: {
-    pricing: number;
-    title: string;
+    pricing: number | null;
+    title: string | null;
   }) => {
-    setIsModalShown(true);
-    setModalData((prev) => ({ ...prev, pricing, title }));
+    if (pricing && title) {
+      setIsModalShown(true);
+      setModalData((prev) => ({ ...prev, pricing, title }));
+    }
   };
 
   return (
@@ -134,8 +136,10 @@ const PricingPlan = ({
               className="flex w-full justify-between gap-2 text-left font-normal text-slate-500  "
             >
               {isTextExpanded.index === 2 && isTextExpanded.state
-                ? planTwoDescription
-                : planTwoDescription.split(" ").slice(0, 5).join(" ") + "..."}
+                ? planTwoDescription || "No description available"
+                : (planTwoDescription
+                    ? planTwoDescription.split(" ").slice(0, 5).join(" ")
+                    : "No description available") + "..."}
               <span className="pt-2">
                 <BsTriangleFill
                   size={12}
@@ -169,9 +173,11 @@ const PricingPlan = ({
               onClick={() => handleExpandText(3)}
               className="f text-leftont-normal flex w-full justify-between gap-2 text-slate-500  "
             >
-              {isTextExpanded.index === 1 && isTextExpanded.state
-                ? planThreeDescription
-                : planThreeDescription.split(" ").slice(0, 5).join(" ") + "..."}
+              {isTextExpanded.index === 3 && isTextExpanded.state
+                ? planTwoDescription || "No description available"
+                : (planThreeDescription
+                    ? planThreeDescription.split(" ").slice(0, 5).join(" ")
+                    : "No description available") + "..."}
               <span className="pt-2">
                 <BsTriangleFill
                   size={12}
