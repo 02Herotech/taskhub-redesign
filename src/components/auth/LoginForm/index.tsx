@@ -104,7 +104,7 @@ const LoginForm = () => {
               label="Password"
               placeholder="**********"
               className=" placeholder:text-dark shadow-sm"
-              rules={["required"]}
+              rules={["required", "password"]}
               type="password"
             />
             {error && (
