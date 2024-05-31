@@ -3,7 +3,6 @@
 import { notificationData } from "@/app/data/service-provider/notification";
 import Button from "@/components/global/Button";
 import Popup from "@/components/global/Popup";
-import { SuccessfulSvg } from "@/lib/svgIcons";
 import Image from "next/image";
 import React, { useState } from "react";
 
@@ -19,15 +18,19 @@ const ServiceNotification = () => {
     <>
       {invoicePopup && (
         <Popup isOpen={invoicePopup} onClose={() => setInvoicePopup(false)}>
-          <div className="relative bg-[#EBE9F4] rounded-2xl min-h-[200px] lg:w-[577px] font-satoshi p-5 lg:p-10">
-            <h3 className="text-3xl font-clashSemiBold text-[#060D1F]">Paid Invoice</h3>
+          <div className="relative min-h-[200px] rounded-2xl bg-[#EBE9F4] p-5 font-satoshi lg:w-[577px] lg:p-10">
+            <h3 className="font-clashSemiBold text-3xl text-[#060D1F]">
+              Paid Invoice
+            </h3>
           </div>
         </Popup>
       )}
-      <main className="space-y-8 p-4 lg:p-8 mt-20">
-        <div className="mt-14 mb-8 space-y-8">
-          <h4 className='text-[#140B31] font-satoshiBold font-bold text-3xl lg:text-5xl'>My Notifications</h4>
-          <div className='border-2 border-primary' />
+      <main className="mt-20 space-y-8 p-4 lg:p-8">
+        <div className="mb-8 mt-14 space-y-8">
+          <h4 className="font-satoshiBold text-3xl font-bold text-[#140B31] lg:text-5xl">
+            My Notifications
+          </h4>
+          <div className="border-2 border-primary" />
         </div>
         <div className="flex flex-wrap gap-4">
           <button
@@ -54,7 +57,7 @@ const ServiceNotification = () => {
           {notificationData.map((item, index) => (
             <div
               key={index}
-              className="pointer-events-auto flex items-center justify-between flex-1 w-full cursor-pointer transition-shadow duration-300"
+              className="pointer-events-auto flex w-full flex-1 cursor-pointer items-center justify-between transition-shadow duration-300"
             >
               <div className="flex items-center justify-between gap-x-3 py-2">
                 <Image
@@ -78,7 +81,13 @@ const ServiceNotification = () => {
                   {item.time}
                 </p>
                 {item.type === "Invoice" && (
-                  <Button className="rounded-full" size="sm" onClick={() => setInvoicePopup(true)}>View Invoice</Button>
+                  <Button
+                    className="rounded-full"
+                    size="sm"
+                    onClick={() => setInvoicePopup(true)}
+                  >
+                    View Invoice
+                  </Button>
                 )}
               </div>
             </div>

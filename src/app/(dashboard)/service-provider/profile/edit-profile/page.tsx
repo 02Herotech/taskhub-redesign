@@ -13,7 +13,7 @@ import { BiCamera, BiCheck } from "react-icons/bi";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import axios from "axios";
-import { defaultUserDetails } from "@/app/data/service-provider/user";
+import { defaultUserDetails } from "@/data/data";
 
 const userDataSchema = z.object({
   firstName: z.string().min(2),

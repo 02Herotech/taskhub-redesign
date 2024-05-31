@@ -1,4 +1,4 @@
-import { defaultUserDetails } from "@/app/data/service-provider/user";
+import { defaultUserDetails } from "@/data/data";
 import Loading from "@/shared/loading";
 import axios from "axios";
 import { useSession } from "next-auth/react";
