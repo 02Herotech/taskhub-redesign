@@ -1,9 +1,8 @@
 // reduce text length
 export const truncateText = (text: string, length: number) => {
   if (!text) return "";
-  const words = text.split(" ");
-  if (words.length <= length) return text;
-  return words.slice(0, length).join(" ") + " ...";
+  if (text.length <= length) return text;
+  return text.slice(0, length) + " ...";
 };
 
 export function formatDate(dateArray: number[]) {

@@ -74,7 +74,7 @@ const SingleListingCard = ({
                   className="size-8 rounded-full object-cover "
                 />
                 <p className="text-sm font-semibold text-violet-dark">
-                  {truncateText(fullName, 6)}
+                  {truncateText(fullName, 10)}
                 </p>
               </div>
               <p className="font-bold text-violet-normal">From ${pricing}</p>
