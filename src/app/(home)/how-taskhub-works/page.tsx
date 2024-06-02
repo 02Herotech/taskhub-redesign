@@ -1,6 +1,5 @@
 
 'use client'
-import Header from '@/components/HowTaskhubWorks/Header'
 import React, { useEffect } from 'react'
 
 import { useRouter } from 'next/navigation'
