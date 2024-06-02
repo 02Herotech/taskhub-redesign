@@ -35,32 +35,32 @@ const SPHowItWorks = () => {
     <div >
 
       <div className='flex flex-col items-center'>
-        <h2 className='text-center text-[35px] font-clashMedium text-tc-orange'>
+        <h2 className='text-center lg:text-[35px] text-[20px] font-[600] font-clashMedium text-tc-orange'>
           How  it works ?
         </h2>
 
-        <p className='text-center text-[35px] font-clashMedium text-primary xl:w-1/2 lg:w-[65%] my-6'>
+        <p className='text-center lg:text-[35px] text-[20px] font-[600] font-clashMedium text-primary xl:w-1/2 lg:w-[65%] my-6'>
           Earn your way to Financial freedom as a <span className='text-tc-orange'>Service provider</span>  on TaskHub
         </p>
       </div>
 
 
-      <div className='flex justify-between mt-5 '>
+      <div className='lg:flex justify-between mt-5 '>
 
-        <div className='w-[50%] space-y-6'>
-          <p className='text-primary text-[32px] font-clashMedium'>
+        <div className='lg:w-[50%] space-y-6'>
+          <p className='text-primary lg:text-[32px] text-[18px] font-[600] font-clashMedium'>
             Tell us your service details  &  Upload your service image.
           </p>
 
           <div className='flex  space-x-3'>
-            <div className='rounded-[100%] h-2 w-2 bg-primary mt-5'>
+            <div className='rounded-[100%] h-2 w-2 bg-primary lg:mt-5 mt-3'>
 
             </div>
-            <p className='text-primary text-[20px] font-satoshiMedium w-[95%]'>Choose your service name, find the best category and subcategory for your service and proceed to give a detailed description. The best part is, we make it easy for you with our AI Assistance.</p>
+            <p className='text-primary lg:text-[20px] text-[16px] font-satoshiMedium w-[95%]'>Choose your service name, find the best category and subcategory for your service and proceed to give a detailed description. The best part is, we make it easy for you with our AI Assistance.</p>
           </div>
 
           <div className='flex justify-between ml-6'>
-            <div className='relative w-[45%] rounded-[30px] h-[200px]'>
+            <div className='relative w-[45%] rounded-[30px] lg:h-[200px] h-[180px]'>
               <Image
                 src={ServiceProvider1}
                 alt="Customer 2"
@@ -68,40 +68,34 @@ const SPHowItWorks = () => {
                 className="absolute rounded-[30px]"
               />
             </div>
-
-
-            <div className='w-[45%]'>
-              <div className='relative w-full h-[200px] rounded-[30px]'>
-                <Image
-                  src={ServiceProvider2}
-                  alt="Customer 3"
-                  fill
-                  className="absolute rounded-[30px]"
-                />
-              </div>
+            <div className='relative w-[45%] rounded-[30px] lg:h-[200px] h-[180px]'>
+              <Image
+                src={ServiceProvider2}
+                alt="Customer 3"
+                fill
+                className="absolute rounded-[30px]"
+              />
             </div>
-          </div>
-
-
-
-          <div className='flex  space-x-3'>
-            <div className='rounded-[100%] h-2 w-2 bg-primary mt-5'>
-
-            </div>
-            <p className='text-primary text-[20px] font-satoshiMedium w-[95%]'>Input details of your pricing plans, choose a service type, physical or remote.</p>
           </div>
 
           <div className='flex  space-x-3'>
-            <div className='rounded-[100%] h-2 w-2 bg-primary mt-5'>
+            <div className='rounded-[100%] h-2 w-2 bg-primary lg:mt-5 mt-3'>
 
             </div>
-            <p className='text-primary text-[20px] font-satoshiMedium w-[95%]'>Add information about your availability( days and time), Then upload service images or generate with AI, and you’re all done.</p>
+            <p className='text-primary lg:text-[20px] text-[16px] font-satoshiMedium w-[95%]'>Input details of your pricing plans, choose a service type, physical or remote.</p>
           </div>
 
-          <div>
+          <div className='flex  space-x-3'>
+            <div className='rounded-[100%] h-2 w-2 bg-primary lg:mt-5 mt-3'>
+
+            </div>
+            <p className='text-primary lg:text-[20px] text-[16px] font-satoshiMedium w-[95%]'>Add information about your availability( days and time), Then upload service images or generate with AI, and you’re all done.</p>
+          </div>
+
+          <div className='hidden lg:block'>
             <button
-              className=" rounded-[50px] w-[250px] lg:w-[230px] xl:w-[250px] bg-[#FE9B07] text-[#FFF5E6] xl:text-[16px] 
-                      lg:px-2    px-3 py-2    hover:bg-[#e79823]  "
+              className=" rounded-[50px] lg:w-[230px] xl:w-[250px] bg-[#FE9B07] text-[#FFF5E6] xl:text-[16px] 
+                      lg:px-2    px-3 py-2 font-satoshiMedium  hover:bg-[#e79823]  "
             >
               <Link
                 href={`/auth/sign-up?${serviceProviderParams.toString()}`}
@@ -114,15 +108,12 @@ const SPHowItWorks = () => {
             </button>
 
           </div>
-
-
-
-
         </div>
-        <div className='w-[40%] flex flex-col space-y-14'>
 
-          <div className='relative w-full'>
-            <div className='relative w-full h-[300px] rounded-[30px]'>
+        <div className='lg:w-[40%]  flex flex-col lg:space-y-14 space-y-10'>
+
+          <div className='relative w-full lg:flex-none flex items-center justify-center lg:mt-0 mt-10'>
+            <div className='relative lg:w-full w-[90%] mx-auto lg:h-[300px] h-[250px] rounded-[30px]'>
               <Image
                 src={ServiceProvider3}
                 alt="Customer 1"
@@ -132,25 +123,39 @@ const SPHowItWorks = () => {
 
             </div>
 
-            <div className="flex space-x-2 shadow-md items-center text-[12px] bg-[#EEE5FC] rounded-xl px-4 py-2 absolute -left-20 -top-[20px] ">
+            <div className="flex space-x-2 shadow-md items-center text-[12px] bg-[#EEE5FC] rounded-xl px-4 py-2 absolute lg:-left-20 -top-[20px] ">
               <Image src={icon1} width={25} alt="hand & dollar"></Image>
               <p className="font-bold">Payment has been made</p>
               <p className="text-[#969696]">2mins ago</p>
             </div>
           </div>
 
-          <div className='h-[400px] w-full bg-tc-orange rounded-[30px] flex items-center justify-center '>
-
-            <div>
-              <div className='relative h-[300px] w-[350px] rounded-[15px] ' >
-                <Image
-                  src={images1[currentImageIndex1]}
-                  alt=""
-                  fill
-                  className="absolute rounded-[15px]"
-                />
-              </div>
+          <div className='h-[420px] lg:w-full w-[90%] mx-auto bg-tc-orange rounded-[30px] flex items-center justify-center '>
+            <div className='relative h-[380px] w-[85%] mx-auto lg:w-[350px] rounded-[15px] ' >
+              <Image
+                src={images1[currentImageIndex1]}
+                alt=""
+                fill
+                className="absolute rounded-[15px]"
+              />
             </div>
+          </div>
+
+          <div className='lg:hidden flex items-center justify-center'>
+            <button
+              className=" rounded-[50px] w-[250px] bg-[#FE9B07] text-[#FFF5E6]
+                         px-3 py-2 font-satoshiMedium text-[16px]    hover:bg-[#e79823]  "
+            >
+              <Link
+                href={`/auth/sign-up?${serviceProviderParams.toString()}`}
+                className="flex items-center justify-center"
+              >
+                <p className="">Become a Service Provider</p>
+
+              </Link>
+
+            </button>
+
           </div>
 
         </div>
