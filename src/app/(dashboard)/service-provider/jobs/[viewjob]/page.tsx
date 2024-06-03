@@ -25,8 +25,6 @@ const ViewJobs = () => {
   });
   const [showCongratulations, setShowCongratulations] = useState(false);
 
-  console.log(currentBooking);
-
   const router = useRouter();
   const session = useSession();
   const token = session?.data?.user?.accessToken;
@@ -163,7 +161,13 @@ const ViewJobs = () => {
         showCongratulations={showCongratulations}
         setShowCongratulations={setShowCongratulations}
       />
-      <Invoice isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
+      {currentBooking && (
+        <Invoice
+          isModalOpen={isModalOpen}
+          setIsModalOpen={setIsModalOpen}
+          currentBooking={currentBooking}
+        />
+      )}
 
       {loading ? (
         <div className="flex min-h-96 items-center justify-center ">

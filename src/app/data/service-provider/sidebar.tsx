@@ -1,11 +1,4 @@
 export const providerSiderbarLinks = [
-  // {
-  //   title: "Profile",
-  //   link: "/service-provider/dashboard",
-  //   icon: (
-
-  //   ),
-  // },
   {
     title: "My Services",
     link: "/service-provider/dashboard/services",

@@ -50,7 +50,9 @@ const SingleListingCard = ({
             />
           </div>
           <div className="mt-2 flex h-full flex-col justify-between">
-            <h2 className="text-lg  font-bold md:text-lg">{businessName}</h2>
+            <h2 className="text-lg  font-bold md:text-lg">
+              {truncateText(businessName, 20)}
+            </h2>
             <div className="py-4 ">
               <p className="text-xs">4.5</p>
               <div className="flex items-center gap-1 ">

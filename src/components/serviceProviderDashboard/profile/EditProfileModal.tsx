@@ -1,5 +1,6 @@
 "use client";
 
+import { dataURLtoFile } from "@/utils/service-provider";
 import axios from "axios";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
@@ -11,7 +12,6 @@ import React, {
   useCallback,
   useRef,
   useState,
-  FormEvent,
 } from "react";
 import { BiCheck, BiXCircle } from "react-icons/bi";
 import { PiFileArrowDownDuotone } from "react-icons/pi";
@@ -32,8 +32,11 @@ type ModalPropsTypes = {
     isEditing: boolean;
     image: string | null;
   };
-  isSubmitting: boolean;
-  setIsSubmitting: React.Dispatch<React.SetStateAction<boolean>>;
+  setSelectedDocument: React.Dispatch<React.SetStateAction<File | null>>;
+  setIsProfileUpdatedSuccessfully: React.Dispatch<
+    React.SetStateAction<boolean>
+  >;
+  isProfileUpdatedSuccessfully: boolean;
 };
 
 const EditProfileModal = ({
@@ -42,8 +45,9 @@ const EditProfileModal = ({
   setDocumentImage,
   isEditingProfilePicture,
   setisEditingProfilePicture,
-  isSubmitting,
-  setIsSubmitting,
+  isProfileUpdatedSuccessfully,
+  setIsProfileUpdatedSuccessfully,
+  setSelectedDocument,
 }: ModalPropsTypes) => {
   // set initial state value
   const [isUploadInitiated, setIsUploadInitiated] = useState(false);
@@ -52,6 +56,7 @@ const EditProfileModal = ({
   const webcamRef = useRef<Webcam>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [isUploadImageLoading, setIsUploadImageLoading] = useState(false);
 
   const session = useSession();
   const token = session?.data?.user?.accessToken;
@@ -60,12 +65,16 @@ const EditProfileModal = ({
     if (webcamRef.current) {
       const imageSrc = webcamRef.current.getScreenshot();
       setImageSrc(imageSrc);
-      if (isEditingProfilePicture.isEditing) {
-        setisEditingProfilePicture((prev) => ({ ...prev, image: imageSrc }));
-      } else {
-        setDocumentImage(imageSrc);
+      if (imageSrc) {
+        const file = dataURLtoFile(imageSrc, "captured_image.png");
+        setSelectedFile(file);
+        if (isEditingProfilePicture.isEditing) {
+          setisEditingProfilePicture((prev) => ({ ...prev, image: imageSrc }));
+        } else {
+          setDocumentImage(imageSrc);
+        }
+        setCameraActive(false);
       }
-      setCameraActive(false);
     }
   }, [isEditingProfilePicture, setDocumentImage, setisEditingProfilePicture]);
 
@@ -87,22 +96,29 @@ const EditProfileModal = ({
     }
   };
 
+  console.log("is successful profile", isProfileUpdatedSuccessfully);
+
   const handleCloseModal = () => {
+    setImageSrc(null);
+    setCameraActive(false);
     setIsFormModalShown(false);
     setIsUploadInitiated(false);
-    setIsSubmitting(false);
+    setSelectedFile(null);
     setisEditingProfilePicture((prev) => ({ ...prev, isEditing: false }));
+    setIsProfileUpdatedSuccessfully(false);
   };
 
   const handleRemoveDocumentImage = () => {
     setImageSrc(null);
     setCameraActive(false);
     setDocumentImage(null);
+    setSelectedFile(null);
   };
 
   const handleUploadAllDocument = async () => {
     try {
-      if (isEditingProfilePicture.isEditing) {
+      if (selectedFile && isEditingProfilePicture.isEditing) {
+        setIsUploadImageLoading(true);
         const url =
           "https://smp.jacinthsolutions.com.au/api/v1/service_provider/profile_picture";
         const { data } = await axios.post(
@@ -116,13 +132,15 @@ const EditProfileModal = ({
           },
         );
         console.log(data);
+      } else {
+        setSelectedDocument(selectedFile);
+        console.log(selectedFile);
       }
-      setIsFormModalShown(false);
-      setIsUploadInitiated(false);
-      setisEditingProfilePicture((prev) => ({ ...prev, isEditing: false }));
+      handleCloseModal();
     } catch (error) {
       console.log(error);
-      console.log("there is an error");
+    } finally {
+      setIsUploadImageLoading(false);
     }
   };
 
@@ -139,7 +157,7 @@ const EditProfileModal = ({
           <BiXCircle className=" h-6 w-6 text-violet-normal" />
         </button>
 
-        {isSubmitting ? (
+        {isProfileUpdatedSuccessfully ? (
           <div>
             <h1 className="text-center text-lg font-medium text-violet-darkHover">
               Your Update is received and awaiting Approval
@@ -187,6 +205,7 @@ const EditProfileModal = ({
                     audio={false}
                     ref={webcamRef}
                     screenshotFormat="image/jpeg"
+                    className="mx-auto size-64 object-contain"
                   />
                   <button
                     onClick={capture}
@@ -203,6 +222,7 @@ const EditProfileModal = ({
                     alt="Captured or Selected"
                     width={400}
                     height={400}
+                    className="mx-auto size-64 object-contain"
                   />
                   <button
                     onClick={handleRemoveDocumentImage}
@@ -215,10 +235,18 @@ const EditProfileModal = ({
             </div>
             <button
               onClick={handleUploadAllDocument}
-              className="my-3 rounded-full bg-violet-normal px-4 py-2 text-white transition-opacity duration-300 hover:opacity-90 "
+              className="my-3 flex min-w-32 items-center justify-center rounded-full bg-violet-normal px-4 py-2 text-center text-white transition-opacity duration-300 hover:opacity-90 "
               disabled={!imageSrc}
             >
-              Upload Document
+              {isUploadImageLoading ? (
+                <BeatLoader
+                  color={"white"}
+                  loading={isUploadImageLoading}
+                  size={14}
+                />
+              ) : (
+                "Upload Document"
+              )}
             </button>
           </div>
         ) : (

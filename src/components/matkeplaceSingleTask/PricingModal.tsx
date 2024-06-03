@@ -9,6 +9,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { BeatLoader } from "react-spinners";
 import { marketPlaceModalIcon } from "@/lib/svgIcons";
+import { formatDate, formatTime } from "@/utils";
 
 interface ModalProps {
   setIsModalShown: Dispatch<SetStateAction<boolean>>;
@@ -66,23 +67,6 @@ const PricingModal = ({
   ) => {
     const { name, value } = event.target;
     setFormState((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const formatDate = (date: Date): string => {
-    const day = String(date.getDate()).padStart(2, "0");
-    const month = String(date.getMonth() + 1).padStart(2, "0"); // Months are zero-based
-    const year = date.getFullYear();
-    return `${day}-${month}-${year}`;
-  };
-
-  const formatTime = (time: string): string => {
-    const [hour, minute] = time.split(":");
-    let hourNum = parseInt(hour, 10);
-    const ampm = hourNum >= 12 ? "PM" : "AM";
-    hourNum = hourNum % 12 || 12; // Convert to 12-hour format and handle midnight (0 becomes 12)
-    const hourString = String(hourNum).padStart(2, "0"); // Ensure the hour has two digits
-    const minuteString = String(minute).padStart(2, "0"); // Ensure the minute has two digits
-    return `${hourString}:${minuteString} ${ampm}`;
   };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
