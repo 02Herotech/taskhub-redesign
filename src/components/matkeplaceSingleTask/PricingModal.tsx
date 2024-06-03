@@ -88,6 +88,7 @@ const PricingModal = ({
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     try {
+      console.log(token);
       setSubmitStatus((prev) => ({ ...prev, isSubmtting: true, error: "" }));
       if (
         !formState.date ||
@@ -185,7 +186,7 @@ const PricingModal = ({
             Sorry! you are not logged in
           </p>
           <p className="text-violet-darkHover">
-            Kindly Login as a customer to Continue
+            Kindly login as a customer to continue
           </p>
           <Link
             href={"/auth/login"}
@@ -201,7 +202,7 @@ const PricingModal = ({
             Sorry! You cannot access this as a service provider
           </p>
           <p className="text-violet-darkHover">
-            Kindly sign up a customer to continue
+            Kindly sign up as a customer to continue
           </p>
           <Link
             href={`/auth/sign-up?${serviceProviderParams.toString()}`}

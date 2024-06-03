@@ -15,6 +15,8 @@ import axios from "axios";
 import { Task } from "@/types/services/tasks";
 import { useSession } from "next-auth/react";
 import Loading from "@/shared/loading";
+import NewDropdown from "@/components/global/NewDropdown";
+import { set } from "react-hook-form";
 
 type Category = {
     id: number;
@@ -32,23 +34,24 @@ const Tasks = () => {
     const itemsPerPage = 9;
     const [dataToRender, setDataToRender] = useState<Task[]>([]);
     const [filtersApplied, setFiltersApplied] = useState(false);
+    const [isCategoryFilterOpen, setIsCategoryFilterOpen] = useState(false)
 
     const { data: tasksData, isLoading, refetch } = useGetActiveTasksQuery(currentPage);
 
-  useEffect(() => {
-    const fetchCategoriesData = async () => {
-      try {
-        const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_URL}/util/all-categories`,
-        );
-        setCategoriesData(response.data);
-      } catch (error) {
-        console.log(error);
-      }
-    };
+    useEffect(() => {
+        const fetchCategoriesData = async () => {
+            try {
+                const response = await axios.get(
+                    `${process.env.NEXT_PUBLIC_API_URL}/util/all-categories`,
+                );
+                setCategoriesData(response.data);
+            } catch (error) {
+                console.log(error);
+            }
+        };
 
-    fetchCategoriesData();
-  }, []);
+        fetchCategoriesData();
+    }, []);
 
     const totalPages = Math.ceil(tasksData?.totalElements! / itemsPerPage); // Calculate total pages
 
@@ -134,6 +137,7 @@ const Tasks = () => {
             );
         }
     };
+
     const otherOptionsDropdown = [
         {
             label: "Price: High to low",
@@ -157,20 +161,16 @@ const Tasks = () => {
         },
     ];
 
-    console.log(session)
+    console.log(tasksData)
 
     return (
         <section className="pt-7 container">
             <div className="hidden lg:flex lg:space-x-4 mt-14 items-center">
                 {/* Category */}
-                <Dropdown
-                    trigger={() => (
-                        <div className="w-full border-2 border-primary text-primary bg-[#F1F1F2] flex items-center justify-between font-semibold py-2 px-4 rounded-full">
-                            <h2>Category</h2>
-                            <FaSortDown />
-                        </div>
-                    )}
-                    className='left-0 right-0 mx-auto top-14'>
+                <NewDropdown
+                    name="Category"
+                    setIsDropdownOpen={setIsCategoryFilterOpen}
+                >
                     <form className='bg-white rounded-2xl py-4 px-2'>
                         {categoriesData.map((category, index) => (
                             <div
@@ -182,7 +182,7 @@ const Tasks = () => {
                             </div>
                         ))}
                     </form>
-                </Dropdown>
+                </NewDropdown>
 
                 {/* Location */}
                 <Dropdown

@@ -8,10 +8,25 @@ import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useSession } from "next-auth/react";
 import { PiFileArrowDownDuotone } from "react-icons/pi";
+import { BsPencilSquare } from "react-icons/bs";
 import { BiCamera, BiCheck } from "react-icons/bi";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import axios from "axios";
+import { defaultUserDetails } from "@/data/data";
+
+const userDataSchema = z.object({
+  firstName: z.string().min(2),
+  lastName: z.string().min(2),
+  dateOfBirth: z.date().nullable(),
+  phoneNumber: z.string().min(10),
+  emailAddress: z.string().email(),
+  postcode: z.string(),
+  suburb: z.string(),
+  state: z.string(),
+  medicareId: z.string(),
+  driverLicence: z.string(),
+});
 
 const EditProfile = () => {
   const [isEditingEnabled, setIsEditingEnabled] = useState(false);
@@ -22,23 +37,12 @@ const EditProfile = () => {
     image: string | null;
   }>({ isEditing: false, image: null });
   const [documentImage, setDocumentImage] = useState<string | null>(null);
-  const [suburbList, setSuburbList] = useState<string[]>([]);
+  const [suburbList, setSuburbList] = useState([]);
+  const [userDetails, setUserDetails] = useState(defaultUserDetails);
 
   const session = useSession();
   const user = session?.data?.user?.user;
-
-  const userDataSchema = z.object({
-    firstName: z.string().min(2),
-    lastName: z.string().min(2),
-    dateOfBirth: z.date().nullable(),
-    phoneNumber: z.string().min(10),
-    emailAddress: z.string().email(),
-    postcode: z.string(),
-    suburb: z.string(),
-    state: z.string(),
-    medicareId: z.string(),
-    driverLicence: z.string(),
-  });
+  const token = session?.data?.user?.accessToken;
 
   type userDataType = z.infer<typeof userDataSchema>;
 
@@ -66,28 +70,45 @@ const EditProfile = () => {
     },
   });
 
-  const watchField = watch();
-
   useEffect(() => {
-    console.log("Watched", watchField);
-  }, [watchField]);
+    const fetchUserData = async () => {
+      if (!token) return;
+      try {
+        const url =
+          "https://smp.jacinthsolutions.com.au/api/v1/service_provider/profile";
+        const { data } = await axios.get(url, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "multipart/form-data",
+          },
+        });
+        setUserDetails(data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchUserData();
+  }, [token]);
+
+  const watchField = watch();
 
   useEffect(() => {
     if (user) {
       reset({
-        firstName: user?.firstName ?? "",
-        lastName: user?.lastName ?? "",
+        firstName: userDetails.firstName || "",
+        lastName: userDetails.lastName || "",
         dateOfBirth: null,
-        phoneNumber: user?.phoneNumber ?? "",
-        emailAddress: user?.emailAddress ?? "",
-        postcode: user?.address?.postCode ?? "",
-        suburb: user?.address?.suburb ?? "",
-        state: user?.address?.state ?? "",
-        medicareId: "",
-        driverLicence: "",
+        phoneNumber: user.phoneNumber || "",
+        emailAddress: user.emailAddress || "",
+        postcode: userDetails.postalCode || "",
+        suburb: userDetails.suburbs || "",
+        state: userDetails.state || "",
+        medicareId: userDetails.idNumber,
+        driverLicence: userDetails.idType,
       });
     }
-  }, [user, reset]);
+  }, [userDetails, reset, user]);
 
   const handleSubmitUserData: SubmitHandler<userDataType> = (data) => {
     setIsSubmitting(true);
@@ -100,7 +121,7 @@ const EditProfile = () => {
     setisEditingProfilePicture((prev) => ({
       ...prev,
       isEditing: true,
-      image: null,
+      image: "",
     }));
     setIsFormModalShown(true);
   };
@@ -138,6 +159,7 @@ const EditProfile = () => {
           <Image
             src={
               isEditingProfilePicture.image ??
+              userDetails.profileImage ??
               user?.profileImage ??
               "/assets/images/serviceProvider/user.jpg"
             }
@@ -376,10 +398,10 @@ const EditProfile = () => {
               <span className="flex items-center justify-between">
                 <span className="flex items-center justify-between gap-9">
                   <span> Driver’s Licence Number</span>
-                  {!errors.driverLicence &&
+                  {/* {!errors.driverLicence &&
                     watchField.driverLicence.length >= 8 && (
                       <BiCheck className="size-5 rounded-full bg-green-500 p-1 text-white" />
-                    )}
+                    )} */}
                 </span>
               </span>
               <input

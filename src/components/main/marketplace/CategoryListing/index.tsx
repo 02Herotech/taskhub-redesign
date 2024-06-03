@@ -25,10 +25,10 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
   } = useSelector((state: RootState) => state.market);
 
   const [isLoading, setIsLoading] = useState(false);
-  const [allListsting, setallListsting] = useState<ListingDataType2[]>([]);
+  const [allListsting, setallListsting] = useState<ListingDataType[]>([]);
   const [ErrorMsg, setErrorMsg] = useState("");
   const [isViewMore, setIsViewMore] = useState({ state: false });
-  const [displayListing, setDisplayListing] = useState<ListingDataType2[]>([]);
+  const [displayListing, setDisplayListing] = useState<ListingDataType[]>([]);
   const [page, setPage] = useState({ totalPages: 1, currentPage: 0 });
 
   const handleFetchCategory = async () => {
@@ -56,6 +56,7 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
       if (url) {
         const { data } = await axios.get(url);
         const content = data.content;
+        console.log(content[0]);
         dispatch(updateListingArray(content));
         setallListsting(content);
         setDisplayListing(content);
@@ -167,6 +168,8 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
                   businessName={item.listingTitle}
                   displayImage={item.businessPictures[0]}
                   pricing={item.planOnePrice ?? 0}
+                  fullName={item?.serviceProvider?.user?.fullName}
+                  profileImage={item?.serviceProvider?.user?.profileImage}
                 />
               );
             })}
@@ -195,6 +198,8 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
                 businessName={item.listingTitle}
                 displayImage={item.businessPictures[0]}
                 pricing={item.planOnePrice ?? 0}
+                fullName={item?.serviceProvider?.user?.fullName}
+                profileImage={item?.serviceProvider?.user?.profileImage}
               />
             );
           })}

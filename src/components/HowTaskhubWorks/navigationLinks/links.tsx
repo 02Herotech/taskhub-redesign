@@ -18,13 +18,13 @@ const HowTaskhubWorkLinks: React.FC<HowTaskhubWorkLinkProps> = ({
   return (
     <Link
       href={href}
-      className={`cursor-pointer font-clashSemiBold text-[25px] w-[250px]  flex  ${isActive ? "text-[#FE9B07] " : "text-primary"
+      className={`cursor-pointer font-clashSemiBold lg:text-[25px] text-[14px] lg:w-[250px]  flex  ${isActive ? "text-[#FE9B07] " : "text-primary"
         }`}
       onClick={onClick}
     >
-      <span className="w-full flex flex-col items-center ">
+      <span className="lg:w-full w-[120px] flex flex-col items-center ">
         {label}
-        {isActive ? (<div className="w-full h-[2px] bg-[#FE9B07]"></div>) : <></>}
+        {isActive ? (<div className="lg:w-full w-[120px] h-[2px] bg-[#FE9B07]"></div>) : <></>}
       </span>
     </Link>
   )

@@ -28,7 +28,7 @@ const EditProfile = () => {
 
   const session = useSession();
   const user = session?.data?.user?.user;
-
+  console.log(user);
   const userDataSchema = z.object({
     firstName: z.string().min(2),
     lastName: z.string().min(2),

@@ -2,7 +2,7 @@
 
 import Button from '@/components/global/Button';
 import Popup from '@/components/global/Popup';
-import { CautionSvg, RevisionSvg, SuccessfulSvg } from '@/lib/svgIcons';
+import { CautionSvg, RevisionSvg } from '@/lib/svgIcons';
 import { formatAmount } from '@/lib/utils';
 import { useGetTaskByIdQuery } from '@/services/tasks';
 import Loading from '@/shared/loading';
@@ -54,7 +54,9 @@ const OnogoingTaskDetailsPage = ({ params }: { params: { id: string } }) => {
                         {revisionSent ? (
                             <div className="flex items-center justify-center h-full font-satoshi py-10 px-20">
                                 <div className="flex flex-col items-center space-y-5">
-                                    <div className="bg-[#140B31] p-1 rounded-full size-14 flex items-center justify-center text-white">{SuccessfulSvg}</div>
+                                    <div className="bg-[#140B31] p-1 rounded-full size-14 flex items-center justify-center text-white"><svg width="34" height="32" viewBox="0 0 34 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M34 15.9924L30.2291 11.742L30.7545 6.11562L25.1755 4.86192L22.2545 0L17 2.2322L11.7455 0L8.82454 4.86192L3.24545 6.10033L3.77091 11.7267L0 15.9924L3.77091 20.2427L3.24545 25.8844L8.82454 27.1381L11.7455 32L17 29.7525L22.2545 31.9847L25.1755 27.1228L30.7545 25.8691L30.2291 20.2427L34 15.9924ZM13.9091 23.6369L7.72727 17.5213L9.90636 15.3655L13.9091 19.3101L24.0936 9.23459L26.2727 11.4056L13.9091 23.6369Z" fill="white" />
+                                    </svg></div>
                                     <h1 className="font-black text-4xl text-[#2A1769]">
                                         Request Successful
                                     </h1>
@@ -123,7 +125,9 @@ const OnogoingTaskDetailsPage = ({ params }: { params: { id: string } }) => {
                     <div className="relative bg-[#EBE9F4] rounded-2xl min-h-[200px] lg:w-[577px] font-satoshi overflow-y-auto">
                         <div className="flex items-center justify-center h-full font-satoshi py-10 px-20">
                             <div className="flex flex-col items-center space-y-5">
-                                <div className="bg-[#140B31] p-1 rounded-full size-14 flex items-center justify-center text-white">{SuccessfulSvg}</div>
+                                <div className="bg-[#140B31] p-1 rounded-full size-14 flex items-center justify-center text-white"><svg width="34" height="32" viewBox="0 0 34 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M34 15.9924L30.2291 11.742L30.7545 6.11562L25.1755 4.86192L22.2545 0L17 2.2322L11.7455 0L8.82454 4.86192L3.24545 6.10033L3.77091 11.7267L0 15.9924L3.77091 20.2427L3.24545 25.8844L8.82454 27.1381L11.7455 32L17 29.7525L22.2545 31.9847L25.1755 27.1228L30.7545 25.8691L30.2291 20.2427L34 15.9924ZM13.9091 23.6369L7.72727 17.5213L9.90636 15.3655L13.9091 19.3101L24.0936 9.23459L26.2727 11.4056L13.9091 23.6369Z" fill="white" />
+                                </svg></div>
                                 <h1 className="font-black text-4xl text-[#2A1769]">
                                     Approve payment
                                 </h1>
@@ -216,7 +220,6 @@ const OnogoingTaskDetailsPage = ({ params }: { params: { id: string } }) => {
                         <div className="flex items-center justify-end space-x-10 lg:text-xl">
                             <button className='text-tc-orange' onClick={() => setRequestRevisionPopup(true)}>Request Revision</button>
                             <button className='text-[#34A853]' onClick={() => setApprovePaymentPopup(true)}>Approve payment</button>
-
                         </div>
                     </div>
                 </div>

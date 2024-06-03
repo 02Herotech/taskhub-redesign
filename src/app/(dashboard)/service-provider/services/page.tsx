@@ -10,32 +10,15 @@ import { BiCalendarWeek, BiCheck } from "react-icons/bi";
 import { HiLocationMarker } from "react-icons/hi";
 import { CiClock1 } from "react-icons/ci";
 import Link from "next/link";
-import { jobsDatas } from "../jobs/page";
 import AllServices from "@/components/dashboard/serviceProvider/services/AllServices";
 
-export const myservices = [
+const myservices = [
   {
     Jobimage: "/assets/images/serviceProvider/plumbing.png",
     category: "Plumbing",
     rating: "4.5",
     profileImage: "/assets/images/marketplace/singleTask/oluchi.png",
     profileName: "Daniels Oluchi",
-    price: 100,
-  },
-  {
-    Jobimage: "/assets/images/serviceProvider/gasfilling.png",
-    category: "Gas Fitting",
-    rating: "4.5",
-    profileImage: "/assets/images/marketplace/singleTask/oluchi.png",
-    profileName: "Daniels Oluchi",
-    price: 100,
-  },
-  {
-    Jobimage: "/assets/images/serviceProvider/plumbing.png",
-    category: "Plumbing",
-    rating: "4.5",
-    profileImage: "/assets/images/marketplace/singleTask/oluchi.png",
-    profileName: "Drain Inspection",
     price: 100,
   },
 ];
@@ -46,30 +29,6 @@ const jobsData = [
     name: "Kelly Jane",
     description: "Request for drain blockage fix service",
     image: "/assets/images/serviceProvider/jobs/joe.png",
-    price: 450,
-    time: "Yesterday",
-  },
-  {
-    id: "2",
-    name: "Kelly Jane",
-    description: "Request for drain blockage fix service",
-    image: "/assets/images/serviceProvider/jobs/kelly.png",
-    price: 450,
-    time: "Yesterday",
-  },
-  {
-    id: "3",
-    name: "Kelly Jane",
-    description: "Request for drain blockage fix service",
-    image: "/assets/images/serviceProvider/jobs/man.png",
-    price: 450,
-    time: "Yesterday",
-  },
-  {
-    id: "3",
-    name: "Kelly Jane",
-    description: "Request for drain blockage fix service",
-    image: "/assets/images/serviceProvider/jobs/woman.png",
     price: 450,
     time: "Yesterday",
   },
@@ -105,7 +64,7 @@ const ServicesPage = () => {
         <AllServices />
       ) : currentCategory === "ongoing" ? (
         <div className="flex flex-col gap-8  pb-4">
-          {jobsDatas.map((item, index) => (
+          {jobsData.map((item, index) => (
             <div
               key={index}
               className=" flex gap-3 border-b border-slate-200 p-4 lg:grid lg:grid-cols-12 lg:items-center lg:px-8 lg:py-4"

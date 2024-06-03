@@ -258,7 +258,7 @@ const Input = ({
 				</span> */}
 
 				{!rules.includes("password") && (error || customError) && (
-					<span className='text-sm text-left mt-2 text-[#E98282]'>
+					<span className='text-[18px] text-left mt-2 text-[#E98282]'>
 						*{customError || error?.message}
 					</span>
 				)}
@@ -266,118 +266,120 @@ const Input = ({
 		);
 
 	return (
-		<label htmlFor={id} className='flex flex-col relative'>
-			<span className='w-full flex items-center space-x-2 text-base text-left leading-5 mb-2'>
+		<div>
+			<span className='w-full flex items-center space-x-2 text-base mb-[6px] text-left leading-5'>
 				<span className='capitalize text-[#333236] font-medium'>{label}</span>
 			</span>
-			<input
-				onFocus={() => setPasswordIsDirty(true)}
-				{...register}
-				className={`w-full active:border-primary text-dark ${inputTheme(
-					theme
-				)} text-base h-12 overflow-hidden font-normal rounded-[10px] outline-none ${className} ${type === "password" ? "pr-16" : ""
-					} ${left ? paddingLeft : ""} ${right ? paddingRight : ""}`}
-				type={showPassword ? "text" : type}
-				placeholder={placeholder}
-				id={id}
-				onChange={(event) => {
-					register.onChange(event);
-					onChange(event);
-				}}
-				ref={(e) => {
-					register.ref(e);
-					inputRef.current = e;
-				}}
-				disabled={disabled}
-				{...rest}
-			/>
-			{type === "password" && (
-				<button
-					type='button'
-					onClick={() => setShowPassword(!showPassword)}
-					className='absolute focus:border-primary focus:outline-primary flex items-center justify-center h-[44px] w-12 right-[2px] top-7 cursor-pointer'>
-					<div className='text-black font-bold pr-4'>
+			<label htmlFor={id} className='flex flex-col relative'>
+
+				<input
+					onFocus={() => setPasswordIsDirty(true)}
+					{...register}
+					className={`w-full active:border-primary text-dark ${inputTheme(
+						theme
+					)} text-base h-12 overflow-hidden font-normal rounded-[10px] outline-none ${className} ${type === "password" ? "pr-16" : ""
+						} ${left ? paddingLeft : ""} ${right ? paddingRight : ""}`}
+					type={showPassword ? "text" : type}
+					placeholder={placeholder}
+					id={id}
+					onChange={(event) => {
+						register.onChange(event);
+						onChange(event);
+					}}
+					ref={(e) => {
+						register.ref(e);
+						inputRef.current = e;
+					}}
+					disabled={disabled}
+					{...rest}
+				/>
+				{type === "password" && (
+					<button
+						type='button'
+						onClick={() => setShowPassword(!showPassword)}
+						className='absolute focus:border-primary focus:outline-primary flex items-center justify-center w-12 right-[2px] top-2 cursor-pointer'>
 						{!showPassword ? <IoMdEye className="w-7 h-7" /> : <IoMdEyeOff className="w-7 h-7" />}
+					</button>
+				)}
+
+				{right && (
+					<div className='absolute flex items-center justify-center h-[44px] right-[2px] top-[30px]'>
+						{right}
 					</div>
-				</button>
-			)}
+				)}
 
-			{right && (
-				<div className='absolute flex items-center justify-center h-[44px] right-[2px] top-[30px]'>
-					{right}
-				</div>
-			)}
-
-			{left && (
-				<div className='absolute flex items-center justify-center h-[44px] left-[2px] top-[30px]'>
-					{left}
-				</div>
-			)}
-
-			{!rules.includes("password") && (error || customError) && (
-				<span className='text-xs text-left mt-2 text-status-error-100'>
-					*{customError || error?.message}
-				</span>
-			)}
-
-			{passwordIsDirty && rules.includes("password") && (
-				<div className='text-sm mt-3 space-y-2'>
-					<div className="flex items-start text-[12px]">
-						{(!passwordCheck.lowercase || !passwordCheck.uppercase) && (
-							<MdErrorOutline className="mr-4 text-status-error-100 h-5 w-5" />
-						)}
-						{!passwordCheck.lowercase && (
-							<span className="text-status-error-100 mr-1">
-								A lowercase
-								{!passwordCheck.uppercase && <span> and uppercase letter</span>}
-							</span>
-						)}
-						{!passwordCheck.uppercase && passwordCheck.lowercase && (
-							<span className="text-status-error-100">
-								An uppercase letter
-							</span>
-						)}
+				{left && (
+					<div className='absolute flex items-center justify-center h-[44px] left-[2px] top-[30px]'>
+						{left}
 					</div>
+				)}
 
-					<div
-						className={
-							passwordCheck.length
-								? "hidden"
-								: "text-status-error-100 text-[12px] flex items-center space-x-4"
-						}>
-						<MdErrorOutline className="w-5 h-5" />
-						<span className=''>At least 8 characters</span>
+				{!rules.includes("password") && (error || customError) && (
+					<span className='text-sm flex items-center space-x-1 mt-2 text-status-error-100'>
+						<MdErrorOutline className="text-status-error-100 h-5 w-5" />
+						<h6>{customError || error?.message}</h6>
+					</span>
+				)}
+
+				{passwordIsDirty && rules.includes("password") && (
+					<div className='text-sm mt-3 space-y-2'>
+						<div className="flex items-start text-[12px]">
+							{(!passwordCheck.lowercase || !passwordCheck.uppercase) && (
+								<MdErrorOutline className="mr-4 text-status-error-100 h-5 w-5" />
+							)}
+							{!passwordCheck.lowercase && (
+								<span className="text-status-error-100 mr-1">
+									A lowercase
+									{!passwordCheck.uppercase && <span> and uppercase letter</span>}
+								</span>
+							)}
+							{!passwordCheck.uppercase && passwordCheck.lowercase && (
+								<span className="text-status-error-100">
+									An uppercase letter
+								</span>
+							)}
+						</div>
+
+						<div
+							className={
+								passwordCheck.length
+									? "hidden"
+									: "text-status-error-100 text-[12px] flex items-center space-x-4"
+							}>
+							<MdErrorOutline className="w-5 h-5" />
+							<span className=''>At least 8 characters</span>
+						</div>
+
+						<div className="flex items-start text-[12px]">
+							{(!passwordCheck.special || !passwordCheck.number) && (
+								<MdErrorOutline className="mr-4 text-status-error-100 h-5 w-5" />
+							)}
+							{!passwordCheck.special && (
+								<span className="text-status-error-100 mr-1">
+									1 special character
+									{!passwordCheck.number && <span> and 1 number</span>}
+								</span>
+							)}
+							{!passwordCheck.number && passwordCheck.special && (
+								<span className="text-status-error-100">
+									1 number
+								</span>
+							)}
+						</div>
 					</div>
+				)}
 
-					<div className="flex items-start text-[12px]">
-						{(!passwordCheck.special || !passwordCheck.number) && (
-							<MdErrorOutline className="mr-4 text-status-error-100 h-5 w-5" />
-						)}
-						{!passwordCheck.special && (
-							<span className="text-status-error-100 mr-1">
-								1 special character
-								{!passwordCheck.number && <span> and 1 number</span>}
-							</span>
-						)}
-						{!passwordCheck.number && passwordCheck.special && (
-							<span className="text-status-error-100">
-								1 number
-							</span>
-						)}
-					</div>
-				</div>
-			)}
+				{customMessage && (
+					<span className='text-sm text-left mt-2 text-status-success-100'>
+						{customMessage}
+					</span>
+				)}
 
-			{customMessage && (
-				<span className='text-sm text-left mt-2 text-status-success-100'>
-					{customMessage}
-				</span>
-			)}
-
-			{hint && !customError && !error && !customMessage && (
-				<span className='text-sm text-left mt-2 text-tc-03'>{hint}</span>
-			)}
-		</label>
+				{hint && !customError && !error && !customMessage && (
+					<span className='text-sm text-left mt-2 text-tc-03'>{hint}</span>
+				)}
+			</label>
+		</div>
 	);
 };
 
