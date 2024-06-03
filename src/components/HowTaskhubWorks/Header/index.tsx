@@ -36,7 +36,7 @@ const Header = () => {
     const currentImageIndex3 = useImageTransition(images3, 3000);
 
     return (
-        <div className='header1 lg:h-[600px] h-[450px] rounded-[25px] mx-auto w-[90%] lg:w-full  flex justify-between items-center lg:my-0  my-20 lg:mt-20'>
+        <div className='header1 lg:h-[600px] h-[450px] rounded-[25px] mx-auto w-[90%] lg:w-full  flex justify-between items-center !mt-20 mb-10 lg:mb-0'>
 
             <style jsx>{`
               .header1 {
@@ -126,7 +126,7 @@ xl:px-7 lg:px-1 py-2 text-primary font-satoshiMedium hover:bg-[#e4e0f7] w-[250px
                 </div>
             </div>
 
-            <div className='lg:hidden md:mx-auto   flex flex-col justify-between items-center px-5  h-[330px] '>
+            <div className='lg:hidden md:mx-auto   flex flex-col justify-between items-center  h-[330px] '>
 
 
                 <div className=''>
@@ -180,7 +180,7 @@ xl:px-7 lg:px-1 py-2 text-primary font-satoshiMedium hover:bg-[#e4e0f7] w-[250px
 
 
 
-                <div className='text-white font-medium space-y-3   text-[20px]  '>
+                <div className='text-white font-medium space-y-3 px-5  text-[20px]  '>
 
                     <h2>
                         GET IT DONE!
@@ -193,7 +193,7 @@ xl:px-7 lg:px-1 py-2 text-primary font-satoshiMedium hover:bg-[#e4e0f7] w-[250px
                     <div className="flex justify-center items-center">
                         <button
                             className=" rounded-[50px] bg-[#EBE9F4] text-[16px]
-xl:px-7 lg:px-1 py-2 text-primary font-satoshiMedium hover:bg-[#e4e0f7] w-[250px] xl:w-[190px] lg:w-[165px]  "
+ py-2 text-primary font-satoshiMedium hover:bg-[#e4e0f7] w-[180px] px-4    "
                         >
 
                             <Link href="/customer/add-task">

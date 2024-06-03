@@ -8,13 +8,14 @@ import { IoIosArrowForward } from "react-icons/io";
 import { PiFileArrowDownDuotone } from "react-icons/pi";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { IoMdArrowDropdown } from "react-icons/io";
 import { GrFormCheckmark } from "react-icons/gr";
 import Popup from "@/components/global/Popup";
 import Button from "@/components/global/Button";
 import { useSession } from "next-auth/react";
 import image from "../../../../../public/assets/images/customer/Task management.png";
 import img from "../../../../../public/assets/images/blend.png";
+import imag from "../../../../../public/assets/images/contract.png";
+import imgg from "../../../../../public/assets/images/girl.png"
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -99,6 +100,7 @@ const AddTaskForm: React.FC = () => {
   const [items, setItems] = useState<Item[]>([]);
   const [wordCount, setWordCount] = useState(0);
   const [wordCounts, setWordCounts] = useState(0);
+  const [isSuccessPopup, setIsSuccessPopup] = useState(false);
 
   
  const CustomInput: React.FC<CustomInputProps> = ({ value, onClick }) => (
@@ -123,7 +125,7 @@ const AddTaskForm: React.FC = () => {
 
   
   const handleLoginNavigation = () => {
-    router.push("/auth/login?from=/customer/add-task");
+    router.push("/auth/sign-up?userType=Service+Provider?from=/customer/add-task");
   };
 
    useEffect(() => {
@@ -434,7 +436,7 @@ const AddTaskForm: React.FC = () => {
         setIsSuccessPopupOpen(true);
       } catch (error) {
         console.error("Error submitting form:", error);
-        // setIsSuccessPopupOpen(true);
+        setIsSuccessPopupOpen(true);
       }
     }
   };
@@ -777,7 +779,7 @@ const AddTaskForm: React.FC = () => {
                   <Button
                     className="rounded-3xl"
                     type="button"
-                    onClick={handleLoginNavigation}
+                    onClick={()=>setIsSuccessPopup(true)}
                   >
                     Confirm Task
                   </Button>
@@ -884,6 +886,44 @@ const AddTaskForm: React.FC = () => {
           </div>
         </div>
       </div>
+      {<Popup
+        isOpen={isSuccessPopup}
+        onClose={() => {
+        setIsSuccessPopupOpen(false);
+      }}>
+        <div className="px-24 py-10">
+          <div className="relative grid items-center justify-center space-y-5">
+            <p className="font-clashBold text-center text-[20px] font-extrabold text-[#2A1769] md:text-[36px] lg:text-[37px] ">
+              You are almost done!!!
+            </p>
+            <p className="text-center text-[14px] lg:text-[20px] ">
+              Please sign up to finish adding your first <br/> task and manage all your tasks.
+            </p>
+            <Image
+              src={imag}
+              alt="image"
+              className="absolute -right-12 top-28 w-24 lg:-right-24 lg:top-1/3 lg:w-36 "
+            />
+            <Image
+              src={imgg}
+              alt="image"
+              className="absolute -left-12 top-12 w-12 lg:-left-[100px] lg:-top-12 lg:w-28"
+            />
+            <div className="flex space-x-3 ">
+                <button onClick={handleLoginNavigation} className="rounded-2xl border-2 border-status-purpleBase p-2 text-[14px] font-semibold text-status-purpleBase outline-none md:w-[100px]">
+                  Sign Up
+                </button>
+              <Link href="/">
+                <button className="rounded-2xl bg-status-purpleBase p-2 text-[14px] text-white outline-none md:w-[100px]">
+                  Cancel
+                </button>
+              </Link>
+            </div>
+          </div>
+        </div>
+      </Popup>
+
+      }
       {!isAuthenticated ? (
         <Popup
           isOpen={isSuccessPopupOpen}

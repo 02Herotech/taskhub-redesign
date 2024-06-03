@@ -12,7 +12,6 @@ type LayoutProps = {
 type SubLink = {
     href: string;
     label: string;
-
 };
 
 const taskhub_links: SubLink[] = [
@@ -51,9 +50,15 @@ const MainLayout = ({ children }: LayoutProps) => {
 
     return (
         <main className='py-10 bg-white lg:bg-gradient-to-b from-[#f3dcfc]  via-[#FFFFFF] to-[#F5DDFD]'>
-            <div className='mx-auto max-w-7xl xl:mx-[120px] lg:mx-[48px] m-[20px] my-0'>
+            <span className='lg:hidden w-[95%] mx-auto'>
                 <Header />
-                <nav className="flex space-x-10 my-10 ">
+            </span>
+            <div className='mx-auto lg:w-[80%] w-[85%]'>
+                <span className='hidden lg:block'>
+                    <Header />
+                </span>
+
+                <nav className="flex lg:space-x-10 space-x-2 lg:my-10 mb-5 ml-5 lg:ml-0 ">
                     {taskhub_links.map((subLink) => (
                         <HowTaskhubWorkLinks
                             key={subLink.href}

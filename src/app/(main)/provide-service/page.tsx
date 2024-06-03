@@ -7,7 +7,6 @@ import Head from "next/head";
 import Image from "next/image";
 import {
   IoIosArrowForward,
-  IoMdArrowDropdown,
   IoMdClose,
 } from "react-icons/io";
 import { PiFileArrowDownDuotone } from "react-icons/pi";
@@ -40,9 +39,9 @@ interface FormData {
   suburb: string;
   postCode: string;
   state: string;
-  available: boolean;
   categoryId: number | null;
   subCategoryId: number | null;
+  termAccepted: boolean;
 }
 
 interface PostalCodeData {
@@ -88,9 +87,9 @@ const ProvideService: React.FC = () => {
     suburb: "",
     postCode: "",
     state: "",
-    available: false,
     categoryId: null,
     subCategoryId: null,
+    termAccepted: false,
   });
   const [selectedCode, setSelectedCode] = useState("");
   const [selectedSubCategory, setSelectedSubCategory] = useState<number | null>(
@@ -100,6 +99,7 @@ const ProvideService: React.FC = () => {
   const [selectedCity, setSelectedCity] = useState("Select City/Suburb");
   const [isRemote, setIsRemote] = useState("");
   const [isOpen, setIsOpen] = useState(false);
+  const [termAccepted, settermAccepted] = useState(false);
   const [activeButtonIndex, setActiveButtonIndex] = useState<number | null>(
     null,
   );
@@ -291,7 +291,12 @@ const ProvideService: React.FC = () => {
       [name]: numberValue,
     });
   };
-
+  const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    settermAccepted(event.target.checked);
+  };
+  const handleCheckboxChanges = (event: React.ChangeEvent<HTMLInputElement>) => {
+    settermAccepted(event.target.checked);
+  };
   const handleChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
@@ -438,9 +443,9 @@ const ProvideService: React.FC = () => {
           suburb: "",
           postCode: "",
           state: "",
-          available: false,
           categoryId: null,
           subCategoryId: null,
+          termAccepted: false,
         });
         setIsSuccessPopupOpen(true);
       } catch (error: any) {
@@ -584,6 +589,22 @@ const ProvideService: React.FC = () => {
               <div className="space-y-4">
                 <h2 className="font-bold">Choose the pricing plans.</h2>
                 <div className="relative grid space-y-4 text-[13px] text-[#221354]">
+                  {isOpen && activePlanIndex === 0 && (
+                    <div>
+                      <div className="flex items-center">
+                        <input
+                          type="checkbox"
+                          name="check"
+                          checked={termAccepted}
+                          onChange={handleCheckboxChange}
+                          className="mr-2"
+                        />
+                        <span className="text-[#381F8C]">
+                          Payment plans are negotiable
+                        </span>
+                      </div>
+                    </div>
+                  )}
                   <input
                     className={`rounded-2xl ${
                       activePlanIndex === 0
@@ -597,7 +618,7 @@ const ProvideService: React.FC = () => {
                     readOnly
                   />
                   {isOpen && activePlanIndex === 0 && (
-                    <div>
+                    <div className="space-y-3">
                       <label className="font-semibold">
                         Give Details about everything this plan includes
                       </label>
@@ -624,10 +645,26 @@ const ProvideService: React.FC = () => {
                             className="w-1/3 rounded-2xl bg-[#EBE9F4] p-3 pl-5 font-satoshiMedium text-[13px] outline-none"
                           />
                           <p className="absolute left-3 top-3">$</p>
-                          <p className="font-extraBold text-xs text-status-lightViolet">
+                          <p className="font-extraBold text-xs text-[#140B31]">
                             Minimum AUD$25 + 10% GST inclusive
                           </p>
                         </div>
+                      </div>
+                    </div>
+                  )}
+                  {isOpen && activePlanIndex === 1 && (
+                    <div>
+                      <div className="flex items-center">
+                        <input
+                          type="checkbox"
+                          name="check"
+                          checked={termAccepted}
+                          onChange={handleCheckboxChanges}
+                          className="mr-2"
+                        />
+                        <span className="text-[#381F8C]">
+                          Payment plans are negotiable
+                        </span>
                       </div>
                     </div>
                   )}
@@ -671,10 +708,26 @@ const ProvideService: React.FC = () => {
                             className="w-1/3 rounded-2xl bg-[#EBE9F4] p-3 pl-5 font-satoshiMedium text-[13px] outline-none"
                           />
                           <p className="absolute left-3 top-3">$</p>
-                          <p className="font-extraBold text-xs text-status-lightViolet">
+                          <p className="font-extraBold text-xs text-[#140B31]">
                             Minimum AUD$25 + 10% GST inclusive
                           </p>
                         </div>
+                      </div>
+                    </div>
+                  )}
+                  {isOpen && activePlanIndex === 2 && (
+                    <div>
+                      <div className="flex items-center">
+                        <input
+                          type="checkbox"
+                          name="check"
+                          checked={termAccepted}
+                          onChange={handleCheckboxChange}
+                          className="mr-2"
+                        />
+                        <span className="text-[#381F8C]">
+                          Payment plans are negotiable
+                        </span>
                       </div>
                     </div>
                   )}
@@ -718,7 +771,7 @@ const ProvideService: React.FC = () => {
                             className="w-1/3 rounded-2xl bg-[#EBE9F4] p-3 pl-5 font-satoshiMedium text-[13px] outline-none"
                           />
                           <p className="absolute left-3 top-3">$</p>
-                          <p className="font-extraBold text-xs text-status-lightViolet">
+                          <p className="font-extraBold text-xs text-[#140B31]">
                             Minimum AUD$25 + 10% GST inclusive
                           </p>
                         </div>
@@ -945,7 +998,7 @@ const ProvideService: React.FC = () => {
               </div>
 
               <div className="space-y-4">
-                <p>Upload additional images of service.</p>
+                <p>Add a portfolio (Images /videos)</p>
                 <div className="flex flex-col space-y-3 lg:flex-row lg:space-x-3 lg:space-y-0">
                   <div className=" space-y-3">
                     {task.image2 ? (

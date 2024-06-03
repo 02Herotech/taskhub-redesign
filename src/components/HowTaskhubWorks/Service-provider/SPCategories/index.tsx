@@ -9,8 +9,6 @@ import { GiStoneCrafting } from "react-icons/gi";
 import { FaBabyCarriage } from "react-icons/fa";
 import { MdSecurity } from "react-icons/md";
 import { MdLocalGroceryStore } from "react-icons/md";
-import { useSelector } from 'react-redux';
-import { RootState } from "@/store";
 import { useRouter } from "next/navigation";
 
 const categoryIcons = [
@@ -24,20 +22,10 @@ const categoryIcons = [
   MdLocalGroceryStore,
 ];
 
-
-
 const SPCategories = () => {
-const router = useRouter()
-  // const {
-  //   categories,
-  //   isFiltering,
-  //   search: { isSearching },
-  // } = useSelector((state: RootState) => state.market);
+  const router = useRouter()
 
   const categories = [
-
-
-
     { id: 1, categoryName: 'Home Service' },
 
     { id: 2, categoryName: 'Beauty' },
@@ -55,8 +43,8 @@ const router = useRouter()
 
   ]
   return (
-    <div className="my-10 ">
-      <h1 className=" text-[25px] font-bold text-primary font-clashMedium   ">
+    <div className="my-10 float-none ">
+      <h1 className=" lg:text-[25px] text-[20px] font-bold text-primary font-clashMedium   ">
         Browse our Category
       </h1>
       <div className="my-5 flex flex-wrap gap-3 ">
