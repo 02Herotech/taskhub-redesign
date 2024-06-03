@@ -7,6 +7,7 @@ import { BiXCircle } from "react-icons/bi";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { formatDateAsYYYYMMDD } from "@/utils";
+import { useRouter } from "next/navigation";
 
 interface ModalPropType {
   isModalOpen: boolean;
@@ -25,6 +26,8 @@ const Invoice = ({
     date: Date | null;
     gst: number;
     total: number;
+    successData: string;
+    loading: boolean;
   }>({
     price: currentBooking?.price ?? "",
     date: null,
@@ -34,7 +37,10 @@ const Invoice = ({
         (currentBooking.price / 100) * 10 -
         SERVICE_CHARGE
       : 0,
+    successData: "",
+    loading: false,
   });
+  const router = useRouter();
   const session = useSession();
   const token = session?.data?.user?.accessToken;
   const user = session?.data?.user?.user;
@@ -42,11 +48,9 @@ const Invoice = ({
   const todayDate = new Date();
   const tomorrowDate = new Date();
 
-  const displayToday = formatDateAsYYYYMMDD(todayDate);
   tomorrowDate.setDate(tomorrowDate.getDate() + 1);
 
   const generateInvoice = async () => {
-    console.log("something");
     if (!currentBooking) return;
     const invoiceData = {
       bookingId: currentBooking.id,
@@ -60,20 +64,27 @@ const Invoice = ({
       gst: invoiceState.gst,
       platformCharge: SERVICE_CHARGE,
     };
-    console.log(invoiceData);
-
     try {
+      setInvoiceState((prev) => ({ ...prev, loading: true }));
       const url =
         "https://smp.jacinthsolutions.com.au/api/v1/booking/generate-invoice";
       const response = await axios.post(url, invoiceData, {
         headers: {
           Authorization: `Bearer ${token}`,
-          "Content-Type": "multipart/form-data",
+          "Content-Type": "application/json",
         },
       });
-      console.log(response);
+      setInvoiceState((prev) => ({
+        ...prev,
+        successData: "Invoice successfully Generated and sent to customer",
+      }));
+      setTimeout(() => {
+        router.push("/service-provider/jobs");
+      }, 2000);
     } catch (error) {
       console.log(error);
+    } finally {
+      setInvoiceState((prev) => ({ ...prev, loading: false }));
     }
   };
 
@@ -202,15 +213,18 @@ const Invoice = ({
             onClick={generateInvoice}
             className="rounded-full bg-violet-normal px-4 py-2 font-medium text-white"
           >
-            Done
+            {invoiceState.loading ? "Loaing ...." : "Done"}
           </button>
           <button
-            onClick={generateInvoice}
+            onClick={() => setIsModalOpen(false)}
             className=" rounded-full px-4 py-2 font-medium text-violet-normal"
           >
             Back
           </button>
         </div>
+        {invoiceState.successData && (
+          <p className="text-emerald-600 "> {invoiceState.successData} </p>
+        )}
       </div>
     </section>
   );
