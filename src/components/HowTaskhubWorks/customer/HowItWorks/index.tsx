@@ -114,7 +114,7 @@ const HowItWorks = () => {
                         <p className='text-primary lg:text-[20px] text-[16px] font-satoshiMedium w-[95%]'>Choose your service type; remotely or in person. Add in your location details and budget and your first task has been created!</p>
                     </div>
 
-                    <div className="lg:flex-none flex items-center justify-center">
+                    <div className="lg:hidden flex items-center justify-center">
                         <button
                             className=" rounded-[50px] bg-primary xl:text-[16px] font-satoshiMedium
                   xl:px-3   lg:px-3 py-2 text-[#EBE9F4] hover:bg-[#25135f] w-[250px] xl:w-[190px] lg:w-[175px]  "
@@ -127,6 +127,23 @@ const HowItWorks = () => {
 
                         </button>
                     </div>
+
+
+                    <div className="lg:block hidden">
+                        <button
+                            className=" rounded-[50px] bg-primary xl:text-[16px] font-satoshiMedium
+                  xl:px-3   lg:px-3 py-2 text-[#EBE9F4] hover:bg-[#25135f] w-[250px] xl:w-[190px] lg:w-[175px]  "
+                        >
+
+                            <Link href="/customer/add-task">
+                                Post your first task
+                            </Link>
+
+
+                        </button>
+                    </div>
+
+                    
 
                 </div>
 

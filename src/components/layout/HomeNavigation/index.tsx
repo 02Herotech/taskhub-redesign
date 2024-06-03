@@ -69,7 +69,7 @@ const HomeNavigation = () => {
             </Link>
             <Link href="/auth/login">
               <Button theme="outline" className="rounded-full bg-transparent">
-                Log in
+                Login
               </Button>
             </Link>
           </div>

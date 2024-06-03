@@ -45,7 +45,7 @@ const WelcomeAboard = () => {
                             <div className="flex flex-col space-y-2">
                                 <div className="flex space-x-2">
                                     <Image src={icon1} width={25} alt="jet icon"></Image>
-                                    <h3 className="lg:text-[20px] text-[16px] font-bold">Log in:</h3>
+                                    <h3 className="lg:text-[20px] text-[16px] font-bold">Login:</h3>
                                 </div>
                                 <span className="block h-[2px] w-40 bg-white"></span>
                             </div>
@@ -56,7 +56,7 @@ const WelcomeAboard = () => {
                                 </li>
 
                                 <li>
-                                    Log in using <br />
+                                    Login using <br />
                                     your credentials
                                 </li>
                             </ul>
