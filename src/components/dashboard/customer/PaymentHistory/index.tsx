@@ -1,6 +1,8 @@
+"use client"
+
 import { useState } from 'react';
-import Button from "@/components/global/Button";
 import { formatAmount } from "@/lib/utils";
+import Button from "@/components/global/Button";
 import Popup from '@/components/global/Popup';
 
 type CustomerPaymentHistoryProps = {
