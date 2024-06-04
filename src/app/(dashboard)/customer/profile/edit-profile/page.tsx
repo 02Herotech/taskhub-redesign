@@ -26,6 +26,8 @@ const EditProfile = () => {
   }>({ isEditing: false, image: null });
   const [documentImage, setDocumentImage] = useState<string | null>(null);
   const [suburbList, setSuburbList] = useState<string[]>([]);
+  const [isProfileUpdatedSuccessfully, setIsProfileUpdatedSuccessfully] =
+    useState(false);
 
   const session = useSession();
   const user = session?.data?.user?.user;
@@ -402,8 +404,8 @@ const EditProfile = () => {
         isFormModalShown={isFormModalShown}
         isEditingProfilePicture={isEditingProfilePicture}
         setisEditingProfilePicture={setisEditingProfilePicture}
-        isSubmitting={isSubmitting}
-        setIsSubmitting={setIsSubmitting}
+        isProfileUpdatedSuccessfully={isProfileUpdatedSuccessfully}
+        setIsProfileUpdatedSuccessfully={setIsProfileUpdatedSuccessfully}
         setSelectedDocument={setSelectedDocument}
       />
     </main>
