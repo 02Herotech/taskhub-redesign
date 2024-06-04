@@ -2,6 +2,7 @@
 
 import Button from "@/components/global/Button"
 import Input from "@/components/global/Input"
+import Link from "next/link";
 import { useState } from "react";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 
@@ -45,11 +46,11 @@ const CustomerPaymentsPage = () => {
   return (
     <div className='p-4 lg:px-14 mt-20'>
       <div className="mt-14 mb-8 space-y-8">
-        <h4 className='text-[#140B31] font-satoshiBold font-bold text-3xl lg:text-5xl'>Payment Settings</h4>
-        <div className='border-2 border-primary' />
+        <h4 className='text-[#140B31] font-satoshiBold font-bold text-2xl lg:text-4xl'>Payment Settings</h4>
+        <div className='border-[1.5px] border-primary' />
       </div>
       <div className="space-y-8">
-        <h2 className="text-[#140B31] font-satoshiBold font-bold text-2xl lg:text-3xl">Select payment method</h2>
+        <h2 className="text-[#140B31] font-satoshiBold font-bold text-xl lg:text-2xl">Select payment method</h2>
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-10">
             <div className="flex items-center space-x-3">
@@ -75,7 +76,9 @@ const CustomerPaymentsPage = () => {
               <h5 className="text-[#140B31] lg:text-lg font-satoshiMedium">Paypal</h5>
             </div>
           </div>
-          <Button className="rounded-full">View Payment History</Button>
+          <Link href="/customer/payment/transaction-history">
+            <Button className="rounded-full">View Payment History</Button>
+          </Link>
         </div>
 
         {selectedMethod === 'creditCard' && (
