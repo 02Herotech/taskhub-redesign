@@ -8,6 +8,8 @@ interface MarketSliceTypes {
     subCategory: SubCategoryType;
     location: string;
     pricing: { minPrice: number; maxPrice: number };
+    type: string;
+    others: string;
   };
   search: {
     isSearching: boolean;
@@ -26,6 +28,8 @@ const initialState: MarketSliceTypes = {
     subCategory: { id: 0, name: "" },
     location: "",
     pricing: { minPrice: 5, maxPrice: 1000 },
+    type: "",
+    others: "",
   },
   search: {
     isSearching: false,
@@ -119,6 +123,8 @@ export const marketSlice = createSlice({
           subCategory: { id: 0, name: "" },
           location: "",
           pricing: { minPrice: 5, maxPrice: 1000 },
+          type: "",
+          others: "",
         },
       };
     },
@@ -144,6 +150,9 @@ export const marketSlice = createSlice({
           newFilter = prevFilter.filter(
             (item) => item.suburb === value || item.state === value,
           );
+          break;
+        case "type":
+          newFilter = prevFilter.filter((item) => item.taskType === value);
           break;
         case "pricing":
           newFilter = prevFilter.filter((item) => {
