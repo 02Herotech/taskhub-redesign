@@ -16,12 +16,8 @@ interface ListingCardProps {
   pricing: number;
   fullName: string;
   profileImage: string;
+  singleListing: ListingDataType;
 }
-
-const handlestoreListingId = (listingId: number, posterId: number) => {
-  const content = { a: listingId, b: posterId };
-  localStorage.setItem("content", JSON.stringify(content));
-};
 
 const SingleListingCard = ({
   listingId,
@@ -31,7 +27,13 @@ const SingleListingCard = ({
   pricing,
   fullName,
   profileImage,
+  singleListing,
 }: ListingCardProps) => {
+  const handlestoreListingId = (listingId: number, posterId: number) => {
+    console.log(singleListing);
+    localStorage.setItem("content", JSON.stringify(singleListing));
+  };
+
   return (
     <Link
       href={`/marketplace/${listingId}`}

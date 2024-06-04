@@ -10,6 +10,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import { BeatLoader } from "react-spinners";
 import { marketPlaceModalIcon } from "@/lib/svgIcons";
 import { formatDate, formatTime } from "@/utils";
+import Image from "next/image";
 
 interface ModalProps {
   setIsModalShown: Dispatch<SetStateAction<boolean>>;
@@ -164,36 +165,51 @@ const PricingModal = ({
         onClick={() => setIsModalShown(false)}
       ></div>
       {!modalData.isAuthenticated ? (
-        <div className=" relative z-10 flex w-[90vw] max-w-lg flex-col items-center justify-center gap-3 rounded-xl bg-violet-light p-3 lg:space-y-4 lg:p-10 ">
-          <span className="size-32 lg:size-40">{marketPlaceModalIcon}</span>
-          <p className="text-center text-3xl font-semibold text-violet-normal">
-            Sorry! you are not logged in
-          </p>
-          <p className="text-violet-darkHover">
-            Kindly login as a customer to continue
-          </p>
-          <Link
-            href={"/auth/login"}
-            className="rounded-full bg-violet-normal px-6 py-3 font-bold text-white"
-          >
-            Login
-          </Link>
+        <div className="relative z-10 flex w-[90vw] max-w-xl flex-col items-center justify-center gap-3 bg-violet-light p-3 px-4 lg:space-y-4 lg:p-10">
+          <div className="clip-triangle absolute left-0 top-0 h-full w-full bg-violet-active"></div>
+          <div className="relative flex flex-col items-center justify-center gap-4 bg-white p-6 lg:px-12 ">
+            <Image
+              src="/assets/images/marketplace/singleTask/Frame 1000003668.png"
+              alt="icon"
+              width={100}
+              height={100}
+              className="size-14 object-contain"
+            />
+            <p className="text-center text-xl font-bold text-violet-normal">
+              Sorry! you are not logged in as a customer
+            </p>
+            <Link
+              href={"/auth/login"}
+              className="rounded-full bg-violet-normal px-6 py-3 font-bold text-white"
+            >
+              Login
+            </Link>
+          </div>
         </div>
       ) : modalData.isServiceProvider ? (
-        <div className=" relative z-10 flex w-[90vw] max-w-lg flex-col items-center justify-center gap-3 rounded-xl bg-violet-light p-3 px-4 lg:space-y-4 lg:p-10  ">
-          <span className="size-32 lg:size-40">{marketPlaceModalIcon}</span>
-          <p className="text-center text-3xl font-semibold text-violet-normal">
-            Sorry! You cannot access this as a service provider
-          </p>
-          <p className="text-violet-darkHover">
-            Kindly sign up as a customer to continue
-          </p>
-          <Link
-            href={`/auth/sign-up?${serviceProviderParams.toString()}`}
-            className="rounded-full bg-violet-normal px-6 py-3 font-bold text-white"
-          >
-            Sign Up
-          </Link>
+        <div className="relative z-10 flex w-[90vw] max-w-xl flex-col items-center justify-center gap-3 bg-violet-light p-3 px-4 lg:space-y-4 lg:p-10">
+          <div className="clip-triangle absolute left-0 top-0 h-full w-full bg-violet-active"></div>
+          <div className="relative flex flex-col items-center justify-center gap-4 bg-white p-6 lg:px-20 ">
+            <Image
+              src="/assets/images/marketplace/singleTask/Frame 1000003668.png"
+              alt="icon"
+              width={100}
+              height={100}
+              className="size-14 object-contain"
+            />
+            <p className="text-center text-xl font-bold text-violet-normal">
+              Sorry, you are not logged in as a customer
+            </p>
+            <p className="font-bold text-violet-darkHover">
+              Kindly login to continue
+            </p>
+            <Link
+              href={`/auth/sign-up?${serviceProviderParams.toString()}`}
+              className="rounded-full bg-violet-normal px-6 py-3 font-bold text-white"
+            >
+              Sign Up
+            </Link>
+          </div>
         </div>
       ) : (
         <form

@@ -67,7 +67,7 @@ const PricingPlan = ({
   };
 
   return (
-    <article className="relative lg:col-span-5 lg:col-start-8 ">
+    <article className="container relative pt-12 lg:col-span-5 lg:col-start-8  ">
       <PricingModal
         setIsModalShown={setIsModalShown}
         isModalShown={isModalShown}
