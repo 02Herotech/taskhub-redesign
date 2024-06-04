@@ -96,8 +96,6 @@ const EditProfileModal = ({
     }
   };
 
-  console.log("is successful profile", isProfileUpdatedSuccessfully);
-
   const handleCloseModal = () => {
     setImageSrc(null);
     setCameraActive(false);

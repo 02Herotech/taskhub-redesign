@@ -8,7 +8,6 @@ import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useSession } from "next-auth/react";
 import { PiFileArrowDownDuotone } from "react-icons/pi";
-import { BsPencilSquare } from "react-icons/bs";
 import { BiCamera, BiCheck } from "react-icons/bi";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -117,7 +116,8 @@ const EditProfile = () => {
       reset({
         firstName: user.firstName || "",
         lastName: user.lastName || "",
-        dateOfBirth: null,
+        // @ts-ignore
+        dateOfBirth: parseDate(userDetails.dateOfBirth) || null,
         phoneNumber: user.phoneNumber || "",
         emailAddress: user.emailAddress || "",
         postcode: userDetails.postalCode || "",

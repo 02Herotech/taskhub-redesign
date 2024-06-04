@@ -1,7 +1,6 @@
 "use client";
 import axios from "axios";
 import { useSession } from "next-auth/react";
-import { headers } from "next/headers";
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { BiXCircle } from "react-icons/bi";
 import DatePicker from "react-datepicker";
