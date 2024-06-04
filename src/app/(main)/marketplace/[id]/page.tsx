@@ -2,77 +2,69 @@
 
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
-import { BiCalendar, BiLocationPlus, BiStar } from "react-icons/bi";
-import { BsArrowUp, BsTriangleFill } from "react-icons/bs";
+import { BiCalendar, BiLocationPlus } from "react-icons/bi";
+import { BsArrowUp } from "react-icons/bs";
 import { CiClock2 } from "react-icons/ci";
 import { FaStar } from "react-icons/fa";
 
 import PricingPlan from "@/components/matkeplaceSingleTask/PricingPlan";
 import Reviews from "@/components/matkeplaceSingleTask/Reviews";
-import axios from "axios";
-import Loading from "@/shared/loading";
 import { formatDate } from "@/lib/utils";
 
 const Page = () => {
-  const [isDataFetched, setIsDataFetched] = useState(false);
   const [displayData, setDisplayData] = useState<ListingDataType>();
-  const [error, setError] = useState("");
-  const [listingId, setListingId] = useState(0);
-
-  // const displayData = {
-  //   id: 7,
-  //   state: "Queensland",
-  //   planOneDescription: "For a decoration service",
-  //   planOnePrice: 600,
-  //   planTwoDescription: "Catering service",
-  //   planTwoPrice: 800,
-  //   planThreeDescription: "Photography service",
-  //   planThreePrice: 500,
-  //   listingDescription:
-  //     "Offering Professional Event Planning Services Tailored To Meet All Your Special Occasion Needs. Whether For Weddings, Corporate Events, Or Private Parties, Our Expertise In Venue Selection, Décor, Catering, And Entertainment Ensures A Memorable And Seamlessly Organized Event. Let Us Handle The Details While You Enjoy Your Event Stress-free. Contact Us To Transform Your Vision Into A Perfectly Executed Reality.",
-  //   postCode: "4220",
-  //   suburb: "Burleigh Waters",
-  //   serviceProvider: {
-  //     id: 9,
-  //   },
-  //   category: {
-  //     id: 4,
-  //     categoryName: "Events",
-  //   },
-  //   listingTitle: "Amyi Event Hub",
-  //   stripeId: "prod_QCXlmBDPPKBswE",
-  //   availableDays: ["THURSDAY", "WEDNESDAY", "TUESDAY", "MONDAY", "FRIDAY"],
-  //   taskType: "PHYSICAL_SERVICE",
-  //   businessPictures: [
-  //     "http://res.cloudinary.com/ddgm9zdnr/image/upload/v1717074348/x7u3ebw2qb4dszrszthv.jpg",
-  //     "http://res.cloudinary.com/ddgm9zdnr/image/upload/v1717074349/e6iyychykqzncku6uske.jpg",
-  //     "http://res.cloudinary.com/ddgm9zdnr/image/upload/v1717074349/q59i5gld2ievpsduiua4.jpg",
-  //     "http://res.cloudinary.com/ddgm9zdnr/image/upload/v1717074350/lcw4moxxp4npk360hvc8.jpg",
-  //   ],
-  //   reviews: [],
-  //   subCategory: {
-  //     name: "Hair vendors",
-  //     id: 4,
-  //   },
-  // };
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const tempList = localStorage.getItem("content");
-        if (tempList) {
-          const content: ListingDataType = JSON.parse(tempList);
-          setDisplayData(content);
-        }
-      } catch (error) {
-        setError("Error Fetching Data");
-      } finally {
-        setIsDataFetched(true);
-      }
-    };
-
-    fetchData();
+    const tempList = localStorage.getItem("content");
+    if (tempList) {
+      const content: ListingDataType = JSON.parse(tempList);
+      setDisplayData(content);
+      console.log(content);
+    }
   }, []);
+
+  function getDaySuffix(day: number): string {
+    if (day > 3 && day < 21) return "th"; // covers 11th, 12th, 13th
+    switch (day % 10) {
+      case 1:
+        return "st";
+      case 2:
+        return "nd";
+      case 3:
+        return "rd";
+      default:
+        return "th";
+    }
+  }
+
+  function getMonthName(monthIndex: number): string {
+    const monthNames = [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December",
+    ];
+    return monthNames[monthIndex];
+  }
+
+  function formatNumberIntoDate(dateArray: number[]): string {
+    const [year, month, day] = dateArray;
+    const date = new Date(year, month, day);
+
+    const dayWithSuffix = day + getDaySuffix(day);
+    const monthName = getMonthName(month);
+    const formattedDate = `${dayWithSuffix} ${monthName} ${year}`;
+
+    return formattedDate;
+  }
 
   return (
     <>
@@ -119,9 +111,8 @@ const Page = () => {
                   <BiCalendar />
                 </span>
                 <span>
-                  {/* {displayData?.createdAt &&
-                      // @ts-ignore
-                      formatDate(displayData.createdAt)} */}
+                  {displayData?.createdAt &&
+                    formatNumberIntoDate(displayData.createdAt)}
                 </span>
               </p>
               <p className="flex items-center gap-2 text-slate-500 ">
@@ -137,7 +128,7 @@ const Page = () => {
                   <div className="flex items-center gap-4">
                     <Image
                       src={
-                        // displayData?.serviceProvider?.user.profileImage ??
+                        displayData?.serviceProvider?.user.profileImage ??
                         "/assets/images/serviceProvider/user.jpg"
                       }
                       alt="User"
@@ -147,7 +138,7 @@ const Page = () => {
                     />
                     <div className="space-y-2">
                       <p className="text-xl font-medium">
-                        {/* {displayData?.serviceProvider?.user?.profileImage} */}
+                        {displayData?.serviceProvider?.user?.fullName}
                       </p>
                       <div>
                         <p className="text-xs text-slate-300 "> 4.5 </p>
@@ -180,7 +171,7 @@ const Page = () => {
             planOneDescription={displayData?.planOneDescription ?? ""}
             planTwoDescription={displayData?.planTwoDescription ?? null}
             planThreeDescription={displayData?.planThreeDescription ?? null}
-            listingId={listingId}
+            listingId={displayData?.id ?? 0}
           />
         </section>
 

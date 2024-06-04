@@ -35,7 +35,7 @@ const locationData = [
 
 const typeData = ["Remote", "Physical"];
 
-const othersData = ["Earliest", "New & Latest", "Oldest"];
+const othersData = ["Earliest", "Latest"];
 
 const MarketPlaceFilter = () => {
   const dispatch = useDispatch();
@@ -170,22 +170,77 @@ const MarketPlaceFilter = () => {
   };
 
   // location
-  const handleFilterbyLocation = (location: string, title: string) => {
-    dispatch(updateFilterStatus({ title, value: location }));
-    handleShowDropdown(title);
-    dispatch(tempUpdateFilterData({ section: "location", value: location }));
+  const handleFilterbyLocation = async (location: string, title: string) => {
+    try {
+      dispatch(updateFilterStatus({ title, value: location }));
+      handleShowDropdown(title);
+      dispatch(tempUpdateFilterData({ section: "location", value: location }));
+
+      const url =
+        "https://smp.jacinthsolutions.com.au/api/v1/listing/by-location/0?location=" +
+        location;
+      const { data } = await axios.get(url);
+      const content = data.content;
+      dispatch(
+        updateFilterData({
+          data: content,
+          section: "location",
+          value: location,
+        }),
+      );
+    } catch (error) {
+      console.log(error);
+    }
   };
   //type
-  const handleFilterbyType = (type: string, title: string) => {
-    dispatch(updateFilterStatus({ title, value: type }));
-    handleShowDropdown(title);
-    dispatch(tempUpdateFilterData({ section: "type", value: type }));
+  const handleFilterbyType = async (type: string, title: string) => {
+    try {
+      const typeOfService =
+        type === "Remote" ? "REMOTE_SERVICE" : "PHYSICAL_SERVICE";
+      dispatch(updateFilterStatus({ title, value: type }));
+      handleShowDropdown(title);
+      const url =
+        "https://smp.jacinthsolutions.com.au/api/v1/listing/by-type/0?taskType=" +
+        typeOfService;
+
+      const { data } = await axios.get(url);
+      const content = data.content;
+      dispatch(
+        updateFilterData({
+          data: content,
+          section: "type",
+          value: type,
+        }),
+      );
+    } catch (error) {
+      console.log(error);
+    }
   };
   //type
-  const handleFilterbyOthers = (others: string, title: string) => {
-    dispatch(updateFilterStatus({ title, value: others }));
-    handleShowDropdown(title);
-    dispatch(tempUpdateFilterData({ section: "others", value: type }));
+  const handleFilterbyOthers = async (others: string, title: string) => {
+    try {
+      dispatch(updateFilterStatus({ title, value: others }));
+      handleShowDropdown(title);
+      dispatch(tempUpdateFilterData({ section: "others", value: type }));
+      let url = "";
+      if (others === "Earliest") {
+        url = "https://smp.jacinthsolutions.com.au/api/v1/listing/earliest/0";
+      } else {
+        url = "https://smp.jacinthsolutions.com.au/api/v1/listing/latest/0";
+      }
+
+      const { data } = await axios.get(url);
+      const content = data.content;
+      dispatch(
+        updateFilterData({
+          data: content,
+          section: "others",
+          value: others,
+        }),
+      );
+    } catch (error) {
+      console.log(error);
+    }
   };
   // handled and working
   const handleFilterBySearch = async (searchData: string) => {
