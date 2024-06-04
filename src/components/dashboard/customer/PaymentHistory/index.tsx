@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { formatAmount } from "@/lib/utils";
 import Button from "@/components/global/Button";
 import Popup from '@/components/global/Popup';
+import { FiClock } from 'react-icons/fi';
 
 type CustomerPaymentHistoryProps = {
     transactionTitle: string;
@@ -98,13 +99,13 @@ const CustomerPaymentHistoryData: CustomerPaymentHistoryProps[] = [
 ];
 
 const CustomerPaymentHistory = () => {
-    const [visibleTransactions, setVisibleTransactions] = useState(5);
+    const [visibleTransactions, setVisibleTransactions] = useState(4);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedPayment, setSelectedPayment] = useState<CustomerPaymentHistoryProps | null>(null);
     const todayDate = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
 
     const handleLoadMore = () => {
-        setVisibleTransactions(prevVisible => prevVisible + 5);
+        setVisibleTransactions(prevVisible => prevVisible + visibleTransactions);
     };
 
     const handleCardClick = (payment: CustomerPaymentHistoryProps) => {
@@ -129,7 +130,7 @@ const CustomerPaymentHistory = () => {
                     >
                         <div className="flex items-center space-x-5">
                             <div className="w-14 h-14 bg-[#C1BADB] rounded-full flex items-center justify-center">
-                                <div className="w-5 h-5 bg-white rounded-full" />
+                                <div className="w-7 h-7 bg-white rounded-full" />
                             </div>
                             <div className="">
                                 <h4 className="text-primary font-bold text-xl mb-1">{data.transactionTitle}</h4>
@@ -143,7 +144,10 @@ const CustomerPaymentHistory = () => {
                 ))}
                 {visibleTransactions < CustomerPaymentHistoryData.length && (
                     <div className="flex items-center justify-center">
-                        <Button onClick={handleLoadMore} className='rounded-full'>Load more...</Button>
+                        <Button onClick={handleLoadMore} className='rounded-full flex items-center space-x-2'>
+                            <FiClock className='text-white' />
+                            <p>Load more...</p>
+                        </Button>
                     </div>
                 )}
             </div>

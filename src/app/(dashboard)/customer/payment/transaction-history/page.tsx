@@ -1,9 +1,8 @@
 "use client"
 
+import Invoices from "@/components/dashboard/customer/Invoices";
 import CustomerPaymentHistory from "@/components/dashboard/customer/PaymentHistory";
 import Button from "@/components/global/Button"
-import Input from "@/components/global/Input"
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
@@ -94,7 +93,7 @@ const TransactionHistory = () => {
                 )}
 
                 {selectedMethod === 'myInvoices' && (
-                    <h3>Invoices</h3>
+                    <Invoices />
                 )}
             </div>
         </div>
