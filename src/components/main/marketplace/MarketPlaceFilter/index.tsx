@@ -21,6 +21,7 @@ import {
 import ReactSlider from "react-slider";
 import { GiSettingsKnobs } from "react-icons/gi";
 import MobileFilterModal from "../MobileFilterModal";
+import { truncateText } from "@/utils/marketplace";
 
 const locationData = [
   "Western Australia",
@@ -52,6 +53,7 @@ const MarketPlaceFilter = () => {
     search: { searchData },
     isFiltering,
     search: { isSearching },
+    filteredData,
   } = useSelector((state: RootState) => state.market);
   const [isDropdownOpen, setIsDropdownOpen] = useState({
     isOpened: false,
@@ -73,6 +75,13 @@ const MarketPlaceFilter = () => {
     fetchData();
     // eslint-disable-next-line
   }, []);
+
+  useEffect(() => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  }, [isFiltering]);
 
   // Filter by category done and working
   const handleFetchSubCategory = async (
@@ -260,18 +269,6 @@ const MarketPlaceFilter = () => {
   //  handled and working
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const searchText = searchData;
-    const url =
-      "https://smp.jacinthsolutions.com.au/api/v1/listing/text/0?text=" +
-      searchText;
-    const { data } = await axios.get(url);
-    dispatch(
-      updateFilterData({
-        data: data.content,
-        section: "search",
-        value: searchData,
-      }),
-    );
   };
 
   return (
@@ -308,7 +305,7 @@ const MarketPlaceFilter = () => {
           <div
             className={` max-md:hidden  ${isFiltering || isSearching ? "order-2" : ""} `}
           >
-            <div className="flex space-x-2 text-xs lg:space-x-6 ">
+            <div className="flex flex-wrap gap-4 space-x-2 text-xs lg:space-x-6 ">
               <button
                 className="cursor-pointer rounded-3xl bg-violet-normal px-4 py-2 text-base  font-bold text-white"
                 onClick={() => dispatch(resetFilter(""))}
@@ -327,7 +324,7 @@ const MarketPlaceFilter = () => {
                     className={`fixed left-0 top-0 h-screen w-screen ${isDropdownOpen.isOpened && isDropdownOpen.category === "category" ? "block" : "hidden"} `}
                     onClick={() => handleShowDropdown("category")}
                   ></div>
-                  {category === "" ? "Category" : category}
+                  {category === "" ? "Category" : truncateText(category, 12)}
                   <span>
                     <BsTriangleFill
                       fill="rgb(56 31 140)"
@@ -367,7 +364,9 @@ const MarketPlaceFilter = () => {
                     className={`fixed left-0 top-0 h-screen w-screen ${isDropdownOpen.isOpened && isDropdownOpen.category === "sub-category" ? "block" : "hidden"} `}
                     onClick={() => handleShowDropdown("subCategory")}
                   ></div>
-                  {subCategory.name === "" ? "Subcategory" : subCategory.name}
+                  {subCategory.name === ""
+                    ? "Subcategory"
+                    : truncateText(subCategory.name, 12)}
                   <span>
                     <BsTriangleFill
                       fill="rgb(56 31 140)"
@@ -413,7 +412,7 @@ const MarketPlaceFilter = () => {
                     className={`fixed left-0 top-0 h-screen w-screen ${isDropdownOpen.isOpened && isDropdownOpen.category === "location" ? "block" : "hidden"} `}
                     onClick={() => handleShowDropdown("location")}
                   ></div>
-                  {location === "" ? "Location" : location}
+                  {location === "" ? "Location" : truncateText(location, 12)}
                   <span>
                     <BsTriangleFill
                       fill="rgb(56 31 140)"
@@ -445,7 +444,7 @@ const MarketPlaceFilter = () => {
                     className={`fixed left-0 top-0 h-screen w-screen ${isDropdownOpen.isOpened && isDropdownOpen.category === "type" ? "block" : "hidden"} `}
                     onClick={() => handleShowDropdown("type")}
                   ></div>
-                  {type === "" ? "Type of service" : type}
+                  {type === "" ? "Type of service" : truncateText(type, 12)}
                   <span>
                     <BsTriangleFill
                       fill="rgb(56 31 140)"
@@ -560,7 +559,7 @@ const MarketPlaceFilter = () => {
                     className={`fixed left-0 top-0 h-screen w-screen ${isDropdownOpen.isOpened && isDropdownOpen.category === "others" ? "block" : "hidden"} `}
                     onClick={() => handleShowDropdown("others")}
                   ></div>
-                  {location === "" ? "Others" : location}
+                  {others === "" ? "Others" : truncateText(others, 12)}
                   <span>
                     <BsTriangleFill
                       fill="rgb(56 31 140)"

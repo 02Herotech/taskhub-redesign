@@ -67,6 +67,14 @@ export const marketSlice = createSlice({
     },
     updateFilterData: (state, action) => {
       const { data, section, value } = action.payload;
+      if (section === "search") {
+        return {
+          ...state,
+          search: { isSearching: true, searchData: value },
+          filteredData: data,
+          isFiltering: true,
+        };
+      }
       let prevFilter = state.filteredData || [];
       let newFilter = [];
       if (!prevFilter.length) {
