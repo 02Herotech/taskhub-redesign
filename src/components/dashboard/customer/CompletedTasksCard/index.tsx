@@ -52,7 +52,7 @@ const CompletedTasksCard = ({ task }: TaskCardProps) => {
             onClick: () => {
                 setIsDropdownOpen(false);
                 setDropReviewPopup(true);
-            },
+            }, 
             icon: DropReviewSvg,
         },
         {

@@ -39,26 +39,26 @@ const CustomerTasksPage: React.FC = () => {
   };
 
   return (
-    <div className='p-4 lg:px-14 mt-20'>
+    <div className='p-4 lg:px-14 mt-[4rem]'>
       <div className="mt-14 mb-8 space-y-8">
-        <h4 className='text-[#140B31] font-satoshiBold font-bold text-3xl lg:text-5xl'>My Tasks</h4>
-        <div className='border-2 border-primary' />
+        <h4 className='text-[#140B31] font-satoshiBold font-bold text-2xl lg:text-4xl'>My Tasks</h4>
+        <div className='border-[1.5px] border-primary' />
       </div>
       <div className="flex items-center space-x-5">
         <button
-          className={`py-3 px-5 lg:py-5 lg:px-10 rounded-xl text-base lg:text-lg font-satoshiMedium ${activeTab === 'New tasks' ? 'bg-primary text-white' : 'bg-[#EBE9F4] text-[#140B31]'}`}
+          className={`py-3 px-5 rounded-xl text-base lg:text-lg font-satoshiMedium ${activeTab === 'New tasks' ? 'bg-primary text-white' : 'bg-[#EBE9F4] text-[#140B31]'}`}
           onClick={() => handleTabClick('New tasks')}
         >
           New tasks
         </button>
         <button
-          className={`py-3 px-5 lg:py-5 lg:px-10 rounded-xl text-base lg:text-lg font-satoshiMedium ${activeTab === 'Ongoing tasks' ? 'bg-primary text-white' : 'bg-[#EBE9F4] text-[#140B31]'}`}
+          className={`py-3 px-5 rounded-xl text-base lg:text-lg font-satoshiMedium ${activeTab === 'Ongoing tasks' ? 'bg-primary text-white' : 'bg-[#EBE9F4] text-[#140B31]'}`}
           onClick={() => handleTabClick('Ongoing tasks')}
         >
           Ongoing tasks
         </button>
         <button
-          className={`py-3 px-5 lg:py-5 lg:px-10 rounded-xl text-base lg:text-lg font-satoshiMedium ${activeTab === 'Completed tasks' ? 'bg-primary text-white' : 'bg-[#EBE9F4] text-[#140B31]'}`}
+          className={`py-3 px-5 rounded-xl text-base lg:text-lg font-satoshiMedium ${activeTab === 'Completed tasks' ? 'bg-primary text-white' : 'bg-[#EBE9F4] text-[#140B31]'}`}
           onClick={() => handleTabClick('Completed tasks')}
         >
           Completed tasks
