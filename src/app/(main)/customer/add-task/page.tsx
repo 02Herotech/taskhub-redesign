@@ -184,9 +184,10 @@ const AddTaskForm: React.FC = () => {
         errors.postalCode = "Please select postal code.";
       } else if (!selectedCity) {
         errors.city = "Please select city.";
-      } else if (!task.customerBudget) {
-        errors.customerBudget = "please enter your budget";
       }
+    }
+    if (!task.customerBudget) {
+      errors.customerBudget = "please enter your budget";
     }
     setErrors(errors);
     return Object.keys(errors).length === 0;
@@ -819,7 +820,7 @@ const AddTaskForm: React.FC = () => {
                   currentPage === 1
                     ? "bg-status-purpleBase text-white"
                     : "bg-status-purpleBase text-white"
-                } rounded-2xl border-none px-3 py-2`}
+                } rounded-2xl border-none px-3 py-2 font-satoshiBold`}
               >
                 01
               </span>{" "}
@@ -840,7 +841,7 @@ const AddTaskForm: React.FC = () => {
                   currentPage === 2
                     ? "bg-status-purpleBase text-white"
                     : "bg-[#EAE9EB] text-[#716F78]"
-                } rounded-2xl border-none px-3 py-2`}
+                } rounded-2xl border-none px-3 py-2 font-satoshiBold`}
               >
                 02
               </span>{" "}

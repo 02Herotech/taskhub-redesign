@@ -41,7 +41,7 @@ interface FormData {
   state: string;
   categoryId: number | null;
   subCategoryId: number | null;
-  termAccepted: boolean;
+  negotiable: boolean;
 }
 
 interface PostalCodeData {
@@ -89,7 +89,7 @@ const ProvideService: React.FC = () => {
     state: "",
     categoryId: null,
     subCategoryId: null,
-    termAccepted: false,
+    negotiable: false,
   });
   const [selectedCode, setSelectedCode] = useState("");
   const [selectedSubCategory, setSelectedSubCategory] = useState<number | null>(
@@ -99,12 +99,12 @@ const ProvideService: React.FC = () => {
   const [selectedCity, setSelectedCity] = useState("Select City/Suburb");
   const [isRemote, setIsRemote] = useState("");
   const [isOpen, setIsOpen] = useState(false);
-  const [termAccepted, settermAccepted] = useState(false);
+  const [negotiable, setnegotiable] = useState(false);
   const [activeButtonIndex, setActiveButtonIndex] = useState<number | null>(
     null,
   );
   const [selectedCategoryName, setSelectedCategoryName] = useState("Category");
-   const [selectedSubCategoryName, setSelectedSubCategoryName] = useState("Subcategory");
+  const [selectedSubCategoryName, setSelectedSubCategoryName] = useState("Subcategory");
   const [activePlanIndex, setActivePlanIndex] = useState<number | null>(null);
   const [errors, setErrors] = useState<any>({});
   const [error, setError] = useState<any>({});
@@ -116,6 +116,16 @@ const ProvideService: React.FC = () => {
   const [subcategories, setSubcategories] = useState<Subcategory[]>([]);
   const [selectedDay, setSelectedDay] = useState("");
   const [selectedDays, setSelectedDays] = useState<string[]>([]);
+
+  const daysOfWeek = [
+    { value: 'MONDAY', label: 'Monday' },
+    { value: 'TUESDAY', label: 'Tuesday' },
+    { value: 'WEDNESDAY', label: 'Wednesday' },
+    { value: 'THURSDAY', label: 'Thursday' },
+    { value: 'FRIDAY', label: 'Friday' },
+    { value: 'SATURDAY', label: 'Saturday' },
+    { value: 'SUNDAY', label: 'Sunday' },
+  ];
 
   useEffect(() => {
     const fetchPostalCodeData = async () => {
@@ -250,11 +260,11 @@ const ProvideService: React.FC = () => {
     setSelectedCode(event.target.value);
   };
   const handleCity = (data: any) => {
-   setSelectedCity(data);
- };
+    setSelectedCity(data);
+  };
 
-  const handleTickChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const value = event.target.value;
+  const handleTickChange = (daysOfWeek: any) => {
+    const value = daysOfWeek;
     if (value && !selectedDays.includes(value)) {
       setSelectedDays([...selectedDays, value]);
     }
@@ -292,11 +302,9 @@ const ProvideService: React.FC = () => {
     });
   };
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    settermAccepted(event.target.checked);
+    setnegotiable(event.target.checked);
   };
-  const handleCheckboxChanges = (event: React.ChangeEvent<HTMLInputElement>) => {
-    settermAccepted(event.target.checked);
-  };
+
   const handleChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
@@ -445,7 +453,7 @@ const ProvideService: React.FC = () => {
           state: "",
           categoryId: null,
           subCategoryId: null,
-          termAccepted: false,
+          negotiable: false,
         });
         setIsSuccessPopupOpen(true);
       } catch (error: any) {
@@ -588,29 +596,26 @@ const ProvideService: React.FC = () => {
             >
               <div className="space-y-4">
                 <h2 className="font-bold">Choose the pricing plans.</h2>
+                <div>
+                  <div className="flex items-center">
+                    <input
+                      type="checkbox"
+                      name="check"
+                      checked={negotiable}
+                      onChange={handleCheckboxChange}
+                      className="mr-2"
+                    />
+                    <span className="text-[#381F8C]">
+                      Payment plans are negotiable
+                    </span>
+                  </div>
+                </div>
                 <div className="relative grid space-y-4 text-[13px] text-[#221354]">
-                  {isOpen && activePlanIndex === 0 && (
-                    <div>
-                      <div className="flex items-center">
-                        <input
-                          type="checkbox"
-                          name="check"
-                          checked={termAccepted}
-                          onChange={handleCheckboxChange}
-                          className="mr-2"
-                        />
-                        <span className="text-[#381F8C]">
-                          Payment plans are negotiable
-                        </span>
-                      </div>
-                    </div>
-                  )}
                   <input
-                    className={`rounded-2xl ${
-                      activePlanIndex === 0
+                    className={`rounded-2xl ${activePlanIndex === 0
                         ? " disabled bg-transparent p-1 text-lg font-bold text-status-darkViolet"
                         : "bg-[#EBE9F4] p-4 hover:bg-status-darkViolet hover:text-white "
-                    } cursor-pointer text-left outline-none placeholder:font-satoshiMedium placeholder:font-medium placeholder:text-[#2A1769] hover:placeholder:text-white`}
+                      } cursor-pointer text-left outline-none placeholder:font-satoshiMedium placeholder:font-medium placeholder:text-[#2A1769] hover:placeholder:text-white`}
                     name="physical"
                     onClick={() => handlePlan(0)}
                     placeholder="Plan 1"
@@ -652,28 +657,11 @@ const ProvideService: React.FC = () => {
                       </div>
                     </div>
                   )}
-                  {isOpen && activePlanIndex === 1 && (
-                    <div>
-                      <div className="flex items-center">
-                        <input
-                          type="checkbox"
-                          name="check"
-                          checked={termAccepted}
-                          onChange={handleCheckboxChanges}
-                          className="mr-2"
-                        />
-                        <span className="text-[#381F8C]">
-                          Payment plans are negotiable
-                        </span>
-                      </div>
-                    </div>
-                  )}
                   <input
-                    className={`rounded-2xl ${
-                      activePlanIndex === 1
+                    className={`rounded-2xl ${activePlanIndex === 1
                         ? " disabled bg-transparent p-1 text-lg font-bold text-status-darkViolet"
                         : "bg-[#EBE9F4] p-4 hover:bg-status-darkViolet hover:text-white"
-                    } cursor-pointer text-left outline-none placeholder:font-satoshiMedium placeholder:font-medium placeholder:text-[#2A1769] hover:placeholder:text-white`}
+                      } cursor-pointer text-left outline-none placeholder:font-satoshiMedium placeholder:font-medium placeholder:text-[#2A1769] hover:placeholder:text-white`}
                     name="physical"
                     onClick={() => handlePlan(1)}
                     placeholder="Plan 2  (Optional)"
@@ -715,28 +703,11 @@ const ProvideService: React.FC = () => {
                       </div>
                     </div>
                   )}
-                  {isOpen && activePlanIndex === 2 && (
-                    <div>
-                      <div className="flex items-center">
-                        <input
-                          type="checkbox"
-                          name="check"
-                          checked={termAccepted}
-                          onChange={handleCheckboxChange}
-                          className="mr-2"
-                        />
-                        <span className="text-[#381F8C]">
-                          Payment plans are negotiable
-                        </span>
-                      </div>
-                    </div>
-                  )}
                   <input
-                    className={`rounded-2xl ${
-                      activePlanIndex === 2
+                    className={`rounded-2xl ${activePlanIndex === 2
                         ? " disabled bg-transparent p-1 text-lg font-bold text-status-darkViolet"
                         : "bg-[#EBE9F4] p-4 hover:bg-status-darkViolet hover:text-white"
-                    } cursor-pointer text-left outline-none placeholder:font-satoshiMedium placeholder:font-medium placeholder:text-[#2A1769] hover:placeholder:text-white`}
+                      } cursor-pointer text-left outline-none placeholder:font-satoshiMedium placeholder:font-medium placeholder:text-[#2A1769] hover:placeholder:text-white`}
                     name="physical"
                     onClick={() => handlePlan(2)}
                     placeholder="Plan 3  (Optional)"
@@ -786,11 +757,10 @@ const ProvideService: React.FC = () => {
                 </h2>
                 <div className="flex space-x-4 text-[13px] text-[#221354]">
                   <input
-                    className={`rounded-2xl p-2 ${
-                      activeButtonIndex === 0
+                    className={`rounded-2xl p-2 ${activeButtonIndex === 0
                         ? "bg-status-purpleBase text-white"
                         : "bg-[#EBE9F4] placeholder:text-white hover:bg-status-purpleBase hover:text-white"
-                    } cursor-pointer outline-none placeholder:font-satoshiMedium placeholder:font-bold`}
+                      } cursor-pointer outline-none placeholder:font-satoshiMedium placeholder:font-bold`}
                     name="physical"
                     onClick={() => handleClick(0)}
                     placeholder="Physical Services"
@@ -798,11 +768,10 @@ const ProvideService: React.FC = () => {
                     readOnly
                   />
                   <input
-                    className={`rounded-2xl p-2 ${
-                      activeButtonIndex === 1
+                    className={`rounded-2xl p-2 ${activeButtonIndex === 1
                         ? "bg-status-purpleBase text-white"
                         : "bg-[#EBE9F4] placeholder:text-white hover:bg-status-purpleBase hover:text-white "
-                    } cursor-pointer outline-none placeholder:font-satoshiMedium placeholder:font-bold`}
+                      } cursor-pointer outline-none placeholder:font-satoshiMedium placeholder:font-bold`}
                     name="remote"
                     onClick={() => {
                       handleClick(1);
@@ -906,21 +875,21 @@ const ProvideService: React.FC = () => {
           <div className="xs:w-[500px] mb-10 space-y-10 font-bold text-status-darkpurple lg:w-[700px]">
             <form onSubmit={handleSubmit} className="space-y-10">
               <div className="relative mt-2">
-                <select
-                  value={selectedDay}
-                  onChange={handleTickChange}
-                  name="availableDays"
-                  className="h-10 w-full rounded-2xl border border-tc-gray bg-[#EBE9F4] px-3 py-1 text-[14px] outline-none lg:w-1/2"
+                <Dropdown
+                  trigger={() => (
+                    <div className="flex justify-between items-center h-10 w-full rounded-2xl border border-tc-gray bg-[#EBE9F4] px-3 py-1 text-[14px] outline-none lg:w-1/2">
+                      <h2>Available Days</h2>
+                      <FaSortDown />
+                    </div>
+                  )}
+                  className="left-0 right-full top-14 mx-auto bg-white w-1/2"
                 >
-                  <option value="">Available Days</option>
-                  <option value="MONDAY">Monday</option>
-                  <option value="TUESDAY">Tuesday</option>
-                  <option value="WEDNESDAY">Wednesday</option>
-                  <option value="THURSDAY">Thursday</option>
-                  <option value="FRIDAY">Friday</option>
-                  <option value="SATURDAY">Saturday</option>
-                  <option value="SUNDAY">Sunday</option>
-                </select>
+                  {daysOfWeek.map((day) => (
+                    <button type="button" key={day.value} value={day.value} onClick={() => { handleTickChange(day.value) }} className="block p-2 text-[12px] text-[#221354]">
+                      {day.label}
+                    </button>
+                  ))}
+                </Dropdown>
                 <div className="mt-4 rounded-2xl lg:w-2/3">
                   <ul className="flex flex-wrap gap-2">
                     {selectedDays.map((day) => (
@@ -929,7 +898,7 @@ const ProvideService: React.FC = () => {
                         className="relative h-[40px] w-[105px] rounded-3xl border-2 border-[#FE9B07] bg-[#FFF0DA] p-3 text-center text-[12px] text-[#fe9b07]"
                         style={{ textTransform: "capitalize" }}
                       >
-                        {day}
+                        {day.toLowerCase()}
                         <button
                           type="button"
                           onClick={() => handleRemoveDay(day)}
@@ -1183,19 +1152,17 @@ const ProvideService: React.FC = () => {
       <div className="w-full">
         <div className="mb-3 flex justify-center font-bold md:space-x-5">
           <div
-            className={`${
-              currentPage === 1
+            className={`${currentPage === 1
                 ? "text-status-purpleBase"
                 : "text-status-purpleBase"
-            }`}
+              }`}
           >
             <p className="flex items-center  text-[12px] md:text-[16px] lg:gap-3">
               <span
-                className={`${
-                  currentPage === 1
+                className={`${currentPage === 1
                     ? "bg-status-purpleBase text-white"
                     : "bg-status-purpleBase text-white"
-                } rounded-2xl border-none px-3 py-2`}
+                  } rounded-2xl border-none px-3 py-2`}
               >
                 01
               </span>{" "}
@@ -1206,19 +1173,17 @@ const ProvideService: React.FC = () => {
             </p>
           </div>
           <div
-            className={`${
-              currentPage === 2 || currentPage === 3
+            className={`${currentPage === 2 || currentPage === 3
                 ? "text-status-purpleBase"
                 : " text-[#716F78]"
-            }`}
+              }`}
           >
             <p className="flex items-center gap-2 text-[12px] md:text-[16px] lg:gap-3">
               <span
-                className={`${
-                  currentPage === 2 || currentPage === 3
+                className={`${currentPage === 2 || currentPage === 3
                     ? "bg-status-purpleBase text-white"
                     : "bg-[#EAE9EB] text-[#716F78]"
-                } rounded-2xl border-none px-3 py-2`}
+                  } rounded-2xl border-none px-3 py-2`}
               >
                 02
               </span>{" "}
@@ -1229,17 +1194,15 @@ const ProvideService: React.FC = () => {
             </p>
           </div>
           <div
-            className={`${
-              currentPage === 3 ? "text-status-purpleBase" : " text-[#716F78]"
-            }`}
+            className={`${currentPage === 3 ? "text-status-purpleBase" : " text-[#716F78]"
+              }`}
           >
             <p className="flex items-center gap-2 text-[12px] md:text-[16px] lg:gap-3">
               <span
-                className={`${
-                  currentPage === 3
+                className={`${currentPage === 3
                     ? "bg-status-purpleBase text-white"
                     : "bg-[#EAE9EB] text-[#716F78]"
-                } rounded-2xl border-none px-3 py-2`}
+                  } rounded-2xl border-none px-3 py-2`}
               >
                 03
               </span>{" "}
@@ -1257,13 +1220,12 @@ const ProvideService: React.FC = () => {
               {/* Progress bar */}
               <div className="h-1 w-2/3 overflow-hidden bg-[#EAE9EB]">
                 <div
-                  className={`h-full ${
-                    currentPage === 1
+                  className={`h-full ${currentPage === 1
                       ? "bg-status-purpleBase"
                       : currentPage === 2
                         ? "bg-status-purpleBase"
                         : "bg-status-purpleBase"
-                  }`}
+                    }`}
                   style={{ width: `${progress}%` }}
                 />
               </div>
