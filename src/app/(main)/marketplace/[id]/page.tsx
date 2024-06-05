@@ -134,7 +134,7 @@ const Page = () => {
                       alt="User"
                       width={80}
                       height={80}
-                      className="rounded-full"
+                      className="size-20 rounded-full object-cover "
                     />
                     <div className="space-y-2">
                       <p className="text-xl font-medium">
