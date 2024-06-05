@@ -19,16 +19,18 @@ const EditProfile = () => {
   const [isEditingEnabled, setIsEditingEnabled] = useState(false);
   const [isFormModalShown, setIsFormModalShown] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [selectedDocument, setSelectedDocument] = useState<File | null>(null);
   const [isEditingProfilePicture, setisEditingProfilePicture] = useState<{
     isEditing: boolean;
     image: string | null;
   }>({ isEditing: false, image: null });
   const [documentImage, setDocumentImage] = useState<string | null>(null);
   const [suburbList, setSuburbList] = useState<string[]>([]);
+  const [isProfileUpdatedSuccessfully, setIsProfileUpdatedSuccessfully] =
+    useState(false);
 
   const session = useSession();
   const user = session?.data?.user?.user;
-  console.log(user);
   const userDataSchema = z.object({
     firstName: z.string().min(2),
     lastName: z.string().min(2),
@@ -402,8 +404,9 @@ const EditProfile = () => {
         isFormModalShown={isFormModalShown}
         isEditingProfilePicture={isEditingProfilePicture}
         setisEditingProfilePicture={setisEditingProfilePicture}
-        isSubmitting={isSubmitting}
-        setIsSubmitting={setIsSubmitting}
+        isProfileUpdatedSuccessfully={isProfileUpdatedSuccessfully}
+        setIsProfileUpdatedSuccessfully={setIsProfileUpdatedSuccessfully}
+        setSelectedDocument={setSelectedDocument}
       />
     </main>
   );

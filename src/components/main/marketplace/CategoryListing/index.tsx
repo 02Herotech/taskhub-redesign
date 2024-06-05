@@ -56,7 +56,6 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
       if (url) {
         const { data } = await axios.get(url);
         const content = data.content;
-        console.log(content[0]);
         dispatch(updateListingArray(content));
         setallListsting(content);
         setDisplayListing(content);
@@ -163,6 +162,7 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
               return (
                 <SingleListingCard
                   key={index}
+                  singleListing={item}
                   listingId={item.id}
                   posterId={item?.serviceProvider?.id}
                   businessName={item.listingTitle}
@@ -193,6 +193,7 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
             return (
               <SingleListingCard
                 key={index}
+                singleListing={item}
                 listingId={item.id}
                 posterId={item?.serviceProvider?.id}
                 businessName={item.listingTitle}

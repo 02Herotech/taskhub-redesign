@@ -43,7 +43,7 @@ export const config = {
         "/explore/:path*",
         "/customer/notifications/:path*",
         "/customer/password/:path*",
-        "/customer/payments/:path*",
+        "/customer/payment/:path*",
         "/customer/profile/:path*",
         "/customer/settings/:path*",
         "/customer/tasks/:path*",

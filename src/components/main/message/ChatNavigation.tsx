@@ -1,11 +1,13 @@
 "use client";
 
-import { chatData } from "@/app/data/service-provider/user";
+// import { chatData } from "@/app/data/service-provider/user";
 import Image from "next/image";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import React, { useState } from "react";
 import { BiSearch } from "react-icons/bi";
+
+const chatData: any = [];
 
 const ChatNavigation = () => {
   const [currentCategory, setCurrentCategory] = useState("All");
@@ -43,6 +45,7 @@ const ChatNavigation = () => {
 
       <article className="flex max-h-[55vh] flex-col gap-4 overflow-y-auto">
         {chatData.length > 0 ? (
+          // @ts-expect-error
           chatData.map((item, index) => (
             <Link
               href={{

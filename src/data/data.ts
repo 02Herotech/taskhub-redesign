@@ -1,4 +1,4 @@
-export const defaultUserDetails = {
+export const defaultUserDetails: DefaultUserDetailsType = {
   dateOfBirth: "",
   firstName: "",
   idImage: "",

@@ -16,12 +16,8 @@ interface ListingCardProps {
   pricing: number;
   fullName: string;
   profileImage: string;
+  singleListing: ListingDataType;
 }
-
-const handlestoreListingId = (listingId: number, posterId: number) => {
-  const content = { a: listingId, b: posterId };
-  localStorage.setItem("content", JSON.stringify(content));
-};
 
 const SingleListingCard = ({
   listingId,
@@ -31,7 +27,13 @@ const SingleListingCard = ({
   pricing,
   fullName,
   profileImage,
+  singleListing,
 }: ListingCardProps) => {
+  const handlestoreListingId = (listingId: number, posterId: number) => {
+    console.log(singleListing);
+    localStorage.setItem("content", JSON.stringify(singleListing));
+  };
+
   return (
     <Link
       href={`/marketplace/${listingId}`}
@@ -50,7 +52,9 @@ const SingleListingCard = ({
             />
           </div>
           <div className="mt-2 flex h-full flex-col justify-between">
-            <h2 className="text-lg  font-bold md:text-lg">{businessName}</h2>
+            <h2 className="text-lg  font-bold md:text-lg">
+              {truncateText(businessName, 20)}
+            </h2>
             <div className="py-4 ">
               <p className="text-xs">4.5</p>
               <div className="flex items-center gap-1 ">
@@ -74,7 +78,7 @@ const SingleListingCard = ({
                   className="size-8 rounded-full object-cover "
                 />
                 <p className="text-sm font-semibold text-violet-dark">
-                  {truncateText(fullName, 6)}
+                  {truncateText(fullName, 10)}
                 </p>
               </div>
               <p className="font-bold text-violet-normal">From ${pricing}</p>
