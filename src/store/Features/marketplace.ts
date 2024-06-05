@@ -125,6 +125,7 @@ export const marketSlice = createSlice({
       return {
         ...state,
         isFiltering: false,
+        search: { isSearching: false, searchData: "" },
         filteredData: [],
         currentFilterStatus: {
           category: "",

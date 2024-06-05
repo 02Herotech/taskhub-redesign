@@ -113,9 +113,11 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
           <h1 className=" text-xl font-bold text-violet-darkHover md:text-2xl">
             {isFiltering && filteredData.length > 0
               ? filteredData[0].category.categoryName
-              : category}
+              : ""}
           </h1>
-          {displayListing.length > 3 && (
+          {(isFiltering
+            ? filteredData.length > 3
+            : displayListing.length > 3) && (
             <button
               className="flex items-center gap-2 border-b-2 border-violet-normal text-sm font-bold  text-violet-normal"
               onClick={() =>
