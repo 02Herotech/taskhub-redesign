@@ -1,7 +1,6 @@
 "use client";
 
 import { dayOfWeekNames, formatAmount, monthNames, suffixes } from "@/lib/utils";
-import { useRouter } from "next/navigation";
 import { FiCalendar, FiClock } from "react-icons/fi";
 import { HiOutlineLocationMarker } from "react-icons/hi";
 import { motion } from "framer-motion";
@@ -20,7 +19,6 @@ type DropDownItem = {
 };
 
 const NewTasksCard = ({ task }: TaskCardProps) => {
-    const router = useRouter();
     const dateArray = task.createdAt;
     const date = new Date(dateArray[0], dateArray[1] - 1, dateArray[2]);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -49,7 +47,7 @@ const NewTasksCard = ({ task }: TaskCardProps) => {
                 transition: { duration: 0.2 },
             }}
         >
-            <div className="flex-1">
+            <div className="w-2/3">
                 <div className="flex w-full items-center justify-between">
                     <h2 className="overflow-hidden truncate text-ellipsis whitespace-nowrap py-4 text-2xl font-satoshiBold font-bold text-primary lg:text-[32px]">
                         {task.taskBriefDescription}
