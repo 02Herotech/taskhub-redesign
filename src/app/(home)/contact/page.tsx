@@ -46,7 +46,7 @@ const ContactUsPage = () => {
         if (fullName === '') {
             setErrorMessage('Please enter your full name.');
             return;
-        }   
+        }
 
         if (emailAddress === '') {
             setErrorMessage('Please enter your email address.');
@@ -83,7 +83,7 @@ const ContactUsPage = () => {
 
     return (
         <div className="">
-            <section className='bg-cover bg-center bg-no-repeat background max-lg:mt-20 h-[157px] lg:h-[378px] flex items-center justify-center bg-[url("/assets/images/contact/contactBanner.png")]'>
+            <section className='bg-cover bg-center bg-no-repeat background max-lg:mt-[4rem] h-[157px] lg:h-[378px] flex items-center justify-center bg-[url("/assets/images/contact/contactBanner.png")]'>
                 <h1 className='max-lg:text-3xl lg:text-5xl font-bold lg:max-w-[757px] text-white font-clashSemiBold'>
                     Contact us
                 </h1>

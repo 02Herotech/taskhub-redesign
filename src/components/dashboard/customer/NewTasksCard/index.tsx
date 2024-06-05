@@ -5,22 +5,40 @@ import { useRouter } from "next/navigation";
 import { FiCalendar, FiClock } from "react-icons/fi";
 import { HiOutlineLocationMarker } from "react-icons/hi";
 import { motion } from "framer-motion";
-import React from "react";
+import React, { useState } from "react";
 import { CustomerTasks } from "@/types/services/tasks";
 
 interface TaskCardProps {
     task: CustomerTasks;
 }
 
+type DropDownItem = {
+    title: string;
+    onClick: () => void;
+    icon?: React.ReactNode;
+};
+
 const NewTasksCard = ({ task }: TaskCardProps) => {
     const router = useRouter();
     const dateArray = task.taskDate;
     const date = new Date(dateArray[0], dateArray[1] - 1, dateArray[2]);
+    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
     const day = date.getDate();
     const daySuffix = suffixes[(day % 10) - 1] || suffixes[0];
 
     const formattedDate = `On ${dayOfWeekNames[date.getDay()]}, ${monthNames[date.getMonth()]} ${day}${daySuffix}`;
+
+    const dropDownItems: DropDownItem[] = [
+        {
+            title: "Drop a Review",
+            onClick: () => {
+                setIsDropdownOpen(false);
+            },
+            // icon: DropReviewSvg,
+        },
+        
+    ];
 
     return (
         <motion.div

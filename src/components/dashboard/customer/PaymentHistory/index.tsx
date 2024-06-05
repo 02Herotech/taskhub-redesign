@@ -125,7 +125,7 @@ const CustomerPaymentHistory = () => {
                 {CustomerPaymentHistoryData.slice(0, visibleTransactions).map((data, index) => (
                     <div
                         key={index}
-                        className="flex items-center justify-between px-5 py-3 border-b border-primary cursor-pointer"
+                        className="flex max-lg:flex-col lg:items-center justify-between px-5 py-3 border-b border-primary cursor-pointer"
                         onClick={() => handleCardClick(data)}
                     >
                         <div className="flex items-center space-x-5">
@@ -137,7 +137,7 @@ const CustomerPaymentHistory = () => {
                                 <p className="text-[#716F78] font-satoshiMedium text-base">{data.serviceType}</p>
                             </div>
                         </div>
-                        <h2 className="text-2xl font-bold capitalize text-tc-orange lg:text-[22px]">
+                        <h2 className="text-xl max-lg:mt-2 font-bold capitalize text-tc-orange lg:text-[22px]">
                             AUD{formatAmount(data.transactionAmount, "USD", false)}
                         </h2>
                     </div>
