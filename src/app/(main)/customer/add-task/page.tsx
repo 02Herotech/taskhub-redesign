@@ -105,7 +105,7 @@ const AddTaskForm: React.FC = () => {
   
  const CustomInput: React.FC<CustomInputProps> = ({ value, onClick }) => (
    <button
-     className="flex w-[150px] justify-between cursor-pointer rounded-2xl border  border-tc-gray  bg-[#EBE9F4] px-2 py-1 outline-none placeholder:text-[14px] placeholder:font-bold"
+     className="flex text-[12px] lg:text-[14px]  lg:w-[150px] justify-between cursor-pointer rounded-2xl border  border-tc-gray  bg-[#EBE9F4] px-2 py-1 outline-none placeholder:text-[14px] placeholder:font-bold"
      onClick={onClick}
      type="button"
    >
@@ -115,7 +115,7 @@ const AddTaskForm: React.FC = () => {
   
   const CustomInputs: React.FC<CustomInputProps> = ({ value, onClick }) => (
     <button
-      className="flex w-[150px] cursor-pointer justify-between rounded-2xl border  border-tc-gray  bg-[#EBE9F4] px-2 py-1 outline-none placeholder:text-[14px] placeholder:font-bold"
+      className="flex text-[12px] lg:text-[14px] lg:w-[150px] cursor-pointer justify-between rounded-2xl border  border-tc-gray  bg-[#EBE9F4] px-2 py-1 outline-none placeholder:text-[14px] placeholder:font-bold"
       onClick={onClick}
       type="button"
     >
@@ -629,7 +629,7 @@ const AddTaskForm: React.FC = () => {
                         onChange={handleCheckboxChange}
                         className="mr-2"
                       />
-                      <span className="text-status-darkpurple">
+                      <span className="text-status-darkpurple text-[12px]">
                         I’m Flexible
                       </span>
                     </div>
