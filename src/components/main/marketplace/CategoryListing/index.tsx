@@ -25,10 +25,10 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
   } = useSelector((state: RootState) => state.market);
 
   const [isLoading, setIsLoading] = useState(false);
-  const [allListsting, setallListsting] = useState<ListingDataType2[]>([]);
+  const [allListsting, setallListsting] = useState<ListingDataType[]>([]);
   const [ErrorMsg, setErrorMsg] = useState("");
   const [isViewMore, setIsViewMore] = useState({ state: false });
-  const [displayListing, setDisplayListing] = useState<ListingDataType2[]>([]);
+  const [displayListing, setDisplayListing] = useState<ListingDataType[]>([]);
   const [page, setPage] = useState({ totalPages: 1, currentPage: 0 });
 
   const handleFetchCategory = async () => {
@@ -111,11 +111,15 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
       <div className="mb-3 flex items-center justify-between">
         <div className="flex w-full items-center justify-between">
           <h1 className=" text-xl font-bold text-violet-darkHover md:text-2xl">
-            {isFiltering && filteredData.length > 0
-              ? filteredData[0].category.categoryName
-              : category}
+            {!isFiltering
+              ? category
+              : filteredData.length > 0
+                ? filteredData[0].category.categoryName
+                : ""}
           </h1>
-          {displayListing.length > 3 && (
+          {(isFiltering
+            ? filteredData.length > 3
+            : displayListing.length > 3) && (
             <button
               className="flex items-center gap-2 border-b-2 border-violet-normal text-sm font-bold  text-violet-normal"
               onClick={() =>
@@ -162,11 +166,14 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
               return (
                 <SingleListingCard
                   key={index}
+                  singleListing={item}
                   listingId={item.id}
                   posterId={item?.serviceProvider?.id}
                   businessName={item.listingTitle}
                   displayImage={item.businessPictures[0]}
                   pricing={item.planOnePrice ?? 0}
+                  fullName={item?.serviceProvider?.user?.fullName}
+                  profileImage={item?.serviceProvider?.user?.profileImage}
                 />
               );
             })}
@@ -190,11 +197,14 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
             return (
               <SingleListingCard
                 key={index}
+                singleListing={item}
                 listingId={item.id}
                 posterId={item?.serviceProvider?.id}
                 businessName={item.listingTitle}
                 displayImage={item.businessPictures[0]}
                 pricing={item.planOnePrice ?? 0}
+                fullName={item?.serviceProvider?.user?.fullName}
+                profileImage={item?.serviceProvider?.user?.profileImage}
               />
             );
           })}

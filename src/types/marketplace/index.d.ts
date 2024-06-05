@@ -25,49 +25,38 @@ declare interface SubCategoryType {
   name: string;
 }
 
-// declare interface ListingDataType {
-//   id: number;
-//   serviceProvider: {
-//     id: number;
-//   };
-//   posterId: number;
-//   businessName: string;
-//   serviceCategory: string;
-//   subCategory: string;
-//   serviceDescription: string;
-//   serviceName: string;
-//   pricing: number;
-//   availableDays: [string];
-//   available: boolean;
-//   startHour: number;
-//   closeMinute: number;
-//   closeHour: number;
-//   startMinute: number;
-//   availableFrom: {
-//     hour: number;
-//     minute: number;
-//     second: number;
-//     nano: number;
-//   };
-//   availableTo: {
-//     hour: number;
-//     minute: number;
-//     second: number;
-//     nano: number;
-//   };
-//   userAddress: {
-//     id: number;
-//     streetNumber: string;
-//     streetName: string;
-//     unitNumber: string;
-//     suburb: string;
-//     state: string;
-//     postCode: string;
-//   };
-//   deleted: boolean;
-//   stripeId: string;
-//   businessPictures: string[]; // Updated to an array of strings
-// }
+declare interface ListingDataType {
+  id: number;
+  state: string;
+  postCode: string;
+  suburb: string;
+  serviceProvider: {
+    id: number;
+    user: { id: number; fullName: string; profileImage: string };
+  };
+  category: {
+    categoryName: string;
+  };
+  stripeId: string;
+  createdAt: number[];
+  availableDays: string[];
+  reviews: number[];
+  businessPictures: string[];
+  listingTitle: string;
+  listingDescription: string;
+  planOneDescription: string;
+  planOnePrice: number;
+  planTwoDescription: string | null;
+  planTwoPrice: number | null;
+  planThreeDescription: string | null;
+  planThreePrice: number | null;
+  available: boolean;
+  taskType: string;
+  subCategory: {
+    name: string;
+  };
+  deleted: bolean;
+}
 
 declare interface ListingDataType2 {
   id: number;
@@ -101,4 +90,30 @@ declare interface ListingDataType2 {
   deleted: boolean;
   stripeId: string;
   businessPictures: string[];
+}
+
+declare interface BookingType {
+  id: 0;
+  userAddress: {
+    id: number;
+    state: string;
+    postCode: string;
+    suburb: string;
+  };
+  startDate: string;
+  startTime: {
+    hour: number;
+    minute: number;
+    second: number;
+    nano: number;
+  };
+  price: number;
+  bookingTitle: string;
+  bookingDescription: string;
+  bookingStage: string;
+  listing: ListingDataType;
+  user: { id: number; fullName: string; profileImage: string | null };
+  bookedAt: string;
+  invoiceSent: boolean;
+  updatedAt: string;
 }

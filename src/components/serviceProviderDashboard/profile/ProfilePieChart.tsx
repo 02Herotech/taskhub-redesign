@@ -6,22 +6,25 @@ import { Pie } from "react-chartjs-2";
 
 ChartJS.register(ArcElement, Tooltip);
 
-export const data = {
-  labels: ["Incomplete", "Complete"],
-  datasets: [
-    {
-      label: "Completion Rate",
-      data: [40, 60],
-      backgroundColor: ["#fff", "#381F8C"],
-    },
-  ],
-};
+interface ProfilePieChartPropType {
+  chartData: { total: number; completed: number };
+}
 
-const ProfilePieChart = () => {
+const ProfilePieChart = ({ chartData }: ProfilePieChartPropType) => {
+  const data = {
+    labels: ["Complete", "Incomplete"],
+    datasets: [
+      {
+        label: "Completion Rate",
+        data: [chartData.completed, chartData.total - chartData.completed],
+        backgroundColor: ["#381F8C", "#fff"],
+      },
+    ],
+  };
   return (
     <div className="relative">
-      <p className="text-orange-normal absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-[calc(50%+0.5rem)] text-xl font-bold">
-        60%
+      <p className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-[calc(50%+0.5rem)] text-xl font-bold text-orange-normal">
+        {Math.floor((chartData.completed / chartData.total) * 100)}
       </p>
       <Pie data={data} />;
     </div>

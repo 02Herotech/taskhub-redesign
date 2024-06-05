@@ -1,21 +1,15 @@
 
-import Header from '@/components/HowTaskhubWorks/Header'
-import PostTasks from '@/components/HowTaskhubWorks/PostTasks'
-import React from 'react'
-import PostService from '@/components/HowTaskhubWorks/PostService'
-import Experiences from '@/components/HowTaskhubWorks/Experience/indes'
+'use client'
+import React, { useEffect } from 'react'
 
+import { useRouter } from 'next/navigation'
 const HowTaskhubWorks = () => {
+    const router = useRouter()
+    useEffect(() => {
+        router.push('how-taskhub-works/customer')
+    })
     return (
-        <div className='py-10 bg-white lg:bg-gradient-to-b from-[#f3dcfc]  via-[#FFFFFF] to-[#F5DDFD]'>
-
-            <div className='mx-auto max-w-7xl xl:mx-[120px] lg:mx-[48px] m-[20px] my-0'>
-                <Header />
-                <PostTasks />
-                <PostService/>
-                <Experiences/>
-            </div>
-        </div>
+        <main></main>
     )
 }
 

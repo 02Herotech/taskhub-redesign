@@ -239,7 +239,7 @@ const HeroSection = () => {
 
             <p className={` text-center lg:text-left lg:w-[400px] font-[500] lg:text-[20px] text-[15px] text-[#190E3F] font-satoshiMedium `}
             >
-              Our user-friendly <span className="text-[#FE9B07]">AI</span> enabled platform ensures a seamless experience, allowing you to effortlessly find, connect, and engage with the perfect service professionals.<br className="lg:hidden" />  <span className=" text-[#ffffff] bg-[#4CAF50] rounded-[50px] text-[10px] px-3 py-1 font-satoshiMedium"> Beta</span>
+              Our user-friendly <span className="text-[#FE9B07]">AI</span> enabled platform ensures a seamless experience, allowing you to effortlessly find, connect and engage with the perfect service professionals.<br className="lg:hidden" />  <span className=" text-[#ffffff] bg-[#4CAF50] rounded-[50px] text-[10px] px-3 py-1 font-satoshiMedium"> Beta</span>
             </p>
           </div>
 
@@ -278,7 +278,7 @@ const HeroSection = () => {
 
             </div>
 
-            <Link href={'how-taskhub-works'}>
+            <Link href={'how-taskhub-works/customer'}>
               <p className="text-[#FE9B07] hover:underline text-[16px]  font-bold flex items-center lg:pl-4 lg:mb-6 space-x-2 mb-3 font-satoshiMedium "><span>Learn how Taskhub works</span>
                 <span className="-rotate-45"> <FaArrowRight size={15} /></span>
               </p>

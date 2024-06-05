@@ -182,7 +182,7 @@ const MobileNavigation = ({ setShowMobileNav }: Props) => {
                     theme="outline"
                     className="rounded-full bg-transparent"
                   >
-                    Log in
+                    Login
                   </Button>
                 </Link>
               </div>
