@@ -75,6 +75,12 @@ export const marketSlice = createSlice({
           isFiltering: true,
         };
       }
+      if (section === "category") {
+        return {
+          ...state,
+          filteredData: data,
+        };
+      }
       let prevFilter = state.filteredData || [];
       let newFilter = [];
       if (!prevFilter.length) {
