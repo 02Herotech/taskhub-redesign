@@ -32,7 +32,7 @@ export default function CheckoutForm({ clientSecret }: { clientSecret: string })
                 elements,
                 clientSecret,
                 confirmParams: {
-                    return_url: 'http://localhost:3000/customer/payment/transaction-history',
+                    return_url: 'https://taskhub-redesign.vercel.app/customer/payment/success',
                 },
             });
 
