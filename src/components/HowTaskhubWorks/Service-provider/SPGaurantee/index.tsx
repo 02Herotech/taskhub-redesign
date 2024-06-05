@@ -18,12 +18,12 @@ const SPGauranteeData = [
   {
     id: 3,
     title: 'Payments Guaranteed.',
-    details: 'We prioritize your financial security. When you pay for a task, your money is held securely until the task is completed to your satisfaction.'
+    details: 'We guarantee a secure and reliable payment process, ensuring that your payments get to you upon successful completion of service.'
   },
   {
     id: 4,
     title: 'Chance to increase visibility.',
-    details: 'You have the chance to rate, inspect, request revision, drop a review on a task if you are not satisfied.'
+    details: 'With every successfully completed task, we increase your visibility on the platform and put you in front of your potential customers.'
   },
 
 ]
@@ -32,7 +32,7 @@ const SPGaurantee = () => {
   return (
     <div className='lg:mt-20 mt-10 lg:flex !justify-between'>
       <div className='lg:w-[50%] '>
-        <h2 className='font-clashMedium lg:text-[40px] text-[30px] text-primary font-extrabold'>
+        <h2 className='font-clashSemiBold lg:text-[45px] text-[30px] text-primary '>
           <span className='text-tc-orange'> TaskHub</span> <br />  Guarantees:
         </h2>
 

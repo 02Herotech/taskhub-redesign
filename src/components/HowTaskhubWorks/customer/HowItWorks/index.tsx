@@ -32,13 +32,13 @@ const HowItWorks = () => {
                     How  it works ?
                 </h2>
 
-                <p className='text-center lg:text-[35px] text-[20px] font-[600] font-clashMedium text-primary xl:w-1/2 lg:w-[65%] my-6'>
+                <p className='text-center lg:text-[35px] text-[20px] font-[600] font-clashMedium text-primary xl:w-1/2 lg:w-[75%] my-6'>
                     Get your Task posted in few steps as a <span className='text-tc-orange'>Customer</span> with TaskHub
                 </p>
             </div>
 
             <div className='lg:flex justify-between mt-5 '>
-                <div className='lg:w-[40%] flex flex-col lg:space-y-14 space-y-10'>
+                <div className='lg:w-[40%] flex flex-col space-y-4 '>
 
                     <div className='relative w-full lg:flex-none flex items-center justify-center'>
                         <div className='relative lg:w-full w-[90%] mx-auto lg:h-[300px] h-[250px] rounded-[30px]'>
@@ -59,7 +59,7 @@ const HowItWorks = () => {
                     </div>
 
                     <div className='h-[400px] lg:w-full w-[90%] mx-auto bg-[#2A1769] rounded-[30px] flex items-center justify-center '>
-                        <div className='relative h-[300px] w-[85%] mx-auto lg:w-[350px] rounded-[15px] ' >
+                        <div className='relative h-[300px] w-[85%]  mx-auto xl:w-[350px] rounded-[15px] ' >
                             <Image
                                 src={images1[currentImageIndex1]}
                                 alt=""
@@ -83,7 +83,7 @@ const HowItWorks = () => {
                     </div>
 
                     <div className='flex justify-between ml-6'>
-                        <div className='relative w-[45%] rounded-[30px] lg:h-[330px] h-[180px]'>
+                        <div className='relative w-[45%] rounded-[30px] lg:h-[280px] h-[180px]'>
                             <Image
                                 src={Customer2}
                                 alt="Customer 2"
@@ -94,7 +94,7 @@ const HowItWorks = () => {
 
 
                         <div className='w-[45%]'>
-                            <div className='relative w-full lg:h-[330px] h-[180px]'>
+                            <div className='relative w-full lg:h-[280px] h-[180px]'>
                                 <Image
                                     src={Customer3}
                                     alt="Customer 3"
@@ -114,7 +114,7 @@ const HowItWorks = () => {
                         <p className='text-primary lg:text-[20px] text-[16px] font-satoshiMedium w-[95%]'>Choose your service type; remotely or in person. Add in your location details and budget and your first task has been created!</p>
                     </div>
 
-                    <div className="lg:flex-none flex items-center justify-center">
+                    <div className="lg:hidden flex items-center justify-center">
                         <button
                             className=" rounded-[50px] bg-primary xl:text-[16px] font-satoshiMedium
                   xl:px-3   lg:px-3 py-2 text-[#EBE9F4] hover:bg-[#25135f] w-[250px] xl:w-[190px] lg:w-[175px]  "
@@ -127,6 +127,23 @@ const HowItWorks = () => {
 
                         </button>
                     </div>
+
+
+                    <div className="lg:block hidden">
+                        <button
+                            className=" rounded-[50px] bg-primary xl:text-[16px] font-satoshiMedium
+                  xl:px-3   lg:px-3 py-2 text-[#EBE9F4] hover:bg-[#25135f] w-[250px] xl:w-[190px] lg:w-[175px]  "
+                        >
+
+                            <Link href="/customer/add-task">
+                                Post your first task
+                            </Link>
+
+
+                        </button>
+                    </div>
+
+                    
 
                 </div>
 

@@ -8,9 +8,8 @@ const HowTaskhubWorks = () => {
     useEffect(() => {
         router.push('how-taskhub-works/customer')
     })
-
     return (
-        <span></span>
+        <main></main>
     )
 }
 

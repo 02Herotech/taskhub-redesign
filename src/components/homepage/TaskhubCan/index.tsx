@@ -53,33 +53,33 @@ const Taskhub = () => {
 
 
                 <div className="flex w-[400px] flex-col gap-5 space-y-8 xl:w-1/2">
-                    <h1 className="hidden xl:text-[55px] lg:text-[45px] font-[900] text-[#381F8C] lg:block font-clashMedium ">
-                    WITH <span className="text-[#FE9B07]">TASKHUB,</span><br/> YOU CAN:
+                    <h1 className="hidden xl:text-[60px] lg:text-[50px]  text-[#381F8C] lg:block font-clashSemiBold ">
+                    With <span className="text-[#FE9B07]">TaskHub,</span><br/> you can:
                     </h1>
                     <div className="flex flex-col gap-5 lg:space-y-6">
                         <div className="flex items-center space-x-3">
                             <span className="text-[20px] text-[#FE9B07]">
                             <BsFillPatchCheckFill />
                             </span>
-                            <p className="font-semibold lg:text-[24px] text-[16px] font-satoshiMedium">Find the right professional in one place.</p>
+                            <p className="font-semibold lg:text-[24px] text-[16px] font-satoshi text-[#140B31]">Find the right professional in one place.</p>
                         </div>
                         <div className="flex items-center space-x-3">
                             <span className="text-[20px] text-[#FE9B07]">
                                 <BsFillPatchCheckFill />
                             </span>
-                            <p className="font-semibold  lg:text-[24px] text-[16px] font-satoshiMedium">Choose from a range of services and experts.</p>
+                            <p className="font-semibold  lg:text-[24px] text-[16px] font-satoshi text-[#140B31]">Choose from a range of services and experts.</p>
                         </div>
                         <div className="flex items-center space-x-3">
                             <span className="text-[20px] text-[#FE9B07]">
                             <BsFillPatchCheckFill />
                             </span>
-                            <p className="font-semibold lg:text-[24px] text-[16px] font-satoshiMedium">Leverage AI to create a listing for you in seconds.</p>
+                            <p className="font-semibold lg:text-[24px] text-[16px] font-satoshi text-[#140B31]">Leverage AI to create a listing for you in seconds.</p>
                         </div>
                         <div className="flex items-center space-x-3">
                             <span className="text-[20px] text-[#FE9B07]">
                             <BsFillPatchCheckFill />
                             </span>
-                            <p className="font-semibold lg:text-[24px] text-[16px] font-satoshiMedium">Save time and money with multiple bids.</p>
+                            <p className="font-semibold lg:text-[24px] text-[16px] font-satoshi text-[#140B31]">Save time and money with multiple bids.</p>
                         </div>
                     </div>
                     <div className="">

@@ -40,7 +40,7 @@ const VerifyEmailForm = () => {
                 <p className='lg:text-[15px] text-tc-gray font-medium'>
                 </p>
                 <h3 className="text-xl font-bold text-center">Please
-                    <Link href="/auth/login" className="text-primary underline"> Log In </Link>
+                    <Link href="/auth/login" className="text-primary underline"> Login </Link>
                     to continue
                 </h3>
             </div>
