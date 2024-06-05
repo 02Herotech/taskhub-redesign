@@ -21,7 +21,7 @@ const MarketPlaceHeader = () => {
     if (!token) {
       router.push("/auth/login");
     } else if (isServiceProvider) {
-      router.push("/service-provider/provide-service");
+      router.push("/provide-service");
     } else {
       router.push("/customer/add-task");
     }

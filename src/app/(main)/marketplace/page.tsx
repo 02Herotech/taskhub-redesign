@@ -121,7 +121,7 @@ const MareketPlace = () => {
               )}
 
               <div className="my-10 md:my-0">
-                <h1 className=" text-[20px] font-bold text-violet-darkHover md:text-[28px]  ">
+                <h1 className=" py-4 text-[20px] font-bold text-black md:text-[28px]  ">
                   Browse by category
                 </h1>
                 <div className="my-5 flex flex-wrap gap-3 ">
