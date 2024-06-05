@@ -9,6 +9,9 @@ import { BeatLoader } from "react-spinners";
 import icon1 from "../../../../public/assets/images/serviceProvider/AiButton.png";
 import icon2 from "../../../../public/assets/images/serviceProvider/AiButton2.png";
 import Image from "next/image";
+import { TypeAnimation } from "react-type-animation";
+
+
 interface Message {
   type: "user" | "ai";
   text: string;
@@ -99,7 +102,7 @@ const AiDesciption: React.FC<AiGenerateProps> = ({ task, setTask, displayType })
       conversationEndRef.current.scrollIntoView({ behavior: "smooth" });
     }
   }, [conversation]);
-
+  
   const setServiceDetails = (index: any) => {
     const description = conversation[index]?.text;
     setTask({ ...task, listingDescription: description });
@@ -127,7 +130,6 @@ const AiDesciption: React.FC<AiGenerateProps> = ({ task, setTask, displayType })
   const AiSuggestions = [
     'Give a service description for a makeup artist that does sfx makeup.',
     'Give a service description for an event planner with 2 years experience who specializes in kids parties.',
-    'Give a service description for a makeup artist that does sfx makeup. '
   ]
 
   const getAiSuggestions = async (index: number) => {
@@ -181,39 +183,39 @@ const AiDesciption: React.FC<AiGenerateProps> = ({ task, setTask, displayType })
           className={` transform bg-none border-none
        text-primary transition-transform duration-300 ease-in-out hover:scale-105 flex items-center  space-x-4 font-satoshiBold font-extrabold`}
         >
-           Generate with AI
+          Generate with AI
 
-           <span className="ml-2"><Image alt='' src={icon2} width={20} height={20} /></span>
-         
+          <span className="ml-2"><Image alt='' src={icon2} width={20} height={20} /></span>
+
         </button>
       )}
 
       {aiChatView && (
-        <div className="bg-opacity-84 fixed inset-0 z-50 flex items-center justify-center bg-black">
-          <div className=" mx-auto h-[90%] w-[90%] rounded-[16px] bg-[#140B31] p-10 text-white md:w-[60%] lg:w-[50%]">
+        <div className="bg-opacity-50 fixed inset-0 z-50 flex items-center justify-center bg-black">
+          <div className=" mx-auto h-[90%] w-[90%] rounded-[16px] bg-[#FFFFFF] p-10 text-white md:w-[60%] lg:w-[50%]">
             <div className=" flex justify-end">
               <div
-                className="flex h-[30px] w-[30px] items-center justify-center rounded-full bg-white hover:cursor-pointer"
+                className="flex h-[30px] w-[30px] items-center justify-center rounded-full bg-[#EBE9F4] hover:cursor-pointer"
                 onClick={AiChatView}
               >
                 <IoCloseCircleOutline color="#4E5158" size={20} className="" />
               </div>
             </div>
             <div>
-              <h2 className="text-[25px]">Hello, {userName}</h2>
-              <p className="pb-3 text-[16px] text-[#716F78]">
-                How can I help you?
+              <h2 className="lg:text-[35px] text-[25px] text-primary font-clashBold">Hello, {userName}</h2>
+              <p className="pb-3 text-[16px] text-[#716F78] font-clashMedium">
+                Here are some suggested questions you can ask me?
               </p>
             </div>
 
-            <div className="conversation h-[65%] space-y-4 overflow-y-scroll lg:h-[65%] ">
+            <div className="conversation h-[65%] space-y-4 overflow-y-scroll  lg:h-[65%] ">
 
-              <div className="lg:flex justify-between w-[90%] mx-auto space-y-3 lg:space-y-0">
+              <div className="lg:flex justify-between lg:w-[90%] w-full mx-auto space-y-3 lg:space-y-0">
                 {AiSuggestions.map((entry, index) => (
 
                   <p
                     key={index}
-                    className="p-2 text-[15px] rounded-[12px] bg-white text-[#2A1769] lg:w-[30%] w-[85%] hover:cursor-pointer hover:transform hover:translate-x-1 hover:translate-y-1 transition-all duration-500 "
+                    className="p-2 text-[15px] rounded-[15px] bg-white border border-[#2A1769] text-[#2A1769] font-satoshiMedium lg:w-[49%]  hover:cursor-pointer hover:transform hover:translate-x-1 hover:translate-y-1 transition-all duration-500 "
                     onClick={() => getAiSuggestions(index)}
                   >
                     {entry}
@@ -223,45 +225,60 @@ const AiDesciption: React.FC<AiGenerateProps> = ({ task, setTask, displayType })
               </div>
               {conversation.map((entry, index) => (
                 <div key={index}>
-                  <div
-                    key={index}
-                    className={` ${entry.type === "user" ? "flex justify-end" : ""}`}
-                  >
-                    <p
-                      className={` p-2 text-[15px] ${entry.type === "user" ? "mr-[5%] rounded-[12px] bg-[#EBE9F4] text-[#2A1769] lg:w-[50%] " : "w-[85%]"}`}
-                    >
+                  {entry.type === 'user' && <div className="flex justify-end">
+                    <p className="p-2 text-[16px] mr-[5%] rounded-[14px] bg-primary text-[#ffffff] lg:w-[50%]">
                       {entry.text}
                     </p>
-                  </div>
+                  </div>}
 
+                  {entry.type === 'ai' && index < conversation.length - 1 && <div className="flex gap-2">
+                    <span className="ml-2 mt-1"><Image alt='' src={icon2} width={20} height={20} /></span>
+                    <p className="w-[85%] text-primary font-satoshiMedium"> {entry.text}</p>
+                  </div>}
+
+                  {entry.type === 'ai' && index === conversation.length - 1 && <div className="flex gap-2">
+                    <span className="ml-2 mt-1"><Image alt='' src={icon2} width={20} height={20} /></span>
+                    <p className="w-[85%] text-primary font-satoshiMedium">
+                      <TypeAnimation
+                        sequence={[entry.text]}
+                        speed={70}
+                        wrapper="span"
+                        style={{
+                          fontSize: "16px",
+                          margin: "0",
+                        }}
+                        repeat={0}
+                        cursor={false}
+                      />
+                    </p>
+                  </div>}
                   <p
-                    className={` ${entry.type === "user" ? "hidden" : "my-2"}`}
+                    className={` ${entry.type === "user" ? "hidden" : "my-2 w-full"}`}
                   >
-                    <span className="text-[15px] font-bold">
+                    <span className="text-[15px] font-satoshi font-bold text-primary">
                       Are you happy with this suggestion? you can
                     </span>{" "}
                     <span
                       onClick={() => setServiceDetails(index)}
-                      className="mt-5 rounded-[20px] bg-[#FE9B07] px-4 py-1 text-[14px] text-white hover:cursor-pointer lg:mt-0 lg:p-2"
+                      className="mt-5 rounded-[20px] bg-[#FE9B07] px-4  py-1 text-[14px] text-white hover:cursor-pointer lg:mt-0 lg:p-2"
                     >
                       USE
                     </span>{" "}
                     <span
                       onClick={getMoreSuggestions}
-                      className="text-[12px] underline hover:cursor-pointer"
+                      className="text-[12px] text-primary font-satoshi font-bold underline hover:cursor-pointer"
                     >
                       or get more suggestions
                     </span>
                   </p>
+                  <div ref={conversationEndRef} />
                 </div>
               ))}
-
-              <div></div>
               <div ref={conversationEndRef} />
             </div>
 
             <p className="h-[15px] ">
-              {AiLoading ? <BeatLoader color={"white"} size={12} /> : ""}
+              {AiLoading ? <BeatLoader className="text-primary" size={12} /> : ""}
             </p>
             <div className=" relative  rounded-[20px] px-4 pb-7 pt-2 font-medium lg:pb-2">
               <form onSubmit={handleAiChatView}>
@@ -271,16 +288,15 @@ const AiDesciption: React.FC<AiGenerateProps> = ({ task, setTask, displayType })
                   onChange={handleInputChange}
                   value={aiQuery}
                   className="h-[50px] w-full overflow-hidden text-wrap rounded-[12px] border-[2px] 
-border-[#716F78] bg-transparent px-3 pt-3 text-[16px] font-normal text-white"
+border-primary bg-transparent px-3 pt-3 text-[16px] font-normal text-primary"
                   required
                 />
                 <div className="absolute right-[10%] top-[20%] hidden lg:right-[5%] lg:top-[25%]  lg:block ">
                   <button type="submit">
                     {" "}
                     <BiSend
-                      color="white"
                       size={26}
-                      className="transform ease-in-out hover:scale-110 hover:cursor-pointer"
+                      className="transform ease-in-out hover:scale-110 hover:cursor-pointer text-primary"
                     />
                   </button>
                 </div>
@@ -291,9 +307,8 @@ border-[#716F78] bg-transparent px-3 pt-3 text-[16px] font-normal text-white"
                 >
                   <span>
                     <BiSend
-                      color="white"
                       size={26}
-                      className="transform ease-in-out hover:scale-110 hover:cursor-pointer"
+                      className="transform ease-in-out hover:scale-110 hover:cursor-pointer text-primary"
                     />
                   </span>
                 </div>

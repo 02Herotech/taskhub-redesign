@@ -1,11 +1,17 @@
+import { defaultUserDetails } from "@/data/data";
 import Loading from "@/shared/loading";
+import axios from "axios";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 
 const ProfileHeader = () => {
+  const [fetchedUserData, setFetchedUserData] = useState(defaultUserDetails);
+
   const session = useSession();
   const user = session?.data?.user?.user;
+  const token = session?.data?.user?.accessToken;
   const isServiceProvider = user?.roles[0] === "SERVICE_PROVIDER";
   const editProfileLink = isServiceProvider
     ? "/service-provider/profile/edit-profile"
@@ -23,6 +29,27 @@ const ProfileHeader = () => {
   );
   const location = user?.address?.state || "Australia";
 
+  useEffect(() => {
+    const fetchUserData = async () => {
+      if (!token) return;
+      try {
+        const url =
+          "https://smp.jacinthsolutions.com.au/api/v1/service_provider/profile";
+        const { data } = await axios.get(url, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "multipart/form-data",
+          },
+        });
+        setFetchedUserData(data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchUserData();
+  }, [token]);
+
   return (
     <>
       {!user ? (
@@ -34,9 +61,9 @@ const ProfileHeader = () => {
           <div className="flex items-center gap-8">
             <Image
               src={
-                user?.profileImage
-                  ? user?.profileImage
-                  : "/assets/images/serviceProvider/user.jpg"
+                fetchedUserData?.profileImage ??
+                user?.profileImage ??
+                "/assets/images/serviceProvider/user.jpg"
               }
               alt={user?.firstName ? user?.firstName : "user"}
               width={160}

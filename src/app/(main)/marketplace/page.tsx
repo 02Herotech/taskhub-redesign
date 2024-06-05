@@ -100,10 +100,10 @@ const MareketPlace = () => {
       {!isFiltering && !isSearching && <MarketPlaceHeader />}
 
       <div
-        className={`mx-auto flex max-w-screen-2xl flex-col px-6 md:px-16  ${(isFiltering || isSearching) && "pt-12"} `}
+        className={`mx-auto flex max-w-screen-xl flex-col px-6 md:px-16  ${(isFiltering || isSearching) && "pt-12"} `}
       >
         <MarketPlaceFilter />
-        <div className="container">
+        <div>
           {isFiltering || isSearching ? (
             <div>
               <CategoryListing category="All" />
@@ -115,13 +115,13 @@ const MareketPlace = () => {
               ) : (
                 <div>
                   <CategoryListing category="All" />
+                  <CategoryListing category={categories[0]?.categoryName} />
                   <CategoryListing category={categories[1]?.categoryName} />
-                  <CategoryListing category={categories[2]?.categoryName} />
                 </div>
               )}
 
               <div className="my-10 md:my-0">
-                <h1 className=" text-[20px] font-bold text-violet-darkHover md:text-[28px]  ">
+                <h1 className=" py-4 text-[20px] font-bold text-black md:text-[28px]  ">
                   Browse by category
                 </h1>
                 <div className="my-5 flex flex-wrap gap-3 ">
@@ -141,9 +141,9 @@ const MareketPlace = () => {
                   <Loading />
                 ) : (
                   <div>
+                    <CategoryListing category={categories[2]?.categoryName} />
                     <CategoryListing category={categories[3]?.categoryName} />
                     <CategoryListing category={categories[4]?.categoryName} />
-                    <CategoryListing category={categories[5]?.categoryName} />
                   </div>
                 )}
               </div>

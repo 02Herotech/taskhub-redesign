@@ -1,6 +1,8 @@
 "use client";
 
 import { notificationData } from "@/app/data/service-provider/notification";
+import Button from "@/components/global/Button";
+import Popup from "@/components/global/Popup";
 import Image from "next/image";
 import React, { useState } from "react";
 

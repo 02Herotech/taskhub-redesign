@@ -1,5 +1,6 @@
 "use client";
 
+import { truncateText } from "@/utils/marketplace";
 import axios from "axios";
 import Image from "next/image";
 import Link from "next/link";
@@ -13,18 +14,10 @@ interface ListingCardProps {
   displayImage: string;
   businessName: string;
   pricing: number;
-}
-interface PosterProfileTypes {
-  id: number;
+  fullName: string;
   profileImage: string;
-  firstName: string;
-  lastName: string;
+  singleListing: ListingDataType;
 }
-
-const handlestoreListingId = (listingId: number, posterId: number) => {
-  const content = { a: listingId, b: posterId };
-  localStorage.setItem("content", JSON.stringify(content));
-};
 
 const SingleListingCard = ({
   listingId,
@@ -32,30 +25,14 @@ const SingleListingCard = ({
   displayImage,
   businessName,
   pricing,
+  fullName,
+  profileImage,
+  singleListing,
 }: ListingCardProps) => {
-  const [posterProfile, setPosterProfile] = useState<PosterProfileTypes>({
-    id: 0,
-    profileImage: "",
-    firstName: "",
-    lastName: "",
-  });
-
-  useEffect(() => {
-    const handleFetchUserProfile = async (posterId: number) => {
-      try {
-        const url =
-          "https://smp.jacinthsolutions.com.au/api/v1/user/user-profile/" +
-          posterId;
-        const {
-          data: { profileImage, firstName, lastName },
-        } = await axios.get(url);
-        setPosterProfile({ id: posterId, profileImage, firstName, lastName });
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    handleFetchUserProfile(posterId);
-  }, [posterId]);
+  const handlestoreListingId = (listingId: number, posterId: number) => {
+    console.log(singleListing);
+    localStorage.setItem("content", JSON.stringify(singleListing));
+  };
 
   return (
     <Link
@@ -75,7 +52,9 @@ const SingleListingCard = ({
             />
           </div>
           <div className="mt-2 flex h-full flex-col justify-between">
-            <h2 className="text-lg  font-bold md:text-lg">{businessName}</h2>
+            <h2 className="text-lg  font-bold md:text-lg">
+              {truncateText(businessName, 20)}
+            </h2>
             <div className="py-4 ">
               <p className="text-xs">4.5</p>
               <div className="flex items-center gap-1 ">
@@ -91,16 +70,15 @@ const SingleListingCard = ({
               <div className="flex items-center gap-2">
                 <Image
                   src={
-                    posterProfile?.profileImage ??
-                    "/assets/images/serviceProvider/user.jpg"
+                    profileImage ?? "/assets/images/serviceProvider/user.jpg"
                   }
-                  alt={posterProfile?.firstName}
+                  alt={fullName}
                   width={200}
                   height={200}
                   className="size-8 rounded-full object-cover "
                 />
                 <p className="text-sm font-semibold text-violet-dark">
-                  {posterProfile?.firstName} {posterProfile?.lastName}
+                  {truncateText(fullName, 10)}
                 </p>
               </div>
               <p className="font-bold text-violet-normal">From ${pricing}</p>

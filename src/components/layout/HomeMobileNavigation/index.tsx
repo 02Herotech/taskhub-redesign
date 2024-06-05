@@ -63,7 +63,7 @@ const HomeMobileNavigation = ({ setShowMobileNav, links }: Props) => {
                         </Link>
                         <Link href='/auth/login'>
                             <Button theme='outline' className="rounded-full bg-transparent w-full">
-                                Log in
+                                Login
                             </Button>
                         </Link>
                     </div>

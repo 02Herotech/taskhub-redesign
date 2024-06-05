@@ -13,9 +13,9 @@ const Wallet = () => {
         className="absolute -right-10 top-0"
       />
       <h4 className="text-2xl font-bold text-[#381F8C] ">Wallet</h4>
-      <h1 className="flex flex-col font-bold text-yellow-300">
+      <h1 className="flex flex-col font-clash text-[#FE9B07]">
         <span className="text-base"> $ </span>
-        <span className="text-6xl"> 0.00</span>
+        <span className="text-7xl"> 0.00</span>
       </h1>
       <Link
         href="/service-provider/dashboard/payment/withdrawl"

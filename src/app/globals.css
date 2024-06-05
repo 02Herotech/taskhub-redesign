@@ -40,6 +40,10 @@
   scrollbar-width: thin; /* Set scrollbar width for Firefox */
 }
 
+.clip-triangle {
+  clip-path: polygon(100% 0, 100% 100%, 0 0);
+}
+
 @layer base {
   @font-face {
     font-family: Clash;
@@ -94,5 +98,5 @@
 }
 
 body {
-	@apply text-dark font-satoshi;
+  @apply font-satoshi text-dark;
 }

@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FaStar } from "react-icons/fa6";
 import { motion } from "framer-motion";
 import { notificationData } from "@/app/data/service-provider/notification";
@@ -10,6 +10,10 @@ import { BiCalendarWeek, BiCheck } from "react-icons/bi";
 import { HiLocationMarker } from "react-icons/hi";
 import { CiClock1 } from "react-icons/ci";
 import Link from "next/link";
+import AllServices from "@/components/dashboard/serviceProvider/services/AllServices";
+import { useSession } from "next-auth/react";
+import axios from "axios";
+import { truncateText } from "@/utils/marketplace";
 
 const myservices = [
   {
@@ -18,22 +22,6 @@ const myservices = [
     rating: "4.5",
     profileImage: "/assets/images/marketplace/singleTask/oluchi.png",
     profileName: "Daniels Oluchi",
-    price: 100,
-  },
-  {
-    Jobimage: "/assets/images/serviceProvider/gasfilling.png",
-    category: "Gas Fitting",
-    rating: "4.5",
-    profileImage: "/assets/images/marketplace/singleTask/oluchi.png",
-    profileName: "Daniels Oluchi",
-    price: 100,
-  },
-  {
-    Jobimage: "/assets/images/serviceProvider/plumbing.png",
-    category: "Plumbing",
-    rating: "4.5",
-    profileImage: "/assets/images/marketplace/singleTask/oluchi.png",
-    profileName: "Drain Inspection",
     price: 100,
   },
 ];
@@ -47,42 +35,49 @@ const jobsData = [
     price: 450,
     time: "Yesterday",
   },
-  {
-    id: "2",
-    name: "Kelly Jane",
-    description: "Request for drain blockage fix service",
-    image: "/assets/images/serviceProvider/jobs/kelly.png",
-    price: 450,
-    time: "Yesterday",
-  },
-  {
-    id: "3",
-    name: "Kelly Jane",
-    description: "Request for drain blockage fix service",
-    image: "/assets/images/serviceProvider/jobs/man.png",
-    price: 450,
-    time: "Yesterday",
-  },
-  {
-    id: "3",
-    name: "Kelly Jane",
-    description: "Request for drain blockage fix service",
-    image: "/assets/images/serviceProvider/jobs/woman.png",
-    price: 450,
-    time: "Yesterday",
-  },
 ];
 
 const ServicesPage = () => {
   const [currentCategory, setCurrentCategory] = useState("services");
-  const rounter = useRouter();
+  const [ongoingBookingData, setOngoingBookingData] = useState<BookingType[]>(
+    [],
+  );
+  const [loading, setLoading] = useState(false);
 
-  console.log(currentCategory);
+  const router = useRouter();
+  const session = useSession();
+  const token = session?.data?.user?.accessToken;
 
-  const handleNavigateCard = (index: number) => {
-    const route = "/service-provider/services/" + index;
-    rounter.push(route);
+  const fetchOngoingBookings = async () => {
+    if (!token) return;
+    try {
+      setLoading(true);
+      console.log("Fetching all bookings");
+      console.log(token);
+      const url =
+        "https://smp.jacinthsolutions.com.au/api/v1/booking/service-provider";
+      const response = await axios.get(url, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      console.log("fetch completed");
+      const data: BookingType[] = response.data;
+      const filteredData = data.filter(
+        (item) => item.bookingStage === "ACCEPTED",
+      );
+      setOngoingBookingData(filteredData);
+    } catch (error) {
+      console.error("An error occurred while fetching services:", error);
+    } finally {
+      setLoading(false);
+    }
   };
+
+  useEffect(() => {
+    fetchOngoingBookings();
+    // eslint-disable-next-line
+  }, [token]);
 
   return (
     <main className="space-y-8 p-4 lg:p-8">
@@ -107,70 +102,21 @@ const ServicesPage = () => {
         </button>
       </div>
       {currentCategory === "services" ? (
-        <section className="flex flex-wrap gap-4">
-          {myservices.map((item, index) => (
-            <motion.div
-              key={index}
-              className="mx-auto cursor-pointer space-y-8 rounded-xl bg-[#EBE9F4] p-2"
-              // onClick={() => handleNavigateCard(index)}
-              initial={{ opacity: 0, translateY: "5rem" }}
-              whileInView={{ opacity: 1, translateY: "0" }}
-              transition={{ duration: 0.5 }}
-            >
-              <div className="space-y-2">
-                <div className="h-52 w-72 overflow-hidden rounded-xl">
-                  <Image
-                    src={item.Jobimage}
-                    width={400}
-                    height={400}
-                    alt={item.category}
-                    className=" h-full w-full object-cover "
-                  />
-                </div>
-                <p className="px-2 text-3xl font-bold text-[#190E3F] ">
-                  {item.category}
-                </p>
-
-                <div className="px-2">
-                  <p className="text-xs"> {item.rating} </p>
-                  <div className="flex items-center gap-1">
-                    <FaStar size={10} color="gold" />
-                    <FaStar size={10} color="gold" />
-                    <FaStar size={10} color="gold" />
-                    <FaStar size={10} color="gold" />
-                    <FaStar size={10} color="grey" />
-                  </div>
-                  <div className="flex items-center justify-between gap-3">
-                    <div className="flex items-center gap-2 py-3">
-                      <Image
-                        src={item.profileImage}
-                        alt={item.profileName}
-                        width={20}
-                        height={20}
-                        className="rounded-full"
-                      />
-                      <p className="text-xs"> {item.profileName} </p>
-                    </div>
-                    <p className="font-bold text-[#381F8C] ">
-                      From ${item.price}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-          ))}
-        </section>
+        <AllServices />
       ) : currentCategory === "ongoing" ? (
         <div className="flex flex-col gap-8  pb-4">
-          {jobsData.map((item, index) => (
+          {ongoingBookingData.map((item, index) => (
             <div
               key={index}
               className=" flex gap-3 border-b border-slate-200 p-4 lg:grid lg:grid-cols-12 lg:items-center lg:px-8 lg:py-4"
             >
               <div className="col-span-2 size-20 flex-shrink-0 overflow-hidden rounded-full border border-violet-normal lg:size-24">
                 <Image
-                  src={item.image}
-                  alt={item.name}
+                  src={
+                    item.user.profileImage ??
+                    "/assets/images/serviceProvider/user.jpg"
+                  }
+                  alt={item.user.fullName}
                   width={200}
                   height={200}
                   className="h-full w-full object-cover "
@@ -180,26 +126,33 @@ const ServicesPage = () => {
                 <div className="flex flex-wrap justify-between gap-2 ">
                   <div className="space-y-2">
                     <p className="text-lg font-semibold text-violet-normal ">
-                      {item.name}
+                      {item.user.fullName}
                     </p>
-                    <p className="text-violet-normal"> {item.description} </p>
+                    <p className="text-violet-normal">
+                      {truncateText(item.bookingTitle, 30)}
+                    </p>
                   </div>
                   <div className="space-y-2">
                     <p className="text-sm font-medium text-orange-normal">
-                      {item.time}
+                      {item.startDate}
                     </p>
                     <p className=" text-slate-700">Total Cost ${item.price}</p>
                   </div>
                 </div>
-                <div className="flex flex-wrap gap-3">
-                  <Link
-                    href={"/service-provider/dashboard/jobs/" + item.id}
-                    className="rounded-full border border-violet-normal bg-violet-light px-6 py-3 text-sm font-medium text-violet-normal transition-colors duration-300 hover:bg-violet-200 max-md:px-4 max-md:py-2 max-md:text-sm "
-                  >
-                    View Enquiry
-                  </Link>
-                  <button className="rounded-full bg-violet-normal px-6 py-3 text-sm font-medium text-white transition-opacity duration-300 hover:opacity-90 max-md:px-4 max-md:py-2 max-md:text-sm">
-                    Chat With Customer
+                <div className="flex flex-wrap justify-between">
+                  <div className="flex flex-wrap gap-3">
+                    <Link
+                      href={"/service-provider/jobs/" + item.id}
+                      className="rounded-full border border-violet-normal bg-violet-light px-6 py-3 text-sm font-medium text-violet-normal transition-colors duration-300 hover:bg-violet-200 max-md:px-4 max-md:py-2 max-md:text-sm "
+                    >
+                      View Enquiry
+                    </Link>
+                    <button className="rounded-full bg-violet-normal px-6 py-3 text-sm font-medium text-white transition-opacity duration-300 hover:opacity-90 max-md:px-4 max-md:py-2 max-md:text-sm">
+                      Complete Service
+                    </button>
+                  </div>
+                  <button className="text-xl font-bold text-red-600">
+                    Report
                   </button>
                 </div>
               </div>
