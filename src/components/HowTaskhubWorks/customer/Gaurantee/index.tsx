@@ -7,13 +7,13 @@ import GauranteeImage from "../../../../../public/assets/images/homepage/howTask
 const CustomerGauranteeData = [
   {
     id: 1,
-    title: 'Posting a task at no cost.',
+    title: 'Posting a task at no cost',
     details: ' You have access to post your task free with no charge.'
   },
   {
     id: 2,
     title: 'Getting the best provider required for your task',
-    details: ' In here we bring you the some of the best services providers to get the work done for you in no time.'
+    details: ' In here we bring you some of the best services providers to get the work done for you in no time.'
   },
 
   {
@@ -32,7 +32,7 @@ const Gaurantee = () => {
   return (
     <div className='lg:mt-16 mt-10 lg:flex !justify-between'>
       <div className='lg:w-[50%] '>
-        <h2 className='font-clashMedium lg:text-[40px] text-[30px] text-primary font-extrabold'>
+        <h2 className='font-clashSemiBold lg:text-[45px] text-[30px] text-primary '>
           <span className='text-tc-orange'> TaskHub</span> <br />  Guarantees:
         </h2>
 

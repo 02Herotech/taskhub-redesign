@@ -28,7 +28,7 @@ const Experience = () => {
   return (
     <div>
       <div className='flex items-center justify-center my-10 lg:mt-20'>
-        <h2 className='lg:text-[30px] text-[18px] text-center  xl:w-[50%] w-full lg:w-[65%]  text-primary font-clashSemiBold font-[600]'>
+        <h2 className='lg:text-[30px] text-[18px] text-center  xl:w-[50%] w-full lg:w-[75%]  text-primary font-clashSemiBold font-[600]'>
           Get the best experience whether you <br /> “<span className='text-tc-orange underline' style={{ textDecorationColor: '#FE9B07' }}>Add a Task</span>” or “<span className='text-tc-orange underline' style={{ textDecorationColor: '#FE9B07' }}>Perform a Service</span>”.   </h2>
       </div>
 

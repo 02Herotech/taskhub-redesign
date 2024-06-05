@@ -32,13 +32,13 @@ const HowItWorks = () => {
                     How  it works ?
                 </h2>
 
-                <p className='text-center lg:text-[35px] text-[20px] font-[600] font-clashMedium text-primary xl:w-1/2 lg:w-[65%] my-6'>
+                <p className='text-center lg:text-[35px] text-[20px] font-[600] font-clashMedium text-primary xl:w-1/2 lg:w-[75%] my-6'>
                     Get your Task posted in few steps as a <span className='text-tc-orange'>Customer</span> with TaskHub
                 </p>
             </div>
 
             <div className='lg:flex justify-between mt-5 '>
-                <div className='lg:w-[40%] flex flex-col lg:space-y-14 space-y-10'>
+                <div className='lg:w-[40%] flex flex-col space-y-4 '>
 
                     <div className='relative w-full lg:flex-none flex items-center justify-center'>
                         <div className='relative lg:w-full w-[90%] mx-auto lg:h-[300px] h-[250px] rounded-[30px]'>
@@ -59,7 +59,7 @@ const HowItWorks = () => {
                     </div>
 
                     <div className='h-[400px] lg:w-full w-[90%] mx-auto bg-[#2A1769] rounded-[30px] flex items-center justify-center '>
-                        <div className='relative h-[300px] w-[85%] mx-auto lg:w-[350px] rounded-[15px] ' >
+                        <div className='relative h-[300px] w-[85%]  mx-auto xl:w-[350px] rounded-[15px] ' >
                             <Image
                                 src={images1[currentImageIndex1]}
                                 alt=""
@@ -83,7 +83,7 @@ const HowItWorks = () => {
                     </div>
 
                     <div className='flex justify-between ml-6'>
-                        <div className='relative w-[45%] rounded-[30px] lg:h-[330px] h-[180px]'>
+                        <div className='relative w-[45%] rounded-[30px] lg:h-[280px] h-[180px]'>
                             <Image
                                 src={Customer2}
                                 alt="Customer 2"
@@ -94,7 +94,7 @@ const HowItWorks = () => {
 
 
                         <div className='w-[45%]'>
-                            <div className='relative w-full lg:h-[330px] h-[180px]'>
+                            <div className='relative w-full lg:h-[280px] h-[180px]'>
                                 <Image
                                     src={Customer3}
                                     alt="Customer 3"

@@ -39,7 +39,7 @@ const SPHowItWorks = () => {
           How  it works ?
         </h2>
 
-        <p className='text-center lg:text-[35px] text-[20px] font-[600] font-clashMedium text-primary xl:w-1/2 lg:w-[65%] my-6'>
+        <p className='text-center lg:text-[35px] text-[20px] font-[600] font-clashMedium text-primary xl:w-1/2 lg:w-[70%] my-6'>
           Earn your way to Financial freedom as a <span className='text-tc-orange'>Service provider</span>  on TaskHub
         </p>
       </div>
@@ -47,20 +47,20 @@ const SPHowItWorks = () => {
 
       <div className='lg:flex justify-between mt-5 '>
 
-        <div className='lg:w-[50%] space-y-6'>
+        <div className='lg:w-[50%] space-y-4'>
           <p className='text-primary lg:text-[32px] text-[18px] font-[600] font-clashMedium'>
             Tell us your service details  &  Upload your service image.
           </p>
 
           <div className='flex  space-x-3'>
-            <div className='rounded-[100%] h-2 w-2 bg-primary lg:mt-5 mt-3'>
+            <div className='rounded-[100%] h-2 w-2 bg-primary lg:mt-3 mt-2'>
 
             </div>
             <p className='text-primary lg:text-[20px] text-[16px] font-satoshiMedium w-[95%]'>Choose your service name, find the best category and subcategory for your service and proceed to give a detailed description. The best part is, we make it easy for you with our AI Assistance.</p>
           </div>
 
           <div className='flex justify-between ml-6'>
-            <div className='relative w-[45%] rounded-[30px] lg:h-[200px] h-[180px]'>
+            <div className='relative w-[48%] rounded-[30px] lg:h-[210px] h-[180px]'>
               <Image
                 src={ServiceProvider1}
                 alt="Customer 2"
@@ -68,7 +68,7 @@ const SPHowItWorks = () => {
                 className="absolute rounded-[30px]"
               />
             </div>
-            <div className='relative w-[45%] rounded-[30px] lg:h-[200px] h-[180px]'>
+            <div className='relative w-[48%] rounded-[30px] lg:h-[210px] h-[180px]'>
               <Image
                 src={ServiceProvider2}
                 alt="Customer 3"
@@ -79,17 +79,17 @@ const SPHowItWorks = () => {
           </div>
 
           <div className='flex  space-x-3'>
-            <div className='rounded-[100%] h-2 w-2 bg-primary lg:mt-5 mt-3'>
+            <div className='rounded-[100%] h-2 w-2 bg-primary lg:mt-3 mt-2'>
 
             </div>
             <p className='text-primary lg:text-[20px] text-[16px] font-satoshiMedium w-[95%]'>Input details of your pricing plans, choose a service type, physical or remote.</p>
           </div>
 
           <div className='flex  space-x-3'>
-            <div className='rounded-[100%] h-2 w-2 bg-primary lg:mt-5 mt-3'>
+            <div className='rounded-[100%] h-2 w-2 bg-primary lg:mt-3 mt-2'>
 
             </div>
-            <p className='text-primary lg:text-[20px] text-[16px] font-satoshiMedium w-[95%]'>Add information about your availability( days and time), Then upload service images or generate with AI, and you’re all done.</p>
+            <p className='text-primary lg:text-[20px] text-[16px] font-satoshiMedium w-[95%]'>Add information about your availability (days and time), Then upload service images or generate with AI and you’re all done.</p>
           </div>
 
           <div className='hidden lg:block'>
@@ -110,9 +110,9 @@ const SPHowItWorks = () => {
           </div>
         </div>
 
-        <div className='lg:w-[40%]  flex flex-col lg:space-y-14 space-y-10'>
+        <div className='lg:w-[40%]  flex flex-col space-y-6'>
 
-          <div className='relative w-full lg:flex-none flex items-center justify-center lg:mt-0 mt-10'>
+          <div className='relative w-full lg:flex-none flex items-center justify-center lg:mt-0 mt-30'>
             <div className='relative lg:w-full w-[90%] mx-auto lg:h-[300px] h-[250px] rounded-[30px]'>
               <Image
                 src={ServiceProvider3}
@@ -131,7 +131,7 @@ const SPHowItWorks = () => {
           </div>
 
           <div className='h-[420px] lg:w-full w-[90%] mx-auto bg-tc-orange rounded-[30px] flex items-center justify-center '>
-            <div className='relative h-[380px] w-[85%] mx-auto lg:w-[350px] rounded-[15px] ' >
+            <div className='relative h-[380px] w-[85%] mx-auto xl:w-[350px] rounded-[15px] ' >
               <Image
                 src={images1[currentImageIndex1]}
                 alt=""

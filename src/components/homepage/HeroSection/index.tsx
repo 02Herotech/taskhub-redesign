@@ -278,7 +278,7 @@ const HeroSection = () => {
 
             </div>
 
-            <Link href={'how-taskhub-works'}>
+            <Link href={'how-taskhub-works/customer'}>
               <p className="text-[#FE9B07] hover:underline text-[16px]  font-bold flex items-center lg:pl-4 lg:mb-6 space-x-2 mb-3 font-satoshiMedium "><span>Learn how Taskhub works</span>
                 <span className="-rotate-45"> <FaArrowRight size={15} /></span>
               </p>
