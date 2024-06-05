@@ -113,7 +113,7 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
           <h1 className=" text-xl font-bold text-violet-darkHover md:text-2xl">
             {isFiltering && filteredData.length > 0
               ? filteredData[0].category.categoryName
-              : ""}
+              : category}
           </h1>
           {(isFiltering
             ? filteredData.length > 3
