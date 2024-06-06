@@ -201,7 +201,7 @@ const Invoices = () => {
                                             </div>
                                             <div className="flex items-center max-lg:space-x-3 justify-between mb-6">
                                                 <div className="">
-                                                    <h2 className='text-xl text-[#001433] font-bold'>"--"</h2>
+                                                    <h2 className='text-xl text-[#001433] font-bold'>1</h2>
                                                     <h5 className='text-[#716F78]'>Service duration</h5>
                                                 </div>
                                             </div>
