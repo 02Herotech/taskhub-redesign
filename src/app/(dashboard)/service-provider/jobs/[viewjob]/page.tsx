@@ -149,7 +149,7 @@ const ViewJobs = () => {
               <div className="space-y-8 text-violet-normal">
                 <p> {currentBooking.listing.listingTitle} </p>
                 <div>
-                  <p className="text-xl font-bold uppercase">Booked by:</p>
+                  <p className="text-xl font-bold uppercase">Requested by:</p>
                   <p className=" text-xl font-bold text-orange-normal">
                     {currentBooking.user.fullName}
                   </p>

@@ -151,53 +151,56 @@ const Invoice = ({
             />
           </label>
         </div>
-        <div className="grid grid-cols-2 gap-5 rounded-lg bg-violet-active p-3 py-8 text-violet-normal">
-          <div className="space-y-5">
-            <div>
-              <p className=" font-satoshiBold font-extrabold text-violet-dark  ">
-                {formatDateAsYYYYMMDD(todayDate)}
-              </p>
-              <p className="text-slate-600 ">Issued On</p>
+        <div className="space-y-3 rounded-lg bg-violet-active p-3 py-4 text-violet-normal">
+          <p className="font-bold text-violet-normal ">Service Information</p>
+          <div className="grid grid-cols-2 gap-5 ">
+            <div className="space-y-5">
+              <div>
+                <p className=" font-satoshiBold font-extrabold text-violet-dark  ">
+                  {formatDateAsYYYYMMDD(todayDate)}
+                </p>
+                <p className="text-slate-600 ">Issued On</p>
+              </div>
+              <div>
+                <p className=" font-satoshiBold font-extrabold text-violet-dark  ">
+                  Bill From
+                </p>
+                <p>
+                  {user?.firstName} {user?.lastName}
+                </p>
+              </div>
+              <div>
+                <p className=" font-satoshiBold font-extrabold text-violet-dark  ">
+                  ${invoiceState.gst}
+                </p>
+                <p>GST @10%</p>
+              </div>
             </div>
-            <div>
-              <p className=" font-satoshiBold font-extrabold text-violet-dark  ">
-                Bill From
-              </p>
-              <p>
-                {user?.firstName} {user?.lastName}
-              </p>
-            </div>
-            <div>
-              <p className=" font-satoshiBold font-extrabold text-violet-dark  ">
-                ${invoiceState.gst}
-              </p>
-              <p>GST @10%</p>
-            </div>
-          </div>
-          <div className="space-y-5">
-            <div>
-              <p className=" font-satoshiBold font-extrabold text-violet-dark  ">
-                {formatDateAsYYYYMMDD(tomorrowDate)}
-              </p>
-              <p>Due On</p>
-            </div>
-            <div>
-              <p className=" font-satoshiBold font-extrabold text-violet-dark  ">
-                Bill To
-              </p>
-              <p className=" ">{currentBooking?.user.fullName}</p>
-            </div>
-            <div>
-              <p className=" font-satoshiBold font-extrabold text-violet-dark  ">
-                Service Charge
-              </p>
-              <p>${SERVICE_CHARGE}</p>
-            </div>
-            <div>
-              <p className=" font-satoshiBold font-extrabold text-violet-dark  ">
-                Total
-              </p>
-              <p>${invoiceState.total}</p>
+            <div className="space-y-5">
+              <div>
+                <p className=" font-satoshiBold font-extrabold text-violet-dark  ">
+                  {formatDateAsYYYYMMDD(tomorrowDate)}
+                </p>
+                <p>Due On</p>
+              </div>
+              <div>
+                <p className=" font-satoshiBold font-extrabold text-violet-dark  ">
+                  Bill To
+                </p>
+                <p className=" ">{currentBooking?.user.fullName}</p>
+              </div>
+              <div>
+                <p className=" font-satoshiBold font-extrabold text-violet-dark  ">
+                  Service Charge
+                </p>
+                <p>${SERVICE_CHARGE}</p>
+              </div>
+              <div>
+                <p className=" font-satoshiBold font-extrabold text-violet-dark  ">
+                  Total
+                </p>
+                <p>${invoiceState.total}</p>
+              </div>
             </div>
           </div>
         </div>
