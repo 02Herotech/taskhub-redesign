@@ -7,6 +7,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { formatDateAsYYYYMMDD } from "@/utils";
 import { useRouter } from "next/navigation";
+import { BeatLoader } from "react-spinners";
 
 interface ModalPropType {
   isModalOpen: boolean;
@@ -163,7 +164,6 @@ const Invoice = ({
                 Bill From
               </p>
               <p>
-                {" "}
                 {user?.firstName} {user?.lastName}
               </p>
             </div>
@@ -201,6 +201,10 @@ const Invoice = ({
             </div>
           </div>
         </div>
+        <p className=" font-bold text-violet-darker">
+          Note: The service charges and GST would be deducted from the total
+          paid by the customer
+        </p>
         <button
           className="absolute right-4 top-4"
           onClick={() => setIsModalOpen((prev) => !prev)}
@@ -212,7 +216,15 @@ const Invoice = ({
             onClick={generateInvoice}
             className="rounded-full bg-violet-normal px-4 py-2 font-medium text-white"
           >
-            {invoiceState.loading ? "Loaing ...." : "Done"}
+            {invoiceState.loading ? (
+              <BeatLoader
+                color={"white"}
+                loading={invoiceState.loading}
+                size={14}
+              />
+            ) : (
+              "Done"
+            )}
           </button>
           <button
             onClick={() => setIsModalOpen(false)}
