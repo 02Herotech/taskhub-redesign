@@ -26,3 +26,39 @@ export const formatDateAsYYYYMMDD = (inputDate: string | Date): string => {
   const day = String(date.getDate()).padStart(2, "0");
   return `${year}-${month}-${day}`;
 };
+
+export function formatDateFromNumberArray(dateArray: number[]) {
+  const [year, month, day] = dateArray;
+  const date = new Date(year, month - 1, day); // JavaScript Date object
+
+  const daySuffix = (day: number) => {
+    if (day > 3 && day < 21) return "th"; // because 11th, 12th, 13th
+    switch (day % 10) {
+      case 1:
+        return "st";
+      case 2:
+        return "nd";
+      case 3:
+        return "rd";
+      default:
+        return "th";
+    }
+  };
+
+  const monthNames = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
+
+  return `${day}${daySuffix(day)} ${monthNames[month - 1]} ${year}`;
+}

@@ -9,7 +9,7 @@ import { FaStar } from "react-icons/fa";
 
 import PricingPlan from "@/components/matkeplaceSingleTask/PricingPlan";
 import Reviews from "@/components/matkeplaceSingleTask/Reviews";
-import { formatDate } from "@/lib/utils";
+import { formatDateFromNumberArray } from "@/utils";
 
 const Page = () => {
   const [displayData, setDisplayData] = useState<ListingDataType>();
@@ -22,49 +22,6 @@ const Page = () => {
       console.log(content);
     }
   }, []);
-
-  function getDaySuffix(day: number): string {
-    if (day > 3 && day < 21) return "th"; // covers 11th, 12th, 13th
-    switch (day % 10) {
-      case 1:
-        return "st";
-      case 2:
-        return "nd";
-      case 3:
-        return "rd";
-      default:
-        return "th";
-    }
-  }
-
-  function getMonthName(monthIndex: number): string {
-    const monthNames = [
-      "January",
-      "February",
-      "March",
-      "April",
-      "May",
-      "June",
-      "July",
-      "August",
-      "September",
-      "October",
-      "November",
-      "December",
-    ];
-    return monthNames[monthIndex];
-  }
-
-  function formatNumberIntoDate(dateArray: number[]): string {
-    const [year, month, day] = dateArray;
-    const date = new Date(year, month, day);
-
-    const dayWithSuffix = day + getDaySuffix(day);
-    const monthName = getMonthName(month);
-    const formattedDate = `${dayWithSuffix} ${monthName} ${year}`;
-
-    return formattedDate;
-  }
 
   return (
     <>
@@ -112,7 +69,7 @@ const Page = () => {
                 </span>
                 <span>
                   {displayData?.createdAt &&
-                    formatNumberIntoDate(displayData.createdAt)}
+                    formatDateFromNumberArray(displayData.createdAt)}
                 </span>
               </p>
               <p className="flex items-center gap-2 text-slate-500 ">

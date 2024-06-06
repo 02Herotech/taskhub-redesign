@@ -52,8 +52,6 @@ const ServicesPage = () => {
     if (!token) return;
     try {
       setLoading(true);
-      console.log("Fetching all bookings");
-      console.log(token);
       const url =
         "https://smp.jacinthsolutions.com.au/api/v1/booking/service-provider";
       const response = await axios.get(url, {
@@ -61,12 +59,12 @@ const ServicesPage = () => {
           Authorization: `Bearer ${token}`,
         },
       });
-      console.log("fetch completed");
       const data: BookingType[] = response.data;
       const filteredData = data.filter(
         (item) => item.bookingStage === "ACCEPTED",
       );
       setOngoingBookingData(filteredData);
+      console.log(filteredData);
     } catch (error) {
       console.error("An error occurred while fetching services:", error);
     } finally {
@@ -148,7 +146,7 @@ const ServicesPage = () => {
                       View Enquiry
                     </Link>
                     <button className="rounded-full bg-violet-normal px-6 py-3 text-sm font-medium text-white transition-opacity duration-300 hover:opacity-90 max-md:px-4 max-md:py-2 max-md:text-sm">
-                      Complete Service
+                      Accept Service
                     </button>
                   </div>
                   <button className="text-xl font-bold text-red-600">

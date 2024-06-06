@@ -1,5 +1,6 @@
 import { defaultUserDetails } from "@/data/data";
 import Loading from "@/shared/loading";
+import { formatDateFromNumberArray } from "@/utils";
 import axios from "axios";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
@@ -16,18 +17,10 @@ const ProfileHeader = () => {
   const editProfileLink = isServiceProvider
     ? "/service-provider/profile/edit-profile"
     : "/customer/profile/edit-profile";
-  const currentDateTime = new Date();
-  const dateArray = user?.registeredAt || [
-    currentDateTime.getFullYear(),
-    currentDateTime.getMonth() + 1,
-    currentDateTime.getDate(),
-  ];
-  const date = new Date(
-    Number(dateArray[0]),
-    Number(dateArray[1]) - 1,
-    Number(dateArray[2]),
-  );
+
   const location = user?.address?.state || "Australia";
+
+  console.log(user);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -88,7 +81,8 @@ const ProfileHeader = () => {
               Edit Account Details
             </Link>
             <p className="text-sm font-medium text-[#140B31]">
-              A member since {date.toDateString()}
+              {/* @ts-expect-error "Type error in the user declaration as number array" */}
+              A member since {formatDateFromNumberArray(user.registeredAt)}
             </p>
             <p className="text-sm font-medium text-[#140B31]">{location}</p>
           </div>

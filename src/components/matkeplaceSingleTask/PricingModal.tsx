@@ -55,6 +55,7 @@ const PricingModal = ({
     description: "",
     time: "",
   });
+  const [isSubmittedSuccessful, setIsSubmittedSuccessful] = useState(false);
 
   const session = useSession();
   const token = session?.data?.user?.accessToken;
@@ -73,7 +74,6 @@ const PricingModal = ({
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     try {
-      console.log(token);
       setSubmitStatus((prev) => ({ ...prev, isSubmtting: true, error: "" }));
       if (
         !formState.date ||
@@ -111,9 +111,7 @@ const PricingModal = ({
         ...prev,
         message: data.message,
       }));
-      setTimeout(() => {
-        router.push("/marketplace");
-      }, 2000);
+      setIsSubmittedSuccessful(true);
     } catch (error) {
       setSubmitStatus((prev) => ({
         ...prev,
@@ -144,10 +142,12 @@ const PricingModal = ({
       const { data } = await axios.get(url);
       const suburb = data.map((item: any) => item.name);
       setStateLists(suburb);
+      setFormState((prev) => ({ ...prev, suburb: suburb[0] }));
     } catch (error) {
       console.log(error);
     }
   };
+
   useEffect(() => {
     const fetchData = async () => {
       await handleFectchLocationByPostcode();
@@ -208,6 +208,28 @@ const PricingModal = ({
               className="rounded-full bg-violet-normal px-6 py-3 font-bold text-white"
             >
               Sign Up
+            </Link>
+          </div>
+        </div>
+      ) : isSubmittedSuccessful ? (
+        <div className="relative z-10 flex w-[90vw] max-w-xl flex-col items-center justify-center gap-3 bg-violet-light p-3 px-4 lg:space-y-4 lg:p-10">
+          <div className="clip-triangle absolute left-0 top-0 h-full w-full bg-violet-active"></div>
+          <div className="relative flex flex-col items-center justify-center gap-4 bg-white p-6 lg:px-20 ">
+            {/* <Image
+              src="/assets/images/marketplace/singleTask/Frame 1000003668.png"
+              alt="icon"
+              width={100}
+              height={100}
+              className="size-14 object-contain"
+            /> */}
+            <p className="text-center text-xl font-bold text-violet-normal">
+              Booking Proposal successfully sent to the service provider
+            </p>
+            <Link
+              href={`/marketplace`}
+              className="rounded-full bg-violet-normal px-6 py-3 font-bold text-white"
+            >
+              Proceed to marketplace
             </Link>
           </div>
         </div>
@@ -286,6 +308,7 @@ const PricingModal = ({
                 className="w-full max-w-60 rounded-lg p-3 outline-none"
                 disabled={stateLists.length === 0}
                 required
+                value={formState.suburb}
                 onChange={(event) =>
                   setFormState((prev) => ({
                     ...prev,
@@ -360,11 +383,6 @@ const PricingModal = ({
           </button>
           {submitSatus.error && (
             <p className="text-center  text-red-800">{submitSatus.error}</p>
-          )}
-          {submitSatus.message && (
-            <p className="text-center  text-emerald-800">
-              {submitSatus.message}
-            </p>
           )}
         </form>
       )}

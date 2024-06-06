@@ -2,9 +2,11 @@
 
 import { marketPlaceModalIcon } from "@/lib/svgIcons";
 import Loading from "@/shared/loading";
+import { formatDateFromNumberArray } from "@/utils";
 import axios from "axios";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
@@ -97,9 +99,9 @@ const Jobs = () => {
                       className="h-full w-full object-cover "
                     />
                   </div>
-                  <div className="col-span-10 w-full space-y-6">
+                  <div className="col-span-10 w-full space-y-4">
                     <div className="flex flex-wrap justify-between gap-2 ">
-                      <div className="space-y-2">
+                      <div>
                         <p className="text-lg font-semibold text-violet-normal ">
                           {item.user.fullName}
                         </p>
@@ -109,7 +111,10 @@ const Jobs = () => {
                       </div>
                       <div className="space-y-2">
                         <p className="text-sm font-medium text-orange-normal">
-                          {item.startDate[0]}
+                          <p>
+                            {/* @ts-expect-error "type error in the array declaration" */}
+                            {formatDateFromNumberArray(item.startDate)}
+                          </p>
                         </p>
                         <p className=" text-slate-700">
                           Total Cost ${item.price}
@@ -123,9 +128,12 @@ const Jobs = () => {
                       >
                         View Enquiry
                       </button>
-                      <button className="rounded-full bg-violet-normal px-6 py-3 text-sm font-medium text-white transition-opacity duration-300 hover:opacity-90 max-md:px-4 max-md:py-2 max-md:text-sm">
+                      <Link
+                        href={"/message"}
+                        className="rounded-full bg-violet-normal px-6 py-3 text-sm font-medium text-white transition-opacity duration-300 hover:opacity-90 max-md:px-4 max-md:py-2 max-md:text-sm"
+                      >
                         Chat With Customer
-                      </button>
+                      </Link>
                     </div>
                   </div>
                 </div>
