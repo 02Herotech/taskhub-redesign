@@ -11,8 +11,8 @@ import icon2 from "../../../../public/assets/images/serviceProvider/AiButton2.pn
 import Image from "next/image";
 import { TypeAnimation } from "react-type-animation";
 
-
 interface Message {
+  id: number;
   type: "user" | "ai";
   text: string;
 }
@@ -43,15 +43,21 @@ interface ProvideServiceData {
 interface AiGenerateProps {
   setTask: React.Dispatch<React.SetStateAction<ProvideServiceData>> | any;
   task: ProvideServiceData | any;
-  displayType: String
+  displayType: String;
 }
 
-const AiDesciption: React.FC<AiGenerateProps> = ({ task, setTask, displayType }) => {
+const AiDesciption: React.FC<AiGenerateProps> = ({
+  task,
+  setTask,
+  displayType,
+}) => {
   const session = useSession();
   const userName = session?.data?.user?.user?.firstName;
 
   const [aiQuery, setAiQuery] = useState("");
   const [currentQuery, setCurrentQuery] = useState("");
+  const [isNewQuery, setIsNewQuery] = useState(false);
+  const generateId = () => Date.now() + Math.random();
 
   const handleInputChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -63,6 +69,7 @@ const AiDesciption: React.FC<AiGenerateProps> = ({ task, setTask, displayType })
   const [aiChatView, showAiChatView] = useState(false);
   const AiChatView = () => {
     showAiChatView(!aiChatView);
+    setIsNewQuery(false);
   };
 
   const [conversation, setConversation] = useState<Message[]>([]);
@@ -78,16 +85,21 @@ const AiDesciption: React.FC<AiGenerateProps> = ({ task, setTask, displayType })
       setEmptyQuerryField(false);
     }
     setAiLoading(true);
+
     const newConversation: Message[] = [
       ...conversation,
-      { type: "user", text: aiQuery },
+      { id: generateId(), type: "user", text: aiQuery },
     ];
     setConversation(newConversation);
+    setIsNewQuery(true);
     try {
       const url = `${process.env.NEXT_PUBLIC_API_URL}/listing/create-listing/category/content-generate?category=${encodeURIComponent(aiQuery)}`;
       const response = await axios.get(url);
       const data = await response.data[0]?.message?.content;
-      setConversation([...newConversation, { type: "ai", text: data }]);
+      setConversation([
+        ...newConversation,
+        { id: generateId(), type: "ai", text: data },
+      ]);
     } catch (error) {
       console.error("Error fetching AI response:", error);
     } finally {
@@ -102,7 +114,7 @@ const AiDesciption: React.FC<AiGenerateProps> = ({ task, setTask, displayType })
       conversationEndRef.current.scrollIntoView({ behavior: "smooth" });
     }
   }, [conversation]);
-  
+
   const setServiceDetails = (index: any) => {
     const description = conversation[index]?.text;
     setTask({ ...task, listingDescription: description });
@@ -111,15 +123,18 @@ const AiDesciption: React.FC<AiGenerateProps> = ({ task, setTask, displayType })
 
   const getMoreSuggestions = async () => {
     setAiLoading(true);
+    setIsNewQuery(false);
+
     try {
       const url = `${process.env.NEXT_PUBLIC_API_URL}/listing/create-listing/category/content-generate?category=${encodeURIComponent(currentQuery)}`;
       const response = await axios.get(url);
       const data = await response.data[0]?.message?.content;
       const newConversation: Message[] = [
         ...conversation,
-        { type: "ai", text: data },
+        { id: generateId(), type: "ai", text: data },
       ];
       setConversation(newConversation);
+      setIsNewQuery(true);
     } catch (error) {
       console.error("Error fetching AI response:", error);
     } finally {
@@ -128,70 +143,111 @@ const AiDesciption: React.FC<AiGenerateProps> = ({ task, setTask, displayType })
   };
 
   const AiSuggestions = [
-    'Give a service description for a makeup artist that does sfx makeup.',
-    'Give a service description for an event planner with 2 years experience who specializes in kids parties.',
-  ]
+    "Give a service description for a makeup artist that does sfx makeup.",
+    "Give a service description for an event planner with 2 years experience who specializes in kids parties.",
+  ];
 
   const getAiSuggestions = async (index: number) => {
     setAiLoading(true);
     setCurrentQuery(AiSuggestions[index]);
+    setIsNewQuery(true);
     const newConversation: Message[] = [
       ...conversation,
-      { type: "user", text: AiSuggestions[index] },
+      { id: generateId(), type: "user", text: AiSuggestions[index] },
     ];
     setConversation(newConversation);
     try {
       const url = `${process.env.NEXT_PUBLIC_API_URL}/listing/create-listing/category/content-generate?category=${encodeURIComponent(AiSuggestions[index])}`;
       const response = await axios.get(url);
       const data = await response.data[0]?.message?.content;
-      setConversation([...newConversation, { type: "ai", text: data }]);
+      setConversation([
+        ...newConversation,
+        { id: generateId(), type: "ai", text: data },
+      ]);
     } catch (error) {
       console.error("Error fetching AI response:", error);
     } finally {
       setAiQuery("");
       setAiLoading(false);
     }
-  }
+  };
+
+  const [animationFinished, setAnimationFinished] = useState<{
+    [key: number]: boolean;
+  }>({});
+
+  useEffect(() => {
+    if (isNewQuery && conversation.length > 0) {
+      const lastMessage = conversation[conversation.length - 1];
+      if (lastMessage.type === "ai") {
+        const textLength = lastMessage.text.length;
+        const animationSpeed = 34;
+        const animationDuration = textLength * animationSpeed;
+
+        setTimeout(() => {
+          setAnimationFinished((prev) => ({ ...prev, [lastMessage.id]: true }));
+        }, animationDuration);
+      }
+    }
+  }, [isNewQuery, conversation]);
 
   return (
     <div>
-      {displayType === 'card' ? (<div className="mb-5 flex flex-col space-y-6 rounded-[20px] bg-[#381F8C] p-4">
-        <h2 className="text-lg font-extrabold text-white">
-          Get personalized AI help
-        </h2>
-        <p className="text-white">
-          Recommended for you , Get an automated content prompt for your service
-          description by clicking on{" "}
-          <span className="text-[#FE9B07]">Generate with AI</span> button.
-        </p>
-        <span>
-          <button
-            onClick={AiChatView}
-            type="button"
-            className={` text-[] w-[200px] transform rounded-[20px] bg-[#FE9B07]  p-2
-       px-3 text-white transition-transform duration-300 ease-in-out hover:scale-105 flex items-center  space-x-4
+      {displayType === "card" ? (
+        <div className="relative ">
+          <div className=" mb-5 flex flex-col space-y-6 rounded-[20px] bg-[#381F8C] p-4">
+            <h2 className="text-lg font-extrabold text-white">
+              Get personalized AI help
+            </h2>
+            <p className="text-white">
+              Recommended for you , Get an automated content prompt for your
+              service description by clicking on{" "}
+              <span className="text-[#FE9B07]">Generate with AI</span> button.
+            </p>
+            <span>
+              <button
+                onClick={AiChatView}
+                type="button"
+                className={` z-10 flex w-[200px] transform items-center  space-x-4 rounded-[20px]
+       bg-[#FE9B07] p-2 px-3 text-[] text-white transition-transform duration-300 ease-in-out  hover:scale-105
       `}
-          >
-            <span className="mr-2"><Image alt='' src={icon1} width={30} height={30} /></span>
-            Generate with AI
-          </button>{" "}
-        </span>
-      </div>) : (
+              >
+                <span className="mr-2">
+                  <Image alt="" src={icon1} width={30} height={30} />
+                </span>
+                Generate with AI
+              </button>{" "}
+            </span>
+          </div>
+          <div className="absolute  right-2 top-[20%] h-full w-[20%] ">
+            {Array.from({ length: 7 }).map((_, index) => (
+              <div
+                key={index}
+                className="absolute bottom-0 right-0 h-[250px] w-[1px] bg-white"
+                style={{
+                  transform: `rotate(45deg) translate(${index * 10}px, ${index * 10}px)`,
+                  opacity: 0.5,
+                }}
+              ></div>
+            ))}
+          </div>
+        </div>
+      ) : (
         <button
           onClick={AiChatView}
           type="button"
-          className={` transform bg-none border-none
-       text-primary transition-transform duration-300 ease-in-out hover:scale-105 flex items-center  space-x-4 font-satoshiBold font-extrabold`}
+          className={` flex transform items-center
+       space-x-4 border-none bg-none font-satoshiBold font-extrabold text-primary transition-transform  duration-300 ease-in-out hover:scale-105`}
         >
           Generate with AI
-
-          <span className="ml-2"><Image alt='' src={icon2} width={20} height={20} /></span>
-
+          <span className="ml-2">
+            <Image alt="" src={icon2} width={20} height={20} />
+          </span>
         </button>
       )}
 
       {aiChatView && (
-        <div className="bg-opacity-50 fixed inset-0 z-50 flex items-center justify-center bg-black">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
           <div className=" mx-auto h-[90%] w-[90%] rounded-[16px] bg-[#FFFFFF] p-10 text-white md:w-[60%] lg:w-[50%]">
             <div className=" flex justify-end">
               <div
@@ -202,75 +258,91 @@ const AiDesciption: React.FC<AiGenerateProps> = ({ task, setTask, displayType })
               </div>
             </div>
             <div>
-              <h2 className="lg:text-[35px] text-[25px] text-primary font-clashBold">Hello, {userName}</h2>
-              <p className="pb-3 text-[16px] text-[#716F78] font-clashMedium">
+              <h2 className="font-clashBold text-[25px] text-primary lg:text-[35px]">
+                Hello, {userName}
+              </h2>
+              <p className="pb-3 font-clashMedium text-[16px] text-[#716F78]">
                 Here are some suggested questions you can ask me?
               </p>
             </div>
 
             <div className="conversation h-[65%] space-y-4 overflow-y-scroll  lg:h-[65%] ">
-
-              <div className="lg:flex justify-between lg:w-[90%] w-full mx-auto space-y-3 lg:space-y-0">
+              <div className="mx-auto w-full justify-between space-y-3 lg:flex lg:space-y-0">
                 {AiSuggestions.map((entry, index) => (
-
                   <p
                     key={index}
-                    className="p-2 text-[15px] rounded-[15px] bg-white border border-[#2A1769] text-[#2A1769] font-satoshiMedium lg:w-[49%]  hover:cursor-pointer hover:transform hover:translate-x-1 hover:translate-y-1 transition-all duration-500 "
+                    className="mr-[5%] rounded-[13px] border border-primary bg-white p-2 font-satoshiMedium text-[14px] text-primary transition-all  duration-500 hover:translate-x-1 hover:translate-y-1 hover:transform hover:cursor-pointer lg:w-[49%] "
                     onClick={() => getAiSuggestions(index)}
                   >
                     {entry}
                   </p>
-
                 ))}
               </div>
               {conversation.map((entry, index) => (
                 <div key={index}>
-                  {entry.type === 'user' && <div className="flex justify-end">
-                    <p className="p-2 text-[16px] mr-[5%] rounded-[14px] bg-primary text-[#ffffff] lg:w-[50%]">
-                      {entry.text}
-                    </p>
-                  </div>}
+                  {entry.type === "user" && (
+                    <div className="flex justify-end">
+                      <p className="mr-[5%] rounded-[14px] bg-primary p-2 text-[16px] text-[#ffffff] lg:w-[50%]">
+                        {entry.text}
+                      </p>
+                    </div>
+                  )}
 
-                  {entry.type === 'ai' && index < conversation.length - 1 && <div className="flex gap-2">
-                    <span className="ml-2 mt-1"><Image alt='' src={icon2} width={20} height={20} /></span>
-                    <p className="w-[85%] text-primary font-satoshiMedium"> {entry.text}</p>
-                  </div>}
+                  {entry.type === "ai" && index < conversation.length - 1 && (
+                    <div className="flex gap-2">
+                      <span className="ml-2 mt-1">
+                        <Image alt="" src={icon2} width={20} height={20} />
+                      </span>
+                      <p className="w-[85%] font-satoshiMedium text-primary">
+                        {" "}
+                        {entry.text}
+                      </p>
+                    </div>
+                  )}
 
-                  {entry.type === 'ai' && index === conversation.length - 1 && <div className="flex gap-2">
-                    <span className="ml-2 mt-1"><Image alt='' src={icon2} width={20} height={20} /></span>
-                    <p className="w-[85%] text-primary font-satoshiMedium">
-                      <TypeAnimation
-                        sequence={[entry.text]}
-                        speed={70}
-                        wrapper="span"
-                        style={{
-                          fontSize: "16px",
-                          margin: "0",
-                        }}
-                        repeat={0}
-                        cursor={false}
-                      />
+                  {entry.type === "ai" && index === conversation.length - 1 && (
+                    <div className="flex gap-2">
+                      <span className="ml-2 mt-1">
+                        <Image alt="" src={icon2} width={20} height={20} />
+                      </span>
+                      <p className="w-[85%] font-satoshiMedium text-primary">
+                        {isNewQuery ? (
+                          <TypeAnimation
+                            sequence={[entry.text]}
+                            speed={70}
+                            wrapper="span"
+                            style={{ fontSize: "16px", margin: "0" }}
+                            repeat={0}
+                            cursor={false}
+                          />
+                        ) : (
+                          entry.text
+                        )}
+                      </p>
+                    </div>
+                  )}
+
+                  {animationFinished[entry.id] && (
+                    <p
+                      className={`mt-6 ${entry.type === "user" ? "hidden" : "my-2 w-full"}`}
+                    >
+                      <span className="font-satoshi text-[15px] font-bold text-primary">
+                        Are you happy with this suggestion? you can
+                      </span>{" "}
+                      <span
+                        onClick={() => setServiceDetails(index)}
+                        className="mt-5 rounded-[20px] bg-[#FE9B07] px-4 py-1 text-[14px] text-white hover:cursor-pointer lg:mt-0 lg:p-2"
+                      >
+                        USE
+                      </span>{" "}
+                      <span
+                        onClick={getMoreSuggestions}
+                        className="font-satoshi text-[12px] font-bold text-primary underline hover:cursor-pointer"
+                      >
+                        or get more suggestions
+                      </span>
                     </p>
-                  </div>}
-                  <p
-                    className={` ${entry.type === "user" ? "hidden" : "my-2 w-full"}`}
-                  >
-                    <span className="text-[15px] font-satoshi font-bold text-primary">
-                      Are you happy with this suggestion? you can
-                    </span>{" "}
-                    <span
-                      onClick={() => setServiceDetails(index)}
-                      className="mt-5 rounded-[20px] bg-[#FE9B07] px-4  py-1 text-[14px] text-white hover:cursor-pointer lg:mt-0 lg:p-2"
-                    >
-                      USE
-                    </span>{" "}
-                    <span
-                      onClick={getMoreSuggestions}
-                      className="text-[12px] text-primary font-satoshi font-bold underline hover:cursor-pointer"
-                    >
-                      or get more suggestions
-                    </span>
-                  </p>
+                  )}
                   <div ref={conversationEndRef} />
                 </div>
               ))}
@@ -278,13 +350,17 @@ const AiDesciption: React.FC<AiGenerateProps> = ({ task, setTask, displayType })
             </div>
 
             <p className="h-[15px] ">
-              {AiLoading ? <BeatLoader className="text-primary" size={12} /> : ""}
+              {AiLoading ? (
+                <BeatLoader className="text-primary" size={12} />
+              ) : (
+                ""
+              )}
             </p>
             <div className=" relative  rounded-[20px] px-4 pb-7 pt-2 font-medium lg:pb-2">
               <form onSubmit={handleAiChatView}>
                 <textarea
                   name="aiQuery"
-                  placeholder="Enter request here"
+                  placeholder="Enter a request here"
                   onChange={handleInputChange}
                   value={aiQuery}
                   className="h-[50px] w-full overflow-hidden text-wrap rounded-[12px] border-[2px] 
@@ -296,7 +372,7 @@ border-primary bg-transparent px-3 pt-3 text-[16px] font-normal text-primary"
                     {" "}
                     <BiSend
                       size={26}
-                      className="transform ease-in-out hover:scale-110 hover:cursor-pointer text-primary"
+                      className="transform text-primary ease-in-out hover:scale-110 hover:cursor-pointer"
                     />
                   </button>
                 </div>
@@ -308,13 +384,13 @@ border-primary bg-transparent px-3 pt-3 text-[16px] font-normal text-primary"
                   <span>
                     <BiSend
                       size={26}
-                      className="transform ease-in-out hover:scale-110 hover:cursor-pointer text-primary"
+                      className="transform text-primary ease-in-out hover:scale-110 hover:cursor-pointer"
                     />
                   </span>
                 </div>
               </form>
               {emptyQuerryField && (
-                <p className="text-center font-clashDisplay text-red-500">
+                <p className="font-clashDisplay text-center text-red-500">
                   Kindly enter your request
                 </p>
               )}
