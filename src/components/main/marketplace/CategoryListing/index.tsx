@@ -111,11 +111,15 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
       <div className="mb-3 flex items-center justify-between">
         <div className="flex w-full items-center justify-between">
           <h1 className=" text-xl font-bold text-violet-darkHover md:text-2xl">
-            {isFiltering && filteredData.length > 0
-              ? filteredData[0].category.categoryName
-              : category}
+            {!isFiltering
+              ? category
+              : filteredData.length > 0
+                ? filteredData[0].category.categoryName
+                : ""}
           </h1>
-          {displayListing.length > 3 && (
+          {(isFiltering
+            ? filteredData.length > 3
+            : displayListing.length > 3) && (
             <button
               className="flex items-center gap-2 border-b-2 border-violet-normal text-sm font-bold  text-violet-normal"
               onClick={() =>

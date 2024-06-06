@@ -5,15 +5,7 @@ import CustomerPaymentHistory from "@/components/dashboard/customer/PaymentHisto
 import Button from "@/components/global/Button"
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 import { IoArrowBackSharp } from "react-icons/io5";
-
-type SignUpRequest = {
-    cardName: string;
-    cardNumber: number
-    expiryDate: string;
-    cvv: number;
-};
 
 const TransactionHistory = () => {
     const [selectedMethod, setSelectedMethod] = useState('paymentHistory');
@@ -23,29 +15,6 @@ const TransactionHistory = () => {
         setSelectedMethod(event.target.value);
     };
 
-    const methods = useForm({
-        mode: "onChange",
-        defaultValues: {
-            cardName: "",
-            cardNumber: 0,
-            expiryDate: "",
-            cvv: 0,
-        },
-    });
-
-    const {
-        formState: { isValid },
-        watch,
-    } = methods;
-
-    const onSubmit: SubmitHandler<SignUpRequest> = async (payload) => {
-        try {
-
-        } catch (err: any) {
-            console.log("Error:", err);
-
-        }
-    };
     return (
         <div className='p-4 lg:px-14 mt-14'>
             <div className="mt-14 mb-8 space-y-8">

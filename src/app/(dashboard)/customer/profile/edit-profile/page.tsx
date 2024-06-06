@@ -8,12 +8,10 @@ import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useSession } from "next-auth/react";
 import { PiFileArrowDownDuotone } from "react-icons/pi";
-import { BsPencilSquare } from "react-icons/bs";
 import { BiCamera, BiCheck } from "react-icons/bi";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import axios from "axios";
-import Webcam from "react-webcam";
 
 const EditProfile = () => {
   const [isEditingEnabled, setIsEditingEnabled] = useState(false);
@@ -71,6 +69,10 @@ const EditProfile = () => {
   });
 
   const watchField = watch();
+
+  useEffect(() => {
+    console.log("Watched", watchField);
+  }, [watchField]);
 
   useEffect(() => {
     if (user) {

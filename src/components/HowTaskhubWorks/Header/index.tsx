@@ -53,13 +53,13 @@ const Header = () => {
 
 
             <div className='hidden lg:flex justify-between items-center px-20'>
-                <div className='text-white font-medium  xl:text-[65px] text-[35px] w-[50%] '>
+                <div className='xl:text-[65px] text-[35px] w-[50%] '>
 
-                    <h2>
+                    <h2 className='text-[#EBE9F4] font-clashMedium'>
                         GET IT DONE!
                     </h2>
 
-                    <p className='text-[24px]'>
+                    <p className='text-[24px] text-[#F8ECFD] font-satoshiMedium'>
                         A place where you can share task and connect with service providers.
                     </p>
 
@@ -180,13 +180,13 @@ xl:px-7 lg:px-1 py-2 text-primary font-satoshiMedium hover:bg-[#e4e0f7] w-[250px
 
 
 
-                <div className='text-white font-medium space-y-3 px-5  text-[20px]  '>
+                <div className=' font-medium space-y-3 px-5  text-[20px]  '>
 
-                    <h2>
+                    <h2 className='text-[#EBE9F4] font-clashMedium'>
                         GET IT DONE!
                     </h2>
 
-                    <p className='text-[16px] w-[80%]'>
+                    <p className='text-[16px] w-[80%] text-[#F8ECFD] font-satoshiMedium'>
                         A place where you can share task and connect with service providers.
                     </p>
 

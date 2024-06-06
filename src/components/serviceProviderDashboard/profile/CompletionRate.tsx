@@ -11,17 +11,17 @@ const CompletionRate = () => {
       </h4>
       <div>
         <div className="relative my-4 mb-10 h-4 w-full rounded-full bg-[#F1F1F2]">
-          <div className="h-4 w-[55%] rounded-full bg-yellow-500 transition-all"></div>
+          <div className="h-4 w-[45%] rounded-full bg-[#FE9B07] transition-all"></div>
           <span className="absolute -bottom-6 left-0 text-sm font-medium text-[#221354]">
             Bad
           </span>
-          <span className="absolute -bottom-6 left-[25%] text-sm font-medium text-[#221354]">
+          <span className="absolute -bottom-6 left-[20%] text-sm font-medium text-[#221354]">
             Fair
           </span>
-          <span className="absolute -bottom-6 left-[50%] text-sm font-medium text-[#221354]">
+          <span className="absolute -bottom-6 left-[40%] text-sm font-medium text-[#221354]">
             Good
           </span>
-          <span className="absolute -bottom-6 left-[70%] text-sm font-medium text-[#221354]">
+          <span className="absolute -bottom-6 left-[65%] text-sm font-medium text-[#221354]">
             Great
           </span>
           <span className="absolute -bottom-6 right-0 text-sm font-medium text-[#221354]">

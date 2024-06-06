@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FaStar } from "react-icons/fa6";
 import { motion } from "framer-motion";
 import { notificationData } from "@/app/data/service-provider/notification";
@@ -11,6 +11,9 @@ import { HiLocationMarker } from "react-icons/hi";
 import { CiClock1 } from "react-icons/ci";
 import Link from "next/link";
 import AllServices from "@/components/dashboard/serviceProvider/services/AllServices";
+import { useSession } from "next-auth/react";
+import axios from "axios";
+import { truncateText } from "@/utils/marketplace";
 
 const myservices = [
   {
@@ -36,7 +39,45 @@ const jobsData = [
 
 const ServicesPage = () => {
   const [currentCategory, setCurrentCategory] = useState("services");
-  const rounter = useRouter();
+  const [ongoingBookingData, setOngoingBookingData] = useState<BookingType[]>(
+    [],
+  );
+  const [loading, setLoading] = useState(false);
+
+  const router = useRouter();
+  const session = useSession();
+  const token = session?.data?.user?.accessToken;
+
+  const fetchOngoingBookings = async () => {
+    if (!token) return;
+    try {
+      setLoading(true);
+      console.log("Fetching all bookings");
+      console.log(token);
+      const url =
+        "https://smp.jacinthsolutions.com.au/api/v1/booking/service-provider";
+      const response = await axios.get(url, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      console.log("fetch completed");
+      const data: BookingType[] = response.data;
+      const filteredData = data.filter(
+        (item) => item.bookingStage === "ACCEPTED",
+      );
+      setOngoingBookingData(filteredData);
+    } catch (error) {
+      console.error("An error occurred while fetching services:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchOngoingBookings();
+    // eslint-disable-next-line
+  }, [token]);
 
   return (
     <main className="space-y-8 p-4 lg:p-8">
@@ -64,15 +105,18 @@ const ServicesPage = () => {
         <AllServices />
       ) : currentCategory === "ongoing" ? (
         <div className="flex flex-col gap-8  pb-4">
-          {jobsData.map((item, index) => (
+          {ongoingBookingData.map((item, index) => (
             <div
               key={index}
               className=" flex gap-3 border-b border-slate-200 p-4 lg:grid lg:grid-cols-12 lg:items-center lg:px-8 lg:py-4"
             >
               <div className="col-span-2 size-20 flex-shrink-0 overflow-hidden rounded-full border border-violet-normal lg:size-24">
                 <Image
-                  src={item.image}
-                  alt={item.name}
+                  src={
+                    item.user.profileImage ??
+                    "/assets/images/serviceProvider/user.jpg"
+                  }
+                  alt={item.user.fullName}
                   width={200}
                   height={200}
                   className="h-full w-full object-cover "
@@ -82,26 +126,33 @@ const ServicesPage = () => {
                 <div className="flex flex-wrap justify-between gap-2 ">
                   <div className="space-y-2">
                     <p className="text-lg font-semibold text-violet-normal ">
-                      {item.name}
+                      {item.user.fullName}
                     </p>
-                    <p className="text-violet-normal"> {item.description} </p>
+                    <p className="text-violet-normal">
+                      {truncateText(item.bookingTitle, 30)}
+                    </p>
                   </div>
                   <div className="space-y-2">
                     <p className="text-sm font-medium text-orange-normal">
-                      {item.time}
+                      {item.startDate}
                     </p>
                     <p className=" text-slate-700">Total Cost ${item.price}</p>
                   </div>
                 </div>
-                <div className="flex flex-wrap gap-3">
-                  <Link
-                    href={"/service-provider/dashboard/jobs/" + item.id}
-                    className="rounded-full border border-violet-normal bg-violet-light px-6 py-3 text-sm font-medium text-violet-normal transition-colors duration-300 hover:bg-violet-200 max-md:px-4 max-md:py-2 max-md:text-sm "
-                  >
-                    View Enquiry
-                  </Link>
-                  <button className="rounded-full bg-violet-normal px-6 py-3 text-sm font-medium text-white transition-opacity duration-300 hover:opacity-90 max-md:px-4 max-md:py-2 max-md:text-sm">
-                    Chat With Customer
+                <div className="flex flex-wrap justify-between">
+                  <div className="flex flex-wrap gap-3">
+                    <Link
+                      href={"/service-provider/jobs/" + item.id}
+                      className="rounded-full border border-violet-normal bg-violet-light px-6 py-3 text-sm font-medium text-violet-normal transition-colors duration-300 hover:bg-violet-200 max-md:px-4 max-md:py-2 max-md:text-sm "
+                    >
+                      View Enquiry
+                    </Link>
+                    <button className="rounded-full bg-violet-normal px-6 py-3 text-sm font-medium text-white transition-opacity duration-300 hover:opacity-90 max-md:px-4 max-md:py-2 max-md:text-sm">
+                      Complete Service
+                    </button>
+                  </div>
+                  <button className="text-xl font-bold text-red-600">
+                    Report
                   </button>
                 </div>
               </div>

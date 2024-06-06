@@ -100,7 +100,7 @@ const ChangePassword = () => {
     };
 
     return (
-        <div className="p-4 lg:px-32 mt-20">
+        <div className="p-4 lg:px-32 mt-[4rem]">
             <div className="mt-14 mb-8 space-y-8">
                 <h4 className='text-[#140B31] font-satoshiBold font-bold text-3xl lg:text-5xl'>Change Password</h4>
                 <div className='border-2 border-primary' />

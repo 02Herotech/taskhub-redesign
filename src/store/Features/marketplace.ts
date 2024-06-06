@@ -8,6 +8,8 @@ interface MarketSliceTypes {
     subCategory: SubCategoryType;
     location: string;
     pricing: { minPrice: number; maxPrice: number };
+    type: string;
+    others: string;
   };
   search: {
     isSearching: boolean;
@@ -26,6 +28,8 @@ const initialState: MarketSliceTypes = {
     subCategory: { id: 0, name: "" },
     location: "",
     pricing: { minPrice: 5, maxPrice: 1000 },
+    type: "",
+    others: "",
   },
   search: {
     isSearching: false,
@@ -63,6 +67,20 @@ export const marketSlice = createSlice({
     },
     updateFilterData: (state, action) => {
       const { data, section, value } = action.payload;
+      if (section === "search") {
+        return {
+          ...state,
+          search: { isSearching: true, searchData: value },
+          filteredData: data,
+          isFiltering: true,
+        };
+      }
+      if (section === "category") {
+        return {
+          ...state,
+          filteredData: data,
+        };
+      }
       let prevFilter = state.filteredData || [];
       let newFilter = [];
       if (!prevFilter.length) {
@@ -113,12 +131,15 @@ export const marketSlice = createSlice({
       return {
         ...state,
         isFiltering: false,
+        search: { isSearching: false, searchData: "" },
         filteredData: [],
         currentFilterStatus: {
           category: "",
           subCategory: { id: 0, name: "" },
           location: "",
           pricing: { minPrice: 5, maxPrice: 1000 },
+          type: "",
+          others: "",
         },
       };
     },
@@ -144,6 +165,9 @@ export const marketSlice = createSlice({
           newFilter = prevFilter.filter(
             (item) => item.suburb === value || item.state === value,
           );
+          break;
+        case "type":
+          newFilter = prevFilter.filter((item) => item.taskType === value);
           break;
         case "pricing":
           newFilter = prevFilter.filter((item) => {

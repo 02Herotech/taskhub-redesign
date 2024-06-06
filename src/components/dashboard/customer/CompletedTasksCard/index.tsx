@@ -30,7 +30,7 @@ const CompletedTasksCard = ({ task }: TaskCardProps) => {
     const [reviewSent, setReviewSent] = useState(false);
     const [deleteTaskPopup, setDeleteTaskPopup] = useState(false);
 
-    const dateArray = task.taskDate;
+    const dateArray = task.createdAt;
     const date = new Date(dateArray[0], dateArray[1] - 1, dateArray[2]);
     const day = date.getDate();
     const daySuffix = suffixes[(day % 10) - 1] || suffixes[0];
@@ -52,7 +52,7 @@ const CompletedTasksCard = ({ task }: TaskCardProps) => {
             onClick: () => {
                 setIsDropdownOpen(false);
                 setDropReviewPopup(true);
-            },
+            }, 
             icon: DropReviewSvg,
         },
         {

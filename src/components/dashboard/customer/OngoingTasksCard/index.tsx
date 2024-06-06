@@ -18,7 +18,7 @@ const OngoingTasksCard = ({ task }: TaskCardProps) => {
     const lastName = session?.data?.user.user.lastName;
     const fullName = `${firstName} ${lastName}`;
 
-    const dateArray = task.taskDate;
+    const dateArray = task.createdAt;
     const date = new Date(dateArray[0], dateArray[1] - 1, dateArray[2]);
 
     const day = date.getDate();

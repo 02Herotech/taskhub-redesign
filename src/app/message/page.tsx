@@ -1,6 +1,5 @@
 "use client";
 
-// import { chatData } from "@/app/data/service-provider/user";
 import ChatNavigation from "@/components/main/message/ChatNavigation";
 import Image from "next/image";
 import Link from "next/link";

@@ -34,8 +34,11 @@ const Jobs = () => {
         },
       });
       console.log("fetch completed");
-      const data = response.data;
-      setBookingData(data);
+      const data: BookingType[] = response.data;
+      const filteredData = data.filter(
+        (item) => item.bookingStage !== "REJECTED",
+      );
+      setBookingData(filteredData);
     } catch (error) {
       console.error("An error occurred while fetching services:", error);
     } finally {
@@ -63,9 +66,6 @@ const Jobs = () => {
   return (
     <>
       <main className="space-y-8 p-4 lg:p-8">
-        {/* <button className="rounded-full bg-orange-normal px-6 py-3 text-white transition-all duration-300 hover:opacity-90">
-        View Jobs
-      </button> */}
         {loading ? (
           <div className="flex min-h-96 items-center justify-center">
             <Loading />
