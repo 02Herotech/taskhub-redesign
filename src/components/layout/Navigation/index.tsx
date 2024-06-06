@@ -135,18 +135,19 @@ const Navigation = () => {
               <>
                 <Link href="/message" className="relative cursor-pointer">
                   <BsChat className="size-[22px] text-black" />
-                  <span className="absolute -right-1 -top-1 flex size-5 items-center justify-center rounded-full bg-tc-orange text-xs text-white">
-                    2
-                  </span>
+                  {/* display a number chat nummber here */}
+                  {/* <span className="absolute -right-1 -top-1 flex size-5 items-center justify-center rounded-full bg-tc-orange text-xs text-white">
+                  </span> */}
                 </Link>
                 <div
                   className="relative cursor-pointer"
                   onClick={() => router.push(notificationRoute)}
                 >
                   <IoMdNotificationsOutline className="size-[24px] text-black" />
-                  <div className="absolute -right-1 -top-1 flex size-5 items-center justify-center rounded-full bg-tc-orange text-xs text-white">
+                  {/* display notification length here */}
+                  {/* <div className="absolute -right-1 -top-1 flex size-5 items-center justify-center rounded-full bg-tc-orange text-xs text-white">
                     {notificationLength}
-                  </div>
+                  </div> */}
                 </div>
                 <Dropdown
                   trigger={() => (

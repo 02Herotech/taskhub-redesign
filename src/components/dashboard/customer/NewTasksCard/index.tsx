@@ -7,6 +7,7 @@ import { motion } from "framer-motion";
 import React, { useState } from "react";
 import { CustomerTasks } from "@/types/services/tasks";
 import { BsThreeDotsVertical } from "react-icons/bs";
+import { FaRegEdit } from "react-icons/fa";
 
 interface TaskCardProps {
     task: CustomerTasks;
@@ -34,43 +35,23 @@ const NewTasksCard = ({ task }: TaskCardProps) => {
             onClick: () => {
                 setIsDropdownOpen(false);
             },
-            // icon: DropReviewSvg,
+            icon: <FaRegEdit className="text-white" />,
         },
-        
+
     ];
 
     return (
         <motion.div
-            className="lg:rounded-4xl font-satoshi rounded-xl bg-[#EBE9F4] p-4 mb-4 flex justify-between"
+            className="lg:rounded-4xl font-satoshi rounded-xl bg-[#EBE9F4] p-4 mb-4"
             whileHover={{
                 scale: 1.02,
                 transition: { duration: 0.2 },
             }}
         >
-            <div className="w-2/3">
-                <div className="flex w-full items-center justify-between">
-                    <h2 className="overflow-hidden truncate text-ellipsis whitespace-nowrap py-4 text-2xl font-satoshiBold font-bold text-primary lg:text-[32px]">
-                        {task.taskBriefDescription}
-                    </h2>
-                </div>
-                <div className="space-y-2">
-                    <div className="flex w-full items-center space-x-2 font-medium text-[#716F78]">
-                        <HiOutlineLocationMarker className="h-6 w-6 font-bold" />
-                        <h5 className="overflow-hidden truncate text-ellipsis whitespace-nowrap py-1 text-[15px] lg:text-xl">
-                            {task.taskAddress || `No location`}
-                        </h5>
-                    </div>
-                    <div className="flex w-full items-center space-x-2 font-medium text-[#716F78]">
-                        <FiCalendar className="h-6 w-6 font-bold" />
-                        <h5 className="text-[15px] lg:text-xl">{formattedDate}</h5>
-                    </div>
-                    <div className="flex w-full items-center space-x-2 font-medium text-[#716F78]">
-                        <FiClock className="h-6 w-6 font-bold" />
-                        <h5 className="text-[15px] lg:text-xl">{task.taskTime}</h5>
-                    </div>
-                </div>
-            </div>
-            <div className="flex flex-col items-center justify-between">
+            <div className="flex w-full items-center justify-between space-x-2">
+                <h2 className="overflow-hidden truncate text-ellipsis whitespace-nowrap py-4 text-2xl font-satoshiBold font-bold text-primary lg:text-[32px]">
+                    {task.taskBriefDescription}
+                </h2>
                 <div className="relative">
                     <button onClick={() => setIsDropdownOpen(!isDropdownOpen)} className="p-3 flex items-center space-x-3 bg-primary text-white rounded-lg">
                         <BsThreeDotsVertical />
@@ -88,7 +69,26 @@ const NewTasksCard = ({ task }: TaskCardProps) => {
                         </div>
                     </div>
                 </div>
-                <h2 className="text-2xl font-bold capitalize text-primary lg:text-[22px]">
+            </div>
+            <p className="text-[#2A1769] font-satoshiMedium line-clamp-3">{task.taskDescription}</p>
+            <div className="flex justify-between my-2">
+                <div className="flex items-center space-x-2 font-medium text-[#716F78]">
+                    <HiOutlineLocationMarker className="h-6 w-6 font-bold" />
+                    <h5 className="overflow-hidden truncate text-ellipsis whitespace-nowrap py-1 text-[15px] lg:text-xl">
+                        {task.taskAddress || `No location`}
+                    </h5>
+                </div>
+                <span className="flex items-center space-x-2 font-medium text-[#716F78]">
+                    <FiClock className="h-6 w-6 font-bold" />
+                    <h5 className="text-[15px] lg:text-xl">{task.taskTime || "Flexible"}</h5>
+                </span>
+            </div>
+            <div className="flex">
+                <div className="flex w-full items-center space-x-2 font-medium text-[#716F78]">
+                    <FiCalendar className="h-6 w-6 font-bold" />
+                    <h5 className="text-[15px] lg:text-xl">{formattedDate}</h5>
+                </div>
+                <h2 className="text-2xl font-bold capitalize text-tc-orange lg:text-[22px]">
                     {formatAmount(task.customerBudget, "USD", false)}
                 </h2>
             </div>

@@ -3,6 +3,7 @@
 import Congratulations from "@/components/dashboard/serviceProvider/jobs/Congratulations";
 import Invoice from "@/components/serviceProviderDashboard/jobs/Invoice";
 import Loading from "@/shared/loading";
+import { formatDateFromNumberArray } from "@/utils";
 import axios from "axios";
 import { error } from "console";
 import { useSession } from "next-auth/react";
@@ -118,42 +119,6 @@ const ViewJobs = () => {
     // eslint-disable-next-line
   }, [token, requestStatus.data]);
 
-  function formatDate(dateArray: number[]) {
-    const [year, month, day] = dateArray;
-    const date = new Date(year, month - 1, day); // JavaScript Date object
-
-    const daySuffix = (day: number) => {
-      if (day > 3 && day < 21) return "th"; // because 11th, 12th, 13th
-      switch (day % 10) {
-        case 1:
-          return "st";
-        case 2:
-          return "nd";
-        case 3:
-          return "rd";
-        default:
-          return "th";
-      }
-    };
-
-    const monthNames = [
-      "January",
-      "February",
-      "March",
-      "April",
-      "May",
-      "June",
-      "July",
-      "August",
-      "September",
-      "October",
-      "November",
-      "December",
-    ];
-
-    return `${day}${daySuffix(day)} ${monthNames[month - 1]} ${year}`;
-  }
-
   return (
     <>
       <Congratulations
@@ -184,9 +149,9 @@ const ViewJobs = () => {
               <div className="space-y-8 text-violet-normal">
                 <p> {currentBooking.listing.listingTitle} </p>
                 <div>
-                  <p className="text-lg font-bold uppercase">Posted by:</p>
-                  <p className=" text-orange-normal">
-                    {user?.firstName} {user?.lastName}
+                  <p className="text-xl font-bold uppercase">Requested by:</p>
+                  <p className=" text-xl font-bold text-orange-normal">
+                    {currentBooking.user.fullName}
                   </p>
                 </div>
                 <div>
@@ -197,8 +162,8 @@ const ViewJobs = () => {
                   <p className="text-lg font-medium uppercase">
                     To be Started:
                   </p>
-                  {/* @ts-ignore */}
-                  <p> {formatDate(currentBooking.startDate)} </p>
+                  {/* @ts-expect-error */}
+                  <p> {formatDateFromNumberArray(currentBooking.startDate)} </p>
                 </div>
               </div>
               <div>
@@ -226,7 +191,7 @@ const ViewJobs = () => {
                   <IoLocationOutline />
                 </span>
                 <span>
-                  {currentBooking.userAddress.state}{" "}
+                  {currentBooking.userAddress.state}
                   {currentBooking.userAddress.suburb}
                 </span>
               </p>
@@ -282,7 +247,7 @@ const ViewJobs = () => {
                   currentBooking.bookingStage === "ACCEPTED") && (
                   <Link
                     href={{
-                      pathname: "/service-provider/message",
+                      pathname: "/message",
                     }}
                     className="rounded-full px-6 py-3 font-medium transition-colors duration-300 hover:bg-violet-100 max-md:px-4  max-md:py-2 max-md:text-sm"
                   >

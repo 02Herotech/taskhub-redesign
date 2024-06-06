@@ -1,43 +1,28 @@
-"use client"
-
 import Image from "next/image";
-import { BiSolidBadgeDollar } from "react-icons/bi";
-import { BsFillPatchCheckFill } from "react-icons/bs";
-import { BsShieldFillCheck } from "react-icons/bs";
-import { MdOutlineStarPurple500 } from "react-icons/md";
-import { useSession } from "next-auth/react";
-import { signOut } from "next-auth/react";
-import axios from "axios";
-
 import image1 from "../../../../public/assets/images/homepage/securityFeatures/lady.jpg";
+import DollarSign from "../../../../public/assets/images/homepage/howTaskhubWorks/customer/DollarSign.png";
+import CheckSign from "../../../../public/assets/images/homepage/howTaskhubWorks/customer/CheckSign.png";
+import MessageSign from "../../../../public/assets/images/homepage/howTaskhubWorks/customer/MessageSign.png";
 
-import { useRouter } from "next/navigation";
-import Link from "next/link";
+const SecurityFeaturesData = [
+    {
+        id: 1,
+        icon: DollarSign,
+        details: 'Payments with Enhanced Security'
+    },
+    {
+        id: 2,
+        icon: CheckSign,
+        details: 'Reliable ratings and reviews'
+    },
+    {
+        id: 3,
+        icon: MessageSign,
+        details: 'Coverage for peace of mind'
+    },
+]
 
 const SecurityFeatures = () => {
-    const { data: session } = useSession();
-    const router = useRouter();
-    console.log(session?.user?.user)
-
-    const handlePostTask = async (e: { preventDefault: () => void }) => {
-        e.preventDefault();
-        try {
-            const response = await axios.post(
-                `${process.env.NEXT_PUBLIC_API_URL}/auth/logout`,
-            );
-            console.log("Sign Out: ", response);
-
-            if (response.status === 200) {
-                await signOut({
-                    redirect: false,
-                });
-                router.push("/auth");
-            }
-        } catch (error) {
-            console.error(error);
-        }
-    };
-
     return (
         <div className={` w-full  bg-gradient-to-b from-[#FAF2FD] via-[#FDF7FE] to-[#F6E1FD] `}>
             <div
@@ -45,32 +30,22 @@ const SecurityFeatures = () => {
             >
                 <div className="flex justify-between items-center">
                     <div className="flex w-[400px] flex-col gap-5 space-y-8 xl:w-1/2">
-                        <h1 className="hidden xl:text-[50px] text-[40px] font-[900] text-[#381F8C] lg:block font-clashMedium ">
-                            Security features ensuring your trust and safety
+                        <h1 className="hidden xl:text-[64px]  text-[40px] font-[900] text-[#381F8C] lg:block font-clashMedium ">
+                            Security features ensuring your <br /> trust and safety
                         </h1>
                         <div className="flex flex-col gap-5 lg:space-y-6">
-                            <div className="flex items-center space-x-3">
-                                <span className="text-[20px] text-[#FE9B07]">
-                                    <BiSolidBadgeDollar />
-                                </span>
-                                <p className="font-semibold lg:text-[24px] text-[16px] font-satoshiMedium">Payments with Enhanced Security</p>
-                            </div>
-                            <div className="flex items-center space-x-3">
-                                <span className="text-[20px] text-[#FE9B07]">
-                                    <BsFillPatchCheckFill />
-                                </span>
-                                <p className="font-semibold  lg:text-[24px] text-[16px] font-satoshiMedium">Reliable ratings and reviews</p>
-                            </div>
-                            <div className="flex items-center space-x-3">
-                                <span className="text-[20px] text-[#FE9B07]">
-                                    <BsShieldFillCheck />
-                                </span>
-                                <p className="font-semibold lg:text-[24px] text-[16px] font-satoshiMedium">Coverage for peace of mind</p>
-                            </div>
+                            {SecurityFeaturesData.map((feature) => (
+                                <div key={feature.id} className="flex items-center space-x-3">
+                                    <span className="relative h-[28px] w-[25px] text-[20px] text-[#FE9B07]">
+                                        <Image alt="" src={feature.icon} fill className="absolute" />
+                                    </span>
+                                    <p className="font-semibold lg:text-[24px] text-[16px] font-satoshiMedium">
+                                        {feature.details}
+                                    </p>
+                                </div>
+                            ))}
                         </div>
-
                     </div>
-
                     <div className="xl:h-[650px] xl:w-[650px] lg:h-[500px] lg:w-[500px]  relative rounded-l-[150px]">
                         <Image src={image1} fill alt="" className="absolute rounded-l-[150px]" />
                     </div>
@@ -89,26 +64,15 @@ const SecurityFeatures = () => {
                         <Image src={image1} fill alt="" className="absolute rounded-[150px]" />
                     </div>
                 </div>
-
-                <div className="flex flex-col gap-5 pb-10 ">
-                    <div className="flex items-center space-x-3">
-                        <span className="text-[20px] text-[#FE9B07]">
-                            <BiSolidBadgeDollar />
-                        </span>
-                        <p className="font-semibold  text-[16px]">Payments with Enhanced Security</p>
-                    </div>
-                    <div className="flex items-center space-x-3">
-                        <span className="text-[20px] text-[#FE9B07]">
-                            <BsFillPatchCheckFill />
-                        </span>
-                        <p className="font-semibold   text-[16px]">Reliable ratings and reviews</p>
-                    </div>
-                    <div className="flex items-center space-x-3">
-                        <span className="text-[20px] text-[#FE9B07]">
-                            <BsShieldFillCheck />
-                        </span>
-                        <p className="font-semibold text-[16px]">Coverage for peace of mind</p>
-                    </div>
+                <div className="flex flex-col gap-5 pb-10">
+                    {SecurityFeaturesData.map((feature) => (
+                        <div key={feature.id} className="flex items-center space-x-3">
+                            <span className="relative h-[20px] w-[20px] text-[20px] text-[#FE9B07]">
+                                <Image alt="" src={feature.icon} fill className="absolute object-cover" />
+                            </span>
+                            <p className="font-semibold text-[16px]">{feature.details}</p>
+                        </div>
+                    ))}
                 </div>
             </div>
         </div>

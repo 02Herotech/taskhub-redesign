@@ -1,10 +1,35 @@
 "use client";
-import { notificationData } from "@/app/data/service-provider/notification";
+import { formatDateFromNumberArray } from "@/utils";
+import { useSession } from "next-auth/react";
 import Image from "next/image";
 import React, { useState } from "react";
 
+interface NotificationTypes {
+  id: number;
+  message: string;
+  read: boolean;
+  bookingId: number;
+  type: null;
+  notificationTime: number[];
+}
+
 const ServiceNotification = () => {
   const [currentCategory, setCurrentCategory] = useState("All");
+
+  const session = useSession();
+  // @ts-expect-error "Fix types errors"
+  const userNotification: NotificationTypes[] =
+    session?.data?.user?.user?.appNotificationList;
+
+  const Not = {
+    id: 1,
+    message:
+      "You have a new task.hub.user.service.category.data.model.Category@1a021a20 booking",
+    read: false,
+    bookingId: 1,
+    type: null,
+    notificationTime: [2024, 5, 30, 12, 25, 4, 217507000],
+  };
 
   const handleChangeCategory = (category: string) => {
     setCurrentCategory(category);
@@ -34,30 +59,34 @@ const ServiceNotification = () => {
       </div>
 
       <div className="flex flex-col gap-8  pb-4 ">
-        {notificationData.map((item, index) => (
+        {userNotification.map((item, index) => (
           <div
             key={index}
             className="pointer-events-auto grid w-full cursor-pointer grid-cols-12 items-center gap-4 transition-shadow duration-300 "
           >
             <div className="col-span-9 flex items-center gap-2">
               <Image
-                src={item.image ?? "/assets/images/placeholder.jpeg"}
-                alt={item.jobLabel}
+                src={"/assets/images/placeholder.jpeg"}
+                alt={item.message}
                 width={100}
                 height={100}
                 className="size-16 rounded-full"
               />
               <div>
                 <p className="cursor-pointer font-bold text-violet-normal">
-                  {item.description}
+                  {item.message}
                 </p>
-                <p className="cursor-pointer text-sm text-slate-500">
-                  {item.jobLabel}
-                </p>
+                {/* <p className="cursor-pointer text-sm text-slate-500">
+                  {item.}
+                </p> */}
               </div>
             </div>
             <p className="col-span-3 cursor-pointer text-sm text-slate-500">
-              {item.time}
+              {formatDateFromNumberArray([
+                item.notificationTime[0],
+                item.notificationTime[1],
+                item.notificationTime[2],
+              ])}
             </p>
           </div>
         ))}
