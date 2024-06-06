@@ -87,7 +87,7 @@ const SPHomepage = () => {
                         <div className="flex w-full">
                             <div className="flex items-center space-x-2 rounded-3xl bg-[#FE9B07] px-3 py-2 ">
                                 <Image src={icon1} width={20} alt="24/7"></Image>
-                                <p className="text-[12px] font-bold">24/7 Availability</p>
+                                <p className="text-[12px] font-bold text-primary">24/7 Availability</p>
                             </div>
                         </div>
                     </div>
@@ -95,20 +95,20 @@ const SPHomepage = () => {
                     <div className=" flex flex-col space-y-5">
                         <div className="flex items-center justify-between lg:px-7 ">
                             <Image src={icon2} width={60} alt=""></Image>
-                            <p className="text-left lg:w-[450px] font-satoshi">
+                            <p className="text-left lg:w-[450px] font-satoshi text-[#2A1769]">
                                 At TaskHub, we understand the importance of being there for our{" "}
                                 customers whenever they need us. That&apos;s why we are proud to
                                 offer round-the-clock availability, ensuring that assistance and
                                 support are always just a click or a call away.
                             </p>
                         </div>
-                        <span className="hidden lg:block h-[2px] w-full bg-black"></span>
+                        <span className="hidden lg:block h-[1px] w-full bg-[#2A1769]"></span>
                     </div>
 
                     <div className="ml-16 flex w-full">
                         <div className="flex items-center space-x-2 rounded-3xl bg-[#FE9B07] px-3 py-2 ">
                             <Image src={icon3} width={20} alt="24/7"></Image>
-                            <p className="text-[12px] font-bold">
+                            <p className="text-[12px] font-bold text-primary">
                                 Professional Service Providers
                             </p>
                         </div>
@@ -117,14 +117,14 @@ const SPHomepage = () => {
                     <div className=" flex flex-col space-y-5">
                         <div className="flex items-center justify-between lg:px-7">
                             <Image src={icon4} width={60} alt=""></Image>
-                            <p className="text-left lg:w-[450px]" >
+                            <p className="text-left lg:w-[450px] text-[#2A1769]" >
                                 Our Specialists offer specialized services with a high level of
                                 expertise, integrity, and reliability. They offer tailored
                                 solutions to meet your unique needs, maintaining professionalism
                                 and adhering to industry standards.
                             </p>
                         </div>
-                        <span className="hidden lg:block h-[2px] w-full bg-black"></span>
+                        <span className="hidden lg:block h-[1px] w-full bg-[#2A1769]"></span>
                     </div>
 
                     <div className="mt-10">
@@ -137,20 +137,16 @@ const SPHomepage = () => {
                                     onClick={handleBecomeSP}
                                     className="flex items-center justify-center"
                                 >
-                                    <p className="">Become a Service Provider</p>
-                                    <span className="-rotate-45">
-                                        <IoArrowForward />
-                                    </span>
+                                    <p className="font-satoshiMedium">Become a Service Provider</p>
+
                                 </div>
                             ) : (
                                 <Link
                                     href="/service-provider/dashboard"
                                     className="flex items-center justify-center"
                                 >
-                                    <p className="">Become a Service Provider</p>
-                                    <span className="-rotate-45">
-                                        <IoArrowForward />
-                                    </span>
+                                    <p className="font-satoshiMedium">Become a Service Provider</p>
+
                                 </Link>
                             )}
                         </button>
@@ -161,14 +157,14 @@ const SPHomepage = () => {
                     <div className="ml-10 ">
                         <div className="w-[160px] flex justify-center  items-center space-x-2 rounded-3xl bg-[#FE9B07] px-3 py-2 ">
                             <Image src={icon1} width={20} alt="24/7"></Image>
-                            <p className="text-[10px] font-bold">24/7 Availability</p>
+                            <p className="text-[10px] font-bold text-primary">24/7 Availability</p>
                         </div>
 
                     </div>
 
                     <div className=" flex items-center gap-2 ">
                         <Image src={icon2} width={50} height={30} alt="" className="align-top"></Image>
-                        <p className="text-left text-[14px]">
+                        <p className="text-left text-[14px] text-[#221354]">
                             At TaskHub, we understand the importance of being there for our{" "}
                             customers whenever they need us. That&apos;s why we are proud to
                             offer round-the-clock availability, ensuring that assistance and
@@ -181,7 +177,7 @@ const SPHomepage = () => {
                     <div className="ml-10 ">
                         <div className="w-[220px] flex items-center justify-center space-x-2 rounded-3xl bg-[#FE9B07] px-3 py-2 ">
                             <Image src={icon3} width={20} alt="24/7"></Image>
-                            <p className="text-[10px] font-bold">
+                            <p className="text-[10px] font-bold text-primary">
                                 Professional Service Providers
                             </p>
                         </div>
@@ -190,7 +186,7 @@ const SPHomepage = () => {
 
                     <div className="flex items-center gap-2">
                         <Image src={icon4} width={50} alt=""></Image>
-                        <p className="text-left text-[14px]" >
+                        <p className="text-left text-[14px] text-[#221354]" >
                             Our Specialists offer specialized services with a high level of
                             expertise, integrity, and reliability. They offer tailored
                             solutions to meet your unique needs, maintaining professionalism
@@ -208,20 +204,14 @@ const SPHomepage = () => {
                                 onClick={handleBecomeSP}
                                 className="flex items-center justify-center"
                             >
-                                <p className="">Become a Service Provider</p>
-                                <span className="-rotate-45">
-                                    <IoArrowForward />
-                                </span>
+                                <p className="font-satoshiMedium">Become a Service Provider</p>
                             </div>
                         ) : (
                             <Link
                                 href="/service-provider/dashboard"
                                 className="flex items-center justify-center"
                             >
-                                <p className="">Become a Service Provider</p>
-                                <span className="-rotate-45">
-                                    <IoArrowForward />
-                                </span>
+                                <p className="font-satoshiMedium">Become a Service Provider</p>
                             </Link>
                         )}
                     </button>

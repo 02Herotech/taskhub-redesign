@@ -90,11 +90,11 @@ const Footer = () => {
             <footer className='pt-10 lg:pt-20 bg-status-lightViolet font-satoshi hidden lg:block'>
                 <div className='container w-full grid grid-cols-1 lg:grid-cols-5 gap-10 lg:gap-20 pb-10 '>
                     <div className='grid lg:col-span-2'>
-                        <Link href='/marketplace' className='w-[67px] h-[50px] lg:w-[109px] mt-[-20px] relative'>
+                        <Link href='/' className='w-[67px] h-[50px] lg:w-[109px] mt-[-20px] relative'>
                             <Logo />
                         </Link>
-                        <div className=" xl:mt-0 lg:mt-[-100px] font-satoshi">
-                            <p className="text-primary font-medium max-lg:text-[13px] mt-5 font-satoshi ">Need Help? If you have any questions or encounter issues, our support team is here to assist you. 
+                        <div className=" mt-[-5px] font-satoshi">
+                            <p className="text-primary  max-lg:text-[14px] mt-5 font-satoshiMedium ">Need Help? If you have any questions or encounter issues, our support team is here to assist you. 
                             Reach out to us at {' '}
                                 <a href="mailto:info@taskhub.org.au" className="text-primary underline">
                                     info@taskhub.org.au
@@ -115,12 +115,12 @@ const Footer = () => {
                     {links.map((group, index) => {
                         return (
                             <ul key={index} className='space-y-5'>
-                                <h3 className='text-[#381F8C] text-base  font-clashMedium' style={{fontWeight: 700}}>
+                                <h3 className='text-[#381F8C] text-base  font-clashSemiBold' >
                                     {group.groupName}
                                 </h3>
                                 {group.links.map((link, index) => {
                                     return (
-                                        <li key={index} className='text-primary !font-medium hover:underline text-sm lg:text-base'>
+                                        <li key={index} className='text-primary font-satoshiMedium hover:underline text-sm lg:text-base w-[200px]'>
                                             <Link href={link.url}>{link.label}</Link>
                                         </li>
                                     );
