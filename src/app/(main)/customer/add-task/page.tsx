@@ -158,6 +158,12 @@ const AddTaskForm: React.FC = () => {
     fetchItems();
   }, []);
 
+  useEffect(() => {
+    if (currentPage === 2) {
+      window.scrollTo(0, 0);
+    }
+  }, [currentPage]);
+
   const validateFields = () => {
     const errors: any = {};
     if (activeButtonIndex === 0) {
@@ -188,6 +194,10 @@ const AddTaskForm: React.FC = () => {
    // Validate taskDescription
    if (!task.taskDescription) {
      error.taskDescription = "Please fill out all required fields";
+   }
+
+   if (!selectedCategory) {
+     error.category = "Please fill out all required fields";
    }
 
    // Validate selectedTime and selectedDate or termAccepted
@@ -492,7 +502,7 @@ const AddTaskForm: React.FC = () => {
                 </div>
                 <Dropdown
                   trigger={() => (
-                    <div className="flex h-full w-full cursor-pointer appearance-none justify-between rounded-2xl bg-[#EBE9F4] p-3 text-[13px] outline-none text-status-darkpurple">
+                    <div className={`flex h-full w-full cursor-pointer appearance-none justify-between rounded-2xl bg-[#EBE9F4] p-3 text-[13px] text-status-darkpurple  ${error.subCategory ? "outline-[#FF0000] border border-[#ff0000]" : "outline-none border-none"}`}>
                       <h2>{selectedCategoryName}</h2>
                       <FaSortDown className="text-status-darkpurple" />
                     </div>
@@ -718,12 +728,12 @@ const AddTaskForm: React.FC = () => {
                       <label>Suburb <span className="text-[#ff0000] font-extrabold">*</span></label>
                       <Dropdown
                         trigger={() => (
-                          <div className={`flex h-full w-[150px] cursor-pointer appearance-none justify-between rounded-2xl bg-[#EBE9F4] p-3 text-[13px] ${error.city ? "outline-[#FF0000] border border-[#ff0000]" : "outline-none border-none"}`}>
+                          <div className={`flex h-full w-[150px] cursor-pointer appearance-none font-satoshi font-light justify-between rounded-2xl bg-[#EBE9F4] p-3 text-[13px] ${error.city ? "outline-[#FF0000] border border-[#ff0000]" : "outline-none border-none"}`}>
                             <h2>{selectedCity}</h2>
                             <FaSortDown />
                           </div>
                         )}
-                        className="left-0 right-0 top-14 mx-auto bg-white"
+                        className="left-0 right-0 top-14 mx-auto bg-white small-scrollbar transition-all duration-300 max-h-64 overflow-y-auto"
                       >
                         {postalCodeData.map((data, index) => (
                           <button
@@ -806,7 +816,7 @@ const AddTaskForm: React.FC = () => {
         <title>TaskHub | Add Task</title>
       </Head>
       <div className="w-full">
-        <div className="fixed top-20 left-0 w-full bg-white shadow-md z-50 border-t-2">
+        <div className="fixed top-20 left-0 w-full bg-white shadow-md z-10 border-t-2">
           <div className="mb-3 flex justify-center space-x-5 pt-4">
             <div
               className={`${currentPage === 1
@@ -849,7 +859,7 @@ const AddTaskForm: React.FC = () => {
           <hr className="h-[2px] w-full bg-[#EAE9EB] text-[#EAE9EB]" />
           <div className="flex justify-center pb-4">
             <div
-              className="container flex w-80 items-center justify-center space-x-5 border border-[#EAE9EB] p-3 lg:w-full"
+              className="container flex w-80 items-center justify-center space-x-5 border border-[#EAE9EB] p-3 lg:w-2/3"
               style={{ borderRadius: "0px 0px 20px 20px ", borderTop: "none" }}
             >
               {/* Progress bar */}

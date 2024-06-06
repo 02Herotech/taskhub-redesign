@@ -96,7 +96,7 @@ const ProvideService: React.FC = () => {
     null,
   );
   const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
-  const [selectedCity, setSelectedCity] = useState("Select City/Suburb");
+  const [selectedCity, setSelectedCity] = useState("Suburb");
   const [isRemote, setIsRemote] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const [negotiable, setnegotiable] = useState(false);
@@ -179,16 +179,25 @@ const ProvideService: React.FC = () => {
     }
   }, [selectedCategory]);
 
+  useEffect(() => {
+    if (currentPage === 2 || currentPage === 3) {
+      window.scrollTo(0, 0);
+    }
+  }, [currentPage]);
+
   const validateFields = () => {
     const errors: any = {};
     if (!selectedCategory) {
-      errors.category = "Please select a category.";
-    } else if (!selectedSubCategory) {
-      errors.subCategory = "Please select a subcategory.";
-    } else if (!task.listingTitle) {
-      errors.lisitingTitle = "Please lisitingTitle with a short title";
-    } else if (!task.listingDescription) {
-      errors.description = "Please give a detailed description";
+      errors.category = "Please fill out all required fields";
+    }
+      if (!selectedSubCategory) {
+      errors.subCategory = "Please fill out all required fields";
+    }
+    if (!task.listingTitle) {
+      errors.lisitingTitle = "Please fill out all required fields";
+    }
+    if (!task.listingDescription) {
+      errors.description = "Please fill out all required fields";
     }
     setErrors(errors);
     return Object.keys(errors).length === 0;
@@ -197,17 +206,19 @@ const ProvideService: React.FC = () => {
   const validateField1 = () => {
     const error: any = {};
     if (!task.planOneDescription) {
-      error.planDetails = "Please write down details about your plan";
+      error.planDetails = "Please fill out all required fields";
     }
     if (!task.planOnePrice) {
-      error.price = "Please write down your budget price";
+      error.price = "Please fill out all required fields";
     }
     if (activeButtonIndex === 0) {
       if (!selectedCode) {
-        error.postalCode = "Please input your postal code";
+        error.postalCode = "Please fill out all required fields";
       }
+    }
+    if (activeButtonIndex === 0) {
       if (!selectedCity) {
-        error.city = "Please select your city";
+        error.city = "Please fill out all required fields";
       }
     }
 
@@ -218,10 +229,10 @@ const ProvideService: React.FC = () => {
   const validateField2 = () => {
     const err: any = {};
     if (!selectedDays) {
-      err.availableDays = "Please select an available day";
+      err.availableDays = "Please fill out all required fields";
     }
     if (!task.image1) {
-      err.image = "Please upload an Image";
+      err.image = "Please fill out all required fields";
     }
 
     setErr(err);
@@ -476,7 +487,7 @@ const ProvideService: React.FC = () => {
               >
                 <div className="grid space-y-4">
                   <label className="font-semibold">
-                    Write a short title that accurately describes your service.{" "}
+                    Write a short title that accurately describes your service.{" "}<span className="text-[#ff0000] font-extrabold">*</span>
                   </label>
                   <input
                     type="text"
@@ -484,23 +495,23 @@ const ProvideService: React.FC = () => {
                     value={task.listingTitle}
                     onChange={handleChange}
                     placeholder="Casual Babysitting"
-                    className="rounded-2xl bg-[#EBE9F4] p-3 text-[13px]  outline-none placeholder:font-satoshiMedium placeholder:font-medium placeholder:text-status-darkpurple"
+                    className={`rounded-2xl bg-[#EBE9F4] p-3 text-[13px] placeholder:font-satoshiMedium placeholder:font-medium placeholder:text-status-darkpurple ${errors.lisitingTitle ? "outline-[#FF0000] border border-[#ff0000]" : "outline-none border-none"}`}
                   />
                 </div>
                 <div className="relative grid space-y-4">
                   <label className="font-semibold">
-                    Choose the best category for your listing.{" "}
+                    Choose the best category for your listing.{" "}<span className="text-[#ff0000] font-extrabold">*</span>
                   </label>
                   <Dropdown
                     trigger={() => (
-                      <div className="flex h-full w-full cursor-pointer appearance-none justify-between rounded-2xl bg-[#EBE9F4] p-3 text-[13px] outline-none">
+                      <div className={`flex h-full w-full cursor-pointer appearance-none justify-between rounded-2xl bg-[#EBE9F4] p-3 text-[13px] ${errors.category ? "outline-[#FF0000] border border-[#ff0000]" : "outline-none border-none"}`}>
                         <h2 className="font-satoshiMedium">
                           {selectedCategoryName}
                         </h2>
                         <FaSortDown />
                       </div>
                     )}
-                    className="left-0 right-0 top-14 mx-auto bg-white"
+                    className="left-0 right-0 top-14 mx-auto bg-white small-scrollbar transition-all duration-300 max-h-64 overflow-y-auto"
                   >
                     {items.map((item) => (
                       <button
@@ -519,15 +530,15 @@ const ProvideService: React.FC = () => {
                   </Dropdown>
                 </div>
                 <div className="relative grid space-y-4">
-                  <label className="font-bold">Choose a subcategory. </label>
+                  <label className="font-bold">Choose a subcategory. <span className="text-[#ff0000] font-extrabold">*</span></label>
                   <Dropdown
                     trigger={() => (
-                      <div className="flex h-full w-full cursor-pointer appearance-none justify-between rounded-2xl bg-[#EBE9F4] p-3 text-[13px] outline-none">
+                      <div className={`flex h-full w-full cursor-pointer appearance-none justify-between rounded-2xl bg-[#EBE9F4] p-3 text-[13px] ${errors.subCategory ? "outline-[#FF0000] border border-[#ff0000]" : "outline-none border-none"}`}>
                         <h2>{selectedSubCategoryName}</h2>
                         <FaSortDown />
                       </div>
                     )}
-                    className="left-0 right-0 top-14 mx-auto bg-white"
+                    className="left-0 right-0 top-14 mx-auto bg-white small-scrollbar transition-all duration-300 max-h-64 overflow-y-auto"
                   >
                     {subcategories.map((subcategory) => (
                       <button
@@ -556,10 +567,10 @@ const ProvideService: React.FC = () => {
                 </div>
                 <div className="grid space-y-3">
                   <label className="font-semibold">
-                    Please give a detailed description of the service
+                    Please give a detailed description of the service <span className="text-[#ff0000] font-extrabold">*</span>
                   </label>
                   <textarea
-                    className=" h-[350px] rounded-2xl bg-[#EBE9F4] p-3 outline-none placeholder:font-medium placeholder:text-status-darkpurple"
+                    className={` h-[350px] rounded-2xl bg-[#EBE9F4] p-3 placeholder:font-medium placeholder:text-status-darkpurple ${errors.description ? "outline-[#FF0000] border border-[#ff0000]" : "outline-none border-none"}`}
                     placeholder="Casual Babysitting"
                     name="description"
                     value={task.listingDescription}
@@ -575,11 +586,9 @@ const ProvideService: React.FC = () => {
                     displayType={"text"}
                   />
                 </div>
-                {Object.keys(errors).map((key, index) => (
-                  <div key={index} className="text-red-500">
-                    {errors[key]}
-                  </div>
-                ))}
+                <div className="text-red-600">
+                  {errors.lisitingTitle|| errors.listingDescription|| errors.category || errors.subCategory}
+                </div>
                 <Button className="rounded-3xl" type="submit">
                   Next
                 </Button>
@@ -595,7 +604,7 @@ const ProvideService: React.FC = () => {
               className="space-y-10 font-satoshi font-medium "
             >
               <div className="space-y-4">
-                <h2 className="font-bold">Choose the pricing plans.</h2>
+                <h2 className="font-bold">Choose the pricing plans. <span className="text-[#ff0000] font-extrabold">*</span></h2>
                 <div>
                   <div className="flex items-center">
                     <input
@@ -615,7 +624,7 @@ const ProvideService: React.FC = () => {
                     className={`rounded-2xl ${activePlanIndex === 0
                       ? " disabled bg-transparent p-1 text-lg font-bold text-status-darkViolet"
                       : "bg-[#EBE9F4] p-4 hover:bg-status-darkViolet hover:text-white "
-                      } cursor-pointer text-left outline-none placeholder:font-satoshiMedium placeholder:font-medium placeholder:text-[#2A1769] hover:placeholder:text-white`}
+                      } cursor-pointer text-left outline-none placeholder:font-satoshiMedium placeholder:font-medium placeholder:text-[#2A1769] hover:placeholder:text-white `}
                     name="physical"
                     onClick={() => handlePlan(0)}
                     placeholder="Plan 1"
@@ -629,7 +638,7 @@ const ProvideService: React.FC = () => {
                       </label>
                       <div className="grid space-y-3 rounded-2xl border-2 pb-5">
                         <textarea
-                          className="h-[200px] rounded-2xl bg-[#EBE9F4] p-3 font-satoshiMedium outline-none placeholder:font-satoshiMedium placeholder:font-semibold"
+                          className={`h-[200px] rounded-2xl bg-[#EBE9F4] p-3 font-satoshiMedium placeholder:font-satoshiMedium placeholder:font-semibold  ${error.planDetails ? "outline-[#FF0000] border border-[#ff0000]" : "outline-none border-none"}`}
                           placeholder="Casual Babysitting"
                           name="planOneDescription"
                           value={task.planOneDescription}
@@ -647,7 +656,7 @@ const ProvideService: React.FC = () => {
                             }
                             onChange={handlePrice}
                             placeholder="500"
-                            className="w-1/3 rounded-2xl bg-[#EBE9F4] p-3 pl-5 font-satoshiMedium text-[13px] outline-none"
+                            className={`w-1/3 rounded-2xl bg-[#EBE9F4] p-3 pl-5 font-satoshiMedium text-[13px]  ${error.price ? "outline-[#FF0000] border border-[#ff0000]" : "outline-none border-none"}`}
                           />
                           <p className="absolute left-3 top-3">$</p>
                           <p className="font-extraBold text-xs text-[#140B31]">
@@ -753,7 +762,7 @@ const ProvideService: React.FC = () => {
               </div>
               <div className="space-y-4">
                 <h2 className="font-satoshiMedium text-xl font-bold">
-                  Type of Service
+                  Type of Service <span className="text-[#ff0000] font-extrabold">*</span>
                 </h2>
                 <div className="flex space-x-4 text-[13px] text-[#221354]">
                   <input
@@ -796,25 +805,25 @@ const ProvideService: React.FC = () => {
                 <div className="flex flex-col font-satoshiMedium font-medium text-status-darkpurple lg:flex-row lg:space-x-3">
                   <div className="flex space-x-4 lg:justify-normal">
                     <div className="grid space-y-4">
-                      <label>Postal code</label>
+                      <label>Postal code <span className="text-[#ff0000] font-extrabold">*</span></label>
                       <input
                         value={selectedCode}
                         onChange={handleCode}
                         name="postalCode"
-                        className="w-[155px] cursor-pointer rounded-2xl bg-[#EBE9F4]  p-3 text-[13px] outline-none placeholder:font-bold sm:w-[200px]  lg:w-[140px]"
+                        className={`w-[155px] cursor-pointer rounded-2xl bg-[#EBE9F4]  p-3 text-[13px] placeholder:font-bold sm:w-[200px]  lg:w-[140px] ${error.postalCode ? "outline-[#FF0000] border border-[#ff0000]" : "outline-none border-none"}`}
                       />
                     </div>
 
                     <div className="relative grid space-y-4">
-                      <label>City/Suburb</label>
+                      <label>Suburb <span className="text-[#ff0000] font-extrabold">*</span></label>
                       <Dropdown
                         trigger={() => (
-                          <div className="flex h-full w-[150px] cursor-pointer appearance-none justify-between rounded-2xl bg-[#EBE9F4] p-3 text-[13px] outline-none">
+                          <div className={`flex h-full w-[150px] cursor-pointer appearance-none font-satoshi font-light justify-between rounded-2xl bg-[#EBE9F4] p-3 text-[13px] ${error.city ? "outline-[#FF0000] border border-[#ff0000]" : "outline-none border-none"}`}>
                             <h2>{selectedCity}</h2>
                             <FaSortDown />
                           </div>
                         )}
-                        className="left-0 right-0 top-14 mx-auto bg-white"
+                        className="left-0 right-0 top-14 mx-auto bg-white small-scrollbar transition-all duration-300 max-h-64 overflow-y-auto"
                       >
                         {postalCodeData.map((data, index) => (
                           <button
@@ -848,11 +857,7 @@ const ProvideService: React.FC = () => {
                 </div>
               )}
               <div className="text-[#FF0000]">
-                {Object.keys(error).map((key, index) => (
-                  <div key={index} className="text-red-500">
-                    {error[key]}
-                  </div>
-                ))}
+                {error.planDetails|| error.price|| error.postalCode|| error.city }
               </div>
               <div className="flex justify-between">
                 <Button
@@ -877,8 +882,8 @@ const ProvideService: React.FC = () => {
               <div className="relative mt-2">
                 <Dropdown
                   trigger={() => (
-                    <div className="flex justify-between items-center h-10 w-full rounded-2xl border border-tc-gray bg-[#EBE9F4] px-3 py-1 text-[14px] outline-none lg:w-1/2">
-                      <h2>Available Days</h2>
+                    <div className={`flex justify-between items-center h-10 w-full rounded-2xl border border-tc-gray bg-[#EBE9F4] px-3 py-1 text-[14px] outline-none lg:w-1/2 ${err.availableDays ? "outline-[#FF0000] border border-[#ff0000]" : "outline-none border-none"}`}>
+                      <h2>Available Days <span className="text-[#ff0000] font-extrabold">*</span></h2>
                       <FaSortDown />
                     </div>
                   )}
@@ -914,7 +919,7 @@ const ProvideService: React.FC = () => {
               <div className="space-y-3">
                 <label className="text-status-darkpurple">
                   Upload an Image <br /> This is the main image that would be
-                  seen by customers
+                  seen by customers <span className="text-[#ff0000] font-extrabold">*</span>
                 </label>
                 {task.image1 ? (
                   <div className="flex items-end ">
@@ -947,8 +952,8 @@ const ProvideService: React.FC = () => {
                   </div>
                 ) : (
                   <label
-                    htmlFor="file-upload-main"
-                    className="flex h-48 w-1/2 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-[#EBE9F4] p-4 lg:w-2/5 "
+                      htmlFor="file-upload-main"
+                      className={`flex h-48 w-1/2 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed p-4 lg:w-2/5  ${err.image ? "outline-[#FF0000] border border-[#ff0000]" : "outline-none border-2 border-[#EBE9F4]"}`}
                   >
                     <PiFileArrowDownDuotone className="text-xl text-[#EBE9F4]" />
                     <span className="text-center font-bold text-[#EBE9F4]">
@@ -1118,10 +1123,8 @@ const ProvideService: React.FC = () => {
                   </div>
                 </div>
               </div>
-              <div className="text-[#FF0000]">
-                {Object.keys(err).map((key, index) => (
-                  <div key={index}>{err[key]}</div>
-                ))}
+              <div className="text-red-600">
+                {err.image|| err.availableDays}
               </div>
               <div className="flex justify-between">
                 <Button
@@ -1150,8 +1153,8 @@ const ProvideService: React.FC = () => {
         <title>TaskHub | Provide Service</title>
       </Head>
       <div className="w-full">
-        <div className="fixed top-20 left-0 w-full bg-white shadow-md z-50 border-t-2">
-          <div className="mb-3 flex justify-center font-bold md:space-x-5">
+        <div className="fixed top-20 left-0 w-full bg-white shadow-md z-10 border-t-2">
+          <div className="mb-3 flex justify-center font-bold md:space-x-5 pt-4">
             <div
               className={`${currentPage === 1
                 ? "text-status-purpleBase"
@@ -1211,12 +1214,11 @@ const ProvideService: React.FC = () => {
               </p>
             </div>
           </div>
-        </div>
         <hr className="h-[2px] w-full bg-[#EAE9EB] text-[#EAE9EB]" />
         <div>
-          <div className="flex justify-center">
+          <div className="flex justify-center pb-4">
             <div
-              className="container flex w-80 items-center justify-center space-x-5 border-2 border-[#EAE9EB] p-3 lg:w-full"
+              className="container flex w-80 items-center justify-center space-x-5 border-2 border-[#EAE9EB] p-3 lg:w-2/3"
               style={{ borderRadius: "0px 0px 20px 20px ", borderTop: "none" }}
             >
               {/* Progress bar */}
@@ -1236,7 +1238,9 @@ const ProvideService: React.FC = () => {
               </p>
             </div>
           </div>
+          </div>
         </div>
+        <div className="pt-24">
         <div className="mt-8 lg:flex">
           {currentPage === 1 && (
             <div className="mr-[50px] hidden lg:ml-[10%] lg:block lg:w-[390px] xl:ml-[15%] ">
@@ -1271,7 +1275,8 @@ const ProvideService: React.FC = () => {
             </div>
           </div>
         </div>
-      </div>
+        </div>
+        </div>
       <div>
         {isAuthenticated ? (
           <Popup
