@@ -84,8 +84,9 @@ const AddTaskForm: React.FC = () => {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [selectedTime, setSelectedTime] = useState<Date | null>(null);
   const [selectedCode, setSelectedCode] = useState("");
-  const [selectedCity, setSelectedCity] = useState("Select a City/Suburb");
+  const [selectedCity, setSelectedCity] = useState("Flagstone");
   const [termAccepted, settermAccepted] = useState(false);
+  const [accepted, setAccepted] = useState(false);
   const [isRemote, setIsRemote] = useState("");
   const [selectedCategoryName, setSelectedCategoryName] = useState("Category");
   const [isOpen, setIsOpen] = useState(false);
@@ -102,26 +103,7 @@ const AddTaskForm: React.FC = () => {
   const [wordCounts, setWordCounts] = useState(0);
   const [isSuccessPopup, setIsSuccessPopup] = useState(false);
 
-  
- const CustomInput: React.FC<CustomInputProps> = ({ value, onClick }) => (
-   <button
-     className="flex text-[12px] lg:text-[14px]  lg:w-[150px] justify-between cursor-pointer rounded-2xl border  border-tc-gray  bg-[#EBE9F4] px-2 py-1 outline-none placeholder:text-[14px] placeholder:font-bold"
-     onClick={onClick}
-     type="button"
-   >
-     {value || "Choose Date"} <FaSortDown />
-   </button>
- );
-  
-  const CustomInputs: React.FC<CustomInputProps> = ({ value, onClick }) => (
-    <button
-      className="flex text-[12px] lg:text-[14px] lg:w-[150px] cursor-pointer justify-between rounded-2xl border  border-tc-gray  bg-[#EBE9F4] px-2 py-1 outline-none placeholder:text-[14px] placeholder:font-bold"
-      onClick={onClick}
-      type="button"
-    >
-      {value || "Choose Time"} <FaSortDown/>
-    </button>
-  );
+
 
   
   const handleLoginNavigation = () => {
@@ -181,13 +163,15 @@ const AddTaskForm: React.FC = () => {
     if (activeButtonIndex === 0) {
       // Validation for physical service
       if (!selectedCode) {
-        errors.postalCode = "Please select postal code.";
+        errors.postalCode = "Please fill out all required fields";
       } else if (!selectedCity) {
-        errors.city = "Please select city.";
+        errors.city = "Please fill out all required fields";
       }
+    } else if(!isRemote){
+      error.service = "Please fill out all required fields"
     }
     if (!task.customerBudget) {
-      errors.customerBudget = "please enter your budget";
+      errors.customerBudget = "Please fill out all required fields";
     }
     setErrors(errors);
     return Object.keys(errors).length === 0;
@@ -198,17 +182,17 @@ const AddTaskForm: React.FC = () => {
 
    // Validate taskBriefDescription
    if (!task.taskBriefDescription) {
-     error.taskBriefDescription = "Please write down a brief description.";
+     error.taskBriefDescription = "Please fill out all required fields";
    }
 
    // Validate taskDescription
    if (!task.taskDescription) {
-     error.taskDescription = "Please write down a description.";
+     error.taskDescription = "Please fill out all required fields";
    }
 
    // Validate selectedTime and selectedDate or termAccepted
    if (!(selectedTime && selectedDate) && !termAccepted) {
-     error.message = "Please select a time and date, or accept the terms.";
+     error.message = "Please fill out all required fields";
    }
 
    setError(error);
@@ -216,6 +200,26 @@ const AddTaskForm: React.FC = () => {
  };
 
 
+  const CustomInput: React.FC<CustomInputProps> = ({ value, onClick }) => (
+    <button
+      className={`flex text-[12px] lg:text-[14px] hover:text-white  lg:w-[150px] justify-between cursor-pointer rounded-2xl bg-[#EBE9F4] hover:bg-status-darkpurple px-2 py-1 placeholder:text-[14px] placeholder:font-bold ${error.message ? "outline-[#FF0000] border border-[#ff0000]" : "outline-none border-tc-gray border"}`}
+      onClick={onClick}
+      type="button"
+    >
+      {value || "Choose Date"} <FaSortDown />
+    </button>
+  );
+
+  const CustomInputs: React.FC<CustomInputProps> = ({ value, onClick }) => (
+    <button
+      className={`flex text-[12px] hover:text-white lg:text-[14px] lg:w-[150px] cursor-pointer justify-between rounded-2xl  bg-[#EBE9F4] hover:bg-status-darkpurple px-2 py-1 placeholder:text-[14px] placeholder:font-bold ${error.message ? "outline-[#FF0000] border border-[#ff0000]" : "outline-none border-tc-gray border"}`}
+      onClick={onClick}
+      type="button"
+    >
+      {value || "Choose Time"} <FaSortDown />
+    </button>
+  );
+  
   const handleClick = (index: number) => {
     setActiveButtonIndex(index);
     setIsOpen(true);
@@ -314,10 +318,13 @@ const AddTaskForm: React.FC = () => {
 
   const handleDateChange = (date: Date | null) => {
     setSelectedDate(date);
+    setAccepted(true);
   };
+
 
   const handleTimeChange = (time: Date | null) => {
     setSelectedTime(time);
+    setAccepted(true);
   };
 
   const formatDateToString = (date: Date | null) => {
@@ -441,7 +448,6 @@ const AddTaskForm: React.FC = () => {
       }
     }
   };
-
   
 
   const renderPage = () => {
@@ -456,7 +462,7 @@ const AddTaskForm: React.FC = () => {
               <div className="grid space-y-3">
                 <div className="flex items-center justify-between">
                   <label className="font-semibold text-status-darkpurple">
-                    Briefly tell us what you need done?
+                    Briefly tell us what you need done? <span className="text-[#ff0000] font-extrabold">*</span>
                   </label>
                   {wordCount > 5 && (
                     <div className="h-[16px] w-[16px] rounded-3xl bg-[#4CAF50] text-[16px] font-extrabold text-white">
@@ -465,7 +471,7 @@ const AddTaskForm: React.FC = () => {
                   )}
                 </div>
                 <textarea
-                  className="h-full w-full rounded-2xl bg-[#EBE9F4] p-3 outline-none placeholder:font-bold"
+                  className={`h-full w-full rounded-2xl bg-[#EBE9F4] placeholder:text-[#C1BADB] p-3  ${error.taskBriefDescription ? "outline-[#FF0000] border border-[#ff0000]" : "outline-none border-none"}`}
                   placeholder="e.g, I need a junior league coach."
                   name="taskBriefDescription"
                   value={task.taskBriefDescription}
@@ -476,7 +482,7 @@ const AddTaskForm: React.FC = () => {
               <div className="relative grid space-y-4">
                 <div className="flex items-center justify-between">
                   <label className="font-semibold">
-                    What category best describes your task?
+                    What category best describes your task? <span className="text-[#ff0000] font-extrabold">*</span>
                   </label>
                   {selectedCategory && (
                     <div className="h-[16px] w-[16px] rounded-3xl bg-[#4CAF50] text-[16px] font-extrabold text-white">
@@ -486,19 +492,19 @@ const AddTaskForm: React.FC = () => {
                 </div>
                 <Dropdown
                   trigger={() => (
-                    <div className="flex h-full w-full cursor-pointer appearance-none justify-between rounded-2xl bg-[#EBE9F4] p-3 text-[13px] outline-none">
+                    <div className="flex h-full w-full cursor-pointer appearance-none justify-between rounded-2xl bg-[#EBE9F4] p-3 text-[13px] outline-none text-status-darkpurple">
                       <h2>{selectedCategoryName}</h2>
-                      <FaSortDown />
+                      <FaSortDown className="text-status-darkpurple" />
                     </div>
                   )}
-                  className="left-0 right-0 top-14 mx-auto bg-white"
+                  className="left-0 right-0 top-14 mx-auto bg-white small-scrollbar transition-all duration-300 max-h-64 overflow-y-auto"
                 >
                   {items.map((item) => (
                     <button
                       type="button"
                       key={item.id}
                       value={item.id}
-                      className="block p-2 text-[12px] text-[#221354]"
+                      className="block p-2 text-[12px] text-[#381F8C] font-satoshiBold font-bold"
                       onClick={() => {
                         handleCategoryChange(item.id);
                         setSelectedCategoryName(item.categoryName);
@@ -511,8 +517,8 @@ const AddTaskForm: React.FC = () => {
               </div>
               <div className="relative grid space-y-3">
                 <div className="flex items-center justify-between">
-                  <label className="flex justify-between font-semibold">
-                    Give a description of your task
+                  <label className="flex font-semibold">
+                    Give a description of your task {""} <span className="text-[#ff0000] font-extrabold">*</span>
                   </label>
                   {wordCounts > 10 && (
                     <div className="h-[16px] w-[16px] rounded-3xl bg-[#4CAF50] text-[16px] font-extrabold text-white">
@@ -521,7 +527,7 @@ const AddTaskForm: React.FC = () => {
                   )}
                 </div>
                 <textarea
-                  className=" h-[150px] rounded-2xl bg-[#EBE9F4] p-3 outline-none"
+                  className={` h-[150px] rounded-2xl bg-[#EBE9F4] p-3 placeholder:text-[#C1BADB] ${error.taskDescription ? "outline-[#FF0000] border border-[#ff0000]" : "outline-none border-none"}`}
                   placeholder="Arts and Craft"
                   name="description"
                   value={task.taskDescription}
@@ -586,7 +592,7 @@ const AddTaskForm: React.FC = () => {
                   htmlFor="taskTime"
                   className="test-[20px] font-satoshiBold font-bold text-status-darkpurple"
                 >
-                  Set Day and Time:
+                  Set Day and Time <span className="text-[#ff0000] font-extrabold">*</span>
                 </label>
                 <div className="flex items-center space-x-3">
                   <div className="relative">
@@ -603,7 +609,7 @@ const AddTaskForm: React.FC = () => {
                       name="taskTime"
                       disabled={termAccepted}
                       customInput={<CustomInputs />}
-                      className="w-full cursor-pointer rounded-2xl border  border-tc-gray  bg-[#EBE9F4] px-2 py-1 outline-none placeholder:text-[14px] placeholder:font-bold "
+                      className="w-full cursor-pointer rounded-2xl  bg-[#EBE9F4] px-2 py-1 outline-none placeholder:text-[14px] placeholder:font-bold"
                     />
                   </div>
                   <div className="relative">
@@ -617,7 +623,7 @@ const AddTaskForm: React.FC = () => {
                       name="taskDate"
                       disabled={termAccepted}
                       customInput={<CustomInput />}
-                      className="w-full cursor-pointer rounded-2xl  border border-tc-gray bg-[#EBE9F4] px-2 py-1 outline-none placeholder:text-[14px] placeholder:font-bold "
+                      className="w-full cursor-pointer rounded-2xl bg-[#EBE9F4] px-2 py-1 outline-none placeholder:text-[14px] placeholder:font-bold "
                     />
                   </div>
                   <div>
@@ -626,6 +632,7 @@ const AddTaskForm: React.FC = () => {
                         type="checkbox"
                         name="check"
                         checked={termAccepted}
+                        disabled={accepted}
                         onChange={handleCheckboxChange}
                         className="mr-2"
                       />
@@ -638,9 +645,7 @@ const AddTaskForm: React.FC = () => {
               </div>
 
               <div className="text-[#FF0000]">
-                {Object.keys(error).map((key, index) => (
-                  <div key={index}>{error[key]}</div>
-                ))}
+                {error.message|| error.taskBriefDescription || error.taskDescription || error.selectedCategory}
               </div>
               <Button
                 type="submit"
@@ -656,7 +661,7 @@ const AddTaskForm: React.FC = () => {
           <div className="mb-10 space-y-10">
             <div className="space-y-4">
               <h2 className="font-satoshiBold font-bold text-status-darkpurple">
-                Type of Service
+                Type of Service <span className="text-[#ff0000] font-extrabold">*</span>
               </h2>
               <div className="flex space-x-4 text-[13px] text-[#221354]">
                 <button
@@ -700,20 +705,20 @@ const AddTaskForm: React.FC = () => {
                 <div className="space-y-10 font-bold text-status-darkpurple ">
                   <div className="flex space-x-4">
                     <div className="grid space-y-4">
-                      <label>Postal code</label>
+                      <label>Postal code <span className="text-[#ff0000] font-extrabold">*</span></label>
                       <input
                         value={selectedCode}
                         onChange={handleCode}
                         name="postalCode"
-                        className="w-[155px] cursor-pointer  rounded-2xl bg-[#EBE9F4] p-3 text-[13px] outline-none  placeholder:font-bold"
+                        className={`w-[155px] cursor-pointer  rounded-2xl bg-[#EBE9F4] p-3 text-[13px] placeholder:font-bold ${error.postalCode ? "outline-[#FF0000] border border-[#ff0000]" : "outline-none border-none"}`}
                       />
                     </div>
 
                     <div className="grid space-y-4">
-                      <label>City/Suburb</label>
+                      <label>Suburb <span className="text-[#ff0000] font-extrabold">*</span></label>
                       <Dropdown
                         trigger={() => (
-                          <div className="flex h-full w-[150px] cursor-pointer appearance-none justify-between rounded-2xl bg-[#EBE9F4] p-3 text-[13px] outline-none">
+                          <div className={`flex h-full w-[150px] cursor-pointer appearance-none justify-between rounded-2xl bg-[#EBE9F4] p-3 text-[13px] ${error.city ? "outline-[#FF0000] border border-[#ff0000]" : "outline-none border-none"}`}>
                             <h2>{selectedCity}</h2>
                             <FaSortDown />
                           </div>
@@ -751,24 +756,19 @@ const AddTaskForm: React.FC = () => {
                   </div>
                 </div>
               )}
-              <p className="text-xl font-extrabold text-[#381F8C]">
-                Your Budget
-              </p>
               <div className="relative grid space-y-4 font-bold text-status-darkpurple">
-                <label>Budget</label>
+                <label>Budget <span className="text-[#ff0000] font-extrabold">*</span></label>
                 <input
                   type="number"
                   name="customerBudget"
                   onChange={handlePrice}
                   placeholder="500"
-                  className="appearance-none rounded-2xl bg-[#EBE9F4] p-3 pl-6 text-[13px] outline-none  placeholder:font-bold"
+                  className={`appearance-none rounded-2xl bg-[#EBE9F4] p-3 pl-6 text-[13px] placeholder:font-bold ${error.customerBudget ? "outline-[#FF0000] border border-[#ff0000]" : "outline-none border-none"}`}
                 />
                 <p className="absolute left-3 top-8">$</p>
               </div>
               <div className="text-[#FF0000]">
-                {Object.keys(errors).map((key, index) => (
-                  <div key={index}>{errors[key]}</div>
-                ))}
+                {errors.city || errors.postalCode || errors.service || errors.customerBudget}
               </div>
               <div className="flex justify-between">
                 {isAuthenticated && (
@@ -806,66 +806,61 @@ const AddTaskForm: React.FC = () => {
         <title>TaskHub | Add Task</title>
       </Head>
       <div className="w-full">
-        <div className="mb-3 flex justify-center space-x-5">
-          <div
-            className={`${
-              currentPage === 1
-                ? "text-status-purpleBase"
-                : "text-status-purpleBase"
-            }`}
-          >
-            <p className="flex items-center gap-2 text-[12px] md:text-[16px] lg:gap-3">
-              <span
-                className={`${
-                  currentPage === 1
-                    ? "bg-status-purpleBase text-white"
-                    : "bg-status-purpleBase text-white"
-                } rounded-2xl border-none px-3 py-2 font-satoshiBold`}
-              >
-                01
-              </span>{" "}
-              Services Details
-              <span>
-                <IoIosArrowForward />
-              </span>
-            </p>
-          </div>
-          <div
-            className={`${
-              currentPage === 2 ? "text-status-purpleBase" : " text-[#716F78]"
-            }`}
-          >
-            <p className="flex items-center gap-2 text-[12px] md:text-[16px] lg:gap-3">
-              <span
-                className={`${
-                  currentPage === 2
-                    ? "bg-status-purpleBase text-white"
-                    : "bg-[#EAE9EB] text-[#716F78]"
-                } rounded-2xl border-none px-3 py-2 font-satoshiBold`}
-              >
-                02
-              </span>{" "}
-              Location and Budget
-            </p>
-          </div>
-        </div>
-        <hr className="h-[2px] w-full bg-[#EAE9EB] text-[#EAE9EB]" />
-        <div>
-          <div className="flex justify-center">
+        <div className="fixed top-20 left-0 w-full bg-white shadow-md z-50 border-t-2">
+          <div className="mb-3 flex justify-center space-x-5 pt-4">
             <div
-              className="container flex w-80 items-center justify-center space-x-5 border-2 border-[#EAE9EB] p-3 lg:w-full"
+              className={`${currentPage === 1
+                  ? "text-status-purpleBase"
+                  : "text-status-purpleBase"
+                }`}
+            >
+              <p className="flex items-center gap-2 text-[12px] md:text-[16px] lg:gap-3">
+                <span
+                  className={`${currentPage === 1
+                      ? "bg-status-purpleBase text-white"
+                      : "bg-status-purpleBase text-white"
+                    } rounded-[22px] border-none p-3 flex justify-center items-center font-satoshiBold w-[47px] h-[37px]`}
+                >
+                  01
+                </span>{" "}
+                Services Details
+                <span>
+                  <IoIosArrowForward />
+                </span>
+              </p>
+            </div>
+            <div
+              className={`${currentPage === 2 ? "text-status-purpleBase" : " text-[#716F78]"
+                }`}
+            >
+              <p className="flex items-center gap-2 text-[12px] md:text-[16px] lg:gap-3">
+                <span
+                  className={`${currentPage === 2
+                      ? "bg-status-purpleBase text-white"
+                      : "bg-[#EAE9EB] text-[#716F78]"
+                    } rounded-[22px] border-none p-3 flex justify-center items-center font-satoshiBold w-[47px] h-[37px]`}
+                >
+                  02
+                </span>{" "}
+                Location and Budget
+              </p>
+            </div>
+          </div>
+          <hr className="h-[2px] w-full bg-[#EAE9EB] text-[#EAE9EB]" />
+          <div className="flex justify-center pb-4">
+            <div
+              className="container flex w-80 items-center justify-center space-x-5 border border-[#EAE9EB] p-3 lg:w-full"
               style={{ borderRadius: "0px 0px 20px 20px ", borderTop: "none" }}
             >
               {/* Progress bar */}
               <div className="h-1 w-2/3 overflow-hidden bg-[#EAE9EB]">
                 <div
-                  className={`h-full ${
-                    currentPage === 1
+                  className={`h-full ${currentPage === 1
                       ? "bg-status-purpleBase"
                       : currentPage === 2
                         ? "bg-status-purpleBase"
                         : "bg-status-purpleBase"
-                  }`}
+                    }`}
                   style={{ width: `${progress}%` }}
                 />
               </div>
@@ -875,30 +870,32 @@ const AddTaskForm: React.FC = () => {
             </div>
           </div>
         </div>
-        <div className="mt-8 flex items-center justify-center p-8 font-medium lg:p-0">
-          <div>
+        <div className="pt-28">
+          <div className="mt-8 flex items-center justify-center p-8 font-medium lg:p-0">
             <div>
-              <h2 className="text-4xl text-status-darkpurple">Add a Task</h2>
-              <p className="text-[12px] text-[#716F78]">
-                Please fill out the information below to add a new task.
-              </p>
+              <div className="space-y-2">
+                <h2 className="text-4xl text-status-darkpurple">Add a Task</h2>
+                <p className="text-[12px] text-[#716F78]">
+                  Please fill out the information below to add a new task.
+                </p>
+              </div>
+              <div className="mt-8">{renderPage()}</div>
             </div>
-            <div className="mt-8">{renderPage()}</div>
           </div>
         </div>
       </div>
       {<Popup
         isOpen={isSuccessPopup}
         onClose={() => {
-        setIsSuccessPopupOpen(false);
-      }}>
+          setIsSuccessPopupOpen(false);
+        }}>
         <div className="px-24 py-10">
           <div className="relative grid items-center justify-center space-y-5">
             <p className="font-clashBold text-center text-[20px] font-extrabold text-[#2A1769] md:text-[36px] lg:text-[37px] ">
               You are almost done!!!
             </p>
             <p className="text-center text-[14px] lg:text-[20px] ">
-              Please sign up to finish adding your first <br/> task and manage all your tasks.
+              Please sign up to finish adding your first <br /> task and manage all your tasks.
             </p>
             <Image
               src={imag}
@@ -911,9 +908,9 @@ const AddTaskForm: React.FC = () => {
               className="absolute -left-12 top-12 w-12 lg:-left-[100px] lg:-top-12 lg:w-28"
             />
             <div className="flex space-x-3 ">
-                <button onClick={handleLoginNavigation} className="rounded-2xl border-2 border-status-purpleBase p-2 text-[14px] font-semibold text-status-purpleBase outline-none md:w-[100px]">
-                  Sign Up
-                </button>
+              <button onClick={handleLoginNavigation} className="rounded-2xl border border-status-purpleBase p-2 text-[14px] font-semibold text-status-purpleBase outline-none md:w-[100px]">
+                Sign Up
+              </button>
               <Link href="/">
                 <button className="rounded-2xl bg-status-purpleBase p-2 text-[14px] text-white outline-none md:w-[100px]">
                   Cancel
@@ -953,7 +950,7 @@ const AddTaskForm: React.FC = () => {
               />
               <div className="flex justify-center space-x-3 md:justify-around">
                 <Link href="/marketplace">
-                  <button className="rounded-2xl border-2 border-status-purpleBase p-2 text-[14px] font-semibold text-status-purpleBase outline-none md:w-[100px]">
+                  <button className="rounded-2xl border border-status-purpleBase p-2 text-[14px] font-semibold text-status-purpleBase outline-none md:w-[100px]">
                     Back
                   </button>
                 </Link>

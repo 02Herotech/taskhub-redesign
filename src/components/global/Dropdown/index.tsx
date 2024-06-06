@@ -76,7 +76,7 @@ const Dropdown = ({
                 transition={{ duration: 0.1 }}
                 exit={{ scale: 0.5, opacity: 0 }}
                 className={cn(
-                  "absolute z-[100] overflow-hidden rounded drop-shadow-2xl",
+                  "absolute z-[100] overflow-hidden rounded drop-shadow-2xl h-[150px]",
                   position === "bottom" ? "top-[38px]" : "bottom-[23px]",
                   className,
                 )}

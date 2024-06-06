@@ -613,8 +613,8 @@ const ProvideService: React.FC = () => {
                 <div className="relative grid space-y-4 text-[13px] text-[#221354]">
                   <input
                     className={`rounded-2xl ${activePlanIndex === 0
-                        ? " disabled bg-transparent p-1 text-lg font-bold text-status-darkViolet"
-                        : "bg-[#EBE9F4] p-4 hover:bg-status-darkViolet hover:text-white "
+                      ? " disabled bg-transparent p-1 text-lg font-bold text-status-darkViolet"
+                      : "bg-[#EBE9F4] p-4 hover:bg-status-darkViolet hover:text-white "
                       } cursor-pointer text-left outline-none placeholder:font-satoshiMedium placeholder:font-medium placeholder:text-[#2A1769] hover:placeholder:text-white`}
                     name="physical"
                     onClick={() => handlePlan(0)}
@@ -659,8 +659,8 @@ const ProvideService: React.FC = () => {
                   )}
                   <input
                     className={`rounded-2xl ${activePlanIndex === 1
-                        ? " disabled bg-transparent p-1 text-lg font-bold text-status-darkViolet"
-                        : "bg-[#EBE9F4] p-4 hover:bg-status-darkViolet hover:text-white"
+                      ? " disabled bg-transparent p-1 text-lg font-bold text-status-darkViolet"
+                      : "bg-[#EBE9F4] p-4 hover:bg-status-darkViolet hover:text-white"
                       } cursor-pointer text-left outline-none placeholder:font-satoshiMedium placeholder:font-medium placeholder:text-[#2A1769] hover:placeholder:text-white`}
                     name="physical"
                     onClick={() => handlePlan(1)}
@@ -705,8 +705,8 @@ const ProvideService: React.FC = () => {
                   )}
                   <input
                     className={`rounded-2xl ${activePlanIndex === 2
-                        ? " disabled bg-transparent p-1 text-lg font-bold text-status-darkViolet"
-                        : "bg-[#EBE9F4] p-4 hover:bg-status-darkViolet hover:text-white"
+                      ? " disabled bg-transparent p-1 text-lg font-bold text-status-darkViolet"
+                      : "bg-[#EBE9F4] p-4 hover:bg-status-darkViolet hover:text-white"
                       } cursor-pointer text-left outline-none placeholder:font-satoshiMedium placeholder:font-medium placeholder:text-[#2A1769] hover:placeholder:text-white`}
                     name="physical"
                     onClick={() => handlePlan(2)}
@@ -758,8 +758,8 @@ const ProvideService: React.FC = () => {
                 <div className="flex space-x-4 text-[13px] text-[#221354]">
                   <input
                     className={`rounded-2xl p-2 ${activeButtonIndex === 0
-                        ? "bg-status-purpleBase text-white"
-                        : "bg-[#EBE9F4] placeholder:text-white hover:bg-status-purpleBase hover:text-white"
+                      ? "bg-status-purpleBase text-white"
+                      : "bg-[#EBE9F4] placeholder:text-white hover:bg-status-purpleBase hover:text-white"
                       } cursor-pointer outline-none placeholder:font-satoshiMedium placeholder:font-bold`}
                     name="physical"
                     onClick={() => handleClick(0)}
@@ -769,8 +769,8 @@ const ProvideService: React.FC = () => {
                   />
                   <input
                     className={`rounded-2xl p-2 ${activeButtonIndex === 1
-                        ? "bg-status-purpleBase text-white"
-                        : "bg-[#EBE9F4] placeholder:text-white hover:bg-status-purpleBase hover:text-white "
+                      ? "bg-status-purpleBase text-white"
+                      : "bg-[#EBE9F4] placeholder:text-white hover:bg-status-purpleBase hover:text-white "
                       } cursor-pointer outline-none placeholder:font-satoshiMedium placeholder:font-bold`}
                     name="remote"
                     onClick={() => {
@@ -1150,64 +1150,66 @@ const ProvideService: React.FC = () => {
         <title>TaskHub | Provide Service</title>
       </Head>
       <div className="w-full">
-        <div className="mb-3 flex justify-center font-bold md:space-x-5">
-          <div
-            className={`${currentPage === 1
+        <div className="fixed top-20 left-0 w-full bg-white shadow-md z-50 border-t-2">
+          <div className="mb-3 flex justify-center font-bold md:space-x-5">
+            <div
+              className={`${currentPage === 1
                 ? "text-status-purpleBase"
                 : "text-status-purpleBase"
-              }`}
-          >
-            <p className="flex items-center  text-[12px] md:text-[16px] lg:gap-3">
-              <span
-                className={`${currentPage === 1
+                }`}
+            >
+              <p className="flex items-center  text-[12px] md:text-[16px] lg:gap-3">
+                <span
+                  className={`${currentPage === 1
                     ? "bg-status-purpleBase text-white"
                     : "bg-status-purpleBase text-white"
-                  } rounded-2xl border-none px-3 py-2`}
-              >
-                01
-              </span>{" "}
-              Services Description
-              <span>
-                <IoIosArrowForward />
-              </span>
-            </p>
-          </div>
-          <div
-            className={`${currentPage === 2 || currentPage === 3
+                    } rounded-2xl border-none px-3 py-2`}
+                >
+                  01
+                </span>{" "}
+                Services Description
+                <span>
+                  <IoIosArrowForward />
+                </span>
+              </p>
+            </div>
+            <div
+              className={`${currentPage === 2 || currentPage === 3
                 ? "text-status-purpleBase"
                 : " text-[#716F78]"
-              }`}
-          >
-            <p className="flex items-center gap-2 text-[12px] md:text-[16px] lg:gap-3">
-              <span
-                className={`${currentPage === 2 || currentPage === 3
+                }`}
+            >
+              <p className="flex items-center gap-2 text-[12px] md:text-[16px] lg:gap-3">
+                <span
+                  className={`${currentPage === 2 || currentPage === 3
                     ? "bg-status-purpleBase text-white"
                     : "bg-[#EAE9EB] text-[#716F78]"
-                  } rounded-2xl border-none px-3 py-2`}
-              >
-                02
-              </span>{" "}
-              Services Details
-              <span>
-                <IoIosArrowForward />
-              </span>
-            </p>
-          </div>
-          <div
-            className={`${currentPage === 3 ? "text-status-purpleBase" : " text-[#716F78]"
-              }`}
-          >
-            <p className="flex items-center gap-2 text-[12px] md:text-[16px] lg:gap-3">
-              <span
-                className={`${currentPage === 3
+                    } rounded-2xl border-none px-3 py-2`}
+                >
+                  02
+                </span>{" "}
+                Services Details
+                <span>
+                  <IoIosArrowForward />
+                </span>
+              </p>
+            </div>
+            <div
+              className={`${currentPage === 3 ? "text-status-purpleBase" : " text-[#716F78]"
+                }`}
+            >
+              <p className="flex items-center gap-2 text-[12px] md:text-[16px] lg:gap-3">
+                <span
+                  className={`${currentPage === 3
                     ? "bg-status-purpleBase text-white"
                     : "bg-[#EAE9EB] text-[#716F78]"
-                  } rounded-2xl border-none px-3 py-2`}
-              >
-                03
-              </span>{" "}
-              Image Upload
-            </p>
+                    } rounded-2xl border-none px-3 py-2`}
+                >
+                  03
+                </span>{" "}
+                Image Upload
+              </p>
+            </div>
           </div>
         </div>
         <hr className="h-[2px] w-full bg-[#EAE9EB] text-[#EAE9EB]" />
@@ -1221,10 +1223,10 @@ const ProvideService: React.FC = () => {
               <div className="h-1 w-2/3 overflow-hidden bg-[#EAE9EB]">
                 <div
                   className={`h-full ${currentPage === 1
+                    ? "bg-status-purpleBase"
+                    : currentPage === 2
                       ? "bg-status-purpleBase"
-                      : currentPage === 2
-                        ? "bg-status-purpleBase"
-                        : "bg-status-purpleBase"
+                      : "bg-status-purpleBase"
                     }`}
                   style={{ width: `${progress}%` }}
                 />
