@@ -44,7 +44,7 @@ const Taskhub = () => {
         <div className={` w-full bg-[#CEFDF930] `}>
 
             <h1 className="lg:hidden text-[20px] text-center py-10 px-12 font-[900] text-[#381F8C] block font-clashMedium">
-            WITH TASKHUB, YOU CAN:
+          With TaskHub you can:
             </h1>
 
             <div
@@ -53,7 +53,7 @@ const Taskhub = () => {
 
 
                 <div className="flex w-[400px] flex-col gap-5 space-y-8 xl:w-1/2">
-                    <h1 className="hidden xl:text-[60px] lg:text-[50px]  text-[#381F8C] lg:block font-clashSemiBold ">
+                    <h1 className="hidden xl:text-[64px] lg:text-[55px]  text-[#381F8C] lg:block font-clashSemiBold ">
                     With <span className="text-[#FE9B07]">TaskHub,</span><br/> you can:
                     </h1>
                     <div className="flex flex-col gap-5 lg:space-y-6">
