@@ -11,6 +11,8 @@ import {
 } from '@stripe/react-stripe-js';
 import { useSession } from 'next-auth/react';
 import CheckoutForm from '../CheckoutForm';
+import { useGetInvoiceByCustomerIdQuery } from '@/services/invoices';
+import Loading from '@/shared/loading';
 
 type CustomerInvoiceHistoryProps = {
     invoiceTitle: string;
@@ -45,7 +47,7 @@ const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY!);
 const Invoices = () => {
     const [visibleTransactions, setVisibleTransactions] = useState(4);
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [selectedInvoice, setSelectedInvoice] = useState<CustomerInvoiceHistoryProps | null>(null);
+    const [selectedInvoice, setSelectedInvoice] = useState<Invoice | null>(null);
     const [initiatePayment, setInitiatePayment] = useState(false);
     const [error, setError] = useState("")
     const [loading, setLoading] = useState(false)
@@ -53,12 +55,16 @@ const Invoices = () => {
     const todayDate = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
     const { data: session } = useSession();
     const userToken = session?.user?.accessToken;
+    const id = session?.user?.user.id;
+    const firstName = session?.user?.user.firstName;
+    const lastName = session?.user?.user.lastName;
+    const fullName = `${firstName} ${lastName}`;
 
     const handleLoadMore = () => {
         setVisibleTransactions(prevVisible => prevVisible + 4);
     };
 
-    const handleCardClick = async (invoice: CustomerInvoiceHistoryProps) => {
+    const handleCardClick = async (invoice: Invoice) => {
         setSelectedInvoice(invoice);
         setIsModalOpen(true);
     };
@@ -68,10 +74,13 @@ const Invoices = () => {
         setSelectedInvoice(null);
     };
 
+    const { data: invoices, isLoading } = useGetInvoiceByCustomerIdQuery(id as unknown as number);
+
     const fetchPaymentIntent = async () => {
         try {
             setLoading(true)
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/booking/payment-intent-stripe/1`, {
+            setInitiatePayment(true)
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/booking/payment-intent-stripe/${selectedInvoice?.id}`, {
                 method: "POST",
                 headers: {
                     "Authorization": `Bearer ${userToken}`,
@@ -97,12 +106,27 @@ const Invoices = () => {
         fetchPaymentIntent();
     }, [isModalOpen, userToken]);
 
+    if (!invoices || isLoading) {
+        return (
+            <div className="w-full flex items-center justify-center h-[full]">
+                <Loading />
+            </div>
+        )
+    }
+
+    console.log(invoices)
+
     return (
         <>
             <div className="w-full bg-[#EBE9F4] rounded-[20px] p-4 font-satoshi">
                 <h3 className="text-[#140B31] font-satoshiBold text-base mb-5">{todayDate}</h3>
+                {invoices.length === 0 && (
+                    <div className="flex flex-col items-center justify-center space-y-5 h-[50vh]">
+                        <h2 className="text-2xl font-bold text-primary text-center">No invoice found</h2>
+                    </div>
+                )}
                 <div className="space-y-5">
-                    {CustomerInvoiceHistoryData.slice(0, visibleTransactions).map((data, index) => (
+                    {invoices.slice(0, visibleTransactions).map((data, index) => (
                         <div
                             key={index}
                             className="flex max-lg:flex-col lg:items-center justify-between px-5 py-3 border-b border-primary"
@@ -114,8 +138,8 @@ const Invoices = () => {
                                     </svg>
                                 </div>
                                 <div className="">
-                                    <h4 className="text-primary font-bold text-xl mb-1">{data.invoiceTitle}</h4>
-                                    <p className="text-[#716F78] font-satoshiMedium text-base">{`${data.transactionTitle} / ${data.serviceType}`}</p>
+                                    <h4 className="text-primary font-bold text-xl mb-1">{data.customer.user.firstName}</h4>
+                                    {/* <p className="text-[#716F78] font-satoshiMedium text-base">{`${data.} / ${data.serviceType}`}</p> */}
                                 </div>
                             </div>
                             <Button theme='outline' className='rounded-full max-lg:mt-2' onClick={() => handleCardClick(data)}>
@@ -123,7 +147,7 @@ const Invoices = () => {
                             </Button>
                         </div>
                     ))}
-                    {visibleTransactions < CustomerInvoiceHistoryData.length && (
+                    {visibleTransactions < invoices.length && (
                         <div className="flex items-center justify-center">
                             <Button onClick={handleLoadMore} className='rounded-full flex items-center space-x-2'>
                                 <FiClock className='text-white' />
@@ -136,7 +160,7 @@ const Invoices = () => {
                 {isModalOpen && selectedInvoice && (
                     <Popup isOpen={isModalOpen} onClose={closeModal}>
                         <div className="relative bg-[#EBE9F4] rounded-2xl min-h-[200px] lg:max-w-[877px] font-satoshi p-5 lg:px-7 lg:py-10">
-                            {clientSecret ? (
+                            {clientSecret && initiatePayment ? (
                                 <Elements stripe={stripePromise} options={{
                                     clientSecret: clientSecret,
                                 }}>
@@ -145,39 +169,39 @@ const Invoices = () => {
                             ) : (
                                 <>
                                     <h3 className="text-3xl font-clashSemiBold text-[#060D1F]">Invoice Details</h3>
-                                    <p className='text-md text-[#546276]'>{selectedInvoice.transactionTitle}</p>
+                                    <p className='text-md text-[#546276]'>{selectedInvoice.serviceProvider.id}</p>
                                     <div className="flex flex-col justify-between space-y-3 mt-5">
                                         <div className="bg-[#C1BADB] p-4 rounded-[20px]">
                                             <h4 className='text-base text-primary font-satoshiMedium'>Total amount payable</h4>
                                             <h2 className="text-xl font-bold capitalize text-[#001433]">
-                                                AUD{formatAmount(selectedInvoice.totalAmount, "USD", false)}
+                                                AUD{formatAmount(selectedInvoice.total, "USD", false)}
                                             </h2>
                                         </div>
                                         <div className="bg-[#C1BADB] p-4 rounded-[20px]">
                                             <h2 className='text-xs text-primary font-satoshiMedium mb-5'>SERVICE INFORMATION</h2>
                                             <div className="flex items-center max-lg:space-x-3 justify-between mb-6">
                                                 <div className="">
-                                                    <h2 className='text-xl text-[#001433] font-bold'>{selectedInvoice.issuedOn}</h2>
+                                                    <h2 className='text-xl text-[#001433] font-bold'>{selectedInvoice.createdAt}</h2>
                                                     <h5 className='text-[#716F78]'>Issued on</h5>
                                                 </div>
                                                 <div className="">
-                                                    <h2 className='text-xl text-[#001433] font-bold'>{selectedInvoice.dueOn}</h2>
+                                                    <h2 className='text-xl text-[#001433] font-bold'>{selectedInvoice.expiredAt}</h2>
                                                     <h5 className='text-[#716F78]'>Due on</h5>
                                                 </div>
                                             </div>
                                             <div className="flex items-center max-lg:space-x-3 justify-between mb-6">
                                                 <div className="">
-                                                    <h2 className='text-xl text-[#001433] font-bold'>{selectedInvoice.billFrom}</h2>
+                                                    <h2 className='text-xl text-[#001433] font-bold'>{fullName}</h2>
                                                     <h5 className='text-[#716F78]'>Bill from</h5>
                                                 </div>
                                                 <div className="">
-                                                    <h2 className='text-xl text-[#001433] font-bold'>{selectedInvoice.billTo}</h2>
+                                                        <h2 className='text-xl text-[#001433] font-bold'>{`${selectedInvoice.serviceProvider.user.firstName} ${selectedInvoice.serviceProvider.user.lastName}`}</h2>
                                                     <h5 className='text-[#716F78]'>Bill to</h5>
                                                 </div>
                                             </div>
                                             <div className="flex items-center max-lg:space-x-3 justify-between mb-6">
                                                 <div className="">
-                                                    <h2 className='text-xl text-[#001433] font-bold'>{selectedInvoice.duration}</h2>
+                                                    <h2 className='text-xl text-[#001433] font-bold'>"--"</h2>
                                                     <h5 className='text-[#716F78]'>Service duration</h5>
                                                 </div>
                                             </div>
