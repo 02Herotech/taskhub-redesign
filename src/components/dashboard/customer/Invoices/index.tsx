@@ -47,6 +47,8 @@ const Invoices = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedInvoice, setSelectedInvoice] = useState<CustomerInvoiceHistoryProps | null>(null);
     const [initiatePayment, setInitiatePayment] = useState(false);
+    const [error, setError] = useState("")
+    const [loading, setLoading] = useState(false)
     const [clientSecret, setClientSecret] = useState("");
     const todayDate = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
     const { data: session } = useSession();
@@ -66,28 +68,32 @@ const Invoices = () => {
         setSelectedInvoice(null);
     };
 
-    useEffect(() => {
-        const fetchPaymentIntent = async () => {
-            try {
-                const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/booking/payment-intent-stripe/1`, {
-                    method: "POST",
-                    headers: {
-                        "Authorization": `Bearer ${userToken}`,
-                        "Content-Type": "application/json",
-                    },
-                });
+    const fetchPaymentIntent = async () => {
+        try {
+            setLoading(true)
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/booking/payment-intent-stripe/1`, {
+                method: "POST",
+                headers: {
+                    "Authorization": `Bearer ${userToken}`,
+                    "Content-Type": "application/json",
+                },
+            });
 
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-
-                const data = await response.json();
-                setClientSecret(data.clientSecret);
-            } catch (error) {
-                console.error('Error fetching payment intent:', error);
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
             }
-        };
 
+            const data = await response.json();
+            setClientSecret(data.clientSecret);
+            setLoading(false)
+        } catch (error) {
+            setLoading(false)
+            console.error('Error fetching payment intent:', error);
+            setError('Error fetching payment intent Please try again')
+        }
+    };
+
+    useEffect(() => {
         fetchPaymentIntent();
     }, [isModalOpen, userToken]);
 
@@ -104,7 +110,7 @@ const Invoices = () => {
                             <div className="flex items-center space-x-5">
                                 <div className="w-14 h-14 bg-[#C1BADB] rounded-full flex items-center justify-center">
                                     <svg width="20" height="25" viewBox="0 0 20 25" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M13.8571 6.11111H6.14286M13.8571 11.2222H6.14286M13.8571 16.3333H8.71429M1 1H19V24L17.6731 22.8704C17.2071 22.4735 16.6136 22.2553 15.9998 22.2553C15.386 22.2553 14.7925 22.4735 14.3264 22.8704L12.9996 24L11.674 22.8704C11.2079 22.4732 10.6141 22.2548 10 22.2548C9.38593 22.2548 8.79213 22.4732 8.326 22.8704L7.00043 24L5.67357 22.8704C5.20753 22.4735 4.61399 22.2553 4.00021 22.2553C3.38643 22.2553 2.7929 22.4735 2.32686 22.8704L1 24V1Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                        <path d="M13.8571 6.11111H6.14286M13.8571 11.2222H6.14286M13.8571 16.3333H8.71429M1 1H19V24L17.6731 22.8704C17.2071 22.4735 16.6136 22.2553 15.9998 22.2553C15.386 22.2553 14.7925 22.4735 14.3264 22.8704L12.9996 24L11.674 22.8704C11.2079 22.4732 10.6141 22.2548 10 22.2548C9.38593 22.2548 8.79213 22.4732 8.326 22.8704L7.00043 24L5.67357 22.8704C5.20753 22.4735 4.61399 22.2553 4.00021 22.2553C3.38643 22.2553 2.7929 22.4735 2.32686 22.8704L1 24V1Z" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                                     </svg>
                                 </div>
                                 <div className="">
@@ -129,7 +135,7 @@ const Invoices = () => {
 
                 {isModalOpen && selectedInvoice && (
                     <Popup isOpen={isModalOpen} onClose={closeModal}>
-                        <div className="relative bg-[#EBE9F4] rounded-2xl min-h-[200px] lg:w-[577px] font-satoshi p-5 lg:px-7 lg:py-10">
+                        <div className="relative bg-[#EBE9F4] rounded-2xl min-h-[200px] lg:max-w-[877px] font-satoshi p-5 lg:px-7 lg:py-10">
                             {clientSecret ? (
                                 <Elements stripe={stripePromise} options={{
                                     clientSecret: clientSecret,
@@ -176,8 +182,11 @@ const Invoices = () => {
                                                 </div>
                                             </div>
                                         </div>
+                                        {error && (
+                                            <div className="text-status-error-100 text-base font-semibold my-1">{error}</div>
+                                        )}
                                         <div className="flex items-center space-x-4 !mt-6">
-                                            <Button className='rounded-full' onClick={() => setInitiatePayment(true)}>
+                                            <Button loading={loading} className='rounded-full' onClick={fetchPaymentIntent}>
                                                 Accept Offer
                                             </Button>
                                             <Button theme='outline' className='rounded-full' onClick={closeModal}>

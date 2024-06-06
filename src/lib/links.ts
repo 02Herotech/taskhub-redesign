@@ -140,7 +140,7 @@ export const mobileCustomerLinks: Link[] = [
             },
             {
                 label: "Payments settings",
-                url: "/customer/payments",
+                url: "/customer/payment",
             },
             {
                 label: "Settings",
