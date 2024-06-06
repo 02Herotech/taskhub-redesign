@@ -44,6 +44,14 @@
   clip-path: polygon(100% 0, 100% 100%, 0 0);
 }
 
+.line-clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 @layer base {
   @font-face {
     font-family: Clash;
