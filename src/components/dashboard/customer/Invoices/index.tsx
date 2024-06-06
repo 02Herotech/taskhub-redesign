@@ -6,41 +6,11 @@ import { FiClock } from "react-icons/fi";
 import Button from "@/components/global/Button";
 import Popup from '@/components/global/Popup';
 import { loadStripe } from '@stripe/stripe-js';
-import {
-    Elements,
-} from '@stripe/react-stripe-js';
+import { Elements } from '@stripe/react-stripe-js';
 import { useSession } from 'next-auth/react';
 import CheckoutForm from '../CheckoutForm';
 import { useGetInvoiceByCustomerIdQuery } from '@/services/invoices';
 import Loading from '@/shared/loading';
-
-type CustomerInvoiceHistoryProps = {
-    invoiceTitle: string;
-    transactionTitle: string;
-    totalAmount: number;
-    serviceType: string;
-    paidTo: string;
-    issuedOn: string;
-    dueOn: string;
-    billFrom: string;
-    billTo: string;
-    duration: string;
-}
-
-const CustomerInvoiceHistoryData: CustomerInvoiceHistoryProps[] = [
-    {
-        invoiceTitle: 'Jude sent you an invoice',
-        transactionTitle: 'Spa Appointment',
-        totalAmount: 125.75,
-        serviceType: 'Wellness',
-        paidTo: 'Relaxation Spa',
-        issuedOn: '03/15/2023',
-        dueOn: '03/30/2023',
-        billFrom: 'Customer Name',
-        billTo: 'Relaxation Spa',
-        duration: '1 hour'
-    },
-]
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY!);
 
@@ -49,8 +19,8 @@ const Invoices = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedInvoice, setSelectedInvoice] = useState<Invoice | null>(null);
     const [initiatePayment, setInitiatePayment] = useState(false);
-    const [error, setError] = useState("")
-    const [loading, setLoading] = useState(false)
+    const [error, setError] = useState("");
+    const [loading, setLoading] = useState(false);
     const [clientSecret, setClientSecret] = useState("");
     const todayDate = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
     const { data: session } = useSession();
@@ -72,14 +42,15 @@ const Invoices = () => {
     const closeModal = () => {
         setIsModalOpen(false);
         setSelectedInvoice(null);
+        setInitiatePayment(false);
+        setClientSecret(""); // Clear clientSecret when the modal is closed
     };
 
     const { data: invoices, isLoading } = useGetInvoiceByCustomerIdQuery(id as unknown as number);
 
     const fetchPaymentIntent = async () => {
         try {
-            setLoading(true)
-            setInitiatePayment(true)
+            setLoading(true);
             const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/booking/payment-intent-stripe/${selectedInvoice?.id}`, {
                 method: "POST",
                 headers: {
@@ -94,16 +65,18 @@ const Invoices = () => {
 
             const data = await response.json();
             setClientSecret(data.clientSecret);
-            setLoading(false)
+            setLoading(false);
         } catch (error) {
-            setLoading(false)
+            setLoading(false);
             console.error('Error fetching payment intent:', error);
-            setError('Error fetching payment intent Please try again')
+            setError('Error fetching payment intent. Please try again.');
         }
     };
 
     useEffect(() => {
-        fetchPaymentIntent();
+        if (isModalOpen && userToken) {
+            fetchPaymentIntent();
+        }
     }, [isModalOpen, userToken]);
 
     if (!invoices || isLoading) {
@@ -111,10 +84,8 @@ const Invoices = () => {
             <div className="w-full flex items-center justify-center h-[full]">
                 <Loading />
             </div>
-        )
+        );
     }
-
-    console.log(invoices)
 
     return (
         <>
@@ -161,61 +132,52 @@ const Invoices = () => {
                     <Popup isOpen={isModalOpen} onClose={closeModal}>
                         <div className="relative bg-[#EBE9F4] rounded-2xl min-h-[200px] lg:max-w-[877px] font-satoshi p-5 lg:px-7 lg:py-10">
                             {clientSecret && initiatePayment ? (
-                                <Elements stripe={stripePromise} options={{
-                                    clientSecret: clientSecret,
-                                }}>
+                                <Elements stripe={stripePromise} options={{ clientSecret }}>
                                     <CheckoutForm clientSecret={clientSecret} />
                                 </Elements>
                             ) : (
                                 <>
                                     <h3 className="text-3xl font-clashSemiBold text-[#060D1F]">Invoice Details</h3>
-                                    <p className='text-md text-[#546276]'>{selectedInvoice.serviceProvider.id}</p>
+                                    <p className="text-md text-[#546276]">
+                                        {selectedInvoice.serviceProvider.user.firstName}
+                                    </p>
                                     <div className="flex flex-col justify-between space-y-3 mt-5">
                                         <div className="bg-[#C1BADB] p-4 rounded-[20px]">
-                                            <h4 className='text-base text-primary font-satoshiMedium'>Total amount payable</h4>
+                                            <h4 className="text-base text-primary font-satoshiMedium">
+                                                Total amount payable
+                                            </h4>
                                             <h2 className="text-xl font-bold capitalize text-[#001433]">
                                                 AUD{formatAmount(selectedInvoice.total, "USD", false)}
                                             </h2>
                                         </div>
                                         <div className="bg-[#C1BADB] p-4 rounded-[20px]">
-                                            <h2 className='text-xs text-primary font-satoshiMedium mb-5'>SERVICE INFORMATION</h2>
+                                            <h2 className="text-xs text-primary font-satoshiMedium mb-5">
+                                                SERVICE INFORMATION
+                                            </h2>
                                             <div className="flex items-center max-lg:space-x-3 justify-between mb-6">
-                                                <div className="">
-                                                    <h2 className='text-xl text-[#001433] font-bold'>{selectedInvoice.createdAt}</h2>
-                                                    <h5 className='text-[#716F78]'>Issued on</h5>
+                                                <div>
+                                                    <h2 className="text-xl text-[#001433] font-bold">
+                                                        {selectedInvoice.createdAt}
+                                                    </h2>
+                                                    <h5 className="text-[#716F78]">Issued on</h5>
                                                 </div>
-                                                <div className="">
-                                                    <h2 className='text-xl text-[#001433] font-bold'>{selectedInvoice.expiredAt}</h2>
-                                                    <h5 className='text-[#716F78]'>Due on</h5>
+                                                <div>
+                                                    <h2 className="text-xl text-[#001433] font-bold">
+                                                        {selectedInvoice.expiredAt}
+                                                    </h2>
+                                                    <h5 className="text-[#716F78]">Due on</h5>
                                                 </div>
                                             </div>
-                                            <div className="flex items-center max-lg:space-x-3 justify-between mb-6">
-                                                <div className="">
-                                                    <h2 className='text-xl text-[#001433] font-bold'>{fullName}</h2>
-                                                    <h5 className='text-[#716F78]'>Bill from</h5>
-                                                </div>
-                                                <div className="">
-                                                        <h2 className='text-xl text-[#001433] font-bold'>{`${selectedInvoice.serviceProvider.user.firstName} ${selectedInvoice.serviceProvider.user.lastName}`}</h2>
-                                                    <h5 className='text-[#716F78]'>Bill to</h5>
-                                                </div>
+                                            <div className="flex items-center space-x-4 !mt-6">
+                                                <Button loading={loading} className="rounded-full" onClick={() => {
+                                                    setInitiatePayment(true)
+                                                }}>
+                                                    Accept Offer
+                                                </Button>
+                                                <Button theme="outline" className="rounded-full" onClick={closeModal}>
+                                                    Reject Offer
+                                                </Button>
                                             </div>
-                                            <div className="flex items-center max-lg:space-x-3 justify-between mb-6">
-                                                <div className="">
-                                                    <h2 className='text-xl text-[#001433] font-bold'>1</h2>
-                                                    <h5 className='text-[#716F78]'>Service duration</h5>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        {error && (
-                                            <div className="text-status-error-100 text-base font-semibold my-1">{error}</div>
-                                        )}
-                                        <div className="flex items-center space-x-4 !mt-6">
-                                            <Button loading={loading} className='rounded-full' onClick={fetchPaymentIntent}>
-                                                Accept Offer
-                                            </Button>
-                                            <Button theme='outline' className='rounded-full' onClick={closeModal}>
-                                                Reject Offer
-                                            </Button>
                                         </div>
                                     </div>
                                 </>
@@ -225,7 +187,7 @@ const Invoices = () => {
                 )}
             </div>
         </>
-    )
+    );
 }
 
-export default Invoices
+export default Invoices;
