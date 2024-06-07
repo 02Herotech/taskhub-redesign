@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState } from 'react';
-import { formatAmount } from "@/lib/utils";
+import { formatAmount, formatDate } from "@/lib/utils";
 import { FiClock } from "react-icons/fi";
 import Button from "@/components/global/Button";
 import Popup from '@/components/global/Popup';
@@ -43,7 +43,7 @@ const Invoices = () => {
         setIsModalOpen(false);
         setSelectedInvoice(null);
         setInitiatePayment(false);
-        setClientSecret(""); // Clear clientSecret when the modal is closed
+        setClientSecret("");
     };
 
     const { data: invoices, isLoading } = useGetInvoiceByCustomerIdQuery(id as unknown as number);
@@ -87,6 +87,12 @@ const Invoices = () => {
         );
     }
 
+    const stripeOptions = {
+        clientSecret: clientSecret,
+    };
+
+    console.log(invoices)
+
     return (
         <>
             <div className="w-full bg-[#EBE9F4] rounded-[20px] p-4 font-satoshi">
@@ -109,8 +115,8 @@ const Invoices = () => {
                                     </svg>
                                 </div>
                                 <div className="">
-                                    <h4 className="text-primary font-bold text-xl mb-1">{data.customer.user.firstName}</h4>
-                                    {/* <p className="text-[#716F78] font-satoshiMedium text-base">{`${data.} / ${data.serviceType}`}</p> */}
+                                    <h4 className="text-primary font-bold text-xl mb-1">{data.serviceProvider.user.firstName} sent you an invoice</h4>
+                                    <p className="text-[#716F78] font-satoshiMedium text-base">Name of service/type of service</p>
                                 </div>
                             </div>
                             <Button theme='outline' className='rounded-full max-lg:mt-2' onClick={() => handleCardClick(data)}>
@@ -132,7 +138,7 @@ const Invoices = () => {
                     <Popup isOpen={isModalOpen} onClose={closeModal}>
                         <div className="relative bg-[#EBE9F4] rounded-2xl min-h-[200px] lg:max-w-[877px] font-satoshi p-5 lg:px-7 lg:py-10">
                             {clientSecret && initiatePayment ? (
-                                <Elements stripe={stripePromise} options={{ clientSecret }}>
+                                <Elements stripe={stripePromise} options={stripeOptions}>
                                     <CheckoutForm clientSecret={clientSecret} />
                                 </Elements>
                             ) : (
@@ -157,19 +163,50 @@ const Invoices = () => {
                                             <div className="flex items-center max-lg:space-x-3 justify-between mb-6">
                                                 <div>
                                                     <h2 className="text-xl text-[#001433] font-bold">
-                                                        {selectedInvoice.createdAt}
+                                                        {formatDate(selectedInvoice.createdAt)}
                                                     </h2>
                                                     <h5 className="text-[#716F78]">Issued on</h5>
                                                 </div>
                                                 <div>
                                                     <h2 className="text-xl text-[#001433] font-bold">
-                                                        {selectedInvoice.expiredAt}
+                                                        {formatDate(selectedInvoice.expiredAt)}
                                                     </h2>
                                                     <h5 className="text-[#716F78]">Due on</h5>
                                                 </div>
                                             </div>
+                                            <div className="flex items-center max-lg:space-x-3 justify-between mb-6">
+                                                <div>
+                                                    <h2 className="text-xl text-[#001433] font-bold">
+                                                        {`${selectedInvoice.customer.user.firstName} ${selectedInvoice.customer.user.lastName}`}
+                                                    </h2>
+                                                    <h5 className="text-[#716F78]">Bill from</h5>
+                                                </div>
+                                                <div>
+                                                    <h2 className="text-xl text-[#001433] font-bold">
+                                                        {`${selectedInvoice.serviceProvider.user.firstName} ${selectedInvoice.serviceProvider.user.lastName}`}
+                                                    </h2>
+                                                    <h5 className="text-[#716F78]">Bill to</h5>
+                                                </div>
+                                            </div>
+                                                <div className="flex items-center max-lg:space-x-3 justify-between mb-6">
+                                                    <div>
+                                                        <h2 className="text-xl text-[#001433] font-bold">
+                                                            1 day
+                                                        </h2>
+                                                        <h5 className="text-[#716F78]">Service duration</h5>
+                                                    </div>
+                                                    {/* <div>
+                                                        <h2 className="text-xl text-[#001433] font-bold">
+                                                            {`${selectedInvoice.serviceProvider.user.firstName} ${selectedInvoice.serviceProvider.user.lastName}`}
+                                                        </h2>
+                                                        <h5 className="text-[#716F78]">Bill to</h5>
+                                                    </div> */}
+                                                </div>
+                                            {error && (
+                                                <div className="text-status-error-100 text-base font-semibold my-1">{error}</div>
+                                            )}
                                             <div className="flex items-center space-x-4 !mt-6">
-                                                <Button loading={loading} className="rounded-full" onClick={() => {
+                                                <Button loading={loading} disabled={!clientSecret} className="rounded-full" onClick={() => {
                                                     setInitiatePayment(true)
                                                 }}>
                                                     Accept Offer
