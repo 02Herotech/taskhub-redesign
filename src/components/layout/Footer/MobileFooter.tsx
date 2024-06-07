@@ -93,7 +93,7 @@ const MobileFooter = () => {
                         <Logo />
                     </Link>
                 </div>
-                <div className={` text-[14px] text-primary pl-[5px] text-left `}>
+                <div className={` text-[16px] text-primary pl-[5px] text-left font-satoshiMedium `}>
                     <p>
                         Need Help? If you have any questions or encounter issues, our support team is here to assist you.
                         Reach out to us at
@@ -114,12 +114,12 @@ const MobileFooter = () => {
                     {links1.map((group, index) => {
                         return (
                             <ul key={index} className='space-y-5'>
-                                <h3 className='text-primary text-base font-clashMedium'>
+                                <h3 className='text-primary text-base font-clashSemiBold'>
                                     {group.groupName}
                                 </h3>
                                 {group.links.map((link, index) => {
                                     return (
-                                        <li key={index} className='text-primary font-medium hover:underline text-sm lg:text-base'>
+                                        <li key={index} className='text-primary font-satoshiMedium hover:underline text-sm lg:text-base'>
                                             <Link href={link.url}>{link.label}</Link>
                                         </li>
                                     );
@@ -135,12 +135,12 @@ const MobileFooter = () => {
                     {links2.map((group, index) => {
                         return (
                             <ul key={index} className='space-y-5'>
-                                <h3 className='text-primary text-base font-bold'>
+                                <h3 className='text-primary text-base font-clashSemiBold'>
                                     {group.groupName}
                                 </h3>
                                 {group.links.map((link, index) => {
                                     return (
-                                        <li key={index} className='text-primary font-medium hover:underline text-sm lg:text-base'>
+                                        <li key={index} className='text-primary font-satoshiMedium hover:underline text-sm lg:text-base'>
                                             <Link href={link.url}>{link.label}</Link>
                                         </li>
                                     );
@@ -154,7 +154,7 @@ const MobileFooter = () => {
             <div className="mt-10 md:mt-[-40px] space-y-5">
                 <Newsletter />
 
-                <div className={`text-[14px]  `}>
+                <div className={`text-[12px]  `}>
                     <h2>   {currentYear} TaskHub. All Rights Reserved.</h2>
                 </div>
             </div>

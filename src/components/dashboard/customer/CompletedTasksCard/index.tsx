@@ -188,7 +188,7 @@ const CompletedTasksCard = ({ task }: TaskCardProps) => {
                     transition: { duration: 0.2 },
                 }}
             >
-                <div className="flex w-full items-center justify-between space-x-2">
+                <div className="flex w-full justify-between space-x-2">
                     <h2 className="overflow-hidden truncate text-ellipsis whitespace-nowrap py-4 text-2xl font-satoshiBold font-bold text-primary lg:text-[32px]">
                         {task.taskBriefDescription}
                     </h2>

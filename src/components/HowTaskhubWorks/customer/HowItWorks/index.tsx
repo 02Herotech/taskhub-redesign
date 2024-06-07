@@ -53,8 +53,8 @@ const HowItWorks = () => {
 
                         <div className="flex space-x-2 shadow-md items-center text-[12px] bg-[#EEE5FC] rounded-xl px-4 py-2 absolute lg:-right-16 -top-4">
                             <Image src={icon1} width={25} alt="hand shake"></Image>
-                            <p className="font-bold">Task completed</p>
-                            <p className="text-[#969696]">Just now</p>
+                            <p className=" font-[700] text-[14px] text-primary">Task completed</p>
+                            <p className="text-[#969696] text-[14px]">Just now</p>
                         </div>
                     </div>
 
@@ -76,7 +76,7 @@ const HowItWorks = () => {
                     </p>
 
                     <div className='flex  space-x-3'>
-                        <div className='rounded-[100%] h-2 w-2 bg-primary lg:mt-5 mt-3'>
+                        <div className='rounded-[100%] h-2 w-2 bg-primary lg:mt-3 mt-2'>
 
                         </div>
                         <p className='text-primary lg:text-[20px] text-[16px] font-satoshiMedium w-[95%]'>In a short sentence, tell us what you need to get done. Use simple and short words to get the best result.</p>
@@ -108,7 +108,7 @@ const HowItWorks = () => {
 
 
                     <div className='flex  space-x-4'>
-                        <div className='rounded-[100%] h-2 w-2 bg-primary lg:mt-5 mt-3'>
+                        <div className='rounded-[100%] h-2 w-2 bg-primary lg:mt-3 mt-2'>
 
                         </div>
                         <p className='text-primary lg:text-[20px] text-[16px] font-satoshiMedium w-[95%]'>Choose your service type; remotely or in person. Add in your location details and budget and your first task has been created!</p>

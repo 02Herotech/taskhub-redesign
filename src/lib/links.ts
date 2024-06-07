@@ -86,7 +86,7 @@ export const mobileServiceProviderLinks: Link[] = [
             },
             {
                 label: "My Notifications",
-                url: "/service-provider/dashboard/notifications",
+                url: "/service-provider/notification",
             },
             {
                 label: "Payments and wallet",
@@ -140,7 +140,7 @@ export const mobileCustomerLinks: Link[] = [
             },
             {
                 label: "Payments settings",
-                url: "/customer/payment",
+                url: "/customer/payment/payment-history",
             },
             {
                 label: "Settings",

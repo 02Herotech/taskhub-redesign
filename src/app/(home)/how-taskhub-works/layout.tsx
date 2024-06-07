@@ -39,6 +39,8 @@ const MainLayout = ({ children }: LayoutProps) => {
             (subLink) => subLink.href === currentRoute
         );
         setActiveTab(activeSubLink || null);
+
+        window.scrollTo(0, 0);
     }, [pathname]);
 
     const handleLinkClick = (subLink: SubLink) => {

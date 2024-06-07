@@ -98,7 +98,7 @@ const CustomerPaymentHistoryData: CustomerPaymentHistoryProps[] = [
     }
 ];
 
-const CustomerPaymentHistory = () => {
+const PaymentHistory = () => {
     const [visibleTransactions, setVisibleTransactions] = useState(4);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedPayment, setSelectedPayment] = useState<CustomerPaymentHistoryProps | null>(null);
@@ -186,4 +186,4 @@ const CustomerPaymentHistory = () => {
     )
 }
 
-export default CustomerPaymentHistory;
+export default PaymentHistory;
