@@ -21,6 +21,7 @@ const ServiceNotification = () => {
   const userNotification: NotificationTypes[] =
     session?.data?.user?.user?.appNotificationList;
 
+
   const Not = {
     id: 1,
     message:

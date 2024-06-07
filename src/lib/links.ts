@@ -86,7 +86,7 @@ export const mobileServiceProviderLinks: Link[] = [
             },
             {
                 label: "My Notifications",
-                url: "/service-provider/dashboard/notifications",
+                url: "/service-provider/notification",
             },
             {
                 label: "Payments and wallet",
