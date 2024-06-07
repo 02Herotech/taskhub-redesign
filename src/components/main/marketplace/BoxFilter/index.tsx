@@ -1,8 +1,8 @@
 "use client";
 
 import {
-  updateFilterData,
-  updateFilterStatus,
+  filterMarketPlace,
+  setFilterLoadingState,
 } from "@/store/Features/marketplace";
 import axios from "axios";
 import { IconType } from "react-icons";
@@ -16,22 +16,20 @@ interface BoxFilterProper {
 
 const BoxFilter: React.FC<BoxFilterProper> = ({ category, Icon, id }) => {
   const dispatch = useDispatch();
-  const handleFilterByCategory = async () => {
-    dispatch(updateFilterStatus({ title: "category", value: category }));
 
-    // filter by category
-    const url =
-      "https://smp.jacinthsolutions.com.au/api/v1/listing/listing-by-category/" +
-      id +
-      "?pageNumber=0";
-    const { data } = await axios.get(url);
-    dispatch(
-      updateFilterData({
-        data: data.content,
-        section: "subCategory",
-        value: category,
-      }),
-    );
+  const handleFilterByCategory = async () => {
+    dispatch(setFilterLoadingState(true));
+    try {
+      const url =
+        "https://smp.jacinthsolutions.com.au/api/v1/listing/filter-listings?category=" +
+        category;
+      const { data } = await axios.get(url);
+      dispatch(filterMarketPlace(data));
+    } catch (error: any) {
+      console.log(error.message);
+    } finally {
+      dispatch(setFilterLoadingState(false));
+    }
   };
 
   return (
