@@ -42,20 +42,21 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
         return;
       }
       let url;
+      let content;
       if (category === "All") {
         url =
           "https://smp.jacinthsolutions.com.au/api/v1/listing/all-active-listings/" +
           currentPage;
+        const { data } = await axios.get(url);
+        content = data.content;
       } else if (categoryId) {
         url =
-          "https://smp.jacinthsolutions.com.au/api/v1/listing/listing-by-category/" +
-          categoryId.id +
-          "?pageNumber=" +
-          currentPage;
+          "https://smp.jacinthsolutions.com.au/api/v1/listing/filter-listings?category=" +
+          categoryId.categoryName;
+        const { data } = await axios.get(url);
+        content = data;
       }
       if (url) {
-        const { data } = await axios.get(url);
-        const content = data.content;
         dispatch(updateListingArray(content));
         setallListsting(content);
         setDisplayListing(content);
@@ -214,7 +215,6 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
         <div className="mt-10 flex w-full items-center justify-center space-x-7">
           <button
             className="rounded-md bg-status-lightViolet p-2 transition-all duration-300 hover:bg-primary hover:text-white disabled:bg-status-lightViolet disabled:opacity-50 disabled:hover:bg-transparent"
-            // onClick={handlePreviousPage}
             disabled={page.currentPage === 1}
           >
             <IoIosArrowBack />

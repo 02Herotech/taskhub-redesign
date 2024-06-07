@@ -40,6 +40,7 @@ const MareketPlace = () => {
   const {
     categories,
     isFiltering,
+    isFilteringLoading,
     search: { isSearching },
   } = useSelector((state: RootState) => state.market);
 
@@ -104,7 +105,11 @@ const MareketPlace = () => {
       >
         <MarketPlaceFilter />
         <div>
-          {isFiltering || isSearching ? (
+          {isFilteringLoading ? (
+            <div className="min-h-80 items-center justify-center p-4">
+              <Loading />
+            </div>
+          ) : isFiltering || isSearching ? (
             <div>
               <CategoryListing category="All" />
             </div>

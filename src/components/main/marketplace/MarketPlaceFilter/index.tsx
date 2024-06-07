@@ -1,11 +1,12 @@
 import { FiSearch } from "react-icons/fi";
 import axios from "axios";
 import {
+  filterMarketPlace,
   resetFilter,
-  tempUpdateFilterData,
+  setFilterLoadingState,
   updateFilterData,
 } from "@/store/Features/marketplace";
-import { BsTriangleFill } from "react-icons/bs";
+import { BsTriangleFill, BsX } from "react-icons/bs";
 import { FormEvent, useEffect, useState } from "react";
 import {
   fetchAllMarketplaseCategories,
@@ -34,7 +35,10 @@ const locationData = [
   "Australian Capital Territory",
 ];
 
-const typeData = ["Remote", "Physical"];
+const typeData = [
+  { label: "Remote", value: "REMOTE_SERVICE" },
+  { label: "Physical", value: "PHYSICAL_SERVICE" },
+];
 
 const othersData = ["Earliest", "Latest"];
 
@@ -54,6 +58,7 @@ const MarketPlaceFilter = () => {
     isFiltering,
     search: { isSearching },
     filteredData,
+    isFilteringLoading,
   } = useSelector((state: RootState) => state.market);
   const [isDropdownOpen, setIsDropdownOpen] = useState({
     isOpened: false,
@@ -183,7 +188,6 @@ const MarketPlaceFilter = () => {
     try {
       dispatch(updateFilterStatus({ title, value: location }));
       handleShowDropdown(title);
-      dispatch(tempUpdateFilterData({ section: "location", value: location }));
 
       const url =
         "https://smp.jacinthsolutions.com.au/api/v1/listing/by-location/0?location=" +
@@ -230,7 +234,6 @@ const MarketPlaceFilter = () => {
     try {
       dispatch(updateFilterStatus({ title, value: others }));
       handleShowDropdown(title);
-      dispatch(tempUpdateFilterData({ section: "others", value: type }));
       let url = "";
       if (others === "Earliest") {
         url = "https://smp.jacinthsolutions.com.au/api/v1/listing/earliest/0";
@@ -266,10 +269,96 @@ const MarketPlaceFilter = () => {
       }),
     );
   };
+
   //  handled and working
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
   };
+
+  // -------------------- New Filter State
+
+  interface FilterDataStructureTypes {
+    category: string;
+    location: string;
+    typeOfService: string;
+    minPrice: number;
+    maxPrice: number;
+  }
+  const [filterDataStructure, setfilterDataStructure] =
+    useState<FilterDataStructureTypes>({
+      category: "",
+      location: "",
+      typeOfService: "",
+      minPrice: 5,
+      maxPrice: 1000,
+    });
+
+  const [isMounted, setIsMounted] = useState(false);
+
+  const handleFilter = async () => {
+    try {
+      const { category, location, typeOfService, minPrice, maxPrice } =
+        filterDataStructure;
+      console.log("Filter process started");
+      let url =
+        "https://smp.jacinthsolutions.com.au/api/v1/listing/filter-listings?";
+      const params = [];
+
+      if (category) {
+        params.push(`category=${category}`);
+      }
+      if (location) {
+        params.push(`location=${location}`);
+      }
+      if (typeOfService) {
+        params.push(`typeOfService=${typeOfService}`);
+      }
+      if (minPrice) {
+        params.push(`minPrice=${minPrice}`);
+      }
+      if (maxPrice) {
+        params.push(`maxPrice=${maxPrice}`);
+      }
+      if (params.length > 0) {
+        url += params.join("&");
+      }
+      const response = await axios.get(url);
+      dispatch(filterMarketPlace(response.data));
+    } catch (error: any) {
+      console.log(error.message);
+    } finally {
+      dispatch(setFilterLoadingState(false));
+    }
+  };
+
+  const handleResetFilters = () => {
+    setfilterDataStructure({
+      category: "",
+      location: "",
+      typeOfService: "",
+      minPrice: 5,
+      maxPrice: 1000,
+    });
+  };
+
+  useEffect(() => {
+    if (isMounted) {
+      if (
+        filterDataStructure.category ||
+        filterDataStructure.location ||
+        filterDataStructure.typeOfService ||
+        filterDataStructure.minPrice !== 5 ||
+        filterDataStructure.maxPrice !== 1000
+      ) {
+        handleFilter();
+      } else {
+        dispatch(resetFilter(""));
+      }
+    } else {
+      setIsMounted(true);
+    }
+    // eslint-disable-next-line
+  }, [filterDataStructure]);
 
   return (
     <div className=" flex flex-col space-y-4 pt-5 lg:space-y-8 lg:py-10">
@@ -308,7 +397,10 @@ const MarketPlaceFilter = () => {
             <div className="flex flex-wrap gap-4 space-x-2 text-xs lg:space-x-6 ">
               <button
                 className="cursor-pointer rounded-3xl bg-violet-normal px-4 py-2 text-base  font-bold text-white"
-                onClick={() => dispatch(resetFilter(""))}
+                onClick={() => {
+                  handleResetFilters();
+                  dispatch(resetFilter(""));
+                }}
               >
                 All
               </button>
@@ -320,11 +412,26 @@ const MarketPlaceFilter = () => {
                   className="flex items-center gap-2 rounded-3xl border border-violet-normal bg-violet-light px-4 py-2 text-base font-bold text-violet-normal transition-colors duration-300 hover:bg-violet-200 "
                   onClick={() => handleShowDropdown("category")}
                 >
+                  {filterDataStructure.category !== "" && (
+                    <button
+                      className="absolute -right-1 -top-1 flex size-6 items-center justify-center rounded-full bg-violet-normal text-white"
+                      onClick={() =>
+                        setfilterDataStructure((prev) => ({
+                          ...prev,
+                          category: "",
+                        }))
+                      }
+                    >
+                      <BsX />
+                    </button>
+                  )}
                   <div
                     className={`fixed left-0 top-0 h-screen w-screen ${isDropdownOpen.isOpened && isDropdownOpen.category === "category" ? "block" : "hidden"} `}
                     onClick={() => handleShowDropdown("category")}
                   ></div>
-                  {category === "" ? "Category" : truncateText(category, 12)}
+                  {filterDataStructure.category === ""
+                    ? "Category"
+                    : truncateText(filterDataStructure.category, 12)}
                   <span>
                     <BsTriangleFill
                       fill="rgb(56 31 140)"
@@ -339,65 +446,17 @@ const MarketPlaceFilter = () => {
                     <button
                       className=" relative whitespace-nowrap px-8 py-3 text-left text-base text-violet-normal transition-colors duration-300 hover:bg-violet-100 "
                       key={item.id}
-                      onClick={() =>
-                        handleFetchSubCategory(
-                          item.id,
-                          item.categoryName,
-                          "category",
-                        )
-                      }
+                      onClick={() => {
+                        handleShowDropdown("category");
+                        setfilterDataStructure((prev) => ({
+                          ...prev,
+                          category: item.categoryName,
+                        }));
+                      }}
                     >
                       {item.categoryName}
                     </button>
                   ))}
-                </div>
-              </div>
-
-              {/* ----------------------------------- */}
-              {/* SubCategory */}
-              <div className="relative">
-                <button
-                  className=" flex items-center gap-2 rounded-3xl border border-violet-normal  bg-violet-light px-4 py-2 text-base font-bold text-violet-normal transition-colors duration-300 hover:bg-violet-200 "
-                  onClick={() => handleShowDropdown("sub-category")}
-                >
-                  <div
-                    className={`fixed left-0 top-0 h-screen w-screen ${isDropdownOpen.isOpened && isDropdownOpen.category === "sub-category" ? "block" : "hidden"} `}
-                    onClick={() => handleShowDropdown("subCategory")}
-                  ></div>
-                  {subCategory.name === ""
-                    ? "Subcategory"
-                    : truncateText(subCategory.name, 12)}
-                  <span>
-                    <BsTriangleFill
-                      fill="rgb(56 31 140)"
-                      className="size-2 rotate-[60deg] text-violet-normal"
-                    />
-                  </span>
-                </button>
-                <div
-                  className={`small-scrollbar absolute top-[calc(100%+1rem)] flex max-h-0 min-w-full flex-col rounded-md bg-violet-50 transition-all duration-300 ${isDropdownOpen.category === "sub-category" && isDropdownOpen.isOpened ? "max-h-64 overflow-y-auto border border-slate-200 " : "max-h-0  overflow-hidden "} `}
-                >
-                  {category === "" ? (
-                    <p className="cursor-default whitespace-nowrap px-8 py-3 text-left text-base text-violet-normal">
-                      Select A Category
-                    </p>
-                  ) : (
-                    subCategories.map((item) => (
-                      <button
-                        key={item.id}
-                        className="whitespace-nowrap px-8 py-3 text-left text-base text-violet-normal transition-colors duration-300 hover:bg-violet-100 "
-                        onClick={() =>
-                          handleFilterDataBySubcategory(
-                            item.id,
-                            { id: item.id, name: item.name },
-                            "subCategory",
-                          )
-                        }
-                      >
-                        {item.name}
-                      </button>
-                    ))
-                  )}
                 </div>
               </div>
 
@@ -408,11 +467,26 @@ const MarketPlaceFilter = () => {
                   className=" flex items-center gap-2 rounded-3xl border border-violet-normal  bg-violet-light px-4 py-2 text-base font-bold text-violet-normal transition-colors duration-300 hover:bg-violet-200 "
                   onClick={() => handleShowDropdown("location")}
                 >
+                  {filterDataStructure.location !== "" && (
+                    <button
+                      className="absolute -right-1 -top-1 flex size-6 items-center justify-center rounded-full bg-violet-normal text-white"
+                      onClick={() =>
+                        setfilterDataStructure((prev) => ({
+                          ...prev,
+                          location: "",
+                        }))
+                      }
+                    >
+                      <BsX />
+                    </button>
+                  )}
                   <div
                     className={`fixed left-0 top-0 h-screen w-screen ${isDropdownOpen.isOpened && isDropdownOpen.category === "location" ? "block" : "hidden"} `}
                     onClick={() => handleShowDropdown("location")}
                   ></div>
-                  {location === "" ? "Location" : truncateText(location, 12)}
+                  {filterDataStructure.location === ""
+                    ? "Location"
+                    : truncateText(filterDataStructure.location, 12)}
                   <span>
                     <BsTriangleFill
                       fill="rgb(56 31 140)"
@@ -427,7 +501,13 @@ const MarketPlaceFilter = () => {
                     <button
                       className="whitespace-nowrap px-8 py-3 text-left text-base text-violet-normal transition-colors duration-300 hover:bg-violet-100 "
                       key={index}
-                      onClick={() => handleFilterbyLocation(item, "location")}
+                      onClick={() => {
+                        handleShowDropdown("location");
+                        setfilterDataStructure((prev) => ({
+                          ...prev,
+                          location: item,
+                        }));
+                      }}
                     >
                       {item}
                     </button>
@@ -440,6 +520,19 @@ const MarketPlaceFilter = () => {
                   className=" flex items-center gap-2 rounded-3xl border border-violet-normal  bg-violet-light px-4 py-2 text-base font-bold text-violet-normal transition-colors duration-300 hover:bg-violet-200 "
                   onClick={() => handleShowDropdown("type")}
                 >
+                  {filterDataStructure.typeOfService !== "" && (
+                    <button
+                      className="absolute -right-1 -top-1 flex size-6 items-center justify-center rounded-full bg-violet-normal text-white"
+                      onClick={() =>
+                        setfilterDataStructure((prev) => ({
+                          ...prev,
+                          typeOfService: "",
+                        }))
+                      }
+                    >
+                      <BsX />
+                    </button>
+                  )}
                   <div
                     className={`fixed left-0 top-0 h-screen w-screen ${isDropdownOpen.isOpened && isDropdownOpen.category === "type" ? "block" : "hidden"} `}
                     onClick={() => handleShowDropdown("type")}
@@ -459,9 +552,15 @@ const MarketPlaceFilter = () => {
                     <button
                       className="whitespace-nowrap px-8 py-3 text-left text-base text-violet-normal transition-colors duration-300 hover:bg-violet-100 "
                       key={index}
-                      onClick={() => handleFilterbyType(item, "type")}
+                      onClick={() => {
+                        handleShowDropdown("type");
+                        setfilterDataStructure((prev) => ({
+                          ...prev,
+                          typeOfService: item.value,
+                        }));
+                      }}
                     >
-                      {item}
+                      {item.label}
                     </button>
                   ))}
                 </div>
@@ -473,6 +572,21 @@ const MarketPlaceFilter = () => {
                   className="flex items-center gap-2 rounded-3xl border border-violet-normal  bg-violet-light px-4 py-2 text-base font-bold text-violet-normal transition-colors duration-300 hover:bg-violet-200 "
                   onClick={() => handleShowDropdown("pricing")}
                 >
+                  {(filterDataStructure.minPrice !== 5 ||
+                    filterDataStructure.maxPrice !== 1000) && (
+                    <button
+                      className="absolute -right-1 -top-1 flex size-6 items-center justify-center rounded-full bg-violet-normal text-white"
+                      onClick={() =>
+                        setfilterDataStructure((prev) => ({
+                          ...prev,
+                          minPrice: 5,
+                          maxPrice: 1000,
+                        }))
+                      }
+                    >
+                      <BsX />
+                    </button>
+                  )}
                   <div
                     className={`fixed left-0 top-0 h-screen w-screen ${isDropdownOpen.isOpened && isDropdownOpen.category === "pricing" ? "block" : "hidden"} `}
                     onClick={() => handleShowDropdown("pricing")}
@@ -491,27 +605,27 @@ const MarketPlaceFilter = () => {
                   <div className="space-y-4 p-4">
                     <div className="min-w-64 p-4">
                       <div className="mb-6 text-center text-2xl font-bold text-violet-normal">
-                        ${pricing.minPrice} - ${pricing.maxPrice}
+                        ${filterDataStructure.minPrice} - $
+                        {filterDataStructure.maxPrice}
                       </div>
                       <ReactSlider
                         className="relative h-2 w-full rounded-md bg-[#FE9B07]"
                         thumbClassName="absolute h-6 w-6 bg-[#FE9B07] rounded-full cursor-grab transform -translate-y-1/2 top-1/2"
                         trackClassName="top-1/2 bg-[#FE9B07]"
-                        value={[pricing.minPrice, pricing.maxPrice]}
+                        value={[
+                          filterDataStructure.minPrice,
+                          filterDataStructure.maxPrice,
+                        ]}
                         min={5}
                         max={1000}
                         step={5}
-                        onChange={(newValues: number[]) =>
-                          dispatch(
-                            updateFilterStatus({
-                              title: "pricing",
-                              value: {
-                                minPrice: newValues[0],
-                                maxPrice: newValues[1],
-                              },
-                            }),
-                          )
-                        }
+                        onChange={(newValues: number[]) => {
+                          setfilterDataStructure((prev) => ({
+                            ...prev,
+                            minPrice: newValues[0],
+                            maxPrice: newValues[1],
+                          }));
+                        }}
                       />
                     </div>
                     <input
@@ -520,67 +634,40 @@ const MarketPlaceFilter = () => {
                       max={99999}
                       min={5}
                       onChange={(event) =>
-                        dispatch(
-                          updateFilterStatus({
-                            title: "pricing",
-                            value: {
-                              minPrice: event?.target.value,
-                              maxPrice: event?.target.value,
-                            },
-                          }),
-                        )
+                        setfilterDataStructure((prev) => ({
+                          ...prev,
+                          minPrice: Number(event.target.value),
+                          maxPrice: Number(event.target.value),
+                        }))
                       }
                     />
                     <div className="flex items-center gap-4 ">
                       <button
-                        onClick={() => handleFilterByPricing()}
+                        onClick={() => handleShowDropdown("pricing")}
                         className=" rounded-full  bg-violet-normal px-4 py-2 text-left text-sm text-white transition-opacity duration-300 hover:opacity-90 "
                       >
                         Apply
                       </button>
-                      <button
+                      {/* <button
                         onClick={() => handleCanelFilterByPricing("pricing")}
                         className=" rounded-full  bg-violet-light px-4 py-2 text-left text-sm text-violet-normal transition-all duration-300  hover:bg-violet-200"
                       >
                         Cancel
-                      </button>
+                      </button> */}
                     </div>
                   </div>
                 </div>
               </div>
 
-              {/* Others */}
-              <div className="relative">
-                <button
-                  className=" flex items-center gap-2 rounded-3xl border border-violet-normal  bg-violet-light px-4 py-2 text-base font-bold text-violet-normal transition-colors duration-300 hover:bg-violet-200 "
-                  onClick={() => handleShowDropdown("others")}
-                >
-                  <div
-                    className={`fixed left-0 top-0 h-screen w-screen ${isDropdownOpen.isOpened && isDropdownOpen.category === "others" ? "block" : "hidden"} `}
-                    onClick={() => handleShowDropdown("others")}
-                  ></div>
-                  {others === "" ? "Others" : truncateText(others, 12)}
-                  <span>
-                    <BsTriangleFill
-                      fill="rgb(56 31 140)"
-                      className="size-2 rotate-[60deg] text-violet-normal"
-                    />
-                  </span>
-                </button>
-                <div
-                  className={`small-scrollbar absolute top-[calc(100%+1rem)] flex max-h-0 min-w-full flex-col rounded-md bg-violet-50 transition-all duration-300 ${isDropdownOpen.category === "others" && isDropdownOpen.isOpened ? "max-h-64 overflow-y-auto border border-slate-200 " : "max-h-0  overflow-hidden "} `}
-                >
-                  {othersData.map((item, index) => (
-                    <button
-                      className="whitespace-nowrap px-8 py-3 text-left text-base text-violet-normal transition-colors duration-300 hover:bg-violet-100 "
-                      key={index}
-                      onClick={() => handleFilterbyOthers(item, "others")}
-                    >
-                      {item}
-                    </button>
-                  ))}
-                </div>
-              </div>
+              <button
+                className="min-w-40 cursor-pointer rounded-3xl bg-orange-normal px-4 py-2 text-base  font-bold text-white"
+                onClick={() => {
+                  handleResetFilters();
+                  dispatch(resetFilter(""));
+                }}
+              >
+                Reset filters
+              </button>
             </div>
           </div>
 
