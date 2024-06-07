@@ -12,6 +12,7 @@ interface PricingPlanProps {
   planTwoDescription: string | null;
   planThreeDescription: string | null;
   listingId: number;
+  listingTitle: string | undefined;
 }
 
 const PricingPlan = ({
@@ -22,6 +23,7 @@ const PricingPlan = ({
   planThreePrice,
   planThreeDescription,
   listingId,
+  listingTitle,
 }: PricingPlanProps) => {
   const session = useSession();
   const isAuthenticated = session?.data?.user?.accessToken;
@@ -42,7 +44,7 @@ const PricingPlan = ({
     pricing: 0,
     isAuthenticated,
     isServiceProvider,
-    title: "",
+    title: listingTitle ?? "",
   });
 
   const handleExpandText = (index: number) => {
@@ -62,7 +64,7 @@ const PricingPlan = ({
   }) => {
     if (pricing && title) {
       setIsModalShown(true);
-      setModalData((prev) => ({ ...prev, pricing, title }));
+      setModalData((prev) => ({ ...prev, pricing, title: listingTitle ?? "" }));
     }
   };
 

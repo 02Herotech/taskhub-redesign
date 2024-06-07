@@ -127,6 +127,7 @@ const Page = () => {
             planTwoDescription={displayData?.planTwoDescription ?? null}
             planThreeDescription={displayData?.planThreeDescription ?? null}
             listingId={displayData?.id ?? 0}
+            listingTitle={displayData?.listingTitle}
           />
         </section>
 

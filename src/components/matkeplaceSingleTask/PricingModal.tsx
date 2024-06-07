@@ -215,13 +215,6 @@ const PricingModal = ({
         <div className="relative z-10 flex w-[90vw] max-w-xl flex-col items-center justify-center gap-3 bg-violet-light p-3 px-4 lg:space-y-4 lg:p-10">
           <div className="clip-triangle absolute left-0 top-0 h-full w-full bg-violet-active"></div>
           <div className="relative flex flex-col items-center justify-center gap-4 bg-white p-6 lg:px-20 ">
-            {/* <Image
-              src="/assets/images/marketplace/singleTask/Frame 1000003668.png"
-              alt="icon"
-              width={100}
-              height={100}
-              className="size-14 object-contain"
-            /> */}
             <p className="text-center text-xl font-bold text-violet-normal">
               Booking Proposal successfully sent to the service provider
             </p>

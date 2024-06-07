@@ -62,3 +62,43 @@ export function formatDateFromNumberArray(dateArray: number[]) {
 
   return `${day}${daySuffix(day)} ${monthNames[month - 1]} ${year}`;
 }
+
+export function formatDateFromNumberArrayToRelativeDate(
+  dateArray: number[],
+): string {
+  const [year, month, day] = dateArray;
+  const date = new Date(year, month - 1, day); // JavaScript Date object
+  const now = new Date();
+  const diffTime = date.getTime() - now.getTime();
+  const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+
+  if (diffDays === 0) {
+    return "today";
+  } else if (diffDays === 1) {
+    return "tomorrow";
+  } else if (diffDays === -1) {
+    return "yesterday";
+  } else if (diffDays > 1 && diffDays < 7) {
+    return `in ${diffDays} days`;
+  } else if (diffDays < -1 && diffDays > -7) {
+    return `${Math.abs(diffDays)} days ago`;
+  } else if (diffDays >= 7 && diffDays < 30) {
+    const diffWeeks = Math.floor(diffDays / 7);
+    return `in ${diffWeeks} ${diffWeeks === 1 ? "week" : "weeks"}`;
+  } else if (diffDays <= -7 && diffDays > -30) {
+    const diffWeeks = Math.floor(Math.abs(diffDays) / 7);
+    return `${diffWeeks} ${diffWeeks === 1 ? "week" : "weeks"} ago`;
+  } else if (diffDays >= 30 && diffDays < 365) {
+    const diffMonths = Math.floor(diffDays / 30);
+    return `in ${diffMonths} ${diffMonths === 1 ? "month" : "months"}`;
+  } else if (diffDays <= -30 && diffDays > -365) {
+    const diffMonths = Math.floor(Math.abs(diffDays) / 30);
+    return `${diffMonths} ${diffMonths === 1 ? "month" : "months"} ago`;
+  } else if (diffDays >= 365) {
+    const diffYears = Math.floor(diffDays / 365);
+    return `in ${diffYears} ${diffYears === 1 ? "year" : "years"}`;
+  } else {
+    const diffYears = Math.floor(Math.abs(diffDays) / 365);
+    return `${diffYears} ${diffYears === 1 ? "year" : "years"} ago`;
+  }
+}

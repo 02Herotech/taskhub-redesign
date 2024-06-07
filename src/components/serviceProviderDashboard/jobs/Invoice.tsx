@@ -8,6 +8,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import { formatDateAsYYYYMMDD, formatDateFromNumberArray } from "@/utils";
 import { useRouter } from "next/navigation";
 import { BeatLoader } from "react-spinners";
+import { BsPencilSquare } from "react-icons/bs";
 
 interface ModalPropType {
   isModalOpen: boolean;
@@ -20,7 +21,6 @@ const Invoice = ({
   setIsModalOpen,
   currentBooking,
 }: ModalPropType) => {
-  const SERVICE_CHARGE = 10;
   const [invoiceState, setInvoiceState] = useState<{
     price: string | number;
     date: Date | null;
@@ -32,11 +32,13 @@ const Invoice = ({
     price: currentBooking?.price ?? "",
     // @ts-expect-error "type not curruntly correct "
     date: convertToDateInputFormat(currentBooking?.startDate) ?? null,
-    gst: currentBooking ? (currentBooking.price / 100) * 10 : 0,
+    gst: currentBooking ? Math.floor((currentBooking.price / 100) * 10) : 0,
     total: currentBooking
-      ? currentBooking.price -
-        (currentBooking.price / 100) * 10 -
-        SERVICE_CHARGE
+      ? Math.floor(
+          currentBooking.price -
+            (currentBooking.price / 100) * 10 -
+            (currentBooking.price / 100) * 2,
+        )
       : 0,
     successData: "",
     loading: false,
@@ -74,7 +76,7 @@ const Invoice = ({
       serviceProviderId: user?.id,
       customerId: currentBooking.user.id,
       gst: invoiceState.gst,
-      platformCharge: SERVICE_CHARGE,
+      platformCharge: Math.floor((Number(invoiceState.price) / 100) * 2),
     };
     try {
       setInvoiceState((prev) => ({ ...prev, loading: true }));
@@ -103,11 +105,12 @@ const Invoice = ({
   useEffect(() => {
     setInvoiceState((prev) => ({
       ...prev,
-      gst: (Number(invoiceState.price) / 100) * 10,
-      total:
+      gst: Math.floor((Number(invoiceState.price) / 100) * 10),
+      total: Math.floor(
         Number(invoiceState.price) -
-        (Number(invoiceState.price) / 100) * 10 -
-        SERVICE_CHARGE,
+          (Number(invoiceState.price) / 100) * 10 -
+          (Number(invoiceState.price) / 100) * 2,
+      ),
     }));
     // eslint-disable-next-line
   }, [invoiceState.price]);
@@ -116,19 +119,22 @@ const Invoice = ({
     <section
       className={`fixed left-0 top-0 z-50 flex h-screen w-screen items-center justify-center bg-black bg-opacity-70 transition-opacity duration-300 ${isModalOpen ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-0"} `}
     >
-      <div className=" relative w-[90vw] max-w-xl  space-y-6 rounded-xl bg-white p-3 py-10 lg:p-6">
+      <div className=" relative w-[90vw] max-w-xl  space-y-3 rounded-xl bg-white p-3 py-10 lg:p-6">
         <div>
-          <h1 className="font-clashBold text-3xl font-extrabold text-violet-dark">
+          <h1 className="font-clashBold text-3xl font-extrabold leading-6 text-violet-dark">
             Paid Invoice
           </h1>
-          <p className="text-sm text-slate-500 ">
-            {currentBooking?.listing?.listingTitle}
+          <p className="text-sm text-violet-active ">
+            {currentBooking?.bookingTitle}
           </p>
         </div>
 
         <div className="flex items-center gap-6">
           <label className="flex-grow rounded-lg bg-violet-light p-4 py-2 font-bold ">
-            <span className="text-[#716F78]">Amount</span>
+            <span className="flex items-center gap-2 text-[#716F78] ">
+              <span>Amount</span>{" "}
+              <BsPencilSquare className="text-violet-normal" />
+            </span>
             <div className="flex w-full items-center gap-1">
               <p>$ </p>
               <input
@@ -147,7 +153,10 @@ const Invoice = ({
             </div>
           </label>
           <label className="flex flex-grow flex-col gap-2 rounded-lg bg-violet-light p-4 py-2 font-bold ">
-            <span className="text-[#716F78]">Start Date</span>
+            <span className="flex items-center gap-2 text-[#716F78]">
+              <span>Start Date</span>
+              <BsPencilSquare className="text-violet-normal" />
+            </span>
             <DatePicker
               selected={invoiceState.date as Date}
               minDate={new Date()}
@@ -164,54 +173,50 @@ const Invoice = ({
           </label>
         </div>
         <div className="space-y-3 rounded-lg bg-violet-active p-3 py-4 text-violet-normal">
-          <p className="font-bold text-violet-normal ">Service Information</p>
-          <div className="grid grid-cols-2 gap-5 ">
-            <div className="space-y-5">
+          <p className="font-bold uppercase text-violet-normal ">
+            Service Information
+          </p>
+          <div className="grid grid-cols-2 gap-3 ">
+            <div className="space-y-3">
               <div>
-                <p className=" font-satoshiBold font-extrabold text-violet-dark  ">
+                <p className="font-black text-violet-dark  ">
                   {formatDateAsYYYYMMDD(todayDate)}
                 </p>
-                <p className="text-slate-600 ">Issued On</p>
+                <p className="font-medium  text-[#4E5158]">Issued On</p>
               </div>
               <div>
-                <p className=" font-satoshiBold font-extrabold text-violet-dark  ">
-                  Bill From
-                </p>
-                <p>
+                <p className=" font-extrabold text-violet-dark  ">Bill From</p>
+                <p className="font-medium  text-[#4E5158]">
                   {user?.firstName} {user?.lastName}
                 </p>
               </div>
               <div>
-                <p className=" font-satoshiBold font-extrabold text-violet-dark  ">
+                <p className=" font-extrabold text-violet-dark  ">
                   ${invoiceState.gst}
                 </p>
-                <p>GST @10%</p>
+                <p className="font-medium  text-[#4E5158]">GST @10%</p>
               </div>
             </div>
-            <div className="space-y-5">
+            <div className="space-y-3">
               <div>
-                <p className=" font-satoshiBold font-extrabold text-violet-dark  ">
+                <p className=" font-extrabold text-violet-dark  ">
                   {formatDateAsYYYYMMDD(tomorrowDate)}
                 </p>
-                <p>Due On</p>
+                <p className="font-medium  text-[#4E5158]">Due On</p>
               </div>
               <div>
-                <p className=" font-satoshiBold font-extrabold text-violet-dark  ">
-                  Bill To
+                <p className=" font-extrabold text-violet-dark  ">Bill To</p>
+                <p className="font-medium  text-[#4E5158]">
+                  {currentBooking?.user.fullName}
                 </p>
-                <p className=" ">{currentBooking?.user.fullName}</p>
               </div>
               <div>
-                <p className=" font-satoshiBold font-extrabold text-violet-dark  ">
-                  Service Charge
+                <p className=" font-extrabold text-violet-dark  ">
+                  ${invoiceState.total}
                 </p>
-                <p>${SERVICE_CHARGE}</p>
-              </div>
-              <div>
-                <p className=" font-satoshiBold font-extrabold text-violet-dark  ">
-                  Total
+                <p className="font-medium  text-[#4E5158]">
+                  Amount + Service fee (2%)
                 </p>
-                <p>${invoiceState.total}</p>
               </div>
             </div>
           </div>

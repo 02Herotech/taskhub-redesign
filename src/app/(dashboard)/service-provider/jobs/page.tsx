@@ -2,7 +2,7 @@
 
 import { marketPlaceModalIcon } from "@/lib/svgIcons";
 import Loading from "@/shared/loading";
-import { formatDateFromNumberArray } from "@/utils";
+import { formatDateFromNumberArrayToRelativeDate } from "@/utils";
 import axios from "axios";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
@@ -23,11 +23,8 @@ const Jobs = () => {
       console.error("No token available");
       return;
     }
-
     try {
       setLoading(true);
-      console.log("Fetching all bookings");
-      console.log(token);
       const url =
         "https://smp.jacinthsolutions.com.au/api/v1/booking/service-provider";
       const response = await axios.get(url, {
@@ -35,10 +32,9 @@ const Jobs = () => {
           Authorization: `Bearer ${token}`,
         },
       });
-      console.log("fetch completed");
       const data: BookingType[] = response.data;
       const filteredData = data.filter(
-        (item) => item.bookingStage !== "REJECTED",
+        (item) => item.bookingStage === "PROPOSED",
       );
       setBookingData(filteredData);
     } catch (error) {
@@ -52,13 +48,6 @@ const Jobs = () => {
     fetchAllBookings();
     // eslint-disable-next-line
   }, [token]);
-
-  const truncateText = (text: string) => {
-    if (!text) return "";
-    const words = text.split(" ");
-    if (words.length <= 5) return text;
-    return words.slice(0, 5).join(" ") + " ...";
-  };
 
   const handleFetchSingleBooking = async (id: number) => {
     localStorage.setItem("bookingDetails", JSON.stringify(id));
@@ -106,17 +95,18 @@ const Jobs = () => {
                           {item.user.fullName}
                         </p>
                         <p className="text-violet-normal">
-                          {truncateText(item.bookingTitle)}
+                          {item.bookingTitle}
                         </p>
                       </div>
                       <div className="space-y-2">
-                        <p className="text-sm font-medium text-orange-normal">
+                        <p className="text-sm font-bold text-orange-normal">
                           <p>
-                            {/* @ts-expect-error "type error in the array declaration" */}
-                            {formatDateFromNumberArray(item.startDate)}
+                            {formatDateFromNumberArrayToRelativeDate(
+                              item.startDate,
+                            )}
                           </p>
                         </p>
-                        <p className=" text-slate-700">
+                        <p className=" font-bold text-[#28272A]">
                           Total Cost ${item.price}
                         </p>
                       </div>

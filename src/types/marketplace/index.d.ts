@@ -100,7 +100,7 @@ declare interface BookingType {
     postCode: string;
     suburb: string;
   };
-  startDate: string;
+  startDate: number[];
   startTime: {
     hour: number;
     minute: number;
@@ -111,7 +111,7 @@ declare interface BookingType {
   bookingTitle: string;
   bookingDescription: string;
   bookingStage: string;
-  listing: ListingDataType;
+  listing: { id: number };
   user: { id: number; fullName: string; profileImage: string | null };
   bookedAt: string;
   invoiceSent: boolean;

@@ -14,6 +14,8 @@ import AllServices from "@/components/dashboard/serviceProvider/services/AllServ
 import { useSession } from "next-auth/react";
 import axios from "axios";
 import { truncateText } from "@/utils/marketplace";
+import ReportModal from "@/components/dashboard/serviceProvider/services/ReportModal";
+import { formatDateFromNumberArrayToRelativeDate } from "@/utils";
 
 const myservices = [
   {
@@ -43,6 +45,8 @@ const ServicesPage = () => {
     [],
   );
   const [loading, setLoading] = useState(false);
+  const [isReportModalShown, setIsReportModalShown] = useState(false);
+  const [isStartModalActive, setIsStartModalActive] = useState(false);
 
   const router = useRouter();
   const session = useSession();
@@ -78,7 +82,8 @@ const ServicesPage = () => {
   }, [token]);
 
   return (
-    <main className="space-y-8 p-4 lg:p-8">
+    <main className=" relative space-y-8 p-4 lg:p-8">
+      {/* <ReportModal /> */}
       <div className="flex flex-wrap gap-2 lg:gap-6">
         <button
           className={` rounded-lg px-4 py-2 font-medium transition-all duration-300 hover:opacity-90 max-md:text-sm lg:px-8 lg:py-3 ${currentCategory === "services" ? "bg-[#381F8C] text-white" : "bg-[#E1DDEE] text-[#381F8C] "} `}
@@ -111,47 +116,49 @@ const ServicesPage = () => {
               <div className="col-span-2 size-20 flex-shrink-0 overflow-hidden rounded-full border border-violet-normal lg:size-24">
                 <Image
                   src={
-                    item.user.profileImage ??
+                    item?.user?.profileImage ??
                     "/assets/images/serviceProvider/user.jpg"
                   }
-                  alt={item.user.fullName}
+                  alt={item?.user.fullName}
                   width={200}
                   height={200}
                   className="h-full w-full object-cover "
                 />
               </div>
-              <div className="col-span-10 w-full space-y-6">
+              <div className="col-span-10 w-full space-y-4">
                 <div className="flex flex-wrap justify-between gap-2 ">
-                  <div className="space-y-2">
+                  <div>
                     <p className="text-lg font-semibold text-violet-normal ">
                       {item.user.fullName}
                     </p>
-                    <p className="text-violet-normal">
-                      {truncateText(item.bookingTitle, 30)}
-                    </p>
+                    <p className="text-violet-normal">{item.bookingTitle}</p>
                   </div>
                   <div className="space-y-2">
-                    <p className="text-sm font-medium text-orange-normal">
-                      {item.startDate}
+                    <p className="text-sm font-bold text-orange-normal">
+                      <p>
+                        {formatDateFromNumberArrayToRelativeDate(
+                          item.startDate,
+                        )}
+                      </p>
                     </p>
-                    <p className=" text-slate-700">Total Cost ${item.price}</p>
+                    <p className=" font-bold text-[#28272A]">
+                      Total Cost ${item.price}
+                    </p>
                   </div>
                 </div>
-                <div className="flex flex-wrap justify-between">
-                  <div className="flex flex-wrap gap-3">
-                    <Link
-                      href={"/service-provider/jobs/" + item.id}
-                      className="rounded-full border border-violet-normal bg-violet-light px-6 py-3 text-sm font-medium text-violet-normal transition-colors duration-300 hover:bg-violet-200 max-md:px-4 max-md:py-2 max-md:text-sm "
-                    >
-                      View Enquiry
-                    </Link>
-                    <button className="rounded-full bg-violet-normal px-6 py-3 text-sm font-medium text-white transition-opacity duration-300 hover:opacity-90 max-md:px-4 max-md:py-2 max-md:text-sm">
-                      Accept Service
-                    </button>
-                  </div>
-                  <button className="text-xl font-bold text-red-600">
-                    Report
-                  </button>
+                <div className="flex flex-wrap gap-3">
+                  <Link
+                    href={"/service-provider/jobs/" + item.id}
+                    className="rounded-full border border-violet-normal bg-violet-light px-6 py-3 text-sm font-medium text-violet-normal transition-colors duration-300 hover:bg-violet-200 max-md:px-4 max-md:py-2 max-md:text-sm "
+                  >
+                    View Enquiry
+                  </Link>
+                  <Link
+                    href={"/message"}
+                    className="rounded-full bg-violet-normal px-6 py-3 text-sm font-medium text-white transition-opacity duration-300 hover:opacity-90 max-md:px-4 max-md:py-2 max-md:text-sm"
+                  >
+                    Start Service
+                  </Link>
                 </div>
               </div>
             </div>
