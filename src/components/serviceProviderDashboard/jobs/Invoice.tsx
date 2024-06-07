@@ -5,7 +5,7 @@ import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { BiXCircle } from "react-icons/bi";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { formatDateAsYYYYMMDD } from "@/utils";
+import { formatDateAsYYYYMMDD, formatDateFromNumberArray } from "@/utils";
 import { useRouter } from "next/navigation";
 import { BeatLoader } from "react-spinners";
 
@@ -30,7 +30,8 @@ const Invoice = ({
     loading: boolean;
   }>({
     price: currentBooking?.price ?? "",
-    date: null,
+    // @ts-expect-error "type not curruntly correct "
+    date: convertToDateInputFormat(currentBooking?.startDate) ?? null,
     gst: currentBooking ? (currentBooking.price / 100) * 10 : 0,
     total: currentBooking
       ? currentBooking.price -
@@ -44,6 +45,17 @@ const Invoice = ({
   const session = useSession();
   const token = session?.data?.user?.accessToken;
   const user = session?.data?.user?.user;
+
+  function convertToDateInputFormat(dateArray: number[]) {
+    const [year, month, day] = dateArray;
+
+    // Ensure month and day are two digits
+    const formattedMonth = month.toString().padStart(2, "0");
+    const formattedDay = day.toString().padStart(2, "0");
+
+    // Return the formatted date string
+    return `${year}-${formattedMonth}-${formattedDay}`;
+  }
 
   const todayDate = new Date();
   const tomorrowDate = new Date();

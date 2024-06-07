@@ -18,6 +18,7 @@ const ViewJobs = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [currentBooking, setCurrentBooking] = useState<BookingType>();
+  const [currentListing, setCurrentListing] = useState<ListingDataType>();
   const [requestStatus, setRequestStatus] = useState({
     isAcceptRequesting: false,
     isRejectRequesting: false,
@@ -47,9 +48,15 @@ const ViewJobs = () => {
             Authorization: `Bearer ${token}`,
           },
         });
-        const data = response.data;
-        console.log(data);
-        setCurrentBooking(data);
+        const bookingData = response.data;
+        const listingId = bookingData.listing.id;
+        setCurrentBooking(bookingData);
+
+        const listingUrl =
+          "https://smp.jacinthsolutions.com.au/api/v1/listing/" + listingId;
+        const listingResponse = await axios.get(listingUrl);
+        const listingData = listingResponse.data;
+        setCurrentListing(listingData);
       }
     } catch (error) {
       console.error("An error occurred while fetching services:", error);
@@ -119,6 +126,33 @@ const ViewJobs = () => {
     // eslint-disable-next-line
   }, [token, requestStatus.data]);
 
+  const book = {
+    id: 1,
+    user: {
+      id: 6,
+      fullName: "Timmy Dev",
+      profileImage: null,
+    },
+    startDate: [2024, 5, 31],
+    startTime: [20, 16],
+    price: 50000,
+    bookingTitle: "Another description",
+    bookingDescription: "Here is the description",
+    bookingStage: "ACCEPTED",
+    listing: {
+      id: 1,
+    },
+    userAddress: {
+      id: 14,
+      state: "Queensland",
+      postCode: "4000",
+      suburb: "Brisbane",
+    },
+    updatedAt: [2024, 5, 30, 15, 7, 34, 470251000],
+    bookedAt: [2024, 5, 30],
+    invoiceSent: false,
+  };
+
   return (
     <>
       <Congratulations
@@ -143,11 +177,13 @@ const ViewJobs = () => {
           Nothing to see here!
         </div>
       ) : (
-        <main className=" relative flex min-h-[70vh] items-center justify-center space-y-8 p-4 lg:p-8">
+        <main className=" relative flex min-h-[70vh] items-center justify-center space-y-8 p-4 lg:p-4">
           <section className="w-[90vw] max-w-2xl space-y-4 rounded-xl bg-violet-light p-4 lg:p-8 ">
             <div className="flex justify-between gap-2">
               <div className="space-y-8 text-violet-normal">
-                <p> {currentBooking.listing.listingTitle} </p>
+                <p className="font-clash text-xl font-bold">
+                  {currentListing?.listingTitle}
+                </p>
                 <div>
                   <p className="text-xl font-bold uppercase">Requested by:</p>
                   <p className=" text-xl font-bold text-orange-normal">
@@ -155,15 +191,17 @@ const ViewJobs = () => {
                   </p>
                 </div>
                 <div>
-                  <p>Total cost </p>
-                  <p>Est. Budget: $ {currentBooking.price} </p>
+                  <p className="font-bold">Total cost </p>
+                  <p className="font-bold">
+                    Est. Budget: $ {currentBooking.price}{" "}
+                  </p>
                 </div>
                 <div>
-                  <p className="text-lg font-medium uppercase">
-                    To be Started:
+                  <p className="font-bold uppercase">To be Started:</p>
+                  <p className="font-bold">
+                    {/* @ts-expect-error */}
+                    {formatDateFromNumberArray(currentBooking.startDate)}
                   </p>
-                  {/* @ts-expect-error */}
-                  <p> {formatDateFromNumberArray(currentBooking.startDate)} </p>
                 </div>
               </div>
               <div>
@@ -186,18 +224,20 @@ const ViewJobs = () => {
 
             {/* --- */}
             <div className="space-y-4">
-              <p className="flex items-center gap-2 text-sm text-violet-dark">
+              <p className="flex items-center gap-2 text-sm font-bold text-violet-dark ">
                 <span>
                   <IoLocationOutline />
                 </span>
                 <span>
-                  {currentBooking.userAddress.state}
+                  {currentBooking.userAddress.state}{" "}
                   {currentBooking.userAddress.suburb}
                 </span>
               </p>
-              <p className="uppercase text-violet-dark">Job Description:</p>
+              <p className="font-bold uppercase text-violet-dark ">
+                Job Description:
+              </p>
               <p className="text-violet-normal">
-                {currentBooking.bookingTitle}
+                {currentListing?.listingDescription}
               </p>
               <div className="flex flex-wrap gap-4">
                 {currentBooking.bookingStage === "PROPOSED" ? (
