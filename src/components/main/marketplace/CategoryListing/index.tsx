@@ -5,7 +5,6 @@ import Loading from "@/shared/loading";
 import { FaArrowUp } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store";
-import { updateListingArray } from "@/store/Features/marketplace";
 import Image from "next/image";
 import SingleListingCard from "../marketplace/SingleListingCard";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
@@ -16,15 +15,11 @@ interface CategoryListingProps {
 
 const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
   const dispatch = useDispatch();
-  const {
-    categories,
-    listing,
-    isFiltering,
-    filteredData,
-    search: { isSearching, searchData },
-  } = useSelector((state: RootState) => state.market);
+  const { categories, listing, isFiltering, filteredData } = useSelector(
+    (state: RootState) => state.market,
+  );
 
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [allListsting, setallListsting] = useState<ListingDataType[]>([]);
   const [ErrorMsg, setErrorMsg] = useState("");
   const [isViewMore, setIsViewMore] = useState({ state: false });
@@ -57,7 +52,7 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
         content = data;
       }
       if (url) {
-        dispatch(updateListingArray(content));
+        // dispatch(updateListingArray(content));
         setallListsting(content);
         setDisplayListing(content);
       }
@@ -67,10 +62,11 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
       setIsLoading(false);
     }
   };
+
   useEffect(() => {
     handleFetchCategory();
     // eslint-disable-next-line
-  }, [page]);
+  }, [category, page]);
 
   const getButtonNumbers = () => {
     const half = Math.floor(5 / 2);
@@ -105,9 +101,7 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
     };
     fetchData();
     // eslint-disable-next-line
-  }, [listing, category, isViewMore]);
-
-  console.log(displayListing);
+  }, [allListsting, isViewMore]);
 
   return (
     <div className="h-full w-full py-4 ">

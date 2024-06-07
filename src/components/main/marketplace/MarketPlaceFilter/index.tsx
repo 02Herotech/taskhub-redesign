@@ -4,7 +4,6 @@ import {
   filterMarketPlace,
   resetFilter,
   setFilterLoadingState,
-  updateFilterData,
 } from "@/store/Features/marketplace";
 import { BsTriangleFill, BsX } from "react-icons/bs";
 import { FormEvent, useEffect, useState } from "react";
@@ -14,11 +13,7 @@ import {
 } from "@/lib/marketplace";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store";
-import {
-  updateCategories,
-  updateFilterStatus,
-  updateSearchListing,
-} from "@/store/Features/marketplace";
+import { updateCategories } from "@/store/Features/marketplace";
 import ReactSlider from "react-slider";
 import { GiSettingsKnobs } from "react-icons/gi";
 import MobileFilterModal from "../MobileFilterModal";
@@ -40,32 +35,16 @@ const typeData = [
   { label: "Physical", value: "PHYSICAL_SERVICE" },
 ];
 
-const othersData = ["Earliest", "Latest"];
-
 const MarketPlaceFilter = () => {
   const dispatch = useDispatch();
-  const {
-    currentFilterStatus: {
-      category,
-      subCategory,
-      location,
-      pricing,
-      type,
-      others,
-    },
-    categories,
-    search: { searchData },
-    isFiltering,
-    search: { isSearching },
-    filteredData,
-    isFilteringLoading,
-  } = useSelector((state: RootState) => state.market);
+  const { categories, isFiltering } = useSelector(
+    (state: RootState) => state.market,
+  );
   const [isDropdownOpen, setIsDropdownOpen] = useState({
     isOpened: false,
     category: "",
   });
 
-  const [subCategories, setSubCategories] = useState<SubCategoryType[]>([]);
   const [categoryHeader, setCategoryHeader] = useState("");
   const [isMobileFilterModalShown, setIsMobileFilterModalShown] =
     useState(false);
@@ -88,57 +67,6 @@ const MarketPlaceFilter = () => {
     });
   }, [isFiltering]);
 
-  // Filter by category done and working
-  const handleFetchSubCategory = async (
-    id: number,
-    category: string,
-    title: string,
-  ) => {
-    dispatch(updateFilterStatus({ title, value: category }));
-    const subcategoryData: SubCategoryType[] =
-      await fetchMarketplaceSubCategoryById(id);
-    setSubCategories(subcategoryData);
-    handleShowDropdown(title);
-
-    // filter by category
-    const url =
-      "https://smp.jacinthsolutions.com.au/api/v1/listing/listing-by-category/" +
-      id +
-      "?pageNumber=0";
-    const { data } = await axios.get(url);
-    dispatch(
-      updateFilterData({
-        data: data.content,
-        section: "subCategory",
-        value: category,
-      }),
-    );
-  };
-
-  // Filter working
-  const handleFilterDataBySubcategory = async (
-    id: number,
-    subCategory: { id: number; name: string },
-    title: string,
-  ) => {
-    console.log("this is initiated");
-    dispatch(updateFilterStatus({ title, value: subCategory }));
-    handleShowDropdown(title);
-    // ----------------
-    const url =
-      "https://smp.jacinthsolutions.com.au/api/v1/listing/listing-by-sub-category/" +
-      subCategory.id +
-      "?pageNumber=0";
-    const { data } = await axios.get(url);
-    dispatch(
-      updateFilterData({
-        data: data.content,
-        section: "subCategory",
-        value: category,
-      }),
-    );
-  };
-
   // done and working
   const handleShowDropdown = (category: string) => {
     if (isDropdownOpen.category === category && isDropdownOpen.isOpened) {
@@ -148,131 +76,24 @@ const MarketPlaceFilter = () => {
     }
   };
 
-  // pending,
-  const handleFilterByPricing = async () => {
-    const { minPrice, maxPrice } = pricing;
-    const url =
-      "https://smp.jacinthsolutions.com.au/api/v1/listing/price/0?minPrice=" +
-      minPrice +
-      "&maxPrice=" +
-      maxPrice;
-    const { data } = await axios.get(url);
-    const content = data.content;
-    console.log(content);
-    dispatch(
-      updateFilterData({
-        data: content,
-        section: "pricing",
-        value: { minPrice, maxPrice },
-      }),
-    );
-    handleShowDropdown("pricing");
-  };
-
-  // working well
-  const handleCanelFilterByPricing = async (title: string) => {
-    handleShowDropdown(title);
-    dispatch(
-      updateFilterStatus({
-        title: "pricing",
-        value: {
-          minPrice: 5,
-          maxPrice: 1000,
-        },
-      }),
-    );
-  };
-
-  // location
-  const handleFilterbyLocation = async (location: string, title: string) => {
-    try {
-      dispatch(updateFilterStatus({ title, value: location }));
-      handleShowDropdown(title);
-
-      const url =
-        "https://smp.jacinthsolutions.com.au/api/v1/listing/by-location/0?location=" +
-        location;
-      const { data } = await axios.get(url);
-      const content = data.content;
-      dispatch(
-        updateFilterData({
-          data: content,
-          section: "location",
-          value: location,
-        }),
-      );
-    } catch (error) {
-      console.log(error);
-    }
-  };
-  //type
-  const handleFilterbyType = async (type: string, title: string) => {
-    try {
-      const typeOfService =
-        type === "Remote" ? "REMOTE_SERVICE" : "PHYSICAL_SERVICE";
-      dispatch(updateFilterStatus({ title, value: type }));
-      handleShowDropdown(title);
-      const url =
-        "https://smp.jacinthsolutions.com.au/api/v1/listing/by-type/0?taskType=" +
-        typeOfService;
-
-      const { data } = await axios.get(url);
-      const content = data.content;
-      dispatch(
-        updateFilterData({
-          data: content,
-          section: "type",
-          value: type,
-        }),
-      );
-    } catch (error) {
-      console.log(error);
-    }
-  };
-  //type
-  const handleFilterbyOthers = async (others: string, title: string) => {
-    try {
-      dispatch(updateFilterStatus({ title, value: others }));
-      handleShowDropdown(title);
-      let url = "";
-      if (others === "Earliest") {
-        url = "https://smp.jacinthsolutions.com.au/api/v1/listing/earliest/0";
-      } else {
-        url = "https://smp.jacinthsolutions.com.au/api/v1/listing/latest/0";
-      }
-
-      const { data } = await axios.get(url);
-      const content = data.content;
-      dispatch(
-        updateFilterData({
-          data: content,
-          section: "others",
-          value: others,
-        }),
-      );
-    } catch (error) {
-      console.log(error);
-    }
-  };
-  // handled and working
-  const handleFilterBySearch = async (searchData: string) => {
-    dispatch(updateSearchListing(searchData));
-    const url =
-      "https://smp.jacinthsolutions.com.au/api/v1/listing/text/0?text=" +
-      searchData;
-    const { data } = await axios.get(url);
-    dispatch(
-      updateFilterData({
-        data: data.content,
-        section: "search",
-        value: searchData,
-      }),
-    );
-  };
+  const [searchInputData, setSearchInputData] = useState("");
 
   //  handled and working
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    try {
+      dispatch(setFilterLoadingState(true));
+      const url =
+        "https://smp.jacinthsolutions.com.au/api/v1/listing/text/0?text=" +
+        searchInputData;
+      const { data } = await axios.get(url);
+      console.log(data);
+      dispatch(filterMarketPlace(data.content));
+    } catch (error: any) {
+      console.log(error.message);
+    } finally {
+      dispatch(setFilterLoadingState(false));
+    }
   };
 
   // -------------------- New Filter State
@@ -299,6 +120,7 @@ const MarketPlaceFilter = () => {
 
   const handleFilter = async () => {
     try {
+      dispatch(setFilterLoadingState(true));
       const { category, location, typeOfService, minPrice, maxPrice } =
         filterDataStructure;
       let url =
@@ -366,7 +188,7 @@ const MarketPlaceFilter = () => {
   return (
     <div className=" flex flex-col space-y-4 pt-5 lg:space-y-8 lg:py-10">
       <div className=" flex flex-col space-y-8">
-        {!isFiltering && !isSearching && (
+        {!isFiltering && (
           <div className="flex flex-col space-y-2">
             <h1 className="text-2xl font-bold text-violet-darkHover md:text-3xl">
               Our Various Category
@@ -394,9 +216,7 @@ const MarketPlaceFilter = () => {
         </div>
 
         <section className="flex flex-col gap-5">
-          <div
-            className={` max-md:hidden  ${isFiltering || isSearching ? "order-2" : ""} `}
-          >
+          <div className={` max-md:hidden  ${isFiltering ? "order-2" : ""} `}>
             <div className="flex flex-wrap gap-4 space-x-2 text-xs lg:space-x-6 ">
               <button
                 className="cursor-pointer rounded-3xl bg-violet-normal px-4 py-2 text-base  font-bold text-white"
@@ -411,23 +231,24 @@ const MarketPlaceFilter = () => {
               {/* -------------------------------- */}
               {/* Category */}
               <div className="relative">
+                {filterDataStructure.category !== "" && (
+                  <button
+                    className="pointer-events-auto absolute -right-1 -top-1 flex size-6 items-center justify-center rounded-full bg-violet-normal text-white "
+                    onClick={() => {
+                      setfilterDataStructure((prev) => ({
+                        ...prev,
+                        category: "",
+                      }));
+                    }}
+                  >
+                    <span></span>
+                    <BsX />
+                  </button>
+                )}
                 <button
                   className="flex items-center gap-2 rounded-3xl border border-violet-normal bg-violet-light px-4 py-2 text-base font-bold text-violet-normal transition-colors duration-300 hover:bg-violet-200 "
                   onClick={() => handleShowDropdown("category")}
                 >
-                  {filterDataStructure.category !== "" && (
-                    <button
-                      className="absolute -right-1 -top-1 flex size-6 items-center justify-center rounded-full bg-violet-normal text-white"
-                      onClick={() =>
-                        setfilterDataStructure((prev) => ({
-                          ...prev,
-                          category: "",
-                        }))
-                      }
-                    >
-                      <BsX />
-                    </button>
-                  )}
                   <div
                     className={`fixed left-0 top-0 h-screen w-screen ${isDropdownOpen.isOpened && isDropdownOpen.category === "category" ? "block" : "hidden"} `}
                     onClick={() => handleShowDropdown("category")}
@@ -466,23 +287,23 @@ const MarketPlaceFilter = () => {
               {/* -------------------------------- */}
               {/* location */}
               <div className="relative">
+                {filterDataStructure.location !== "" && (
+                  <button
+                    className="absolute -right-1 -top-1 flex size-6 items-center justify-center rounded-full bg-violet-normal text-white"
+                    onClick={() =>
+                      setfilterDataStructure((prev) => ({
+                        ...prev,
+                        location: "",
+                      }))
+                    }
+                  >
+                    <BsX />
+                  </button>
+                )}
                 <button
                   className=" flex items-center gap-2 rounded-3xl border border-violet-normal  bg-violet-light px-4 py-2 text-base font-bold text-violet-normal transition-colors duration-300 hover:bg-violet-200 "
                   onClick={() => handleShowDropdown("location")}
                 >
-                  {filterDataStructure.location !== "" && (
-                    <button
-                      className="absolute -right-1 -top-1 flex size-6 items-center justify-center rounded-full bg-violet-normal text-white"
-                      onClick={() =>
-                        setfilterDataStructure((prev) => ({
-                          ...prev,
-                          location: "",
-                        }))
-                      }
-                    >
-                      <BsX />
-                    </button>
-                  )}
                   <div
                     className={`fixed left-0 top-0 h-screen w-screen ${isDropdownOpen.isOpened && isDropdownOpen.category === "location" ? "block" : "hidden"} `}
                     onClick={() => handleShowDropdown("location")}
@@ -519,24 +340,24 @@ const MarketPlaceFilter = () => {
               </div>
               {/* Type of service */}
               <div className="relative">
+                {filterDataStructure.typeOfService !== "" && (
+                  <button
+                    className="pointer-events-auto absolute -right-1 -top-1 flex size-6 items-center justify-center rounded-full bg-violet-normal text-white "
+                    onClick={() => {
+                      setfilterDataStructure((prev) => ({
+                        ...prev,
+                        typeOfService: "",
+                        typeOfServiceDisplay: "",
+                      }));
+                    }}
+                  >
+                    <BsX />
+                  </button>
+                )}
                 <button
                   className=" flex items-center gap-2 rounded-3xl border border-violet-normal  bg-violet-light px-4 py-2 text-base font-bold text-violet-normal transition-colors duration-300 hover:bg-violet-200 "
                   onClick={() => handleShowDropdown("type")}
                 >
-                  {filterDataStructure.typeOfService !== "" && (
-                    <button
-                      className="pointer-events-auto absolute -right-1 -top-1 flex size-6 items-center justify-center rounded-full bg-violet-normal text-white "
-                      onClick={() => {
-                        setfilterDataStructure((prev) => ({
-                          ...prev,
-                          typeOfService: "",
-                          typeOfServiceDisplay: "",
-                        }));
-                      }}
-                    >
-                      <BsX />
-                    </button>
-                  )}
                   <div
                     className={`fixed left-0 top-0 h-screen w-screen ${isDropdownOpen.isOpened && isDropdownOpen.category === "type" ? "block" : "hidden"} `}
                     onClick={() => handleShowDropdown("type")}
@@ -578,25 +399,25 @@ const MarketPlaceFilter = () => {
               {/* ----------------------------------------- */}
               {/* Pricing */}
               <div className="relative z-20">
+                {(filterDataStructure.minPrice !== 5 ||
+                  filterDataStructure.maxPrice !== 1000) && (
+                  <button
+                    className="absolute -right-1 -top-1 flex size-6 items-center justify-center rounded-full bg-violet-normal text-white"
+                    onClick={() =>
+                      setfilterDataStructure((prev) => ({
+                        ...prev,
+                        minPrice: 5,
+                        maxPrice: 1000,
+                      }))
+                    }
+                  >
+                    <BsX />
+                  </button>
+                )}
                 <button
                   className="flex items-center gap-2 rounded-3xl border border-violet-normal  bg-violet-light px-4 py-2 text-base font-bold text-violet-normal transition-colors duration-300 hover:bg-violet-200 "
                   onClick={() => handleShowDropdown("pricing")}
                 >
-                  {(filterDataStructure.minPrice !== 5 ||
-                    filterDataStructure.maxPrice !== 1000) && (
-                    <button
-                      className="absolute -right-1 -top-1 flex size-6 items-center justify-center rounded-full bg-violet-normal text-white"
-                      onClick={() =>
-                        setfilterDataStructure((prev) => ({
-                          ...prev,
-                          minPrice: 5,
-                          maxPrice: 1000,
-                        }))
-                      }
-                    >
-                      <BsX />
-                    </button>
-                  )}
                   <div
                     className={`fixed left-0 top-0 h-screen w-screen ${isDropdownOpen.isOpened && isDropdownOpen.category === "pricing" ? "block" : "hidden"} `}
                     onClick={() => handleShowDropdown("pricing")}
@@ -683,7 +504,7 @@ const MarketPlaceFilter = () => {
 
           {/* Search form */}
           <div
-            className={`flex justify-between gap-4 py-4 max-md:flex-col md:gap-8  lg:items-center   ${isFiltering || isSearching ? "order-1" : ""} `}
+            className={`flex justify-between gap-4 py-4 max-md:flex-col md:gap-8  lg:items-center   ${isFiltering ? "order-1" : ""} `}
           >
             <div className="">
               <h1 className="text-xl font-bold text-violet-dark md:text-3xl">
@@ -703,9 +524,9 @@ const MarketPlaceFilter = () => {
               <div className="w-full">
                 <input
                   type="text"
-                  value={searchData}
+                  value={searchInputData}
                   className="w-full rounded-xl border border-violet-normal px-4 py-3   text-lg text-slate-500 shadow  placeholder-shown:border-slate-300 placeholder-shown:outline-none focus:outline-none "
-                  onChange={(event) => handleFilterBySearch(event.target.value)}
+                  onChange={(event) => setSearchInputData(event.target.value)}
                   placeholder="Search"
                 />
               </div>

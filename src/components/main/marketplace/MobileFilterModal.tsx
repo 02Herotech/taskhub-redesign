@@ -1,10 +1,6 @@
 "use client";
 
 import { RootState } from "@/store";
-import {
-  updateFilterData,
-  updateFilterStatus,
-} from "@/store/Features/marketplace";
 import axios from "axios";
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -53,13 +49,13 @@ const MobileFilterModal = ({
   };
 
   const handleFetchByAvailability = () => {
-    dispatch(
-      updateFilterData({
-        data: listing,
-        section: "available",
-        value: filterState.availbleTask,
-      }),
-    );
+    // dispatch(
+    //   updateFilterData({
+    //     data: listing,
+    //     section: "available",
+    //     value: filterState.availbleTask,
+    //   }),
+    // );
   };
 
   useEffect(() => {
@@ -72,7 +68,7 @@ const MobileFilterModal = ({
     category: string,
     title: string,
   ) => {
-    dispatch(updateFilterStatus({ title, value: category }));
+    // dispatch(updateFilterStatus({ title, value: category }));
 
     // filter by category
     const url =
@@ -80,13 +76,13 @@ const MobileFilterModal = ({
       id +
       "?pageNumber=0";
     const { data } = await axios.get(url);
-    dispatch(
-      updateFilterData({
-        data: data.content,
-        section: "subCategory",
-        value: category,
-      }),
-    );
+    // dispatch(
+    //   updateFilterData({
+    //     data: data.content,
+    //     section: "subCategory",
+    //     value: category,
+    //   }),
+    // );
   };
 
   return (

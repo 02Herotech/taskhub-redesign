@@ -37,12 +37,9 @@ const categoryIcons = [
 
 const MareketPlace = () => {
   // set states for market place
-  const {
-    categories,
-    isFiltering,
-    isFilteringLoading,
-    search: { isSearching },
-  } = useSelector((state: RootState) => state.market);
+  const { categories, isFiltering, isFilteringLoading } = useSelector(
+    (state: RootState) => state.market,
+  );
 
   // Getting session and router for pop up and user anthentication state
   const session = useSession();
@@ -98,10 +95,10 @@ const MareketPlace = () => {
           </div>
         </Popup>
       )}
-      {!isFiltering && !isSearching && <MarketPlaceHeader />}
+      {!isFiltering && <MarketPlaceHeader />}
 
       <div
-        className={`mx-auto flex max-w-screen-xl flex-col px-6 md:px-16  ${(isFiltering || isSearching) && "pt-12"} `}
+        className={`mx-auto flex max-w-screen-xl flex-col px-6 md:px-16  ${isFiltering && "pt-12"} `}
       >
         <MarketPlaceFilter />
         <div>
@@ -109,7 +106,7 @@ const MareketPlace = () => {
             <div className="min-h-80 items-center justify-center p-4">
               <Loading />
             </div>
-          ) : isFiltering || isSearching ? (
+          ) : isFiltering ? (
             <div>
               <CategoryListing category="All" />
             </div>

@@ -13,13 +13,11 @@ import { formatDateFromNumberArray } from "@/utils";
 
 const Page = () => {
   const [displayData, setDisplayData] = useState<ListingDataType>();
-
   useEffect(() => {
     const tempList = localStorage.getItem("content");
     if (tempList) {
       const content: ListingDataType = JSON.parse(tempList);
       setDisplayData(content);
-      console.log(content);
     }
   }, []);
 
