@@ -43,7 +43,7 @@ const Invoices = () => {
         setIsModalOpen(false);
         setSelectedInvoice(null);
         setInitiatePayment(false);
-        setClientSecret(""); // Clear clientSecret when the modal is closed
+        setClientSecret("");
     };
 
     const { data: invoices, isLoading } = useGetInvoiceByCustomerIdQuery(id as unknown as number);
@@ -86,6 +86,17 @@ const Invoices = () => {
             </div>
         );
     }
+
+    const stripeOptions = {
+        layout: {
+            type: 'tabs',
+            defaultCollapsed: false,
+        },
+        clientSecret: clientSecret,
+        business: "Taskhub"
+    };
+
+    console.log(invoices)
 
     return (
         <>
@@ -132,7 +143,7 @@ const Invoices = () => {
                     <Popup isOpen={isModalOpen} onClose={closeModal}>
                         <div className="relative bg-[#EBE9F4] rounded-2xl min-h-[200px] lg:max-w-[877px] font-satoshi p-5 lg:px-7 lg:py-10">
                             {clientSecret && initiatePayment ? (
-                                <Elements stripe={stripePromise} options={{ clientSecret }}>
+                                <Elements stripe={stripePromise} options={stripeOptions}>
                                     <CheckoutForm clientSecret={clientSecret} />
                                 </Elements>
                             ) : (
@@ -168,8 +179,11 @@ const Invoices = () => {
                                                     <h5 className="text-[#716F78]">Due on</h5>
                                                 </div>
                                             </div>
+                                            {error && (
+                                                <div className="text-status-error-100 text-base font-semibold my-1">{error}</div>
+                                            )}
                                             <div className="flex items-center space-x-4 !mt-6">
-                                                <Button loading={loading} className="rounded-full" onClick={() => {
+                                                <Button loading={loading} disabled={!clientSecret} className="rounded-full" onClick={() => {
                                                     setInitiatePayment(true)
                                                 }}>
                                                     Accept Offer
