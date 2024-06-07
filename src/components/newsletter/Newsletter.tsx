@@ -14,16 +14,10 @@ const Newsletter = () => {
         setEmail(e.target.value)
     }
 
-
-
-
     const isAllFieldsFilled = () => {
         const requiredField = ['email'];
         return requiredField.every(() => email !== '');
     }
-
-
-
 
     const onSubmit = (event: { preventDefault: () => void }) => {
         event.preventDefault();
@@ -34,7 +28,7 @@ const Newsletter = () => {
     return (
         <div className={`flex justify-center flex-col space-y-2 `}>
             <div className={` text-purpleBase`}>
-                <h1 className={`font-extrabold text-base text-[#2E095DF2]`}>Subscribe to our Newsletter</h1>
+                <h1 className={`font-clashSemiBold text-base text-[#2E095DF2]`}>Subscribe to our Newsletter</h1>
             </div>
 
             {submitted ? 

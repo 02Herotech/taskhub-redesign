@@ -39,7 +39,7 @@ const SPHowItWorks = () => {
           How  it works ?
         </h2>
 
-        <p className='text-center lg:text-[35px] text-[20px] font-[600] font-clashMedium text-primary xl:w-1/2 lg:w-[70%] my-6'>
+        <p className='text-center lg:text-[35px] text-[20px] font-[600] font-clashMedium text-primary xl:w-1/2 lg:w-[75%] my-6'>
           Earn your way to Financial freedom as a <span className='text-tc-orange'>Service provider</span>  on TaskHub
         </p>
       </div>
@@ -60,7 +60,7 @@ const SPHowItWorks = () => {
           </div>
 
           <div className='flex justify-between ml-6'>
-            <div className='relative w-[48%] rounded-[30px] lg:h-[210px] h-[180px]'>
+            <div className='relative w-[48%] rounded-[30px] lg:h-[280px] h-[180px]'>
               <Image
                 src={ServiceProvider1}
                 alt="Customer 2"
@@ -68,7 +68,7 @@ const SPHowItWorks = () => {
                 className="absolute rounded-[30px]"
               />
             </div>
-            <div className='relative w-[48%] rounded-[30px] lg:h-[210px] h-[180px]'>
+            <div className='relative w-[48%] rounded-[30px] lg:h-[280px] h-[180px]'>
               <Image
                 src={ServiceProvider2}
                 alt="Customer 3"
@@ -125,8 +125,8 @@ const SPHowItWorks = () => {
 
             <div className="flex space-x-2 shadow-md items-center text-[12px] bg-[#EEE5FC] rounded-xl px-4 py-2 absolute lg:-left-20 -top-[20px] ">
               <Image src={icon1} width={25} alt="hand & dollar"></Image>
-              <p className="font-bold">Payment has been made</p>
-              <p className="text-[#969696]">2mins ago</p>
+              <p className="font-bold text-primary text-[14px8">Payment has been made</p>
+              <p className="text-[#969696] text-[14px8">2mins ago</p>
             </div>
           </div>
 
