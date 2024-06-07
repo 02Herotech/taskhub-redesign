@@ -91,8 +91,6 @@ const Invoices = () => {
         clientSecret: clientSecret,
     };
 
-    console.log(invoices)
-
     return (
         <>
             <div className="w-full bg-[#EBE9F4] rounded-[20px] p-4 font-satoshi">
@@ -188,20 +186,14 @@ const Invoices = () => {
                                                     <h5 className="text-[#716F78]">Bill to</h5>
                                                 </div>
                                             </div>
-                                                <div className="flex items-center max-lg:space-x-3 justify-between mb-6">
-                                                    <div>
-                                                        <h2 className="text-xl text-[#001433] font-bold">
-                                                            1 day
-                                                        </h2>
-                                                        <h5 className="text-[#716F78]">Service duration</h5>
-                                                    </div>
-                                                    {/* <div>
-                                                        <h2 className="text-xl text-[#001433] font-bold">
-                                                            {`${selectedInvoice.serviceProvider.user.firstName} ${selectedInvoice.serviceProvider.user.lastName}`}
-                                                        </h2>
-                                                        <h5 className="text-[#716F78]">Bill to</h5>
-                                                    </div> */}
+                                            <div className="flex items-center max-lg:space-x-3 justify-between mb-6">
+                                                <div>
+                                                    <h2 className="text-xl text-[#001433] font-bold">
+                                                        1 day
+                                                    </h2>
+                                                    <h5 className="text-[#716F78]">Service duration</h5>
                                                 </div>
+                                            </div>
                                             {error && (
                                                 <div className="text-status-error-100 text-base font-semibold my-1">{error}</div>
                                             )}
