@@ -107,6 +107,8 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
     // eslint-disable-next-line
   }, [listing, category, isViewMore]);
 
+  console.log(displayListing);
+
   return (
     <div className="h-full w-full py-4 ">
       <div className="mb-3 flex items-center justify-between">

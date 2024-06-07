@@ -281,6 +281,7 @@ const MarketPlaceFilter = () => {
     category: string;
     location: string;
     typeOfService: string;
+    typeOfServiceDisplay: string;
     minPrice: number;
     maxPrice: number;
   }
@@ -289,6 +290,7 @@ const MarketPlaceFilter = () => {
       category: "",
       location: "",
       typeOfService: "",
+      typeOfServiceDisplay: "",
       minPrice: 5,
       maxPrice: 1000,
     });
@@ -299,7 +301,6 @@ const MarketPlaceFilter = () => {
     try {
       const { category, location, typeOfService, minPrice, maxPrice } =
         filterDataStructure;
-      console.log("Filter process started");
       let url =
         "https://smp.jacinthsolutions.com.au/api/v1/listing/filter-listings?";
       const params = [];
@@ -338,6 +339,7 @@ const MarketPlaceFilter = () => {
       typeOfService: "",
       minPrice: 5,
       maxPrice: 1000,
+      typeOfServiceDisplay: "",
     });
   };
 
@@ -347,6 +349,7 @@ const MarketPlaceFilter = () => {
         filterDataStructure.category ||
         filterDataStructure.location ||
         filterDataStructure.typeOfService ||
+        filterDataStructure.typeOfServiceDisplay ||
         filterDataStructure.minPrice !== 5 ||
         filterDataStructure.maxPrice !== 1000
       ) {
@@ -522,13 +525,14 @@ const MarketPlaceFilter = () => {
                 >
                   {filterDataStructure.typeOfService !== "" && (
                     <button
-                      className="absolute -right-1 -top-1 flex size-6 items-center justify-center rounded-full bg-violet-normal text-white"
-                      onClick={() =>
+                      className="pointer-events-auto absolute -right-1 -top-1 flex size-6 items-center justify-center rounded-full bg-violet-normal text-white "
+                      onClick={() => {
                         setfilterDataStructure((prev) => ({
                           ...prev,
                           typeOfService: "",
-                        }))
-                      }
+                          typeOfServiceDisplay: "",
+                        }));
+                      }}
                     >
                       <BsX />
                     </button>
@@ -537,7 +541,12 @@ const MarketPlaceFilter = () => {
                     className={`fixed left-0 top-0 h-screen w-screen ${isDropdownOpen.isOpened && isDropdownOpen.category === "type" ? "block" : "hidden"} `}
                     onClick={() => handleShowDropdown("type")}
                   ></div>
-                  {type === "" ? "Type of service" : truncateText(type, 12)}
+                  {filterDataStructure.typeOfServiceDisplay === ""
+                    ? "Type of service"
+                    : truncateText(
+                        filterDataStructure.typeOfServiceDisplay,
+                        12,
+                      )}
                   <span>
                     <BsTriangleFill
                       fill="rgb(56 31 140)"
@@ -557,6 +566,7 @@ const MarketPlaceFilter = () => {
                         setfilterDataStructure((prev) => ({
                           ...prev,
                           typeOfService: item.value,
+                          typeOfServiceDisplay: item.label,
                         }));
                       }}
                     >
