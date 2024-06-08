@@ -14,8 +14,7 @@ interface CategoryListingProps {
 }
 
 const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
-  const dispatch = useDispatch();
-  const { categories, listing, isFiltering, filteredData } = useSelector(
+  const { categories, isFiltering, filteredData } = useSelector(
     (state: RootState) => state.market,
   );
 
@@ -36,8 +35,7 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
       if (!category) {
         return;
       }
-      let url;
-      let content;
+      let url, content;
       if (category === "All") {
         url =
           "https://smp.jacinthsolutions.com.au/api/v1/listing/all-active-listings/" +
@@ -52,7 +50,6 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
         content = data;
       }
       if (url) {
-        // dispatch(updateListingArray(content));
         setallListsting(content);
         setDisplayListing(content);
       }
