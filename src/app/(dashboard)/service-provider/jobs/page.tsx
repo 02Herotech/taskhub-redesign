@@ -7,22 +7,17 @@ import axios from "axios";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
 const Jobs = () => {
   const [bookingData, setBookingData] = useState<BookingType[]>([]);
   const [loading, setLoading] = useState(false);
 
-  const router = useRouter();
   const session = useSession();
   const token = session?.data?.user?.accessToken;
 
   const fetchAllBookings = async () => {
-    if (!token) {
-      console.error("No token available");
-      return;
-    }
+    if (!token) return;
     try {
       setLoading(true);
       const url =
@@ -48,11 +43,6 @@ const Jobs = () => {
     fetchAllBookings();
     // eslint-disable-next-line
   }, [token]);
-
-  const handleFetchSingleBooking = async (id: number) => {
-    localStorage.setItem("bookingDetails", JSON.stringify(id));
-    router.push("/service-provider/jobs/" + id);
-  };
 
   return (
     <>
@@ -112,12 +102,12 @@ const Jobs = () => {
                       </div>
                     </div>
                     <div className="flex flex-wrap gap-3">
-                      <button
-                        onClick={() => handleFetchSingleBooking(item.id)}
+                      <Link
+                        href={"/service-provider/jobs/" + item.id}
                         className="rounded-full border border-violet-normal bg-violet-light px-6 py-3 text-sm font-medium text-violet-normal transition-colors duration-300 hover:bg-violet-200 max-md:px-4 max-md:py-2 max-md:text-sm "
                       >
                         View Enquiry
-                      </button>
+                      </Link>
                       <Link
                         href={"/message"}
                         className="rounded-full bg-violet-normal px-6 py-3 text-sm font-medium text-white transition-opacity duration-300 hover:opacity-90 max-md:px-4 max-md:py-2 max-md:text-sm"

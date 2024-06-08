@@ -131,6 +131,7 @@ const MarketPlaceFilter = () => {
       maxPrice: 1000,
       typeOfServiceDisplay: "",
     });
+    dispatch(resetFilter());
   };
 
   useEffect(() => {
@@ -145,7 +146,7 @@ const MarketPlaceFilter = () => {
       ) {
         handleFilter();
       } else {
-        dispatch(resetFilter(""));
+        dispatch(resetFilter());
       }
     } else {
       setIsMounted(true);
@@ -192,7 +193,6 @@ const MarketPlaceFilter = () => {
                 className="cursor-pointer rounded-3xl bg-violet-normal px-4 py-2 text-base  font-bold text-white"
                 onClick={() => {
                   handleResetFilters();
-                  dispatch(resetFilter(""));
                 }}
               >
                 All
@@ -448,12 +448,6 @@ const MarketPlaceFilter = () => {
                       >
                         Apply
                       </button>
-                      {/* <button
-                        onClick={() => handleCanelFilterByPricing("pricing")}
-                        className=" rounded-full  bg-violet-light px-4 py-2 text-left text-sm text-violet-normal transition-all duration-300  hover:bg-violet-200"
-                      >
-                        Cancel
-                      </button> */}
                     </div>
                   </div>
                 </div>
@@ -461,10 +455,7 @@ const MarketPlaceFilter = () => {
 
               <button
                 className="min-w-40 cursor-pointer rounded-3xl bg-orange-normal px-4 py-2 text-base  font-bold text-white"
-                onClick={() => {
-                  handleResetFilters();
-                  dispatch(resetFilter(""));
-                }}
+                onClick={handleResetFilters}
               >
                 Reset filters
               </button>

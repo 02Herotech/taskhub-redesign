@@ -4,7 +4,6 @@ import { createSlice } from "@reduxjs/toolkit";
 
 interface MarketSliceTypes {
   categories: CategoryType[];
-  listing: ListingDataType[];
   isFiltering: boolean;
   filteredData: ListingDataType[];
   isFilteringLoading: boolean;
@@ -12,7 +11,6 @@ interface MarketSliceTypes {
 
 const initialState: MarketSliceTypes = {
   categories: [],
-  listing: [],
   isFiltering: false,
   filteredData: [],
   isFilteringLoading: false,
@@ -39,11 +37,7 @@ export const marketSlice = createSlice({
         isFiltering: true,
       };
     },
-    updateListingArray: (state, action) => {
-      const listing = action.payload;
-      return { ...state, listing };
-    },
-    resetFilter: (state, action) => {
+    resetFilter: (state) => {
       return {
         ...state,
         isFiltering: false,
@@ -51,21 +45,12 @@ export const marketSlice = createSlice({
         filteredData: [],
       };
     },
-    updateSearchListing: (state, action) => {
-      const searchData = action.payload;
-      return {
-        ...state,
-        // search: { isSearching: true, searchData }
-      };
-    },
   },
 });
 
 export const {
   updateCategories,
-  updateListingArray,
   resetFilter,
-  updateSearchListing,
   filterMarketPlace,
   setFilterLoadingState,
 } = marketSlice.actions;

@@ -12,7 +12,7 @@ import { error } from "console";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { IoLocationOutline } from "react-icons/io5";
 import { BeatLoader } from "react-spinners";
@@ -33,34 +33,28 @@ const ViewJobs = () => {
   const router = useRouter();
   const session = useSession();
   const token = session?.data?.user?.accessToken;
-  const user = session?.data?.user?.user;
+
+  const { id } = useParams();
 
   const fetchSingleBooking = async () => {
-    if (!token) {
-      console.error("No token available");
-      return;
-    }
+    if (!token) return;
     try {
       setLoading(true);
-      const tempId = localStorage.getItem("bookingDetails");
-      if (tempId) {
-        const id = JSON.parse(tempId);
-        const url = "https://smp.jacinthsolutions.com.au/api/v1/booking/" + id;
-        const response = await axios.get(url, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        const bookingData = response.data;
-        const listingId = bookingData.listing.id;
-        setCurrentBooking(bookingData);
+      const url = "https://smp.jacinthsolutions.com.au/api/v1/booking/" + id;
+      const response = await axios.get(url, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const bookingData = response.data;
+      const listingId = bookingData.listing.id;
+      setCurrentBooking(bookingData);
 
-        const listingUrl =
-          "https://smp.jacinthsolutions.com.au/api/v1/listing/" + listingId;
-        const listingResponse = await axios.get(listingUrl);
-        const listingData = listingResponse.data;
-        setCurrentListing(listingData);
-      }
+      const listingUrl =
+        "https://smp.jacinthsolutions.com.au/api/v1/listing/" + listingId;
+      const listingResponse = await axios.get(listingUrl);
+      const listingData = listingResponse.data;
+      setCurrentListing(listingData);
     } catch (error) {
       console.error("An error occurred while fetching services:", error);
     } finally {

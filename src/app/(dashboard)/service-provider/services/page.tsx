@@ -1,11 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
-import { FaStar } from "react-icons/fa6";
-import { motion } from "framer-motion";
-import { notificationData } from "@/app/data/service-provider/notification";
 import { BiCalendarWeek, BiCheck } from "react-icons/bi";
 import { HiLocationMarker } from "react-icons/hi";
 import { CiClock1 } from "react-icons/ci";
@@ -13,31 +9,8 @@ import Link from "next/link";
 import AllServices from "@/components/dashboard/serviceProvider/services/AllServices";
 import { useSession } from "next-auth/react";
 import axios from "axios";
-import { truncateText } from "@/utils/marketplace";
 import ReportModal from "@/components/dashboard/serviceProvider/services/ReportModal";
 import { formatDateFromNumberArrayToRelativeDate } from "@/utils";
-
-const myservices = [
-  {
-    Jobimage: "/assets/images/serviceProvider/plumbing.png",
-    category: "Plumbing",
-    rating: "4.5",
-    profileImage: "/assets/images/marketplace/singleTask/oluchi.png",
-    profileName: "Daniels Oluchi",
-    price: 100,
-  },
-];
-
-const jobsData = [
-  {
-    id: "1",
-    name: "Kelly Jane",
-    description: "Request for drain blockage fix service",
-    image: "/assets/images/serviceProvider/jobs/joe.png",
-    price: 450,
-    time: "Yesterday",
-  },
-];
 
 const ServicesPage = () => {
   const [currentCategory, setCurrentCategory] = useState("services");
@@ -48,7 +21,6 @@ const ServicesPage = () => {
   const [isReportModalShown, setIsReportModalShown] = useState(false);
   const [isStartModalActive, setIsStartModalActive] = useState(false);
 
-  const router = useRouter();
   const session = useSession();
   const token = session?.data?.user?.accessToken;
 
@@ -68,7 +40,6 @@ const ServicesPage = () => {
         (item) => item.bookingStage === "ACCEPTED",
       );
       setOngoingBookingData(filteredData);
-      console.log(filteredData);
     } catch (error) {
       console.error("An error occurred while fetching services:", error);
     } finally {
