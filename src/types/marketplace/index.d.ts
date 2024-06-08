@@ -92,6 +92,15 @@ declare interface ListingDataType2 {
   businessPictures: string[];
 }
 
+declare interface FilterDataStructureTypes {
+  category: string;
+  location: string;
+  typeOfService: string;
+  typeOfServiceDisplay: string;
+  minPrice: number;
+  maxPrice: number;
+}
+
 declare interface BookingType {
   id: 0;
   userAddress: {

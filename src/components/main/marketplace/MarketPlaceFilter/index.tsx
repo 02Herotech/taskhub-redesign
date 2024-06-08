@@ -7,10 +7,7 @@ import {
 } from "@/store/Features/marketplace";
 import { BsTriangleFill, BsX } from "react-icons/bs";
 import { FormEvent, useEffect, useState } from "react";
-import {
-  fetchAllMarketplaseCategories,
-  fetchMarketplaceSubCategoryById,
-} from "@/lib/marketplace";
+import { fetchAllMarketplaseCategories } from "@/lib/marketplace";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store";
 import { updateCategories } from "@/store/Features/marketplace";
@@ -18,22 +15,7 @@ import ReactSlider from "react-slider";
 import { GiSettingsKnobs } from "react-icons/gi";
 import MobileFilterModal from "../MobileFilterModal";
 import { truncateText } from "@/utils/marketplace";
-
-const locationData = [
-  "Western Australia",
-  "Northern Territory",
-  "South Australia",
-  "Queensland",
-  "New South Wales",
-  "Victoria",
-  "Tasmania",
-  "Australian Capital Territory",
-];
-
-const typeData = [
-  { label: "Remote", value: "REMOTE_SERVICE" },
-  { label: "Physical", value: "PHYSICAL_SERVICE" },
-];
+import { locationData, typeData } from "@/data/marketplace/data";
 
 const MarketPlaceFilter = () => {
   const dispatch = useDispatch();
@@ -44,8 +26,19 @@ const MarketPlaceFilter = () => {
     isOpened: false,
     category: "",
   });
+  const [filterDataStructure, setfilterDataStructure] =
+    useState<FilterDataStructureTypes>({
+      category: "",
+      location: "",
+      typeOfService: "",
+      typeOfServiceDisplay: "",
+      minPrice: 5,
+      maxPrice: 1000,
+    });
 
-  const [categoryHeader, setCategoryHeader] = useState("");
+  const [isMounted, setIsMounted] = useState(false);
+  const [searchInputData, setSearchInputData] = useState("");
+
   const [isMobileFilterModalShown, setIsMobileFilterModalShown] =
     useState(false);
 
@@ -76,8 +69,6 @@ const MarketPlaceFilter = () => {
     }
   };
 
-  const [searchInputData, setSearchInputData] = useState("");
-
   //  handled and working
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -87,7 +78,6 @@ const MarketPlaceFilter = () => {
         "https://smp.jacinthsolutions.com.au/api/v1/listing/text/0?text=" +
         searchInputData;
       const { data } = await axios.get(url);
-      console.log(data);
       dispatch(filterMarketPlace(data.content));
     } catch (error: any) {
       console.log(error.message);
@@ -95,28 +85,6 @@ const MarketPlaceFilter = () => {
       dispatch(setFilterLoadingState(false));
     }
   };
-
-  // -------------------- New Filter State
-
-  interface FilterDataStructureTypes {
-    category: string;
-    location: string;
-    typeOfService: string;
-    typeOfServiceDisplay: string;
-    minPrice: number;
-    maxPrice: number;
-  }
-  const [filterDataStructure, setfilterDataStructure] =
-    useState<FilterDataStructureTypes>({
-      category: "",
-      location: "",
-      typeOfService: "",
-      typeOfServiceDisplay: "",
-      minPrice: 5,
-      maxPrice: 1000,
-    });
-
-  const [isMounted, setIsMounted] = useState(false);
 
   const handleFilter = async () => {
     try {
@@ -203,6 +171,8 @@ const MarketPlaceFilter = () => {
           <MobileFilterModal
             isMobileFilterModalShown={isMobileFilterModalShown}
             setIsMobileFilterModalShown={setIsMobileFilterModalShown}
+            setfilterDataStructure={setfilterDataStructure}
+            filterDataStructure={filterDataStructure}
           />
           <button
             className="flex w-full items-center justify-center gap-3 rounded-full border border-violet-normal bg-violet-light px-6 py-2 font-bold  text-violet-normal"
@@ -283,7 +253,6 @@ const MarketPlaceFilter = () => {
                   ))}
                 </div>
               </div>
-
               {/* -------------------------------- */}
               {/* location */}
               <div className="relative">
@@ -504,16 +473,14 @@ const MarketPlaceFilter = () => {
 
           {/* Search form */}
           <div
-            className={`flex justify-between gap-4 py-4 max-md:flex-col md:gap-8  lg:items-center   ${isFiltering ? "order-1" : ""} `}
+            className={`flex justify-between gap-4 py-4 max-md:flex-col md:gap-8  lg:items-center   ${isFiltering ? "lg:order-1" : ""} `}
           >
             <div className="">
               <h1 className="text-xl font-bold text-violet-dark md:text-3xl">
                 Get a Specialist Directly
               </h1>
               <p className="text-base font-[400] text-violet-darkHover md:text-lg">
-                {categoryHeader
-                  ? `Here are few of our ${categoryHeader}`
-                  : "Browse through our various services"}
+                Browse through our various services
               </p>
             </div>
 

@@ -46,6 +46,8 @@ const MareketPlace = () => {
   const router = useRouter();
   const isAuth = session.status === "authenticated";
   const isComplete = session?.data?.user?.user?.enabled;
+  const isServiceProvider =
+    session?.data?.user?.user?.roles[0] === "SERVICE_PROVIDER";
   const [showPopup, setShowPopup] = useState(false);
 
   const token = session?.data?.user?.accessToken;
@@ -73,7 +75,13 @@ const MareketPlace = () => {
               </p>
               <Button
                 className="w-[151px] rounded-full py-6 max-lg:text-sm"
-                onClick={() => router.push("/service-provider/dashboard")}
+                onClick={() =>
+                  router.push(
+                    isServiceProvider
+                      ? "/service-provider/profile"
+                      : "/customer/profile",
+                  )
+                }
               >
                 Go to Profile
               </Button>
