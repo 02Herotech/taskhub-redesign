@@ -476,16 +476,10 @@ const AddTaskForm: React.FC = () => {
                   <label className="font-semibold text-status-darkpurple">
                     Briefly tell us what you need done? <span className="text-[#ff0000] font-extrabold">*</span>
                   </label>
-                  {wordCount > 3 ? (
+                  {wordCount > 3 && (
                     <div className="h-[16px] w-[16px] rounded-3xl bg-[#4CAF50] text-[16px] font-extrabold text-white">
                       <GrFormCheckmark />
                     </div>
-                  ) : wordCount >= 1 ? (
-                      <div className="bg-[#F44336] h-[16px] w-[16px] rounded-3xl text-[16px] font-extrabold text-white">
-                        <GrFormClose />
-                    </div>
-                  ) : (
-                    <div></div>
                   )}
                 </div>
                 <textarea
@@ -493,11 +487,12 @@ const AddTaskForm: React.FC = () => {
                   placeholder="e.g, I need a junior league coach."
                   name="taskBriefDescription"
                   value={task.taskBriefDescription}
-                  minLength={3}
-                  maxLength={50}
                   onChange={handleChange}
                   style={{ resize: "none", overflow: "hidden" }}
                 ></textarea>
+                <div className="text-right text-sm text-status-darkpurple">
+                  {wordCount}/10 words
+                </div>
               </div>
               <div className="relative grid space-y-4">
                 <div className="flex items-center justify-between">
@@ -540,23 +535,16 @@ const AddTaskForm: React.FC = () => {
                   <label className="flex font-semibold">
                     Give a description of your task {""} <span className="text-[#ff0000] font-extrabold">*</span>
                   </label>
-                  {wordCount > 15 ? (
+                  {wordCounts > 15 && (
                     <div className="h-[16px] w-[16px] rounded-3xl bg-[#4CAF50] text-[16px] font-extrabold text-white">
                       <GrFormCheckmark />
                     </div>
-                  ) : wordCount >= 1 ? (
-                    <div className="bg-[#F44336] h-[16px] w-[16px] rounded-3xl text-[16px] font-extrabold text-white">
-                      <GrFormClose />
-                    </div>
-                  ) : (
-                    <div></div>
                   )}
                 </div>
                 <textarea
                   className={` h-[150px] rounded-2xl bg-[#EBE9F4] p-3 placeholder:text-[#C1BADB] ${error.taskDescription ? "outline-[#FF0000] border border-[#ff0000]" : "outline-none border-none"}`}
                   placeholder="Arts and Craft"
                   name="description"
-                  minLength={50}
                   value={task.taskDescription}
                   onChange={handleDescription}
                 ></textarea>
@@ -732,7 +720,14 @@ const AddTaskForm: React.FC = () => {
                 <div className="space-y-10 font-bold text-status-darkpurple ">
                   <div className="flex space-x-4">
                     <div className="grid space-y-4">
+                      <div className="flex items-center justify-between">
                       <label>Postal code <span className="text-[#ff0000] font-extrabold">*</span></label>
+                      {selectedCode && (
+                        <div className="h-[16px] w-[16px] rounded-3xl bg-[#4CAF50] text-[16px] font-extrabold text-white">
+                          <GrFormCheckmark />
+                        </div>
+                        )}
+                      </div>
                       <input
                         value={selectedCode}
                         onChange={handleCode}
@@ -742,7 +737,14 @@ const AddTaskForm: React.FC = () => {
                     </div>
 
                     <div className="grid space-y-4">
-                      <label>Suburb <span className="text-[#ff0000] font-extrabold">*</span></label>
+                      <div className="flex items-center justify-between">
+                        <label>Suburb <span className="text-[#ff0000] font-extrabold">*</span></label>
+                        {selectedCity && (
+                          <div className="h-[16px] w-[16px] rounded-3xl bg-[#4CAF50] text-[16px] font-extrabold text-white">
+                            <GrFormCheckmark />
+                          </div>
+                        )}
+                      </div>
                       <Dropdown
                         trigger={() => (
                           <div className={`flex h-full w-[150px] cursor-pointer appearance-none font-satoshi font-light justify-between rounded-2xl bg-[#EBE9F4] p-3 text-[13px] ${error.city ? "outline-[#FF0000] border border-[#ff0000]" : "outline-none border-none"}`}>
@@ -784,7 +786,14 @@ const AddTaskForm: React.FC = () => {
                 </div>
               )}
               <div className="relative grid space-y-4 font-bold text-status-darkpurple">
+                <div className="flex items-center justify-between">
                 <label>Budget <span className="text-[#ff0000] font-extrabold">*</span></label>
+                {task.customerBudget && (
+                  <div className="h-[16px] w-[16px] rounded-3xl bg-[#4CAF50] text-[16px] font-extrabold text-white">
+                    <GrFormCheckmark />
+                  </div>
+                  )}
+                </div>
                 <input
                   type="number"
                   name="customerBudget"
