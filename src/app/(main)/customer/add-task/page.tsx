@@ -8,7 +8,7 @@ import { IoIosArrowForward } from "react-icons/io";
 import { PiFileArrowDownDuotone } from "react-icons/pi";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { GrFormCheckmark } from "react-icons/gr";
+import { GrFormCheckmark, GrFormClose } from "react-icons/gr";
 import Popup from "@/components/global/Popup";
 import Button from "@/components/global/Button";
 import { useSession } from "next-auth/react";
@@ -102,16 +102,12 @@ const AddTaskForm: React.FC = () => {
   const [wordCount, setWordCount] = useState(0);
   const [wordCounts, setWordCounts] = useState(0);
   const [isSuccessPopup, setIsSuccessPopup] = useState(false);
-
-
-
   
   const handleLoginNavigation = () => {
     router.push("/auth/sign-up?userType=Service+Provider?from=/customer/add-task");
   };
 
    useEffect(() => {
-     // Save task data to cookies whenever it changes
      setCookie("taskBriefDescription", task.taskBriefDescription, { maxAge: 120 });
      setCookie("taskTime", task.taskTime, { maxAge: 120 });
      setCookie("taskDate", task.taskDate, { maxAge: 120 });
@@ -283,11 +279,16 @@ const AddTaskForm: React.FC = () => {
   const handleChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
-    setTask({
-      ...task,
-      [event.target.name]: event.target.value,
-    });
-    setWordCount(event.target.value.split(/\s+/).filter(Boolean).length);
+   
+    const wordArray = event.target.value.split(/\s+/).filter(Boolean);
+    if (wordArray.length <= 10) {
+      setTask({
+        ...task,
+        [event.target.name]: event.target.value,
+      });
+      setWordCount(wordArray.length);
+    }
+
   };
 
   const handleDescription = (
@@ -298,6 +299,7 @@ const AddTaskForm: React.FC = () => {
       taskDescription: event.target.value,
     });
     setWordCounts(event.target.value.split(/\s+/).filter(Boolean).length);
+   
   };
 
   const handletaskImageUpload = (
@@ -474,10 +476,16 @@ const AddTaskForm: React.FC = () => {
                   <label className="font-semibold text-status-darkpurple">
                     Briefly tell us what you need done? <span className="text-[#ff0000] font-extrabold">*</span>
                   </label>
-                  {wordCount > 5 && (
+                  {wordCount > 3 ? (
                     <div className="h-[16px] w-[16px] rounded-3xl bg-[#4CAF50] text-[16px] font-extrabold text-white">
                       <GrFormCheckmark />
                     </div>
+                  ) : wordCount >= 1 ? (
+                      <div className="bg-[#F44336] h-[16px] w-[16px] rounded-3xl text-[16px] font-extrabold text-white">
+                        <GrFormClose />
+                    </div>
+                  ) : (
+                    <div></div>
                   )}
                 </div>
                 <textarea
@@ -485,6 +493,8 @@ const AddTaskForm: React.FC = () => {
                   placeholder="e.g, I need a junior league coach."
                   name="taskBriefDescription"
                   value={task.taskBriefDescription}
+                  minLength={3}
+                  maxLength={50}
                   onChange={handleChange}
                   style={{ resize: "none", overflow: "hidden" }}
                 ></textarea>
@@ -530,16 +540,23 @@ const AddTaskForm: React.FC = () => {
                   <label className="flex font-semibold">
                     Give a description of your task {""} <span className="text-[#ff0000] font-extrabold">*</span>
                   </label>
-                  {wordCounts > 10 && (
+                  {wordCount > 15 ? (
                     <div className="h-[16px] w-[16px] rounded-3xl bg-[#4CAF50] text-[16px] font-extrabold text-white">
                       <GrFormCheckmark />
                     </div>
+                  ) : wordCount >= 1 ? (
+                    <div className="bg-[#F44336] h-[16px] w-[16px] rounded-3xl text-[16px] font-extrabold text-white">
+                      <GrFormClose />
+                    </div>
+                  ) : (
+                    <div></div>
                   )}
                 </div>
                 <textarea
                   className={` h-[150px] rounded-2xl bg-[#EBE9F4] p-3 placeholder:text-[#C1BADB] ${error.taskDescription ? "outline-[#FF0000] border border-[#ff0000]" : "outline-none border-none"}`}
                   placeholder="Arts and Craft"
                   name="description"
+                  minLength={50}
                   value={task.taskDescription}
                   onChange={handleDescription}
                 ></textarea>
@@ -881,7 +898,7 @@ const AddTaskForm: React.FC = () => {
           </div>
         </div>
         <div className="pt-28">
-          <div className="mt-8 flex items-center justify-center p-8 font-medium lg:p-0">
+          <div className="mt-8 flex items-center justify-center p-4 font-medium lg:p-0">
             <div>
               <div className="space-y-2">
                 <h2 className="text-4xl text-status-darkpurple">Add a Task</h2>
