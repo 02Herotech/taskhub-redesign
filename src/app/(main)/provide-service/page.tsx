@@ -5,10 +5,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Head from "next/head";
 import Image from "next/image";
-import {
-  IoIosArrowForward,
-  IoMdClose,
-} from "react-icons/io";
+import { IoIosArrowForward, IoMdClose } from "react-icons/io";
 import { PiFileArrowDownDuotone } from "react-icons/pi";
 import Popup from "@/components/global/Popup";
 import Button from "@/components/global/Button";
@@ -20,6 +17,7 @@ import { useSession } from "next-auth/react";
 import { GrFormCheckmark } from "react-icons/gr";
 import { FaSortDown } from "react-icons/fa6";
 import Dropdown from "@/components/global/Dropdown";
+import { useSearchParams } from "next/navigation";
 
 interface FormData {
   listingTitle: string;
@@ -104,7 +102,8 @@ const ProvideService: React.FC = () => {
     null,
   );
   const [selectedCategoryName, setSelectedCategoryName] = useState("Category");
-  const [selectedSubCategoryName, setSelectedSubCategoryName] = useState("Subcategory");
+  const [selectedSubCategoryName, setSelectedSubCategoryName] =
+    useState("Subcategory");
   const [activePlanIndex, setActivePlanIndex] = useState<number | null>(null);
   const [errors, setErrors] = useState<any>({});
   const [error, setError] = useState<any>({});
@@ -118,14 +117,30 @@ const ProvideService: React.FC = () => {
   const [selectedDays, setSelectedDays] = useState<string[]>([]);
 
   const daysOfWeek = [
-    { value: 'MONDAY', label: 'Monday' },
-    { value: 'TUESDAY', label: 'Tuesday' },
-    { value: 'WEDNESDAY', label: 'Wednesday' },
-    { value: 'THURSDAY', label: 'Thursday' },
-    { value: 'FRIDAY', label: 'Friday' },
-    { value: 'SATURDAY', label: 'Saturday' },
-    { value: 'SUNDAY', label: 'Sunday' },
+    { value: "MONDAY", label: "Monday" },
+    { value: "TUESDAY", label: "Tuesday" },
+    { value: "WEDNESDAY", label: "Wednesday" },
+    { value: "THURSDAY", label: "Thursday" },
+    { value: "FRIDAY", label: "Friday" },
+    { value: "SATURDAY", label: "Saturday" },
+    { value: "SUNDAY", label: "Sunday" },
   ];
+
+  // Handling getting the description from the marketplace when i user navigates from the marketplace
+  const params = useSearchParams();
+  const marketplaceDescription = params.get("marketplaceDescription");
+
+  console.log(marketplaceDescription);
+
+  useEffect(() => {
+    if (marketplaceDescription) {
+      setTask((prev) => ({
+        ...prev,
+        listingTitle: marketplaceDescription,
+      }));
+    }
+  }, [marketplaceDescription]);
+  // End of getting description from the marketplace
 
   useEffect(() => {
     const fetchPostalCodeData = async () => {
@@ -190,7 +205,7 @@ const ProvideService: React.FC = () => {
     if (!selectedCategory) {
       errors.category = "Please fill out all required fields";
     }
-      if (!selectedSubCategory) {
+    if (!selectedSubCategory) {
       errors.subCategory = "Please fill out all required fields";
     }
     if (!task.listingTitle) {
@@ -487,7 +502,8 @@ const ProvideService: React.FC = () => {
               >
                 <div className="grid space-y-4">
                   <label className="font-semibold">
-                    Write a short title that accurately describes your service.{" "}<span className="text-[#ff0000] font-extrabold">*</span>
+                    Write a short title that accurately describes your service.{" "}
+                    <span className="font-extrabold text-[#ff0000]">*</span>
                   </label>
                   <input
                     type="text"
@@ -495,30 +511,33 @@ const ProvideService: React.FC = () => {
                     value={task.listingTitle}
                     onChange={handleChange}
                     placeholder="Casual Babysitting"
-                    className={`rounded-2xl bg-[#EBE9F4] p-3 text-[13px] placeholder:font-satoshiMedium placeholder:font-medium placeholder:text-status-darkpurple ${errors.lisitingTitle ? "outline-[#FF0000] border border-[#ff0000]" : "outline-none border-none"}`}
+                    className={`rounded-2xl bg-[#EBE9F4] p-3 text-[13px] placeholder:font-satoshiMedium placeholder:font-medium placeholder:text-status-darkpurple ${errors.lisitingTitle ? "border border-[#ff0000] outline-[#FF0000]" : "border-none outline-none"}`}
                   />
                 </div>
                 <div className="relative grid space-y-4">
                   <label className="font-semibold">
-                    Choose the best category for your listing.{" "}<span className="text-[#ff0000] font-extrabold">*</span>
+                    Choose the best category for your listing.{" "}
+                    <span className="font-extrabold text-[#ff0000]">*</span>
                   </label>
                   <Dropdown
                     trigger={() => (
-                      <div className={`flex h-full w-full cursor-pointer appearance-none justify-between rounded-2xl bg-[#EBE9F4] p-3 text-[13px] ${errors.category ? "outline-[#FF0000] border border-[#ff0000]" : "outline-none border-none"}`}>
+                      <div
+                        className={`flex h-full w-full cursor-pointer appearance-none justify-between rounded-2xl bg-[#EBE9F4] p-3 text-[13px] ${errors.category ? "border border-[#ff0000] outline-[#FF0000]" : "border-none outline-none"}`}
+                      >
                         <h2 className="font-satoshiMedium">
                           {selectedCategoryName}
                         </h2>
                         <FaSortDown />
                       </div>
                     )}
-                    className="left-0 right-0 top-14 mx-auto bg-white small-scrollbar transition-all duration-300 max-h-64 overflow-y-auto"
+                    className="small-scrollbar left-0 right-0 top-14 mx-auto max-h-64 overflow-y-auto bg-white transition-all duration-300"
                   >
                     {items.map((item) => (
                       <button
                         type="button"
                         key={item.id}
                         value={item.id}
-                        className="block p-2 text-[12px] text-[#221354] font-satoshiMedium"
+                        className="block p-2 font-satoshiMedium text-[12px] text-[#221354]"
                         onClick={() => {
                           handleCategoryChange(item.id);
                           setSelectedCategoryName(item.categoryName);
@@ -530,22 +549,27 @@ const ProvideService: React.FC = () => {
                   </Dropdown>
                 </div>
                 <div className="relative grid space-y-4">
-                  <label className="font-bold">Choose a subcategory. <span className="text-[#ff0000] font-extrabold">*</span></label>
+                  <label className="font-bold">
+                    Choose a subcategory.{" "}
+                    <span className="font-extrabold text-[#ff0000]">*</span>
+                  </label>
                   <Dropdown
                     trigger={() => (
-                      <div className={`flex h-full w-full cursor-pointer appearance-none justify-between rounded-2xl bg-[#EBE9F4] p-3 text-[13px] ${errors.subCategory ? "outline-[#FF0000] border border-[#ff0000]" : "outline-none border-none"}`}>
+                      <div
+                        className={`flex h-full w-full cursor-pointer appearance-none justify-between rounded-2xl bg-[#EBE9F4] p-3 text-[13px] ${errors.subCategory ? "border border-[#ff0000] outline-[#FF0000]" : "border-none outline-none"}`}
+                      >
                         <h2>{selectedSubCategoryName}</h2>
                         <FaSortDown />
                       </div>
                     )}
-                    className="left-0 right-0 top-14 mx-auto bg-white small-scrollbar transition-all duration-300 max-h-64 overflow-y-auto"
+                    className="small-scrollbar left-0 right-0 top-14 mx-auto max-h-64 overflow-y-auto bg-white transition-all duration-300"
                   >
                     {subcategories.map((subcategory) => (
                       <button
                         type="button"
                         key={subcategory.id}
                         value={subcategory.id}
-                        className="block p-2 text-[12px] text-[#221354] font-satoshiMedium"
+                        className="block p-2 font-satoshiMedium text-[12px] text-[#221354]"
                         onClick={() => {
                           handleSubCategoryChange(subcategory.id);
                           setSelectedSubCategoryName(subcategory.name);
@@ -567,10 +591,11 @@ const ProvideService: React.FC = () => {
                 </div>
                 <div className="grid space-y-3">
                   <label className="font-semibold">
-                    Please give a detailed description of the service <span className="text-[#ff0000] font-extrabold">*</span>
+                    Please give a detailed description of the service{" "}
+                    <span className="font-extrabold text-[#ff0000]">*</span>
                   </label>
                   <textarea
-                    className={` h-[350px] rounded-2xl bg-[#EBE9F4] p-3 placeholder:font-medium placeholder:text-status-darkpurple ${errors.description ? "outline-[#FF0000] border border-[#ff0000]" : "outline-none border-none"}`}
+                    className={` h-[350px] rounded-2xl bg-[#EBE9F4] p-3 placeholder:font-medium placeholder:text-status-darkpurple ${errors.description ? "border border-[#ff0000] outline-[#FF0000]" : "border-none outline-none"}`}
                     placeholder="Casual Babysitting"
                     name="description"
                     value={task.listingDescription}
@@ -587,7 +612,10 @@ const ProvideService: React.FC = () => {
                   />
                 </div>
                 <div className="text-red-600">
-                  {errors.lisitingTitle|| errors.listingDescription|| errors.category || errors.subCategory}
+                  {errors.lisitingTitle ||
+                    errors.listingDescription ||
+                    errors.category ||
+                    errors.subCategory}
                 </div>
                 <Button className="rounded-3xl" type="submit">
                   Next
@@ -604,7 +632,10 @@ const ProvideService: React.FC = () => {
               className="space-y-10 font-satoshi font-medium "
             >
               <div className="space-y-4">
-                <h2 className="font-bold">Choose the pricing plans. <span className="text-[#ff0000] font-extrabold">*</span></h2>
+                <h2 className="font-bold">
+                  Choose the pricing plans.{" "}
+                  <span className="font-extrabold text-[#ff0000]">*</span>
+                </h2>
                 <div>
                   <div className="flex items-center">
                     <input
@@ -621,10 +652,11 @@ const ProvideService: React.FC = () => {
                 </div>
                 <div className="relative grid space-y-4 text-[13px] text-[#221354]">
                   <input
-                    className={`rounded-2xl ${activePlanIndex === 0
-                      ? " disabled bg-transparent p-1 text-lg font-bold text-status-darkViolet"
-                      : "bg-[#EBE9F4] p-4 hover:bg-status-darkViolet hover:text-white "
-                      } cursor-pointer text-left outline-none placeholder:font-satoshiMedium placeholder:font-medium placeholder:text-[#2A1769] hover:placeholder:text-white `}
+                    className={`rounded-2xl ${
+                      activePlanIndex === 0
+                        ? " disabled bg-transparent p-1 text-lg font-bold text-status-darkViolet"
+                        : "bg-[#EBE9F4] p-4 hover:bg-status-darkViolet hover:text-white "
+                    } cursor-pointer text-left outline-none placeholder:font-satoshiMedium placeholder:font-medium placeholder:text-[#2A1769] hover:placeholder:text-white `}
                     name="physical"
                     onClick={() => handlePlan(0)}
                     placeholder="Plan 1"
@@ -638,7 +670,7 @@ const ProvideService: React.FC = () => {
                       </label>
                       <div className="grid space-y-3 rounded-2xl border-2 pb-5">
                         <textarea
-                          className={`h-[200px] rounded-2xl bg-[#EBE9F4] p-3 font-satoshiMedium placeholder:font-satoshiMedium placeholder:font-semibold  ${error.planDetails ? "outline-[#FF0000] border border-[#ff0000]" : "outline-none border-none"}`}
+                          className={`h-[200px] rounded-2xl bg-[#EBE9F4] p-3 font-satoshiMedium placeholder:font-satoshiMedium placeholder:font-semibold  ${error.planDetails ? "border border-[#ff0000] outline-[#FF0000]" : "border-none outline-none"}`}
                           placeholder="Casual Babysitting"
                           name="planOneDescription"
                           value={task.planOneDescription}
@@ -656,7 +688,7 @@ const ProvideService: React.FC = () => {
                             }
                             onChange={handlePrice}
                             placeholder="500"
-                            className={`w-1/3 rounded-2xl bg-[#EBE9F4] p-3 pl-5 font-satoshiMedium text-[13px]  ${error.price ? "outline-[#FF0000] border border-[#ff0000]" : "outline-none border-none"}`}
+                            className={`w-1/3 rounded-2xl bg-[#EBE9F4] p-3 pl-5 font-satoshiMedium text-[13px]  ${error.price ? "border border-[#ff0000] outline-[#FF0000]" : "border-none outline-none"}`}
                           />
                           <p className="absolute left-3 top-3">$</p>
                           <p className="font-extraBold text-xs text-[#140B31]">
@@ -667,10 +699,11 @@ const ProvideService: React.FC = () => {
                     </div>
                   )}
                   <input
-                    className={`rounded-2xl ${activePlanIndex === 1
-                      ? " disabled bg-transparent p-1 text-lg font-bold text-status-darkViolet"
-                      : "bg-[#EBE9F4] p-4 hover:bg-status-darkViolet hover:text-white"
-                      } cursor-pointer text-left outline-none placeholder:font-satoshiMedium placeholder:font-medium placeholder:text-[#2A1769] hover:placeholder:text-white`}
+                    className={`rounded-2xl ${
+                      activePlanIndex === 1
+                        ? " disabled bg-transparent p-1 text-lg font-bold text-status-darkViolet"
+                        : "bg-[#EBE9F4] p-4 hover:bg-status-darkViolet hover:text-white"
+                    } cursor-pointer text-left outline-none placeholder:font-satoshiMedium placeholder:font-medium placeholder:text-[#2A1769] hover:placeholder:text-white`}
                     name="physical"
                     onClick={() => handlePlan(1)}
                     placeholder="Plan 2  (Optional)"
@@ -713,10 +746,11 @@ const ProvideService: React.FC = () => {
                     </div>
                   )}
                   <input
-                    className={`rounded-2xl ${activePlanIndex === 2
-                      ? " disabled bg-transparent p-1 text-lg font-bold text-status-darkViolet"
-                      : "bg-[#EBE9F4] p-4 hover:bg-status-darkViolet hover:text-white"
-                      } cursor-pointer text-left outline-none placeholder:font-satoshiMedium placeholder:font-medium placeholder:text-[#2A1769] hover:placeholder:text-white`}
+                    className={`rounded-2xl ${
+                      activePlanIndex === 2
+                        ? " disabled bg-transparent p-1 text-lg font-bold text-status-darkViolet"
+                        : "bg-[#EBE9F4] p-4 hover:bg-status-darkViolet hover:text-white"
+                    } cursor-pointer text-left outline-none placeholder:font-satoshiMedium placeholder:font-medium placeholder:text-[#2A1769] hover:placeholder:text-white`}
                     name="physical"
                     onClick={() => handlePlan(2)}
                     placeholder="Plan 3  (Optional)"
@@ -762,14 +796,16 @@ const ProvideService: React.FC = () => {
               </div>
               <div className="space-y-4">
                 <h2 className="font-satoshiMedium text-xl font-bold">
-                  Type of Service <span className="text-[#ff0000] font-extrabold">*</span>
+                  Type of Service{" "}
+                  <span className="font-extrabold text-[#ff0000]">*</span>
                 </h2>
                 <div className="flex space-x-4 text-[13px] text-[#221354]">
                   <input
-                    className={`rounded-2xl p-2 ${activeButtonIndex === 0
-                      ? "bg-status-purpleBase text-white"
-                      : "bg-[#EBE9F4] placeholder:text-white hover:bg-status-purpleBase hover:text-white"
-                      } cursor-pointer outline-none placeholder:font-satoshiMedium placeholder:font-bold`}
+                    className={`rounded-2xl p-2 ${
+                      activeButtonIndex === 0
+                        ? "bg-status-purpleBase text-white"
+                        : "bg-[#EBE9F4] placeholder:text-white hover:bg-status-purpleBase hover:text-white"
+                    } cursor-pointer outline-none placeholder:font-satoshiMedium placeholder:font-bold`}
                     name="physical"
                     onClick={() => handleClick(0)}
                     placeholder="Physical Services"
@@ -777,10 +813,11 @@ const ProvideService: React.FC = () => {
                     readOnly
                   />
                   <input
-                    className={`rounded-2xl p-2 ${activeButtonIndex === 1
-                      ? "bg-status-purpleBase text-white"
-                      : "bg-[#EBE9F4] placeholder:text-white hover:bg-status-purpleBase hover:text-white "
-                      } cursor-pointer outline-none placeholder:font-satoshiMedium placeholder:font-bold`}
+                    className={`rounded-2xl p-2 ${
+                      activeButtonIndex === 1
+                        ? "bg-status-purpleBase text-white"
+                        : "bg-[#EBE9F4] placeholder:text-white hover:bg-status-purpleBase hover:text-white "
+                    } cursor-pointer outline-none placeholder:font-satoshiMedium placeholder:font-bold`}
                     name="remote"
                     onClick={() => {
                       handleClick(1);
@@ -805,25 +842,33 @@ const ProvideService: React.FC = () => {
                 <div className="flex flex-col font-satoshiMedium font-medium text-status-darkpurple lg:flex-row lg:space-x-3">
                   <div className="flex space-x-4 lg:justify-normal">
                     <div className="grid space-y-4">
-                      <label>Postal code <span className="text-[#ff0000] font-extrabold">*</span></label>
+                      <label>
+                        Postal code{" "}
+                        <span className="font-extrabold text-[#ff0000]">*</span>
+                      </label>
                       <input
                         value={selectedCode}
                         onChange={handleCode}
                         name="postalCode"
-                        className={`w-[155px] cursor-pointer rounded-2xl bg-[#EBE9F4]  p-3 text-[13px] placeholder:font-bold sm:w-[200px]  lg:w-[140px] ${error.postalCode ? "outline-[#FF0000] border border-[#ff0000]" : "outline-none border-none"}`}
+                        className={`w-[155px] cursor-pointer rounded-2xl bg-[#EBE9F4]  p-3 text-[13px] placeholder:font-bold sm:w-[200px]  lg:w-[140px] ${error.postalCode ? "border border-[#ff0000] outline-[#FF0000]" : "border-none outline-none"}`}
                       />
                     </div>
 
                     <div className="relative grid space-y-4">
-                      <label>Suburb <span className="text-[#ff0000] font-extrabold">*</span></label>
+                      <label>
+                        Suburb{" "}
+                        <span className="font-extrabold text-[#ff0000]">*</span>
+                      </label>
                       <Dropdown
                         trigger={() => (
-                          <div className={`flex h-full w-[150px] cursor-pointer appearance-none font-satoshi font-light justify-between rounded-2xl bg-[#EBE9F4] p-3 text-[13px] ${error.city ? "outline-[#FF0000] border border-[#ff0000]" : "outline-none border-none"}`}>
+                          <div
+                            className={`flex h-full w-[150px] cursor-pointer appearance-none justify-between rounded-2xl bg-[#EBE9F4] p-3 font-satoshi text-[13px] font-light ${error.city ? "border border-[#ff0000] outline-[#FF0000]" : "border-none outline-none"}`}
+                          >
                             <h2>{selectedCity}</h2>
                             <FaSortDown />
                           </div>
                         )}
-                        className="left-0 right-0 top-14 mx-auto bg-white small-scrollbar transition-all duration-300 max-h-64 overflow-y-auto"
+                        className="small-scrollbar left-0 right-0 top-14 mx-auto max-h-64 overflow-y-auto bg-white transition-all duration-300"
                       >
                         {postalCodeData.map((data, index) => (
                           <button
@@ -857,7 +902,10 @@ const ProvideService: React.FC = () => {
                 </div>
               )}
               <div className="text-[#FF0000]">
-                {error.planDetails|| error.price|| error.postalCode|| error.city }
+                {error.planDetails ||
+                  error.price ||
+                  error.postalCode ||
+                  error.city}
               </div>
               <div className="flex justify-between">
                 <Button
@@ -882,15 +930,28 @@ const ProvideService: React.FC = () => {
               <div className="relative mt-2">
                 <Dropdown
                   trigger={() => (
-                    <div className={`flex justify-between items-center h-10 w-full rounded-2xl border border-tc-gray bg-[#EBE9F4] px-3 py-1 text-[14px] outline-none lg:w-1/2 ${err.availableDays ? "outline-[#FF0000] border border-[#ff0000]" : "outline-none border-none"}`}>
-                      <h2>Available Days <span className="text-[#ff0000] font-extrabold">*</span></h2>
+                    <div
+                      className={`flex h-10 w-full items-center justify-between rounded-2xl border border-tc-gray bg-[#EBE9F4] px-3 py-1 text-[14px] outline-none lg:w-1/2 ${err.availableDays ? "border border-[#ff0000] outline-[#FF0000]" : "border-none outline-none"}`}
+                    >
+                      <h2>
+                        Available Days{" "}
+                        <span className="font-extrabold text-[#ff0000]">*</span>
+                      </h2>
                       <FaSortDown />
                     </div>
                   )}
-                  className="left-0 right-full top-14 mx-auto bg-white w-1/2"
+                  className="left-0 right-full top-14 mx-auto w-1/2 bg-white"
                 >
                   {daysOfWeek.map((day) => (
-                    <button type="button" key={day.value} value={day.value} onClick={() => { handleTickChange(day.value) }} className="block p-2 text-[12px] text-[#221354]">
+                    <button
+                      type="button"
+                      key={day.value}
+                      value={day.value}
+                      onClick={() => {
+                        handleTickChange(day.value);
+                      }}
+                      className="block p-2 text-[12px] text-[#221354]"
+                    >
                       {day.label}
                     </button>
                   ))}
@@ -919,7 +980,8 @@ const ProvideService: React.FC = () => {
               <div className="space-y-3">
                 <label className="text-status-darkpurple">
                   Upload an Image <br /> This is the main image that would be
-                  seen by customers <span className="text-[#ff0000] font-extrabold">*</span>
+                  seen by customers{" "}
+                  <span className="font-extrabold text-[#ff0000]">*</span>
                 </label>
                 {task.image1 ? (
                   <div className="flex items-end ">
@@ -952,8 +1014,8 @@ const ProvideService: React.FC = () => {
                   </div>
                 ) : (
                   <label
-                      htmlFor="file-upload-main"
-                      className={`flex h-48 w-1/2 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed p-4 lg:w-2/5  ${err.image ? "outline-[#FF0000] border border-[#ff0000]" : "outline-none border-2 border-[#EBE9F4]"}`}
+                    htmlFor="file-upload-main"
+                    className={`flex h-48 w-1/2 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed p-4 lg:w-2/5  ${err.image ? "border border-[#ff0000] outline-[#FF0000]" : "border-2 border-[#EBE9F4] outline-none"}`}
                   >
                     <PiFileArrowDownDuotone className="text-xl text-[#EBE9F4]" />
                     <span className="text-center font-bold text-[#EBE9F4]">
@@ -1124,7 +1186,7 @@ const ProvideService: React.FC = () => {
                 </div>
               </div>
               <div className="text-red-600">
-                {err.image|| err.availableDays}
+                {err.image || err.availableDays}
               </div>
               <div className="flex justify-between">
                 <Button
@@ -1153,20 +1215,22 @@ const ProvideService: React.FC = () => {
         <title>TaskHub | Provide Service</title>
       </Head>
       <div className="w-full">
-        <div className="fixed top-20 left-0 w-full bg-white shadow-md z-10 border-t-2">
-          <div className="mb-3 flex justify-center font-bold md:space-x-5 pt-4">
+        <div className="fixed left-0 top-20 z-10 w-full border-t-2 bg-white shadow-md">
+          <div className="mb-3 flex justify-center pt-4 font-bold md:space-x-5">
             <div
-              className={`${currentPage === 1
-                ? "text-status-purpleBase"
-                : "text-status-purpleBase"
-                }`}
+              className={`${
+                currentPage === 1
+                  ? "text-status-purpleBase"
+                  : "text-status-purpleBase"
+              }`}
             >
               <p className="flex items-center  text-[12px] md:text-[16px] lg:gap-3">
                 <span
-                  className={`${currentPage === 1
-                    ? "bg-status-purpleBase text-white"
-                    : "bg-status-purpleBase text-white"
-                    } rounded-2xl border-none px-3 py-2`}
+                  className={`${
+                    currentPage === 1
+                      ? "bg-status-purpleBase text-white"
+                      : "bg-status-purpleBase text-white"
+                  } rounded-2xl border-none px-3 py-2`}
                 >
                   01
                 </span>{" "}
@@ -1177,17 +1241,19 @@ const ProvideService: React.FC = () => {
               </p>
             </div>
             <div
-              className={`${currentPage === 2 || currentPage === 3
-                ? "text-status-purpleBase"
-                : " text-[#716F78]"
-                }`}
+              className={`${
+                currentPage === 2 || currentPage === 3
+                  ? "text-status-purpleBase"
+                  : " text-[#716F78]"
+              }`}
             >
               <p className="flex items-center gap-2 text-[12px] md:text-[16px] lg:gap-3">
                 <span
-                  className={`${currentPage === 2 || currentPage === 3
-                    ? "bg-status-purpleBase text-white"
-                    : "bg-[#EAE9EB] text-[#716F78]"
-                    } rounded-2xl border-none px-3 py-2`}
+                  className={`${
+                    currentPage === 2 || currentPage === 3
+                      ? "bg-status-purpleBase text-white"
+                      : "bg-[#EAE9EB] text-[#716F78]"
+                  } rounded-2xl border-none px-3 py-2`}
                 >
                   02
                 </span>{" "}
@@ -1198,15 +1264,17 @@ const ProvideService: React.FC = () => {
               </p>
             </div>
             <div
-              className={`${currentPage === 3 ? "text-status-purpleBase" : " text-[#716F78]"
-                }`}
+              className={`${
+                currentPage === 3 ? "text-status-purpleBase" : " text-[#716F78]"
+              }`}
             >
               <p className="flex items-center gap-2 text-[12px] md:text-[16px] lg:gap-3">
                 <span
-                  className={`${currentPage === 3
-                    ? "bg-status-purpleBase text-white"
-                    : "bg-[#EAE9EB] text-[#716F78]"
-                    } rounded-2xl border-none px-3 py-2`}
+                  className={`${
+                    currentPage === 3
+                      ? "bg-status-purpleBase text-white"
+                      : "bg-[#EAE9EB] text-[#716F78]"
+                  } rounded-2xl border-none px-3 py-2`}
                 >
                   03
                 </span>{" "}
@@ -1214,69 +1282,75 @@ const ProvideService: React.FC = () => {
               </p>
             </div>
           </div>
-        <hr className="h-[2px] w-full bg-[#EAE9EB] text-[#EAE9EB]" />
-        <div>
-          <div className="flex justify-center pb-4">
-            <div
-              className="container flex w-80 items-center justify-center space-x-5 border-2 border-[#EAE9EB] p-3 lg:w-2/3"
-              style={{ borderRadius: "0px 0px 20px 20px ", borderTop: "none" }}
-            >
-              {/* Progress bar */}
-              <div className="h-1 w-2/3 overflow-hidden bg-[#EAE9EB]">
-                <div
-                  className={`h-full ${currentPage === 1
-                    ? "bg-status-purpleBase"
-                    : currentPage === 2
-                      ? "bg-status-purpleBase"
-                      : "bg-status-purpleBase"
+          <hr className="h-[2px] w-full bg-[#EAE9EB] text-[#EAE9EB]" />
+          <div>
+            <div className="flex justify-center pb-4">
+              <div
+                className="container flex w-80 items-center justify-center space-x-5 border-2 border-[#EAE9EB] p-3 lg:w-2/3"
+                style={{
+                  borderRadius: "0px 0px 20px 20px ",
+                  borderTop: "none",
+                }}
+              >
+                {/* Progress bar */}
+                <div className="h-1 w-2/3 overflow-hidden bg-[#EAE9EB]">
+                  <div
+                    className={`h-full ${
+                      currentPage === 1
+                        ? "bg-status-purpleBase"
+                        : currentPage === 2
+                          ? "bg-status-purpleBase"
+                          : "bg-status-purpleBase"
                     }`}
-                  style={{ width: `${progress}%` }}
-                />
+                    style={{ width: `${progress}%` }}
+                  />
+                </div>
+                <p className="text-xs text-status-darkpurple">
+                  {`${progress}% complete`}
+                </p>
               </div>
-              <p className="text-xs text-status-darkpurple">
-                {`${progress}% complete`}
-              </p>
             </div>
-          </div>
           </div>
         </div>
         <div className="pt-24">
-        <div className="mt-8 lg:flex">
-          {currentPage === 1 && (
-            <div className="mr-[50px] hidden lg:ml-[10%] lg:block lg:w-[390px] xl:ml-[15%] ">
-              {/* @ts-ignore */}
-              <AiDesciption
-                setTask={setTask}
-                task={task}
-                displayType={"card"}
-              />
-            </div>
-          )}
-
-          <div
-            className={
-              currentPage !== 1 ? "flex w-full items-center justify-center" : ""
-            }
-          >
-            <div>
-              <div
-                className={
-                  currentPage === 1 ? " mx-auto w-[80%] lg:w-full " : ""
-                }
-              >
-                <h2 className="text-4xl font-medium text-status-darkpurple">
-                  Provide a Service
-                </h2>
-                <p className="text-[12px] font-medium text-[#716F78]">
-                  Please fill out the information below to add a new listing.
-                </p>
+          <div className="mt-8 lg:flex">
+            {currentPage === 1 && (
+              <div className="mr-[50px] hidden lg:ml-[10%] lg:block lg:w-[390px] xl:ml-[15%] ">
+                {/* @ts-ignore */}
+                <AiDesciption
+                  setTask={setTask}
+                  task={task}
+                  displayType={"card"}
+                />
               </div>
-              <div className="mt-8">{renderPage()}</div>
+            )}
+
+            <div
+              className={
+                currentPage !== 1
+                  ? "flex w-full items-center justify-center"
+                  : ""
+              }
+            >
+              <div>
+                <div
+                  className={
+                    currentPage === 1 ? " mx-auto w-[80%] lg:w-full " : ""
+                  }
+                >
+                  <h2 className="text-4xl font-medium text-status-darkpurple">
+                    Provide a Service
+                  </h2>
+                  <p className="text-[12px] font-medium text-[#716F78]">
+                    Please fill out the information below to add a new listing.
+                  </p>
+                </div>
+                <div className="mt-8">{renderPage()}</div>
+              </div>
             </div>
           </div>
         </div>
-        </div>
-        </div>
+      </div>
       <div>
         {isAuthenticated ? (
           <Popup

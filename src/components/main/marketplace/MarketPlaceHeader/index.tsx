@@ -21,9 +21,11 @@ const MarketPlaceHeader = () => {
     if (!token) {
       router.push("/auth/login");
     } else if (isServiceProvider) {
-      router.push("/provide-service");
+      router.push(`/provide-service?marketplaceDescription=${addDescription}`);
     } else {
-      router.push("/customer/add-task");
+      router.push(
+        `/customer/add-task?marketplaceDescription=${addDescription}`,
+      );
     }
   };
   return (

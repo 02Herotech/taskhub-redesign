@@ -13,6 +13,8 @@ import { formatDateFromNumberArray } from "@/utils";
 
 const Page = () => {
   const [displayData, setDisplayData] = useState<ListingDataType>();
+
+  let temporaryNumber = 1;
   useEffect(() => {
     const tempList = localStorage.getItem("content");
     if (tempList) {

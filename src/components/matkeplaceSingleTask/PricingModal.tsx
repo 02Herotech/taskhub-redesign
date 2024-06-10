@@ -8,8 +8,7 @@ import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { BeatLoader } from "react-spinners";
-import { marketPlaceModalIcon } from "@/lib/svgIcons";
-import { formatDate, formatTime } from "@/utils";
+import { formatDate, formatTimeFromDate } from "@/utils";
 import Image from "next/image";
 
 interface ModalProps {
@@ -47,7 +46,7 @@ const PricingModal = ({
     suburb: string;
     pricing: number | string;
     description: string;
-    time: string;
+    time: Date | string;
   }>({
     postcode: "",
     date: "",
@@ -96,13 +95,15 @@ const PricingModal = ({
       const uploadData = {
         listingId,
         startDate: formatDate(formState.date as Date),
-        startTime: formatTime(formState.time),
+        startTime: formatTimeFromDate(formState.time as Date),
         postCode: formState.postcode,
         suburb: formState.suburb,
         price: formState.pricing,
         bookingDescription: formState.description,
         bookingTitle: modalData.title,
       };
+
+      console.log(uploadData);
       const url = "https://smp.jacinthsolutions.com.au/api/v1/booking";
       const { data } = await axios.post(url, uploadData, {
         headers: {
@@ -115,7 +116,8 @@ const PricingModal = ({
         message: data.message,
       }));
       setIsSubmittedSuccessful(true);
-    } catch (error) {
+    } catch (error: any) {
+      console.log(error);
       setSubmitStatus((prev) => ({
         ...prev,
         error: "Kindly check your network connection",
@@ -266,9 +268,7 @@ const PricingModal = ({
           <div className="grid w-full grid-cols-2  items-end justify-end gap-4 ">
             {/* Date */}
             <div className="flex flex-col justify-between space-y-1">
-              <label htmlFor="" className="font-bold  text-violet-darker">
-                Date
-              </label>
+              <label className="font-bold  text-violet-darker">Date</label>
               <DatePicker
                 selected={formState.date as Date}
                 minDate={new Date()}
@@ -285,22 +285,22 @@ const PricingModal = ({
             </div>
             {/* Time */}
             <div className="flex flex-col space-y-1">
-              <label htmlFor="" className="font-bold  text-violet-darker">
-                Time
-              </label>
-              {/* <DatePicker
-                selected={formState.time}
-                onChange={(date) => setFormState((prev) => ({ ...prev, date }))}
+              <label className="font-bold  text-violet-darker">Time</label>
+              <DatePicker
+                selected={formState.time as Date}
+                onChange={(date: Date) =>
+                  setFormState((prev) => ({ ...prev, time: date }))
+                }
                 showTimeSelect
                 showTimeSelectOnly
-                timeIntervals={15} // You can adjust the intervals (e.g., 15, 30)
+                timeIntervals={30} // You can adjust the intervals (e.g., 15, 30)
                 timeCaption="Time"
                 dateFormat="h:mm aa" // Adjust the format as needed
-                className="w-full rounded-xl border border-slate-100 p-2 py-3 text-slate-700 shadow outline-none transition-shadow duration-300 hover:shadow-md lg:max-w-sm"
+                className="small-scrollbar w-full rounded-xl border border-slate-100 p-2 py-3 text-slate-700 shadow outline-none transition-shadow duration-300 hover:shadow-md lg:max-w-sm"
                 required
-              /> */}
+              />
 
-              <input
+              {/* <input
                 type="time"
                 name="time"
                 required
@@ -312,7 +312,7 @@ const PricingModal = ({
                   }))
                 }
                 className="w-full  rounded-lg p-3 outline-none"
-              />
+              /> */}
             </div>
             {/* Location */}
             <div className="flex flex-col space-y-1">
