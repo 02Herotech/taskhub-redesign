@@ -156,6 +156,19 @@ const PricingModal = ({
     // eslint-disable-next-line
   }, [formState.postcode]);
 
+  const handleInputChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const wordLimit = 50;
+    const inputText = event.target.value;
+    const wordCount = inputText.trim().split(/\s+/).length;
+
+    if (wordCount <= wordLimit) {
+      setFormState((prev) => ({
+        ...prev,
+        description: inputText,
+      }));
+    }
+  };
+
   return (
     <section
       className={`fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-70 transition-opacity duration-300 ${isModalShown ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-0"} `}
@@ -215,6 +228,15 @@ const PricingModal = ({
         <div className="relative z-10 flex w-[90vw] max-w-xl flex-col items-center justify-center gap-3 bg-violet-light p-3 px-4 lg:space-y-4 lg:p-10">
           <div className="clip-triangle absolute left-0 top-0 h-full w-full bg-violet-active"></div>
           <div className="relative flex flex-col items-center justify-center gap-4 bg-white p-6 lg:px-20 ">
+            <div className="size-10 rounded-full bg-violet-darker p-2">
+              <Image
+                src={"/assets/images/serviceProvider/jobs/checkicon.png"}
+                alt="checkicon"
+                width={80}
+                height={80}
+                className="h-full w-full"
+              />
+            </div>
             <p className="text-center text-xl font-bold text-violet-normal">
               Booking Proposal successfully sent to the service provider
             </p>
@@ -262,6 +284,17 @@ const PricingModal = ({
               <label htmlFor="" className="font-bold  text-violet-darker">
                 Time
               </label>
+              {/* <DatePicker
+                selected={formState.time}
+                onChange={(date) => setFormState((prev) => ({ ...prev, date }))}
+                showTimeSelect
+                showTimeSelectOnly
+                timeIntervals={15} // You can adjust the intervals (e.g., 15, 30)
+                timeCaption="Time"
+                dateFormat="h:mm aa" // Adjust the format as needed
+                className="w-full rounded-xl border border-slate-100 p-2 py-3 text-slate-700 shadow outline-none transition-shadow duration-300 hover:shadow-md lg:max-w-sm"
+                required
+              /> */}
 
               <input
                 type="time"
@@ -349,15 +382,10 @@ const PricingModal = ({
             </label>
             <textarea
               placeholder="Write a little details about why you need the service..."
-              className="w-full rounded-lg p-3 outline-none"
+              className="small-scrollbar w-full rounded-lg p-3 outline-none "
               value={formState.description}
               required
-              onChange={(event) =>
-                setFormState((prev) => ({
-                  ...prev,
-                  description: event.target.value,
-                }))
-              }
+              onChange={(event) => handleInputChange(event)}
             />
           </div>
           <button
