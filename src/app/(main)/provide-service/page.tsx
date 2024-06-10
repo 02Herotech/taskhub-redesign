@@ -127,19 +127,16 @@ const ProvideService: React.FC = () => {
   ];
 
   // Handling getting the description from the marketplace when i user navigates from the marketplace
-  const params = useSearchParams();
-  const marketplaceDescription = params.get("marketplaceDescription");
-
-  console.log(marketplaceDescription);
-
   useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const marketplaceDescription = urlParams.get("marketplaceDescription");
     if (marketplaceDescription) {
       setTask((prev) => ({
         ...prev,
-        listingTitle: marketplaceDescription,
+        taskBriefDescription: marketplaceDescription,
       }));
     }
-  }, [marketplaceDescription]);
+  }, []);
   // End of getting description from the marketplace
 
   useEffect(() => {
