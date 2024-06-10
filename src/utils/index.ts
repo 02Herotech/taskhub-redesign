@@ -8,12 +8,11 @@ export const formatDate = (date: Date): string => {
 };
 
 // format time into backend time
-
-export const formatTime = (time: string): string => {
-  const [hour, minute] = time.split(":");
-  let hourNum = parseInt(hour, 10);
-  const ampm = hourNum >= 12 ? "PM" : "AM";
-  hourNum = hourNum % 12 || 12; // Convert to 12-hour format and handle midnight (0 becomes 12)
+export const formatTimeFromDate = (date: Date): string => {
+  const hour = date.getHours();
+  const minute = date.getMinutes();
+  const ampm = hour >= 12 ? "PM" : "AM";
+  const hourNum = hour % 12 || 12; // Convert to 12-hour format and handle midnight (0 becomes 12)
   const hourString = String(hourNum).padStart(2, "0"); // Ensure the hour has two digits
   const minuteString = String(minute).padStart(2, "0"); // Ensure the minute has two digits
   return `${hourString}:${minuteString} ${ampm}`;

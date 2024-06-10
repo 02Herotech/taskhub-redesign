@@ -48,11 +48,25 @@ const PricingPlan = ({
   });
 
   const handleExpandText = (index: number) => {
-    if (isTextExpanded.index === index) {
-      setIsTextExpanded({ index: index, state: !isTextExpanded.state });
-    } else {
-      setIsTextExpanded({ index: index, state: true });
+    setIsTextExpanded((prev) => ({
+      index,
+      state: prev.index === index ? !prev.state : true,
+    }));
+  };
+
+  const renderDescription = (description: string, index: number) => {
+    const words = description.split(" ");
+    const shouldShowEllipses = words.length > 4;
+
+    if (isTextExpanded.index === index && isTextExpanded.state) {
+      return description;
     }
+
+    if (shouldShowEllipses) {
+      return words.slice(0, 5).join(" ") + "...";
+    }
+
+    return description;
   };
 
   const handleShowModal = ({
@@ -98,23 +112,19 @@ const PricingPlan = ({
               Book Task
             </button>
           </div>
-          <button
-            onClick={() => handleExpandText(1)}
-            className="flex w-full justify-between gap-2 text-left font-normal text-slate-500  "
-          >
-            {isTextExpanded.index === 1 && isTextExpanded.state
-              ? planOneDescription
-              : planOneDescription.split(" ").slice(0, 5).join(" ") + "..."}
 
-            <span className="pt-2">
-              <BsTriangleFill
-                size={12}
-                fill="[#381F8C]"
-                className="rotate-[60deg]"
-              />
-            </span>
-          </button>
+          <div className="flex w-full justify-between gap-2 text-slate-500">
+            <p>{renderDescription(planOneDescription, 1)}</p>
+            {planOneDescription.split(" ").length > 4 && (
+              <button onClick={() => handleExpandText(1)}>
+                <span className="pt-2 text-sm font-bold text-violet-normal">
+                  Read more
+                </span>
+              </button>
+            )}
+          </div>
         </div>
+
         {planTwoDescription && (
           <div className="space-y-2 py-6">
             <div className="flex items-center justify-between">
@@ -133,23 +143,17 @@ const PricingPlan = ({
                 Book Task
               </button>
             </div>
-            <button
-              onClick={() => handleExpandText(2)}
-              className="flex w-full justify-between gap-2 text-left font-normal text-slate-500  "
-            >
-              {isTextExpanded.index === 2 && isTextExpanded.state
-                ? planTwoDescription || "No description available"
-                : (planTwoDescription
-                    ? planTwoDescription.split(" ").slice(0, 5).join(" ")
-                    : "No description available") + "..."}
-              <span className="pt-2">
-                <BsTriangleFill
-                  size={12}
-                  fill="[#381F8C]"
-                  className="rotate-[60deg]"
-                />
-              </span>
-            </button>
+            <div className="flex w-full justify-between gap-2 text-slate-500">
+              <p>{renderDescription(planTwoDescription, 2)}</p>
+              {planTwoDescription &&
+                planTwoDescription.split(" ").length > 4 && (
+                  <button onClick={() => handleExpandText(2)}>
+                    <span className="pt-2 text-sm font-bold text-violet-normal">
+                      Read more
+                    </span>
+                  </button>
+                )}
+            </div>
           </div>
         )}
 
@@ -171,23 +175,17 @@ const PricingPlan = ({
                 Book Task
               </button>
             </div>
-            <button
-              onClick={() => handleExpandText(3)}
-              className="f text-leftont-normal flex w-full justify-between gap-2 text-slate-500  "
-            >
-              {isTextExpanded.index === 3 && isTextExpanded.state
-                ? planTwoDescription || "No description available"
-                : (planThreeDescription
-                    ? planThreeDescription.split(" ").slice(0, 5).join(" ")
-                    : "No description available") + "..."}
-              <span className="pt-2">
-                <BsTriangleFill
-                  size={12}
-                  fill="[#381F8C]"
-                  className="rotate-[60deg]"
-                />
-              </span>
-            </button>
+            <div className="flex w-full justify-between gap-2 text-slate-500">
+              <p>{renderDescription(planThreeDescription as string, 3)}</p>
+              {planThreeDescription &&
+                planThreeDescription.split(" ").length > 4 && (
+                  <button onClick={() => handleExpandText(3)}>
+                    <span className="pt-2 text-sm font-bold text-violet-normal">
+                      Read more
+                    </span>
+                  </button>
+                )}
+            </div>
           </div>
         )}
       </div>
