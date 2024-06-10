@@ -8,7 +8,7 @@ import { IoIosArrowForward } from "react-icons/io";
 import { PiFileArrowDownDuotone } from "react-icons/pi";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { GrFormCheckmark } from "react-icons/gr";
+import { GrFormCheckmark, GrFormClose } from "react-icons/gr";
 import Popup from "@/components/global/Popup";
 import Button from "@/components/global/Button";
 import { useSession } from "next-auth/react";
@@ -122,7 +122,6 @@ const AddTaskForm: React.FC = () => {
   };
 
   useEffect(() => {
-    // Save task data to cookies whenever it changes
     setCookie("taskBriefDescription", task.taskBriefDescription, {
       maxAge: 120,
     });
@@ -291,11 +290,14 @@ const AddTaskForm: React.FC = () => {
   const handleChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
-    setTask({
-      ...task,
-      [event.target.name]: event.target.value,
-    });
-    setWordCount(event.target.value.split(/\s+/).filter(Boolean).length);
+    const wordArray = event.target.value.split(/\s+/).filter(Boolean);
+    if (wordArray.length <= 10) {
+      setTask({
+        ...task,
+        [event.target.name]: event.target.value,
+      });
+      setWordCount(wordArray.length);
+    }
   };
 
   const handleDescription = (
@@ -480,10 +482,16 @@ const AddTaskForm: React.FC = () => {
                     Briefly tell us what you need done?{" "}
                     <span className="font-extrabold text-[#ff0000]">*</span>
                   </label>
-                  {wordCount > 5 && (
+                  {wordCount > 3 ? (
                     <div className="h-[16px] w-[16px] rounded-3xl bg-[#4CAF50] text-[16px] font-extrabold text-white">
                       <GrFormCheckmark />
                     </div>
+                  ) : wordCount >= 1 ? (
+                    <div className="h-[16px] w-[16px] rounded-3xl bg-[#F44336] text-[16px] font-extrabold text-white">
+                      <GrFormClose />
+                    </div>
+                  ) : (
+                    <div></div>
                   )}
                 </div>
                 <textarea
@@ -491,6 +499,8 @@ const AddTaskForm: React.FC = () => {
                   placeholder="e.g, I need a junior league coach."
                   name="taskBriefDescription"
                   value={task.taskBriefDescription}
+                  minLength={3}
+                  maxLength={50}
                   onChange={handleChange}
                   style={{ resize: "none", overflow: "hidden" }}
                 ></textarea>
@@ -540,16 +550,23 @@ const AddTaskForm: React.FC = () => {
                     Give a description of your task {""}{" "}
                     <span className="font-extrabold text-[#ff0000]">*</span>
                   </label>
-                  {wordCounts > 10 && (
+                  {wordCount > 15 ? (
                     <div className="h-[16px] w-[16px] rounded-3xl bg-[#4CAF50] text-[16px] font-extrabold text-white">
                       <GrFormCheckmark />
                     </div>
+                  ) : wordCount >= 1 ? (
+                    <div className="h-[16px] w-[16px] rounded-3xl bg-[#F44336] text-[16px] font-extrabold text-white">
+                      <GrFormClose />
+                    </div>
+                  ) : (
+                    <div></div>
                   )}
                 </div>
                 <textarea
                   className={` h-[150px] rounded-2xl bg-[#EBE9F4] p-3 placeholder:text-[#C1BADB] ${error.taskDescription ? "border border-[#ff0000] outline-[#FF0000]" : "border-none outline-none"}`}
                   placeholder="Arts and Craft"
                   name="description"
+                  minLength={50}
                   value={task.taskDescription}
                   onChange={handleDescription}
                 ></textarea>
@@ -915,7 +932,7 @@ const AddTaskForm: React.FC = () => {
           </div>
         </div>
         <div className="pt-28">
-          <div className="mt-8 flex items-center justify-center p-8 font-medium lg:p-0">
+          <div className="mt-8 flex items-center justify-center p-4 font-medium lg:p-0">
             <div>
               <div className="space-y-2">
                 <h2 className="text-4xl text-status-darkpurple">Add a Task</h2>
