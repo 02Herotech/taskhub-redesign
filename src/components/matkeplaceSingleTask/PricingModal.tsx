@@ -39,6 +39,7 @@ const PricingModal = ({
     message: "",
   });
 
+  const [wordCount, setWordCount] = useState(0);
   const [stateLists, setStateLists] = useState([]);
   const [formState, setFormState] = useState<{
     postcode: number | string;
@@ -59,6 +60,8 @@ const PricingModal = ({
 
   const session = useSession();
   const token = session?.data?.user?.accessToken;
+
+  const wordLimit = 50;
 
   useEffect(() => {
     setFormState((prev) => ({ ...prev, pricing: modalData.pricing }));
@@ -157,15 +160,16 @@ const PricingModal = ({
   }, [formState.postcode]);
 
   const handleInputChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-    const wordLimit = 50;
     const inputText = event.target.value;
-    const wordCount = inputText.trim().split(/\s+/).length;
+    const words = inputText.trim().split(/\s+/);
+    const count = words.filter((word) => word).length; // Filter out empty strings
 
-    if (wordCount <= wordLimit) {
+    if (count <= wordLimit) {
       setFormState((prev) => ({
         ...prev,
         description: inputText,
       }));
+      setWordCount(count);
     }
   };
 
@@ -387,6 +391,9 @@ const PricingModal = ({
               required
               onChange={(event) => handleInputChange(event)}
             />
+            <div className="text-right text-sm text-violet-normal">
+              {wordCount}/{wordLimit} words
+            </div>
           </div>
           <button
             className="mx-auto flex w-full max-w-xs items-center justify-center rounded-full bg-violet-normal p-3 px-8 text-center text-white"
