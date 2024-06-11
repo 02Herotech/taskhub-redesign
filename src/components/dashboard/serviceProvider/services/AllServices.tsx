@@ -34,7 +34,6 @@ const AllServices = () => {
       if (!data.content) {
         throw new Error("Response content is missing");
       }
-      console.log(data);
       setservicesData(data.content);
     } catch (error) {
       console.error("An error occurred while fetching services:", error);

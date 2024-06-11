@@ -9,8 +9,9 @@ import Link from "next/link";
 import AllServices from "@/components/dashboard/serviceProvider/services/AllServices";
 import { useSession } from "next-auth/react";
 import axios from "axios";
-import ReportModal from "@/components/dashboard/serviceProvider/services/ReportModal";
 import { formatDateFromNumberArrayToRelativeDate } from "@/utils";
+import { BeatLoader } from "react-spinners";
+import OngoingServiceModal from "@/components/dashboard/serviceProvider/services/OngoingServiceModal";
 
 const ServicesPage = () => {
   const [currentCategory, setCurrentCategory] = useState("services");
@@ -18,8 +19,19 @@ const ServicesPage = () => {
     [],
   );
   const [loading, setLoading] = useState(false);
-  const [isReportModalShown, setIsReportModalShown] = useState(false);
-  const [isStartModalActive, setIsStartModalActive] = useState(false);
+  const [startJobState, setStartJobState] = useState({
+    id: 0,
+    loading: false,
+  });
+
+  const [modalData, setModalData] = useState<ModalDataType>({
+    isModalShown: false,
+    message: "",
+    isStartService: false,
+    isCompleteService: false,
+    isReportService: false,
+    error: "",
+  });
 
   const session = useSession();
   const token = session?.data?.user?.accessToken;
@@ -37,7 +49,8 @@ const ServicesPage = () => {
       });
       const data: BookingType[] = response.data;
       const filteredData = data.filter(
-        (item) => item.bookingStage === "ACCEPTED",
+        (item) =>
+          item.bookingStage !== "PROPOSED" && item.bookingStage !== "REJECTED",
       );
       setOngoingBookingData(filteredData);
     } catch (error) {
@@ -52,9 +65,55 @@ const ServicesPage = () => {
     // eslint-disable-next-line
   }, [token]);
 
+  const handleStartService = async (id: number) => {
+    try {
+      setStartJobState((prev) => ({ ...prev, loading: true, id }));
+      const url =
+        "https://smp.jacinthsolutions.com.au/api/v1/booking/start-task?jobId=" +
+        id;
+      const body = { jobId: id };
+      const { data } = await axios.post(url, body, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setModalData((prev) => ({
+        ...prev,
+        isModalShown: true,
+        message: data.message,
+        isStartService: true,
+      }));
+    } catch (error: any) {
+      setModalData((prev) => ({
+        ...prev,
+        isModalShown: true,
+        isStartService: true,
+        message: "Kindly check your network connection",
+      }));
+    } finally {
+      setStartJobState((prev) => ({ ...prev, loading: false, id: 0 }));
+    }
+  };
+  const handleCompleteService = async (id: number) => {
+    setModalData((prev) => ({
+      ...prev,
+      isModalShown: true,
+      message: id,
+      isCompleteService: true,
+    }));
+  };
+  const handleReportervice = async (id: number) => {
+    setModalData((prev) => ({
+      ...prev,
+      isModalShown: true,
+      message: id,
+      isReportService: true,
+    }));
+  };
+
   return (
     <main className=" relative space-y-8 p-4 lg:p-8">
-      {/* <ReportModal /> */}
+      <OngoingServiceModal modalData={modalData} setModalData={setModalData} />
       <div className="flex flex-wrap gap-2 lg:gap-6">
         <button
           className={` rounded-lg px-4 py-2 font-medium transition-all duration-300 hover:opacity-90 max-md:text-sm lg:px-8 lg:py-3 ${currentCategory === "services" ? "bg-[#381F8C] text-white" : "bg-[#E1DDEE] text-[#381F8C] "} `}
@@ -117,19 +176,40 @@ const ServicesPage = () => {
                     </p>
                   </div>
                 </div>
-                <div className="flex flex-wrap gap-3">
-                  <Link
-                    href={"/service-provider/jobs/" + item.id}
-                    className="rounded-full border border-violet-normal bg-violet-light px-6 py-3 text-sm font-medium text-violet-normal transition-colors duration-300 hover:bg-violet-200 max-md:px-4 max-md:py-2 max-md:text-sm "
+                <div className="flex items-center justify-between">
+                  <div className="flex flex-wrap gap-3">
+                    <Link
+                      href={"/service-provider/jobs/" + item.id}
+                      className="rounded-full border border-violet-normal bg-violet-light px-6 py-3 text-sm font-medium text-violet-normal transition-colors duration-300 hover:bg-violet-200 max-md:px-4 max-md:py-2 max-md:text-sm "
+                    >
+                      View Enquiry
+                    </Link>
+                    <button
+                      onClick={() => handleStartService(item.id)}
+                      disabled={startJobState.loading}
+                      className="rounded-full bg-violet-normal px-6 py-3 text-sm font-medium text-white transition-opacity duration-300 hover:opacity-90 max-md:px-4 max-md:py-2 max-md:text-sm"
+                    >
+                      {startJobState.loading && startJobState.id === item.id ? (
+                        <BeatLoader
+                          loading={
+                            startJobState.loading &&
+                            startJobState.id === item.id
+                          }
+                          color="white"
+                          size={20}
+                        />
+                      ) : (
+                        "Start Service"
+                      )}
+                    </button>
+                  </div>
+
+                  <button
+                    className="rounded-full  px-4 py-2 text-xl font-bold text-red-500 transition-colors duration-300 hover:bg-red-100 "
+                    onClick={() => handleReportervice(item.id)}
                   >
-                    View Enquiry
-                  </Link>
-                  <Link
-                    href={"/message"}
-                    className="rounded-full bg-violet-normal px-6 py-3 text-sm font-medium text-white transition-opacity duration-300 hover:opacity-90 max-md:px-4 max-md:py-2 max-md:text-sm"
-                  >
-                    Start Service
-                  </Link>
+                    Report
+                  </button>
                 </div>
               </div>
             </div>
