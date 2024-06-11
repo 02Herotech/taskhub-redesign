@@ -84,11 +84,12 @@ const ServicesPage = () => {
         isStartService: true,
       }));
     } catch (error: any) {
+      console.log(error.response.data);
       setModalData((prev) => ({
         ...prev,
         isModalShown: true,
         isStartService: true,
-        message: "Kindly check your network connection",
+        message: "Customer has not paid for this service!!!",
       }));
     } finally {
       setStartJobState((prev) => ({ ...prev, loading: false, id: 0 }));

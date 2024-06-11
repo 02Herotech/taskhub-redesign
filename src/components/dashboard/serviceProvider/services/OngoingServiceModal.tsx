@@ -119,8 +119,6 @@ const OngoingServiceModal = ({ modalData, setModalData }: ModalType) => {
     }
   };
 
-  console.log(modalData);
-
   return (
     <section
       className={`linear fixed left-0 top-0 z-50 flex h-screen w-screen items-center justify-center bg-black bg-opacity-80 transition-all duration-300 ${modalData.isModalShown ? " pointer-events-auto opacity-100 " : " pointer-events-none opacity-0 "} `}
