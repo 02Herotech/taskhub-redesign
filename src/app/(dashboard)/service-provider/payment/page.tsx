@@ -1,4 +1,3 @@
-// import { paymentSvg } from "@/app/data/service-provider/sidebar";
 import { PaymentSvg } from "@/lib/svgIcons";
 import Image from "next/image";
 import Link from "next/link";

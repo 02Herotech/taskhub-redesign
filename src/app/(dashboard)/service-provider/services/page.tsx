@@ -12,17 +12,17 @@ import axios from "axios";
 import { formatDateFromNumberArrayToRelativeDate } from "@/utils";
 import { BeatLoader } from "react-spinners";
 import OngoingServiceModal from "@/components/dashboard/serviceProvider/services/OngoingServiceModal";
+import AcceptedServices from "@/components/dashboard/serviceProvider/services/AcceptedServices";
 
 const ServicesPage = () => {
   const [currentCategory, setCurrentCategory] = useState("services");
   const [ongoingBookingData, setOngoingBookingData] = useState<BookingType[]>(
     [],
   );
+  const [acceptedBookingData, setAcceptedBookingData] = useState<BookingType[]>(
+    [],
+  );
   const [loading, setLoading] = useState(false);
-  const [startJobState, setStartJobState] = useState({
-    id: 0,
-    loading: false,
-  });
 
   const [modalData, setModalData] = useState<ModalDataType>({
     isModalShown: false,
@@ -36,7 +36,7 @@ const ServicesPage = () => {
   const session = useSession();
   const token = session?.data?.user?.accessToken;
 
-  const fetchOngoingBookings = async () => {
+  const fetchBookings = async () => {
     if (!token) return;
     try {
       setLoading(true);
@@ -48,11 +48,17 @@ const ServicesPage = () => {
         },
       });
       const data: BookingType[] = response.data;
-      const filteredData = data.filter(
-        (item) =>
-          item.bookingStage !== "PROPOSED" && item.bookingStage !== "REJECTED",
+      const filteredAcceptedData = data.filter(
+        (item) => item.bookingStage === "ACCEPTED",
       );
-      setOngoingBookingData(filteredData);
+
+      const filteredOngoingData = data.filter(
+        (item) =>
+          item.bookingStage === "PAID" || item.bookingStage === "STARTED",
+      );
+
+      setOngoingBookingData(filteredOngoingData);
+      setAcceptedBookingData(filteredAcceptedData);
     } catch (error) {
       console.error("An error occurred while fetching services:", error);
     } finally {
@@ -61,40 +67,10 @@ const ServicesPage = () => {
   };
 
   useEffect(() => {
-    fetchOngoingBookings();
+    fetchBookings();
     // eslint-disable-next-line
   }, [token]);
 
-  const handleStartService = async (id: number) => {
-    try {
-      setStartJobState((prev) => ({ ...prev, loading: true, id }));
-      const url =
-        "https://smp.jacinthsolutions.com.au/api/v1/booking/start-task?jobId=" +
-        id;
-      const body = { jobId: id };
-      const { data } = await axios.post(url, body, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      setModalData((prev) => ({
-        ...prev,
-        isModalShown: true,
-        message: data.message,
-        isStartService: true,
-      }));
-    } catch (error: any) {
-      console.log(error.response.data);
-      setModalData((prev) => ({
-        ...prev,
-        isModalShown: true,
-        isStartService: true,
-        message: "Customer has not paid for this service!!!",
-      }));
-    } finally {
-      setStartJobState((prev) => ({ ...prev, loading: false, id: 0 }));
-    }
-  };
   const handleCompleteService = async (id: number) => {
     setModalData((prev) => ({
       ...prev,
@@ -103,7 +79,8 @@ const ServicesPage = () => {
       isCompleteService: true,
     }));
   };
-  const handleReportervice = async (id: number) => {
+
+  const handleReportService = async (id: number) => {
     setModalData((prev) => ({
       ...prev,
       isModalShown: true,
@@ -123,6 +100,12 @@ const ServicesPage = () => {
           My Services
         </button>
         <button
+          className={` rounded-lg px-4 py-2 font-medium transition-all duration-300 hover:opacity-90 lg:px-8 lg:py-3 ${currentCategory === "accepted" ? "bg-[#381F8C] text-white" : "bg-[#E1DDEE] text-[#381F8C] "} `}
+          onClick={() => setCurrentCategory("accepted")}
+        >
+          My Accepted Services
+        </button>
+        <button
           className={` rounded-lg px-4 py-2 font-medium transition-all duration-300 hover:opacity-90 lg:px-8 lg:py-3 ${currentCategory === "ongoing" ? "bg-[#381F8C] text-white" : "bg-[#E1DDEE] text-[#381F8C] "} `}
           onClick={() => setCurrentCategory("ongoing")}
         >
@@ -137,6 +120,12 @@ const ServicesPage = () => {
       </div>
       {currentCategory === "services" ? (
         <AllServices />
+      ) : currentCategory === "accepted" ? (
+        <AcceptedServices
+          setModalData={setModalData}
+          acceptedBookingData={acceptedBookingData}
+          handleReportservice={handleReportService}
+        />
       ) : currentCategory === "ongoing" ? (
         <div className="flex flex-col gap-8  pb-4">
           {ongoingBookingData.map((item, index) => (
@@ -186,28 +175,16 @@ const ServicesPage = () => {
                       View Enquiry
                     </Link>
                     <button
-                      onClick={() => handleStartService(item.id)}
-                      disabled={startJobState.loading}
+                      onClick={() => handleCompleteService(item.id)}
                       className="rounded-full bg-violet-normal px-6 py-3 text-sm font-medium text-white transition-opacity duration-300 hover:opacity-90 max-md:px-4 max-md:py-2 max-md:text-sm"
                     >
-                      {startJobState.loading && startJobState.id === item.id ? (
-                        <BeatLoader
-                          loading={
-                            startJobState.loading &&
-                            startJobState.id === item.id
-                          }
-                          color="white"
-                          size={20}
-                        />
-                      ) : (
-                        "Start Service"
-                      )}
+                      Complete Service
                     </button>
                   </div>
 
                   <button
                     className="rounded-full  px-4 py-2 text-xl font-bold text-red-500 transition-colors duration-300 hover:bg-red-100 "
-                    onClick={() => handleReportervice(item.id)}
+                    onClick={() => handleReportService(item.id)}
                   >
                     Report
                   </button>

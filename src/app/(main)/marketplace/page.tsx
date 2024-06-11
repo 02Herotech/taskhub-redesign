@@ -106,7 +106,7 @@ const MareketPlace = () => {
       {!isFiltering && <MarketPlaceHeader />}
 
       <div
-        className={`mx-auto flex max-w-screen-xl flex-col px-6 pt-32  md:px-16 `}
+        className={`mx-auto flex max-w-screen-xl flex-col px-6 md:px-16  ${isFiltering ? "pt-16 " : "md:pt-32"}    `}
       >
         <MarketPlaceFilter />
         <div>
