@@ -191,11 +191,11 @@ const ProvideService: React.FC = () => {
     }
   }, [selectedCategory]);
 
-  useEffect(() => {
-    if (currentPage === 2 || currentPage === 3) {
-      window.scrollTo(0, 0);
-    }
-  }, [currentPage]);
+  // useEffect(() => {
+  //   if (currentPage === 2 || currentPage === 3) {
+  //     window.scrollTo(0, 0);
+  //   }
+  // }, [currentPage]);
 
   const validateFields = () => {
     const errors: any = {};

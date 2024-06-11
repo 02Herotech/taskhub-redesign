@@ -10,3 +10,12 @@ declare interface DefaultUserDetailsType {
   state: string;
   suburbs: string;
 }
+
+declare interface ModalDataType {
+  isModalShown: boolean;
+  message: string | number;
+  isStartService: boolean;
+  error: string;
+  isCompleteService: boolean;
+  isReportService: boolean;
+}
