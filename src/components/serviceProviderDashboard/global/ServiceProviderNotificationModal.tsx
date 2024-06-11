@@ -1,9 +1,10 @@
-import { notificationData } from "@/app/data/service-provider/notification";
 import Image from "next/image";
 import Link from "next/link";
 import React, { Dispatch, SetStateAction } from "react";
 import { BiXCircle } from "react-icons/bi";
 import { BsTriangle, BsTriangleFill } from "react-icons/bs";
+
+const notificationData: any[] = [];
 
 interface ModalPropsType {
   setIsNotificationOpen: Dispatch<SetStateAction<boolean>>;
