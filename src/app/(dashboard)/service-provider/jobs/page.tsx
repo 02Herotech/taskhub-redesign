@@ -32,6 +32,7 @@ const Jobs = () => {
         (item) => item.bookingStage === "PROPOSED",
       );
       setBookingData(filteredData);
+      console.log(filteredData);
     } catch (error) {
       console.error("An error occurred while fetching services:", error);
     } finally {

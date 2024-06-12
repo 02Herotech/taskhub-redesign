@@ -1,4 +1,4 @@
-import { paymentSvg } from "@/app/data/service-provider/sidebar";
+import { PaymentSvg } from "@/lib/svgIcons";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
@@ -74,7 +74,7 @@ const ServicePayment = () => {
           Payment History
         </h1>
         <div className="flex flex-col  flex-wrap items-center justify-center gap-2 rounded-lg bg-violet-active px-4 py-8 lg:p-6  lg:py-16 ">
-          {paymentSvg}
+          {PaymentSvg}
           <p className="text-center text-violet-normal">
             Looks like you do not have any transaction yet!
           </p>

@@ -9,22 +9,34 @@ import Link from "next/link";
 import AllServices from "@/components/dashboard/serviceProvider/services/AllServices";
 import { useSession } from "next-auth/react";
 import axios from "axios";
-import ReportModal from "@/components/dashboard/serviceProvider/services/ReportModal";
 import { formatDateFromNumberArrayToRelativeDate } from "@/utils";
+import { BeatLoader } from "react-spinners";
+import OngoingServiceModal from "@/components/dashboard/serviceProvider/services/OngoingServiceModal";
+import AcceptedServices from "@/components/dashboard/serviceProvider/services/AcceptedServices";
 
 const ServicesPage = () => {
   const [currentCategory, setCurrentCategory] = useState("services");
   const [ongoingBookingData, setOngoingBookingData] = useState<BookingType[]>(
     [],
   );
+  const [acceptedBookingData, setAcceptedBookingData] = useState<BookingType[]>(
+    [],
+  );
   const [loading, setLoading] = useState(false);
-  const [isReportModalShown, setIsReportModalShown] = useState(false);
-  const [isStartModalActive, setIsStartModalActive] = useState(false);
+
+  const [modalData, setModalData] = useState<ModalDataType>({
+    isModalShown: false,
+    message: "",
+    isStartService: false,
+    isCompleteService: false,
+    isReportService: false,
+    error: "",
+  });
 
   const session = useSession();
   const token = session?.data?.user?.accessToken;
 
-  const fetchOngoingBookings = async () => {
+  const fetchBookings = async () => {
     if (!token) return;
     try {
       setLoading(true);
@@ -36,10 +48,17 @@ const ServicesPage = () => {
         },
       });
       const data: BookingType[] = response.data;
-      const filteredData = data.filter(
+      const filteredAcceptedData = data.filter(
         (item) => item.bookingStage === "ACCEPTED",
       );
-      setOngoingBookingData(filteredData);
+
+      const filteredOngoingData = data.filter(
+        (item) =>
+          item.bookingStage === "PAID" || item.bookingStage === "STARTED",
+      );
+
+      setOngoingBookingData(filteredOngoingData);
+      setAcceptedBookingData(filteredAcceptedData);
     } catch (error) {
       console.error("An error occurred while fetching services:", error);
     } finally {
@@ -48,19 +67,43 @@ const ServicesPage = () => {
   };
 
   useEffect(() => {
-    fetchOngoingBookings();
+    fetchBookings();
     // eslint-disable-next-line
   }, [token]);
 
+  const handleCompleteService = async (id: number) => {
+    setModalData((prev) => ({
+      ...prev,
+      isModalShown: true,
+      message: id,
+      isCompleteService: true,
+    }));
+  };
+
+  const handleReportService = async (id: number) => {
+    setModalData((prev) => ({
+      ...prev,
+      isModalShown: true,
+      message: id,
+      isReportService: true,
+    }));
+  };
+
   return (
     <main className=" relative space-y-8 p-4 lg:p-8">
-      {/* <ReportModal /> */}
+      <OngoingServiceModal modalData={modalData} setModalData={setModalData} />
       <div className="flex flex-wrap gap-2 lg:gap-6">
         <button
           className={` rounded-lg px-4 py-2 font-medium transition-all duration-300 hover:opacity-90 max-md:text-sm lg:px-8 lg:py-3 ${currentCategory === "services" ? "bg-[#381F8C] text-white" : "bg-[#E1DDEE] text-[#381F8C] "} `}
           onClick={() => setCurrentCategory("services")}
         >
           My Services
+        </button>
+        <button
+          className={` rounded-lg px-4 py-2 font-medium transition-all duration-300 hover:opacity-90 lg:px-8 lg:py-3 ${currentCategory === "accepted" ? "bg-[#381F8C] text-white" : "bg-[#E1DDEE] text-[#381F8C] "} `}
+          onClick={() => setCurrentCategory("accepted")}
+        >
+          My Accepted Services
         </button>
         <button
           className={` rounded-lg px-4 py-2 font-medium transition-all duration-300 hover:opacity-90 lg:px-8 lg:py-3 ${currentCategory === "ongoing" ? "bg-[#381F8C] text-white" : "bg-[#E1DDEE] text-[#381F8C] "} `}
@@ -77,6 +120,12 @@ const ServicesPage = () => {
       </div>
       {currentCategory === "services" ? (
         <AllServices />
+      ) : currentCategory === "accepted" ? (
+        <AcceptedServices
+          setModalData={setModalData}
+          acceptedBookingData={acceptedBookingData}
+          handleReportservice={handleReportService}
+        />
       ) : currentCategory === "ongoing" ? (
         <div className="flex flex-col gap-8  pb-4">
           {ongoingBookingData.map((item, index) => (
@@ -117,19 +166,28 @@ const ServicesPage = () => {
                     </p>
                   </div>
                 </div>
-                <div className="flex flex-wrap gap-3">
-                  <Link
-                    href={"/service-provider/jobs/" + item.id}
-                    className="rounded-full border border-violet-normal bg-violet-light px-6 py-3 text-sm font-medium text-violet-normal transition-colors duration-300 hover:bg-violet-200 max-md:px-4 max-md:py-2 max-md:text-sm "
+                <div className="flex items-center justify-between">
+                  <div className="flex flex-wrap gap-3">
+                    <Link
+                      href={"/service-provider/jobs/" + item.id}
+                      className="rounded-full border border-violet-normal bg-violet-light px-6 py-3 text-sm font-medium text-violet-normal transition-colors duration-300 hover:bg-violet-200 max-md:px-4 max-md:py-2 max-md:text-sm "
+                    >
+                      View Enquiry
+                    </Link>
+                    <button
+                      onClick={() => handleCompleteService(item.id)}
+                      className="rounded-full bg-violet-normal px-6 py-3 text-sm font-medium text-white transition-opacity duration-300 hover:opacity-90 max-md:px-4 max-md:py-2 max-md:text-sm"
+                    >
+                      Complete Service
+                    </button>
+                  </div>
+
+                  <button
+                    className="rounded-full  px-4 py-2 text-xl font-bold text-red-500 transition-colors duration-300 hover:bg-red-100 "
+                    onClick={() => handleReportService(item.id)}
                   >
-                    View Enquiry
-                  </Link>
-                  <Link
-                    href={"/message"}
-                    className="rounded-full bg-violet-normal px-6 py-3 text-sm font-medium text-white transition-opacity duration-300 hover:opacity-90 max-md:px-4 max-md:py-2 max-md:text-sm"
-                  >
-                    Start Service
-                  </Link>
+                    Report
+                  </button>
                 </div>
               </div>
             </div>

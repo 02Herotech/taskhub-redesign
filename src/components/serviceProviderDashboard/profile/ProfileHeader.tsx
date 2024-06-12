@@ -20,8 +20,6 @@ const ProfileHeader = () => {
 
   const location = user?.address?.state || "Australia";
 
-  console.log(user);
-
   useEffect(() => {
     const fetchUserData = async () => {
       if (!token) return;

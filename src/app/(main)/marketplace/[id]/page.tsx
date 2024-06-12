@@ -39,6 +39,8 @@ const Page = () => {
                   alt="bannerImage"
                   width={1600}
                   height={1600}
+                  layout="intrinsic"
+                  quality={100}
                   className="mx-auto max-h-[400px] min-h-64 w-full max-w-screen-xl  rounded-lg object-cover "
                 />
               </div>
@@ -91,6 +93,7 @@ const Page = () => {
                       alt="User"
                       width={80}
                       height={80}
+                      quality={100}
                       className="size-20 rounded-full object-cover "
                     />
                     <div className="space-y-2">
@@ -144,6 +147,7 @@ const Page = () => {
               alt="googlemap"
               width={800}
               height={500}
+              quality={100}
               className="mx-auto h-96 w-full rounded-xl  object-cover lg:col-span-6 "
             />
             <div className="flex flex-col gap-5 md:grid md:grid-cols-2 lg:col-span-6">
@@ -154,6 +158,7 @@ const Page = () => {
                   alt={item}
                   width={1600}
                   height={1600}
+                  quality={100}
                   className="mx-auto h-44 w-full rounded-xl object-cover "
                 />
               ))}

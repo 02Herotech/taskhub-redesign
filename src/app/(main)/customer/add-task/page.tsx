@@ -105,16 +105,16 @@ const AddTaskForm: React.FC = () => {
   const [isSuccessPopup, setIsSuccessPopup] = useState(false);
 
   // Handling getting the description from the marketplace when i user navigates from the marketplace
-  const params = useSearchParams();
-  const marketplaceDescription = params.get("marketplaceDescription");
   useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const marketplaceDescription = urlParams.get("marketplaceDescription");
     if (marketplaceDescription) {
       setTask((prev) => ({
         ...prev,
         taskBriefDescription: marketplaceDescription,
       }));
     }
-  }, [marketplaceDescription]);
+  }, []);
   // End of getting description from the marketplace
 
   const handleLoginNavigation = () => {

@@ -111,6 +111,9 @@ const EditProfile = () => {
     return null;
   };
 
+  const today = new Date();
+  const age18YearsAgo = new Date(today.setFullYear(today.getFullYear() - 18));
+
   useEffect(() => {
     if (user) {
       reset({
@@ -282,6 +285,7 @@ const EditProfile = () => {
                     selected={value}
                     onChange={onChange}
                     onBlur={onBlur}
+                    maxDate={age18YearsAgo}
                     className="w-full rounded-xl border border-slate-100 p-2 text-slate-700 shadow outline-none transition-shadow duration-300 hover:shadow-md lg:max-w-sm"
                     dateFormat="dd/MM/yyyy"
                   />

@@ -48,6 +48,7 @@ const SingleListingCard = ({
               alt="user"
               width={200}
               height={200}
+              quality={100}
               className="h-40  w-full rounded-xl border border-[#D9D9D9] object-cover transition-all  duration-300 group-hover:scale-105"
             />
           </div>
