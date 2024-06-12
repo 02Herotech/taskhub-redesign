@@ -52,13 +52,12 @@ const ProfileHeader = () => {
           <div className="flex items-center gap-8">
             <Image
               src={
-                fetchedUserData?.profileImage ??
-                user?.profileImage ??
-                "/assets/images/serviceProvider/user.jpg"
+                user?.profileImage ?? "/assets/images/serviceProvider/user.jpg"
               }
-              alt={user?.firstName ? user?.firstName : "user"}
+              alt={user?.firstName ?? "user"}
               width={160}
               height={160}
+              quality={100}
               className="max-siz-40 size-40 rounded-full object-cover max-md:size-24 max-md:max-w-24"
             />
             <div className="flex flex-col gap-2">

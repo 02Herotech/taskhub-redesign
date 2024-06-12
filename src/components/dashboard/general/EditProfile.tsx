@@ -248,7 +248,7 @@ const EditProfile = () => {
           <h3 className="text-xl font-bold text-violet-dark lg:text-center">
             Personal Information
           </h3>
-          <div className="flex flex-wrap justify-between gap-6 lg:col-span-8">
+          <div className="flex flex-wrap justify-between gap-6 lg:col-span-8 lg:grid lg:grid-cols-3">
             {/* First name */}
             <label className="flex w-full flex-col gap-3 text-lg  text-violet-normal lg:max-w-64 ">
               <span className="flex items-center justify-between">
@@ -311,7 +311,7 @@ const EditProfile = () => {
           <h3 className="text-xl font-bold text-violet-dark lg:text-center">
             Contact Information
           </h3>
-          <div className="flex flex-wrap gap-6 lg:col-span-8">
+          <div className="lg flex grid-cols-3 flex-wrap gap-6 lg:col-span-8 lg:grid">
             {/* Phone number */}
             <label className="flex w-full flex-col gap-3 text-lg  text-violet-normal lg:max-w-64 ">
               <span className="flex items-center justify-between">
@@ -352,7 +352,7 @@ const EditProfile = () => {
             Address Information
           </h3>
 
-          <div className="flex flex-wrap gap-6 lg:col-span-8">
+          <div className="flex flex-wrap gap-6 lg:col-span-8 lg:grid lg:grid-cols-3">
             {/* postcode */}
             <label className="flex w-full flex-col gap-3 text-lg  text-violet-normal lg:max-w-64 ">
               <span className="flex items-center justify-between">
@@ -412,7 +412,7 @@ const EditProfile = () => {
             Identification Document
           </h3>
           <div className="flex flex-col lg:col-span-8 lg:gap-8">
-            <div className="flex flex-wrap lg:col-span-8 lg:gap-8">
+            <div className="flex flex-wrap lg:col-span-8 lg:grid lg:grid-cols-3 lg:gap-8">
               {/* select Id type */}
               <label className="space-y-4">
                 <span className="flex items-center justify-between">
@@ -462,50 +462,49 @@ const EditProfile = () => {
                   disabled={!isEditingEnabled || watchField.idType === ""}
                 />
               </label>
-            </div>
-
-            {/* Upload Identification Document */}
-            <label className="flex w-full flex-col gap-3 text-lg  text-violet-normal lg:max-w-64 ">
-              <span className="flex items-center justify-between">
-                <span className="flex items-center justify-between gap-9">
-                  <span>Means of ID</span>
-                  {documentImage && (
-                    <BiCheck className="size-5 rounded-full bg-green-500 p-1 text-white" />
-                  )}
+              {/* Upload Identification Document */}
+              <label className="flex w-full flex-col gap-3 text-lg  text-violet-normal lg:max-w-64 ">
+                <span className="flex items-center justify-between">
+                  <span className="flex items-center justify-between gap-9">
+                    <span>Means of ID</span>
+                    {documentImage && (
+                      <BiCheck className="size-5 rounded-full bg-green-500 p-1 text-white" />
+                    )}
+                  </span>
                 </span>
-              </span>
-              <div>
-                {documentImage ? (
-                  <button
-                    type="button"
-                    className="flex items-end justify-center space-x-2"
-                    onClick={() => setIsFormModalShown(true)}
-                  >
-                    {/* Display a disabled input with message */}
-                    <Image
-                      src={documentImage}
-                      alt="Captured or Selected"
-                      width={300}
-                      height={300}
-                      className="rounded-xl"
-                    />
-                  </button>
-                ) : (
-                  // If no taskImage is uploaded, render the file input
-                  <button
-                    type="button"
-                    className="flex h-48 w-48 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-slate-500 p-4"
-                    onClick={() => setIsFormModalShown(true)}
-                    disabled={!isEditingEnabled}
-                  >
-                    <PiFileArrowDownDuotone className="text-xl text-tc-gray" />
-                    <span className="text-center text-tc-gray">
-                      Choose a File Upload supports: JPG, PDF, PNG.
-                    </span>
-                  </button>
-                )}
-              </div>
-            </label>
+                <div>
+                  {documentImage ? (
+                    <button
+                      type="button"
+                      className="flex items-end justify-center space-x-2"
+                      onClick={() => setIsFormModalShown(true)}
+                    >
+                      {/* Display a disabled input with message */}
+                      <Image
+                        src={documentImage}
+                        alt="Captured or Selected"
+                        width={300}
+                        height={300}
+                        className="rounded-xl"
+                      />
+                    </button>
+                  ) : (
+                    // If no taskImage is uploaded, render the file input
+                    <button
+                      type="button"
+                      className="flex h-48 w-48 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-slate-500 p-4"
+                      onClick={() => setIsFormModalShown(true)}
+                      disabled={!isEditingEnabled}
+                    >
+                      <PiFileArrowDownDuotone className="text-xl text-tc-gray" />
+                      <span className="text-center text-tc-gray">
+                        Choose a File Upload supports: JPG, PDF, PNG.
+                      </span>
+                    </button>
+                  )}
+                </div>
+              </label>
+            </div>
           </div>
         </section>
 
