@@ -22,6 +22,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { setCookie, getCookie } from "cookies-next";
 import { FaSortDown } from "react-icons/fa6";
 import Dropdown from "@/components/global/Dropdown";
+import Loading from "@/components/global/loading/page";
 
 interface FormData {
   taskBriefDescription: string;
@@ -62,6 +63,7 @@ const AddTaskForm: React.FC = () => {
   const token = session?.data?.user.accessToken;
   const isAuthenticated = session.status === "authenticated";
   const [currentPage, setCurrentPage] = useState(1);
+  const [loading, setLoading] = useState(false)
   const defaultImageSrc =
     "https://static.wixstatic.com/media/7d1889_ab302adc66e943f9b6be9de260cbc40f~mv2.png";
   const [task, setTask] = useState<FormData>({
@@ -396,8 +398,15 @@ const AddTaskForm: React.FC = () => {
 
   const progress = calculateProgress();
 
+  const timeout = (ms: number) => {
+    return new Promise((_, reject) => {
+      setTimeout(() => reject(new Error('Request timed out')), ms);
+    });
+  };
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    setLoading(true);
     if (validateFields() && validateField1()) {
       try {
         let finalTask = { ...task };
@@ -436,16 +445,20 @@ const AddTaskForm: React.FC = () => {
         }
 
         console.log(finalTask);
-        await axios.post(
-          "https://smp.jacinthsolutions.com.au/api/v1/task/post",
-          finalTask,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-              "Content-Type": "multipart/form-data",
-            },
-          },
-        );
+        await Promise.race([
+          axios.post(
+            "https://smp.jacinthsolutions.com.au/api/v1/task/post",
+            finalTask,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "multipart/form-data",
+              },
+            }
+          ),
+          timeout(10000), // 10 seconds timeout
+        ]);
+
         setTask({
           taskBriefDescription: "",
           taskImage: null,
@@ -458,12 +471,16 @@ const AddTaskForm: React.FC = () => {
           categoryId: null,
           taskDescription: "",
         });
-        console.log(finalTask);
+
         setIsSuccessPopupOpen(true);
       } catch (error) {
         console.error("Error submitting form:", error);
         setIsSuccessPopupOpen(true);
+      } finally {
+        setLoading(false);
       }
+    } else {
+      setLoading(false);
     }
   };
 
@@ -940,6 +957,7 @@ const AddTaskForm: React.FC = () => {
                   Please fill out the information below to add a new task.
                 </p>
               </div>
+              {loading && <Loading/>}
               <div className="mt-8">{renderPage()}</div>
             </div>
           </div>
@@ -993,6 +1011,7 @@ const AddTaskForm: React.FC = () => {
           isOpen={isSuccessPopupOpen}
           onClose={() => {
             setIsSuccessPopupOpen(false);
+            router.push("/marketplace")
           }}
         >
           <div className="px-24 py-10">

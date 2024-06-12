@@ -17,7 +17,8 @@ import { useSession } from "next-auth/react";
 import { GrFormCheckmark } from "react-icons/gr";
 import { FaSortDown } from "react-icons/fa6";
 import Dropdown from "@/components/global/Dropdown";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
+import Loading from "@/components/global/loading/page";
 
 interface FormData {
   listingTitle: string;
@@ -64,9 +65,11 @@ interface Subcategory {
 
 const ProvideService: React.FC = () => {
   const session = useSession();
+  const route = useRouter();
   const id = session?.data?.user.user.id;
   const isAuthenticated = session?.data?.user.user.enabled === false;
   const [currentPage, setCurrentPage] = useState(1);
+  const [loading, setLoading] = useState(false)
   const [task, setTask] = useState<FormData>({
     listingTitle: "",
     listingDescription: "",
@@ -416,9 +419,16 @@ const ProvideService: React.FC = () => {
   };
 
   const progress = calculateProgress();
+  const timeout = (ms: number) => {
+    return new Promise((_, reject) => {
+      setTimeout(() => reject(new Error('Request timed out')), ms);
+    });
+  };
+
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    setLoading(true);
     if (validateField2()) {
       try {
         let finalTask = { ...task };
@@ -449,16 +459,18 @@ const ProvideService: React.FC = () => {
           };
         }
         console.log(finalTask);
-
-        await axios.post(
-          `https://smp.jacinthsolutions.com.au/api/v1/listing/create-listing?userId=${id}`,
-          finalTask,
-          {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-          },
-        );
+        await Promise.race([
+          axios.post(
+            `https://smp.jacinthsolutions.com.au/api/v1/listing/create-listing?userId=${id}`,
+            finalTask,
+            {
+              headers: {
+                "Content-Type": "multipart/form-data",
+              },
+            }
+          ),
+          timeout(10000), // 10 seconds timeout
+        ]);
         setTask({
           listingTitle: "",
           listingDescription: "",
@@ -482,13 +494,17 @@ const ProvideService: React.FC = () => {
           negotiable: false,
         });
         setIsSuccessPopupOpen(true);
-      } catch (error: any) {
+      } catch (error) {
         console.error("Error submitting form:", error);
-        console.log(error.message);
-        setIsSuccessPopupOpen(false);
+        setIsSuccessPopupOpen(true);
+      } finally {
+        setLoading(false);
       }
+    } else {
+      setLoading(false);
     }
   };
+
 
   const renderPage = () => {
     switch (currentPage) {
@@ -1345,6 +1361,7 @@ const ProvideService: React.FC = () => {
                     Please fill out the information below to add a new listing.
                   </p>
                 </div>
+                {loading && <Loading/>}
                 <div className="mt-8">{renderPage()}</div>
               </div>
             </div>
@@ -1396,7 +1413,8 @@ const ProvideService: React.FC = () => {
         ) : (
           <Popup
             isOpen={isSuccessPopupOpen}
-            onClose={() => {
+              onClose={() => {
+                route.push("/marketplace");
               setIsSuccessPopupOpen(false);
             }}
           >
