@@ -6,16 +6,6 @@ import React from "react";
 
 const dummyChat = [
   {
-    message:
-      "Hello, My name is Kelly and i want to have a blocked drain in my office.",
-    sender: "customer",
-  },
-  {
-    message:
-      "Hello i am John, i can fix it for $500. Where is your office located?",
-    sender: "user",
-  },
-  {
     message: "My budget is $480. Can it be done for that?",
     sender: "customer",
   },
@@ -59,7 +49,7 @@ const dummyChat = [
   },
 ];
 
-const chatData = [];
+const chatData = [{}];
 
 const ServiceProviderChat = () => {
   const handleReschedule = () => {};
