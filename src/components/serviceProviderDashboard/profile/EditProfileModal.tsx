@@ -59,7 +59,9 @@ const EditProfileModal = ({
   const [isUploadImageLoading, setIsUploadImageLoading] = useState(false);
 
   const session = useSession();
+  const user = session?.data?.user?.user;
   const token = session?.data?.user?.accessToken;
+  const isServiceProvider = user?.roles[0] === "SERVICE_PROVIDER";
 
   const capture = useCallback(() => {
     if (webcamRef.current) {
@@ -117,9 +119,17 @@ const EditProfileModal = ({
     try {
       if (selectedFile && isEditingProfilePicture.isEditing) {
         setIsUploadImageLoading(true);
-        const url =
-          "https://smp.jacinthsolutions.com.au/api/v1/service_provider/profile_picture";
-        const { data } = await axios.post(
+        let url;
+
+        if (isServiceProvider) {
+          url =
+            "https://smp.jacinthsolutions.com.au/api/v1/service_provider/profile_picture";
+        } else {
+          url =
+            "https://smp.jacinthsolutions.com.au/api/v1/customer/profile_picture";
+        }
+
+        await axios.post(
           url,
           { image: selectedFile },
           {
@@ -129,10 +139,8 @@ const EditProfileModal = ({
             },
           },
         );
-        console.log(data);
       } else {
         setSelectedDocument(selectedFile);
-        console.log(selectedFile);
       }
       handleCloseModal();
     } catch (error) {
