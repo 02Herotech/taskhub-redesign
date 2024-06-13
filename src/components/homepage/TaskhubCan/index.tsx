@@ -33,7 +33,7 @@ const Taskhub = () => {
                 await signOut({
                     redirect: false,
                 });
-                router.push("/auth");
+                router.push("/customer/add-task");
             }
         } catch (error) {
             console.error(error);
@@ -50,8 +50,6 @@ const Taskhub = () => {
             <div
                 className={`mx-auto flex max-w-7xl flex-wrap-reverse items-start justify-between  px-12 pb-20 lg:pt-[60px] lg:flex-nowrap xl:px-8 font-SatoshiBold `}
             >
-
-
                 <div className="flex w-[400px] flex-col gap-5 space-y-8 xl:w-1/2">
                     <h1 className="hidden xl:text-[64px] lg:text-[55px]  text-[#381F8C] lg:block font-clashSemiBold ">
                         With <span className="text-[#FE9B07]">TaskHub,</span><br /> you can:

@@ -38,20 +38,22 @@ const useImageTransition = (images: any, transitionDuration: any) => {
 };
 
 const HeroSection = () => {
+
   const serviceProviderParams = new URLSearchParams({ userType: "serviceProvider" });
+
+  const session = useSession();
+  const isServiceProvider =
+    session?.data?.user?.user?.roles[0] === "SERVICE_PROVIDER";
 
   // Image1 transition
   const images1 = [heroImage1, heroImage1a];
   const currentImageIndex1 = useImageTransition(images1, 3000);
-
   // Image2 transition
   const images2 = [heroImage2, heroImage2a];
   const currentImageIndex2 = useImageTransition(images2, 3000);
-
   // Image3 transition
   const images3 = [heroImage3, heroImage3a];
   const currentImageIndex3 = useImageTransition(images3, 3000);
-
   // Image4 transition
   const images4 = [heroImage4, heroImage4a];
   const currentImageIndex4 = useImageTransition(images4, 3000);
@@ -62,23 +64,6 @@ const HeroSection = () => {
   let it = ['I', 'T']
   let done = ['D', 'O', 'N', 'E']
 
-  // const AnimatedText = ({ text, delay }: any) => {
-  //   return (
-  //     <span className="flex">
-  //       {text.split("").map((letter: any, i: number) => (
-  //         <motion.span
-  //           key={i}
-  //           className="flex items-center gap-4"
-  //           initial={{ opacity: 0, translateY: 100 }}
-  //           animate={{ opacity: 1, translateY: 0 }}
-  //           transition={{ duration: 0.3, delay: i * 0.08 + delay }}
-  //         >
-  //           {letter}
-  //         </motion.span>
-  //       ))}
-  //     </span>
-  //   )
-  // };
   return (
     <div
       className={` w-full bg-gradient-to-b from-[#f3dcfc] via-[#f5f1f7] to-[#FFFFFF] m-0`}
@@ -264,13 +249,24 @@ const HeroSection = () => {
                   className=" rounded-[50px] w-[250px] lg:w-[230px] xl:w-[250px] bg-[#FE9B07] text-[#FFF5E6] xl:text-[16px] 
                       lg:px-2    px-3 py-2    hover:bg-[#e79823]  "
                 >
-                  <Link
+
+                  {!isServiceProvider ? (<Link
                     href={`/auth/sign-up?${serviceProviderParams.toString()}`}
                     className="flex items-center justify-center"
                   >
                     <p className="">Become a Service Provider</p>
 
-                  </Link>
+                  </Link>) : (<Link
+                    href={`/service-provider/profile`}
+                    className="flex items-center justify-center"
+                  >
+                    <p className="">Become a Service Provider</p>
+
+                  </Link>)}
+
+
+
+
 
                 </button>
               </div>
