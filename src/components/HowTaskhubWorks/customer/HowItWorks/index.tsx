@@ -32,8 +32,8 @@ const HowItWorks = () => {
                     How  it works ?
                 </h2>
 
-                <p className='text-center lg:text-[35px] text-[20px] font-[600] font-clashMedium text-primary xl:w-1/2 lg:w-[75%] my-6'>
-                    Get your Task posted in few steps as a <span className='text-tc-orange'>Customer</span> with TaskHub
+                <p className='text-center lg:text-[30px] text-[20px] font-[600] font-clashMedium text-primary xl:w-[60%] lg:w-[85%] my-6'>
+                    Get your Task posted in few steps <br/> as a <span className='text-tc-orange'>Customer</span> with TaskHub
                 </p>
             </div>
 

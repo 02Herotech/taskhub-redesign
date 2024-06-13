@@ -39,8 +39,8 @@ const SPHowItWorks = () => {
           How  it works ?
         </h2>
 
-        <p className='text-center lg:text-[35px] text-[20px] font-[600] font-clashMedium text-primary xl:w-1/2 lg:w-[75%] my-6'>
-          Earn your way to Financial freedom as a <span className='text-tc-orange'>Service provider</span>  on TaskHub
+        <p className='text-center lg:text-[35px] text-[20px] font-[600] font-clashMedium text-primary xl:w-[60%] lg:w-[85%] my-6'>
+          Earn your way to Financial <br /> freedom as a <span className='text-tc-orange'>Service provider</span>  on <br /> TaskHub
         </p>
       </div>
 
