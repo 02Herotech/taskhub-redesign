@@ -69,6 +69,7 @@ const EditProfile = () => {
   const token = session?.data?.user?.accessToken;
   const isServiceProvider = user?.roles[0] === "SERVICE_PROVIDER";
 
+  console.log(userDetails);
   type userDataType = z.infer<typeof userDataSchema>;
 
   const {
@@ -168,7 +169,9 @@ const EditProfile = () => {
         medicareId: userDetails.idNumber,
         idType: userDetails.idType,
         idNumber: userDetails.idNumber,
-        bio: "Enter Your bio",
+        bio: isServiceProvider
+          ? userDetails.bio ?? ""
+          : "No Bio need for customer",
       });
     }
     // eslint-disable-next-line

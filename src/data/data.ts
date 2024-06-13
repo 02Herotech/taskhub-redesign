@@ -9,4 +9,5 @@ export const defaultUserDetails: DefaultUserDetailsType = {
   profileImage: "",
   state: "",
   suburbs: "",
+  bio: "",
 };

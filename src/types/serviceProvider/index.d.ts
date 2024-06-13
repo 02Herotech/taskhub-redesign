@@ -9,6 +9,7 @@ declare interface DefaultUserDetailsType {
   profileImage: string;
   state: string;
   suburbs: string;
+  bio: string | null;
 }
 
 declare interface ModalDataType {
