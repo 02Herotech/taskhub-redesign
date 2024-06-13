@@ -1,15 +1,50 @@
+import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
 import React from "react";
-import { PiPencilLine, PiPencilLineLight } from "react-icons/pi";
+import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import { RiPencilLine } from "react-icons/ri";
+import { z } from "zod";
 
-const page = () => {
+const EditListing = () => {
+  const listingZodSchema = z.object({
+    businessName: z.string().min(15),
+    serviceDescription: z.string().min(30),
+    category: z.string(),
+    subCategory: z.string(),
+    description: z.string(),
+    pricing: z.string(),
+    available: z.string(),
+  });
+
+  type listingZodType = z.infer<typeof listingZodSchema>;
+
+  const {
+    register,
+    control,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+    reset,
+    watch,
+    setValue,
+  } = useForm({
+    resolver: zodResolver(listingZodSchema),
+  });
+
+  const watchField = watch();
+
+  const handleUpdateListing: SubmitHandler<listingZodType> = async (data) => {
+    console.log(data);
+  };
+
   return (
     <main className="space-y-8 p-4 lg:p-8">
       <h1 className="text-2xl font-extrabold text-orange-normal">
         Edit Service
       </h1>
-      <form className="mx-auto  w-full max-w-md space-y-2 font-satoshiMedium text-violet-normal ">
+      <form
+        onSubmit={handleSubmit(handleUpdateListing)}
+        className="mx-auto  w-full max-w-md space-y-2 font-satoshiMedium text-violet-normal "
+      >
         {/* Service description */}
         <section className="flex flex-col gap-2 font-satoshiMedium">
           <h1 className="my-2 flex items-center gap-2 font-satoshiBold text-2xl font-bold ">
@@ -24,26 +59,38 @@ const page = () => {
             <input
               type="text"
               className="rounded-lg bg-violet-light p-3 outline-none"
+              {...register("businessName")}
             />
           </label>
           {/* category */}
           <label className="flex flex-col gap-2">
             <span className=" text-violet-darker">Category</span>
-            <select className="rounded-lg bg-violet-light p-3 outline-none">
-              <option value="">select a category</option>
-            </select>
+            <input
+              type="text"
+              className="rounded-lg bg-violet-light p-3 outline-none"
+              disabled
+              {...register("category")}
+            />
           </label>
           {/* subcategory */}
           <label className="flex flex-col gap-2">
             <span className=" text-violet-darker">Subcategory</span>
-            <select className="rounded-lg bg-violet-light p-3 outline-none">
-              <option value="">select a subcategory</option>
-            </select>
+            <input
+              type="text"
+              className="rounded-lg bg-violet-light p-3 outline-none"
+              disabled
+              {...register("subcategory")}
+            />
           </label>
-          {/* subcategory */}
-          <label className="flex flex-col gap-2">
-            <span className=" text-violet-darker">Description</span>
-            <textarea className="min-h-40 rounded-lg bg-violet-light p-3 outline-none"></textarea>
+          {/* Description */}
+          <div className="flex flex-col gap-2">
+            <label className="flex flex-col gap-2">
+              <span className=" text-violet-darker">Description</span>
+              <textarea
+                className="min-h-40 rounded-lg bg-violet-light p-3 outline-none"
+                {...register("description")}
+              />
+            </label>
             <div className=" flex items-center gap-2">
               <button
                 type="button"
@@ -58,7 +105,7 @@ const page = () => {
                 height={30}
               />
             </div>
-          </label>
+          </div>
         </section>
         {/* { Service Details } */}
         <section className="flex flex-col gap-2 font-satoshiMedium">
@@ -154,4 +201,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default EditListing;

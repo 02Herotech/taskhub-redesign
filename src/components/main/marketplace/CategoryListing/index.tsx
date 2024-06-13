@@ -103,7 +103,7 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
   return (
     <div className="h-full w-full py-4 ">
       <div className="mb-3 flex items-center justify-between">
-        <div className="flex w-full items-center justify-between">
+        <div className="flex w-full items-center justify-between gap-4">
           <h1 className=" text-xl font-bold text-violet-darkHover md:text-2xl">
             {!isFiltering
               ? category
@@ -120,7 +120,9 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
                 setIsViewMore((prev) => ({ ...prev, state: !prev.state }))
               }
             >
-              <span>{isViewMore.state ? "View Less" : "View More"}</span>
+              <span className="whitespace-nowrap">
+                {isViewMore.state ? "View Less" : "View More"}
+              </span>
               <span>
                 <FaArrowUp
                   className={`size-3  ${isViewMore.state ? "rotate-90" : "rotate-45"} `}

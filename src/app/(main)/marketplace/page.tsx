@@ -137,7 +137,7 @@ const MareketPlace = () => {
                 <h1 className=" py-4 text-[20px] font-bold text-black md:text-[28px]  ">
                   Browse by category
                 </h1>
-                <div className="my-5 flex flex-wrap gap-3 ">
+                <div className="my-5 flex flex-wrap gap-3 max-sm:grid max-sm:grid-cols-2 ">
                   {categories.map((item, index) => (
                     <BoxFilter
                       key={item.id}

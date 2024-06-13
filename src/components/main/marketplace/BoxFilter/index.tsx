@@ -38,7 +38,9 @@ const BoxFilter: React.FC<BoxFilterProper> = ({ category, Icon, id }) => {
       className="flex flex-col gap-3 rounded-lg bg-[#E58C06] px-4 py-2 text-white shadow-md  transition-colors duration-300 hover:bg-orange-400 md:px-8 md:py-4"
     >
       <Icon size={15} className="size-4 lg:size-6" />
-      <p className="text-[13px] font-bold md:text-[18px]">{category}</p>
+      <p className="text-left text-[13px] font-bold md:text-[18px]">
+        {category}
+      </p>
     </button>
   );
 };

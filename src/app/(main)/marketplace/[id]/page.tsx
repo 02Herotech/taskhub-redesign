@@ -44,7 +44,7 @@ const Page = () => {
 
   return (
     <>
-      <main className="  pt-16 text-[#221354]">
+      <main className="  pt-16 font-satoshiMedium text-[#221354] ">
         <section className=" grid gap-4 lg:grid-cols-12 lg:gap-4">
           {/* left handside */}
           <article className="space-y-4 lg:col-span-7">
@@ -67,12 +67,16 @@ const Page = () => {
 
             {/* content */}
             <div className="container space-y-4 ">
-              <p className="font-medium">Recently Added</p>
+              {/* <p className="font-medium">Recently Added</p> */}
               <h3 className="text-4xl font-extrabold">
                 {displayData?.listingTitle}
               </h3>
-              <p className="font-medium underline">Service Purpose</p>
-              <p className="font-medium">{displayData?.listingDescription}</p>
+              <p className="font-satoshiMedium text-xl font-medium">
+                Service Purpose
+              </p>
+              <p className="font-satoshiMedium">
+                {displayData?.listingDescription}
+              </p>
               <h4 className="text-3xl font-extrabold">Location</h4>
               <p className="flex items-center gap-2 text-slate-500 ">
                 <span>
@@ -159,8 +163,8 @@ const Page = () => {
         </section>
 
         {/* Portfolio */}
-        <section className="mx-auto w-full space-y-4 p-4  lg:p-16 ">
-          <h1 className="text-3xl font-bold text-violet-darkHover max-md:text-xl">
+        <section className="mx-auto w-full space-y-4 p-4  py-8 lg:p-16 ">
+          <h1 className="text-3xl font-bold text-violet-darkHover">
             Portfolio
           </h1>
           <div className="flex flex-col gap-6 lg:grid lg:grid-cols-12">

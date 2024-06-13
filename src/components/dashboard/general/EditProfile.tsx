@@ -69,7 +69,6 @@ const EditProfile = () => {
   const isServiceProvider = user?.roles[0] === "SERVICE_PROVIDER";
 
   type userDataType = z.infer<typeof userDataSchema>;
-  console.log(user);
 
   const {
     register,
