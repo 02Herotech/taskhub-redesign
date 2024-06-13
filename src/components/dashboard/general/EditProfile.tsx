@@ -28,7 +28,7 @@ const userDataSchema = z.object({
   medicareId: z.string(),
   idType: z.string(),
   idNumber: z.string(),
-  // bio: z.string().nullable(),
+  bio: z.string().nullable(),
 });
 
 const idTypeObject = [
@@ -125,7 +125,20 @@ const EditProfile = () => {
 
   const watchField = watch();
 
-  const parseDate = (inputDate: string | Date): string => {
+  const parseDate = (date: string | Date | null | undefined): Date | null => {
+    if (date instanceof Date) {
+      return date;
+    }
+    if (typeof date === "string") {
+      const [year, month, day] = date.split("-").map(Number);
+      if (!isNaN(year) && !isNaN(month) && !isNaN(day)) {
+        return new Date(year, month - 1, day);
+      }
+    }
+    return null;
+  };
+
+  const parseSendingDate = (inputDate: string | Date): string => {
     const date = new Date(inputDate);
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, "0"); // getMonth() is zero-based
@@ -155,6 +168,7 @@ const EditProfile = () => {
         medicareId: userDetails.idNumber,
         idType: userDetails.idType,
         idNumber: userDetails.idNumber,
+        bio: "Enter Your bio",
       });
     }
     // eslint-disable-next-line
@@ -162,25 +176,39 @@ const EditProfile = () => {
 
   const handleSubmitUserData: SubmitHandler<userDataType> = async (data) => {
     try {
-      const submitData = {
-        firstName: data.firstName,
-        lastName: data.lastName,
-        dateOfBirth: parseDate(data.dateOfBirth as Date),
-        suburb: data.suburb,
-        state: data.state,
-        postCode: data.postcode,
-        idImage: selectedDocument,
-        idType: data.idType,
-        idNumber: data.idNumber,
-      };
+      let submitData: any;
+
       let url;
       if (isServiceProvider) {
+        submitData = {
+          firstName: data.firstName,
+          lastName: data.lastName,
+          dateOfBirth: parseSendingDate(data.dateOfBirth as Date),
+          suburb: data.suburb,
+          state: data.state,
+          postCode: data.postcode,
+          idImage: selectedDocument,
+          idType: data.idType,
+          idNumber: data.idNumber,
+          bio: data.bio,
+        };
         url =
           "https://smp.jacinthsolutions.com.au/api/v1/service_provider/update";
       } else {
+        submitData = {
+          firstName: data.firstName,
+          lastName: data.lastName,
+          dateOfBirth: parseSendingDate(data.dateOfBirth as Date),
+          suburb: data.suburb,
+          state: data.state,
+          postCode: data.postcode,
+          idImage: selectedDocument,
+          idType: data.idType,
+          idNumber: data.idNumber,
+        };
         url = "https://smp.jacinthsolutions.com.au/api/v1/customer";
       }
-      const response = await axios.patch(url, submitData, {
+      await axios.patch(url, submitData, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "multipart/form-data",
@@ -267,8 +295,22 @@ const EditProfile = () => {
         {isServiceProvider && (
           <section>
             <h3 className="text-xl font-bold text-violet-dark lg:text-center">
-              Contact Information
+              Bio
             </h3>
+            {/* First name */}
+            <label className="flex w-full flex-col  gap-3 text-lg  text-violet-normal">
+              <span className="flex items-center justify-between">
+                <span>Bio Description</span>
+                {!errors.bio && watchField.bio?.length >= 20 && (
+                  <BiCheck className="size-5 rounded-full bg-green-500 p-1 text-white" />
+                )}
+              </span>
+              <textarea
+                disabled={!isEditingEnabled}
+                className="w-full rounded-xl border border-slate-100 p-2 text-slate-700  shadow outline-none transition-shadow duration-300 hover:shadow-md "
+                {...register("bio")}
+              />
+            </label>
           </section>
         )}
 
