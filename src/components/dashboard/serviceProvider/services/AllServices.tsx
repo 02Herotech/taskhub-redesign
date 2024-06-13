@@ -7,6 +7,7 @@ import { useSession } from "next-auth/react";
 import Loading from "@/shared/loading";
 import { marketPlaceModalIcon } from "@/lib/svgIcons";
 import { BsPencilSquare } from "react-icons/bs";
+import Link from "next/link";
 
 const AllServices = () => {
   const [page, setPage] = useState(0);
@@ -75,58 +76,60 @@ const AllServices = () => {
                 whileInView={{ opacity: 1, translateY: "0" }}
                 transition={{ duration: 0.5 }}
               >
-                <div className="space-y-2">
-                  <div className="relative h-52  w-72 overflow-hidden rounded-xl">
-                    <Image
-                      src={
-                        item.businessPictures[0] ??
-                        "/assets/images/serviceProvider/drain.png"
-                      }
-                      width={400}
-                      height={400}
-                      alt={item.listingTitle}
-                      className=" h-full w-full object-cover transition-transform duration-300 group-hover:scale-105 "
-                    />
-                    <span className="absolute right-3 top-3 flex items-center gap-2 rounded-full border bg-orange-normal  px-2 py-1 text-sm text-white  ">
-                      <BsPencilSquare className="" />
-                      Edit
-                    </span>
-                  </div>
-                  <p className="px-2 text-3xl font-bold text-[#190E3F] ">
-                    {item.listingTitle}
-                  </p>
-
-                  <div className="px-2">
-                    <p className="text-xs"> 4.5 </p>
-                    <div className="flex items-center gap-1">
-                      <FaStar size={10} color="gold" />
-                      <FaStar size={10} color="gold" />
-                      <FaStar size={10} color="gold" />
-                      <FaStar size={10} color="gold" />
-                      <FaStar size={10} color="grey" />
+                <Link href={"/service-provider/services/" + item.id}>
+                  <div className="space-y-2">
+                    <div className="relative h-52  w-72 overflow-hidden rounded-xl">
+                      <Image
+                        src={
+                          item.businessPictures[0] ??
+                          "/assets/images/serviceProvider/drain.png"
+                        }
+                        width={400}
+                        height={400}
+                        alt={item.listingTitle}
+                        className=" h-full w-full object-cover transition-transform duration-300 group-hover:scale-105 "
+                      />
+                      <span className="absolute right-3 top-3 flex items-center gap-2 rounded-full border bg-orange-normal  px-2 py-1 text-sm text-white  ">
+                        <BsPencilSquare className="" />
+                        Edit
+                      </span>
                     </div>
-                    <div className="flex items-center justify-between gap-3">
-                      <div className="flex items-center gap-2 py-3">
-                        <Image
-                          src={
-                            user?.profileImage ??
-                            "/assets/images/serviceProvider/user.jpg"
-                          }
-                          alt={user?.firstName ?? "user"}
-                          width={20}
-                          height={20}
-                          className="rounded-full"
-                        />
-                        <p className="text-xs">
-                          {user?.firstName} {user?.lastName}
+                    <p className="px-2 text-3xl font-bold text-[#190E3F] ">
+                      {item.listingTitle}
+                    </p>
+
+                    <div className="px-2">
+                      <p className="text-xs"> 4.5 </p>
+                      <div className="flex items-center gap-1">
+                        <FaStar size={10} color="gold" />
+                        <FaStar size={10} color="gold" />
+                        <FaStar size={10} color="gold" />
+                        <FaStar size={10} color="gold" />
+                        <FaStar size={10} color="grey" />
+                      </div>
+                      <div className="flex items-center justify-between gap-3">
+                        <div className="flex items-center gap-2 py-3">
+                          <Image
+                            src={
+                              user?.profileImage ??
+                              "/assets/images/serviceProvider/user.jpg"
+                            }
+                            alt={user?.firstName ?? "user"}
+                            width={20}
+                            height={20}
+                            className="rounded-full"
+                          />
+                          <p className="text-xs">
+                            {user?.firstName} {user?.lastName}
+                          </p>
+                        </div>
+                        <p className="font-bold text-[#381F8C] ">
+                          From ${item.planOnePrice}
                         </p>
                       </div>
-                      <p className="font-bold text-[#381F8C] ">
-                        From ${item.planOnePrice}
-                      </p>
                     </div>
                   </div>
-                </div>
+                </Link>
               </motion.div>
             ))
           )}

@@ -47,7 +47,7 @@ const CustomerProfileCompletion = () => {
       ).length,
     }));
     // eslint-disable-next-line
-  }, []);
+  }, [user]);
 
   return (
     <section className="flex items-center gap-3 rounded-lg bg-[#EBE9F4] p-4">
