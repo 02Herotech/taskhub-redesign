@@ -1,18 +1,85 @@
 "use client";
 import { zodResolver } from "@hookform/resolvers/zod";
+import axios from "axios";
 import Image from "next/image";
-import React from "react";
+import { useParams } from "next/navigation";
+import React, { useEffect, useState } from "react";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import { RiPencilLine } from "react-icons/ri";
 import { z } from "zod";
 
+const tempData = {
+  id: 35,
+  state: "",
+  postCode: "",
+  suburb: "",
+  serviceProvider: {
+    id: 1,
+    user: {
+      id: 1,
+      fullName: "Anthony Dev",
+      profileImage:
+        "http://res.cloudinary.com/ddgm9zdnr/image/upload/v1717685216/hzvnxejvpbcaevpxhpgb.png",
+    },
+    bio: "I am a software developer with years of experience",
+  },
+  category: {
+    id: 3,
+    categoryName: "Information and Technology",
+  },
+  listingTitle: "Casual Danser",
+  stripeId: "prod_QGfDM2zd9LlA5E",
+  planOneDescription: "Street dancing",
+  planOnePrice: 25,
+  planTwoDescription: "",
+  planTwoPrice: null,
+  planThreeDescription: "",
+  planThreePrice: null,
+  taskType: "REMOTE_SERVICE",
+  businessPictures: [
+    "http://res.cloudinary.com/ddgm9zdnr/image/upload/v1718024645/xc05hkanpe1usoi2t58k.png",
+    "http://res.cloudinary.com/ddgm9zdnr/image/upload/v1718024646/cmy1q0nt8rlyr8rw3bek.png",
+    "http://res.cloudinary.com/ddgm9zdnr/image/upload/v1718024647/zjoodtijqrzy2jj6ddpu.png",
+    "http://res.cloudinary.com/ddgm9zdnr/image/upload/v1718024647/n7bsgtjoskr5w9uz3nmu.png",
+  ],
+  availableDays: ["TUESDAY", "MONDAY", "THURSDAY"],
+  listingDescription: "You Need A Dancer, I've Got Your Back",
+  reviews: [],
+  subCategory: {
+    name: "House Keeping",
+    id: 3,
+  },
+};
+
 const EditListing = () => {
+  const [currentListing, setCurrentListing] =
+    // @ts-expect-error "type delcaration"
+    useState<ListingDataType>(tempData);
+
   const listingZodSchema = z.object({
     businessName: z.string(),
     category: z.string(),
     subcategory: z.string(),
     description: z.string(),
   });
+
+  const { listingId } = useParams();
+
+  useEffect(() => {
+    const fetchCurentListing = async () => {
+      try {
+        const url =
+          "https://smp.jacinthsolutions.com.au/api/v1/listing/" + listingId;
+        const { data } = await axios.get(url);
+        console.log(data);
+        setCurrentListing(data);
+      } catch (error: any) {
+        console.log(error.response.data);
+      }
+    };
+
+    fetchCurentListing();
+  }, [listingId]);
 
   type listingZodType = z.infer<typeof listingZodSchema>;
 
@@ -28,7 +95,20 @@ const EditListing = () => {
     resolver: zodResolver(listingZodSchema),
   });
 
-  // const watchField = watch();
+  useEffect(() => {
+    if (currentListing) {
+      reset({
+        businessName: currentListing.listingTitle,
+        category: currentListing.category.categoryName,
+        subcategory: currentListing.subCategory.name,
+        description: currentListing.listingDescription,
+      });
+    }
+
+    // eslint-disable-next-line
+  }, [currentListing]);
+
+  const watchField = watch();
 
   const handleUpdateListing: SubmitHandler<listingZodType> = async (data) => {
     console.log(data);
