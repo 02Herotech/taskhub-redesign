@@ -9,6 +9,9 @@ import { GiStoneCrafting } from "react-icons/gi";
 import { FaBabyCarriage } from "react-icons/fa";
 import { MdSecurity } from "react-icons/md";
 import { MdLocalGroceryStore } from "react-icons/md";
+import { FaHeartbeat } from "react-icons/fa";
+import { FaGraduationCap } from "react-icons/fa";
+import { FaImage } from "react-icons/fa";
 
 import MarketPlaceFilter from "@/components/main/marketplace/MarketPlaceFilter";
 import MarketPlaceHeader from "@/components/main/marketplace/MarketPlaceHeader";
@@ -28,10 +31,10 @@ const categoryIcons = [
   FaHome,
   MdPersonalInjury,
   GrPersonalComputer,
+  FaGraduationCap,
+  FaImage,
+  FaHeartbeat,
   BsCalendar2EventFill,
-  GiStoneCrafting,
-  FaBabyCarriage,
-  MdSecurity,
   MdLocalGroceryStore,
 ];
 

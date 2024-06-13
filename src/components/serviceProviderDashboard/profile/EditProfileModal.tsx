@@ -128,7 +128,6 @@ const EditProfileModal = ({
           url =
             "https://smp.jacinthsolutions.com.au/api/v1/customer/profile_picture";
         }
-
         await axios.post(
           url,
           { image: selectedFile },

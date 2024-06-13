@@ -10,11 +10,12 @@ import { FaStar } from "react-icons/fa";
 import PricingPlan from "@/components/matkeplaceSingleTask/PricingPlan";
 import Reviews from "@/components/matkeplaceSingleTask/Reviews";
 import { formatDateFromNumberArray } from "@/utils";
+import axios from "axios";
 
 const Page = () => {
   const [displayData, setDisplayData] = useState<ListingDataType>();
+  const [currentListing, setCurrentListing] = useState<ListingDataType>();
 
-  let temporaryNumber = 1;
   useEffect(() => {
     const tempList = localStorage.getItem("content");
     if (tempList) {
@@ -22,6 +23,24 @@ const Page = () => {
       setDisplayData(content);
     }
   }, []);
+
+  useEffect(() => {
+    const fetchListing = async () => {
+      try {
+        if (!displayData) return;
+        const url =
+          "https://smp.jacinthsolutions.com.au/api/v1/listing/" +
+          displayData.id;
+        const { data } = await axios.get(url);
+        setCurrentListing(data);
+        console.log(data);
+      } catch (error: any) {
+        console.log(error.response.data);
+      }
+    };
+
+    fetchListing();
+  }, [displayData]);
 
   return (
     <>
@@ -119,7 +138,10 @@ const Page = () => {
                     Message
                   </button>
                 </div>
-                <p className="font-medium">{displayData?.listingDescription}</p>
+                <p className="font-medium">
+                  {/* @ts-ignore */}
+                  {currentListing?.serviceProvider.bio}
+                </p>
               </div>
             </div>
           </article>

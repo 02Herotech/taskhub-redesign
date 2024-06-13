@@ -25,7 +25,6 @@ const userDataSchema = z.object({
   postcode: z.string(),
   suburb: z.string(),
   state: z.string(),
-  medicareId: z.string(),
   idType: z.string(),
   idNumber: z.string(),
   bio: z.string().nullable(),
@@ -69,8 +68,8 @@ const EditProfile = () => {
   const token = session?.data?.user?.accessToken;
   const isServiceProvider = user?.roles[0] === "SERVICE_PROVIDER";
 
-  console.log(userDetails);
   type userDataType = z.infer<typeof userDataSchema>;
+  console.log(user);
 
   const {
     register,
@@ -91,7 +90,6 @@ const EditProfile = () => {
       postcode: "",
       suburb: "",
       state: "",
-      medicareId: "",
       idType: "",
       idNumber: "",
       bio: "",
@@ -139,18 +137,6 @@ const EditProfile = () => {
     return null;
   };
 
-  const parseSendingDate = (inputDate: string | Date): string => {
-    const date = new Date(inputDate);
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, "0"); // getMonth() is zero-based
-    const day = String(date.getDate()).padStart(2, "0");
-    if (isServiceProvider) {
-      return `${year}-${month}-${day}`;
-    } else {
-      return `${day}-${month}-${year}`;
-    }
-  };
-
   const today = new Date();
   const age18YearsAgo = new Date(today.setFullYear(today.getFullYear() - 18));
 
@@ -163,15 +149,14 @@ const EditProfile = () => {
         dateOfBirth: parseDate(userDetails.dateOfBirth) || null,
         phoneNumber: user.phoneNumber || "",
         emailAddress: user.emailAddress || "",
-        postcode: userDetails.postalCode || "",
-        suburb: userDetails.suburbs || "",
-        state: userDetails.state || "",
-        medicareId: userDetails.idNumber,
+        postcode: userDetails.postalCode || user.address.postCode || "",
+        suburb: userDetails.suburbs || user.address.suburb || "",
+        state: userDetails.state || user.address.state || "",
         idType: userDetails.idType,
         idNumber: userDetails.idNumber,
         bio: isServiceProvider
           ? userDetails.bio ?? ""
-          : "No Bio need for customer",
+          : "No Bio needed for customer",
       });
     }
     // eslint-disable-next-line
@@ -186,7 +171,7 @@ const EditProfile = () => {
         submitData = {
           firstName: data.firstName,
           lastName: data.lastName,
-          dateOfBirth: parseSendingDate(data.dateOfBirth as Date),
+          dateOfBirth: formatDateAsYYYYMMDD(data.dateOfBirth as Date),
           suburb: data.suburb,
           state: data.state,
           postCode: data.postcode,
@@ -201,7 +186,7 @@ const EditProfile = () => {
         submitData = {
           firstName: data.firstName,
           lastName: data.lastName,
-          dateOfBirth: parseSendingDate(data.dateOfBirth as Date),
+          dateOfBirth: formatDateAsYYYYMMDD(data.dateOfBirth as Date),
           suburb: data.suburb,
           state: data.state,
           postCode: data.postcode,
