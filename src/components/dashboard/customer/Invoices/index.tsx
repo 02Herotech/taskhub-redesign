@@ -69,7 +69,7 @@ const Invoices = () => {
         } catch (error) {
             setLoading(false);
             console.error('Error fetching payment intent:', error);
-            setError('Error fetching payment intent. Please try again.');
+            setError('Invoice has already been paid for');
         }
     };
 
@@ -137,7 +137,7 @@ const Invoices = () => {
                         <div className="relative bg-[#EBE9F4] rounded-2xl min-h-[200px] lg:max-w-[877px] font-satoshi p-5 lg:px-7 lg:py-10">
                             {clientSecret && initiatePayment ? (
                                 <Elements stripe={stripePromise} options={stripeOptions}>
-                                    <CheckoutForm clientSecret={clientSecret} />
+                                    <CheckoutForm clientSecret={clientSecret} invoiceId={selectedInvoice.id} />
                                 </Elements>
                             ) : (
                                 <>
@@ -175,7 +175,7 @@ const Invoices = () => {
                                             <div className="flex items-center max-lg:space-x-3 justify-between mb-6">
                                                 <div>
                                                     <h2 className="text-xl text-[#001433] font-bold">
-                                                        {`${selectedInvoice.customer.user.firstName} ${selectedInvoice.customer.user.lastName}`}
+                                                        {fullName}
                                                     </h2>
                                                     <h5 className="text-[#716F78]">Bill from</h5>
                                                 </div>
