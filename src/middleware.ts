@@ -5,6 +5,7 @@ import { NextResponse } from "next/server";
 export default withAuth(
   async function middleware(req) {
     const token = await getToken({ req });
+    console.log("token", token)
     const isAuth = !!token;
     const isAuthPage = req.nextUrl.pathname.startsWith("/auth");
 
@@ -24,7 +25,7 @@ export default withAuth(
         new URL(`/auth/login`, req.url),
       );
     }
-    
+
   },
   {
     callbacks: {
@@ -39,14 +40,14 @@ export default withAuth(
 );
 
 export const config = {
-    matcher: [
-        "/explore/:path*",
-        "/customer/notifications/:path*",
-        "/customer/password/:path*",
-        "/customer/payment/:path*",
-        "/customer/profile/:path*",
-        "/customer/settings/:path*",
-        "/customer/tasks/:path*",
-        "/service-provider/:path*",
-    ],
+  matcher: [
+    "/explore/:path*",
+    "/customer/notifications/:path*",
+    "/customer/password/:path*",
+    "/customer/payment/:path*",
+    "/customer/profile/:path*",
+    "/customer/settings/:path*",
+    "/customer/tasks/:path*",
+    "/service-provider/:path*",
+  ],
 };
