@@ -194,11 +194,11 @@ const ProvideService: React.FC = () => {
     }
   }, [selectedCategory]);
 
-  // useEffect(() => {
-  //   if (currentPage === 2 || currentPage === 3) {
-  //     window.scrollTo(0, 0);
-  //   }
-  // }, [currentPage]);
+  useEffect(() => {
+    if (currentPage === 2 || currentPage === 3) {
+      window.scrollTo(0, 0);
+    }
+  }, [currentPage]);
 
   const validateFields = () => {
     const errors: any = {};
@@ -524,7 +524,7 @@ const ProvideService: React.FC = () => {
                     value={task.listingTitle}
                     onChange={handleChange}
                     placeholder="Casual Babysitting"
-                    className={`rounded-2xl bg-[#EBE9F4] p-3 text-[13px] placeholder:font-satoshiMedium placeholder:font-medium placeholder:text-status-darkpurple ${errors.lisitingTitle ? "border border-[#ff0000] outline-[#FF0000]" : "border-none outline-none"}`}
+                    className={`rounded-2xl bg-[#EBE9F4] p-3 text-[13px] placeholder:font-satoshi placeholder:font-medium placeholder:text-status-darkpurple ${errors.lisitingTitle ? "border border-[#ff0000] outline-[#FF0000]" : "border-none outline-none"}`}
                   />
                 </div>
                 <div className="relative grid space-y-4">
@@ -537,7 +537,7 @@ const ProvideService: React.FC = () => {
                       <div
                         className={`flex h-full w-full cursor-pointer appearance-none justify-between rounded-2xl bg-[#EBE9F4] p-3 text-[13px] ${errors.category ? "border border-[#ff0000] outline-[#FF0000]" : "border-none outline-none"}`}
                       >
-                        <h2 className="font-satoshiMedium">
+                        <h2 className="font-satoshi">
                           {selectedCategoryName}
                         </h2>
                         <FaSortDown />
@@ -608,7 +608,7 @@ const ProvideService: React.FC = () => {
                     <span className="font-extrabold text-[#ff0000]">*</span>
                   </label>
                   <textarea
-                    className={` h-[350px] rounded-2xl bg-[#EBE9F4] p-3 placeholder:font-medium placeholder:text-status-darkpurple ${errors.description ? "border border-[#ff0000] outline-[#FF0000]" : "border-none outline-none"}`}
+                    className={` h-[350px] rounded-2xl bg-[#EBE9F4] p-3 placeholder:text-[12px] placeholder:font-satoshi placeholder:text-status-darkpurple ${errors.description ? "border border-[#ff0000] outline-[#FF0000]" : "border-none outline-none"}`}
                     placeholder="Casual Babysitting"
                     name="description"
                     value={task.listingDescription}
@@ -818,7 +818,7 @@ const ProvideService: React.FC = () => {
                       activeButtonIndex === 0
                         ? "bg-status-purpleBase text-white"
                         : "bg-[#EBE9F4] placeholder:text-white hover:bg-status-purpleBase hover:text-white"
-                    } cursor-pointer outline-none placeholder:font-satoshiMedium placeholder:font-bold`}
+                    } cursor-pointer outline-none font-satoshiBold text-status-darkpurple text-center`}
                     name="physical"
                     onClick={() => handleClick(0)}
                     placeholder="Physical Services"
@@ -830,7 +830,7 @@ const ProvideService: React.FC = () => {
                       activeButtonIndex === 1
                         ? "bg-status-purpleBase text-white"
                         : "bg-[#EBE9F4] placeholder:text-white hover:bg-status-purpleBase hover:text-white "
-                    } cursor-pointer outline-none placeholder:font-satoshiMedium placeholder:font-bold`}
+                    } cursor-pointer outline-none font-satoshiBold text-status-darkpurple text-center`}
                     name="remote"
                     onClick={() => {
                       handleClick(1);
@@ -848,7 +848,7 @@ const ProvideService: React.FC = () => {
                   type="text"
                   value={isRemote}
                   readOnly
-                  className="rounded-2xl bg-[#EBE9F4] p-3 font-satoshiMedium "
+                  className="rounded-2xl bg-[#EBE9F4] p-3 font-satoshiBold text-center "
                 />
               )}
               {isOpen && activeButtonIndex === 0 && (
@@ -953,7 +953,7 @@ const ProvideService: React.FC = () => {
                       <FaSortDown />
                     </div>
                   )}
-                  className="left-0 right-full top-14 mx-auto w-1/2 bg-white"
+                  className="small-scrollbar left-0 right-0 lg:w-1/2 top-14 max-h-64 overflow-y-auto bg-white transition-all duration-300"
                 >
                   {daysOfWeek.map((day) => (
                     <button
