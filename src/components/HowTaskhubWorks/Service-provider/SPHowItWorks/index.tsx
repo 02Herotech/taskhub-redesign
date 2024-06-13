@@ -60,7 +60,7 @@ const SPHowItWorks = () => {
           </div>
 
           <div className='flex justify-between ml-6'>
-            <div className='relative w-[48%] rounded-[30px] lg:h-[280px] h-[180px]'>
+            <div className='relative w-[48%] rounded-[30px] lg:h-[250px] h-[180px]'>
               <Image
                 src={ServiceProvider1}
                 alt="Customer 2"
@@ -68,7 +68,7 @@ const SPHowItWorks = () => {
                 className="absolute rounded-[30px]"
               />
             </div>
-            <div className='relative w-[48%] rounded-[30px] lg:h-[280px] h-[180px]'>
+            <div className='relative w-[48%] rounded-[30px] lg:h-[250px] h-[180px]'>
               <Image
                 src={ServiceProvider2}
                 alt="Customer 3"

@@ -352,23 +352,65 @@ const AiDesciption: React.FC<AiGenerateProps> = ({
               <div ref={conversationEndRef} />
             </div>
 
-            <p className="h-[15px] lg:mb-4 mb-2 ">
+            <p className="h-[15px] mb-1 ">
               {AiLoading ? (
                 <BeatLoader className="text-primary" size={12} />
               ) : (
                 ""
               )}
             </p>
-            <div className="   rounded-[20px] lg:px-4 px-2 py-2 font-medium border-[2px] border-primary">
+            {/* <div className="h-auto   rounded-[20px] lg:px-4 px-2 py-2 font-medium border-[2px] border-primary">
               <form onSubmit={handleAiChatView} className="flex items-center">
                 <textarea
                   name="aiQuery"
                   placeholder="Enter a request here"
                   onChange={handleInputChange}
                   value={aiQuery}
-                  className="h-[45px] w-full overflow-hidden text-wrap  
+                  className="h-auto w-full overflow-hidden text-wrap  
  bg-transparent px-2 text-[16px] font-normal text-primary border-none outline-none"
                   required
+                />
+
+                <div className="hidden lg:block ">
+                  <button type="submit">
+                    {" "}
+                    <BiSend
+                      size={26}
+                      className="transform text-primary ease-in-out hover:scale-110 hover:cursor-pointer"
+                    />
+                  </button>
+                </div>
+
+                <div
+                  className="lg:hidden"
+                  onClick={handleAiChatView}
+                >
+                  <span>
+                    <BiSend
+                      size={26}
+                      className="transform text-primary ease-in-out hover:scale-110 hover:cursor-pointer"
+                    />
+                  </span>
+                </div>
+              </form>
+              {emptyQuerryField && (
+                <p className="font-clashDisplay text-center text-red-500">
+                  Kindly enter your request
+                </p>
+              )}
+            </div> */}
+
+
+            <div className="rounded-[20px] lg:px-4 px-2 pb-2  font-medium border-[2px] border-primary ">
+              <form onSubmit={handleAiChatView} className="flex items-center py-2">
+                <textarea
+                  name="aiQuery"
+                  placeholder="Enter a request here"
+                  onChange={handleInputChange}
+                  value={aiQuery}
+                  className="w-full overflow-hidden text-wrap  
+ bg-transparent px-2 text-[16px] font-normal text-primary border-none outline-none resize-none"
+                  required              
                 />
 
                 <div className="hidden lg:block ">
