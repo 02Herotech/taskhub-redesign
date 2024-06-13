@@ -28,7 +28,27 @@ const userDataSchema = z.object({
   medicareId: z.string(),
   idType: z.string(),
   idNumber: z.string(),
+  // bio: z.string().nullable(),
 });
+
+const idTypeObject = [
+  {
+    label: "Medicare Card",
+    value: "MEDICARE_CARD",
+  },
+  {
+    label: "International Passport",
+    value: "INTERNATIONAL_PASSPORT",
+  },
+  {
+    label: "Photo ID",
+    value: "PHOTO_ID",
+  },
+  {
+    label: "Drivers Licence",
+    value: "DRIVER_LICENSE",
+  },
+];
 
 const EditProfile = () => {
   const [isEditingEnabled, setIsEditingEnabled] = useState(false);
@@ -73,6 +93,7 @@ const EditProfile = () => {
       medicareId: "",
       idType: "",
       idNumber: "",
+      bio: "",
     },
   });
 
@@ -104,17 +125,16 @@ const EditProfile = () => {
 
   const watchField = watch();
 
-  const parseDate = (date: string | Date | null | undefined): Date | null => {
-    if (date instanceof Date) {
-      return date;
+  const parseDate = (inputDate: string | Date): string => {
+    const date = new Date(inputDate);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0"); // getMonth() is zero-based
+    const day = String(date.getDate()).padStart(2, "0");
+    if (isServiceProvider) {
+      return `${year}-${month}-${day}`;
+    } else {
+      return `${day}-${month}-${year}`;
     }
-    if (typeof date === "string") {
-      const [year, month, day] = date.split("-").map(Number);
-      if (!isNaN(year) && !isNaN(month) && !isNaN(day)) {
-        return new Date(year, month - 1, day);
-      }
-    }
-    return null;
   };
 
   const today = new Date();
@@ -137,6 +157,7 @@ const EditProfile = () => {
         idNumber: userDetails.idNumber,
       });
     }
+    // eslint-disable-next-line
   }, [userDetails, reset, user]);
 
   const handleSubmitUserData: SubmitHandler<userDataType> = async (data) => {
@@ -144,12 +165,11 @@ const EditProfile = () => {
       const submitData = {
         firstName: data.firstName,
         lastName: data.lastName,
-        dateOfBirth: formatDateAsYYYYMMDD(data.dateOfBirth as Date),
+        dateOfBirth: parseDate(data.dateOfBirth as Date),
         suburb: data.suburb,
         state: data.state,
         postCode: data.postcode,
         idImage: selectedDocument,
-        // idType: "INTERNATIONAL_PASSPORT",
         idType: data.idType,
         idNumber: data.idNumber,
       };
@@ -243,12 +263,21 @@ const EditProfile = () => {
         onSubmit={handleSubmit(handleSubmitUserData)}
         className="space-y-10 lg:space-y-20"
       >
+        {/* Bio */}
+        {isServiceProvider && (
+          <section>
+            <h3 className="text-xl font-bold text-violet-dark lg:text-center">
+              Contact Information
+            </h3>
+          </section>
+        )}
+
         {/* Personal information */}
         <section className="flex flex-col gap-4 ">
           <h3 className="text-xl font-bold text-violet-dark lg:text-center">
             Personal Information
           </h3>
-          <div className="flex flex-wrap justify-between gap-6 lg:col-span-8 lg:grid lg:grid-cols-3">
+          <div className="flex flex-wrap justify-between gap-6 lg:col-span-8">
             {/* First name */}
             <label className="flex w-full flex-col gap-3 text-lg  text-violet-normal lg:max-w-64 ">
               <span className="flex items-center justify-between">
@@ -311,7 +340,7 @@ const EditProfile = () => {
           <h3 className="text-xl font-bold text-violet-dark lg:text-center">
             Contact Information
           </h3>
-          <div className="lg flex grid-cols-3 flex-wrap gap-6 lg:col-span-8 lg:grid">
+          <div className="flex flex-wrap gap-6 lg:col-span-8">
             {/* Phone number */}
             <label className="flex w-full flex-col gap-3 text-lg  text-violet-normal lg:max-w-64 ">
               <span className="flex items-center justify-between">
@@ -352,7 +381,7 @@ const EditProfile = () => {
             Address Information
           </h3>
 
-          <div className="flex flex-wrap gap-6 lg:col-span-8 lg:grid lg:grid-cols-3">
+          <div className="flex flex-wrap gap-6 lg:col-span-8">
             {/* postcode */}
             <label className="flex w-full flex-col gap-3 text-lg  text-violet-normal lg:max-w-64 ">
               <span className="flex items-center justify-between">
@@ -412,7 +441,7 @@ const EditProfile = () => {
             Identification Document
           </h3>
           <div className="flex flex-col lg:col-span-8 lg:gap-8">
-            <div className="flex flex-wrap lg:col-span-8 lg:grid lg:grid-cols-3 lg:gap-8">
+            <div className="flex flex-wrap lg:col-span-8 lg:gap-8">
               {/* select Id type */}
               <label className="space-y-4">
                 <span className="flex items-center justify-between">
@@ -429,12 +458,11 @@ const EditProfile = () => {
                 transition-shadow duration-300 hover:shadow-md lg:max-w-sm"
                   {...register("idType")}
                 >
-                  <option value="Medicare Card"> Medicare Card</option>
-                  <option value="International Passport">
-                    International Passport
-                  </option>
-                  <option value="Driver Licence">Driver Licence</option>
-                  <option value="Proof of address">Proof of address</option>
+                  {idTypeObject.map((item) => (
+                    <option key={item.value} value={item.value}>
+                      {item.label}
+                    </option>
+                  ))}
                 </select>
               </label>
 
@@ -446,7 +474,9 @@ const EditProfile = () => {
                     <span>
                       {watchField.idType === ""
                         ? "Select Id Type"
-                        : watchField.idType + " Number"}
+                        : idTypeObject.find(
+                            (item) => item.value === watchField.idType,
+                          )?.label + " Number"}
                     </span>
                     {!errors.idNumber && watchField.idNumber.length >= 7 && (
                       <BiCheck className="size-5 rounded-full bg-green-500 p-1 text-white" />
@@ -462,49 +492,50 @@ const EditProfile = () => {
                   disabled={!isEditingEnabled || watchField.idType === ""}
                 />
               </label>
-              {/* Upload Identification Document */}
-              <label className="flex w-full flex-col gap-3 text-lg  text-violet-normal lg:max-w-64 ">
-                <span className="flex items-center justify-between">
-                  <span className="flex items-center justify-between gap-9">
-                    <span>Means of ID</span>
-                    {documentImage && (
-                      <BiCheck className="size-5 rounded-full bg-green-500 p-1 text-white" />
-                    )}
-                  </span>
-                </span>
-                <div>
-                  {documentImage ? (
-                    <button
-                      type="button"
-                      className="flex items-end justify-center space-x-2"
-                      onClick={() => setIsFormModalShown(true)}
-                    >
-                      {/* Display a disabled input with message */}
-                      <Image
-                        src={documentImage}
-                        alt="Captured or Selected"
-                        width={300}
-                        height={300}
-                        className="rounded-xl"
-                      />
-                    </button>
-                  ) : (
-                    // If no taskImage is uploaded, render the file input
-                    <button
-                      type="button"
-                      className="flex h-48 w-48 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-slate-500 p-4"
-                      onClick={() => setIsFormModalShown(true)}
-                      disabled={!isEditingEnabled}
-                    >
-                      <PiFileArrowDownDuotone className="text-xl text-tc-gray" />
-                      <span className="text-center text-tc-gray">
-                        Choose a File Upload supports: JPG, PDF, PNG.
-                      </span>
-                    </button>
-                  )}
-                </div>
-              </label>
             </div>
+
+            {/* Upload Identification Document */}
+            <label className="flex w-full flex-col gap-3 text-lg  text-violet-normal lg:max-w-64 ">
+              <span className="flex items-center justify-between">
+                <span className="flex items-center justify-between gap-9">
+                  <span>Means of ID</span>
+                  {documentImage && (
+                    <BiCheck className="size-5 rounded-full bg-green-500 p-1 text-white" />
+                  )}
+                </span>
+              </span>
+              <div>
+                {documentImage ? (
+                  <button
+                    type="button"
+                    className="flex items-end justify-center space-x-2"
+                    onClick={() => setIsFormModalShown(true)}
+                  >
+                    {/* Display a disabled input with message */}
+                    <Image
+                      src={documentImage}
+                      alt="Captured or Selected"
+                      width={300}
+                      height={300}
+                      className="rounded-xl"
+                    />
+                  </button>
+                ) : (
+                  // If no taskImage is uploaded, render the file input
+                  <button
+                    type="button"
+                    className="flex h-48 w-48 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-slate-500 p-4"
+                    onClick={() => setIsFormModalShown(true)}
+                    disabled={!isEditingEnabled}
+                  >
+                    <PiFileArrowDownDuotone className="text-xl text-tc-gray" />
+                    <span className="text-center text-tc-gray">
+                      Choose a File Upload supports: JPG, PDF, PNG.
+                    </span>
+                  </button>
+                )}
+              </div>
+            </label>
           </div>
         </section>
 
