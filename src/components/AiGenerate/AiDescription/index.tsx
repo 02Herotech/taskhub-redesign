@@ -352,7 +352,7 @@ const AiDesciption: React.FC<AiGenerateProps> = ({
               <div ref={conversationEndRef} />
             </div>
 
-            <p className="h-[15px] lg:mb-4 mb-2 ">
+            <p className="h-[15px] mb-1 ">
               {AiLoading ? (
                 <BeatLoader className="text-primary" size={12} />
               ) : (
@@ -401,7 +401,7 @@ const AiDesciption: React.FC<AiGenerateProps> = ({
             </div> */}
 
 
-            <div className="rounded-[20px] lg:px-4 px-2  font-medium border-[2px] border-primary ">
+            <div className="rounded-[20px] lg:px-4 px-2 pb-2  font-medium border-[2px] border-primary ">
               <form onSubmit={handleAiChatView} className="flex items-center py-2">
                 <textarea
                   name="aiQuery"
@@ -409,8 +409,8 @@ const AiDesciption: React.FC<AiGenerateProps> = ({
                   onChange={handleInputChange}
                   value={aiQuery}
                   className="w-full overflow-hidden text-wrap  
- bg-transparent px-2 text-[16px] font-normal text-primary border-none outline-none resize-none "
-                  required
+ bg-transparent px-2 text-[16px] font-normal text-primary border-none outline-none resize-none"
+                  required              
                 />
 
                 <div className="hidden lg:block ">
