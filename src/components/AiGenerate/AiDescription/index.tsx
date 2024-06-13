@@ -266,23 +266,26 @@ const AiDesciption: React.FC<AiGenerateProps> = ({
               </p>
             </div>
 
-            <div className="conversation h-[65%] space-y-4 overflow-y-scroll  lg:h-[65%] ">
-              <div className="mx-auto w-full justify-between space-y-3 lg:flex lg:space-y-0">
-                {AiSuggestions.map((entry, index) => (
-                  <p
-                    key={index}
-                    className="mr-[5%] rounded-[13px] border border-primary bg-white p-2 font-satoshiMedium text-[14px] text-primary transition-all  duration-500 hover:translate-x-1 hover:translate-y-1 hover:transform hover:cursor-pointer lg:w-[49%] "
-                    onClick={() => getAiSuggestions(index)}
-                  >
-                    {entry}
-                  </p>
-                ))}
-              </div>
+            <div className="conversation h-[60%] space-y-4 overflow-y-scroll    ">
+              {conversation.length === 0 && (
+                <div className="mx-auto w-full justify-between space-y-3 lg:flex lg:space-y-0">
+                  {AiSuggestions.map((entry, index) => (
+                    <p
+                      key={index}
+                      className="mr-[5%] rounded-[13px] border border-primary bg-white p-2 font-satoshiMedium text-[14px] text-primary transition-all  duration-500 hover:translate-x-1 hover:translate-y-1 hover:transform hover:cursor-pointer lg:w-[49%] "
+                      onClick={() => getAiSuggestions(index)}
+                    >
+                      {entry}
+                    </p>
+                  ))}
+                </div>
+              )}
+
               {conversation.map((entry, index) => (
                 <div key={index}>
                   {entry.type === "user" && (
                     <div className="flex justify-end">
-                      <p className="mr-[5%] rounded-[14px] bg-primary p-2 text-[16px] text-[#ffffff] lg:w-[50%]">
+                      <p className="mr-[5%] rounded-[14px] bg-primary p-2 text-[16px] text-[#ffffff] w-[85%] lg:w-[50%] break-words">
                         {entry.text}
                       </p>
                     </div>
@@ -349,25 +352,26 @@ const AiDesciption: React.FC<AiGenerateProps> = ({
               <div ref={conversationEndRef} />
             </div>
 
-            <p className="h-[15px] ">
+            <p className="h-[15px] mb-1 ">
               {AiLoading ? (
                 <BeatLoader className="text-primary" size={12} />
               ) : (
                 ""
               )}
             </p>
-            <div className=" relative  rounded-[20px] px-4 pb-7 pt-2 font-medium lg:pb-2">
-              <form onSubmit={handleAiChatView}>
+            {/* <div className="h-auto   rounded-[20px] lg:px-4 px-2 py-2 font-medium border-[2px] border-primary">
+              <form onSubmit={handleAiChatView} className="flex items-center">
                 <textarea
                   name="aiQuery"
                   placeholder="Enter a request here"
                   onChange={handleInputChange}
                   value={aiQuery}
-                  className="h-[50px] w-full overflow-hidden text-wrap rounded-[12px] border-[2px] 
-border-primary bg-transparent px-3 pt-3 text-[16px] font-normal text-primary"
+                  className="h-auto w-full overflow-hidden text-wrap  
+ bg-transparent px-2 text-[16px] font-normal text-primary border-none outline-none"
                   required
                 />
-                <div className="absolute right-[10%] top-[20%] hidden lg:right-[5%] lg:top-[25%]  lg:block ">
+
+                <div className="hidden lg:block ">
                   <button type="submit">
                     {" "}
                     <BiSend
@@ -378,7 +382,49 @@ border-primary bg-transparent px-3 pt-3 text-[16px] font-normal text-primary"
                 </div>
 
                 <div
-                  className="absolute right-[10%] top-[20%] lg:right-[5%] lg:top-[25%]  lg:hidden"
+                  className="lg:hidden"
+                  onClick={handleAiChatView}
+                >
+                  <span>
+                    <BiSend
+                      size={26}
+                      className="transform text-primary ease-in-out hover:scale-110 hover:cursor-pointer"
+                    />
+                  </span>
+                </div>
+              </form>
+              {emptyQuerryField && (
+                <p className="font-clashDisplay text-center text-red-500">
+                  Kindly enter your request
+                </p>
+              )}
+            </div> */}
+
+
+            <div className="rounded-[20px] lg:px-4 px-2 pb-2  font-medium border-[2px] border-primary ">
+              <form onSubmit={handleAiChatView} className="flex items-center pt-2">
+                <textarea
+                  name="aiQuery"
+                  placeholder="Enter a request here"
+                  onChange={handleInputChange}
+                  value={aiQuery}
+                  className="w-full overflow-hidden text-wrap  
+ bg-transparent px-2 text-[16px] font-normal text-primary border-none outline-none resize-none"
+                  required              
+                />
+
+                <div className="hidden lg:block ">
+                  <button type="submit">
+                    {" "}
+                    <BiSend
+                      size={26}
+                      className="transform text-primary ease-in-out hover:scale-110 hover:cursor-pointer"
+                    />
+                  </button>
+                </div>
+
+                <div
+                  className="lg:hidden"
                   onClick={handleAiChatView}
                 >
                   <span>

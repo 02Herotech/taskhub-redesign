@@ -1011,7 +1011,6 @@ const AddTaskForm: React.FC = () => {
           isOpen={isSuccessPopupOpen}
           onClose={() => {
             setIsSuccessPopupOpen(false);
-            router.push("/marketplace")
           }}
         >
           <div className="px-24 py-10">
@@ -1051,7 +1050,8 @@ const AddTaskForm: React.FC = () => {
       ) : (
         <Popup
           isOpen={isSuccessPopupOpen}
-          onClose={() => {
+            onClose={() => {
+              router.push("/marketplace");
             setIsSuccessPopupOpen(false);
           }}
         >
