@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
+import { PiFileArrowDownDuotone } from "react-icons/pi";
 import { RiPencilLine } from "react-icons/ri";
 import { z } from "zod";
 
@@ -56,11 +57,15 @@ const EditListing = () => {
     // @ts-expect-error "type delcaration"
     useState<ListingDataType>(tempData);
 
+  const [image, setImage] = useState("");
+
   const listingZodSchema = z.object({
     businessName: z.string(),
     category: z.string(),
     subcategory: z.string(),
     description: z.string(),
+    availableDays: z.array(z.string()),
+    bannerImage: z.string(),
   });
 
   const { listingId } = useParams();
@@ -267,6 +272,37 @@ const EditListing = () => {
           <span className=" text-violet-darker">Upload Image</span>
           <span className=" text-violet-darker">
             This is the main image that would be seen by customers
+            <label className="flex w-full flex-col gap-3 text-lg  text-violet-normal lg:max-w-64 ">
+              <div>
+                {image ? (
+                  <button
+                    type="button"
+                    className="flex items-end justify-center space-x-2"
+                    // onClick={() => setIsFormModalShown(true)}
+                  >
+                    {/* Display a disabled input with message */}
+                    <Image
+                      src={image}
+                      alt="Captured or Selected"
+                      width={300}
+                      height={300}
+                      className="rounded-xl"
+                    />
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    className="flex h-48 w-48 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-slate-500 p-4"
+                    // onClick={() => setIsFormModalShown(true)}
+                  >
+                    <PiFileArrowDownDuotone className="text-xl text-tc-gray" />
+                    <span className="text-center text-tc-gray">
+                      Choose a File Upload supports: JPG, PDF, PNG.
+                    </span>
+                  </button>
+                )}
+              </div>
+            </label>
           </span>
           <span>Add image</span>
           <span>Add a portfolio image</span>
