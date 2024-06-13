@@ -4,7 +4,7 @@ import Button from "@/components/global/Button";
 import { PaymentElement, useElements, useStripe } from "@stripe/react-stripe-js";
 import { useState } from "react";
 
-export default function CheckoutForm({ clientSecret }: { clientSecret: string }) {
+export default function CheckoutForm({ clientSecret, invoiceId }: { clientSecret: string, invoiceId: number}) {
     const stripe = useStripe();
     const elements = useElements();
     const [errorMessage, setErrorMessage] = useState("");
@@ -32,7 +32,7 @@ export default function CheckoutForm({ clientSecret }: { clientSecret: string })
                 elements,
                 clientSecret,
                 confirmParams: {
-                    return_url: 'https://taskhub-redesign.vercel.app/customer/payment/success',
+                    return_url: `http://localhost:3000/customer/payment/success?invoiceId=${invoiceId}`,
                 },
             });
 

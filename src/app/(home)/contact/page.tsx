@@ -98,10 +98,10 @@ const ContactUsPage = () => {
             </section>
             <div className="bg-white lg:bg-gradient-to-b from-[#F8E9FE] via-[#FFFFFF] to-[#FBEAFF] w-full">
                 <div className="flex flex-col lg:grid lg:grid-cols-3 lg:justify-between lg:space-x-20 max-lg:py-14 max-lg:px-5 lg:p-28 font-satoshi">
-                    <div className="w-full lg:col-span-2 max-lg:mb-10">
-                        <form className="lg:space-y-10" onSubmit={handleFormSubmit}>
+                    <div className="w-full lg:col-span-2 max-lg:mb-10 gap-x-10">
+                        <form className="lg:space-y-10 w-[90%]" onSubmit={handleFormSubmit}>
                             <div className="mb-4 flex flex-col lg:flex-row lg:items-center w-full">
-                                <label className="lg:text-black text-[#333236] font-satoshiMedium lg:font-bold text-sm lg:text-xl lg:w-[25%] mb-2 lg:mb-0">
+                                <label className="lg:text-black text-[#333236] font-satoshiMedium lg:font-bold text-sm lg:text-xl lg:w-[18rem] mb-2 lg:mb-0">
                                     Subject category:
                                 </label>
                                 <div className="w-full">
@@ -144,7 +144,7 @@ const ContactUsPage = () => {
                                 </div>
                             </div>
                             <div className="mb-4 lg:flex items-center">
-                                <label className="lg:text-black text-[#333236] font-satoshiMedium lg:font-bold text-sm lg:text-xl lg:w-[25%]">Full name:</label>
+                                <label className="lg:text-black text-[#333236] font-satoshiMedium lg:font-bold text-sm lg:text-xl lg:w-[18rem]">Full name:</label>
                                 <input
                                     type="text"
                                     className="w-full mt-2 p-3 border border-gray-300 rounded-2xl placeholder:text-[#D3D2D5]"
@@ -154,7 +154,7 @@ const ContactUsPage = () => {
                                 />
                             </div>
                             <div className="mb-4 lg:flex items-center">
-                                <label className="lg:text-black text-[#333236] font-satoshiMedium lg:font-bold text-sm lg:text-xl lg:w-[25%]">Email address:</label>
+                                <label className="lg:text-black text-[#333236] font-satoshiMedium lg:font-bold text-sm lg:text-xl lg:w-[18rem]">Email address:</label>
                                 <input
                                     type="email"
                                     className="w-full mt-2 p-3 border border-gray-300 rounded-2xl placeholder:text-[#D3D2D5]"
@@ -164,7 +164,7 @@ const ContactUsPage = () => {
                                 />
                             </div>
                             <div className="mb-4 lg:flex items-start">
-                                <label className="lg:text-black text-[#333236] font-satoshiMedium lg:font-bold text-sm lg:text-xl lg:w-[25%]">Message:</label>
+                                <label className="lg:text-black text-[#333236] font-satoshiMedium lg:font-bold text-sm lg:text-xl lg:w-[18rem]">Message:</label>
                                 <textarea
                                     className="w-full mt-2 p-3 border border-gray-300 rounded-2xl placeholder:text-[#D3D2D5]"
                                     value={message}
