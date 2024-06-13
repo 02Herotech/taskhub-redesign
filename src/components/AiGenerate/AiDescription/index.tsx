@@ -402,7 +402,7 @@ const AiDesciption: React.FC<AiGenerateProps> = ({
 
 
             <div className="rounded-[20px] lg:px-4 px-2 pb-2  font-medium border-[2px] border-primary ">
-              <form onSubmit={handleAiChatView} className="flex items-center py-2">
+              <form onSubmit={handleAiChatView} className="flex items-center pt-2">
                 <textarea
                   name="aiQuery"
                   placeholder="Enter a request here"
