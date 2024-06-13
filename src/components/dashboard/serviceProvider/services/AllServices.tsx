@@ -1,3 +1,5 @@
+"use client";
+
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import { FaStar } from "react-icons/fa6";
@@ -6,13 +8,19 @@ import axios from "axios";
 import { useSession } from "next-auth/react";
 import Loading from "@/shared/loading";
 import { marketPlaceModalIcon } from "@/lib/svgIcons";
-import { BsPencilSquare } from "react-icons/bs";
+import { BsPencilSquare, BsX } from "react-icons/bs";
 import Link from "next/link";
+import { BiDotsVertical, BiX } from "react-icons/bi";
+import DeleteListingModal from "./DeleteListingModal";
 
 const AllServices = () => {
-  const [page, setPage] = useState(0);
   const [loading, setLoading] = useState(false);
   const [servicesData, setservicesData] = useState<ListingDataType[]>([]);
+  const [showDropdown, setshowDropdown] = useState({ id: 0, isShown: true });
+  const [isDeleteModalShown, setIsDeleteModalShown] = useState({
+    id: 0,
+    isShown: false,
+  });
 
   const session = useSession();
   const token = session?.data?.user?.accessToken;
@@ -48,6 +56,14 @@ const AllServices = () => {
     // eslint-disable-next-line
   }, [token]);
 
+  const handleShowDropdown = (id: number) => {
+    if (id === showDropdown.id && showDropdown.isShown === true) {
+      setshowDropdown((prev) => ({ ...prev, isShown: false }));
+    } else {
+      setshowDropdown({ id, isShown: true });
+    }
+  };
+
   return (
     <>
       {loading ? (
@@ -55,7 +71,11 @@ const AllServices = () => {
           <Loading />
         </div>
       ) : (
-        <section className="flex flex-wrap gap-4">
+        <section className="relative flex flex-wrap gap-4 ">
+          <DeleteListingModal
+            isDeleteModalShown={isDeleteModalShown}
+            setIsDeleteModalShown={setIsDeleteModalShown}
+          />
           {servicesData.length === 0 ? (
             <div className="flex min-h-96 w-full flex-col items-center justify-center gap-4 p-4 ">
               <span className="size-64">{marketPlaceModalIcon}</span>
@@ -76,60 +96,88 @@ const AllServices = () => {
                 whileInView={{ opacity: 1, translateY: "0" }}
                 transition={{ duration: 0.5 }}
               >
-                <Link href={"/service-provider/services/" + item.id}>
-                  <div className="space-y-2">
-                    <div className="relative h-52  w-72 overflow-hidden rounded-xl">
-                      <Image
-                        src={
-                          item.businessPictures[0] ??
-                          "/assets/images/serviceProvider/drain.png"
-                        }
-                        width={400}
-                        height={400}
-                        alt={item.listingTitle}
-                        className=" h-full w-full object-cover transition-transform duration-300 group-hover:scale-105 "
-                      />
-                      <span className="absolute right-3 top-3 flex items-center gap-2 rounded-full border bg-orange-normal  px-2 py-1 text-sm text-white  ">
-                        <BsPencilSquare className="" />
-                        Edit
-                      </span>
-                    </div>
-                    <p className="px-2 text-3xl font-bold text-[#190E3F] ">
-                      {item.listingTitle}
-                    </p>
-
-                    <div className="px-2">
-                      <p className="text-xs"> 4.5 </p>
-                      <div className="flex items-center gap-1">
-                        <FaStar size={10} color="gold" />
-                        <FaStar size={10} color="gold" />
-                        <FaStar size={10} color="gold" />
-                        <FaStar size={10} color="gold" />
-                        <FaStar size={10} color="grey" />
+                <div className="space-y-2">
+                  <div className="relative h-52  w-72 overflow-hidden rounded-xl">
+                    <Image
+                      src={
+                        item.businessPictures[0] ??
+                        "/assets/images/serviceProvider/drain.png"
+                      }
+                      width={400}
+                      height={400}
+                      alt={item.listingTitle}
+                      className=" h-full w-full object-cover transition-transform duration-300 group-hover:scale-105 "
+                    />
+                    <div className="absolute right-3 top-3 flex flex-col justify-end">
+                      <div className="flex justify-end">
+                        <button
+                          onClick={() => handleShowDropdown(item.id)}
+                          className=" flex items-center gap-2 rounded-full border bg-orange-normal  px-2 py-1 text-sm text-white  "
+                        >
+                          <BiDotsVertical />
+                        </button>
                       </div>
-                      <div className="flex items-center justify-between gap-3">
-                        <div className="flex items-center gap-2 py-3">
-                          <Image
-                            src={
-                              user?.profileImage ??
-                              "/assets/images/serviceProvider/user.jpg"
-                            }
-                            alt={user?.firstName ?? "user"}
-                            width={20}
-                            height={20}
-                            className="rounded-full"
-                          />
-                          <p className="text-xs">
-                            {user?.firstName} {user?.lastName}
-                          </p>
-                        </div>
-                        <p className="font-bold text-[#381F8C] ">
-                          From ${item.planOnePrice}
-                        </p>
+                      <div
+                        className={`flex h-32 flex-col overflow-hidden rounded-md bg-white transition-all duration-300 ${showDropdown.id === item.id && showDropdown.isShown ? "pointer-events-auto max-h-20 shadow" : "pointer-events-none max-h-0"} `}
+                      >
+                        <Link
+                          href={"/service-provider/services/" + item.id}
+                          className="flex h-10 w-32 items-center gap-2 px-2 transition-colors duration-300 hover:bg-violet-100 "
+                        >
+                          <BsPencilSquare />
+                          Edit
+                        </Link>
+                        <button
+                          onClick={() => {
+                            setIsDeleteModalShown({
+                              id: item.id,
+                              isShown: true,
+                            });
+                            handleShowDropdown(item.id);
+                          }}
+                          className="flex h-10 w-32 items-center gap-2 bg-white px-2 text-red-500 transition-colors duration-300 hover:bg-violet-100 "
+                        >
+                          <BsX />
+                          Delete
+                        </button>
                       </div>
                     </div>
                   </div>
-                </Link>
+                  <p className="px-2 text-3xl font-bold text-[#190E3F] ">
+                    {item.listingTitle}
+                  </p>
+
+                  <div className="px-2">
+                    <p className="text-xs"> 4.5 </p>
+                    <div className="flex items-center gap-1">
+                      <FaStar size={10} color="gold" />
+                      <FaStar size={10} color="gold" />
+                      <FaStar size={10} color="gold" />
+                      <FaStar size={10} color="gold" />
+                      <FaStar size={10} color="grey" />
+                    </div>
+                    <div className="flex items-center justify-between gap-3">
+                      <div className="flex items-center gap-2 py-3">
+                        <Image
+                          src={
+                            user?.profileImage ??
+                            "/assets/images/serviceProvider/user.jpg"
+                          }
+                          alt={user?.firstName ?? "user"}
+                          width={20}
+                          height={20}
+                          className="rounded-full"
+                        />
+                        <p className="text-xs">
+                          {user?.firstName} {user?.lastName}
+                        </p>
+                      </div>
+                      <p className="font-bold text-[#381F8C] ">
+                        From ${item.planOnePrice}
+                      </p>
+                    </div>
+                  </div>
+                </div>
               </motion.div>
             ))
           )}

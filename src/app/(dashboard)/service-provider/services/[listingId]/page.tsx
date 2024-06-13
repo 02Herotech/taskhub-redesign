@@ -1,3 +1,4 @@
+"use client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
 import React from "react";
@@ -7,13 +8,10 @@ import { z } from "zod";
 
 const EditListing = () => {
   const listingZodSchema = z.object({
-    businessName: z.string().min(15),
-    serviceDescription: z.string().min(30),
+    businessName: z.string(),
     category: z.string(),
-    subCategory: z.string(),
+    subcategory: z.string(),
     description: z.string(),
-    pricing: z.string(),
-    available: z.string(),
   });
 
   type listingZodType = z.infer<typeof listingZodSchema>;
@@ -30,7 +28,7 @@ const EditListing = () => {
     resolver: zodResolver(listingZodSchema),
   });
 
-  const watchField = watch();
+  // const watchField = watch();
 
   const handleUpdateListing: SubmitHandler<listingZodType> = async (data) => {
     console.log(data);
@@ -42,7 +40,7 @@ const EditListing = () => {
         Edit Service
       </h1>
       <form
-        onSubmit={handleSubmit(handleUpdateListing)}
+        // onSubmit={handleSubmit(handleUpdateListing)}
         className="mx-auto  w-full max-w-md space-y-2 font-satoshiMedium text-violet-normal "
       >
         {/* Service description */}
