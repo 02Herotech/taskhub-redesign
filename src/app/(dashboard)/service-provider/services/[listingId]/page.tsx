@@ -5,57 +5,14 @@ import Image from "next/image";
 import { useParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
+import { BiChevronDown, BiX } from "react-icons/bi";
+import { BsTriangleFill } from "react-icons/bs";
 import { PiFileArrowDownDuotone } from "react-icons/pi";
 import { RiPencilLine } from "react-icons/ri";
 import { z } from "zod";
 
-const tempData = {
-  id: 35,
-  state: "",
-  postCode: "",
-  suburb: "",
-  serviceProvider: {
-    id: 1,
-    user: {
-      id: 1,
-      fullName: "Anthony Dev",
-      profileImage:
-        "http://res.cloudinary.com/ddgm9zdnr/image/upload/v1717685216/hzvnxejvpbcaevpxhpgb.png",
-    },
-    bio: "I am a software developer with years of experience",
-  },
-  category: {
-    id: 3,
-    categoryName: "Information and Technology",
-  },
-  listingTitle: "Casual Danser",
-  stripeId: "prod_QGfDM2zd9LlA5E",
-  planOneDescription: "Street dancing",
-  planOnePrice: 25,
-  planTwoDescription: "",
-  planTwoPrice: null,
-  planThreeDescription: "",
-  planThreePrice: null,
-  taskType: "REMOTE_SERVICE",
-  businessPictures: [
-    "http://res.cloudinary.com/ddgm9zdnr/image/upload/v1718024645/xc05hkanpe1usoi2t58k.png",
-    "http://res.cloudinary.com/ddgm9zdnr/image/upload/v1718024646/cmy1q0nt8rlyr8rw3bek.png",
-    "http://res.cloudinary.com/ddgm9zdnr/image/upload/v1718024647/zjoodtijqrzy2jj6ddpu.png",
-    "http://res.cloudinary.com/ddgm9zdnr/image/upload/v1718024647/n7bsgtjoskr5w9uz3nmu.png",
-  ],
-  availableDays: ["TUESDAY", "MONDAY", "THURSDAY"],
-  listingDescription: "You Need A Dancer, I've Got Your Back",
-  reviews: [],
-  subCategory: {
-    name: "House Keeping",
-    id: 3,
-  },
-};
-
 const EditListing = () => {
-  const [currentListing, setCurrentListing] =
-    // @ts-expect-error "type delcaration"
-    useState<ListingDataType>(tempData);
+  const [currentListing, setCurrentListing] = useState<ListingDataType>();
 
   const [image, setImage] = useState("");
 
@@ -107,6 +64,8 @@ const EditListing = () => {
         category: currentListing.category.categoryName,
         subcategory: currentListing.subCategory.name,
         description: currentListing.listingDescription,
+        availableDays: currentListing.availableDays,
+        bannerImage: currentListing.businessPictures[0],
       });
     }
 
@@ -126,7 +85,7 @@ const EditListing = () => {
       </h1>
       <form
         // onSubmit={handleSubmit(handleUpdateListing)}
-        className="mx-auto  w-full max-w-md space-y-2 font-satoshiMedium text-violet-normal "
+        className="mx-auto  w-full max-w-lg space-y-2 font-satoshiMedium text-violet-normal "
       >
         {/* Service description */}
         <section className="flex flex-col gap-2 font-satoshiMedium">
@@ -166,7 +125,7 @@ const EditListing = () => {
             />
           </label>
           {/* Description */}
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-4">
             <label className="flex flex-col gap-2">
               <span className=" text-violet-darker">Description</span>
               <textarea
@@ -191,7 +150,7 @@ const EditListing = () => {
           </div>
         </section>
         {/* { Service Details } */}
-        <section className="flex flex-col gap-2 font-satoshiMedium">
+        <section className="flex flex-col gap-2 space-y-4 font-satoshiMedium">
           <h1 className="my-2 flex items-center gap-2 font-satoshiBold text-2xl font-bold ">
             <span>Service Details</span>
             <span>
@@ -265,47 +224,88 @@ const EditListing = () => {
         </section>
 
         {/* Image section */}
-        <section className="flex flex-col gap-2 font-satoshiMedium">
+        <section className="flex flex-col gap-2 space-y-4 font-satoshiMedium">
+          <h1 className="my-2 flex items-center gap-2 font-satoshiBold text-2xl font-bold ">
+            <span>Image Upload</span>
+            <span>
+              <RiPencilLine className="text-violet-normal" />
+            </span>
+          </h1>
           {/* Availability */}
-          <div></div>
+          <div className=" relative flex justify-between gap-5 rounded-md bg-violet-light p-3 ">
+            <div className="absolute inset-0 h-full w-full" />
+            <div className="flex flex-wrap gap-3  ">
+              {watchField.availableDays &&
+                watchField.availableDays.length > 0 &&
+                watchField.availableDays.map((item: string, index: number) => (
+                  <div key={index} className="relative">
+                    <button className="absolute -right-1 -top-1 rounded-full border border-slate-600 bg-slate-200 p-0.5 text-slate-600">
+                      <BiX className="size-3" />
+                    </button>
+                    <button className="text-orange rounded-full border border-orange-normal bg-[#FFF0DA] px-4 py-2 font-satoshiMedium text-xs font-normal text-orange-normal">
+                      {item}
+                    </button>
+                  </div>
+                ))}
+            </div>
+            <button className="px-2 text-violet-normal">
+              <BsTriangleFill
+                className="size-3 rotate-[60deg] "
+                fill="rgb(20 11 49)"
+              />
+            </button>
+          </div>
           {/* Upload Image */}
-          <span className=" text-violet-darker">Upload Image</span>
-          <span className=" text-violet-darker">
-            This is the main image that would be seen by customers
-            <label className="flex w-full flex-col gap-3 text-lg  text-violet-normal lg:max-w-64 ">
-              <div>
-                {image ? (
-                  <button
-                    type="button"
-                    className="flex items-end justify-center space-x-2"
-                    // onClick={() => setIsFormModalShown(true)}
-                  >
-                    {/* Display a disabled input with message */}
-                    <Image
-                      src={image}
-                      alt="Captured or Selected"
-                      width={300}
-                      height={300}
-                      className="rounded-xl"
-                    />
-                  </button>
-                ) : (
-                  <button
-                    type="button"
-                    className="flex h-48 w-48 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-slate-500 p-4"
-                    // onClick={() => setIsFormModalShown(true)}
-                  >
-                    <PiFileArrowDownDuotone className="text-xl text-tc-gray" />
-                    <span className="text-center text-tc-gray">
-                      Choose a File Upload supports: JPG, PDF, PNG.
-                    </span>
-                  </button>
-                )}
-              </div>
-            </label>
+          <span className=" font-satoshiBold text-xl text-violet-darker">
+            Upload Image
           </span>
-          <span>Add image</span>
-          <span>Add a portfolio image</span>
+          <div>
+            <span className=" text-violet-darker">
+              This is the main image that would be seen by customers
+            </span>
+            <div className="flex w-full flex-col gap-3 text-lg  text-violet-normal lg:max-w-64 ">
+              <div>
+                <button
+                  type="button"
+                  className="my-2 flex items-end justify-center space-x-2 rounded-xl border border-dashed border-violet-normal "
+                >
+                  {/* Display a disabled input with message */}
+                  <Image
+                    src={currentListing?.businessPictures[0] ?? ""}
+                    alt="Captured or Selected"
+                    width={300}
+                    height={300}
+                    className="rounded-xl"
+                  />
+                </button>
+              </div>
+            </div>
+          </div>
+          {/* add portfolio images */}
+          <div>
+            <span>Add a portfolio image</span>
+            <div className="flex flex-wrap items-center justify-between gap-2 lg:grid lg:grid-cols-3">
+              {currentListing &&
+                currentListing.businessPictures
+                  .slice(1, 4)
+                  .map((item, index) => (
+                    <button
+                      key={index}
+                      type="button"
+                      className="my-2 flex items-end justify-center space-x-2 rounded-xl border border-dashed border-violet-normal "
+                    >
+                      {/* Display a disabled input with message */}
+                      <Image
+                        src={item}
+                        alt="Captured or Selected"
+                        width={300}
+                        height={300}
+                        className="size-40 rounded-xl object-cover"
+                      />
+                    </button>
+                  ))}
+            </div>
+          </div>
         </section>
         <button className="rounded-full border border-violet-normal bg-violet-normal px-4 py-2 font-satoshi text-sm font-normal text-white transition-opacity duration-300 hover:opacity-90 ">
           Save and Exit
