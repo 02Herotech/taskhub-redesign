@@ -1,4 +1,5 @@
 "use client";
+import { typeData } from "@/data/marketplace/data";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
 import Image from "next/image";
@@ -23,6 +24,10 @@ const EditListing = () => {
     description: z.string(),
     availableDays: z.array(z.string()),
     bannerImage: z.string(),
+    postcode: z.string(),
+    suburb: z.string(),
+    state: z.string(),
+    typeOfService: z.string(),
   });
 
   const { listingId } = useParams();
@@ -33,7 +38,6 @@ const EditListing = () => {
         const url =
           "https://smp.jacinthsolutions.com.au/api/v1/listing/" + listingId;
         const { data } = await axios.get(url);
-        console.log(data);
         setCurrentListing(data);
       } catch (error: any) {
         console.log(error.response.data);
@@ -66,9 +70,12 @@ const EditListing = () => {
         description: currentListing.listingDescription,
         availableDays: currentListing.availableDays,
         bannerImage: currentListing.businessPictures[0],
+        postcode: currentListing.postCode,
+        suburb: currentListing.suburb,
+        state: currentListing.state,
+        typeOfService: currentListing.taskType,
       });
     }
-
     // eslint-disable-next-line
   }, [currentListing]);
 
@@ -183,43 +190,57 @@ const EditListing = () => {
           </div>
 
           {/* Type of Service */}
-          <div className="my-2 space-y-2 ">
+          <div className="my-2 space-y-6 ">
             <span className=" text-violet-darker">Type of service</span>
             <div className="space-x-2">
-              <button className="rounded-full border border-violet-normal bg-violet-normal px-4 py-2 font-satoshi text-sm font-normal text-white transition-opacity duration-300 hover:opacity-90 ">
-                Pysical Service
-              </button>
-              <button className="rounded-full border border-violet-normal bg-violet-light px-4 py-2 font-satoshi text-sm font-normal text-violet-normal transition-opacity duration-300 hover:opacity-90 ">
-                Remote Service
-              </button>
+              {typeData.map((item, index) => (
+                <button
+                  key={index}
+                  className={`rounded-full border border-violet-normal  px-4 py-2 font-satoshi text-sm font-normal  transition-opacity duration-300 hover:opacity-90 ${item.value === watchField.typeOfService ? "bg-violet-normal text-white" : "bg-violet-light text-violet-normal"} `}
+                  onClick={() => setValue("typeOfService", item.value)}
+                >
+                  {item.label} Service
+                </button>
+              ))}
             </div>
 
             {/* Physical Service Props */}
-            <div className="flex justify-between gap-4 ">
-              {/* postcode */}
-              <label className="flex flex-col gap-2">
-                <span className=" text-violet-darker">Postcode</span>
-                <input
-                  type="text"
-                  className="w-28 rounded-lg bg-violet-light p-3 pl-4 outline-none"
-                />
-              </label>
-              {/* State */}
-              <label className="flex flex-col gap-2">
-                <span className=" text-violet-darker">State</span>
-                <input
-                  type="text"
-                  className=" w-32 rounded-lg bg-violet-light p-3 pl-4 outline-none"
-                />
-              </label>
-              {/* suburb */}
-              <label className="flex flex-col gap-2">
-                <span className="font-bold text-violet-darker">Suburb</span>
-                <select className="min-w-40 rounded-lg bg-violet-light p-3 pl-4 outline-none">
-                  <option value="">Suburb</option>
-                </select>
-              </label>
-            </div>
+            {watchField.typeOfService === typeData[1].value ? (
+              <div className="flex flex-wrap justify-between gap-4 ">
+                {/* postcode */}
+                <label className="flex flex-col gap-2">
+                  <span className=" text-violet-darker">Postcode</span>
+                  <input
+                    type="text"
+                    disabled
+                    className="w-28 rounded-lg bg-violet-light p-3 pl-4 outline-none"
+                    {...register("postcode")}
+                  />
+                </label>
+                {/* State */}
+                <label className="flex flex-col gap-2">
+                  <span className=" text-violet-darker">State</span>
+                  <input
+                    type="text"
+                    disabled
+                    className=" w-32 rounded-lg bg-violet-light p-3 pl-4 outline-none"
+                    {...register("state")}
+                  />
+                </label>
+                {/* suburb */}
+                <label className="flex flex-col gap-2">
+                  <span className="font-bold text-violet-darker">Suburb</span>
+                  <input
+                    type="text"
+                    disabled
+                    className=" w-48 rounded-lg bg-violet-light p-3 pl-4 outline-none"
+                    {...register("suburb")}
+                  />
+                </label>
+              </div>
+            ) : (
+              <div></div>
+            )}
           </div>
         </section>
 
