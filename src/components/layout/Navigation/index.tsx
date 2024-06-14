@@ -77,7 +77,7 @@ const Navigation = () => {
       ? serviceProviderLinks
       : customerLinks;
   const notificationRoute = isServiceProvider
-    ? "/service-provider/dashbaord/notification"
+    ? "/service-provider/dashboard/notification"
     : "/customer/notifications";
 
   return (
@@ -101,7 +101,7 @@ const Navigation = () => {
                 <li key={link.url} className="relative">
                   <Link
                     href={link.url as string}
-                    className={cn("text-xl font-semibold text-primary", {
+                    className={cn("text-xl font-clashMedium text-primary", {
                       "text-tc-orange":
                         link.url === "/" && pathname === "/"
                           ? true

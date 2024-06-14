@@ -36,12 +36,8 @@ const Dropdown = ({
   onTrigger,
 }: Props) => {
   const [showDropdown, setShowDropdown] = useState(false);
-  const menuRef = useRef(null);
-  const [listening, setListening] = useState(false);
-
-  useEffect(() => {
-    listenForOutsideClicks(listening, setListening, menuRef, setShowDropdown);
-  }, [listening, showDropdown, menuRef, setShowDropdown]);
+  const menuRef = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLDivElement>(null);
 
   const closeDropdown = () => setShowDropdown(false);
 
@@ -51,18 +47,38 @@ const Dropdown = ({
     }
   };
 
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        menuRef.current &&
+        !menuRef.current.contains(event.target as Node) &&
+        triggerRef.current &&
+        !triggerRef.current.contains(event.target as Node)
+      ) {
+        closeDropdown();
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [menuRef, triggerRef]);
+
   return (
     <DropdownContext.Provider value={{ closeDropdown }}>
-      <div
-        className="relative w-full"
-        ref={menuRef}
-        onMouseEnter={() => triggerStyle === "hover" && setShowDropdown(true)}
-        onMouseLeave={() => triggerStyle === "hover" && setShowDropdown(false)}
-      >
+      <div className="relative w-full" ref={menuRef}>
         <div
+          ref={triggerRef}
+          onMouseEnter={() => triggerStyle === "hover" && setShowDropdown(true)}
+          onMouseLeave={() => triggerStyle === "hover" && setShowDropdown(false)}
           onClick={() => {
-            triggerStyle === "click" && setShowDropdown(!showDropdown);
-            !showDropdown && onTrigger && onTrigger();
+            if (triggerStyle === "click") {
+              setShowDropdown((prev) => !prev);
+              if (!showDropdown && onTrigger) {
+                onTrigger();
+              }
+            }
           }}
         >
           {trigger && trigger(showDropdown)}
@@ -80,7 +96,7 @@ const Dropdown = ({
                   position === "bottom" ? "top-[38px]" : "bottom-[23px]",
                   className,
                 )}
-                onClick={handleChildClick} 
+                onClick={handleChildClick}
               >
                 <div>{children}</div>
               </motion.div>

@@ -29,12 +29,11 @@ const Tasks = () => {
     const [locationValues, setLocationValues] = useState<[number, number]>([1, 50]);
     const [selectedService, setSelectedService] = useState<"REMOTE_SERVICE" | "PHYSICAL_SERVICE">("PHYSICAL_SERVICE");
     const [categoriesData, setCategoriesData] = useState<Category[]>([]);
-    const [currentPage, setCurrentPage] = useState(1);
+    const [currentPage, setCurrentPage] = useState(0);
     const [filteredData, setFilteredData] = useState<Task[]>([]);
     const itemsPerPage = 9;
     const [dataToRender, setDataToRender] = useState<Task[]>([]);
     const [filtersApplied, setFiltersApplied] = useState(false);
-    const [isCategoryFilterOpen, setIsCategoryFilterOpen] = useState(false)
 
     const { data: tasksData, isLoading, refetch } = useGetActiveTasksQuery(currentPage);
 
@@ -167,22 +166,27 @@ const Tasks = () => {
         <section className="pt-7 container">
             <div className="hidden lg:flex lg:space-x-4 mt-14 items-center">
                 {/* Category */}
-                <NewDropdown
-                    name="Category"
-                    setIsDropdownOpen={setIsCategoryFilterOpen}
+                <Dropdown
+                    trigger={() => (
+                        <div className="w-full border-2 border-primary text-primary bg-[#F1F1F2] flex items-center justify-between font-semibold py-2 px-4 rounded-full">
+                            <h2>Category</h2>
+                            <FaSortDown />
+                        </div>
+                    )}
+                    className='left-0 right-0 top-14'
                 >
-                    <form className='bg-white rounded-2xl py-4 px-2'>
+                    <form className='bg-white min-w-[240px] rounded-2xl p-2'>
                         {categoriesData.map((category, index) => (
                             <div
                                 key={index}
-                                className='flex w-full transition-all text-status-darkViolet text-base font-bold hover:text-tc-orange cursor-pointer items-center justify-between py-3 px-5'>
+                                className='flex w-full transition-all text-status-darkViolet text-base font-bold hover:text-tc-orange cursor-pointer items-center justify-between p-2'>
                                 <div className="">
                                     {category?.categoryName}
                                 </div>
                             </div>
                         ))}
                     </form>
-                </NewDropdown>
+                </Dropdown>
 
                 {/* Location */}
                 <Dropdown
@@ -298,12 +302,12 @@ const Tasks = () => {
                     )}
                     className='left-0 right-0 mx-auto top-14'>
                     <form className='bg-white rounded-2xl p-4'>
-                        <h4 className="text-lg text-black font-medium mb-4 px-5">Others</h4>
+                        <h4 className="text-lg text-black font-medium mb-4 px-2">Others</h4>
                         {otherOptionsDropdown.map((option, index) => (
                             <div
                                 key={index}
                                 onClick={option.onClick}
-                                className='flex w-full transition-all text-[#140B31] text-base font-bold hover:text-tc-orange cursor-pointer items-center justify-between py-2 px-5'>
+                                className='flex w-full transition-all text-[#140B31] text-base font-bold hover:text-tc-orange cursor-pointer items-center justify-between p-2'>
                                 <div className="">
                                     {option.label}
                                 </div>

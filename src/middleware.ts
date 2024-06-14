@@ -49,5 +49,6 @@ export const config = {
     "/customer/settings/:path*",
     "/customer/tasks/:path*",
     "/service-provider/:path*",
+    
   ],
 };
