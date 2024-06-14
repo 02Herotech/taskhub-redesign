@@ -196,6 +196,7 @@ const EditListing = () => {
               {typeData.map((item, index) => (
                 <button
                   key={index}
+                  type="button"
                   className={`rounded-full border border-violet-normal  px-4 py-2 font-satoshi text-sm font-normal  transition-opacity duration-300 hover:opacity-90 ${item.value === watchField.typeOfService ? "bg-violet-normal text-white" : "bg-violet-light text-violet-normal"} `}
                   onClick={() => setValue("typeOfService", item.value)}
                 >
