@@ -60,7 +60,7 @@ const Page = () => {
                   height={1600}
                   layout="intrinsic"
                   quality={100}
-                  className="mx-auto max-h-[400px] min-h-64 w-full max-w-screen-xl  rounded-lg object-cover "
+                  className="mx-auto max-h-[400px] w-full max-w-screen-xl  rounded-lg object-cover "
                 />
               </div>
             </header>
@@ -68,13 +68,13 @@ const Page = () => {
             {/* content */}
             <div className="container space-y-4 ">
               {/* <p className="font-medium">Recently Added</p> */}
-              <h3 className="text-4xl font-extrabold">
+              <h3 className="text-4xl font-extrabold ">
                 {displayData?.listingTitle}
               </h3>
               <p className="font-satoshiMedium text-xl font-medium">
                 Service Purpose
               </p>
-              <p className="font-satoshiMedium">
+              <p className="font-satoshiMedium capitalize">
                 {displayData?.listingDescription}
               </p>
               <h4 className="text-3xl font-extrabold">Location</h4>
@@ -84,9 +84,9 @@ const Page = () => {
                 </span>
                 <span>{displayData?.suburb}</span>
               </p>
-              <p className="flex items-center gap-2 text-sm underline ">
+              {/* <p className="flex items-center gap-2 text-sm underline ">
                 View Maps <BsArrowUp className="rotate-45" />
-              </p>
+              </p> */}
               <h4 className="text-3xl font-extrabold">Date and Time</h4>
               <p className="flex items-center gap-2 text-slate-500 ">
                 <span>
