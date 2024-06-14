@@ -77,7 +77,7 @@ const Navigation = () => {
       ? serviceProviderLinks
       : customerLinks;
   const notificationRoute = isServiceProvider
-    ? "/service-provider/dashbaord/notification"
+    ? "/service-provider/dashboard/notification"
     : "/customer/notifications";
 
   return (

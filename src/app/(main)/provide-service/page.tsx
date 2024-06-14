@@ -1237,13 +1237,13 @@ const ProvideService: React.FC = () => {
                   : "text-status-purpleBase"
               }`}
             >
-              <p className="flex items-center  text-[12px] md:text-[16px] lg:gap-3">
+              <p className="flex items-center gap-1 text-[9px] md:text-[16px] lg:gap-3">
                 <span
                   className={`${
                     currentPage === 1
                       ? "bg-status-purpleBase text-white"
                       : "bg-status-purpleBase text-white"
-                  } rounded-2xl border-none px-3 py-2`}
+                  } rounded-2xl border-none px-2 py-1 lg:px-3 lg:py-2`}
                 >
                   01
                 </span>{" "}
@@ -1260,13 +1260,13 @@ const ProvideService: React.FC = () => {
                   : " text-[#716F78]"
               }`}
             >
-              <p className="flex items-center gap-2 text-[12px] md:text-[16px] lg:gap-3">
+              <p className="flex items-center gap-1 text-[9px] md:text-[16px] lg:gap-3">
                 <span
                   className={`${
                     currentPage === 2 || currentPage === 3
                       ? "bg-status-purpleBase text-white"
                       : "bg-[#EAE9EB] text-[#716F78]"
-                  } rounded-2xl border-none px-3 py-2`}
+                  } rounded-2xl border-none px-2 py-1 lg:px-3 lg:py-2`}
                 >
                   02
                 </span>{" "}
@@ -1281,13 +1281,13 @@ const ProvideService: React.FC = () => {
                 currentPage === 3 ? "text-status-purpleBase" : " text-[#716F78]"
               }`}
             >
-              <p className="flex items-center gap-2 text-[12px] md:text-[16px] lg:gap-3">
+              <p className="flex items-center gap-1 text-[9px] md:text-[16px] lg:gap-3">
                 <span
                   className={`${
                     currentPage === 3
                       ? "bg-status-purpleBase text-white"
                       : "bg-[#EAE9EB] text-[#716F78]"
-                  } rounded-2xl border-none px-3 py-2`}
+                  } rounded-2xl border-none px-2 py-1 lg:px-3 lg:py-2`}
                 >
                   03
                 </span>{" "}
@@ -1299,7 +1299,7 @@ const ProvideService: React.FC = () => {
           <div>
             <div className="flex justify-center pb-4">
               <div
-                className="container flex w-80 items-center justify-center space-x-5 border-2 border-[#EAE9EB] p-3 lg:w-2/3"
+                className="container flex items-center justify-center space-x-5 border-2 border-[#EAE9EB] p-3 lg:w-2/3"
                 style={{
                   borderRadius: "0px 0px 20px 20px ",
                   borderTop: "none",
@@ -1423,11 +1423,11 @@ const ProvideService: React.FC = () => {
                 <p className=" text-center font-clashBold text-[32px] font-extrabold text-[#2A1769] lg:text-[42px]">
                   Service created
                 </p>
-                <p className="text-center font-satoshiMedium lg:text-[20px]">
-                  Your Service Listing has been created!
-                  <br /> please click on the button to proceed to <br />{" "}
+                <div className="text-center font-satoshiMedium lg:text-[20px]">
+                    <p>Your Service Listing has been created!</p>
+                  please click on the button to proceed to{" "}
                   marketplace
-                </p>
+                </div>
                 <Image
                   src={image}
                   alt="image"

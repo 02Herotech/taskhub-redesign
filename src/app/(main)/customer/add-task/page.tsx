@@ -496,7 +496,7 @@ const AddTaskForm: React.FC = () => {
               <div className="grid space-y-3">
                 <div className="flex items-center justify-between">
                   <label className="font-semibold text-status-darkpurple">
-                    Briefly tell us what you need done?{" "}
+                    Write a short title for the task you need done?{" "}
                     <span className="font-extrabold text-[#ff0000]">*</span>
                   </label>
                   {wordCount > 3 && (
