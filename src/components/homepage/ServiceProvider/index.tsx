@@ -16,8 +16,15 @@ import icon3 from "../../../../public/assets/images/homepage/serviceProvider/spI
 import icon4 from "../../../../public/assets/images/homepage/serviceProvider/spIcon4.png";
 
 const SPHomepage = () => {
-    const { data: session } = useSession();
+    const session = useSession();
     const router = useRouter();
+
+    const serviceProviderParams = new URLSearchParams({ userType: "serviceProvider" });
+
+
+    const isServiceProvider =
+        session?.data?.user?.user?.roles[0] === "SERVICE_PROVIDER";
+
 
     const handleBecomeSP = async (e: { preventDefault: () => void }) => {
         e.preventDefault();
@@ -34,7 +41,7 @@ const SPHomepage = () => {
             console.log("Sign Out: ", response);
 
             if (response.status === 200) {
-                router.push("/auth");
+                router.push(`/auth/sign-up?${serviceProviderParams.toString()}`);
             }
         } catch (error) {
             console.error(error);
@@ -132,21 +139,19 @@ const SPHomepage = () => {
                             className="text-bold rounded-[50px] w-[250px] bg-[#FE9B07] text-[#FFF5E6] lg:text-[16px]
                           px-3 py-2   ml-16 mt-10 hover:bg-[#f0b357]  "
                         >
-                            {session?.user?.user?.roles[0] === "CUSTOMER" ? (
+                            {!isServiceProvider ? (
                                 <div
                                     onClick={handleBecomeSP}
                                     className="flex items-center justify-center"
                                 >
                                     <p className="font-satoshiMedium">Become a Service Provider</p>
-
                                 </div>
                             ) : (
                                 <Link
-                                    href="/service-provider/dashboard"
+                                    href="/service-provider/profile"
                                     className="flex items-center justify-center"
                                 >
                                     <p className="font-satoshiMedium">Become a Service Provider</p>
-
                                 </Link>
                             )}
                         </button>
@@ -199,7 +204,7 @@ const SPHomepage = () => {
                         className="text-bold rounded-[50px] w-[250px] bg-[#FE9B07] text-[#FFF5E6] lg:text-[16px]
                           px-3 py-2   mt-10 hover:bg-[#e79823]  "
                     >
-                        {session?.user?.user?.roles[0] === "CUSTOMER" ? (
+                        {!isServiceProvider ? (
                             <div
                                 onClick={handleBecomeSP}
                                 className="flex items-center justify-center"
@@ -208,7 +213,7 @@ const SPHomepage = () => {
                             </div>
                         ) : (
                             <Link
-                                href="/service-provider/dashboard"
+                                href="/service-provider/profile"
                                 className="flex items-center justify-center"
                             >
                                 <p className="font-satoshiMedium">Become a Service Provider</p>

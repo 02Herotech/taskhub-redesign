@@ -1,13 +1,10 @@
 'use client'
 import BoxFilter from '@/components/main/marketplace/BoxFilter'
 import React from 'react'
-import { FaHome } from "react-icons/fa";
+import { FaGraduationCap, FaHeartbeat, FaHome, FaImage } from "react-icons/fa";
 import { MdPersonalInjury } from "react-icons/md";
 import { GrPersonalComputer } from "react-icons/gr";
 import { BsCalendar2EventFill } from "react-icons/bs";
-import { GiStoneCrafting } from "react-icons/gi";
-import { FaBabyCarriage } from "react-icons/fa";
-import { MdSecurity } from "react-icons/md";
 import { MdLocalGroceryStore } from "react-icons/md";
 import { useRouter } from "next/navigation";
 
@@ -15,10 +12,10 @@ const categoryIcons = [
   FaHome,
   MdPersonalInjury,
   GrPersonalComputer,
+  FaGraduationCap,
+  FaImage,
+  FaHeartbeat,
   BsCalendar2EventFill,
-  GiStoneCrafting,
-  FaBabyCarriage,
-  MdSecurity,
   MdLocalGroceryStore,
 ];
 

@@ -38,20 +38,64 @@ const useImageTransition = (images: any, transitionDuration: any) => {
 };
 
 const HeroSection = () => {
+
   const serviceProviderParams = new URLSearchParams({ userType: "serviceProvider" });
+
+  const session = useSession();
+  const router = useRouter();
+  const isServiceProvider =
+    session?.data?.user?.user?.roles[0] === "SERVICE_PROVIDER";
+
+  const handleBecomeSP = async (e: { preventDefault: () => void }) => {
+    e.preventDefault();
+
+    try {
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/auth/logout`,
+      );
+
+      await signOut({
+        redirect: false,
+      });
+
+      console.log("Sign Out: ", response);
+
+      if (response.status === 200) {
+        router.push(`/auth/sign-up?${serviceProviderParams.toString()}`);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handlePostTask = async (e: { preventDefault: () => void }) => {
+    e.preventDefault();
+    try {
+        const response = await axios.post(
+            `${process.env.NEXT_PUBLIC_API_URL}/auth/logout`,
+        );
+        console.log("Sign Out: ", response);
+
+        if (response.status === 200) {
+            await signOut({
+                redirect: false,
+            });
+            router.push("/customer/add-task");
+        }
+    } catch (error) {
+        console.error(error);
+    }
+};
 
   // Image1 transition
   const images1 = [heroImage1, heroImage1a];
   const currentImageIndex1 = useImageTransition(images1, 3000);
-
   // Image2 transition
   const images2 = [heroImage2, heroImage2a];
   const currentImageIndex2 = useImageTransition(images2, 3000);
-
   // Image3 transition
   const images3 = [heroImage3, heroImage3a];
   const currentImageIndex3 = useImageTransition(images3, 3000);
-
   // Image4 transition
   const images4 = [heroImage4, heroImage4a];
   const currentImageIndex4 = useImageTransition(images4, 3000);
@@ -62,23 +106,6 @@ const HeroSection = () => {
   let it = ['I', 'T']
   let done = ['D', 'O', 'N', 'E']
 
-  // const AnimatedText = ({ text, delay }: any) => {
-  //   return (
-  //     <span className="flex">
-  //       {text.split("").map((letter: any, i: number) => (
-  //         <motion.span
-  //           key={i}
-  //           className="flex items-center gap-4"
-  //           initial={{ opacity: 0, translateY: 100 }}
-  //           animate={{ opacity: 1, translateY: 0 }}
-  //           transition={{ duration: 0.3, delay: i * 0.08 + delay }}
-  //         >
-  //           {letter}
-  //         </motion.span>
-  //       ))}
-  //     </span>
-  //   )
-  // };
   return (
     <div
       className={` w-full bg-gradient-to-b from-[#f3dcfc] via-[#f5f1f7] to-[#FFFFFF] m-0`}
@@ -251,10 +278,13 @@ const HeroSection = () => {
                   xl:px-3   lg:px-3 py-2 text-[#EBE9F4] hover:bg-[#25135f] w-[250px] xl:w-[190px] lg:w-[175px]  "
                 >
 
-                  <Link href="/customer/add-task">
-                    Post at no cost today
-                  </Link>
-
+                  {isServiceProvider ? (
+                    <p onClick={handlePostTask}>Post at no cost today</p>
+                  ) : (
+                    <Link href="/customer/add-task">
+                      Post at no cost today
+                    </Link>
+                  )}
 
                 </button>
               </div>
@@ -264,14 +294,19 @@ const HeroSection = () => {
                   className=" rounded-[50px] w-[250px] lg:w-[230px] xl:w-[250px] bg-[#FE9B07] text-[#FFF5E6] xl:text-[16px] 
                       lg:px-2    px-3 py-2    hover:bg-[#e79823]  "
                 >
-                  <Link
-                    href={`/auth/sign-up?${serviceProviderParams.toString()}`}
+
+                  {!isServiceProvider ? (<div
+                    onClick={handleBecomeSP}
+                    className="flex items-center justify-center"
+                  >
+                    <p className="font-satoshiMedium">Become a Service Provider</p>
+                  </div>) : (<Link
+                    href={`/service-provider/profile`}
                     className="flex items-center justify-center"
                   >
                     <p className="">Become a Service Provider</p>
 
-                  </Link>
-
+                  </Link>)}
                 </button>
               </div>
 
