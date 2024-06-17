@@ -106,6 +106,7 @@ const AllServices = () => {
                       width={400}
                       height={400}
                       alt={item.listingTitle}
+                      onClick={() => handleShowDropdown(item.id)}
                       className=" h-full w-full object-cover transition-transform duration-300 group-hover:scale-105 "
                     />
                     <div className="absolute right-3 top-3 flex flex-col justify-end">
@@ -147,7 +148,10 @@ const AllServices = () => {
                     {item.listingTitle}
                   </p>
 
-                  <div className="px-2">
+                  <div
+                    className="px-2"
+                    onClick={() => handleShowDropdown(item.id)}
+                  >
                     <p className="text-xs"> 4.5 </p>
                     <div className="flex items-center gap-1">
                       <FaStar size={10} color="gold" />

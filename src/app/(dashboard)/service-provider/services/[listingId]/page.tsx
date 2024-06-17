@@ -66,7 +66,7 @@ const EditListing = () => {
     available: z.boolean(),
     taskType: z.string(),
     negotiable: z.boolean(),
-    planOneDescription: z.string(),
+    planOneDescription: z.string().min(1, "Please write a plan description"),
     planOnePrice: z.number(),
     planTwoDescription: z.string().nullable().optional(),
     planTwoPrice: z.string().nullable().optional(),
@@ -439,7 +439,7 @@ const EditListing = () => {
                 Description <span className="text-xl text-red-600"> * </span>
               </span>
               <textarea
-                className={` min-h-40 rounded-lg bg-violet-light p-3 outline-none ${errors.listingDescription && "border border-red-500"}`}
+                className={` small-scrollbar min-h-40 rounded-lg bg-violet-light p-3 outline-none ${errors.listingDescription && "border border-red-500"}`}
                 {...register("listingDescription")}
               />
               {errors.listingDescription && (
@@ -496,7 +496,7 @@ const EditListing = () => {
                 <button
                   type="button"
                   onClick={() => expandDropdown("one")}
-                  className={` w-full rounded-lg  p-3 text-left outline-none transition-colors duration-300 hover:bg-violet-normal hover:text-white ${showDropdown.name === "one" && showDropdown.isShown ? "bg-violet-normal text-white" : "bg-violet-light"} `}
+                  className={` w-full rounded-lg  p-3 text-left outline-none transition-colors duration-300 hover:bg-violet-normal hover:text-white ${showDropdown.name === "one" && showDropdown.isShown ? "bg-violet-normal text-white" : "bg-violet-light"} ${errors.planOnePrice || (errors.planOneDescription && "border border-red-500")} `}
                 >
                   Plan One <span className="text-xl text-red-600"> * </span>
                 </button>
@@ -505,8 +505,13 @@ const EditListing = () => {
                 >
                   <textarea
                     {...register("planOneDescription")}
-                    className="small-scrollbar min-h-32 w-full rounded-lg bg-violet-light p-3 outline-none"
+                    className={`small-scrollbar min-h-32 w-full rounded-lg bg-violet-light p-3 outline-none ${errors.planOneDescription && "border border-red-500"} `}
                   />
+                  {errors.planOneDescription && (
+                    <p className="text-sm  text-red-500">
+                      {errors.planOneDescription.message}
+                    </p>
+                  )}
                   <p className="text-right text-sm">
                     {String(
                       watchField?.planOneDescription?.split(" ").filter(Boolean)
