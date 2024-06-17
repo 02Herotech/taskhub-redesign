@@ -28,7 +28,6 @@ const Navigation = () => {
   const handleLogout = async () => {
     try {
       await signOut();
-
       await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/logout`);
       router.push("/home");
     } catch (error: any) {
@@ -77,7 +76,7 @@ const Navigation = () => {
       ? serviceProviderLinks
       : customerLinks;
   const notificationRoute = isServiceProvider
-    ? "/service-provider/dashboard/notification"
+    ? "/service-provider/dashbaord/notification"
     : "/customer/notifications";
 
   return (
@@ -101,7 +100,7 @@ const Navigation = () => {
                 <li key={link.url} className="relative">
                   <Link
                     href={link.url as string}
-                    className={cn("text-xl font-clashMedium text-primary", {
+                    className={cn("text-xl font-semibold text-primary", {
                       "text-tc-orange":
                         link.url === "/" && pathname === "/"
                           ? true
