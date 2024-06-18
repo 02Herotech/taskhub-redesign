@@ -12,7 +12,7 @@ const TaskList = () => {
   const userId = sessionData?.user?.user.id;
 
   // Make the query only when the userId is available
-  const { data: tasksData, isLoading, error } = useGetTaskByCustomerIdQuery(userId!, {
+  const { data: tasksData, isLoading } = useGetTaskByCustomerIdQuery(userId!, {
     skip: !userId,
   });
 

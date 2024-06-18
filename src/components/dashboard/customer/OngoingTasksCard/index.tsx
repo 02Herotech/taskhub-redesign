@@ -18,27 +18,35 @@ const OngoingTasksCard = ({ task }: TaskCardProps) => {
     const lastName = session?.data?.user.user.lastName;
     const fullName = `${firstName} ${lastName}`;
 
-    const dateArray = task.createdAt;
-    const date = new Date(dateArray[0], dateArray[1] - 1, dateArray[2]);
-
+    const date = task?.createdAt ? new Date(task.createdAt[0], task.createdAt[1] - 1, task.createdAt[2]) : new Date();
     const day = date.getDate();
-    const daySuffix = suffixes[(day % 10) - 1] || suffixes[0];
-
-    const formattedDate = `On ${dayOfWeekNames[date.getDay()]}, ${monthNames[date.getMonth()]} ${day}${daySuffix}`;
+    const month = date.getMonth();
+    const monthName = monthNames[month];
+    const dayOfWeek = date.getDay();
+    const dayOfWeekName = dayOfWeekNames[dayOfWeek];
+    // Determine the correct suffix for the day
+    let daySuffix;
+    if (day === 11 || day === 12 || day === 13) {
+        daySuffix = "th";
+    } else {
+        daySuffix = suffixes[day % 10] || suffixes[0]; // Default to "th" if suffix is undefined
+    }
+    // const daySuffix = suffixes[day % 10] || suffixes[0]; // Default to "th" if suffix is undefined
+    const formattedDate = `${dayOfWeekName}, ${monthName} ${day}${daySuffix}`;
 
     return (
-        <div className="lg:rounded-4xl font-satoshi bg-white p-5 mb-4 flex flex-col lg:flex-row lg:justify-between border-b">
-            <div className="flex items-center lg:items-start space-x-3 mb-4 lg:mb-0">
+        <div className="lg:rounded-4xl font-satoshi bg-white py-5 mb-4 flex flex-col lg:flex-row lg:justify-between border-b">
+            <div className="flex items-center space-x-5 mb-4 lg:mb-0">
                 <Image
                     src={profileImage || "/assets/images/placeholder.jpeg"}
                     alt="Profile"
-                    className="rounded-full object-cover"
+                    className="object-cover rounded-full size-24"
                     width={90}
                     height={90}
                 />
-                <div className="space-y-2 max-w-full lg:max-w-[60%]">
+                <div className="space-y-1 w-full">
                     <h2 className="font-satoshiMedium text-primary text-xl">{fullName}</h2>
-                    <h2 className="py-4 text-base font-satoshi text-primary break-words">
+                    <h2 className="pb-4 text-base font-satoshi text-primary">
                         {task.taskBriefDescription}
                     </h2>
                     <Link href={`/customer/tasks/ongoing-task-details/${task.id}`}>
@@ -48,7 +56,7 @@ const OngoingTasksCard = ({ task }: TaskCardProps) => {
                     </Link>
                 </div>
             </div>
-            <div className="flex flex-col justify-between lg:text-right text-center items-start lg:items-end">
+            <div className="flex flex-col space-y-2 lg:text-right text-center items-start lg:items-end">
                 <h5 className="text-base text-tc-orange">{formattedDate}</h5>
                 <h2 className="font-bold capitalize text-[#28272A] text-base">
                     Total Cost: {formatAmount(task.customerBudget, "USD", false)}
