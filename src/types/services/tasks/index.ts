@@ -28,6 +28,10 @@ export type CustomerTasks = {
     taskImage: string;
     taskTime: string;
     taskDate: [number, number, number];
+    category: {
+        id: number;
+        categoryName: string;
+    }
     hubTime: string | null;
     taskType: string;
     taskStatus: string;

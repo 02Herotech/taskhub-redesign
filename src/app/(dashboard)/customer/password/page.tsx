@@ -102,7 +102,7 @@ const ChangePassword = () => {
     return (
         <div className="p-4 lg:px-32 mt-[4rem]">
             <div className="mt-14 mb-8 space-y-8">
-                <h4 className='text-[#140B31] font-satoshiBold font-bold text-3xl lg:text-5xl'>Change Password</h4>
+                <h4 className='text-[#140B31] font-satoshiBold font-bold text-3xl lg:text-4xl'>Change Password</h4>
                 <div className='border-2 border-primary' />
             </div>
             {!isPasswordVerified ? (
@@ -121,16 +121,12 @@ const ChangePassword = () => {
                         >
                             Current Password
                         </label>
-                        <div className="relative my-2">
-                            <button className="absolute right-2 top-1/2 -translate-y-1/2">
-                                <BsEye />
-                            </button>
-                            <input
-                                type="text"
-                                className="w-full rounded-xl p-3  outline-none"
-                                onChange={(e) => setCurrentPassword(e.target.value)}
-                            />
-                        </div>
+                        <Input
+                            name='password'
+                            type="password"
+                            className="w-full rounded-xl p-3 outline-none"
+                            rules={["required", "password"]}
+                        />
                         {error && (
                             <div className="text-status-error-100 text-base font-semibold !my-5">{error}</div>
                         )}
