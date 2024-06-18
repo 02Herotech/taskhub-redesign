@@ -5,6 +5,10 @@ export type Task = {
     taskBriefDescription: string;
     taskDescription: string;
     taskImage: string;
+    category: {
+        id: number;
+        categoryName: string;
+    }
     taskTime: string;
     taskDate: [number, number, number];
     hubTime: string | null;
