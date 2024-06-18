@@ -3,7 +3,7 @@
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import MobileNavigation from "../MobileNavigation";
 import { AnimatePresence } from "framer-motion";
 import { BsChat } from "react-icons/bs";
@@ -21,6 +21,7 @@ import Image from "next/image";
 
 const Navigation = () => {
   const router = useRouter();
+  const session = useSession()
   const [showMobileNav, setShowMobileNav] = useState(false);
 
   const pathname = usePathname();
@@ -36,8 +37,7 @@ const Navigation = () => {
       router.push("/home");
     }
   };
-
-  const session = useSession();
+  
   const profileImage = session?.data?.user.user.profileImage;
   const userRole = session?.data?.user.user.roles;
   const isServiceProvider = userRole && userRole[0] === "SERVICE_PROVIDER";
