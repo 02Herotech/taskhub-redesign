@@ -23,7 +23,6 @@ import { setCookie, getCookie } from "cookies-next";
 import { FaSortDown} from "react-icons/fa6";
 import Dropdown from "@/components/global/Dropdown";
 
-
 interface FormData {
   taskBriefDescription: string;
   taskImage?: File | null | Blob;

@@ -125,7 +125,7 @@ const Tasks = () => {
                 </div>
             );
         } else if (dataToRender.length === 0) {
-            return <div className="text-center text-status-darkViolet text-2xl font-semibold my-20">No results found</div>;
+            return <div className="text-center text-status-darkViolet text-2xl font-semibold my-20">Tasks not found, <br /> please check your internet connection and try again</div>;
         } else {
             return (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 my-14">

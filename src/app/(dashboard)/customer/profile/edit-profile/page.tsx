@@ -12,35 +12,44 @@ import { BiCamera, BiCheck } from "react-icons/bi";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import axios from "axios";
+import { defaultUserDetails } from "@/data/data";
+import { BeatLoader } from "react-spinners";
+import { formatDateAsYYYYMMDD } from "@/utils";
+
+const userDataSchema = z.object({
+  firstName: z.string().min(2),
+  lastName: z.string().min(2),
+  dateOfBirth: z.date().nullable(),
+  phoneNumber: z.string().min(10),
+  emailAddress: z.string().email(),
+  postcode: z.string(),
+  suburb: z.string(),
+  state: z.string(),
+  medicareId: z.string(),
+  idType: z.string(),
+  idNumber: z.string(),
+});
 
 const EditProfile = () => {
   const [isEditingEnabled, setIsEditingEnabled] = useState(false);
   const [isFormModalShown, setIsFormModalShown] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [selectedDocument, setSelectedDocument] = useState<File | null>(null);
   const [isEditingProfilePicture, setisEditingProfilePicture] = useState<{
     isEditing: boolean;
     image: string | null;
   }>({ isEditing: false, image: null });
   const [documentImage, setDocumentImage] = useState<string | null>(null);
-  const [suburbList, setSuburbList] = useState<string[]>([]);
+  const [suburbList, setSuburbList] = useState([]);
+  const [userDetails, setUserDetails] = useState(defaultUserDetails);
+  const [selectedDocument, setSelectedDocument] = useState<File | null>(null);
   const [isProfileUpdatedSuccessfully, setIsProfileUpdatedSuccessfully] =
     useState(false);
 
   const session = useSession();
   const user = session?.data?.user?.user;
-  const userDataSchema = z.object({
-    firstName: z.string().min(2),
-    lastName: z.string().min(2),
-    dateOfBirth: z.date().nullable(),
-    phoneNumber: z.string().min(10),
-    emailAddress: z.string().email(),
-    postcode: z.string(),
-    suburb: z.string(),
-    state: z.string(),
-    medicareId: z.string(),
-    driverLicence: z.string(),
-  });
+  const token = session?.data?.user?.accessToken;
+  const userRole = session?.data?.user?.user?.roles;
+  const isServiceProvider = userRole && userRole[0] === "SERVICE_PROVIDER";
+  const isCustomer = userRole && userRole[0] === "CUSTOMER";
 
   type userDataType = z.infer<typeof userDataSchema>;
 
@@ -48,7 +57,7 @@ const EditProfile = () => {
     register,
     control,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
     reset,
     watch,
     setValue,
@@ -64,45 +73,101 @@ const EditProfile = () => {
       suburb: "",
       state: "",
       medicareId: "",
-      driverLicence: "",
+      idType: "",
+      idNumber: "",
     },
   });
 
+  useEffect(() => {
+    const fetchUserData = async () => {
+      if (!token) return;
+      try {
+        const url =
+          "https://smp.jacinthsolutions.com.au/api/v1/service_provider/profile";
+        const { data } = await axios.get(url, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "multipart/form-data",
+          },
+        });
+        setUserDetails(data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchUserData();
+  }, [token]);
+
   const watchField = watch();
 
-  useEffect(() => {
-    console.log("Watched", watchField);
-  }, [watchField]);
+  const parseDate = (date: string | Date | null | undefined): Date | null => {
+    if (date instanceof Date) {
+      return date;
+    }
+    if (typeof date === "string") {
+      const [year, month, day] = date.split("-").map(Number);
+      if (!isNaN(year) && !isNaN(month) && !isNaN(day)) {
+        return new Date(year, month - 1, day);
+      }
+    }
+    return null;
+  };
 
   useEffect(() => {
     if (user) {
       reset({
-        firstName: user?.firstName ?? "",
-        lastName: user?.lastName ?? "",
-        dateOfBirth: null,
-        phoneNumber: user?.phoneNumber ?? "",
-        emailAddress: user?.emailAddress ?? "",
-        postcode: user?.address?.postCode ?? "",
-        suburb: user?.address?.suburb ?? "",
-        state: user?.address?.state ?? "",
-        medicareId: "",
-        driverLicence: "",
+        firstName: user.firstName || "",
+        lastName: user.lastName || "",
+        // @ts-ignore
+        dateOfBirth: parseDate(userDetails.dateOfBirth) || null,
+        phoneNumber: user.phoneNumber || "",
+        emailAddress: user.emailAddress || "",
+        postcode: userDetails.postalCode || "",
+        suburb: userDetails.suburbs || "",
+        state: userDetails.state || "",
+        medicareId: userDetails.idNumber,
+        idType: userDetails.idType,
+        idNumber: userDetails.idNumber,
       });
     }
-  }, [user, reset]);
+  }, [userDetails, reset, user]);
 
-  const handleSubmitUserData: SubmitHandler<userDataType> = (data) => {
-    setIsSubmitting(true);
-    setIsFormModalShown(true);
-    setIsEditingEnabled(false);
-    const newUserData = { ...data, documentImage: documentImage };
+  const handleSubmitUserData: SubmitHandler<userDataType> = async (data) => {
+    try {
+      const submitData = {
+        firstName: data.firstName,
+        lastName: data.lastName,
+        dateOfBirth: formatDateAsYYYYMMDD(data.dateOfBirth as Date),
+        suburb: data.suburb,
+        state: data.state,
+        phoneNumber: data.phoneNumber,
+        postCode: data.postcode,
+        idImage: selectedDocument,
+        idType: data.idType,
+        idNumber: data.idNumber,
+      };
+      const url = isServiceProvider ? "https://smp.jacinthsolutions.com.au/api/v1/service_provider/update" : "https://smp.jacinthsolutions.com.au/api/v1/customer";
+      const response = await axios.patch(url, submitData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      console.log(response);
+      setIsProfileUpdatedSuccessfully(true);
+      setIsFormModalShown(true);
+      setIsEditingEnabled(false);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const handleChangeProfilePicture = () => {
     setisEditingProfilePicture((prev) => ({
       ...prev,
       isEditing: true,
-      image: null,
+      image: "",
     }));
     setIsFormModalShown(true);
   };
@@ -127,7 +192,7 @@ const EditProfile = () => {
   }, [watchField.postcode]);
 
   return (
-    <main className=" relative p-4 lg:p-8">
+    <main className=" relative px-6 py-10 lg:p-10">
       {/* Top profile Image section */}
       <section className="flex flex-col items-center justify-center gap-1 pb-8 ">
         <button
@@ -141,7 +206,7 @@ const EditProfile = () => {
             src={
               isEditingProfilePicture.image ??
               user?.profileImage ??
-              "/assets/images/serviceProvider/user.jpg"
+              "/assets/images/placeholder.jpeg"
             }
             alt="user"
             width={80}
@@ -156,13 +221,12 @@ const EditProfile = () => {
           {user?.address?.state} Australia
         </p>
         <button
-          className={` rounded-full bg-violet-normal px-4 py-2 text-sm text-white transition-all duration-300 hover:opacity-90  ${isEditingEnabled && "animate-pulse"} `}
+          className={` rounded-full bg-violet-normal px-4 py-2 text-sm text-white transition-all duration-300 hover:opacity-90 `}
           onClick={() => setIsEditingEnabled((prev) => !prev)}
         >
           {isEditingEnabled ? "Editing ..." : " Edit Profile"}
         </button>
       </section>
-
       {/* Form modal section */}
       <form
         onSubmit={handleSubmit(handleSubmitUserData)}
@@ -335,7 +399,59 @@ const EditProfile = () => {
           <h3 className="text-xl font-bold text-violet-dark lg:text-center">
             Identification Document
           </h3>
-          <div className="flex flex-wrap lg:col-span-8 lg:gap-8">
+          <div className="flex flex-col lg:col-span-8 lg:gap-8">
+            <div className="flex flex-wrap lg:col-span-8 lg:gap-8">
+              {/* select Id type */}
+              <label className="space-y-4">
+                <span className="flex items-center justify-between">
+                  <span className="flex items-center justify-between gap-9">
+                    <span>Choose a valid means of ID</span>
+                    {/* {!errors.idType && watchField.idType.length > 0 && (
+                      <BiCheck className="size-5 rounded-full bg-green-500 p-1 text-white" />
+                    )} */}
+                  </span>
+                </span>
+                <select
+                  className="w-full rounded-xl border border-slate-100
+                p-3 text-slate-700 shadow outline-none
+                transition-shadow duration-300 hover:shadow-md lg:max-w-sm"
+                  {...register("idType")}
+                >
+                  <option value="Medicare Card"> Medicare Card</option>
+                  <option value="International Passport">
+                    International Passport
+                  </option>
+                  <option value="Driver Licence">Driver Licence</option>
+                  <option value="Proof of address">Proof of address</option>
+                </select>
+              </label>
+
+              {/* Id Type Number */}
+
+              <label className="flex w-full flex-col gap-3 text-lg  text-violet-normal lg:max-w-64 ">
+                <span className="flex items-center justify-between">
+                  <span className="flex items-center justify-between gap-9">
+                    <span>
+                      {watchField.idType === ""
+                        ? "Select Id Type"
+                        : watchField.idType + " Number"}
+                    </span>
+                    {!errors.idNumber && watchField.idNumber.length >= 7 && (
+                      <BiCheck className="size-5 rounded-full bg-green-500 p-1 text-white" />
+                    )}
+                  </span>
+                </span>
+                <input
+                  type="number"
+                  id="suburb"
+                  maxLength={12}
+                  className="rounded-xl border border-slate-100 p-2 text-slate-700 shadow  outline-none transition-shadow duration-300 hover:shadow-md lg:max-w-sm "
+                  {...register("idNumber")}
+                  disabled={!isEditingEnabled || watchField.idType === ""}
+                />
+              </label>
+            </div>
+
             {/* Upload Identification Document */}
             <label className="flex w-full flex-col gap-3 text-lg  text-violet-normal lg:max-w-64 ">
               <span className="flex items-center justify-between">
@@ -348,7 +464,11 @@ const EditProfile = () => {
               </span>
               <div>
                 {documentImage ? (
-                  <div className="flex items-end justify-center space-x-2">
+                  <button
+                    type="button"
+                    className="flex items-end justify-center space-x-2"
+                    onClick={() => setIsFormModalShown(true)}
+                  >
                     {/* Display a disabled input with message */}
                     <Image
                       src={documentImage}
@@ -357,13 +477,14 @@ const EditProfile = () => {
                       height={300}
                       className="rounded-xl"
                     />
-                  </div>
+                  </button>
                 ) : (
                   // If no taskImage is uploaded, render the file input
                   <button
                     type="button"
                     className="flex h-48 w-48 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-slate-500 p-4"
                     onClick={() => setIsFormModalShown(true)}
+                    disabled={!isEditingEnabled}
                   >
                     <PiFileArrowDownDuotone className="text-xl text-tc-gray" />
                     <span className="text-center text-tc-gray">
@@ -373,30 +494,17 @@ const EditProfile = () => {
                 )}
               </div>
             </label>
-
-            <label className="flex w-full flex-col gap-3 text-lg  text-violet-normal lg:max-w-64 ">
-              <span className="flex items-center justify-between">
-                <span className="flex items-center justify-between gap-9">
-                  <span> Driver’s Licence Number</span>
-                  {!errors.driverLicence &&
-                    watchField.driverLicence.length >= 8 && (
-                      <BiCheck className="size-5 rounded-full bg-green-500 p-1 text-white" />
-                    )}
-                </span>
-              </span>
-              <input
-                type="text"
-                id="suburb"
-                className="rounded-xl border border-slate-100 p-2 text-slate-700 shadow  outline-none transition-shadow duration-300 hover:shadow-md lg:max-w-sm "
-                {...register("driverLicence")}
-                disabled={!isEditingEnabled}
-              />
-            </label>
           </div>
         </section>
+
+        {/* ----------------- submit  button -------------------- */}
         <div className="flex lg:items-end lg:justify-end lg:px-24">
           <button className="w-fit rounded-full border border-violet-normal bg-violet-light px-6 py-3 font-medium text-violet-normal transition-all duration-300 hover:bg-violet-200 hover:shadow-md">
-            Save and Continue
+            {isSubmitting ? (
+              <BeatLoader color={"white"} loading={isSubmitting} size={14} />
+            ) : (
+              "Save and Continue"
+            )}
           </button>
         </div>
       </form>

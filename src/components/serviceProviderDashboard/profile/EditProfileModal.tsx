@@ -60,6 +60,9 @@ const EditProfileModal = ({
 
   const session = useSession();
   const token = session?.data?.user?.accessToken;
+  const userRole = session?.data?.user?.user?.roles;
+  const isServiceProvider = userRole && userRole[0] === "SERVICE_PROVIDER";
+  const isCustomer = userRole && userRole[0] === "CUSTOMER";
 
   const capture = useCallback(() => {
     if (webcamRef.current) {
@@ -117,8 +120,8 @@ const EditProfileModal = ({
     try {
       if (selectedFile && isEditingProfilePicture.isEditing) {
         setIsUploadImageLoading(true);
-        const url =
-          "https://smp.jacinthsolutions.com.au/api/v1/service_provider/profile_picture";
+        const url = isServiceProvider ? "https://smp.jacinthsolutions.com.au/api/v1/service_provider/profile_picture" : "https://smp.jacinthsolutions.com.au/api/v1/customer/profile_picture";
+          // "https://smp.jacinthsolutions.com.au/api/v1/service_provider/profile_picture";
         const { data } = await axios.post(
           url,
           { image: selectedFile },

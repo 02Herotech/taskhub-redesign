@@ -61,9 +61,8 @@ const ProfileHeader = () => {
           <div className="flex items-center gap-8">
             <Image
               src={
-                fetchedUserData?.profileImage ??
                 user?.profileImage ??
-                "/assets/images/serviceProvider/user.jpg"
+                "/assets/images/placeholder.jpeg"
               }
               alt={user?.firstName ? user?.firstName : "user"}
               width={160}

@@ -63,7 +63,7 @@ export const homeLinks: Link[] = [
 export const mobileServiceProviderLinks: Link[] = [
     {
         label: "Provide a service",
-        url: "/service-provider/provide-service",
+        url: "/provide-service",
     },
     {
         label: "Explore Tasks",

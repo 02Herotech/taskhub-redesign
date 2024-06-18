@@ -8,7 +8,7 @@ import TopActivities from "@/components/dashboard/customer/TopActivities";
 
 const CustomerProfilePage = () => {
   return (
-    <main className="space-y-8 p-4 lg:p-8 mt-[4rem]">
+    <main className="space-y-8 p-4 lg:p-8 mt-[5rem]">
       <ProfileHeader />
       <section className="flex flex-col flex-wrap gap-6 lg:grid lg:grid-cols-12">
         <motion.div
