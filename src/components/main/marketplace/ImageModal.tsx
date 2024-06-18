@@ -28,7 +28,7 @@ const ImageModal = ({ showImageModal, setShowImageModal }: ModalData) => {
         onClick={handleCloseModal}
       ></div>
 
-      <div className="relative z-10 flex max-w-md flex-col items-center justify-center gap-4 rounded-lg bg-violet-light p-5 ">
+      <div className="relative z-10 flex max-w-[90vw] flex-col items-center justify-center gap-4 rounded-lg bg-violet-light p-5 ">
         {/* eslint-disable-next-line */}
         <img
           src={showImageModal.image}
