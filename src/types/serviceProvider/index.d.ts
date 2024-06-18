@@ -9,4 +9,14 @@ declare interface DefaultUserDetailsType {
   profileImage: string;
   state: string;
   suburbs: string;
+  bio: string | null;
+}
+
+declare interface ModalDataType {
+  isModalShown: boolean;
+  message: string | number;
+  isStartService: boolean;
+  error: string;
+  isCompleteService: boolean;
+  isReportService: boolean;
 }

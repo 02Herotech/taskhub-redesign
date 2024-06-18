@@ -1,5 +1,4 @@
 import Link from "next/link";
-import clsx from "clsx";
 
 type HowTaskhubWorkLinkProps = {
   href: string;

@@ -7,7 +7,25 @@ import { useSearchParams } from "next/navigation";
 import React, { useState } from "react";
 import { BiSearch } from "react-icons/bi";
 
-const chatData: any = [];
+interface ChatDataType {
+  id: string;
+  name: string;
+  image: string;
+  chatNo: string;
+  lastMessage: string;
+  date: string;
+}
+
+const chatData: ChatDataType[] = [
+  {
+    id: "1",
+    name: "Anthony dev",
+    image: "/assets/images/serviceProvider/user.jpg",
+    chatNo: "1",
+    lastMessage: "I need a dancer",
+    date: "Today",
+  },
+];
 
 const ChatNavigation = () => {
   const [currentCategory, setCurrentCategory] = useState("All");
@@ -45,11 +63,10 @@ const ChatNavigation = () => {
 
       <article className="flex max-h-[55vh] flex-col gap-4 overflow-y-auto">
         {chatData.length > 0 ? (
-          // @ts-expect-error
           chatData.map((item, index) => (
             <Link
               href={{
-                pathname: "/service-provider/message/" + item.id,
+                pathname: "/message/" + item.id,
                 query: "id=" + item.id,
               }}
               key={index}
@@ -60,7 +77,8 @@ const ChatNavigation = () => {
                 alt={item.name}
                 width={60}
                 height={60}
-                className="size-16 rounded-full"
+                quality={100}
+                className="size-16 rounded-full object-cover"
               />
               <div className="w-full space-y-4">
                 <div className="flex w-full cursor-pointer items-center justify-between">

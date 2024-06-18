@@ -28,26 +28,26 @@ const CustomerProfilePage = () => {
           >
             <CustomerBadge />
           </motion.div>
-          <motion.div
+          {/* <motion.div
             className="flex flex-col justify-between gap-4 overflow-hidden rounded-xl bg-[#EBE9F4] p-20"
             initial={{ opacity: 0, translateY: "5rem" }}
             whileInView={{ opacity: 1, translateY: "0" }}
             transition={{ duration: 1.4 }}
           >
             Refer and Earn
-          </motion.div>
+          </motion.div> */}
         </div>
-        <motion.div
+        {/* <motion.div
           className="col-span-7 h-full"
           initial={{ opacity: 0, translateY: "5rem" }}
           whileInView={{ opacity: 1, translateY: "0" }}
           transition={{ duration: 1.2 }}
         >
           <TopActivities />
-        </motion.div>
+        </motion.div> */}
       </section>
     </main>
-  )
-}
+  );
+};
 
-export default CustomerProfilePage
+export default CustomerProfilePage;

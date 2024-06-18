@@ -5,7 +5,6 @@ import Loading from "@/shared/loading";
 import { FaArrowUp } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store";
-import { updateListingArray } from "@/store/Features/marketplace";
 import Image from "next/image";
 import SingleListingCard from "../marketplace/SingleListingCard";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
@@ -15,16 +14,11 @@ interface CategoryListingProps {
 }
 
 const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
-  const dispatch = useDispatch();
-  const {
-    categories,
-    listing,
-    isFiltering,
-    filteredData,
-    search: { isSearching, searchData },
-  } = useSelector((state: RootState) => state.market);
+  const { categories, isFiltering, filteredData } = useSelector(
+    (state: RootState) => state.market,
+  );
 
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [allListsting, setallListsting] = useState<ListingDataType[]>([]);
   const [ErrorMsg, setErrorMsg] = useState("");
   const [isViewMore, setIsViewMore] = useState({ state: false });
@@ -41,22 +35,21 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
       if (!category) {
         return;
       }
-      let url;
+      let url, content;
       if (category === "All") {
         url =
           "https://smp.jacinthsolutions.com.au/api/v1/listing/all-active-listings/" +
           currentPage;
+        const { data } = await axios.get(url);
+        content = data.content;
       } else if (categoryId) {
         url =
-          "https://smp.jacinthsolutions.com.au/api/v1/listing/listing-by-category/" +
-          categoryId.id +
-          "?pageNumber=" +
-          currentPage;
+          "https://smp.jacinthsolutions.com.au/api/v1/listing/filter-listings?category=" +
+          categoryId.categoryName;
+        const { data } = await axios.get(url);
+        content = data;
       }
       if (url) {
-        const { data } = await axios.get(url);
-        const content = data.content;
-        dispatch(updateListingArray(content));
         setallListsting(content);
         setDisplayListing(content);
       }
@@ -66,10 +59,11 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
       setIsLoading(false);
     }
   };
+
   useEffect(() => {
     handleFetchCategory();
     // eslint-disable-next-line
-  }, [page]);
+  }, [category, page]);
 
   const getButtonNumbers = () => {
     const half = Math.floor(5 / 2);
@@ -104,12 +98,12 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
     };
     fetchData();
     // eslint-disable-next-line
-  }, [listing, category, isViewMore]);
+  }, [allListsting, isViewMore]);
 
   return (
     <div className="h-full w-full py-4 ">
       <div className="mb-3 flex items-center justify-between">
-        <div className="flex w-full items-center justify-between">
+        <div className="flex w-full items-center justify-between gap-4">
           <h1 className=" text-xl font-bold text-violet-darkHover md:text-2xl">
             {!isFiltering
               ? category
@@ -126,7 +120,9 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
                 setIsViewMore((prev) => ({ ...prev, state: !prev.state }))
               }
             >
-              <span>{isViewMore.state ? "View Less" : "View More"}</span>
+              <span className="whitespace-nowrap">
+                {isViewMore.state ? "View Less" : "View More"}
+              </span>
               <span>
                 <FaArrowUp
                   className={`size-3  ${isViewMore.state ? "rotate-90" : "rotate-45"} `}
@@ -214,7 +210,6 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
         <div className="mt-10 flex w-full items-center justify-center space-x-7">
           <button
             className="rounded-md bg-status-lightViolet p-2 transition-all duration-300 hover:bg-primary hover:text-white disabled:bg-status-lightViolet disabled:opacity-50 disabled:hover:bg-transparent"
-            // onClick={handlePreviousPage}
             disabled={page.currentPage === 1}
           >
             <IoIosArrowBack />

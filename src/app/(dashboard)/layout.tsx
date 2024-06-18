@@ -1,6 +1,7 @@
 import DashboardSidebar from "@/components/dashboard/layout/DashboardSidebar";
 import { Suspense } from "react";
 import Navigation from "@/components/layout/Navigation";
+import "../../styles/serviceProviderStyles.css";
 
 type AuthLayoutProps = {
   children: React.ReactNode;
@@ -11,7 +12,7 @@ const DashboardLayout = ({ children }: AuthLayoutProps) => {
     <div className="relative mx-auto ">
       <Navigation />
       <DashboardSidebar />
-      <main className="mt-[4rem] lg:ml-72">
+      <main className="mt-[4rem] max-lg:container lg:ml-72 ">
         <Suspense>{children}</Suspense>
       </main>
     </div>

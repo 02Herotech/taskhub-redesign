@@ -4,6 +4,8 @@ import styles from "./styles.module.css";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
+import GlowingBox from "../GlowingBox";
+
 const MarketPlaceHeader = () => {
   // Setting the add description state
   const [addDescription, setAddDescription] = useState("");
@@ -21,14 +23,17 @@ const MarketPlaceHeader = () => {
     if (!token) {
       router.push("/auth/login");
     } else if (isServiceProvider) {
-      router.push("/provide-service");
+      router.push(`/provide-service?marketplaceDescription=${addDescription}`);
     } else {
-      router.push("/customer/add-task");
+      router.push(
+        `/customer/add-task?marketplaceDescription=${addDescription}`,
+      );
     }
   };
   return (
     <div className={`${styles.headerCover} w-full py-20 md:mt-16 lg:mt-20`}>
-      <div className="mx-auto flex flex-col items-center justify-center space-y-8 px-5 text-white md:max-w-full md:px-0  ">
+      <div className="relative mx-auto flex flex-col items-center justify-center space-y-8 px-5 text-white md:max-w-full md:px-0  ">
+        <GlowingBox />
         <div className="flex w-full flex-col justify-center space-y-2 sm:items-start md:items-center ">
           <div className=" mt-10 flex w-full flex-col flex-wrap items-start justify-center gap-3 md:mt-0 md:flex-row md:items-center md:justify-center ">
             <h1 className="text-[27px] font-bold md:text-[39px]">

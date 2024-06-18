@@ -9,6 +9,9 @@ import { GiStoneCrafting } from "react-icons/gi";
 import { FaBabyCarriage } from "react-icons/fa";
 import { MdSecurity } from "react-icons/md";
 import { MdLocalGroceryStore } from "react-icons/md";
+import { FaHeartbeat } from "react-icons/fa";
+import { FaGraduationCap } from "react-icons/fa";
+import { FaImage } from "react-icons/fa";
 
 import MarketPlaceFilter from "@/components/main/marketplace/MarketPlaceFilter";
 import MarketPlaceHeader from "@/components/main/marketplace/MarketPlaceHeader";
@@ -28,26 +31,26 @@ const categoryIcons = [
   FaHome,
   MdPersonalInjury,
   GrPersonalComputer,
+  FaGraduationCap,
+  FaImage,
+  FaHeartbeat,
   BsCalendar2EventFill,
-  GiStoneCrafting,
-  FaBabyCarriage,
-  MdSecurity,
   MdLocalGroceryStore,
 ];
 
 const MareketPlace = () => {
   // set states for market place
-  const {
-    categories,
-    isFiltering,
-    search: { isSearching },
-  } = useSelector((state: RootState) => state.market);
+  const { categories, isFiltering, isFilteringLoading } = useSelector(
+    (state: RootState) => state.market,
+  );
 
   // Getting session and router for pop up and user anthentication state
   const session = useSession();
   const router = useRouter();
   const isAuth = session.status === "authenticated";
   const isComplete = session?.data?.user?.user?.enabled;
+  const isServiceProvider =
+    session?.data?.user?.user?.roles[0] === "SERVICE_PROVIDER";
   const [showPopup, setShowPopup] = useState(false);
 
   const token = session?.data?.user?.accessToken;
@@ -75,7 +78,13 @@ const MareketPlace = () => {
               </p>
               <Button
                 className="w-[151px] rounded-full py-6 max-lg:text-sm"
-                onClick={() => router.push("/service-provider/dashboard")}
+                onClick={() =>
+                  router.push(
+                    isServiceProvider
+                      ? "/service-provider/profile"
+                      : "/customer/profile",
+                  )
+                }
               >
                 Go to Profile
               </Button>
@@ -97,14 +106,18 @@ const MareketPlace = () => {
           </div>
         </Popup>
       )}
-      {!isFiltering && !isSearching && <MarketPlaceHeader />}
+      {!isFiltering && <MarketPlaceHeader />}
 
       <div
-        className={`mx-auto flex max-w-screen-xl flex-col px-6 md:px-16  ${(isFiltering || isSearching) && "pt-12"} `}
+        className={`mx-auto flex max-w-screen-xl flex-col px-6 md:px-16  ${isFiltering ? "pt-16 " : "md:pt-32"}    `}
       >
         <MarketPlaceFilter />
         <div>
-          {isFiltering || isSearching ? (
+          {isFilteringLoading ? (
+            <div className="min-h-80 items-center justify-center p-4">
+              <Loading />
+            </div>
+          ) : isFiltering ? (
             <div>
               <CategoryListing category="All" />
             </div>
@@ -124,7 +137,7 @@ const MareketPlace = () => {
                 <h1 className=" py-4 text-[20px] font-bold text-black md:text-[28px]  ">
                   Browse by category
                 </h1>
-                <div className="my-5 flex flex-wrap gap-3 ">
+                <div className="my-5 flex flex-wrap gap-3 max-sm:grid max-sm:grid-cols-2 ">
                   {categories.map((item, index) => (
                     <BoxFilter
                       key={item.id}

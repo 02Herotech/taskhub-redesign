@@ -3,12 +3,16 @@
 import Congratulations from "@/components/dashboard/serviceProvider/jobs/Congratulations";
 import Invoice from "@/components/serviceProviderDashboard/jobs/Invoice";
 import Loading from "@/shared/loading";
+import {
+  formatDateFromNumberArray,
+  formatDateFromNumberArrayToRelativeDate,
+} from "@/utils";
 import axios from "axios";
 import { error } from "console";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { IoLocationOutline } from "react-icons/io5";
 import { BeatLoader } from "react-spinners";
@@ -17,6 +21,7 @@ const ViewJobs = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [currentBooking, setCurrentBooking] = useState<BookingType>();
+  const [currentListing, setCurrentListing] = useState<ListingDataType>();
   const [requestStatus, setRequestStatus] = useState({
     isAcceptRequesting: false,
     isRejectRequesting: false,
@@ -28,28 +33,28 @@ const ViewJobs = () => {
   const router = useRouter();
   const session = useSession();
   const token = session?.data?.user?.accessToken;
-  const user = session?.data?.user?.user;
+
+  const { id } = useParams();
 
   const fetchSingleBooking = async () => {
-    if (!token) {
-      console.error("No token available");
-      return;
-    }
+    if (!token) return;
     try {
       setLoading(true);
-      const tempId = localStorage.getItem("bookingDetails");
-      if (tempId) {
-        const id = JSON.parse(tempId);
-        const url = "https://smp.jacinthsolutions.com.au/api/v1/booking/" + id;
-        const response = await axios.get(url, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        const data = response.data;
-        console.log(data);
-        setCurrentBooking(data);
-      }
+      const url = "https://smp.jacinthsolutions.com.au/api/v1/booking/" + id;
+      const response = await axios.get(url, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const bookingData = response.data;
+      const listingId = bookingData.listing.id;
+      setCurrentBooking(bookingData);
+
+      const listingUrl =
+        "https://smp.jacinthsolutions.com.au/api/v1/listing/" + listingId;
+      const listingResponse = await axios.get(listingUrl);
+      const listingData = listingResponse.data;
+      setCurrentListing(listingData);
     } catch (error) {
       console.error("An error occurred while fetching services:", error);
     } finally {
@@ -118,42 +123,6 @@ const ViewJobs = () => {
     // eslint-disable-next-line
   }, [token, requestStatus.data]);
 
-  function formatDate(dateArray: number[]) {
-    const [year, month, day] = dateArray;
-    const date = new Date(year, month - 1, day); // JavaScript Date object
-
-    const daySuffix = (day: number) => {
-      if (day > 3 && day < 21) return "th"; // because 11th, 12th, 13th
-      switch (day % 10) {
-        case 1:
-          return "st";
-        case 2:
-          return "nd";
-        case 3:
-          return "rd";
-        default:
-          return "th";
-      }
-    };
-
-    const monthNames = [
-      "January",
-      "February",
-      "March",
-      "April",
-      "May",
-      "June",
-      "July",
-      "August",
-      "September",
-      "October",
-      "November",
-      "December",
-    ];
-
-    return `${day}${daySuffix(day)} ${monthNames[month - 1]} ${year}`;
-  }
-
   return (
     <>
       <Congratulations
@@ -178,27 +147,32 @@ const ViewJobs = () => {
           Nothing to see here!
         </div>
       ) : (
-        <main className=" relative flex min-h-[70vh] items-center justify-center space-y-8 p-4 lg:p-8">
+        <main className=" relative mt-28 flex min-h-[70vh] items-center justify-center space-y-8 p-4 lg:p-4">
           <section className="w-[90vw] max-w-2xl space-y-4 rounded-xl bg-violet-light p-4 lg:p-8 ">
             <div className="flex justify-between gap-2">
               <div className="space-y-8 text-violet-normal">
-                <p> {currentBooking.listing.listingTitle} </p>
+                <p className="font-clash text-xl font-bold">
+                  {currentBooking.bookingTitle}
+                </p>
                 <div>
-                  <p className="text-lg font-bold uppercase">Posted by:</p>
-                  <p className=" text-orange-normal">
-                    {user?.firstName} {user?.lastName}
+                  <p className="text-xl font-bold uppercase">Requested by:</p>
+                  <p className="text-lg font-bold text-orange-normal">
+                    {currentBooking.user.fullName}
                   </p>
                 </div>
                 <div>
-                  <p>Total cost </p>
-                  <p>Est. Budget: $ {currentBooking.price} </p>
+                  <p className="font-bold">Total cost </p>
+                  <p className="font-bold">
+                    Est. Budget: $ {currentBooking.price}
+                  </p>
                 </div>
                 <div>
-                  <p className="text-lg font-medium uppercase">
-                    To be Started:
+                  <p className="font-bold uppercase">To be Started:</p>
+                  <p className="font-bold">
+                    {formatDateFromNumberArrayToRelativeDate(
+                      currentBooking.startDate,
+                    )}
                   </p>
-                  {/* @ts-ignore */}
-                  <p> {formatDate(currentBooking.startDate)} </p>
                 </div>
               </div>
               <div>
@@ -221,7 +195,7 @@ const ViewJobs = () => {
 
             {/* --- */}
             <div className="space-y-4">
-              <p className="flex items-center gap-2 text-sm text-violet-dark">
+              <p className="flex items-center gap-2 text-sm font-bold text-violet-dark ">
                 <span>
                   <IoLocationOutline />
                 </span>
@@ -230,9 +204,11 @@ const ViewJobs = () => {
                   {currentBooking.userAddress.suburb}
                 </span>
               </p>
-              <p className="uppercase text-violet-dark">Job Description:</p>
+              <p className="font-bold uppercase text-violet-dark ">
+                Job Description:
+              </p>
               <p className="text-violet-normal">
-                {currentBooking.bookingTitle}
+                {currentBooking.bookingDescription}
               </p>
               <div className="flex flex-wrap gap-4">
                 {currentBooking.bookingStage === "PROPOSED" ? (
@@ -282,9 +258,9 @@ const ViewJobs = () => {
                   currentBooking.bookingStage === "ACCEPTED") && (
                   <Link
                     href={{
-                      pathname: "/service-provider/message",
+                      pathname: "/message",
                     }}
-                    className="rounded-full px-6 py-3 font-medium transition-colors duration-300 hover:bg-violet-100 max-md:px-4  max-md:py-2 max-md:text-sm"
+                    className="rounded-full px-6 py-3 font-bold text-violet-normal  transition-colors duration-300 hover:bg-violet-200 max-md:px-4  max-md:py-2 max-md:text-sm"
                   >
                     Chat with Customer
                   </Link>

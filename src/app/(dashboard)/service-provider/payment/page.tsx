@@ -1,4 +1,4 @@
-import { paymentSvg } from "@/app/data/service-provider/sidebar";
+import { PaymentSvg } from "@/lib/svgIcons";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
@@ -6,7 +6,7 @@ import React from "react";
 const ServicePayment = () => {
   return (
     <main className="space-y-8 p-4 lg:p-8">
-      <section className="bg-violet-active flex flex-wrap items-center justify-between gap-2 rounded-lg p-3 lg:p-6 ">
+      <section className="flex flex-wrap items-center justify-between gap-2 rounded-lg bg-violet-active p-3 lg:p-6 ">
         <h1 className="text-3xl font-bold text-violet-normal">
           Payment and wallet
         </h1>
@@ -48,7 +48,7 @@ const ServicePayment = () => {
         </span>
       </section>
 
-      <section className="bg-violet-active relative flex flex-wrap items-center justify-between gap-2 overflow-hidden rounded-lg p-3 lg:p-6 ">
+      <section className="relative flex flex-wrap items-center justify-between gap-2 overflow-hidden rounded-lg bg-violet-active p-3 lg:p-6 ">
         <Image
           src="/assets/images/serviceProvider/wallet/Vector 13.png"
           alt="overlay"
@@ -66,15 +66,15 @@ const ServicePayment = () => {
           href="/service-provider/dashboard/payment/withdrawl"
           className="relative rounded-full bg-orange-normal px-6 py-3 font-medium text-white"
         >
-          Withdrawl
+          Withdraw
         </Link>
       </section>
       <section className="space-y-4">
         <h1 className="text-2xl font-bold  text-violet-dark">
           Payment History
         </h1>
-        <div className="bg-violet-active flex  flex-col flex-wrap items-center justify-center gap-2 rounded-lg px-4 py-8 lg:p-6  lg:py-16 ">
-          {paymentSvg}
+        <div className="flex flex-col  flex-wrap items-center justify-center gap-2 rounded-lg bg-violet-active px-4 py-8 lg:p-6  lg:py-16 ">
+          {PaymentSvg}
           <p className="text-center text-violet-normal">
             Looks like you do not have any transaction yet!
           </p>

@@ -27,8 +27,8 @@ const ExperienceData = [
 const Experience = () => {
   return (
     <div>
-      <div className='flex items-center justify-center my-10 lg:mt-20'>
-        <h2 className='lg:text-[30px] text-[18px] text-center  xl:w-[50%] w-full lg:w-[75%]  text-primary font-clashSemiBold font-[600]'>
+      <div className='flex items-center justify-center my-10 lg:mt-20 w-full'>
+        <h2 className='lg:text-[30px] text-[18px] text-center  xl:w-[70%] w-full lg:w-[90%]  text-primary font-clashSemiBold font-[600]'>
           Get the best experience whether you <br /> “<span className='text-tc-orange underline' style={{ textDecorationColor: '#FE9B07' }}>Add a Task</span>” or “<span className='text-tc-orange underline' style={{ textDecorationColor: '#FE9B07' }}>Perform a Service</span>”.   </h2>
       </div>
 
@@ -39,7 +39,7 @@ const Experience = () => {
               <span className=" text-[#FE9B07] h-[70px] w-[70px] relative">
                 {eachData.icon}
               </span>
-              <p className="font-satoshiMedium font-[700] lg:text-[18px] xl:text-[24px] text-[16px] text-center text-[#2A1769]">{eachData.details}</p>
+              <p className="font-satoshi font-[700] lg:text-[18px] xl:text-[24px] text-[16px] text-center text-primary">{eachData.details}</p>
             </div>
           ))
         }

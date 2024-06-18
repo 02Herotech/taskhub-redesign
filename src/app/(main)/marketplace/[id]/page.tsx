@@ -9,66 +9,42 @@ import { FaStar } from "react-icons/fa";
 
 import PricingPlan from "@/components/matkeplaceSingleTask/PricingPlan";
 import Reviews from "@/components/matkeplaceSingleTask/Reviews";
-import { formatDate } from "@/lib/utils";
+import { formatDateFromNumberArray } from "@/utils";
+import axios from "axios";
 
 const Page = () => {
   const [displayData, setDisplayData] = useState<ListingDataType>();
+  const [currentListing, setCurrentListing] = useState<ListingDataType>();
 
   useEffect(() => {
     const tempList = localStorage.getItem("content");
     if (tempList) {
       const content: ListingDataType = JSON.parse(tempList);
       setDisplayData(content);
-      console.log(content);
     }
   }, []);
 
-  function getDaySuffix(day: number): string {
-    if (day > 3 && day < 21) return "th"; // covers 11th, 12th, 13th
-    switch (day % 10) {
-      case 1:
-        return "st";
-      case 2:
-        return "nd";
-      case 3:
-        return "rd";
-      default:
-        return "th";
-    }
-  }
+  useEffect(() => {
+    const fetchListing = async () => {
+      try {
+        if (!displayData) return;
+        const url =
+          "https://smp.jacinthsolutions.com.au/api/v1/listing/" +
+          displayData.id;
+        const { data } = await axios.get(url);
+        setCurrentListing(data);
+        console.log(data);
+      } catch (error: any) {
+        console.log(error.response.data);
+      }
+    };
 
-  function getMonthName(monthIndex: number): string {
-    const monthNames = [
-      "January",
-      "February",
-      "March",
-      "April",
-      "May",
-      "June",
-      "July",
-      "August",
-      "September",
-      "October",
-      "November",
-      "December",
-    ];
-    return monthNames[monthIndex];
-  }
-
-  function formatNumberIntoDate(dateArray: number[]): string {
-    const [year, month, day] = dateArray;
-    const date = new Date(year, month, day);
-
-    const dayWithSuffix = day + getDaySuffix(day);
-    const monthName = getMonthName(month);
-    const formattedDate = `${dayWithSuffix} ${monthName} ${year}`;
-
-    return formattedDate;
-  }
+    fetchListing();
+  }, [displayData]);
 
   return (
     <>
-      <main className="  pt-16 text-[#221354]">
+      <main className="  pt-16 font-satoshiMedium text-[#221354] ">
         <section className=" grid gap-4 lg:grid-cols-12 lg:gap-4">
           {/* left handside */}
           <article className="space-y-4 lg:col-span-7">
@@ -82,19 +58,25 @@ const Page = () => {
                   alt="bannerImage"
                   width={1600}
                   height={1600}
-                  className="mx-auto max-h-[400px] min-h-64 w-full max-w-screen-xl  rounded-lg object-cover "
+                  layout="intrinsic"
+                  quality={100}
+                  className="mx-auto max-h-[400px] w-full max-w-screen-xl  rounded-lg object-cover "
                 />
               </div>
             </header>
 
             {/* content */}
             <div className="container space-y-4 ">
-              <p className="font-medium">Recently Added</p>
-              <h3 className="text-4xl font-extrabold">
+              {/* <p className="font-medium">Recently Added</p> */}
+              <h3 className="text-4xl font-extrabold ">
                 {displayData?.listingTitle}
               </h3>
-              <p className="font-medium underline">Service Purpose</p>
-              <p className="font-medium">{displayData?.listingDescription}</p>
+              <p className="font-satoshiMedium text-xl font-medium">
+                Service Purpose
+              </p>
+              <p className="font-satoshiMedium capitalize">
+                {displayData?.listingDescription}
+              </p>
               <h4 className="text-3xl font-extrabold">Location</h4>
               <p className="flex items-center gap-2 text-slate-500 ">
                 <span>
@@ -102,9 +84,9 @@ const Page = () => {
                 </span>
                 <span>{displayData?.suburb}</span>
               </p>
-              <p className="flex items-center gap-2 text-sm underline ">
+              {/* <p className="flex items-center gap-2 text-sm underline ">
                 View Maps <BsArrowUp className="rotate-45" />
-              </p>
+              </p> */}
               <h4 className="text-3xl font-extrabold">Date and Time</h4>
               <p className="flex items-center gap-2 text-slate-500 ">
                 <span>
@@ -112,7 +94,7 @@ const Page = () => {
                 </span>
                 <span>
                   {displayData?.createdAt &&
-                    formatNumberIntoDate(displayData.createdAt)}
+                    formatDateFromNumberArray(displayData.createdAt)}
                 </span>
               </p>
               <p className="flex items-center gap-2 text-slate-500 ">
@@ -134,6 +116,7 @@ const Page = () => {
                       alt="User"
                       width={80}
                       height={80}
+                      quality={100}
                       className="size-20 rounded-full object-cover "
                     />
                     <div className="space-y-2">
@@ -159,7 +142,10 @@ const Page = () => {
                     Message
                   </button>
                 </div>
-                <p className="font-medium">{displayData?.listingDescription}</p>
+                <p className="font-medium">
+                  {/* @ts-ignore */}
+                  {currentListing?.serviceProvider.bio}
+                </p>
               </div>
             </div>
           </article>
@@ -172,12 +158,13 @@ const Page = () => {
             planTwoDescription={displayData?.planTwoDescription ?? null}
             planThreeDescription={displayData?.planThreeDescription ?? null}
             listingId={displayData?.id ?? 0}
+            listingTitle={displayData?.listingTitle}
           />
         </section>
 
         {/* Portfolio */}
-        <section className="mx-auto w-full space-y-4 p-4  lg:p-16 ">
-          <h1 className="text-3xl font-bold text-violet-darkHover max-md:text-xl">
+        <section className="mx-auto w-full space-y-4 p-4  py-8 lg:p-16 ">
+          <h1 className="text-3xl font-bold text-violet-darkHover">
             Portfolio
           </h1>
           <div className="flex flex-col gap-6 lg:grid lg:grid-cols-12">
@@ -186,6 +173,7 @@ const Page = () => {
               alt="googlemap"
               width={800}
               height={500}
+              quality={100}
               className="mx-auto h-96 w-full rounded-xl  object-cover lg:col-span-6 "
             />
             <div className="flex flex-col gap-5 md:grid md:grid-cols-2 lg:col-span-6">
@@ -196,6 +184,7 @@ const Page = () => {
                   alt={item}
                   width={1600}
                   height={1600}
+                  quality={100}
                   className="mx-auto h-44 w-full rounded-xl object-cover "
                 />
               ))}

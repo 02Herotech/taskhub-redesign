@@ -8,8 +8,7 @@ import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { BeatLoader } from "react-spinners";
-import { marketPlaceModalIcon } from "@/lib/svgIcons";
-import { formatDate, formatTime } from "@/utils";
+import { formatDate, formatTimeFromDate } from "@/utils";
 import Image from "next/image";
 
 interface ModalProps {
@@ -39,6 +38,7 @@ const PricingModal = ({
     message: "",
   });
 
+  const [wordCount, setWordCount] = useState(0);
   const [stateLists, setStateLists] = useState([]);
   const [formState, setFormState] = useState<{
     postcode: number | string;
@@ -46,7 +46,7 @@ const PricingModal = ({
     suburb: string;
     pricing: number | string;
     description: string;
-    time: string;
+    time: Date | string;
   }>({
     postcode: "",
     date: "",
@@ -55,9 +55,12 @@ const PricingModal = ({
     description: "",
     time: "",
   });
+  const [isSubmittedSuccessful, setIsSubmittedSuccessful] = useState(false);
 
   const session = useSession();
   const token = session?.data?.user?.accessToken;
+
+  const wordLimit = 50;
 
   useEffect(() => {
     setFormState((prev) => ({ ...prev, pricing: modalData.pricing }));
@@ -73,7 +76,6 @@ const PricingModal = ({
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     try {
-      console.log(token);
       setSubmitStatus((prev) => ({ ...prev, isSubmtting: true, error: "" }));
       if (
         !formState.date ||
@@ -93,13 +95,15 @@ const PricingModal = ({
       const uploadData = {
         listingId,
         startDate: formatDate(formState.date as Date),
-        startTime: formatTime(formState.time),
+        startTime: formatTimeFromDate(formState.time as Date),
         postCode: formState.postcode,
         suburb: formState.suburb,
         price: formState.pricing,
         bookingDescription: formState.description,
         bookingTitle: modalData.title,
       };
+
+      console.log(uploadData);
       const url = "https://smp.jacinthsolutions.com.au/api/v1/booking";
       const { data } = await axios.post(url, uploadData, {
         headers: {
@@ -111,10 +115,9 @@ const PricingModal = ({
         ...prev,
         message: data.message,
       }));
-      setTimeout(() => {
-        router.push("/marketplace");
-      }, 2000);
-    } catch (error) {
+      setIsSubmittedSuccessful(true);
+    } catch (error: any) {
+      console.log(error);
       setSubmitStatus((prev) => ({
         ...prev,
         error: "Kindly check your network connection",
@@ -144,10 +147,12 @@ const PricingModal = ({
       const { data } = await axios.get(url);
       const suburb = data.map((item: any) => item.name);
       setStateLists(suburb);
+      setFormState((prev) => ({ ...prev, suburb: suburb[0] }));
     } catch (error) {
       console.log(error);
     }
   };
+
   useEffect(() => {
     const fetchData = async () => {
       await handleFectchLocationByPostcode();
@@ -155,6 +160,20 @@ const PricingModal = ({
     fetchData();
     // eslint-disable-next-line
   }, [formState.postcode]);
+
+  const handleInputChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const inputText = event.target.value;
+    const words = inputText.trim().split(/\s+/);
+    const count = words.filter((word) => word).length; // Filter out empty strings
+
+    if (count <= wordLimit) {
+      setFormState((prev) => ({
+        ...prev,
+        description: inputText,
+      }));
+      setWordCount(count);
+    }
+  };
 
   return (
     <section
@@ -211,6 +230,30 @@ const PricingModal = ({
             </Link>
           </div>
         </div>
+      ) : isSubmittedSuccessful ? (
+        <div className="relative z-10 flex w-[90vw] max-w-xl flex-col items-center justify-center gap-3 bg-violet-light p-3 px-4 lg:space-y-4 lg:p-10">
+          <div className="clip-triangle absolute left-0 top-0 h-full w-full bg-violet-active"></div>
+          <div className="relative flex flex-col items-center justify-center gap-4 bg-white p-6 lg:px-20 ">
+            <div className="size-10 rounded-full bg-violet-darker p-2">
+              <Image
+                src={"/assets/images/serviceProvider/jobs/checkicon.png"}
+                alt="checkicon"
+                width={80}
+                height={80}
+                className="h-full w-full"
+              />
+            </div>
+            <p className="text-center text-xl font-bold text-violet-normal">
+              Booking Proposal successfully sent to the service provider
+            </p>
+            <Link
+              href={`/marketplace`}
+              className="rounded-full bg-violet-normal px-6 py-3 font-bold text-white"
+            >
+              Proceed to marketplace
+            </Link>
+          </div>
+        </div>
       ) : (
         <form
           onSubmit={(event) => handleSubmit(event)}
@@ -225,9 +268,7 @@ const PricingModal = ({
           <div className="grid w-full grid-cols-2  items-end justify-end gap-4 ">
             {/* Date */}
             <div className="flex flex-col justify-between space-y-1">
-              <label htmlFor="" className="font-bold  text-violet-darker">
-                Date
-              </label>
+              <label className="font-bold  text-violet-darker">Date</label>
               <DatePicker
                 selected={formState.date as Date}
                 minDate={new Date()}
@@ -244,11 +285,22 @@ const PricingModal = ({
             </div>
             {/* Time */}
             <div className="flex flex-col space-y-1">
-              <label htmlFor="" className="font-bold  text-violet-darker">
-                Time
-              </label>
+              <label className="font-bold  text-violet-darker">Time</label>
+              <DatePicker
+                selected={formState.time as Date}
+                onChange={(date: Date) =>
+                  setFormState((prev) => ({ ...prev, time: date }))
+                }
+                showTimeSelect
+                showTimeSelectOnly
+                timeIntervals={30} // You can adjust the intervals (e.g., 15, 30)
+                timeCaption="Time"
+                dateFormat="h:mm aa" // Adjust the format as needed
+                className="small-scrollbar w-full rounded-xl border border-slate-100 p-2 py-3 text-slate-700 shadow outline-none transition-shadow duration-300 hover:shadow-md lg:max-w-sm"
+                required
+              />
 
-              <input
+              {/* <input
                 type="time"
                 name="time"
                 required
@@ -260,7 +312,7 @@ const PricingModal = ({
                   }))
                 }
                 className="w-full  rounded-lg p-3 outline-none"
-              />
+              /> */}
             </div>
             {/* Location */}
             <div className="flex flex-col space-y-1">
@@ -286,6 +338,7 @@ const PricingModal = ({
                 className="w-full max-w-60 rounded-lg p-3 outline-none"
                 disabled={stateLists.length === 0}
                 required
+                value={formState.suburb}
                 onChange={(event) =>
                   setFormState((prev) => ({
                     ...prev,
@@ -333,16 +386,14 @@ const PricingModal = ({
             </label>
             <textarea
               placeholder="Write a little details about why you need the service..."
-              className="w-full rounded-lg p-3 outline-none"
+              className="small-scrollbar w-full rounded-lg p-3 outline-none "
               value={formState.description}
               required
-              onChange={(event) =>
-                setFormState((prev) => ({
-                  ...prev,
-                  description: event.target.value,
-                }))
-              }
+              onChange={(event) => handleInputChange(event)}
             />
+            <div className="text-right text-sm text-violet-normal">
+              {wordCount}/{wordLimit} words
+            </div>
           </div>
           <button
             className="mx-auto flex w-full max-w-xs items-center justify-center rounded-full bg-violet-normal p-3 px-8 text-center text-white"
@@ -360,11 +411,6 @@ const PricingModal = ({
           </button>
           {submitSatus.error && (
             <p className="text-center  text-red-800">{submitSatus.error}</p>
-          )}
-          {submitSatus.message && (
-            <p className="text-center  text-emerald-800">
-              {submitSatus.message}
-            </p>
           )}
         </form>
       )}

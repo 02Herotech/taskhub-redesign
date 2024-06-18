@@ -1,10 +1,12 @@
 "use client";
 
-import { notificationData } from "@/app/data/service-provider/notification";
+// import { notificationData } from "@/app/data/service-provider/notification";
 import Button from "@/components/global/Button";
 import Popup from "@/components/global/Popup";
 import Image from "next/image";
 import React, { useState } from "react";
+
+const notificationData: any[] = [];
 
 const ServiceNotification = () => {
   const [currentCategory, setCurrentCategory] = useState("All");
@@ -14,10 +16,12 @@ const ServiceNotification = () => {
   };
 
   return (
-    <main className="space-y-8 p-4 lg:p-8 mt-[4rem]">
-      <div className="mt-14 mb-8 space-y-8">
-        <h4 className='text-[#140B31] font-satoshiBold font-bold text-2xl lg:text-4xl'>My Notifications</h4>
-        <div className='border-[1.5px] border-primary' />
+    <main className="mt-[4rem] space-y-8 p-4 lg:p-8">
+      <div className="mb-8 mt-14 space-y-8">
+        <h4 className="font-satoshiBold text-2xl font-bold text-[#140B31] lg:text-4xl">
+          My Notifications
+        </h4>
+        <div className="border-[1.5px] border-primary" />
       </div>
       <div className="flex flex-wrap gap-4">
         <button
@@ -44,7 +48,7 @@ const ServiceNotification = () => {
         {notificationData.map((item, index) => (
           <div
             key={index}
-            className="pointer-events-auto flex items-center justify-between flex-1 w-full cursor-pointer transition-shadow duration-300"
+            className="pointer-events-auto flex w-full flex-1 cursor-pointer items-center justify-between transition-shadow duration-300"
           >
             <div className="flex items-center justify-between gap-x-3 py-2">
               <Image

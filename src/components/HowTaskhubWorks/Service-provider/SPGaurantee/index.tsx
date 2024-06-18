@@ -43,8 +43,8 @@ const SPGaurantee = () => {
                 <BsFillPatchCheckFill />
               </span>
               <div className='space-y-3'>
-                <p className=" lg:text-[24px] text-[18px] font-satoshiMedium font-[800] text-[#140B31]">{eachData.title}</p>
-                <p className='font-satoshiMedium font-[500] lg:text-[20px] text-[15px] text-primary'>
+                <p className=" lg:text-[24px] text-[18px] font-satoshi font-[900] text-[#140B31]">{eachData.title}</p>
+                <p className='font-satoshi font-[600] lg:text-[20px] text-[15px] text-primary'>
                   {eachData.details}
                 </p>
               </div>

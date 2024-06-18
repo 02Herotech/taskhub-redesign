@@ -65,8 +65,8 @@ const Header = () => {
 
                     <div className="">
                         <button
-                            className=" rounded-[50px] bg-[#EBE9F4] text-[16px]
-xl:px-7 lg:px-1 py-2 text-primary font-satoshiMedium hover:bg-[#e4e0f7] w-[250px] xl:w-[190px] lg:w-[165px]  "
+                            className=" rounded-[50px] bg-[#EBE9F4] text-[17px]
+xl:px-7 lg:px-1 py-2 text-primary font-satoshi font-[900] hover:bg-[#e4e0f7]  xl:w-[200px] lg:w-[175px] h-[50px]  "
                         >
 
                             <Link href="/customer/add-task">
@@ -193,7 +193,7 @@ xl:px-7 lg:px-1 py-2 text-primary font-satoshiMedium hover:bg-[#e4e0f7] w-[250px
                     <div className="flex justify-center items-center">
                         <button
                             className=" rounded-[50px] bg-[#EBE9F4] text-[16px]
- py-2 text-primary font-satoshiMedium hover:bg-[#e4e0f7] w-[180px] px-4    "
+ py-2 text-primary font-satoshi font-[700] hover:bg-[#e4e0f7] w-[180px] px-4    "
                         >
 
                             <Link href="/customer/add-task">

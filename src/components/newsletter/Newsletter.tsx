@@ -14,16 +14,10 @@ const Newsletter = () => {
         setEmail(e.target.value)
     }
 
-
-
-
     const isAllFieldsFilled = () => {
         const requiredField = ['email'];
         return requiredField.every(() => email !== '');
     }
-
-
-
 
     const onSubmit = (event: { preventDefault: () => void }) => {
         event.preventDefault();
@@ -34,7 +28,7 @@ const Newsletter = () => {
     return (
         <div className={`flex justify-center flex-col space-y-2 `}>
             <div className={` text-purpleBase`}>
-                <h1 className={`font-extrabold text-base text-[#2E095DF2]`}>Subscribe to our Newsletter</h1>
+                <h1 className={`font-clashSemiBold text-base text-[#2E095DF2]`}>Subscribe to our Newsletter</h1>
             </div>
 
             {submitted ? 
@@ -43,7 +37,7 @@ const Newsletter = () => {
                     <p className='text-[12px] ml-2'>Thank you for Subscribing</p>
                 </div> :
                 
-                <form className={`w-[320px] flex items-center -space-x-5 `} onSubmit={onSubmit}>
+                <form className={`w-full flex items-center -space-x-5 `} onSubmit={onSubmit}>
                     <input type="email" placeholder="Your Email..." className={`px-5 text-left  text-[12px] text-[#381F8C] outline-none h-[36px] w-[250px] bg-white rounded-xl `} value={email} onChange={handleEmailChange} />
                     <button className={`bg-primary hover:bg-purple5 h-[35px] flex items-center justify-center text-white text-[30px] w-[50px] rounded-[18px] ${isAllFieldsFilled() ? '' : 'opacity-80'}`} type='submit'
                         disabled={!isAllFieldsFilled()} >

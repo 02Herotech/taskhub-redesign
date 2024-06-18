@@ -1,5 +1,6 @@
 import { defaultUserDetails } from "@/data/data";
 import Loading from "@/shared/loading";
+import { formatDateFromNumberArray } from "@/utils";
 import axios from "axios";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
@@ -16,17 +17,7 @@ const ProfileHeader = () => {
   const editProfileLink = isServiceProvider
     ? "/service-provider/profile/edit-profile"
     : "/customer/profile/edit-profile";
-  const currentDateTime = new Date();
-  const dateArray = user?.registeredAt || [
-    currentDateTime.getFullYear(),
-    currentDateTime.getMonth() + 1,
-    currentDateTime.getDate(),
-  ];
-  const date = new Date(
-    Number(dateArray[0]),
-    Number(dateArray[1]) - 1,
-    Number(dateArray[2]),
-  );
+
   const location = user?.address?.state || "Australia";
 
   useEffect(() => {
@@ -61,12 +52,12 @@ const ProfileHeader = () => {
           <div className="flex items-center gap-8">
             <Image
               src={
-                user?.profileImage ??
-                "/assets/images/placeholder.jpeg"
+                user?.profileImage ?? "/assets/images/serviceProvider/user.jpg"
               }
-              alt={user?.firstName ? user?.firstName : "user"}
+              alt={user?.firstName ?? "user"}
               width={160}
               height={160}
+              quality={100}
               className="max-siz-40 size-40 rounded-full object-cover max-md:size-24 max-md:max-w-24"
             />
             <div className="flex flex-col gap-2">
@@ -87,7 +78,8 @@ const ProfileHeader = () => {
               Edit Account Details
             </Link>
             <p className="text-sm font-medium text-[#140B31]">
-              A member since {date.toDateString()}
+              {/* @ts-expect-error "Type error in the user declaration as number array" */}
+              A member since {formatDateFromNumberArray(user.registeredAt)}
             </p>
             <p className="text-sm font-medium text-[#140B31]">{location}</p>
           </div>

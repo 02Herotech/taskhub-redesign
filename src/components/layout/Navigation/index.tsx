@@ -29,7 +29,6 @@ const Navigation = () => {
   const handleLogout = async () => {
     try {
       await signOut();
-
       await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/logout`);
       router.push("/home");
     } catch (error: any) {
@@ -86,7 +85,7 @@ const Navigation = () => {
         className={`fixed left-0 right-0 top-0 z-50 w-full ${currentLinks === homeLinks ? `bg-[#F5E2FC]` : `bg-white`} drop-shadow-sm`}
       >
         <div className="container flex items-center justify-between px-7 py-4 lg:px-14 lg:py-5">
-          <Link href="/marketplace">
+          <Link href="/">
             <Logo />
           </Link>
           <button
@@ -101,7 +100,7 @@ const Navigation = () => {
                 <li key={link.url} className="relative">
                   <Link
                     href={link.url as string}
-                    className={cn("text-xl font-clashMedium text-primary", {
+                    className={cn("text-xl font-semibold text-primary", {
                       "text-tc-orange":
                         link.url === "/" && pathname === "/"
                           ? true
@@ -135,18 +134,19 @@ const Navigation = () => {
               <>
                 <Link href="/message" className="relative cursor-pointer">
                   <BsChat className="size-[22px] text-black" />
-                  <span className="absolute -right-1 -top-1 flex size-5 items-center justify-center rounded-full bg-tc-orange text-xs text-white">
-                    2
-                  </span>
+                  {/* display a number chat nummber here */}
+                  {/* <span className="absolute -right-1 -top-1 flex size-5 items-center justify-center rounded-full bg-tc-orange text-xs text-white">
+                  </span> */}
                 </Link>
                 <div
                   className="relative cursor-pointer"
                   onClick={() => router.push(notificationRoute)}
                 >
                   <IoMdNotificationsOutline className="size-[24px] text-black" />
-                  <div className="absolute -right-1 -top-1 flex size-5 items-center justify-center rounded-full bg-tc-orange text-xs text-white">
+                  {/* display notification length here */}
+                  {/* <div className="absolute -right-1 -top-1 flex size-5 items-center justify-center rounded-full bg-tc-orange text-xs text-white">
                     {notificationLength}
-                  </div>
+                  </div> */}
                 </div>
                 <Dropdown
                   trigger={() => (

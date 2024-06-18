@@ -95,10 +95,10 @@ export const customerDashboardDropdown = [
 export const serviceProviderDashboardDropdown = [
   {
     label: "Password",
-    link: "/service-provider/password",
+    link: "/service-provider/settings/password",
   },
   {
     label: "Notification",
-    link: "/service-provider/notification",
+    link: "/service-provider/settings/notification",
   },
 ];

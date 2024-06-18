@@ -1,11 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
-import { FaStar } from "react-icons/fa6";
-import { motion } from "framer-motion";
-import { notificationData } from "@/app/data/service-provider/notification";
 import { BiCalendarWeek, BiCheck } from "react-icons/bi";
 import { HiLocationMarker } from "react-icons/hi";
 import { CiClock1 } from "react-icons/ci";
@@ -13,47 +9,37 @@ import Link from "next/link";
 import AllServices from "@/components/dashboard/serviceProvider/services/AllServices";
 import { useSession } from "next-auth/react";
 import axios from "axios";
-import { truncateText } from "@/utils/marketplace";
-
-const myservices = [
-  {
-    Jobimage: "/assets/images/serviceProvider/plumbing.png",
-    category: "Plumbing",
-    rating: "4.5",
-    profileImage: "/assets/images/marketplace/singleTask/oluchi.png",
-    profileName: "Daniels Oluchi",
-    price: 100,
-  },
-];
-
-const jobsData = [
-  {
-    id: "1",
-    name: "Kelly Jane",
-    description: "Request for drain blockage fix service",
-    image: "/assets/images/serviceProvider/jobs/joe.png",
-    price: 450,
-    time: "Yesterday",
-  },
-];
+import { formatDateFromNumberArrayToRelativeDate } from "@/utils";
+import { BeatLoader } from "react-spinners";
+import OngoingServiceModal from "@/components/dashboard/serviceProvider/services/OngoingServiceModal";
+import AcceptedServices from "@/components/dashboard/serviceProvider/services/AcceptedServices";
 
 const ServicesPage = () => {
   const [currentCategory, setCurrentCategory] = useState("services");
   const [ongoingBookingData, setOngoingBookingData] = useState<BookingType[]>(
     [],
   );
+  const [acceptedBookingData, setAcceptedBookingData] = useState<BookingType[]>(
+    [],
+  );
   const [loading, setLoading] = useState(false);
 
-  const router = useRouter();
+  const [modalData, setModalData] = useState<ModalDataType>({
+    isModalShown: false,
+    message: "",
+    isStartService: false,
+    isCompleteService: false,
+    isReportService: false,
+    error: "",
+  });
+
   const session = useSession();
   const token = session?.data?.user?.accessToken;
 
-  const fetchOngoingBookings = async () => {
+  const fetchBookings = async () => {
     if (!token) return;
     try {
       setLoading(true);
-      console.log("Fetching all bookings");
-      console.log(token);
       const url =
         "https://smp.jacinthsolutions.com.au/api/v1/booking/service-provider";
       const response = await axios.get(url, {
@@ -61,12 +47,18 @@ const ServicesPage = () => {
           Authorization: `Bearer ${token}`,
         },
       });
-      console.log("fetch completed");
       const data: BookingType[] = response.data;
-      const filteredData = data.filter(
+      const filteredAcceptedData = data.filter(
         (item) => item.bookingStage === "ACCEPTED",
       );
-      setOngoingBookingData(filteredData);
+
+      const filteredOngoingData = data.filter(
+        (item) =>
+          item.bookingStage === "PAID" || item.bookingStage === "STARTED",
+      );
+
+      setOngoingBookingData(filteredOngoingData);
+      setAcceptedBookingData(filteredAcceptedData);
     } catch (error) {
       console.error("An error occurred while fetching services:", error);
     } finally {
@@ -75,18 +67,43 @@ const ServicesPage = () => {
   };
 
   useEffect(() => {
-    fetchOngoingBookings();
+    fetchBookings();
     // eslint-disable-next-line
   }, [token]);
 
+  const handleCompleteService = async (id: number) => {
+    setModalData((prev) => ({
+      ...prev,
+      isModalShown: true,
+      message: id,
+      isCompleteService: true,
+    }));
+  };
+
+  const handleReportService = async (id: number) => {
+    setModalData((prev) => ({
+      ...prev,
+      isModalShown: true,
+      message: id,
+      isReportService: true,
+    }));
+  };
+
   return (
-    <main className="space-y-8 p-4 lg:p-8">
+    <main className=" relative space-y-8 p-4 lg:p-8">
+      <OngoingServiceModal modalData={modalData} setModalData={setModalData} />
       <div className="flex flex-wrap gap-2 lg:gap-6">
         <button
           className={` rounded-lg px-4 py-2 font-medium transition-all duration-300 hover:opacity-90 max-md:text-sm lg:px-8 lg:py-3 ${currentCategory === "services" ? "bg-[#381F8C] text-white" : "bg-[#E1DDEE] text-[#381F8C] "} `}
           onClick={() => setCurrentCategory("services")}
         >
           My Services
+        </button>
+        <button
+          className={`rounded-lg px-4 py-2 font-medium transition-all duration-300 hover:opacity-90 lg:px-8 lg:py-3 ${currentCategory === "accepted" ? "bg-[#381F8C] text-white" : "bg-[#E1DDEE] text-[#381F8C] "} `}
+          onClick={() => setCurrentCategory("accepted")}
+        >
+          My Accepted Services
         </button>
         <button
           className={` rounded-lg px-4 py-2 font-medium transition-all duration-300 hover:opacity-90 lg:px-8 lg:py-3 ${currentCategory === "ongoing" ? "bg-[#381F8C] text-white" : "bg-[#E1DDEE] text-[#381F8C] "} `}
@@ -103,6 +120,12 @@ const ServicesPage = () => {
       </div>
       {currentCategory === "services" ? (
         <AllServices />
+      ) : currentCategory === "accepted" ? (
+        <AcceptedServices
+          setModalData={setModalData}
+          acceptedBookingData={acceptedBookingData}
+          handleReportservice={handleReportService}
+        />
       ) : currentCategory === "ongoing" ? (
         <div className="flex flex-col gap-8  pb-4">
           {ongoingBookingData.map((item, index) => (
@@ -113,33 +136,37 @@ const ServicesPage = () => {
               <div className="col-span-2 size-20 flex-shrink-0 overflow-hidden rounded-full border border-violet-normal lg:size-24">
                 <Image
                   src={
-                    item.user.profileImage ??
+                    item?.user?.profileImage ??
                     "/assets/images/serviceProvider/user.jpg"
                   }
-                  alt={item.user.fullName}
+                  alt={item?.user.fullName}
                   width={200}
                   height={200}
                   className="h-full w-full object-cover "
                 />
               </div>
-              <div className="col-span-10 w-full space-y-6">
+              <div className="col-span-10 w-full space-y-4">
                 <div className="flex flex-wrap justify-between gap-2 ">
-                  <div className="space-y-2">
+                  <div>
                     <p className="text-lg font-semibold text-violet-normal ">
                       {item.user.fullName}
                     </p>
-                    <p className="text-violet-normal">
-                      {truncateText(item.bookingTitle, 30)}
-                    </p>
+                    <p className="text-violet-normal">{item.bookingTitle}</p>
                   </div>
                   <div className="space-y-2">
-                    <p className="text-sm font-medium text-orange-normal">
-                      {item.startDate}
+                    <p className="text-sm font-bold text-orange-normal">
+                      <p>
+                        {formatDateFromNumberArrayToRelativeDate(
+                          item.startDate,
+                        )}
+                      </p>
                     </p>
-                    <p className=" text-slate-700">Total Cost ${item.price}</p>
+                    <p className=" font-bold text-[#28272A]">
+                      Total Cost ${item.price}
+                    </p>
                   </div>
                 </div>
-                <div className="flex flex-wrap justify-between">
+                <div className="flex items-center justify-between">
                   <div className="flex flex-wrap gap-3">
                     <Link
                       href={"/service-provider/jobs/" + item.id}
@@ -147,11 +174,18 @@ const ServicesPage = () => {
                     >
                       View Enquiry
                     </Link>
-                    <button className="rounded-full bg-violet-normal px-6 py-3 text-sm font-medium text-white transition-opacity duration-300 hover:opacity-90 max-md:px-4 max-md:py-2 max-md:text-sm">
+                    <button
+                      onClick={() => handleCompleteService(item.id)}
+                      className="rounded-full bg-violet-normal px-6 py-3 text-sm font-medium text-white transition-opacity duration-300 hover:opacity-90 max-md:px-4 max-md:py-2 max-md:text-sm"
+                    >
                       Complete Service
                     </button>
                   </div>
-                  <button className="text-xl font-bold text-red-600">
+
+                  <button
+                    className="rounded-full  px-4 py-2 text-xl font-bold text-red-500 transition-colors duration-300 hover:bg-red-100 "
+                    onClick={() => handleReportService(item.id)}
+                  >
                     Report
                   </button>
                 </div>
