@@ -13,6 +13,7 @@ interface PricingPlanProps {
   planThreeDescription: string | null;
   listingId: number;
   listingTitle: string | undefined;
+  negotiable: boolean;
 }
 
 const PricingPlan = ({
@@ -24,6 +25,7 @@ const PricingPlan = ({
   planThreeDescription,
   listingId,
   listingTitle,
+  negotiable,
 }: PricingPlanProps) => {
   const session = useSession();
   const isAuthenticated = session?.data?.user?.accessToken;
@@ -40,11 +42,13 @@ const PricingPlan = ({
     isAuthenticated: string | undefined;
     isServiceProvider: boolean;
     title: string;
+    negotiable: boolean;
   }>({
     pricing: 0,
     isAuthenticated,
     isServiceProvider,
     title: listingTitle ?? "",
+    negotiable,
   });
 
   const handleExpandText = (index: number) => {

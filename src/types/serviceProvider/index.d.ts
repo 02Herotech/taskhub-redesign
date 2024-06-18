@@ -20,3 +20,12 @@ declare interface ModalDataType {
   isCompleteService: boolean;
   isReportService: boolean;
 }
+
+declare interface NotificationTypes {
+  id: number;
+  message: string;
+  read: boolean;
+  bookingId: number;
+  type: null;
+  notificationTime: number[];
+}
