@@ -177,6 +177,7 @@ const Page = () => {
             planThreeDescription={displayData?.planThreeDescription ?? null}
             listingId={displayData?.id ?? 0}
             listingTitle={displayData?.listingTitle}
+            negotiable={displayData?.negotiable ?? false}
           />
         </section>
 
