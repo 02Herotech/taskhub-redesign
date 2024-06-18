@@ -22,6 +22,7 @@ import { handleFetchNotifications } from "@/lib/serviceproviderutil";
 
 const Navigation = () => {
   const router = useRouter();
+  const session = useSession()
   const [showMobileNav, setShowMobileNav] = useState(false);
   const [notifications, setNotifications] = useState<NotificationTypes[]>([]);
   const pathname = usePathname();
@@ -37,8 +38,7 @@ const Navigation = () => {
       router.push("/home");
     }
   };
-
-  const session = useSession();
+  
   const profileImage = session?.data?.user.user.profileImage;
   const userRole = session?.data?.user.user.roles;
   const token = session?.data?.user?.accessToken;

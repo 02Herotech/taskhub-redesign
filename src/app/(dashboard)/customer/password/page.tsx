@@ -6,7 +6,7 @@ import axios from "axios";
 import { useSession } from "next-auth/react";
 import React, { useState } from "react";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
-import { BsEye } from "react-icons/bs";
+import { BsEye, BsEyeSlash } from "react-icons/bs";
 import { FaBullseye } from "react-icons/fa6";
 import { FiAlertTriangle } from "react-icons/fi";
 
@@ -24,6 +24,7 @@ const ChangePassword = () => {
     const [currentPassword, setCurrentPassword] = useState('')
     const [isLoading, setIsLoading] = useState(false);
     const [success, setSuccess] = useState<string | null>(null);
+    const [showCurrentPassword, setShowCurrentPassword] = useState(false);
 
     const handlePasswordVerification = async (e: any) => {
         e.preventDefault();
@@ -100,9 +101,9 @@ const ChangePassword = () => {
     };
 
     return (
-        <div className="p-4 lg:px-32 mt-[4rem]">
+        <div className="p-4 lg:px-20 mt-[4rem]">
             <div className="mt-14 mb-8 space-y-8">
-                <h4 className='text-[#140B31] font-satoshiBold font-bold text-3xl lg:text-5xl'>Change Password</h4>
+                <h4 className='text-[#140B31] font-satoshiBold font-bold text-3xl lg:text-4xl'>Change Password</h4>
                 <div className='border-2 border-primary' />
             </div>
             {!isPasswordVerified ? (
@@ -122,11 +123,14 @@ const ChangePassword = () => {
                             Current Password
                         </label>
                         <div className="relative my-2">
-                            <button className="absolute right-2 top-1/2 -translate-y-1/2">
-                                <BsEye />
-                            </button>
+                            <div
+                                className="absolute right-2 top-1/2 -translate-y-1/2 cursor-pointer"
+                                onClick={() => setShowCurrentPassword(!showCurrentPassword)}
+                            >
+                                {showCurrentPassword ? <BsEyeSlash /> : <BsEye />}
+                            </div>
                             <input
-                                type="text"
+                                type={showCurrentPassword ? "text" : "password"}
                                 className="w-full rounded-xl p-3  outline-none"
                                 onChange={(e) => setCurrentPassword(e.target.value)}
                             />

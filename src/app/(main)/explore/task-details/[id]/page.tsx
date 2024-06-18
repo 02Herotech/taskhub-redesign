@@ -22,21 +22,21 @@ const TaskDetailsPage = ({ params }: { params: { id: string } }) => {
     }
 
     const availability = task.active ? "Available" : "Unavailable";
-    const currentDateTime = new Date();
-    const dateArray = task?.taskDate || [currentDateTime.getFullYear(), currentDateTime.getMonth() + 1, currentDateTime.getDate()];
-    const date = new Date(dateArray[0], dateArray[1] - 1, dateArray[2]);
-
-    // Define suffixes for day
+    const date = task?.taskDate ? new Date(task.taskDate[0], task.taskDate[1] - 1, task.taskDate[2]) : new Date();
     const day = date.getDate();
-    const daySuffix = suffixes[(day - 1) % 10] || suffixes[3];
-
     const month = date.getMonth();
     const monthName = monthNames[month];
-
     const dayOfWeek = date.getDay();
     const dayOfWeekName = dayOfWeekNames[dayOfWeek];
-
-    const formattedDate = `On ${dayOfWeekName}, ${monthName} ${day}${daySuffix}`;
+    // Determine the correct suffix for the day
+    let daySuffix;
+    if (day === 11 || day === 12 || day === 13) {
+        daySuffix = "th";
+    } else {
+        daySuffix = suffixes[day % 10] || suffixes[0]; // Default to "th" if suffix is undefined
+    }
+    // const daySuffix = suffixes[day % 10] || suffixes[0]; // Default to "th" if suffix is undefined
+    const formattedDate = `${dayOfWeekName}, ${monthName} ${day}${daySuffix}`;
 
     // Get hours and minutes
     const hours = date.getHours();
@@ -75,20 +75,20 @@ const TaskDetailsPage = ({ params }: { params: { id: string } }) => {
                 </div>
             ) : (
                 <>
-                    <div className="flex items-center space-x-3">
+                    <div className="flex items-center space-x-3 font-satoshi">
                         <div className="w-6 h-6 rounded-full border mr-3 border-[#34A853] flex items-center justify-center">
                             <div className="w-4 h-4 rounded-full bg-[#34A853] p-1" />
                         </div>
-                        <p className='text-sm lg:text-[20px] font-satoshiBold'>
+                        <p className='text-sm lg:text-[18px] font-bold'>
                             {availability}
                         </p>
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-10 space-x-5 w-full mt-10">
-                        <div className="space-y-7 lg:space-y-20">
-                            <h2 className="text-lg lg:text-[40px] font-satoshiBold text-primary leading-tight">{task?.taskBriefDescription}</h2>
+                        <div className="space-y-7 lg:space-y-20 font-satoshi">
+                            <h2 className="text-lg lg:text-[40px] font-black text-primary leading-tight">{task?.taskBriefDescription}</h2>
                             <div className="space-y-3 text-xs lg:text-xl">
                                 <h2 className='text-primary lg:text-3xl font-satoshiMedium font-bold'>Service purpose</h2>
-                                <p className='text-[#221354] font-satoshiMedium text-2xl'>{task?.taskDescription}</p>
+                                    <p className='text-[#221354] font-satoshiMedium text-2xl'>{task?.taskDescription}</p>
                             </div>
                             <div className="space-y-8">
                                 <h4 className='text-primary lg:text-3xl font-satoshiMedium font-bold'>Location</h4>
