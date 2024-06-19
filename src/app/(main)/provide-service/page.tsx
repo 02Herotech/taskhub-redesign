@@ -1030,8 +1030,8 @@ const ProvideService: React.FC = () => {
                     htmlFor="file-upload-main"
                     className={`flex h-48 w-1/2 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed p-4 lg:w-2/5  ${err.image ? "border border-[#ff0000] outline-[#FF0000]" : "border-2 border-[#EBE9F4] outline-none"}`}
                   >
-                    <PiFileArrowDownDuotone className="text-xl text-[#EBE9F4]" />
-                    <span className="text-center font-bold text-[#EBE9F4]">
+                      <PiFileArrowDownDuotone className="text-xl text-[#a3a1ac]" />
+                      <span className="text-center font-bold text-[#a3a1ac]">
                       File Upload supports: JPG, PDF, PNG.
                     </span>
                     <input
@@ -1083,8 +1083,8 @@ const ProvideService: React.FC = () => {
                         htmlFor="file-upload-1"
                         className="flex h-48 w-1/2 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-[#EBE9F4] p-4 lg:w-full "
                       >
-                        <PiFileArrowDownDuotone className="text-xl text-[#EBE9F4]" />
-                        <span className="text-center font-bold text-[#EBE9F4]">
+                          <PiFileArrowDownDuotone className="text-xl text-[#a3a1ac]" />
+                          <span className="text-center font-bold text-[#a3a1ac]">
                           File Upload supports: JPG, PDF, PNG.
                         </span>
                         <input
@@ -1132,8 +1132,8 @@ const ProvideService: React.FC = () => {
                         htmlFor="file-upload-2"
                         className="flex h-48 w-1/2 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-[#EBE9F4] p-4 lg:w-full "
                       >
-                        <PiFileArrowDownDuotone className="text-xl text-[#EBE9F4]" />
-                        <span className="text-center font-bold text-[#EBE9F4]">
+                          <PiFileArrowDownDuotone className="text-xl text-[#a3a1ac]" />
+                          <span className="text-center font-bold text-[#a3a1ac]">
                           File Upload supports: JPG, PDF, PNG.
                         </span>
                         <input
@@ -1181,8 +1181,8 @@ const ProvideService: React.FC = () => {
                         htmlFor="file-upload-3"
                         className="flex h-48 w-1/2 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-[#EBE9F4] p-4 lg:w-full "
                       >
-                        <PiFileArrowDownDuotone className="text-xl text-[#EBE9F4]" />
-                        <span className="text-center font-bold text-[#EBE9F4]">
+                          <PiFileArrowDownDuotone className="text-xl text-[#a3a1ac]" />
+                          <span className="text-center font-bold text-[#a3a1ac]">
                           File Upload supports: JPG, PDF, PNG.
                         </span>
                         <input
@@ -1373,15 +1373,19 @@ const ProvideService: React.FC = () => {
               setIsSuccessPopupOpen(false);
             }}
           >
-            <div className="px-24 py-10">
+            <div className="lg:px-24 px-16 py-10">
               <div className="relative grid items-center justify-center space-y-5">
                 <p className="font-clashDisplay text-center text-[20px] font-extrabold text-[#2A1769] md:text-[36px] lg:text-[37px] ">
                   You are almost done!!!
                 </p>
+                <div>
                 <p className="text-center text-[14px] lg:text-[20px]">
                   Please proceed to update your profile
-                  <br /> before your Task can be posted
-                </p>
+                 </p>
+                <p className="text-center text-[14px] lg:text-[20px]">
+                   before your Task can be posted
+                  </p>
+                </div>
                 <Image
                   src={image}
                   alt="image"
@@ -1415,7 +1419,7 @@ const ProvideService: React.FC = () => {
               setIsSuccessPopupOpen(false);
             }}
           >
-            <div className="px-24 py-10">
+            <div className="lg:px-24 px-16 py-10">
               <div className="relative grid items-center justify-center space-y-3">
                 <div className="flex justify-center text-[1px] text-white">
                   <GrFormCheckmark className="h-[50px] w-[50px] rounded-full bg-[#FE9B07] p-2 lg:h-[60px] lg:w-[60px]" />
