@@ -120,7 +120,7 @@ const PaymentHistory = () => {
 
     return (
         <div className="w-full bg-[#EBE9F4] rounded-[20px] p-4 font-satoshi">
-            <h3 className="text-[#140B31] font-satoshiBold text-base mb-5">{todayDate}</h3>
+            <h3 className="text-[#140B31] font-satoshiBold font-bold text-base mb-5">{todayDate}</h3>
             <div className="space-y-5">
                 {CustomerPaymentHistoryData.slice(0, visibleTransactions).map((data, index) => (
                     <div

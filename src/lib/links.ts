@@ -139,7 +139,7 @@ export const mobileCustomerLinks: Link[] = [
                 url: "/customer/notifications",
             },
             {
-                label: "Payments settings",
+                label: "Payment settings",
                 url: "/customer/payment/payment-history",
             },
             {

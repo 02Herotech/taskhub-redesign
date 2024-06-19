@@ -31,7 +31,7 @@ export const customerDashboardLinks: DashboardLinks[] = [
     icon: NotificationIcon,
   },
   {
-    label: "Payments Settings",
+    label: "Payment Settings",
     link: "/customer/payment/payment-history",
     icon: PaymentIcon,
   },
