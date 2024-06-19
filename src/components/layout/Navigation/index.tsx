@@ -22,7 +22,7 @@ import { handleFetchNotifications } from "@/lib/serviceproviderutil";
 
 const Navigation = () => {
   const router = useRouter();
-  const session = useSession()
+  const session = useSession();
   const [showMobileNav, setShowMobileNav] = useState(false);
   const [notifications, setNotifications] = useState<NotificationTypes[]>([]);
   const pathname = usePathname();
@@ -38,7 +38,7 @@ const Navigation = () => {
       router.push("/home");
     }
   };
-  
+
   const profileImage = session?.data?.user.user.profileImage;
   const userRole = session?.data?.user.user.roles;
   const token = session?.data?.user?.accessToken;
@@ -74,8 +74,14 @@ const Navigation = () => {
   useEffect(() => {
     if (user && user.id && token) {
       const fetchNotification = async () => {
-        const data = await handleFetchNotifications({ userId: user.id, token });
-        setNotifications(data);
+        const data: NotificationTypes[] = await handleFetchNotifications({
+          userId: user.id,
+          token,
+        });
+        const unreadNotifications = data.filter(
+          (notification) => notification.read === true,
+        );
+        setNotifications(unreadNotifications);
       };
       fetchNotification();
     }

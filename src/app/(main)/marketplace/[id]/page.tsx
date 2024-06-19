@@ -105,7 +105,7 @@ const Page = () => {
               {/* <p className="flex items-center gap-2 text-sm underline ">
                 View Maps <BsArrowUp className="rotate-45" />
               </p> */}
-              <h4 className="text-3xl font-extrabold">Date and Days</h4>
+              <h4 className="text-3xl font-extrabold">Date and Days</h4>d
               <p className="flex items-center gap-2 text-slate-500 ">
                 <span>
                   <BiCalendar />

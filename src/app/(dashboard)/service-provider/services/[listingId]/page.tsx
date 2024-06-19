@@ -166,12 +166,6 @@ const EditListing = () => {
   }, [currentListing]);
 
   const watchField = watch();
-  console.log(errors);
-
-  console.log(watchField.planTwoDescription);
-  console.log(watchField.planTwoPrice);
-
-  console.log(errors);
 
   const expandDropdown = (name: string) => {
     if (name === showDropdown.name && showDropdown.isShown) {
@@ -284,11 +278,12 @@ const EditListing = () => {
         value !== "" &&
         value !== 0
       ) {
-        // @ts-expect-error "type of key not know"
+        // @ts-expect-error "type of key not known"
         acc[key] = value;
       }
       return acc;
     }, {});
+    console.log(body);
     try {
       const url =
         "https://smp.jacinthsolutions.com.au/api/v1/listing/update-listing/" +

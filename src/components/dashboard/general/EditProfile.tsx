@@ -33,19 +33,19 @@ const userDataSchema = z.object({
 const idTypeObject = [
   {
     label: "Medicare Card",
-    value: "MEDICARE_CARD",
+    value: "Medicare Card",
   },
   {
     label: "International Passport",
-    value: "INTERNATIONAL_PASSPORT",
+    value: "International Passport",
   },
   {
     label: "Photo ID",
-    value: "PHOTO_ID",
+    value: "Photo ID",
   },
   {
     label: "Drivers Licence",
-    value: "DRIVER_LICENSE",
+    value: "Driver's Licence",
   },
 ];
 
@@ -123,8 +123,6 @@ const EditProfile = () => {
 
   const watchField = watch();
 
-  console.log(errors);
-
   const parseDate = (date: string | Date | null | undefined): Date | null => {
     if (date instanceof Date) {
       return date;
@@ -137,6 +135,8 @@ const EditProfile = () => {
     }
     return null;
   };
+
+  console.log(userDetails);
 
   const today = new Date();
   const age18YearsAgo = new Date(today.setFullYear(today.getFullYear() - 18));
@@ -169,7 +169,25 @@ const EditProfile = () => {
 
       let url;
       if (isServiceProvider) {
-        submitData = Object.entries({
+        // submitData = Object.entries({
+        //   firstName: data.firstName,
+        //   lastName: data.lastName,
+        //   dateOfBirth: formatDateAsYYYYMMDD(data.dateOfBirth as Date),
+        //   suburb: data.suburb,
+        //   state: data.state,
+        //   postCode: data.postcode,
+        //   idImage: selectedDocument,
+        //   idType: data.idType,
+        //   idNumber: data.idNumber,
+        //   bio: data.bio,
+        // }).reduce((acc, [key, value]) => {
+        //   if (value !== null && value !== undefined && value !== "") {
+        //     // @ts-expect-error "type of key not know"
+        //     acc[key] = value;
+        //   }
+        //   return acc;
+        // }, {});
+        submitData = {
           firstName: data.firstName,
           lastName: data.lastName,
           dateOfBirth: formatDateAsYYYYMMDD(data.dateOfBirth as Date),
@@ -180,15 +198,7 @@ const EditProfile = () => {
           idType: data.idType,
           idNumber: data.idNumber,
           bio: data.bio,
-        }).reduce((acc, [key, value]) => {
-          if (value !== null && value !== undefined && value !== "") {
-            // @ts-expect-error "type of key not know"
-            acc[key] = value;
-          }
-          return acc;
-        }, {});
-
-        console.log(submitData);
+        };
         url =
           "https://smp.jacinthsolutions.com.au/api/v1/service_provider/update";
       } else {
@@ -205,6 +215,8 @@ const EditProfile = () => {
         };
         url = "https://smp.jacinthsolutions.com.au/api/v1/customer";
       }
+
+      console.log(submitData);
       await axios.patch(url, submitData, {
         headers: {
           Authorization: `Bearer ${token}`,
