@@ -103,6 +103,8 @@ const AddTaskForm: React.FC = () => {
   const [wordCount, setWordCount] = useState(0);
   const [wordCounts, setWordCounts] = useState(0);
   const [isSuccessPopup, setIsSuccessPopup] = useState(false);
+  const maxSize = 5 * 1024 * 1024; // 5MB in bytes
+  const [errs, setErrs] = useState("")
 
   // Handling getting the description from the marketplace when i user navigates from the marketplace
   useEffect(() => {
@@ -317,10 +319,14 @@ const AddTaskForm: React.FC = () => {
   ) => {
     const uploadedFile = event.target.files?.[0];
     if (uploadedFile) {
-      setTask({ ...task, taskImage: uploadedFile });
-
-      const reader = new FileReader();
-      reader.readAsDataURL(uploadedFile);
+      if (uploadedFile.size > maxSize) {
+        setErrs('File size exceeds 5MB.');
+      } else {
+        setTask({ ...task, taskImage: uploadedFile });
+        const reader = new FileReader();
+        reader.readAsDataURL(uploadedFile);
+        setErrs('');
+      }
     }
   };
 
@@ -626,6 +632,9 @@ const AddTaskForm: React.FC = () => {
                       onChange={handletaskImageUpload}
                     />
                   </label>
+                )}
+                {errs && (
+                  <div className="text-red-500 font-bold">{errs}</div>
                 )}
               </div>
 

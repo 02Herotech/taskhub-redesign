@@ -118,7 +118,8 @@ const ProvideService: React.FC = () => {
   const [subcategories, setSubcategories] = useState<Subcategory[]>([]);
   const [selectedDay, setSelectedDay] = useState("");
   const [selectedDays, setSelectedDays] = useState<string[]>([]);
-
+  const maxSize = 5 * 1024 * 1024; // 5MB in bytes
+  const [errs, setErrs] = useState({ image1: '', image2: '', image3: '', image4: '' })
   const daysOfWeek = [
     { value: "MONDAY", label: "Monday" },
     { value: "TUESDAY", label: "Tuesday" },
@@ -249,7 +250,7 @@ const ProvideService: React.FC = () => {
     if (!task.image1) {
       err.image = "Please fill out all required fields";
     }
-
+    
     setErr(err);
     return Object.keys(err).length === 0;
   };
@@ -340,27 +341,48 @@ const ProvideService: React.FC = () => {
   const handlePictureUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const uploadedFile = event.target.files?.[0];
     if (uploadedFile) {
-      setTask({ ...task, image1: uploadedFile });
+      if (uploadedFile.size > maxSize) {
+        setErrs((prev) => ({ ...prev, image1: 'File size exceeds 5MB.' }));
+      } else {
+        setTask({ ...task, image1: uploadedFile });
+        setErrs((prev) => ({ ...prev, image1: '' }));
+      }
     }
   };
+
   const handlePictureUpload1 = (event: React.ChangeEvent<HTMLInputElement>) => {
     const uploadedFile = event.target.files?.[0];
     if (uploadedFile) {
-      setTask({ ...task, image2: uploadedFile });
+      if (uploadedFile.size > maxSize) {
+        setErrs((prev) => ({ ...prev, image1: 'File size exceeds 5MB.' }));
+      } else {
+        setTask({ ...task, image2: uploadedFile });
+        setErrs((prev) => ({ ...prev, image2: '' }));
+      }
     }
   };
 
   const handlePictureUpload2 = (event: React.ChangeEvent<HTMLInputElement>) => {
     const uploadedFile = event.target.files?.[0];
     if (uploadedFile) {
-      setTask({ ...task, image3: uploadedFile });
+      if (uploadedFile.size > maxSize) {
+        setErrs((prev) => ({ ...prev, image2: 'File size exceeds 5MB.' }));
+      } else {
+        setTask({ ...task, image3: uploadedFile });
+        setErrs((prev) => ({ ...prev, image2: '' }));
+      }
     }
   };
 
   const handlePictureUpload3 = (event: React.ChangeEvent<HTMLInputElement>) => {
     const uploadedFile = event.target.files?.[0];
     if (uploadedFile) {
-      setTask({ ...task, image4: uploadedFile });
+      if (uploadedFile.size > maxSize) {
+        setErrs((prev) => ({ ...prev, image3: 'File size exceeds 5MB.' }));
+      } else {
+        setTask({ ...task, image4: uploadedFile });
+        setErrs((prev) => ({ ...prev, image3: '' }));
+      }
     }
   };
   const getImageURL = (imageIndex: number) => {
@@ -1044,8 +1066,11 @@ const ProvideService: React.FC = () => {
                     />
                   </label>
                 )}
+                {errs && (
+                  <div className="text-red-500">{errs.image1}</div>
+                )}
               </div>
-
+              
               <div className="space-y-4">
                 <p>Add a portfolio (Images /videos)</p>
                 <div className="flex flex-col space-y-3 lg:flex-row lg:space-x-3 lg:space-y-0">
@@ -1097,8 +1122,11 @@ const ProvideService: React.FC = () => {
                         />
                       </label>
                     )}
+                    {errs && (
+                      <div className="text-red-500">{errs.image2}</div>
+                    )}
                   </div>
-
+                  
                   <div className=" space-y-3">
                     {task.image3 ? (
                       <div className="relative flex items-end ">
@@ -1146,8 +1174,11 @@ const ProvideService: React.FC = () => {
                         />
                       </label>
                     )}
+                    {errs && (
+                      <div className="text-red-500">{errs.image3}</div>
+                    )}
                   </div>
-
+                  
                   <div className=" space-y-3">
                     {task.image4 ? (
                       <div className="relative flex items-end">
@@ -1195,7 +1226,11 @@ const ProvideService: React.FC = () => {
                         />
                       </label>
                     )}
+                    {errs && (
+                      <div className="text-red-500">{errs.image4}</div>
+                    )}
                   </div>
+                  
                 </div>
               </div>
               <div className="text-red-600">
