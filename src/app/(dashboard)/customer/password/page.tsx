@@ -108,8 +108,8 @@ const ChangePassword = () => {
             </div>
             {!isPasswordVerified ? (
                 <main className="space-y-8">
-                    <p className=" flex items-center gap-2 rounded-xl bg-[#FFF0DA] p-5 font-normal text-tc-orange">
-                        <FiAlertTriangle className="size-8" />
+                    <p className="flex items-start lg:items-center gap-x-2 rounded-xl bg-[#FFF0DA] p-5 font-normal text-tc-orange">
+                        <FiAlertTriangle className="size-14 lg:size-7" />
                         <span>
                             When you change your password, please know that you will have to
                             wait for about 3months before you can change it again.
@@ -118,7 +118,7 @@ const ChangePassword = () => {
                     <form onSubmit={handlePasswordVerification} className="mx-auto flex w-full flex-col rounded-xl  bg-violet-light p-3 lg:py-6 lg:px-10">
                         <label
                             htmlFor="checkPassword"
-                            className="text-3xl font-bold text-violet-900 my-4"
+                            className="text-base lg:text-2xl font-bold text-violet-900 my-4"
                         >
                             Current Password
                         </label>
@@ -138,7 +138,7 @@ const ChangePassword = () => {
                         {error && (
                             <div className="text-status-error-100 text-base font-semibold !my-5">{error}</div>
                         )}
-                        <Button loading={isLoading} type="submit" className="mx-auto w-fit rounded-full bg-violet-normal px-6 my-3 py-3 text-white ">
+                        <Button loading={isLoading} type="submit" className="mx-auto w-fit rounded-full bg-violet-normal px-6 my-3 py-3 text-white">
                             Change Password
                         </Button>
                     </form>
