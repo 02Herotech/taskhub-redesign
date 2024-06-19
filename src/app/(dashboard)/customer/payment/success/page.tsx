@@ -22,12 +22,12 @@ const SuccessPage = () => {
                     invoiceId: Number(invoiceId), // Convert invoiceId to a number
                     status: "success"
                 },
-                {
-                    headers: {
-                        "Authorization": `Bearer ${userToken}`,
-                        "Content-Type": "application/json"
-                    }
-                }
+                // {
+                //     headers: {
+                //         "Authorization": `Bearer ${userToken}`,
+                //         "Content-Type": "application/json"
+                //     }
+                // }
             );
         } catch (error) {
             console.error('Error sending payment response', error);

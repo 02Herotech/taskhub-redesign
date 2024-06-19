@@ -118,7 +118,8 @@ const ProvideService: React.FC = () => {
   const [subcategories, setSubcategories] = useState<Subcategory[]>([]);
   const [selectedDay, setSelectedDay] = useState("");
   const [selectedDays, setSelectedDays] = useState<string[]>([]);
-
+  const maxSize = 5 * 1024 * 1024; // 5MB in bytes
+  const [errs, setErrs] = useState({ image1: '', image2: '', image3: '', image4: '' })
   const daysOfWeek = [
     { value: "MONDAY", label: "Monday" },
     { value: "TUESDAY", label: "Tuesday" },
@@ -249,7 +250,7 @@ const ProvideService: React.FC = () => {
     if (!task.image1) {
       err.image = "Please fill out all required fields";
     }
-
+    
     setErr(err);
     return Object.keys(err).length === 0;
   };
@@ -340,27 +341,48 @@ const ProvideService: React.FC = () => {
   const handlePictureUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const uploadedFile = event.target.files?.[0];
     if (uploadedFile) {
-      setTask({ ...task, image1: uploadedFile });
+      if (uploadedFile.size > maxSize) {
+        setErrs((prev) => ({ ...prev, image1: 'File size exceeds 5MB.' }));
+      } else {
+        setTask({ ...task, image1: uploadedFile });
+        setErrs((prev) => ({ ...prev, image1: '' }));
+      }
     }
   };
+
   const handlePictureUpload1 = (event: React.ChangeEvent<HTMLInputElement>) => {
     const uploadedFile = event.target.files?.[0];
     if (uploadedFile) {
-      setTask({ ...task, image2: uploadedFile });
+      if (uploadedFile.size > maxSize) {
+        setErrs((prev) => ({ ...prev, image1: 'File size exceeds 5MB.' }));
+      } else {
+        setTask({ ...task, image2: uploadedFile });
+        setErrs((prev) => ({ ...prev, image2: '' }));
+      }
     }
   };
 
   const handlePictureUpload2 = (event: React.ChangeEvent<HTMLInputElement>) => {
     const uploadedFile = event.target.files?.[0];
     if (uploadedFile) {
-      setTask({ ...task, image3: uploadedFile });
+      if (uploadedFile.size > maxSize) {
+        setErrs((prev) => ({ ...prev, image2: 'File size exceeds 5MB.' }));
+      } else {
+        setTask({ ...task, image3: uploadedFile });
+        setErrs((prev) => ({ ...prev, image2: '' }));
+      }
     }
   };
 
   const handlePictureUpload3 = (event: React.ChangeEvent<HTMLInputElement>) => {
     const uploadedFile = event.target.files?.[0];
     if (uploadedFile) {
-      setTask({ ...task, image4: uploadedFile });
+      if (uploadedFile.size > maxSize) {
+        setErrs((prev) => ({ ...prev, image3: 'File size exceeds 5MB.' }));
+      } else {
+        setTask({ ...task, image4: uploadedFile });
+        setErrs((prev) => ({ ...prev, image3: '' }));
+      }
     }
   };
   const getImageURL = (imageIndex: number) => {
@@ -1030,8 +1052,8 @@ const ProvideService: React.FC = () => {
                     htmlFor="file-upload-main"
                     className={`flex h-48 w-1/2 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed p-4 lg:w-2/5  ${err.image ? "border border-[#ff0000] outline-[#FF0000]" : "border-2 border-[#EBE9F4] outline-none"}`}
                   >
-                    <PiFileArrowDownDuotone className="text-xl text-[#EBE9F4]" />
-                    <span className="text-center font-bold text-[#EBE9F4]">
+                      <PiFileArrowDownDuotone className="text-xl text-[#a3a1ac]" />
+                      <span className="text-center font-bold text-[#a3a1ac]">
                       File Upload supports: JPG, PDF, PNG.
                     </span>
                     <input
@@ -1044,8 +1066,11 @@ const ProvideService: React.FC = () => {
                     />
                   </label>
                 )}
+                {errs && (
+                  <div className="text-red-500">{errs.image1}</div>
+                )}
               </div>
-
+              
               <div className="space-y-4">
                 <p>Add a portfolio (Images /videos)</p>
                 <div className="flex flex-col space-y-3 lg:flex-row lg:space-x-3 lg:space-y-0">
@@ -1083,8 +1108,8 @@ const ProvideService: React.FC = () => {
                         htmlFor="file-upload-1"
                         className="flex h-48 w-1/2 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-[#EBE9F4] p-4 lg:w-full "
                       >
-                        <PiFileArrowDownDuotone className="text-xl text-[#EBE9F4]" />
-                        <span className="text-center font-bold text-[#EBE9F4]">
+                          <PiFileArrowDownDuotone className="text-xl text-[#a3a1ac]" />
+                          <span className="text-center font-bold text-[#a3a1ac]">
                           File Upload supports: JPG, PDF, PNG.
                         </span>
                         <input
@@ -1097,8 +1122,11 @@ const ProvideService: React.FC = () => {
                         />
                       </label>
                     )}
+                    {errs && (
+                      <div className="text-red-500">{errs.image2}</div>
+                    )}
                   </div>
-
+                  
                   <div className=" space-y-3">
                     {task.image3 ? (
                       <div className="relative flex items-end ">
@@ -1132,8 +1160,8 @@ const ProvideService: React.FC = () => {
                         htmlFor="file-upload-2"
                         className="flex h-48 w-1/2 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-[#EBE9F4] p-4 lg:w-full "
                       >
-                        <PiFileArrowDownDuotone className="text-xl text-[#EBE9F4]" />
-                        <span className="text-center font-bold text-[#EBE9F4]">
+                          <PiFileArrowDownDuotone className="text-xl text-[#a3a1ac]" />
+                          <span className="text-center font-bold text-[#a3a1ac]">
                           File Upload supports: JPG, PDF, PNG.
                         </span>
                         <input
@@ -1146,8 +1174,11 @@ const ProvideService: React.FC = () => {
                         />
                       </label>
                     )}
+                    {errs && (
+                      <div className="text-red-500">{errs.image3}</div>
+                    )}
                   </div>
-
+                  
                   <div className=" space-y-3">
                     {task.image4 ? (
                       <div className="relative flex items-end">
@@ -1181,8 +1212,8 @@ const ProvideService: React.FC = () => {
                         htmlFor="file-upload-3"
                         className="flex h-48 w-1/2 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-[#EBE9F4] p-4 lg:w-full "
                       >
-                        <PiFileArrowDownDuotone className="text-xl text-[#EBE9F4]" />
-                        <span className="text-center font-bold text-[#EBE9F4]">
+                          <PiFileArrowDownDuotone className="text-xl text-[#a3a1ac]" />
+                          <span className="text-center font-bold text-[#a3a1ac]">
                           File Upload supports: JPG, PDF, PNG.
                         </span>
                         <input
@@ -1195,7 +1226,11 @@ const ProvideService: React.FC = () => {
                         />
                       </label>
                     )}
+                    {errs && (
+                      <div className="text-red-500">{errs.image4}</div>
+                    )}
                   </div>
+                  
                 </div>
               </div>
               <div className="text-red-600">
@@ -1373,15 +1408,19 @@ const ProvideService: React.FC = () => {
               setIsSuccessPopupOpen(false);
             }}
           >
-            <div className="px-24 py-10">
+            <div className="lg:px-24 px-16 py-10">
               <div className="relative grid items-center justify-center space-y-5">
                 <p className="font-clashDisplay text-center text-[20px] font-extrabold text-[#2A1769] md:text-[36px] lg:text-[37px] ">
                   You are almost done!!!
                 </p>
+                <div>
                 <p className="text-center text-[14px] lg:text-[20px]">
                   Please proceed to update your profile
-                  <br /> before your Task can be posted
-                </p>
+                 </p>
+                <p className="text-center text-[14px] lg:text-[20px]">
+                   before your Task can be posted
+                  </p>
+                </div>
                 <Image
                   src={image}
                   alt="image"
@@ -1415,7 +1454,7 @@ const ProvideService: React.FC = () => {
               setIsSuccessPopupOpen(false);
             }}
           >
-            <div className="px-24 py-10">
+            <div className="lg:px-24 px-16 py-10">
               <div className="relative grid items-center justify-center space-y-3">
                 <div className="flex justify-center text-[1px] text-white">
                   <GrFormCheckmark className="h-[50px] w-[50px] rounded-full bg-[#FE9B07] p-2 lg:h-[60px] lg:w-[60px]" />
