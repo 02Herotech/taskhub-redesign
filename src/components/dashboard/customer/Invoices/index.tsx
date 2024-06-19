@@ -68,7 +68,7 @@ const Invoices = () => {
             setLoading(false);
         } catch (error) {
             setLoading(false);
-            console.error('Error fetching payment intent:', error);
+            console.log('Error fetching payment intent:', error);
             setError('Invoice has already been paid for');
         }
     };

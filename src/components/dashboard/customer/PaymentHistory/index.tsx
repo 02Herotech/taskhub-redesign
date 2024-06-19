@@ -125,10 +125,10 @@ const PaymentHistory = () => {
                 {CustomerPaymentHistoryData.slice(0, visibleTransactions).map((data, index) => (
                     <div
                         key={index}
-                        className="flex max-lg:flex-col lg:items-center justify-between px-5 py-3 border-b border-primary cursor-pointer"
+                        className="flex items-center max-lg:space-x-3 lg:justify-between px-5 py-3 border-b border-primary cursor-pointer"
                         onClick={() => handleCardClick(data)}
                     >
-                        <div className="flex items-center space-x-5">
+                        <div className="flex items-center w-full flex-1 space-x-5">
                             <div className="w-14 h-14 bg-[#C1BADB] rounded-full flex items-center justify-center">
                                 <div className="w-7 h-7 bg-white rounded-full" />
                             </div>

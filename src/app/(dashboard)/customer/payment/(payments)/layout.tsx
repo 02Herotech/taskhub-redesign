@@ -28,7 +28,7 @@ const TransactionHistoryLayout = ({ children }: AuthLayoutProps) => {
 
     return (
         <div className='p-4 lg:px-14 mt-14'>
-            <div className="mt-14 mb-8 space-y-8">
+            <div className="mt-14 mb-4 space-y-8">
                 <h4 className='text-[#140B31] font-satoshiBold font-bold text-2xl lg:text-4xl'>Payments</h4>
                 <div className='border-[1.5px] border-primary' />
             </div>
@@ -45,7 +45,7 @@ const TransactionHistoryLayout = ({ children }: AuthLayoutProps) => {
                     <div className="flex items-center space-x-10">
                         {links.map((link, index) => (
                             <Link key={index} href={link.link} className="flex items-center space-x-3">
-                                <div className={`size-5 rounded-full ${pathname === link.link ? 'bg-primary' : 'bg-white border-primary border-4'}`} />
+                                <div className={`size-5 rounded-full ${pathname === link.link ? 'bg-white border-primary border-4' : 'bg-primary'}`} />
                                 <h2 className={`text-[#140B31] lg:text-lg font-satoshiMedium`}>{link.title}</h2>
                             </Link>
                         ))}

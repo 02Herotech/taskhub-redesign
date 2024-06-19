@@ -161,7 +161,7 @@ const Navigation = () => {
                       <BiChevronDown className="size-6" />
                     </div>
                   )}
-                  className="-left-32 top-20"
+                  className="-left-32 top-14"
                 >
                   <div className="w-[200px] rounded-md bg-white">
                     {dropdownItems.map((button, index) => (

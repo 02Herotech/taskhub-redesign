@@ -44,7 +44,6 @@ const Newsletter = () => {
                         <MdKeyboardArrowRight />
                     </button>
                 </form>
-            
             }
             
         </div>
