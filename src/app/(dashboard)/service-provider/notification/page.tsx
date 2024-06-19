@@ -220,7 +220,7 @@ const ServiceNotification = () => {
               )}
             </div>
 
-            {notifications.length < 1 && currentCategory ? (
+            {notifications.length < 1 && currentCategory === "All" ? (
               <div className="flex min-h-96 w-full flex-col items-center justify-center gap-4 p-4 ">
                 <span className="size-64">{marketPlaceModalIcon}</span>
                 <p className="text-xl font-medium text-violet-normal">
