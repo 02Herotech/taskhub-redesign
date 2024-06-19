@@ -5,6 +5,10 @@ export type Task = {
     taskBriefDescription: string;
     taskDescription: string;
     taskImage: string;
+    category: {
+        id: number;
+        categoryName: string;
+    }
     taskTime: string;
     taskDate: [number, number, number];
     hubTime: string | null;
@@ -24,6 +28,10 @@ export type CustomerTasks = {
     taskImage: string;
     taskTime: string;
     taskDate: [number, number, number];
+    category: {
+        id: number;
+        categoryName: string;
+    }
     hubTime: string | null;
     taskType: string;
     taskStatus: string;

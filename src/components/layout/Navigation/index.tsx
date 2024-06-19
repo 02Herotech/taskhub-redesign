@@ -3,7 +3,7 @@
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import MobileNavigation from "../MobileNavigation";
 import { AnimatePresence } from "framer-motion";
 import { BsChat } from "react-icons/bs";
@@ -18,17 +18,18 @@ import PlaceholderImage from "../../../../public/assets/images/placeholder.jpeg"
 import { customerLinks, homeLinks, serviceProviderLinks } from "@/lib/links";
 import Button from "@/components/global/Button";
 import Image from "next/image";
+import { handleFetchNotifications } from "@/lib/serviceproviderutil";
 
 const Navigation = () => {
   const router = useRouter();
+  const session = useSession()
   const [showMobileNav, setShowMobileNav] = useState(false);
-
+  const [notifications, setNotifications] = useState<NotificationTypes[]>([]);
   const pathname = usePathname();
 
   const handleLogout = async () => {
     try {
       await signOut();
-
       await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/logout`);
       router.push("/home");
     } catch (error: any) {
@@ -37,10 +38,11 @@ const Navigation = () => {
       router.push("/home");
     }
   };
-
-  const session = useSession();
+  
   const profileImage = session?.data?.user.user.profileImage;
   const userRole = session?.data?.user.user.roles;
+  const token = session?.data?.user?.accessToken;
+  const user = session?.data?.user?.user;
   const isServiceProvider = userRole && userRole[0] === "SERVICE_PROVIDER";
   const isAuth = session.status === "authenticated";
 
@@ -69,7 +71,16 @@ const Navigation = () => {
     },
   ];
 
-  const notificationLength = session.data?.user.user.appNotificationList.length;
+  useEffect(() => {
+    if (user && user.id && token) {
+      const fetchNotification = async () => {
+        const data = await handleFetchNotifications({ userId: user.id, token });
+        setNotifications(data);
+      };
+      fetchNotification();
+    }
+    // eslint-disable-next-line
+  }, [token]);
 
   const currentLinks = !isAuth
     ? homeLinks
@@ -77,7 +88,7 @@ const Navigation = () => {
       ? serviceProviderLinks
       : customerLinks;
   const notificationRoute = isServiceProvider
-    ? "/service-provider/dashboard/notification"
+    ? "/service-provider/notification"
     : "/customer/notifications";
 
   return (
@@ -101,7 +112,7 @@ const Navigation = () => {
                 <li key={link.url} className="relative">
                   <Link
                     href={link.url as string}
-                    className={cn("text-xl font-clashMedium text-primary", {
+                    className={cn("text-xl font-semibold text-primary", {
                       "text-tc-orange":
                         link.url === "/" && pathname === "/"
                           ? true
@@ -139,16 +150,18 @@ const Navigation = () => {
                   {/* <span className="absolute -right-1 -top-1 flex size-5 items-center justify-center rounded-full bg-tc-orange text-xs text-white">
                   </span> */}
                 </Link>
-                <div
+                <button
                   className="relative cursor-pointer"
                   onClick={() => router.push(notificationRoute)}
                 >
                   <IoMdNotificationsOutline className="size-[24px] text-black" />
                   {/* display notification length here */}
-                  {/* <div className="absolute -right-1 -top-1 flex size-5 items-center justify-center rounded-full bg-tc-orange text-xs text-white">
-                    {notificationLength}
-                  </div> */}
-                </div>
+                  {notifications.length > 0 && (
+                    <div className="absolute -right-1 -top-1 flex size-5 items-center justify-center rounded-full bg-tc-orange text-xs text-white">
+                      {notifications.length}
+                    </div>
+                  )}
+                </button>
                 <Dropdown
                   trigger={() => (
                     <div className="flex cursor-pointer items-center space-x-1">

@@ -11,10 +11,17 @@ import PricingPlan from "@/components/matkeplaceSingleTask/PricingPlan";
 import Reviews from "@/components/matkeplaceSingleTask/Reviews";
 import { formatDateFromNumberArray } from "@/utils";
 import axios from "axios";
+import ImageModal from "@/components/main/marketplace/ImageModal";
 
 const Page = () => {
   const [displayData, setDisplayData] = useState<ListingDataType>();
   const [currentListing, setCurrentListing] = useState<ListingDataType>();
+  const [showImageModal, setShowImageModal] = useState({
+    state: false,
+    image: "",
+  });
+
+  console.log(currentListing);
 
   useEffect(() => {
     const tempList = localStorage.getItem("content");
@@ -44,23 +51,30 @@ const Page = () => {
 
   return (
     <>
-      <main className="  pt-16 font-satoshiMedium text-[#221354] ">
+      <main className=" relative  pt-16 font-satoshiMedium text-[#221354] ">
+        <ImageModal
+          showImageModal={showImageModal}
+          setShowImageModal={setShowImageModal}
+        />
         <section className=" grid gap-4 lg:grid-cols-12 lg:gap-4">
           {/* left handside */}
           <article className="space-y-4 lg:col-span-7">
             <header className=" mx-auto bg-slate-200  p-4 lg:rounded-br-[2rem] lg:rounded-tr-[2rem] lg:px-10 lg:py-10 ">
               <div className="flex items-center   ">
                 <Image
-                  src={
-                    displayData?.businessPictures[0] ??
-                    "/images/marketplace/singleTask/marketPlace banner.png"
-                  }
+                  src={displayData?.businessPictures[0] ?? ""}
                   alt="bannerImage"
                   width={1600}
                   height={1600}
                   layout="intrinsic"
                   quality={100}
-                  className="mx-auto max-h-[400px] min-h-64 w-full max-w-screen-xl  rounded-lg object-cover "
+                  onClick={() =>
+                    setShowImageModal({
+                      state: true,
+                      image: displayData?.businessPictures[0] ?? "",
+                    })
+                  }
+                  className="mx-auto max-h-[400px] w-full max-w-screen-xl cursor-pointer  rounded-lg object-cover "
                 />
               </div>
             </header>
@@ -68,25 +82,29 @@ const Page = () => {
             {/* content */}
             <div className="container space-y-4 ">
               {/* <p className="font-medium">Recently Added</p> */}
-              <h3 className="text-4xl font-extrabold">
+              <h3 className="lgtext-4xl font-satoshiMedium text-3xl font-bold ">
                 {displayData?.listingTitle}
               </h3>
               <p className="font-satoshiMedium text-xl font-medium">
                 Service Purpose
               </p>
-              <p className="font-satoshiMedium">
+              <p className="font-satoshiMedium capitalize">
                 {displayData?.listingDescription}
               </p>
-              <h4 className="text-3xl font-extrabold">Location</h4>
-              <p className="flex items-center gap-2 text-slate-500 ">
-                <span>
-                  <BiLocationPlus />
-                </span>
-                <span>{displayData?.suburb}</span>
-              </p>
-              <p className="flex items-center gap-2 text-sm underline ">
+              {displayData?.suburb && (
+                <div>
+                  <h4 className="text-3xl font-extrabold">Location</h4>
+                  <p className="flex items-center gap-2 text-slate-500 ">
+                    <span>
+                      <BiLocationPlus />
+                    </span>
+                    <span>{displayData?.suburb}</span>
+                  </p>
+                </div>
+              )}
+              {/* <p className="flex items-center gap-2 text-sm underline ">
                 View Maps <BsArrowUp className="rotate-45" />
-              </p>
+              </p> */}
               <h4 className="text-3xl font-extrabold">Date and Time</h4>
               <p className="flex items-center gap-2 text-slate-500 ">
                 <span>
@@ -159,6 +177,7 @@ const Page = () => {
             planThreeDescription={displayData?.planThreeDescription ?? null}
             listingId={displayData?.id ?? 0}
             listingTitle={displayData?.listingTitle}
+            negotiable={displayData?.negotiable ?? false}
           />
         </section>
 
@@ -174,6 +193,12 @@ const Page = () => {
               width={800}
               height={500}
               quality={100}
+              onClick={() =>
+                setShowImageModal({
+                  state: true,
+                  image: displayData?.businessPictures[0] ?? "",
+                })
+              }
               className="mx-auto h-96 w-full rounded-xl  object-cover lg:col-span-6 "
             />
             <div className="flex flex-col gap-5 md:grid md:grid-cols-2 lg:col-span-6">
@@ -185,6 +210,9 @@ const Page = () => {
                   width={1600}
                   height={1600}
                   quality={100}
+                  onClick={() =>
+                    setShowImageModal({ state: true, image: item })
+                  }
                   className="mx-auto h-44 w-full rounded-xl object-cover "
                 />
               ))}

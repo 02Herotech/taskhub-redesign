@@ -6,6 +6,7 @@ import Button from '@/components/global/Button';
 import { useSearchParams } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import { useEffect } from 'react';
+import axios from 'axios';
 
 const SuccessPage = () => {
     const searchParams = useSearchParams();
@@ -15,19 +16,22 @@ const SuccessPage = () => {
 
     const sendPaymentResponse = async () => {
         try {
-            await fetch(`${process.env.NEXT_PUBLIC_API_URL}/stripe/handle-payment`, {
-                method: "POST",
-                headers: {
-                    "Authorization": `Bearer ${userToken}`,
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
+            await axios.post(
+                `${process.env.NEXT_PUBLIC_API_URL}/stripe/handle-payment`,
+                {
                     invoiceId: Number(invoiceId), // Convert invoiceId to a number
                     status: "success"
-                }),
-            });
+                },
+                // {
+                //     headers: {
+                //         "Authorization": `Bearer ${userToken}`,
+                //         "Content-Type": "application/json"
+                //     }
+                // }
+            );
         } catch (error) {
             console.error('Error sending payment response', error);
+            console.log("error", error);
         }
     };
 

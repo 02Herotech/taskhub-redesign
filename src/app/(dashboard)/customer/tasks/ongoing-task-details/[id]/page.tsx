@@ -57,10 +57,10 @@ const OnogoingTaskDetailsPage = ({ params }: { params: { id: string } }) => {
                                     <div className="bg-[#140B31] p-1 rounded-full size-14 flex items-center justify-center text-white"><svg width="34" height="32" viewBox="0 0 34 32" fill="none" xmlns="http://www.w3.org/2000/svg">
                                         <path d="M34 15.9924L30.2291 11.742L30.7545 6.11562L25.1755 4.86192L22.2545 0L17 2.2322L11.7455 0L8.82454 4.86192L3.24545 6.10033L3.77091 11.7267L0 15.9924L3.77091 20.2427L3.24545 25.8844L8.82454 27.1381L11.7455 32L17 29.7525L22.2545 31.9847L25.1755 27.1228L30.7545 25.8691L30.2291 20.2427L34 15.9924ZM13.9091 23.6369L7.72727 17.5213L9.90636 15.3655L13.9091 19.3101L24.0936 9.23459L26.2727 11.4056L13.9091 23.6369Z" fill="white" />
                                     </svg></div>
-                                    <h1 className="font-black text-4xl text-[#2A1769]">
+                                    <h1 className="font-black text-3xl text-[#2A1769]">
                                         Request Successful
                                     </h1>
-                                    <p className="mb-8 font-satoshiMedium text-center text-xl font-medium text-[#140B31]">
+                                    <p className="mb-8 font-satoshiMedium text-center text-lg font-medium text-[#140B31]">
                                         Your request for revision has been sent, you will get a response shortly as to the date it’s starts and ends.
                                     </p>
                                     <Button
@@ -78,7 +78,7 @@ const OnogoingTaskDetailsPage = ({ params }: { params: { id: string } }) => {
                             <>
                                 <div className="border-b border-primary flex items-center space-x-5 px-5 py-4">
                                     <div className="bg-[#140B31] p-1 rounded-full size-9 flex items-center justify-center text-white">{RevisionSvg}</div>
-                                    <h2 className="text-primary font-bold lg:text-2xl">Request Revision</h2>
+                                    <h2 className="text-primary font-bold lg:text-xl">Request Revision</h2>
                                 </div>
                                 <form onSubmit={handleRevisionSubmission} className="max-lg:p-5 lg:py-5 lg:px-8">
                                     <p className='mb-5 text-lg font-satoshiMedium text-[#140B31]'>We are committed to making sure you have the best experience. Why aren’t you ready to approve payment?</p>
@@ -172,8 +172,8 @@ const OnogoingTaskDetailsPage = ({ params }: { params: { id: string } }) => {
                 </div>
                 <div className="mt-8 lg:flex lg:space-x-8 justify-between border-b border-[#C1BADB] pb-8">
                     <div className="space-y-5 flex-1">
-                        <h1 className='text-primary font-satoshiBold text-3xl lg:text-4xl'>{task.taskBriefDescription}</h1>
-                        <h5 className='text-black text-xl lg:text-2xl'>{task.taskDescription}</h5>
+                        <h1 className='text-primary font-satoshiBold text-3xl'>{task.taskBriefDescription}</h1>
+                        <h5 className='text-black text-xl'>{task.taskDescription}</h5>
                         <div className="relative">
                             <button
                                 className="w-[190px] flex items-center justify-center gap-x-4 rounded-3xl bg-[#F1F1F2] px-4 py-2 text-base font-bold text-[#140B31] transition-colors duration-300"
@@ -213,11 +213,11 @@ const OnogoingTaskDetailsPage = ({ params }: { params: { id: string } }) => {
                         </div>
                     </div>
                     <div className="flex flex-col justify-between items-end">
-                        <h4 className='text-xl text-[#716F78]'>{task.taskTime}</h4>
-                        <h2 className="text-2xl font-bold capitalize text-primary lg:text-[22px]">
+                        <h4 className='text-lg text-[#716F78]'>{task.taskTime}</h4>
+                        <h2 className="text-xl font-bold capitalize text-primary">
                             {formatAmount(task.customerBudget, "USD", false)}
                         </h2>
-                        <div className="flex items-center justify-end space-x-10 lg:text-xl">
+                        <div className="flex items-center justify-end space-x-10 lg:text-lg">
                             <button className='text-tc-orange' onClick={() => setRequestRevisionPopup(true)}>Request Revision</button>
                             <button className='text-[#34A853]' onClick={() => setApprovePaymentPopup(true)}>Approve payment</button>
                         </div>

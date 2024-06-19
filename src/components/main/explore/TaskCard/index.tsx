@@ -15,24 +15,21 @@ interface TaskCardProps {
 const TaskCard = ({ task }: TaskCardProps) => {
   const router = useRouter();
 
-  const availability = task.active ? "Available" : "Unavailable";
-  const currentDateTime = new Date();
-  const dateArray = task?.taskDate || [
-    currentDateTime.getFullYear(),
-    currentDateTime.getMonth() + 1,
-    currentDateTime.getDate(),
-  ];
-  const date = new Date(dateArray[0], dateArray[1] - 1, dateArray[2]);
-
+  // const availability = task.active ? "Available" : "Unavailable";
+  const date = task?.taskDate ? new Date(task.taskDate[0], task.taskDate[1] - 1, task.taskDate[2]) : new Date();
   const day = date.getDate();
-  const daySuffix = suffixes[(day - 1) % 10] || suffixes[3];
-
   const month = date.getMonth();
   const monthName = monthNames[month];
-
   const dayOfWeek = date.getDay();
   const dayOfWeekName = dayOfWeekNames[dayOfWeek];
-
+  // Determine the correct suffix for the day
+  let daySuffix;
+  if (day === 11 || day === 12 || day === 13) {
+    daySuffix = "th";
+  } else {
+    daySuffix = suffixes[day % 10] || suffixes[0]; // Default to "th" if suffix is undefined
+  }
+  // const daySuffix = suffixes[day % 10] || suffixes[0]; // Default to "th" if suffix is undefined
   const formattedDate = `${dayOfWeekName}, ${monthName} ${day}${daySuffix}`;
 
   // Get hours and minutes
@@ -58,8 +55,6 @@ const TaskCard = ({ task }: TaskCardProps) => {
   //     .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
   //     .join(" ");
   // }
-
-  console.log("task", task)
 
   return (
     <motion.div

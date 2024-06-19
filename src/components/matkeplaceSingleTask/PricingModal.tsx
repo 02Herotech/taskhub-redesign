@@ -20,6 +20,7 @@ interface ModalProps {
     isAuthenticated: string | undefined;
     isServiceProvider: boolean;
     title: string;
+    negotiable: boolean;
   };
 }
 
@@ -155,7 +156,9 @@ const PricingModal = ({
 
   useEffect(() => {
     const fetchData = async () => {
-      await handleFectchLocationByPostcode();
+      if (formState.postcode) {
+        await handleFectchLocationByPostcode();
+      }
     };
     fetchData();
     // eslint-disable-next-line
@@ -359,25 +362,36 @@ const PricingModal = ({
             <label htmlFor="" className="font-bold  text-violet-darker">
               Price
             </label>
-            <input
-              placeholder="Select/Type you budget"
-              type="number"
-              className="w-full  rounded-lg p-3 outline-none"
-              value={formState.pricing}
-              required
-              min={modalData.pricing - 10}
-              max={modalData.pricing + 10}
-              onChange={(event) =>
-                setFormState((prev) => ({
-                  ...prev,
-                  pricing: Number(event.target.value),
-                }))
-              }
-            />
-            <p className="text-sm font-semibold text-violet-darker">
-              Price is in the range of A${modalData.pricing - 10} - A$
-              {modalData.pricing + 10}
-            </p>
+            <div className="relative">
+              <span className="absolute left-4 top-1/2 -translate-y-1/2">
+                $
+              </span>
+              <input
+                placeholder="Select/Type you budget"
+                type="number"
+                disabled={!modalData.negotiable}
+                className="w-full  rounded-lg p-3 px-7 outline-none disabled:bg-white "
+                value={formState.pricing}
+                required
+                min={Math.floor(
+                  modalData.pricing - (10 * modalData.pricing) / 100,
+                )}
+                max={Math.floor(
+                  modalData.pricing + (10 * modalData.pricing) / 100,
+                )}
+                onChange={(event) =>
+                  setFormState((prev) => ({
+                    ...prev,
+                    pricing: Number(event.target.value),
+                  }))
+                }
+              />
+            </div>
+            {modalData.negotiable && (
+              <p className="text-sm font-semibold text-violet-darker">
+                Price is in the range of 10% of original price
+              </p>
+            )}
           </div>
           {/* Description */}
           <div className="flex flex-col space-y-1">
