@@ -88,7 +88,7 @@ const Page = () => {
               <p className="font-satoshiMedium text-xl font-medium">
                 Service Purpose
               </p>
-              <p className="font-satoshiMedium capitalize">
+              <p className="font-satoshiMedium">
                 {displayData?.listingDescription}
               </p>
               {displayData?.suburb && (

@@ -166,6 +166,7 @@ const EditListing = () => {
   }, [currentListing]);
 
   const watchField = watch();
+  console.log(errors);
 
   console.log(watchField.planTwoDescription);
   console.log(watchField.planTwoPrice);

@@ -79,7 +79,7 @@ const ServiceNotification = () => {
         <div className="flex min-h-80 items-center justify-center">
           <Loading />
         </div>
-      ) : notifications.length < 1 ? (
+      ) : notifications.length < 1 && currentCategory ? (
         <div className="flex min-h-96 w-full flex-col items-center justify-center gap-4 p-4 ">
           <span className="size-64">{marketPlaceModalIcon}</span>
           <p className="text-xl font-medium text-violet-normal">
@@ -108,42 +108,54 @@ const ServiceNotification = () => {
               Old
             </button>
           </div>
-          <div className="flex flex-col gap-8 pb-4">
-            {notifications.map((item, index) => (
-              <div
-                key={index}
-                className="pointer-events-auto grid w-full cursor-pointer grid-cols-12 gap-4 transition-shadow duration-300 lg:items-center"
-              >
-                <div className="col-span-9 flex gap-2 lg:items-center">
-                  <div className=" size-9 flex-shrink-0 rounded-full bg-violet-darker p-2 lg:size-12">
-                    <Image
-                      src={"/assets/images/serviceProvider/jobs/checkicon.png"}
-                      alt="checkicon"
-                      width={80}
-                      height={80}
-                      quality={100}
-                      className="h-full w-full"
-                    />
+
+          {notifications.length < 1 && currentCategory ? (
+            <div className="flex min-h-96 w-full flex-col items-center justify-center gap-4 p-4 ">
+              <span className="size-64">{marketPlaceModalIcon}</span>
+              <p className="text-xl font-medium text-violet-normal">
+                No Notification
+              </p>
+            </div>
+          ) : (
+            <div className="flex flex-col gap-8 pb-4">
+              {notifications.map((item, index) => (
+                <div
+                  key={index}
+                  className="pointer-events-auto grid w-full cursor-pointer grid-cols-12 gap-4 transition-shadow duration-300 lg:items-center"
+                >
+                  <div className="col-span-9 flex gap-2 lg:items-center">
+                    <div className=" size-9 flex-shrink-0 rounded-full bg-violet-darker p-2 lg:size-12">
+                      <Image
+                        src={
+                          "/assets/images/serviceProvider/jobs/checkicon.png"
+                        }
+                        alt="checkicon"
+                        width={80}
+                        height={80}
+                        quality={100}
+                        className="h-full w-full"
+                      />
+                    </div>
+                    <div>
+                      <p className="cursor-pointer font-bold text-violet-normal">
+                        {item.message}
+                      </p>
+                    </div>
                   </div>
-                  <div>
-                    <p className="cursor-pointer font-bold text-violet-normal">
-                      {item.message}
-                    </p>
-                  </div>
+                  <p className="col-span-3 cursor-pointer text-sm text-slate-500">
+                    {formatDateFromNumberArrayToRelativeDate([
+                      item.notificationTime[0],
+                      item.notificationTime[1],
+                      item.notificationTime[2],
+                      item.notificationTime[3],
+                      item.notificationTime[4],
+                      item.notificationTime[5],
+                    ])}
+                  </p>
                 </div>
-                <p className="col-span-3 cursor-pointer text-sm text-slate-500">
-                  {formatDateFromNumberArrayToRelativeDate([
-                    item.notificationTime[0],
-                    item.notificationTime[1],
-                    item.notificationTime[2],
-                    item.notificationTime[3],
-                    item.notificationTime[4],
-                    item.notificationTime[5],
-                  ])}
-                </p>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </div>
       )}
     </main>
