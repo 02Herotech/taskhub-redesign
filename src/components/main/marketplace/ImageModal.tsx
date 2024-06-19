@@ -28,9 +28,13 @@ const ImageModal = ({ showImageModal, setShowImageModal }: ModalData) => {
         onClick={handleCloseModal}
       ></div>
 
-      <div className="relative z-10 flex max-h-[80vh] min-w-[50vw] max-w-[80vw] flex-col items-center justify-center gap-4 rounded-lg bg-violet-light p-5 ">
+      <div className="relative z-10 flex max-h-[80vh] min-w-[50vw] max-w-[80vw] flex-col items-center justify-center gap-4 overflow-hidden rounded-lg bg-violet-light p-5">
         {/* eslint-disable-next-line */}
-        <img src={showImageModal.image} alt="image" className="object-fill" />
+        <img
+          src={showImageModal.image}
+          alt="image"
+          className="max-h-[32rem] min-h-[24rem] object-contain"
+        />
       </div>
     </section>
   );
