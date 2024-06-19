@@ -6,6 +6,7 @@ import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { CiEdit } from "react-icons/ci";
 
 const ProfileHeader = () => {
   const [fetchedUserData, setFetchedUserData] = useState(defaultUserDetails);
@@ -48,8 +49,8 @@ const ProfileHeader = () => {
           <Loading />
         </div>
       ) : (
-        <header className="flex items-center justify-between gap-2 max-md:flex-col">
-          <div className="flex items-center gap-8">
+        <header className="flex justify-between lg:items-center gap-2">
+          <div className="flex items-center gap-4 lg:gap-8">
             <Image
               src={
                 user?.profileImage ?? "/assets/images/serviceProvider/user.jpg"
@@ -58,19 +59,19 @@ const ProfileHeader = () => {
               width={160}
               height={160}
               quality={100}
-              className="max-siz-40 size-40 rounded-full object-cover max-md:size-24 max-md:max-w-24"
+              className="max-size-40 size-40 rounded-full object-cover max-md:size-16 max-md:max-w-16"
             />
             <div className="flex flex-col gap-2">
-              <h1 className="text-3xl font-bold text-[#140B31] lg:text-4xl">
+              <h1 className="text-base lg:text-3xl font-bold text-[#140B31]">
                 Welcome {user?.firstName} {user?.lastName}
               </h1>
-              <p className="font-clashDisplay text-[#140B31]">
+              <p className="font-clashDisplay text-sm lg:text-base text-[#140B31]">
                 {user?.emailAddress}
               </p>
             </div>
           </div>
 
-          <div className="flex flex-row gap-4 max-md:justify-between max-md:py-4 lg:flex-col lg:items-end">
+          <div className="hidden lg:flex flex-row gap-4 max-md:justify-between max-md:py-4 lg:flex-col lg:items-end">
             <Link
               href={editProfileLink}
               className="text-md font-satoshi font-semibold text-primary underline"
@@ -83,6 +84,9 @@ const ProfileHeader = () => {
             </p>
             <p className="text-sm font-medium text-[#140B31]">{location}</p>
           </div>
+          <Link href={editProfileLink} className="lg:hidden">
+            <CiEdit className="text-primary size-6" />
+          </Link>
         </header>
       )}
     </>
