@@ -9,7 +9,7 @@ import { useParams } from "next/navigation";
 import React, { useEffect, useRef, useState } from "react";
 import { useForm, SubmitHandler, Controller, set } from "react-hook-form";
 import { BiChevronDown, BiX } from "react-icons/bi";
-import { BsTriangleFill } from "react-icons/bs";
+import { BsTriangle, BsTriangleFill } from "react-icons/bs";
 import { PiFileArrowDownDuotone } from "react-icons/pi";
 import { RiPencilLine } from "react-icons/ri";
 import { BeatLoader } from "react-spinners";
@@ -289,8 +289,6 @@ const EditListing = () => {
       }
       return acc;
     }, {});
-
-    console.log(body);
     try {
       const url =
         "https://smp.jacinthsolutions.com.au/api/v1/listing/update-listing/" +
@@ -690,7 +688,7 @@ const EditListing = () => {
                   <input
                     type="number"
                     className="rounded-lg bg-violet-light p-3 pl-4 outline-none lg:w-28"
-                    {...register("postcode", { valueAsNumber: true })}
+                    {...register("postcode")}
                   />
                 </label>
                 {/* State */}
@@ -706,13 +704,21 @@ const EditListing = () => {
                 {/* suburb */}
                 <div className="relative flex flex-col gap-2">
                   <span className="font-bold text-violet-darker">Suburb</span>
-                  <button
-                    type="button"
-                    onClick={() => expandDropdown("suburb")}
-                    className=" h-12 min-w-48 rounded-lg bg-violet-light p-3 pl-4 text-left outline-none"
-                  >
-                    {watchField.suburb}
-                  </button>
+                  <div className="relative ">
+                    <span className="absolute right-4 top-1/2 -translate-y-1/2">
+                      <BsTriangleFill
+                        className=" size-3 rotate-[60deg] text-violet-normal"
+                        fill="rgb(56 31 140)"
+                      />
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => expandDropdown("suburb")}
+                      className=" h-12 min-w-48 rounded-lg bg-violet-light p-3 pl-4 text-left outline-none"
+                    >
+                      {watchField.suburb}
+                    </button>
+                  </div>
                   <div
                     className={`absolute left-0 top-[calc(100%+0.5rem)] z-10 w-full overflow-hidden  rounded-md bg-violet-light transition-all duration-300 ${showDropdown.name === "suburb" && showDropdown.isShown ? "max-h-96" : "max-h-0"} `}
                   >

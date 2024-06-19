@@ -17,17 +17,17 @@ import { BeatLoader } from "react-spinners";
 import { formatDateAsYYYYMMDD } from "@/utils";
 
 const userDataSchema = z.object({
-  firstName: z.string().min(2),
-  lastName: z.string().min(2),
-  dateOfBirth: z.date().nullable(),
-  phoneNumber: z.string().min(10),
-  emailAddress: z.string().email(),
-  postcode: z.string(),
-  suburb: z.string(),
-  state: z.string(),
-  idType: z.string(),
-  idNumber: z.string(),
-  bio: z.string().nullable(),
+  firstName: z.string().min(2).optional(),
+  lastName: z.string().min(2).optional(),
+  dateOfBirth: z.date().nullable().optional(),
+  phoneNumber: z.string().min(10).optional(),
+  emailAddress: z.string().email().optional(),
+  postcode: z.string().optional(),
+  suburb: z.string().optional(),
+  state: z.string().optional(),
+  idType: z.string().optional().nullable(),
+  idNumber: z.string().optional(),
+  bio: z.string().nullable().optional(),
 });
 
 const idTypeObject = [
@@ -123,6 +123,8 @@ const EditProfile = () => {
 
   const watchField = watch();
 
+  console.log(errors);
+
   const parseDate = (date: string | Date | null | undefined): Date | null => {
     if (date instanceof Date) {
       return date;
@@ -167,7 +169,7 @@ const EditProfile = () => {
 
       let url;
       if (isServiceProvider) {
-        submitData = {
+        submitData = Object.entries({
           firstName: data.firstName,
           lastName: data.lastName,
           dateOfBirth: formatDateAsYYYYMMDD(data.dateOfBirth as Date),
@@ -178,7 +180,15 @@ const EditProfile = () => {
           idType: data.idType,
           idNumber: data.idNumber,
           bio: data.bio,
-        };
+        }).reduce((acc, [key, value]) => {
+          if (value !== null && value !== undefined && value !== "") {
+            // @ts-expect-error "type of key not know"
+            acc[key] = value;
+          }
+          return acc;
+        }, {});
+
+        console.log(submitData);
         url =
           "https://smp.jacinthsolutions.com.au/api/v1/service_provider/update";
       } else {
