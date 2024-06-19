@@ -28,24 +28,25 @@ const userDataSchema = z.object({
   idType: z.string().optional().nullable(),
   idNumber: z.string().optional(),
   bio: z.string().nullable().optional(),
+  idImage: z.string().nullable().optional(),
 });
 
 const idTypeObject = [
   {
     label: "Medicare Card",
-    value: "Medicare Card",
+    value: "MEDICARE_CARD",
   },
   {
     label: "International Passport",
-    value: "International Passport",
+    value: "INTERNATIONAL_PASSPORT",
   },
   {
     label: "Photo ID",
-    value: "Photo ID",
+    value: "PHOTO_ID",
   },
   {
-    label: "Drivers Licence",
-    value: "Driver's Licence",
+    label: "Driver's Licence",
+    value: "DRIVERS_LICENSE",
   },
 ];
 
@@ -78,7 +79,7 @@ const EditProfile = () => {
     reset,
     watch,
     setValue,
-  } = useForm({
+  } = useForm<userDataType>({
     resolver: zodResolver(userDataSchema),
     defaultValues: {
       firstName: "",
@@ -136,8 +137,6 @@ const EditProfile = () => {
     return null;
   };
 
-  console.log(userDetails);
-
   const today = new Date();
   const age18YearsAgo = new Date(today.setFullYear(today.getFullYear() - 18));
 
@@ -153,8 +152,11 @@ const EditProfile = () => {
         postcode: userDetails.postalCode || user.address.postCode || "",
         suburb: userDetails.suburbs || user.address.suburb || "",
         state: userDetails.state || user.address.state || "",
-        idType: userDetails.idType,
+        idType:
+          idTypeObject.find((item) => item.value === userDetails.idType)
+            ?.label || "",
         idNumber: userDetails.idNumber,
+        idImage: userDetails.idImage,
         bio: isServiceProvider
           ? userDetails.bio ?? ""
           : "No Bio needed for customer",
@@ -169,25 +171,7 @@ const EditProfile = () => {
 
       let url;
       if (isServiceProvider) {
-        // submitData = Object.entries({
-        //   firstName: data.firstName,
-        //   lastName: data.lastName,
-        //   dateOfBirth: formatDateAsYYYYMMDD(data.dateOfBirth as Date),
-        //   suburb: data.suburb,
-        //   state: data.state,
-        //   postCode: data.postcode,
-        //   idImage: selectedDocument,
-        //   idType: data.idType,
-        //   idNumber: data.idNumber,
-        //   bio: data.bio,
-        // }).reduce((acc, [key, value]) => {
-        //   if (value !== null && value !== undefined && value !== "") {
-        //     // @ts-expect-error "type of key not know"
-        //     acc[key] = value;
-        //   }
-        //   return acc;
-        // }, {});
-        submitData = {
+        submitData = Object.entries({
           firstName: data.firstName,
           lastName: data.lastName,
           dateOfBirth: formatDateAsYYYYMMDD(data.dateOfBirth as Date),
@@ -198,7 +182,13 @@ const EditProfile = () => {
           idType: data.idType,
           idNumber: data.idNumber,
           bio: data.bio,
-        };
+        }).reduce((acc, [key, value]) => {
+          if (value !== null && value !== undefined && value !== "") {
+            // @ts-expect-error "type of key not know"
+            acc[key] = value;
+          }
+          return acc;
+        }, {});
         url =
           "https://smp.jacinthsolutions.com.au/api/v1/service_provider/update";
       } else {
@@ -260,9 +250,20 @@ const EditProfile = () => {
   }, [watchField.postcode]);
 
   return (
-    <main className=" relative p-4 lg:p-8">
+    <main className=" relative p-4 lg:grid lg:grid-cols-12 lg:items-start lg:gap-6 lg:p-8 lg:py-16">
+      <EditProfileModal
+        setIsFormModalShown={setIsFormModalShown}
+        setDocumentImage={setDocumentImage}
+        isFormModalShown={isFormModalShown}
+        isEditingProfilePicture={isEditingProfilePicture}
+        setisEditingProfilePicture={setisEditingProfilePicture}
+        isProfileUpdatedSuccessfully={isProfileUpdatedSuccessfully}
+        setIsProfileUpdatedSuccessfully={setIsProfileUpdatedSuccessfully}
+        setSelectedDocument={setSelectedDocument}
+      />
       {/* Top profile Image section */}
-      <section className="flex flex-col items-center justify-center gap-1 pb-8 ">
+
+      <section className="col-span-3 flex flex-col items-center justify-center gap-1 pb-8 ">
         <button
           className="relative mx-auto size-28 overflow-hidden rounded-full hover:shadow-md"
           onClick={handleChangeProfilePicture}
@@ -298,44 +299,23 @@ const EditProfile = () => {
       {/* Form modal section */}
       <form
         onSubmit={handleSubmit(handleSubmitUserData)}
-        className="space-y-10 lg:space-y-20"
+        className="col-span-9 space-y-10 lg:space-y-12"
       >
-        {/* Bio */}
-        {isServiceProvider && (
-          <section>
-            <h3 className="text-xl font-bold text-violet-dark lg:text-center">
-              Bio
-            </h3>
-            {/* First name */}
-            <label className="flex w-full flex-col  gap-3 text-lg  text-violet-normal">
-              <span className="flex items-center justify-between">
-                <span>Bio Description</span>
-                {!errors.bio && watchField.bio?.length >= 20 && (
-                  <BiCheck className="size-5 rounded-full bg-green-500 p-1 text-white" />
-                )}
-              </span>
-              <textarea
-                disabled={!isEditingEnabled}
-                className="w-full rounded-xl border border-slate-100 p-2 text-slate-700  shadow outline-none transition-shadow duration-300 hover:shadow-md "
-                {...register("bio")}
-              />
-            </label>
-          </section>
-        )}
-
         {/* Personal information */}
-        <section className="flex flex-col gap-4 ">
+        <section className="flex flex-col gap-8 ">
           <h3 className="text-xl font-bold text-violet-dark lg:text-center">
             Personal Information
           </h3>
-          <div className="flex flex-wrap justify-between gap-6 lg:col-span-8">
+          <div className="flex flex-wrap justify-between gap-6 lg:col-span-8 lg:grid lg:grid-cols-2">
             {/* First name */}
-            <label className="flex w-full flex-col gap-3 text-lg  text-violet-normal lg:max-w-64 ">
+            <label className="flex w-full flex-col gap-3 text-lg  text-violet-normal ">
               <span className="flex items-center justify-between">
                 <span>First Name</span>
-                {!errors.firstName && watchField.firstName?.length >= 3 && (
-                  <BiCheck className="size-5 rounded-full bg-green-500 p-1 text-white" />
-                )}
+                {!errors.firstName &&
+                  watchField.firstName &&
+                  watchField.firstName?.length >= 3 && (
+                    <BiCheck className="size-5 rounded-full bg-green-500 p-1 text-white" />
+                  )}
               </span>
               <input
                 type="text"
@@ -345,12 +325,14 @@ const EditProfile = () => {
               />
             </label>
             {/* Last name */}
-            <label className="flex w-full flex-col gap-3 text-lg  text-violet-normal lg:max-w-64 ">
+            <label className="flex w-full flex-col gap-3 text-lg  text-violet-normal">
               <span className="flex items-center justify-between">
                 <span>Last Name</span>
-                {!errors.lastName && watchField.lastName?.length >= 3 && (
-                  <BiCheck className="size-5 rounded-full bg-green-500 p-1 text-white" />
-                )}
+                {!errors.lastName &&
+                  watchField.lastName &&
+                  watchField.lastName?.length >= 3 && (
+                    <BiCheck className="size-5 rounded-full bg-green-500 p-1 text-white" />
+                  )}
               </span>
               <input
                 type="text"
@@ -360,7 +342,7 @@ const EditProfile = () => {
               />
             </label>
             {/* Date of birth */}
-            <label className="flex w-full flex-col gap-3 text-lg  text-violet-normal lg:max-w-64 ">
+            <label className="flex w-full flex-col gap-3 text-lg  text-violet-normal ">
               <span className="flex items-center justify-between">
                 <span> Date of Birth</span>
                 {!errors.dateOfBirth && watchField.dateOfBirth !== null && (
@@ -386,19 +368,45 @@ const EditProfile = () => {
           </div>
         </section>
 
+        {/* Bio */}
+        {isServiceProvider && (
+          <section>
+            <h3 className="text-xl font-bold text-violet-dark lg:text-center">
+              Bio
+            </h3>
+            <label className="flex w-full flex-col  gap-3 text-lg  text-violet-normal">
+              <span className="flex items-center justify-between">
+                <span>Bio Description</span>
+                {!errors.bio &&
+                  watchField.bio &&
+                  watchField.bio.length >= 20 && (
+                    <BiCheck className="size-5 rounded-full bg-green-500 p-1 text-white" />
+                  )}
+              </span>
+              <textarea
+                disabled={!isEditingEnabled}
+                className="min-h-32 w-full rounded-xl border border-slate-100 p-2 text-slate-700  shadow outline-none transition-shadow duration-300 hover:shadow-md "
+                {...register("bio")}
+              />
+            </label>
+          </section>
+        )}
+
         {/* contact details */}
         <section className="flex flex-col gap-4 ">
           <h3 className="text-xl font-bold text-violet-dark lg:text-center">
             Contact Information
           </h3>
-          <div className="flex flex-wrap gap-6 lg:col-span-8">
+          <div className="flex flex-wrap gap-6 lg:col-span-8 lg:grid lg:grid-cols-2">
             {/* Phone number */}
-            <label className="flex w-full flex-col gap-3 text-lg  text-violet-normal lg:max-w-64 ">
+            <label className="flex w-full flex-col gap-3 text-lg  text-violet-normal  ">
               <span className="flex items-center justify-between">
                 <span> Phone Number</span>
-                {!errors.phoneNumber && watchField.phoneNumber.length >= 12 && (
-                  <BiCheck className="size-5 rounded-full bg-green-500 p-1 text-white" />
-                )}
+                {!errors.phoneNumber &&
+                  watchField.phoneNumber &&
+                  watchField.phoneNumber.length >= 12 && (
+                    <BiCheck className="size-5 rounded-full bg-green-500 p-1 text-white" />
+                  )}
               </span>
               <input
                 type="text"
@@ -409,10 +417,11 @@ const EditProfile = () => {
               />
             </label>
             {/* Email Address */}
-            <label className="flex w-full flex-col gap-3 text-lg  text-violet-normal lg:max-w-64 ">
+            <label className="flex w-full flex-col gap-3 text-lg  text-violet-normal ">
               <span className="flex items-center justify-between">
                 <span>Email Address</span>
                 {!errors.emailAddress &&
+                  watchField.emailAddress &&
                   watchField.emailAddress.length >= 2 && (
                     <BiCheck className="size-5 rounded-full bg-green-500 p-1 text-white" />
                   )}
@@ -432,14 +441,16 @@ const EditProfile = () => {
             Address Information
           </h3>
 
-          <div className="flex flex-wrap gap-6 lg:col-span-8">
+          <div className="flex flex-wrap gap-6 lg:col-span-8 lg:grid lg:grid-cols-2">
             {/* postcode */}
-            <label className="flex w-full flex-col gap-3 text-lg  text-violet-normal lg:max-w-64 ">
+            <label className="flex w-full flex-col gap-3 text-lg  text-violet-normal ">
               <span className="flex items-center justify-between">
                 <span>Postal Code</span>
-                {suburbList.length > 0 && watchField.postcode.length > 0 && (
-                  <BiCheck className="size-5 rounded-full bg-green-500 p-1 text-white" />
-                )}
+                {suburbList.length > 0 &&
+                  watchField.postcode &&
+                  watchField.postcode.length > 0 && (
+                    <BiCheck className="size-5 rounded-full bg-green-500 p-1 text-white" />
+                  )}
               </span>
               <input
                 type="text"
@@ -450,16 +461,18 @@ const EditProfile = () => {
             </label>
 
             {/* suburb */}
-            <label className="flex w-full flex-col gap-3 text-lg  text-violet-normal lg:max-w-64 ">
+            <label className="flex w-full flex-col gap-3 text-lg  text-violet-normal ">
               <span className="flex items-center justify-between">
                 <span> Suburb</span>
-                {!errors.suburb && watchField.suburb.length > 0 && (
-                  <BiCheck className="size-5 rounded-full bg-green-500 p-1 text-white" />
-                )}
+                {!errors.suburb &&
+                  watchField.suburb &&
+                  watchField.suburb.length > 0 && (
+                    <BiCheck className="size-5 rounded-full bg-green-500 p-1 text-white" />
+                  )}
               </span>
               <select
                 {...register("suburb")}
-                className="rounded-xl border border-slate-100 p-2 py-2.5 text-slate-700 shadow  outline-none transition-shadow duration-300 hover:shadow-md lg:max-w-sm "
+                className="rounded-xl border border-slate-100 p-2 py-2.5 text-slate-700 shadow  outline-none transition-shadow duration-300 hover:shadow-md "
                 disabled={!isEditingEnabled || suburbList.length === 0}
               >
                 {suburbList.map((item) => (
@@ -471,12 +484,14 @@ const EditProfile = () => {
             </label>
 
             {/* State */}
-            <label className="flex w-full flex-col gap-3 text-lg  text-violet-normal lg:max-w-64 ">
+            <label className="flex w-full flex-col gap-3 text-lg  text-violet-normal ">
               <span className="flex items-center justify-between">
                 <span> State</span>
-                {!errors.state && watchField.state.length > 0 && (
-                  <BiCheck className="size-5 rounded-full bg-green-500 p-1 text-white" />
-                )}
+                {!errors.state &&
+                  watchField.state &&
+                  watchField.state.length > 0 && (
+                    <BiCheck className="size-5 rounded-full bg-green-500 p-1 text-white" />
+                  )}
               </span>
               <input
                 readOnly
@@ -492,15 +507,17 @@ const EditProfile = () => {
             Identification Document
           </h3>
           <div className="flex flex-col lg:col-span-8 lg:gap-8">
-            <div className="flex flex-wrap lg:col-span-8 lg:gap-8">
+            <div className="flex flex-wrap lg:grid lg:grid-cols-2 lg:gap-8 ">
               {/* select Id type */}
               <label className="space-y-4">
                 <span className="flex items-center justify-between">
                   <span className="flex items-center justify-between gap-9">
                     <span>Choose a valid means of ID</span>
-                    {/* {!errors.idType && watchField.idType.length > 0 && (
-                      <BiCheck className="size-5 rounded-full bg-green-500 p-1 text-white" />
-                    )} */}
+                    {!errors.idType &&
+                      watchField.idType &&
+                      watchField.idType.length > 0 && (
+                        <BiCheck className="size-5 rounded-full bg-green-500 p-1 text-white" />
+                      )}
                   </span>
                 </span>
                 <select
@@ -508,9 +525,10 @@ const EditProfile = () => {
                 p-3 text-slate-700 shadow outline-none
                 transition-shadow duration-300 hover:shadow-md lg:max-w-sm"
                   {...register("idType")}
+                  disabled={!isEditingEnabled}
                 >
                   {idTypeObject.map((item) => (
-                    <option key={item.value} value={item.value}>
+                    <option key={item.label} value={item.label}>
                       {item.label}
                     </option>
                   ))}
@@ -519,19 +537,23 @@ const EditProfile = () => {
 
               {/* Id Type Number */}
 
-              <label className="flex w-full flex-col gap-3 text-lg  text-violet-normal lg:max-w-64 ">
+              <label className="flex w-full flex-col gap-3 text-lg  text-violet-normal">
                 <span className="flex items-center justify-between">
                   <span className="flex items-center justify-between gap-9">
                     <span>
                       {watchField.idType === ""
                         ? "Select Id Type"
                         : idTypeObject.find(
-                            (item) => item.value === watchField.idType,
+                            (item) =>
+                              item.value === watchField.idType ||
+                              item.label === watchField.idType,
                           )?.label + " Number"}
                     </span>
-                    {!errors.idNumber && watchField.idNumber.length >= 7 && (
-                      <BiCheck className="size-5 rounded-full bg-green-500 p-1 text-white" />
-                    )}
+                    {!errors.idNumber &&
+                      watchField.idNumber &&
+                      watchField.idNumber.length >= 7 && (
+                        <BiCheck className="size-5 rounded-full bg-green-500 p-1 text-white" />
+                      )}
                   </span>
                 </span>
                 <input
@@ -550,21 +572,22 @@ const EditProfile = () => {
               <span className="flex items-center justify-between">
                 <span className="flex items-center justify-between gap-9">
                   <span>Means of ID</span>
-                  {documentImage && (
+                  {(documentImage || watchField.idImage) && (
                     <BiCheck className="size-5 rounded-full bg-green-500 p-1 text-white" />
                   )}
                 </span>
               </span>
               <div>
-                {documentImage ? (
+                {documentImage || watchField.idImage ? (
                   <button
                     type="button"
                     className="flex items-end justify-center space-x-2"
                     onClick={() => setIsFormModalShown(true)}
+                    disabled={!isEditingEnabled}
                   >
                     {/* Display a disabled input with message */}
                     <Image
-                      src={documentImage}
+                      src={documentImage ?? watchField.idImage ?? ""}
                       alt="Captured or Selected"
                       width={300}
                       height={300}
@@ -601,16 +624,6 @@ const EditProfile = () => {
           </button>
         </div>
       </form>
-      <EditProfileModal
-        setIsFormModalShown={setIsFormModalShown}
-        setDocumentImage={setDocumentImage}
-        isFormModalShown={isFormModalShown}
-        isEditingProfilePicture={isEditingProfilePicture}
-        setisEditingProfilePicture={setisEditingProfilePicture}
-        isProfileUpdatedSuccessfully={isProfileUpdatedSuccessfully}
-        setIsProfileUpdatedSuccessfully={setIsProfileUpdatedSuccessfully}
-        setSelectedDocument={setSelectedDocument}
-      />
     </main>
   );
 };
