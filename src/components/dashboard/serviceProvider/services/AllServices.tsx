@@ -99,10 +99,7 @@ const AllServices = () => {
                 <div className="space-y-2">
                   <div className="relative h-52  w-72 overflow-hidden rounded-xl">
                     <Image
-                      src={
-                        item.businessPictures[0] ??
-                        "/assets/images/serviceProvider/drain.png"
-                      }
+                      src={item.businessPictures[0] ?? ""}
                       width={400}
                       height={400}
                       alt={item.listingTitle}

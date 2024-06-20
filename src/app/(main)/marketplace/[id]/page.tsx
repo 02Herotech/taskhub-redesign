@@ -2,8 +2,8 @@
 
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
-import { BiCalendar, BiLocationPlus } from "react-icons/bi";
-import { BsArrowUp } from "react-icons/bs";
+import { BiCalendar, BiCalendarCheck, BiLocationPlus } from "react-icons/bi";
+import { BsArrowUp, BsCalendarDay } from "react-icons/bs";
 import { CiClock2 } from "react-icons/ci";
 import { FaStar } from "react-icons/fa";
 
@@ -88,7 +88,7 @@ const Page = () => {
               <p className="font-satoshiMedium text-xl font-medium">
                 Service Purpose
               </p>
-              <p className="font-satoshiMedium capitalize">
+              <p className="font-satoshiMedium">
                 {displayData?.listingDescription}
               </p>
               {displayData?.suburb && (
@@ -105,7 +105,7 @@ const Page = () => {
               {/* <p className="flex items-center gap-2 text-sm underline ">
                 View Maps <BsArrowUp className="rotate-45" />
               </p> */}
-              <h4 className="text-3xl font-extrabold">Date and Time</h4>
+              <h4 className="text-3xl font-extrabold">Date and Days</h4>d
               <p className="flex items-center gap-2 text-slate-500 ">
                 <span>
                   <BiCalendar />
@@ -117,13 +117,16 @@ const Page = () => {
               </p>
               <p className="flex items-center gap-2 text-slate-500 ">
                 <span>
-                  <CiClock2 />
+                  <BiCalendarCheck />
                 </span>
                 <span>
                   {displayData?.availableDays.map((item) => `${item}, `)}
                 </span>
               </p>
               <div className="space-y-6 py-4">
+                <h1 className="font-satoshiBold text-3xl font-bold">
+                  About the provider
+                </h1>
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-4">
                     <Image
