@@ -26,16 +26,20 @@ const Navigation = () => {
   const [showMobileNav, setShowMobileNav] = useState(false);
   const [notifications, setNotifications] = useState<NotificationTypes[]>([]);
   const pathname = usePathname();
-
-  // const authStatus = sessionStorage.getItem("auth");
-  const authStatus = localStorage.getItem("auth");
-  let auth: { token: string | null; roles: string[] | null } = {
+  const [auth, setAuth] = useState<{
+    token: string | null;
+    roles: string[] | null;
+  }>({
     token: null,
     roles: null,
-  };
-  if (authStatus) {
-    auth = JSON.parse(authStatus);
-  }
+  });
+
+  useEffect(() => {
+    const authStatus = sessionStorage.getItem("auth");
+    if (authStatus) {
+      setAuth(JSON.parse(authStatus));
+    }
+  }, []);
 
   console.log(auth);
 
