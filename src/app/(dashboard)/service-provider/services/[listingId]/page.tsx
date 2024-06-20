@@ -9,7 +9,7 @@ import { useParams } from "next/navigation";
 import React, { useEffect, useRef, useState } from "react";
 import { useForm, SubmitHandler, Controller, set } from "react-hook-form";
 import { BiChevronDown, BiX } from "react-icons/bi";
-import { BsTriangleFill } from "react-icons/bs";
+import { BsTriangle, BsTriangleFill } from "react-icons/bs";
 import { PiFileArrowDownDuotone } from "react-icons/pi";
 import { RiPencilLine } from "react-icons/ri";
 import { BeatLoader } from "react-spinners";
@@ -31,8 +31,8 @@ const EditListing = () => {
     name: "",
     isShown: false,
   });
-  const [showAvailableDays, setShowAvailableDays] = useState(false);
   const [suburbList, setSuburbList] = useState([]);
+  const [errorMessage, setErrorMessage] = useState("");
   const { listingId } = useParams();
   const [image1, setImage1] = useState<File | null>(null);
   const [image2, setImage2] = useState<File | null>(null);
@@ -52,12 +52,12 @@ const EditListing = () => {
       .string()
       .min(3, "Minimum of 3 characters")
       .refine((str) => str.split(" ").filter(Boolean).length > 0, {
-        message: `Title must have ${1} words or more`,
+        message: `Title must have ${1} word or more`,
       }),
     listingDescription: z
       .string()
       .min(10, "Minimum of 10 characters")
-      .refine((str) => str.split(" ").filter(Boolean).length > 5, {
+      .refine((str) => str.split(" ").filter(Boolean).length >= 5, {
         message: `Description must have ${5} words or more`,
       }),
     category: z.string(),
@@ -66,7 +66,7 @@ const EditListing = () => {
     available: z.boolean(),
     taskType: z.string(),
     negotiable: z.boolean(),
-    planOneDescription: z.string(),
+    planOneDescription: z.string().min(1, "Please write a plan description"),
     planOnePrice: z.number(),
     planTwoDescription: z.string().nullable().optional(),
     planTwoPrice: z.string().nullable().optional(),
@@ -80,6 +80,33 @@ const EditListing = () => {
     image3: z.string().optional(),
     image4: z.string().optional(),
   });
+  // .refine(
+  //   (data) => {
+  //     // Check if planTwoDescription is not "", null, or undefined, and ensure planTwoPrice is provided
+  //     if (
+  //       data.planTwoDescription &&
+  //       data.planTwoDescription.trim().length > 0 &&
+  //       !data.planTwoPrice
+  //     ) {
+  //       return false;
+  //     }
+
+  //     // Check if planThreeDescription is not "", null, or undefined, and ensure planThreePrice is provided
+  //     if (
+  //       data.planThreeDescription &&
+  //       data.planThreeDescription.trim().length > 0 &&
+  //       !data.planThreePrice
+  //     ) {
+  //       return false;
+  //     }
+
+  //     return true;
+  //   },
+  //   {
+  //     message: "Price is required if description is provided",
+  //     path: ["planTwoPrice", "planThreePrice"], // This will show error on both fields
+  //   },
+  // );
 
   type listingZodType = z.infer<typeof listingZodSchema>;
 
@@ -119,8 +146,7 @@ const EditListing = () => {
         availableDays: currentListing.availableDays,
         available: currentListing.available,
         taskType: currentListing.taskType,
-        // @ts-expect-error "handle types later"
-        negotiable: currentListing.negotiable ?? false,
+        negotiable: currentListing.negotiable,
         planOneDescription: currentListing.planOneDescription,
         planOnePrice: currentListing.planOnePrice,
         planTwoDescription: currentListing.planTwoDescription,
@@ -224,6 +250,7 @@ const EditListing = () => {
   };
 
   const handleUpdateListing: SubmitHandler<listingZodType> = async (data) => {
+    setErrorMessage("");
     const body = Object.entries({
       listingTitle: data.listingTitle,
       listingDescription: data.listingDescription,
@@ -251,12 +278,11 @@ const EditListing = () => {
         value !== "" &&
         value !== 0
       ) {
-        // @ts-expect-error "type of key not know"
+        // @ts-expect-error "type of key not known"
         acc[key] = value;
       }
       return acc;
     }, {});
-
     console.log(body);
     try {
       const url =
@@ -271,6 +297,7 @@ const EditListing = () => {
       setShowModal(true);
     } catch (error: any) {
       console.log(error.response.data);
+      setErrorMessage(error.response.data.message);
     }
   };
 
@@ -439,7 +466,7 @@ const EditListing = () => {
                 Description <span className="text-xl text-red-600"> * </span>
               </span>
               <textarea
-                className={` min-h-40 rounded-lg bg-violet-light p-3 outline-none ${errors.listingDescription && "border border-red-500"}`}
+                className={` small-scrollbar min-h-40 rounded-lg bg-violet-light p-3 outline-none ${errors.listingDescription && "border border-red-500"}`}
                 {...register("listingDescription")}
               />
               {errors.listingDescription && (
@@ -496,7 +523,7 @@ const EditListing = () => {
                 <button
                   type="button"
                   onClick={() => expandDropdown("one")}
-                  className={` w-full rounded-lg  p-3 text-left outline-none transition-colors duration-300 hover:bg-violet-normal hover:text-white ${showDropdown.name === "one" && showDropdown.isShown ? "bg-violet-normal text-white" : "bg-violet-light"} `}
+                  className={` w-full rounded-lg  p-3 text-left outline-none transition-colors duration-300 hover:bg-violet-normal hover:text-white ${showDropdown.name === "one" && showDropdown.isShown ? "bg-violet-normal text-white" : "bg-violet-light"} ${errors.planOnePrice || (errors.planOneDescription && "border border-red-500")} `}
                 >
                   Plan One <span className="text-xl text-red-600"> * </span>
                 </button>
@@ -505,8 +532,13 @@ const EditListing = () => {
                 >
                   <textarea
                     {...register("planOneDescription")}
-                    className="small-scrollbar min-h-32 w-full rounded-lg bg-violet-light p-3 outline-none"
+                    className={`small-scrollbar min-h-32 w-full rounded-lg bg-violet-light p-3 outline-none ${errors.planOneDescription && "border border-red-500"} `}
                   />
+                  {errors.planOneDescription && (
+                    <p className="text-sm  text-red-500">
+                      {errors.planOneDescription.message}
+                    </p>
+                  )}
                   <p className="text-right text-sm">
                     {String(
                       watchField?.planOneDescription?.split(" ").filter(Boolean)
@@ -538,7 +570,7 @@ const EditListing = () => {
                 <button
                   type="button"
                   onClick={() => expandDropdown("two")}
-                  className={` w-full rounded-lg  p-3 text-left outline-none transition-colors duration-300 hover:bg-violet-normal hover:text-white ${showDropdown.name === "two" && showDropdown.isShown ? "bg-violet-normal text-white" : "bg-violet-light"} `}
+                  className={` w-full rounded-lg  p-3 text-left outline-none transition-colors duration-300 hover:bg-violet-normal hover:text-white ${showDropdown.name === "two" && showDropdown.isShown ? "bg-violet-normal text-white" : "bg-violet-light"} ${(errors.planTwoPrice || errors.planTwoDescription) && "border border-red-500"} `}
                 >
                   Plan Two
                 </button>
@@ -566,13 +598,18 @@ const EditListing = () => {
                         type="number"
                         min={25}
                         {...register("planTwoPrice")}
-                        className="w-28 rounded-lg bg-violet-light p-3 pl-6 outline-none"
+                        className={`w-28 rounded-lg bg-violet-light p-3 pl-6 outline-none ${errors.planTwoPrice && "border border-red-500"} `}
                       />
                     </div>
                     <p className="basis-2/3 text-sm text-violet-darker">
                       Minimum AUD$25 + 10% GST inclusive
                     </p>
                   </div>
+                  {errors.planTwoPrice && (
+                    <p className="text-sm  text-red-500">
+                      {errors.planTwoPrice.message}
+                    </p>
+                  )}
                 </div>
               </div>
               {/* plan 3 */}
@@ -580,7 +617,7 @@ const EditListing = () => {
                 <button
                   type="button"
                   onClick={() => expandDropdown("three")}
-                  className={` w-full rounded-lg  p-3 text-left outline-none transition-colors duration-300 hover:bg-violet-normal hover:text-white ${showDropdown.name === "three" && showDropdown.isShown ? "bg-violet-normal text-white" : "bg-violet-light"} `}
+                  className={` w-full rounded-lg  p-3 text-left outline-none transition-colors duration-300 hover:bg-violet-normal hover:text-white ${showDropdown.name === "three" && showDropdown.isShown ? "bg-violet-normal text-white" : "bg-violet-light"} ${(errors.planThreePrice || errors.planThreeDescription) && "border border-red-500"}  `}
                 >
                   Plan Three
                 </button>
@@ -609,7 +646,7 @@ const EditListing = () => {
                         type="number"
                         min={25}
                         {...register("planThreePrice")}
-                        className="w-28 rounded-lg bg-violet-light p-3 pl-6 outline-none"
+                        className={`w-28 rounded-lg bg-violet-light p-3 pl-6 outline-none ${errors.planThreePrice && "border border-red-500"} `}
                       />
                     </div>
                     <p className="basis-2/3 text-sm text-violet-darker">
@@ -646,7 +683,7 @@ const EditListing = () => {
                   <input
                     type="number"
                     className="rounded-lg bg-violet-light p-3 pl-4 outline-none lg:w-28"
-                    {...register("postcode", { valueAsNumber: true })}
+                    {...register("postcode")}
                   />
                 </label>
                 {/* State */}
@@ -662,13 +699,21 @@ const EditListing = () => {
                 {/* suburb */}
                 <div className="relative flex flex-col gap-2">
                   <span className="font-bold text-violet-darker">Suburb</span>
-                  <button
-                    type="button"
-                    onClick={() => expandDropdown("suburb")}
-                    className=" h-12 min-w-48 rounded-lg bg-violet-light p-3 pl-4 text-left outline-none"
-                  >
-                    {watchField.suburb}
-                  </button>
+                  <div className="relative ">
+                    <span className="absolute right-4 top-1/2 -translate-y-1/2">
+                      <BsTriangleFill
+                        className=" size-3 rotate-[60deg] text-violet-normal"
+                        fill="rgb(56 31 140)"
+                      />
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => expandDropdown("suburb")}
+                      className=" h-12 min-w-48 rounded-lg bg-violet-light p-3 pl-4 text-left outline-none"
+                    >
+                      {watchField.suburb}
+                    </button>
+                  </div>
                   <div
                     className={`absolute left-0 top-[calc(100%+0.5rem)] z-10 w-full overflow-hidden  rounded-md bg-violet-light transition-all duration-300 ${showDropdown.name === "suburb" && showDropdown.isShown ? "max-h-96" : "max-h-0"} `}
                   >
@@ -851,6 +896,9 @@ const EditListing = () => {
             "Save and Exit"
           )}
         </button>
+        {errorMessage && (
+          <p className="text-sm  text-red-500">{errorMessage}</p>
+        )}
       </form>
     </main>
   );

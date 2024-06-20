@@ -19,7 +19,7 @@ const SPHomepage = () => {
     const session = useSession();
     const router = useRouter();
 
-    const serviceProviderParams = new URLSearchParams({ userType: "serviceProvider" });
+    const serviceProviderParams = new URLSearchParams({ userType: "Service Provider" });
 
 
     const isServiceProvider =

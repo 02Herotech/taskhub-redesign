@@ -39,7 +39,7 @@ const useImageTransition = (images: any, transitionDuration: any) => {
 
 const HeroSection = () => {
 
-  const serviceProviderParams = new URLSearchParams({ userType: "serviceProvider" });
+  const serviceProviderParams = new URLSearchParams({ userType: "Service Provider" });
 
   const session = useSession();
   const router = useRouter();

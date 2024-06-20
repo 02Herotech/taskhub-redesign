@@ -11,6 +11,8 @@ import axios from "axios";
 
 import image1 from "../../../../public/assets/images/homepage/securityFeatures/getStartedImg.png";
 import image2 from "../../../../public/assets/images/homepage/securityFeatures/getStartedImg2.png";
+import aiImage from "../../../../public/assets/images/homepage/securityFeatures/aiImage.png";
+
 import icon1 from "../../../../public/assets/images/homepage/securityFeatures/getStartedIcon1.png";
 import icon2 from "../../../../public/assets/images/homepage/securityFeatures/getStartedIcon2.png";
 import { useRouter } from "next/navigation";
@@ -98,78 +100,107 @@ const Taskhub = () => {
                 </div>
 
                 {/* Large screen Images  part*/}
-                <div className="hidden xl:w-1/2 w-[500px] lg:flex justify-end items-center relative">
-                    <Image src={image1} width={400} alt="Security Features"></Image>
-                    <div className="flex absolute -bottom-4 left-[5px] shadow-md bg-white rounded-[30px]">
-                        <Image src={image2} width={250} alt="devon lane"></Image>
-                        <div className="flex flex-col text-[16px] bg-white rounded-r-xl px-4 items-start justify-center space-y-6">
-                            <div className="flex text-[#F2994A] text-[25px] ">
-                                <MdOutlineStarPurple500 />
-                                <MdOutlineStarPurple500 />
-                                <MdOutlineStarPurple500 />
-                                <MdOutlineStarPurple500 />
-                                <MdOutlineStarPurple500 />
-                            </div>
-                            <p className="font-bold text-[#090914] ">5 Star Rating !!!</p>
-                            <div className="flex text-[10px] space-x-2">
-                                <p className="font-[900] text-[16px] text-[#2A1769]">Devon Lane</p>
-                                <p className="text-[16px] text-[#716F78] font-[900]">DLDesign.co</p>
-                            </div>
-                        </div>
+                <div className=" xl:w-1/2 w-[500px] hidden lg:block    ">
 
-                        <div className="flex space-x-2 shadow-md items-center text-[12px] bg-[#EEE5FC] rounded-xl px-4 py-2 absolute -top-[17em] left-12 xl:left-36 xl:py-3 xl:px-6">
+                    <div className="relative">
+                        <div className="flex justify-end mt-20  ">
+                            <div className="flex shadow-md bg-white rounded-[30px] ">
+                                <Image src={image2} width={250} alt="devon lane " className="z-0"></Image>
+                                <div className="flex flex-col text-[16px] bg-white rounded-r-xl xl:px-10 px-4 items-start justify-center space-y-6">
+                                    <div className="flex text-[#F2994A] text-[25px] ">
+                                        <MdOutlineStarPurple500 />
+                                        <MdOutlineStarPurple500 />
+                                        <MdOutlineStarPurple500 />
+                                        <MdOutlineStarPurple500 />
+                                        <MdOutlineStarPurple500 />
+                                    </div>
+                                    <p className="font-bold text-[#090914] ">5 Star Rating !!!</p>
+                                    <div className="flex text-[10px] space-x-2">
+                                        <p className="font-[900] text-[16px] text-[#2A1769]">Devon Lane</p>
+                                        <p className="text-[16px] text-[#716F78] font-[900]">DLDesign.co</p>
+                                    </div>
+                                </div>
+
+
+
+                                {/* <div className="flex space-x-2 shadow-md items-center text-[12px] bg-[#EEE5FC] rounded-xl px-4 py-2 absolute -top-[17em] left-12 xl:left-36 xl:py-3 xl:px-6">
                             <Image src={icon2} width={25} alt="hand shake"></Image>
                             <p className=" font-[700] text-[14px] text-primary">Task completed</p>
                             <p className="text-[#969696] text-[14px]">Just now</p>
                         </div>
 
-                        <div className="flex space-x-2 shadow-md items-center text-[12px] bg-[#EEE5FC] rounded-xl px-3 py-1 absolute -top-[10em] -left-3 xl:left-20 xl:py-3 xl:px-6">
+                       */}
+
+
+                            </div>
+                        </div>
+                        <div className="flex space-x-2 shadow-md items-center text-[12px] bg-[#EEE5FC] rounded-[24px] px-3 py-3 xl:w-[320px] w-[300px] absolute xl:top-[160px] lg:top-[180px] -ml-20 ">
                             <Image src={icon1} width={25} alt="hand & dollar"></Image>
                             <p className=" font-[700] text-[14px] text-primary">Payment has been made</p>
                             <p className="text-[#969696] text-[14px]">2mins ago</p>
                         </div>
-
-
                     </div>
+
+
+                    <div className="mt-10 relative">
+                        <div className="  ">
+                            <Image src={aiImage} width={350} alt="devon lane " className="z-0"></Image>
+                        </div>
+                        <div className="flex space-x-2 shadow-md items-center text-[12px] bg-[#EEE5FC] rounded-[24px] px-4 py-2 absolute xl:top-[165px] xl:right-[60px] lg:top-[175px] lg:right-[30px] xl:py-3 xl:px-6">
+                            <Image src={icon2} width={25} alt="hand shake"></Image>
+                            <p className=" font-[700] text-[14px] text-primary">Task completed</p>
+                            <p className="text-[#969696] text-[14px]">Just now</p>
+                        </div>
+                    </div>
+
+
                 </div>
 
                 {/* Mobile Images  part*/}
 
-                <div className="lg:hidden  w-full flex flex-col items-center justify-cente  ">
-                    <div className=" w-full flex flex-col items-center justify-cente relative">
-                        <div className="relative w-[85%] h-[300px] rounded-lg">
-                            <Image src={image1} fill alt="Security Features" className="object-cover rounded-[15px]"></Image>
-                        </div>
+                <div className="lg:hidden  w-full   ">
+                    <div className=" w-full  ">
+                        <div className="relative">
+                            <div className="flex justify-end   ">
+                                <div className="flex shadow-md bg-white rounded-[30px] ">
+                                    <Image src={image2} width={150} alt="devon lane " className="z-0"></Image>
 
+                                    <div className="flex flex-col text-[12px] bg-white rounded-r-xl px-4 items-start justify-center space-y-6">
+                                        <div className="flex text-[#F2994A] text-[16px] ">
+                                            <MdOutlineStarPurple500 />
+                                            <MdOutlineStarPurple500 />
+                                            <MdOutlineStarPurple500 />
+                                            <MdOutlineStarPurple500 />
+                                            <MdOutlineStarPurple500 />
+                                        </div>
+                                        <p className="font-bold text-[10px]">5 Star Rating !!!</p>
+                                        <div className="flex text-[8px] space-x-2">
+                                            <p className="font-[900] text-[#2A1769]">Devon Lane</p>
+                                            <p className="text-[#716F78]">DLDesign.co</p>
+                                        </div>
+                                    </div>
 
-                        <div className="flex space-x-2 shadow-md items-center text-[8px] bg-[#EEE5FC] rounded-xl px-4 py-2 absolute top-[120px] -left-[20px] ">
-                            <Image src={icon2} width={25} alt="hand shake"></Image>
-                            <p className=" font-[700] text-[12px] text-primary">Task completed</p>
-                            <p className="text-[#969696] text-[12px]">Just now</p>
-                        </div>
+                                </div>
 
-                        <div className="flex space-x-2 shadow-md items-center text-[8px] bg-[#EEE5FC] rounded-xl px-3 py-2 absolute top-[210px] -right-[20px] ">
-                            <Image src={icon1} width={25} alt="hand & dollar"></Image>
-                            <p className=" font-[700] text-[12px] text-primary">Payment has been made</p>
-                            <p className="text-[#969696] text-[12px]">2mins ago</p>
-                        </div>
-
-                    </div>
-
-                    <div className="flex  shadow-md bg-white rounded-[30px] w-[250px] mt-5">
-                        <Image src={image2} width={120} alt="devon lane"></Image>
-                        <div className="flex flex-col text-[12px] bg-white rounded-r-xl px-4 items-start justify-center space-y-6">
-                            <div className="flex text-[#F2994A] text-[16px] ">
-                                <MdOutlineStarPurple500 />
-                                <MdOutlineStarPurple500 />
-                                <MdOutlineStarPurple500 />
-                                <MdOutlineStarPurple500 />
-                                <MdOutlineStarPurple500 />
                             </div>
-                            <p className="font-bold text-[10px]">5 Star Rating !!!</p>
-                            <div className="flex text-[8px] space-x-2">
-                                <p className="font-[900] text-[#2A1769]">Devon Lane</p>
-                                <p className="text-[#716F78]">DLDesign.co</p>
+
+                            <div className="flex space-x-2 shadow-md items-center text-[8px] bg-[#EEE5FC] rounded-xl px-3 py-2 absolute -top-[25px] -ml-5 ">
+                                <Image src={icon1} width={25} alt="hand & dollar"></Image>
+                                <p className=" font-[700] text-[12px] text-primary">Payment has been made</p>
+                                <p className="text-[#969696] text-[12px]">2mins ago</p>
+                            </div>
+                        </div>
+
+
+                        <div className="my-5 relative">
+                            <div className="  ">
+                                <Image src={aiImage} width={280} alt="devon lane " className="z-0"></Image>
+                            </div>
+
+                            <div className="flex space-x-2 shadow-md items-center text-[8px] bg-[#EEE5FC] rounded-[24px] px-4 py-2 absolute  -right-[30px]  ">
+                                <Image src={icon2} width={25} alt="hand shake"></Image>
+                                <p className=" font-[700] text-[12px] text-primary">Task completed</p>
+                                <p className="text-[#969696] text-[12px]">Just now</p>
                             </div>
                         </div>
                     </div>

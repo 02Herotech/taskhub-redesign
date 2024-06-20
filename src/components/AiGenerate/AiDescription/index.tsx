@@ -76,7 +76,7 @@ const AiDesciption: React.FC<AiGenerateProps> = ({
   const [AiLoading, setAiLoading] = useState(false);
   const [emptyQuerryField, setEmptyQuerryField] = useState(false);
 
-  const handleAiChatView = async (e: any) => {
+  const handleAiChatQuery = async (e: any) => {
     e.preventDefault();
     if (aiQuery === "") {
       setEmptyQuerryField(true);
@@ -223,7 +223,7 @@ const AiDesciption: React.FC<AiGenerateProps> = ({
             {Array.from({ length: 7 }).map((_, index) => (
               <div
                 key={index}
-                className="absolute bottom-0 right-0 h-[250px] w-[1px] bg-white"
+                className="absolute bottom-0 right-0 h-[200px] w-[1px] bg-white"
                 style={{
                   transform: `rotate(45deg) translate(${index * 10}px, ${index * 10}px)`,
                   opacity: 0.5,
@@ -361,7 +361,7 @@ const AiDesciption: React.FC<AiGenerateProps> = ({
             </p>
         
             <div className="rounded-[20px] lg:px-4 px-2 pb-2  font-medium border-[2px] border-primary ">
-              <form onSubmit={handleAiChatView} className="flex items-center pt-2">
+              <form  className="flex items-center pt-2">
                 <textarea
                   name="aiQuery"
                   placeholder="Enter a request here"
@@ -371,20 +371,9 @@ const AiDesciption: React.FC<AiGenerateProps> = ({
  bg-transparent px-2 text-[16px] font-normal text-primary border-none outline-none resize-none"
                   required              
                 />
-
-                <div className="hidden lg:block ">
-                  <button type="submit">
-                    {" "}
-                    <BiSend
-                      size={26}
-                      className="transform text-primary ease-in-out hover:scale-110 hover:cursor-pointer"
-                    />
-                  </button>
-                </div>
-
                 <div
-                  className="lg:hidden"
-                  onClick={handleAiChatView}
+                  className=""
+                  onClick={handleAiChatQuery}
                 >
                   <span>
                     <BiSend
