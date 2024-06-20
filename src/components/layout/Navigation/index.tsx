@@ -27,7 +27,8 @@ const Navigation = () => {
   const [notifications, setNotifications] = useState<NotificationTypes[]>([]);
   const pathname = usePathname();
 
-  const authStatus = sessionStorage.getItem("auth");
+  // const authStatus = sessionStorage.getItem("auth");
+  const authStatus = localStorage.getItem("auth");
   let auth: { token: string | null; roles: string[] | null } = {
     token: null,
     roles: null,
