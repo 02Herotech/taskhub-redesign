@@ -51,10 +51,7 @@ const LoginForm = () => {
         role: response.data.user.roles,
       };
 
-      console.log(authData);
-
       sessionStorage.setItem("auth", JSON.stringify(authData));
-
       if (response.status === 200) {
         const userTypeRole = response.data.user.roles[0];
 
