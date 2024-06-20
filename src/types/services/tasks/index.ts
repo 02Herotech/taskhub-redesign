@@ -65,3 +65,8 @@ export type GetFilterTaskByTypeRequest = {
     page: number;
     type: string;
 };
+
+export type GetTaskByTextRequest = {
+    pageNumber: number;
+    text: string;
+};

@@ -5,6 +5,7 @@ import { formatAmount } from "@/lib/utils";
 import Button from "@/components/global/Button";
 import Popup from '@/components/global/Popup';
 import { FiClock } from 'react-icons/fi';
+import { useSession } from 'next-auth/react';
 
 type CustomerPaymentHistoryProps = {
     transactionTitle: string;
@@ -103,6 +104,8 @@ const PaymentHistory = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedPayment, setSelectedPayment] = useState<CustomerPaymentHistoryProps | null>(null);
     const todayDate = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+    const session = useSession()
+    console.log(session)
 
     const handleLoadMore = () => {
         setVisibleTransactions(prevVisible => prevVisible + visibleTransactions);

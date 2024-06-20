@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { FaChevronLeft, FaChevronRight, FaSortDown } from "react-icons/fa";
-import { useGetActiveTasksQuery } from "@/services/tasks";
+import { useGetActiveTasksQuery, useSearchTaskByTextQuery } from "@/services/tasks";
 import { Task } from "@/types/services/tasks";
 import Dropdown from "@/components/global/Dropdown";
 import TaskCard from "../TaskCard";
@@ -12,6 +12,7 @@ import axios from "axios";
 import Loading from "@/shared/loading";
 import Image from "next/image";
 import { CiSearch } from "react-icons/ci";
+import { IoMdArrowDropdown } from "react-icons/io";
 
 type Category = {
     id: number;
@@ -24,11 +25,14 @@ const Tasks = () => {
     const [selectedService, setSelectedService] = useState<"REMOTE_SERVICE" | "PHYSICAL_SERVICE">("PHYSICAL_SERVICE");
     const [categoriesData, setCategoriesData] = useState<Category[]>([]);
     const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 9;
     const [filteredData, setFilteredData] = useState<Task[]>([]);
     const [dataToRender, setDataToRender] = useState<Task[]>([]);
     const [filtersApplied, setFiltersApplied] = useState(false);
+    const [searchText, setSearchText] = useState("");
 
     const { data: tasksData, isLoading, refetch } = useGetActiveTasksQuery(currentPage);
+    const { data: searchResults } = useSearchTaskByTextQuery({ text: searchText, pageNumber: 1 });
 
     useEffect(() => {
         const fetchCategoriesData = async () => {
@@ -48,6 +52,8 @@ const Tasks = () => {
     const handlePageChange = (pageNumber: number) => {
         setCurrentPage(pageNumber);
     };
+
+    const totalPages = Math.ceil(tasksData?.totalElements! / itemsPerPage); // Calculate total pages
 
     const handleFilterByCategory = (categoryId: number) => {
         if (!tasksData?.content) return;
@@ -103,10 +109,12 @@ const Tasks = () => {
             setDataToRender(filteredData);
         } else if (filtersApplied && filteredData.length === 0) {
             setDataToRender([]);
+        } else if (searchText !== "") {
+            setDataToRender(searchResults?.content || []);
         } else {
             setDataToRender(tasksData?.content || []);
         }
-    }, [filteredData, tasksData, filtersApplied]);
+    }, [filteredData, tasksData, filtersApplied, searchText, searchResults]);
 
     const renderContent = () => {
         if (isLoading) {
@@ -116,10 +124,10 @@ const Tasks = () => {
                 </div>
             );
         } else if (dataToRender.length === 0) {
-            return <div className="text-center text-status-darkViolet text-2xl font-semibold my-20">Tasks not found, <br /> please check your internet connection and try again</div>;
+            return <div className="text-center text-status-darkViolet text-2xl font-semibold my-20">Tasks not found</div>;
         } else {
             return (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 my-14">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 my-10">
                     {dataToRender.map((task, index) => (
                         <TaskCard task={task} key={index} />
                     ))}
@@ -153,197 +161,208 @@ const Tasks = () => {
 
     return (
         <section className="pt-7 container">
-            <section className="pt-14">
-                <div className="container">
-                    <div className="flex w-full items-center justify-between">
-                        <form className="flex items-center space-x-4 max-lg:my-4 max-lg:w-full max-lg:justify-between max-lg:px-1">
-                            <div className="flex h-[29px] items-center space-x-2 rounded-lg border border-status-violet bg-[#F1F1F2] px-4 max-sm:w-full lg:h-[58px] lg:w-[300px] lg:rounded-2xl">
-                                <CiSearch className="h-6 w-6 text-status-violet" />
-                                <input
-                                    placeholder="Search"
-                                    type="search"
-                                    className="w-full bg-[#F1F1F2] text-base outline-none placeholder:text-base focus:outline-none active:outline-none lg:py-3"
-                                />
-                            </div>
-                            <button className="flex h-[29px] w-[29px] items-center justify-center rounded-lg bg-primary lg:h-[58px] lg:w-[58px] lg:rounded-2xl">
-                                <CiSearch className="h-5 w-5 text-status-violet lg:h-7 lg:w-7" />
-                            </button>
-                        </form>
-                        <Button
-                            theme="secondary"
-                            className="hidden h-[29px] items-center justify-center rounded-full bg-tc-orange px-14 font-bold text-white lg:flex lg:h-[58px]"
-                        >
-                            1 New Task
-                        </Button>
-                    </div>
-                    <div className="relative mt-7 h-[124px] lg:h-[473px]">
-                        <Image
-                            src="/assets/images/explore/google-map.png"
-                            alt="map"
-                            fill
-                            className="object-cover"
-                        />
-                    </div>
+            {/* Search bar */}
+            <section className="pt-10">
+                <div className="flex w-full items-center justify-between">
+                    <form className="flex items-center space-x-4 max-lg:my-4 max-lg:w-full max-lg:justify-between max-lg:px-1">
+                        <div className="flex h-[29px] items-center space-x-2 rounded-lg border border-status-violet bg-[#F1F1F2] px-4 max-sm:w-full lg:h-[58px] lg:w-[300px] lg:rounded-2xl">
+                            <CiSearch className="h-6 w-6 text-status-violet" />
+                            <input
+                                placeholder="Search"
+                                onChange={(e) => setSearchText(e.target.value)}
+                                type="search"
+                                className="w-full bg-[#F1F1F2] text-base outline-none placeholder:text-base focus:outline-none active:outline-none lg:py-3"
+                            />
+                        </div>
+                        <button type="button" className="flex h-[29px] w-[29px] items-center justify-center rounded-lg bg-primary lg:h-[58px] lg:w-[58px] lg:rounded-2xl">
+                            <CiSearch className="h-5 w-5 text-status-violet lg:h-7 lg:w-7" />
+                        </button>
+                    </form>
+                    <Button
+                        theme="secondary"
+                        className="hidden h-[29px] items-center justify-center rounded-full bg-tc-orange px-14 font-bold text-white lg:flex lg:h-[58px]"
+                    >
+                        1 New Task
+                    </Button>
+                </div>
+                <div className="relative mt-7 h-[124px] lg:h-[473px]">
+                    <Image
+                        src="/assets/images/explore/google-map.png"
+                        alt="map"
+                        fill
+                        className="object-cover"
+                    />
                 </div>
             </section>
-            <div className="hidden lg:flex lg:space-x-4 mt-14 items-center">
-                <Button className="rounded-full text-center w-[120px]" onClick={resetFilters}>
+            <div className="hidden lg:flex lg:space-x-4 mt-10 items-center">
+                <Button className="rounded-full text-center w-[100px] text-sm" onClick={resetFilters}>
                     All
                 </Button>
 
                 {/* Category */}
-                <Dropdown
-                    trigger={() => (
-                        <div className="w-full border-2 border-primary text-primary bg-[#F1F1F2] flex items-center justify-center space-x-2 font-semibold py-2 px-4 rounded-full">
-                            <h2>Category</h2>
-                            <FaSortDown />
-                        </div>
-                    )}
-                    className='left-0 right-0 top-14'
-                >
-                    <form className='bg-white min-w-[240px] rounded-2xl p-2'>
-                        {categoriesData.map((category, index) => (
-                            <div
-                                key={index}
-                                onClick={() => handleFilterByCategory(category.id)}
-                                className='flex w-full transition-all text-status-darkViolet text-base font-bold hover:text-tc-orange cursor-pointer items-center justify-between p-2'>
-                                <div className="">
-                                    {category?.categoryName}
-                                </div>
+                <div className="">
+                    <Dropdown
+                        trigger={() => (
+                            <div className="w-[130px] border-2 border-primary text-primary bg-[#F1F1F2] flex items-center justify-center space-x-2 font-semibold py-2 px-4 rounded-full">
+                                <h2 className="text-sm">Category</h2>
+                                <IoMdArrowDropdown />
                             </div>
-                        ))}
-                    </form>
-                </Dropdown>
+                        )}
+                        className='left-0 right-0 top-14'
+                    >
+                        <form className='bg-white min-w-[240px] rounded-2xl p-2'>
+                            {categoriesData.map((category, index) => (
+                                <div
+                                    key={index}
+                                    onClick={() => handleFilterByCategory(category.id)}
+                                    className='flex w-full transition-all text-status-darkViolet text-base font-bold hover:text-tc-orange cursor-pointer items-center justify-between p-2'>
+                                    <div className="">
+                                        {category?.categoryName}
+                                    </div>
+                                </div>
+                            ))}
+                        </form>
+                    </Dropdown>
+                </div>
 
                 {/* Location */}
-                <Dropdown
-                    trigger={() => (
-                        <div className="w-full border-2 border-primary text-primary bg-[#F1F1F2] flex items-center justify-center space-x-2 font-semibold py-2 px-4 rounded-full">
-                            <h2>Location</h2>
-                            <FaSortDown />
-                        </div>
-                    )}
-                    className='-left-24 top-14'>
-                    <form className='bg-white min-w-[240px] rounded-2xl flex items-center p-4'>
-                        <div className="space-y-8 w-full p-3">
-                            <h4 className="text-lg text-[#190E3F] font-medium">Distance</h4>
-                            <div className="text-2xl text-black font-bold text-center mb-6">
-                                {locationValues[0]}km - {locationValues[1]}km
+                <div className="">
+                    <Dropdown
+                        trigger={() => (
+                            <div className="w-[130px] border-2 border-primary text-primary bg-[#F1F1F2] flex items-center justify-center space-x-2 font-semibold py-2 px-4 rounded-full">
+                                <h2 className="text-sm">Location</h2>
+                                <IoMdArrowDropdown />
                             </div>
-                            <ReactSlider
-                                className="relative w-full h-2 bg-[#FE9B07] rounded-2xl"
-                                thumbClassName="absolute h-6 w-6 bg-[#FE9B07] rounded-full cursor-grab transform -translate-y-1/2 top-1/2"
-                                trackClassName="top-1/2 bg-[#FE9B07]"
-                                value={locationValues}
-                                min={1}
-                                max={50}
-                                step={1}
-                                onChange={(newValues) => setLocationValues(newValues as [number, number])}
-                            />
-                            <div className="flex items-center justify-between space-x-4 w-full">
-                                <Button theme="outline" className="rounded-full" onClick={() => setLocationValues([1, 50])}>
-                                    Cancel
-                                </Button>
-                                <Button className="rounded-full">
-                                    Apply
-                                </Button>
-                            </div>
-                        </div>
-                    </form>
-                </Dropdown>
-
-                {/* Type of service */}
-                <Dropdown
-                    trigger={() => (
-                        <div id="typeOfService" className="w-full border-2 border-primary bg-[#F1F1F2] flex items-center justify-center space-x-2 text-primary font-semibold py-2 px-4 rounded-full">
-                            <h2>Type of service</h2>
-                            <FaSortDown />
-                        </div>
-                    )}
-                    className='-left-24 top-14'>
-                    <div className='bg-white min-w-[240px] rounded-2xl p-4 space-y-8'>
-                        <h4 className="text-xl text-[#190E3F] font-medium">Type of service</h4>
-                        <div className="flex mb-6 w-full rounded-full bg-orange-100">
-                            <button
-                                className={`px-6 py-2 rounded-full text-status-darkViolet font-bold text-lg focus:outline-none ${selectedService === 'REMOTE_SERVICE' ? 'bg-orange-500 flex-1' : 'bg-transparent'
-                                    }`}
-                                onClick={() => handleFilterByType('REMOTE_SERVICE')}
-                            >
-                                Remote
-                            </button>
-                            <button
-                                className={`px-6 py-2 rounded-full text-status-darkViolet font-bold text-lg focus:outline-none ${selectedService === 'PHYSICAL_SERVICE' ? 'bg-orange-500  flex-1' : 'bg-transparent'
-                                    }`}
-                                onClick={() => handleFilterByType('PHYSICAL_SERVICE')}
-                            >
-                                In Person
-                            </button>
-                        </div>
-                    </div>
-                </Dropdown>
-
-                {/* Price */}
-                <Dropdown
-                    trigger={() => (
-                        <div className="w-full border-2 border-primary text-primary bg-[#F1F1F2] flex items-center justify-center space-x-2 font-semibold py-2 px-4 rounded-full">
-                            <h2>Pricing</h2>
-                            <FaSortDown />
-                        </div>
-                    )}
-                    className='-left-24 top-14'>
-                    <form className='bg-white min-w-[240px] rounded-2xl flex items-center p-4'>
-                        <div className="space-y-8 w-full p-3">
-                            <h4 className="text-xl text-[#190E3F] font-medium">Price</h4>
-                            <div className="text-2xl text-black font-bold text-center mb-6">
-                                ${priceValues[0]} - ${priceValues[1]}
-                            </div>
-                            <ReactSlider
-                                className="relative w-full h-2 bg-[#FE9B07] rounded-2xl"
-                                thumbClassName="absolute h-6 w-6 bg-[#FE9B07] rounded-full cursor-grab transform -translate-y-1/2 top-1/2"
-                                trackClassName="top-1/2 bg-[#FE9B07]"
-                                value={priceValues}
-                                min={5}
-                                max={10000}
-                                step={5}
-                                onChange={(newValues) => setPriceValues(newValues as [number, number])}
-                            />
-                            <div className="flex items-center justify-between space-x-8 w-full">
-                                <Button theme="outline" className="rounded-full" onClick={() => setPriceValues([5, 10000])}>
-                                    Cancel
-                                </Button>
-                                <Button className="rounded-full" onClick={() => handleFilterByPriceRange(priceValues[0], priceValues[1])}>
-                                    Apply
-                                </Button>
-                            </div>
-                        </div>
-                    </form>
-                </Dropdown>
-
-                {/* Others */}
-                <Dropdown
-                    trigger={() => (
-                        <div className="w-full border-2 border-primary text-primary bg-[#F1F1F2] flex items-center justify-center space-x-2 font-semibold py-2 px-4 rounded-full">
-                            <h2>Others</h2>
-                            <FaSortDown />
-                        </div>
-                    )}
-                    className='left-0 right-0 mx-auto top-14'>
-                    <form className='bg-white rounded-2xl p-4'>
-                        <h4 className="text-lg text-black font-medium mb-4 px-2">Others</h4>
-                        {otherOptionsDropdown.map((option, index) => (
-                            <div
-                                key={index}
-                                onClick={option.onClick}
-                                className='flex w-full transition-all text-[#140B31] overflow-y-auto text-base font-bold hover:text-tc-orange cursor-pointer items-center justify-between p-2'>
-                                <div className="">
-                                    {option.label}
+                        )}
+                        className='-left-24 top-14'>
+                        <form className='bg-white min-w-[240px] rounded-2xl flex items-center p-4'>
+                            <div className="space-y-8 w-full p-3">
+                                <h4 className="text-lg text-[#190E3F] font-medium">Distance</h4>
+                                <div className="text-2xl text-black font-bold text-center mb-6">
+                                    {locationValues[0]}km - {locationValues[1]}km
+                                </div>
+                                <ReactSlider
+                                    className="relative w-full h-2 bg-[#FE9B07] rounded-2xl"
+                                    thumbClassName="absolute h-6 w-6 bg-[#FE9B07] rounded-full cursor-grab transform -translate-y-1/2 top-1/2"
+                                    trackClassName="top-1/2 bg-[#FE9B07]"
+                                    value={locationValues}
+                                    min={1}
+                                    max={50}
+                                    step={1}
+                                    onChange={(newValues) => setLocationValues(newValues as [number, number])}
+                                />
+                                <div className="flex items-center justify-between space-x-4 w-full">
+                                    <Button theme="outline" className="rounded-full" onClick={() => setLocationValues([1, 50])}>
+                                        Cancel
+                                    </Button>
+                                    <Button className="rounded-full">
+                                        Apply
+                                    </Button>
                                 </div>
                             </div>
-                        ))}
-                    </form>
-                </Dropdown>
+                        </form>
+                    </Dropdown>
+                </div>
+
+                {/* Type of service */}
+                <div className="">
+                    <Dropdown
+                        trigger={() => (
+                            <div id="typeOfService" className="w-[200px] border-2 border-primary bg-[#F1F1F2] flex items-center justify-center space-x-2 text-primary font-semibold py-2 px-4 rounded-full">
+                                <h2 className="text-sm">Type of service</h2>
+                                <IoMdArrowDropdown />
+                            </div>
+                        )}
+                        className='-left-24 top-14'>
+                        <div className='bg-white min-w-[240px] rounded-2xl p-4 space-y-8'>
+                            <h4 className="text-xl text-[#190E3F] font-medium">Type of service</h4>
+                            <div className="flex mb-6 w-full rounded-full bg-orange-100">
+                                <button
+                                    className={`px-6 py-2 rounded-full text-status-darkViolet font-bold text-lg focus:outline-none ${selectedService === 'REMOTE_SERVICE' ? 'bg-orange-500 flex-1' : 'bg-transparent'
+                                        }`}
+                                    onClick={() => handleFilterByType('REMOTE_SERVICE')}
+                                >
+                                    Remote
+                                </button>
+                                <button
+                                    className={`px-6 py-2 rounded-full text-status-darkViolet font-bold text-lg focus:outline-none ${selectedService === 'PHYSICAL_SERVICE' ? 'bg-orange-500  flex-1' : 'bg-transparent'
+                                        }`}
+                                    onClick={() => handleFilterByType('PHYSICAL_SERVICE')}
+                                >
+                                    In Person
+                                </button>
+                            </div>
+                        </div>
+                    </Dropdown>
+                </div>
+
+                {/* Price */}
+                <div className="">
+                    <Dropdown
+                        trigger={() => (
+                            <div className="w-[130px] border-2 border-primary text-primary bg-[#F1F1F2] flex items-center justify-center space-x-2 font-semibold py-2 px-4 rounded-full">
+                                <h2 className="text-sm">Pricing</h2>
+                                <IoMdArrowDropdown />
+                            </div>
+                        )}
+                        className='-left-24 top-14'>
+                        <form className='bg-white min-w-[240px] rounded-2xl flex items-center p-4'>
+                            <div className="space-y-8 w-full p-3">
+                                <h4 className="text-xl text-[#190E3F] font-medium">Price</h4>
+                                <div className="text-2xl text-black font-bold text-center mb-6">
+                                    ${priceValues[0]} - ${priceValues[1]}
+                                </div>
+                                <ReactSlider
+                                    className="relative w-full h-2 bg-[#FE9B07] rounded-2xl"
+                                    thumbClassName="absolute h-6 w-6 bg-[#FE9B07] rounded-full cursor-grab transform -translate-y-1/2 top-1/2"
+                                    trackClassName="top-1/2 bg-[#FE9B07]"
+                                    value={priceValues}
+                                    min={5}
+                                    max={10000}
+                                    step={5}
+                                    onChange={(newValues) => setPriceValues(newValues as [number, number])}
+                                />
+                                <div className="flex items-center justify-between space-x-8 w-full">
+                                    <Button theme="outline" className="rounded-full" onClick={() => setPriceValues([5, 10000])}>
+                                        Cancel
+                                    </Button>
+                                    <Button className="rounded-full" onClick={() => handleFilterByPriceRange(priceValues[0], priceValues[1])}>
+                                        Apply
+                                    </Button>
+                                </div>
+                            </div>
+                        </form>
+                    </Dropdown>
+                </div>
+
+                {/* Others */}
+                <div className="">
+                    <Dropdown
+                        trigger={() => (
+                            <div className="w-[130px] border-2 border-primary text-primary bg-[#F1F1F2] flex items-center justify-center space-x-2 font-semibold py-2 px-4 rounded-full">
+                                <h2 className="text-sm">Others</h2>
+                                <IoMdArrowDropdown />
+                            </div>
+                        )}
+                        className='left-0 right-0 top-14'>
+                        <form className='bg-white rounded-2xl p-4 min-w-[240px]'>
+                            {otherOptionsDropdown.map((option, index) => (
+                                <div
+                                    key={index}
+                                    onClick={option.onClick}
+                                    className='flex w-full transition-all text-[#140B31] overflow-y-auto text-base font-bold hover:text-tc-orange cursor-pointer items-center justify-between p-2'>
+                                    <div className="">
+                                        {option.label}
+                                    </div>
+                                </div>
+                            ))}
+                        </form>
+                    </Dropdown>
+                </div>
 
             </div>
+
+            {/* Mobile filters */}
             <div className="flex items-center justify-center w-full">
                 <div className="lg:hidden mt-5">
                     <Dropdown
@@ -381,7 +400,7 @@ const Tasks = () => {
                             <form action="" className="space-y-8 mt-5">
                                 <h3 className="font-bold text-status-darkViolet text-2xl">Services</h3>
                                 {categoriesData.map((category, index) => (
-                                    <div className="flex items-center space-x-3 cursor-pointer hover:underline" key={index}>
+                                    <div className="flex items-center space-x-3 cursor-pointer hover:underline" key={index} onClick={() => handleFilterByCategory(category.id)}>
                                         <div className="w-3 h-3 bg-tc-orange rounded-full" />
                                         <div className="font-medium text-lg text-primary">{category.categoryName}</div>
                                     </div>
@@ -459,24 +478,25 @@ const Tasks = () => {
                     <div className="flex justify-center items-center my-4">
                         <button
                             onClick={() => handlePageChange(currentPage - 1)}
-                            disabled={currentPage === 0}
-                            className={`bg-primary text-white mr-10 rounded max-lg:text-xs lg:rounded-[10px] h-[39px] w-[39px] flex items-center justify-center ${currentPage === 0 && 'bg-status-violet'}`}
+                            disabled={currentPage === 1}
+                            className={`bg-primary text-white mr-10 rounded max-lg:text-xs lg:rounded-[10px] h-[39px] w-[39px] flex items-center justify-center ${currentPage === 1 && 'bg-status-violet'}`}
                         >
                             <FaChevronLeft />
                         </button>
-                        {tasksData && Array.from({ length: tasksData.totalPages }, (_, index) => (
+                        {Array.from({ length: totalPages }, (_, index) => (
                             <button
                                 key={index}
-                                onClick={() => handlePageChange(index)}
-                                className={`border font-bold rounded max-lg:text-xs mx-2 lg:rounded-[10px] h-[39px] w-[39px] flex items-center justify-center ${currentPage === index ? 'bg-primary text-white' : 'bg-white text-primary'}`}
+                                onClick={() => handlePageChange(index + 1)}
+                                className={`border font-bold rounded max-lg:text-xs mx-2 lg:rounded-[10px] h-[39px] w-[39px] flex items-center justify-center ${currentPage === index + 1 ? 'bg-primary text-white' : 'bg-white text-primary '}`}
                             >
                                 {index + 1}
                             </button>
                         ))}
                         <button
                             onClick={() => handlePageChange(currentPage + 1)}
-                            disabled={currentPage === tasksData?.totalPages! - 1}
-                            className={`bg-primary text-white ml-10 rounded max-lg:text-xs lg:rounded-[10px] h-[39px] w-[39px] flex items-center justify-center ${currentPage === tasksData?.totalPages! - 1 && 'bg-status-violet'}`}
+                            disabled={currentPage === totalPages}
+                            className={`bg-primary text-white ml-10 rounded max-lg:text-xs lg:rounded-[10px] h-[39px] w-[39px] flex items-center justify-center ${currentPage === totalPages && 'bg-status-violet'
+                                }`}
                         >
                             <FaChevronRight />
                         </button>

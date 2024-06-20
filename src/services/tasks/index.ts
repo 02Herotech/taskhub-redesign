@@ -3,6 +3,7 @@ import {
   GetFilterTaskByPriceRequest,
   GetFilterTaskByTypeRequest,
   GetSingleTasksResponse,
+  GetTaskByTextRequest,
   GetTasksRequest,
   GetTasksResponse,
 } from "@/types/services/tasks";
@@ -130,6 +131,10 @@ export const task = createApi({
       query: (id) => postRequest(`/delete-task/${id}`,{}),
       invalidatesTags: ["Task"],
     }),
+    searchTaskByText: builder.query<GetTasksResponse, GetTaskByTextRequest>({
+      query: (credentials) => getRequest(`/text/${credentials.pageNumber}?text=${credentials.text}`),
+      providesTags: ["Task"],
+    }),
   }),
 });
 
@@ -146,4 +151,5 @@ export const {
   useGetCustomerOngoingTasksQuery,
   useGetCustomerCompletedTasksQuery,
   useDeleteTaskMutation,
+  useSearchTaskByTextQuery,
 } = task;
