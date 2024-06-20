@@ -111,37 +111,38 @@ export const mobileServiceProviderLinks: Link[] = [
 ];
 
 export const mobileCustomerLinks: Link[] = [
-  {
-    label: "Add a task",
-    url: "/customer/add-task",
-  },
-  {
-    label: "Marketplace",
-    url: "/marketplace",
-  },
-  {
-    label: "Profile",
-    sublinks: [
-      {
-        label: "My Profile",
-        url: "/customer/profile",
-      },
-      {
-        label: "My Tasks",
-        url: "/customer/tasks",
-      },
-      {
-        label: "My Notifications",
-        url: "/customer/notifications",
-      },
-      {
-        label: "Payments settings",
-        url: "/customer/payment/payment-history",
-      },
-      {
-        label: "Settings",
-        url: "/customer/settings",
-      },
-    ],
-  },
+    {
+        label: "Add a task",
+        url: "/customer/add-task",
+    },
+    {
+        label: "Marketplace",
+        url: "/marketplace",
+    },
+    {
+        label: "Profile",
+        sublinks: [
+            {
+                label: "My Profile",
+                url: "/customer/profile",
+            },
+            {
+                label: "My Tasks",
+                url: "/customer/tasks",
+            },
+            {
+                label: "My Notifications",
+                url: "/customer/notifications",
+            },
+            {
+                label: "Payment settings",
+                url: "/customer/payment/payment-history",
+            },
+            {
+                label: "Settings",
+                url: "/customer/settings",
+            },
+        ]
+    }
 ];
+

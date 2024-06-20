@@ -118,7 +118,7 @@ const ChangePassword = () => {
                     <form onSubmit={handlePasswordVerification} className="mx-auto flex w-full flex-col rounded-xl  bg-violet-light p-3 lg:py-6 lg:px-10">
                         <label
                             htmlFor="checkPassword"
-                            className="text-base lg:text-2xl font-bold text-violet-900 my-4"
+                            className="text-base lg:text-2xl font-bold text-[#140B31] my-4"
                         >
                             Current Password
                         </label>

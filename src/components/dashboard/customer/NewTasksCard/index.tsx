@@ -56,13 +56,13 @@ const NewTasksCard = ({ task }: TaskCardProps) => {
                         className={`small-scrollbar right-0 absolute top-[calc(100%+0.2rem)] flex max-h-0 w-[190px] flex-col rounded-md bg-[#EBE9F4] transition-all duration-300 ${isDropdownOpen ? "max-h-64 overflow-y-auto border border-primary" : "max-h-0 overflow-hidden"
                             }`}
                     >
-                        <div className="p-5 space-y-3 w-full">
+                        <div className="p-2 space-y-2 w-full">
                             {dropDownItems.map((item, index) => (
                                 <button key={index} onClick={item.onClick} className="flex items-center space-x-3">
                                     <span className="bg-[#140B31] p-1 rounded-full size-9 flex items-center justify-center text-white">
                                         {item.icon}
                                     </span>
-                                    <span className='lg:text-xl text-[#140B31] font-satoshiMedium'>{item.title}</span>
+                                    <span className='lg:text-lg text-[#140B31] font-satoshiMedium'>{item.title}</span>
                                 </button>
                             ))}
                         </div>

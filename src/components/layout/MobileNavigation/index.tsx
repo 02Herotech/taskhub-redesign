@@ -91,7 +91,7 @@ const MobileNavigation = ({ setShowMobileNav }: Props) => {
               </button>
             </div>
           )}
-          <ul className="my-[40px] space-y-7">
+          <ul className="my-[40px] overflow-y-scroll h-[60vh] space-y-7">
             {currentLinks.map((link, index) => {
               const isActive =
                 (link.url === "/" && pathname === "/") ||

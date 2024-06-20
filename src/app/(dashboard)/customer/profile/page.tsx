@@ -19,7 +19,7 @@ const CustomerProfilePage = () => {
         >
           <CustomerProfileCompletion />
         </motion.div>
-        <div className="col-span-5 space-y-5">
+        <div className="col-span-6 space-y-5">
           <motion.div
             className=""
             initial={{ opacity: 0, translateY: "5rem" }}
@@ -37,14 +37,14 @@ const CustomerProfilePage = () => {
             Refer and Earn
           </motion.div> */}
         </div>
-        {/* <motion.div
-          className="col-span-7 h-full"
+        <motion.div
+          className="col-span-6 h-full"
           initial={{ opacity: 0, translateY: "5rem" }}
           whileInView={{ opacity: 1, translateY: "0" }}
           transition={{ duration: 1.2 }}
         >
           <TopActivities />
-        </motion.div> */}
+        </motion.div>
       </section>
     </main>
   );

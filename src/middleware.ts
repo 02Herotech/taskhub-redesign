@@ -111,6 +111,7 @@ export const config = {
   matcher: [
     "/explore/:path*",
     "/customer/notifications/:path*",
+    "/customer/notification-settings/:path*",
     "/customer/password/:path*",
     "/customer/payment/:path*",
     "/customer/profile/:path*",

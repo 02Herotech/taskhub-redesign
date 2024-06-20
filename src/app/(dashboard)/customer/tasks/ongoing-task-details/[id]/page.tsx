@@ -152,8 +152,8 @@ const OnogoingTaskDetailsPage = ({ params }: { params: { id: string } }) => {
             )}
 
             <div className='p-4 lg:px-14 mt-[4rem]'>
-                <div className="mt-14 mb-8 space-y-8">
-                    <h4 className='text-[#140B31] font-satoshiBold font-bold text-3xl lg:text-5xl'>My Tasks</h4>
+                <div className="mt-14 mb-4 space-y-8">
+                    <h4 className='text-[#140B31] font-satoshiBold font-bold text-2xl lg:text-4xl'>My Tasks</h4>
                     <div className='border-2 border-primary' />
                 </div>
                 <div className="flex items-center space-x-2 mb-5">
@@ -172,8 +172,8 @@ const OnogoingTaskDetailsPage = ({ params }: { params: { id: string } }) => {
                 </div>
                 <div className="mt-8 lg:flex lg:space-x-8 justify-between border-b border-[#C1BADB] pb-8">
                     <div className="space-y-5 flex-1">
-                        <h1 className='text-primary font-satoshiBold text-3xl'>{task.taskBriefDescription}</h1>
-                        <h5 className='text-black text-xl'>{task.taskDescription}</h5>
+                        <h1 className='text-primary font-bold text-2xl'>{task.taskBriefDescription}</h1>
+                        <h5 className='text-black font-satoshiMedium'>{task.taskDescription}</h5>
                         <div className="relative">
                             <button
                                 className="w-[190px] flex items-center justify-center gap-x-4 rounded-3xl bg-[#F1F1F2] px-4 py-2 text-base font-bold text-[#140B31] transition-colors duration-300"

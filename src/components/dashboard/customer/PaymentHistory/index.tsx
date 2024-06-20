@@ -5,6 +5,7 @@ import { formatAmount } from "@/lib/utils";
 import Button from "@/components/global/Button";
 import Popup from '@/components/global/Popup';
 import { FiClock } from 'react-icons/fi';
+import { useSession } from 'next-auth/react';
 
 type CustomerPaymentHistoryProps = {
     transactionTitle: string;
@@ -103,6 +104,8 @@ const PaymentHistory = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedPayment, setSelectedPayment] = useState<CustomerPaymentHistoryProps | null>(null);
     const todayDate = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+    const session = useSession()
+    console.log(session)
 
     const handleLoadMore = () => {
         setVisibleTransactions(prevVisible => prevVisible + visibleTransactions);
@@ -120,15 +123,15 @@ const PaymentHistory = () => {
 
     return (
         <div className="w-full bg-[#EBE9F4] rounded-[20px] p-4 font-satoshi">
-            <h3 className="text-[#140B31] font-satoshiBold text-base mb-5">{todayDate}</h3>
+            <h3 className="text-[#140B31] font-satoshiBold font-bold text-base mb-5">{todayDate}</h3>
             <div className="space-y-5">
                 {CustomerPaymentHistoryData.slice(0, visibleTransactions).map((data, index) => (
                     <div
                         key={index}
-                        className="flex max-lg:flex-col lg:items-center justify-between px-5 py-3 border-b border-primary cursor-pointer"
+                        className="flex items-center max-lg:space-x-3 lg:justify-between px-5 py-3 border-b border-primary cursor-pointer"
                         onClick={() => handleCardClick(data)}
                     >
-                        <div className="flex items-center space-x-5">
+                        <div className="flex items-center w-full flex-1 space-x-5">
                             <div className="w-14 h-14 bg-[#C1BADB] rounded-full flex items-center justify-center">
                                 <div className="w-7 h-7 bg-white rounded-full" />
                             </div>

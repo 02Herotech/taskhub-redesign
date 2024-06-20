@@ -68,7 +68,7 @@ const Invoices = () => {
             setLoading(false);
         } catch (error) {
             setLoading(false);
-            console.error('Error fetching payment intent:', error);
+            console.log('Error fetching payment intent:', error);
             setError('Invoice has already been paid for');
         }
     };
@@ -94,7 +94,7 @@ const Invoices = () => {
     return (
         <>
             <div className="w-full bg-[#EBE9F4] rounded-[20px] p-4 font-satoshi">
-                <h3 className="text-[#140B31] font-satoshiBold text-base mb-5">{todayDate}</h3>
+                <h3 className="text-[#140B31] font-satoshiBold font-bold text-base mb-5">{todayDate}</h3>
                 {invoices.length === 0 && (
                     <div className="flex flex-col items-center justify-center space-y-5 h-[50vh]">
                         <h2 className="text-2xl font-bold text-primary text-center">No invoice found</h2>
