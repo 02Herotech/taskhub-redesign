@@ -36,6 +36,8 @@ const Navigation = () => {
     auth = JSON.parse(authStatus);
   }
 
+  console.log(auth);
+
   const handleLogout = async () => {
     try {
       await signOut();
