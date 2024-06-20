@@ -250,7 +250,7 @@ const ProvideService: React.FC = () => {
     if (!task.image1) {
       err.image = "Please fill out all required fields";
     }
-    
+
     setErr(err);
     return Object.keys(err).length === 0;
   };
@@ -536,10 +536,17 @@ const ProvideService: React.FC = () => {
                 onSubmit={nextPage}
               >
                 <div className="grid space-y-4">
-                  <label className="font-semibold">
-                    Write a short title that accurately describes your service.{" "}
-                    <span className="font-extrabold text-[#ff0000]">*</span>
-                  </label>
+                  <div className="flex items-center justify-between gap-3">
+                    <label className="font-semibold text-[13px] lg:text-[16px]">
+                      Write a short title that accurately describes your service.{" "}
+                      <span className="font-extrabold text-[#ff0000]">*</span>
+                    </label>
+                    {task.listingTitle && (
+                      <div className="h-[16px] w-[16px] rounded-3xl bg-[#4CAF50] text-[16px] font-extrabold text-white">
+                        <GrFormCheckmark />
+                      </div>
+                    )}
+                  </div>
                   <input
                     type="text"
                     name="listingTitle"
@@ -550,10 +557,17 @@ const ProvideService: React.FC = () => {
                   />
                 </div>
                 <div className="relative grid space-y-4">
-                  <label className="font-semibold">
-                    Choose the best category for your listing.{" "}
-                    <span className="font-extrabold text-[#ff0000]">*</span>
-                  </label>
+                  <div className="flex items-center justify-between gap-3">
+                    <label className="font-semibold text-[13px] lg:text-[16px]">
+                      Choose the best category for your listing.{" "}
+                      <span className="font-extrabold text-[#ff0000]">*</span>
+                    </label>
+                    {selectedCategory && (
+                      <div className="h-[16px] w-[16px] rounded-3xl bg-[#4CAF50] text-[16px] font-extrabold text-white">
+                        <GrFormCheckmark />
+                      </div>
+                    )}
+                  </div>
                   <Dropdown
                     trigger={() => (
                       <div
@@ -584,10 +598,17 @@ const ProvideService: React.FC = () => {
                   </Dropdown>
                 </div>
                 <div className="relative grid space-y-4">
-                  <label className="font-bold">
-                    Choose a subcategory.{" "}
-                    <span className="font-extrabold text-[#ff0000]">*</span>
-                  </label>
+                  <div className="flex items-center justify-between gap-3">
+                    <label className="font-bold text-[13px] lg:text-[16px]">
+                      Choose a subcategory.{" "}
+                      <span className="font-extrabold text-[#ff0000]">*</span>
+                    </label>
+                    {selectedSubCategory && (
+                      <div className="h-[16px] w-[16px] rounded-3xl bg-[#4CAF50] text-[16px] font-extrabold text-white">
+                        <GrFormCheckmark />
+                      </div>
+                    )}
+                  </div>
                   <Dropdown
                     trigger={() => (
                       <div
@@ -625,10 +646,17 @@ const ProvideService: React.FC = () => {
                   />
                 </div>
                 <div className="grid space-y-3">
-                  <label className="font-semibold">
-                    Please give a detailed description of the service{" "}
-                    <span className="font-extrabold text-[#ff0000]">*</span>
-                  </label>
+                  <div className="flex items-center justify-between gap-3">
+                    <label className="font-semibold text-[13px] lg:text-[16px]">
+                      Please give a detailed description of the service{" "}
+                      <span className="font-extrabold text-[#ff0000]">*</span>
+                    </label>
+                    {task.listingDescription && (
+                      <div className="h-[16px] w-[16px] rounded-3xl bg-[#4CAF50] text-[16px] font-extrabold text-white">
+                        <GrFormCheckmark />
+                      </div>
+                    )}
+                  </div>
                   <textarea
                     className={` h-[350px] rounded-2xl bg-[#EBE9F4] p-3 placeholder:text-[12px] placeholder:font-satoshi placeholder:text-status-darkpurple ${errors.description ? "border border-[#ff0000] outline-[#FF0000]" : "border-none outline-none"}`}
                     placeholder="Casual Babysitting"
@@ -661,13 +689,13 @@ const ProvideService: React.FC = () => {
         );
       case 2:
         return (
-          <div className="mb-10 space-y-10 lg:w-[470px]">
+          <div className="mb-10 space-y-10">
             <form
               onSubmit={nextPages}
               className="space-y-10 font-satoshi font-medium "
             >
               <div className="space-y-4">
-                <h2 className="font-bold">
+                <h2 className="font-bold text-[13px] lg:text-[16px]">
                   Choose the pricing plans.{" "}
                   <span className="font-extrabold text-[#ff0000]">*</span>
                 </h2>
@@ -680,18 +708,17 @@ const ProvideService: React.FC = () => {
                       onChange={handleCheckboxChange}
                       className="mr-2"
                     />
-                    <span className="text-[#381F8C]">
+                    <span className="text-[#381F8C] text-[13px] lg:text-[16px]">
                       Payment plans are negotiable
                     </span>
                   </div>
                 </div>
                 <div className="relative grid space-y-4 text-[13px] text-[#221354]">
                   <input
-                    className={`rounded-2xl ${
-                      activePlanIndex === 0
+                    className={`rounded-2xl ${activePlanIndex === 0
                         ? " disabled bg-transparent p-1 text-lg font-bold text-status-darkViolet"
                         : "bg-[#EBE9F4] p-4 hover:bg-status-darkViolet hover:text-white "
-                    } cursor-pointer text-left outline-none placeholder:font-satoshiMedium placeholder:font-medium placeholder:text-[#2A1769] hover:placeholder:text-white `}
+                      } cursor-pointer text-left outline-none placeholder:font-satoshiMedium placeholder:font-medium placeholder:text-[#2A1769] hover:placeholder:text-white `}
                     name="physical"
                     onClick={() => handlePlan(0)}
                     placeholder="Plan 1"
@@ -700,7 +727,7 @@ const ProvideService: React.FC = () => {
                   />
                   {isOpen && activePlanIndex === 0 && (
                     <div className="space-y-3">
-                      <label className="font-semibold">
+                      <label className="font-semibold text-[13px] lg:text-[16px]">
                         Give Details about everything this plan includes
                       </label>
                       <div className="grid space-y-3 rounded-2xl border-2 pb-5">
@@ -714,7 +741,8 @@ const ProvideService: React.FC = () => {
                         <label className="pl-2 font-satoshiMedium">Price</label>
                         <div className="relative flex items-center space-x-2 pl-2">
                           <input
-                            type="text"
+                            type="number"
+                            min="25"
                             name="planOnePrice"
                             value={
                               task.planOnePrice !== null
@@ -723,7 +751,7 @@ const ProvideService: React.FC = () => {
                             }
                             onChange={handlePrice}
                             placeholder="500"
-                            className={`w-1/3 rounded-2xl bg-[#EBE9F4] p-3 pl-5 font-satoshiMedium text-[13px]  ${error.price ? "border border-[#ff0000] outline-[#FF0000]" : "border-none outline-none"}`}
+                            className={` rounded-2xl bg-[#EBE9F4] p-3 pl-5 font-satoshiMedium text-[13px]  ${error.price ? "border border-[#ff0000] outline-[#FF0000]" : "border-none outline-none"}`}
                           />
                           <p className="absolute left-3 top-3">$</p>
                           <p className="font-extraBold text-xs text-[#140B31]">
@@ -734,11 +762,10 @@ const ProvideService: React.FC = () => {
                     </div>
                   )}
                   <input
-                    className={`rounded-2xl ${
-                      activePlanIndex === 1
+                    className={`rounded-2xl ${activePlanIndex === 1
                         ? " disabled bg-transparent p-1 text-lg font-bold text-status-darkViolet"
                         : "bg-[#EBE9F4] p-4 hover:bg-status-darkViolet hover:text-white"
-                    } cursor-pointer text-left outline-none placeholder:font-satoshiMedium placeholder:font-medium placeholder:text-[#2A1769] hover:placeholder:text-white`}
+                      } cursor-pointer text-left outline-none placeholder:font-satoshiMedium placeholder:font-medium placeholder:text-[#2A1769] hover:placeholder:text-white`}
                     name="physical"
                     onClick={() => handlePlan(1)}
                     placeholder="Plan 2  (Optional)"
@@ -747,7 +774,7 @@ const ProvideService: React.FC = () => {
                   />
                   {isOpen && activePlanIndex === 1 && (
                     <div>
-                      <label className="font-bold">
+                      <label className="font-bold text-[13px] lg:text-[16px]">
                         Give Details about everything this plan includes
                       </label>
                       <div className="grid space-y-3 rounded-2xl border-2 pb-5">
@@ -761,8 +788,9 @@ const ProvideService: React.FC = () => {
                         <label className="pl-2 font-bold">Price</label>
                         <div className="relative flex items-center space-x-2 pl-2">
                           <input
-                            type="text"
+                            type="number"
                             name="planTwoPrice"
+                            min="25"
                             value={
                               task.planTwoPrice !== null
                                 ? task.planTwoPrice
@@ -781,11 +809,10 @@ const ProvideService: React.FC = () => {
                     </div>
                   )}
                   <input
-                    className={`rounded-2xl ${
-                      activePlanIndex === 2
+                    className={`rounded-2xl ${activePlanIndex === 2
                         ? " disabled bg-transparent p-1 text-lg font-bold text-status-darkViolet"
                         : "bg-[#EBE9F4] p-4 hover:bg-status-darkViolet hover:text-white"
-                    } cursor-pointer text-left outline-none placeholder:font-satoshiMedium placeholder:font-medium placeholder:text-[#2A1769] hover:placeholder:text-white`}
+                      } cursor-pointer text-left outline-none placeholder:font-satoshiMedium placeholder:font-medium placeholder:text-[#2A1769] hover:placeholder:text-white`}
                     name="physical"
                     onClick={() => handlePlan(2)}
                     placeholder="Plan 3  (Optional)"
@@ -794,7 +821,7 @@ const ProvideService: React.FC = () => {
                   />
                   {isOpen && activePlanIndex === 2 && (
                     <div>
-                      <label className="font-bold">
+                      <label className="font-bold text-[13px] lg:text-[16px]">
                         Give Details about everything this plan includes
                       </label>
                       <div className="grid space-y-3 rounded-2xl border-2 pb-5">
@@ -808,7 +835,8 @@ const ProvideService: React.FC = () => {
                         <label className="pl-2 font-bold">Price</label>
                         <div className="relative flex items-center space-x-2 pl-2">
                           <input
-                            type="text"
+                            type="number"
+                            min="25"
                             name="planThreePrice"
                             value={
                               task.planThreePrice !== null
@@ -836,11 +864,10 @@ const ProvideService: React.FC = () => {
                 </h2>
                 <div className="flex space-x-4 text-[13px] text-[#221354]">
                   <input
-                    className={`rounded-2xl p-2 ${
-                      activeButtonIndex === 0
+                    className={`rounded-2xl p-2 ${activeButtonIndex === 0
                         ? "bg-status-purpleBase text-white"
                         : "bg-[#EBE9F4] placeholder:text-white hover:bg-status-purpleBase hover:text-white"
-                    } cursor-pointer outline-none font-satoshiBold text-status-darkpurple text-center`}
+                      } cursor-pointer outline-none font-satoshiBold text-status-darkpurple text-center`}
                     name="physical"
                     onClick={() => handleClick(0)}
                     placeholder="Physical Services"
@@ -848,11 +875,10 @@ const ProvideService: React.FC = () => {
                     readOnly
                   />
                   <input
-                    className={`rounded-2xl p-2 ${
-                      activeButtonIndex === 1
+                    className={`rounded-2xl p-2 ${activeButtonIndex === 1
                         ? "bg-status-purpleBase text-white"
                         : "bg-[#EBE9F4] placeholder:text-white hover:bg-status-purpleBase hover:text-white "
-                    } cursor-pointer outline-none font-satoshiBold text-status-darkpurple text-center`}
+                      } cursor-pointer outline-none font-satoshiBold text-status-darkpurple text-center`}
                     name="remote"
                     onClick={() => {
                       handleClick(1);
@@ -968,7 +994,7 @@ const ProvideService: React.FC = () => {
                     <div
                       className={`flex h-10 w-full items-center justify-between rounded-2xl border border-tc-gray bg-[#EBE9F4] px-3 py-1 text-[14px] outline-none lg:w-1/2 ${err.availableDays ? "border border-[#ff0000] outline-[#FF0000]" : "border-none outline-none"}`}
                     >
-                      <h2>
+                      <h2 className="text-[13px] lg:text-[16px]">
                         Available Days{" "}
                         <span className="font-extrabold text-[#ff0000]">*</span>
                       </h2>
@@ -1013,7 +1039,7 @@ const ProvideService: React.FC = () => {
                 </div>
               </div>
               <div className="space-y-3">
-                <label className="text-status-darkpurple">
+                <label className="text-status-darkpurple text-[13px] lg:text-[16px]">
                   Upload an Image <br /> This is the main image that would be
                   seen by customers{" "}
                   <span className="font-extrabold text-[#ff0000]">*</span>
@@ -1052,8 +1078,8 @@ const ProvideService: React.FC = () => {
                     htmlFor="file-upload-main"
                     className={`flex h-48 w-1/2 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed p-4 lg:w-2/5  ${err.image ? "border border-[#ff0000] outline-[#FF0000]" : "border-2 border-[#EBE9F4] outline-none"}`}
                   >
-                      <PiFileArrowDownDuotone className="text-xl text-[#a3a1ac]" />
-                      <span className="text-center font-bold text-[#a3a1ac]">
+                    <PiFileArrowDownDuotone className="text-xl text-[#a3a1ac]" />
+                    <span className="text-center font-bold text-[#a3a1ac]">
                       File Upload supports: JPG, PDF, PNG.
                     </span>
                     <input
@@ -1070,9 +1096,9 @@ const ProvideService: React.FC = () => {
                   <div className="text-red-500">{errs.image1}</div>
                 )}
               </div>
-              
+
               <div className="space-y-4">
-                <p>Add a portfolio (Images /videos)</p>
+                <p className="text-[13px] lg:text-[16px]">Add a portfolio (Images /videos)</p>
                 <div className="flex flex-col space-y-3 lg:flex-row lg:space-x-3 lg:space-y-0">
                   <div className=" space-y-3">
                     {task.image2 ? (
@@ -1108,8 +1134,8 @@ const ProvideService: React.FC = () => {
                         htmlFor="file-upload-1"
                         className="flex h-48 w-1/2 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-[#EBE9F4] p-4 lg:w-full "
                       >
-                          <PiFileArrowDownDuotone className="text-xl text-[#a3a1ac]" />
-                          <span className="text-center font-bold text-[#a3a1ac]">
+                        <PiFileArrowDownDuotone className="text-xl text-[#a3a1ac]" />
+                        <span className="text-center font-bold text-[#a3a1ac]">
                           File Upload supports: JPG, PDF, PNG.
                         </span>
                         <input
@@ -1126,7 +1152,7 @@ const ProvideService: React.FC = () => {
                       <div className="text-red-500">{errs.image2}</div>
                     )}
                   </div>
-                  
+
                   <div className=" space-y-3">
                     {task.image3 ? (
                       <div className="relative flex items-end ">
@@ -1160,8 +1186,8 @@ const ProvideService: React.FC = () => {
                         htmlFor="file-upload-2"
                         className="flex h-48 w-1/2 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-[#EBE9F4] p-4 lg:w-full "
                       >
-                          <PiFileArrowDownDuotone className="text-xl text-[#a3a1ac]" />
-                          <span className="text-center font-bold text-[#a3a1ac]">
+                        <PiFileArrowDownDuotone className="text-xl text-[#a3a1ac]" />
+                        <span className="text-center font-bold text-[#a3a1ac]">
                           File Upload supports: JPG, PDF, PNG.
                         </span>
                         <input
@@ -1178,7 +1204,7 @@ const ProvideService: React.FC = () => {
                       <div className="text-red-500">{errs.image3}</div>
                     )}
                   </div>
-                  
+
                   <div className=" space-y-3">
                     {task.image4 ? (
                       <div className="relative flex items-end">
@@ -1212,8 +1238,8 @@ const ProvideService: React.FC = () => {
                         htmlFor="file-upload-3"
                         className="flex h-48 w-1/2 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-[#EBE9F4] p-4 lg:w-full "
                       >
-                          <PiFileArrowDownDuotone className="text-xl text-[#a3a1ac]" />
-                          <span className="text-center font-bold text-[#a3a1ac]">
+                        <PiFileArrowDownDuotone className="text-xl text-[#a3a1ac]" />
+                        <span className="text-center font-bold text-[#a3a1ac]">
                           File Upload supports: JPG, PDF, PNG.
                         </span>
                         <input
@@ -1230,7 +1256,7 @@ const ProvideService: React.FC = () => {
                       <div className="text-red-500">{errs.image4}</div>
                     )}
                   </div>
-                  
+
                 </div>
               </div>
               <div className="text-red-600">
@@ -1266,19 +1292,17 @@ const ProvideService: React.FC = () => {
         <div className="fixed left-0 top-20 z-10 w-full border-t-2 bg-white shadow-md">
           <div className="mb-3 flex justify-center pt-4 font-bold md:space-x-5">
             <div
-              className={`${
-                currentPage === 1
+              className={`${currentPage === 1
                   ? "text-status-purpleBase"
                   : "text-status-purpleBase"
-              }`}
+                }`}
             >
               <p className="flex items-center gap-1 text-[9px] md:text-[16px] lg:gap-3">
                 <span
-                  className={`${
-                    currentPage === 1
+                  className={`${currentPage === 1
                       ? "bg-status-purpleBase text-white"
                       : "bg-status-purpleBase text-white"
-                  } rounded-2xl border-none px-2 py-1 lg:px-3 lg:py-2`}
+                    } rounded-2xl border-none px-2 py-1 lg:px-3 lg:py-2`}
                 >
                   01
                 </span>{" "}
@@ -1289,19 +1313,17 @@ const ProvideService: React.FC = () => {
               </p>
             </div>
             <div
-              className={`${
-                currentPage === 2 || currentPage === 3
+              className={`${currentPage === 2 || currentPage === 3
                   ? "text-status-purpleBase"
                   : " text-[#716F78]"
-              }`}
+                }`}
             >
               <p className="flex items-center gap-1 text-[9px] md:text-[16px] lg:gap-3">
                 <span
-                  className={`${
-                    currentPage === 2 || currentPage === 3
+                  className={`${currentPage === 2 || currentPage === 3
                       ? "bg-status-purpleBase text-white"
                       : "bg-[#EAE9EB] text-[#716F78]"
-                  } rounded-2xl border-none px-2 py-1 lg:px-3 lg:py-2`}
+                    } rounded-2xl border-none px-2 py-1 lg:px-3 lg:py-2`}
                 >
                   02
                 </span>{" "}
@@ -1312,17 +1334,15 @@ const ProvideService: React.FC = () => {
               </p>
             </div>
             <div
-              className={`${
-                currentPage === 3 ? "text-status-purpleBase" : " text-[#716F78]"
-              }`}
+              className={`${currentPage === 3 ? "text-status-purpleBase" : " text-[#716F78]"
+                }`}
             >
               <p className="flex items-center gap-1 text-[9px] md:text-[16px] lg:gap-3">
                 <span
-                  className={`${
-                    currentPage === 3
+                  className={`${currentPage === 3
                       ? "bg-status-purpleBase text-white"
                       : "bg-[#EAE9EB] text-[#716F78]"
-                  } rounded-2xl border-none px-2 py-1 lg:px-3 lg:py-2`}
+                    } rounded-2xl border-none px-2 py-1 lg:px-3 lg:py-2`}
                 >
                   03
                 </span>{" "}
@@ -1343,13 +1363,12 @@ const ProvideService: React.FC = () => {
                 {/* Progress bar */}
                 <div className="h-1 w-2/3 overflow-hidden bg-[#EAE9EB]">
                   <div
-                    className={`h-full ${
-                      currentPage === 1
+                    className={`h-full ${currentPage === 1
                         ? "bg-status-purpleBase"
                         : currentPage === 2
                           ? "bg-status-purpleBase"
                           : "bg-status-purpleBase"
-                    }`}
+                      }`}
                     style={{ width: `${progress}%` }}
                   />
                 </div>
@@ -1393,7 +1412,7 @@ const ProvideService: React.FC = () => {
                     Please fill out the information below to add a new listing.
                   </p>
                 </div>
-                {loading && <Loading/>}
+                {loading && <Loading />}
                 <div className="mt-8">{renderPage()}</div>
               </div>
             </div>
@@ -1414,11 +1433,11 @@ const ProvideService: React.FC = () => {
                   You are almost done!!!
                 </p>
                 <div>
-                <p className="text-center text-[14px] lg:text-[20px]">
-                  Please proceed to update your profile
-                 </p>
-                <p className="text-center text-[14px] lg:text-[20px]">
-                   before your Task can be posted
+                  <p className="text-center text-[14px] lg:text-[20px]">
+                    Please proceed to update your profile
+                  </p>
+                  <p className="text-center text-[14px] lg:text-[20px]">
+                    before your Task can be posted
                   </p>
                 </div>
                 <Image
@@ -1449,8 +1468,8 @@ const ProvideService: React.FC = () => {
         ) : (
           <Popup
             isOpen={isSuccessPopupOpen}
-              onClose={() => {
-                route.push("/marketplace");
+            onClose={() => {
+              route.push("/marketplace");
               setIsSuccessPopupOpen(false);
             }}
           >
@@ -1463,7 +1482,7 @@ const ProvideService: React.FC = () => {
                   Service created
                 </p>
                 <div className="text-center font-satoshiMedium lg:text-[20px]">
-                    <p>Your Service Listing has been created!</p>
+                  <p>Your Service Listing has been created!</p>
                   please click on the button to proceed to{" "}
                   marketplace
                 </div>

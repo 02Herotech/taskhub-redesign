@@ -501,7 +501,7 @@ const AddTaskForm: React.FC = () => {
             >
               <div className="grid space-y-3">
                 <div className="flex items-center justify-between">
-                  <label className="font-semibold text-status-darkpurple">
+                  <label className="font-semibold text-status-darkpurple text-[13px] lg:text-[16px]">
                     Write a short title for the task you need done{" "}
                     <span className="font-extrabold text-[#ff0000]">*</span>
                   </label>
@@ -525,7 +525,7 @@ const AddTaskForm: React.FC = () => {
               </div>
               <div className="relative grid space-y-4">
                 <div className="flex items-center justify-between">
-                  <label className="font-semibold">
+                  <label className="font-semibold text-[13px] lg:text-[16px]">
                     What category best describes your task?{" "}
                     <span className="font-extrabold text-[#ff0000]">*</span>
                   </label>
@@ -564,7 +564,7 @@ const AddTaskForm: React.FC = () => {
               </div>
               <div className="relative grid space-y-3">
                 <div className="flex items-center justify-between">
-                  <label className="flex font-semibold">
+                  <label className="flex font-semibold text-[13px] lg:text-[16px]">
                     Give a description of your task {""}{" "}
                     <span className="font-extrabold text-[#ff0000]">*</span>
                   </label>
@@ -583,7 +583,7 @@ const AddTaskForm: React.FC = () => {
                 ></textarea>
               </div>
               <div className=" space-y-3">
-                <label className="font-satoshiBold font-bold text-status-darkpurple">
+                <label className="font-satoshiBold font-bold text-status-darkpurple text-[13px] lg:text-[16px]">
                   Upload an Image (Optional)
                 </label>
                 {task.taskImage ? (
@@ -715,7 +715,7 @@ const AddTaskForm: React.FC = () => {
         return (
           <div className="mb-10 space-y-10">
             <div className="space-y-4">
-              <h2 className="font-satoshiBold font-bold text-status-darkpurple">
+              <h2 className="font-satoshiBold font-bold text-status-darkpurple text-[13px] lg:text-[16px]">
                 Type of Service{" "}
                 <span className="font-extrabold text-[#ff0000]">*</span>
               </h2>
@@ -828,7 +828,7 @@ const AddTaskForm: React.FC = () => {
               )}
               <div className="relative grid space-y-4 font-bold text-status-darkpurple">
                 <div className="flex items-center justify-between">
-                  <label>Budget <span className="text-[#ff0000] font-extrabold">*</span></label>
+                  <label className="text-[13px] lg:text-[16px]">Budget <span className="text-[#ff0000] font-extrabold">*</span></label>
                   {task.customerBudget && (
                     <div className="h-[16px] w-[16px] rounded-3xl bg-[#4CAF50] text-[16px] font-extrabold text-white">
                       <GrFormCheckmark />
