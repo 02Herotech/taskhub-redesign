@@ -32,7 +32,7 @@ const Tasks = () => {
     const [searchText, setSearchText] = useState("");
 
     const { data: tasksData, isLoading, refetch } = useGetActiveTasksQuery(currentPage);
-    const { data: searchResults } = useSearchTaskByTextQuery({ text: searchText, pageNumber: 1 });
+    const { data: searchResults } = useSearchTaskByTextQuery({ text: searchText, pageNumber: currentPage });
 
     useEffect(() => {
         const fetchCategoriesData = async () => {

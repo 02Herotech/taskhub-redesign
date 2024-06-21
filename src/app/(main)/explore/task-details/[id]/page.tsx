@@ -9,7 +9,6 @@ import { dayOfWeekNames, formatAmount, monthNames, suffixes } from '@/lib/utils'
 import Loading from '@/shared/loading';
 
 const TaskDetailsPage = ({ params }: { params: { id: string } }) => {
-
     const id = params.id;
     const { data: task, isLoading } = useGetTaskByIdQuery(id as unknown as number);
 
@@ -63,7 +62,7 @@ const TaskDetailsPage = ({ params }: { params: { id: string } }) => {
     // }
 
     return (
-        <section className="py-28 container font-satoshi">
+        <section className="py-20 container font-satoshi">
             {/* <Link href="/explore" className="flex items-center space-x-5 lg:space-x-10 text-primary mb-2">
                 <FaChevronLeft />
                 <h2 className='font-bold text-lg lg:text-2xl font-clashDisplay'>Job Details</h2>
@@ -84,39 +83,39 @@ const TaskDetailsPage = ({ params }: { params: { id: string } }) => {
                         </p>
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-10 space-x-5 w-full mt-10">
-                        <div className="space-y-7 lg:space-y-20 font-satoshi">
-                            <h2 className="text-lg lg:text-[40px] font-black text-primary leading-tight">{task?.taskBriefDescription}</h2>
+                        <div className="space-y-7 lg:space-y-10 font-satoshi">
+                            <h2 className="text-lg lg:text-4xl font-black text-primary">{task?.taskBriefDescription}</h2>
                             <div className="space-y-3 text-xs lg:text-xl">
-                                <h2 className='text-primary lg:text-3xl font-satoshiMedium font-bold'>Service purpose</h2>
-                                    <p className='text-[#221354] font-satoshiMedium text-2xl'>{task?.taskDescription}</p>
+                                <h2 className='text-primary lg:text-2xl font-satoshiMedium font-bold'>Service purpose</h2>
+                                <p className='text-[#221354] font-satoshiMedium font-medium text-xl'>{task?.taskDescription}</p>
                             </div>
-                            <div className="space-y-8">
-                                <h4 className='text-primary lg:text-3xl font-satoshiMedium font-bold'>Location</h4>
+                            <div className="space-y-5">
+                                <h4 className='text-primary lg:text-2xl font-satoshiMedium font-bold'>Location</h4>
                                 <div className="flex items-center space-x-2 w-full text-[#716F78]">
                                     <HiOutlineLocationMarker className="h-6 w-6 font-bold" />
-                                    <h5 className="text-[15px] lg:text-xl">{task?.taskAddress || "Location unavailable"}</h5>
+                                    <h5 className="text-[15px] lg:text-xl font-satoshiMedium font-medium">{task?.taskAddress || "Location unavailable"}</h5>
                                 </div>
                             </div>
 
-                            <div className="space-y-8">
-                                <h4 className='text-primary lg:text-3xl font-satoshiMedium font-bold'>Date and Time</h4>
+                            <div className="space-y-5">
+                                <h4 className='text-primary lg:text-2xl font-satoshiMedium font-bold'>Date and Time</h4>
                                 <div className="max-lg:text-xs flex items-center space-x-3 text-[#716F78]">
                                     <FiCalendar className="h-6 w-6" />
-                                    <h5>{formattedDate}</h5>
+                                    <h5 className='text-[15px] lg:text-xl font-satoshiMedium font-medium'>On {formattedDate}</h5>
                                 </div>
                                 <div className="max-lg:text-xs flex items-center space-x-3 text-[#716F78]">
                                     <FiClock className="h-6 w-6" />
-                                    <h5>{task.taskTime || "Flexible"}</h5>
+                                    <h5 className='text-[15px] lg:text-xl font-satoshiMedium font-medium'>{task.taskTime || "Flexible"}</h5>
                                 </div>
                             </div>
                         </div>
 
                         <div className='space-y-7 lg:space-y-10'>
-                            <div className="px-5 py-10 rounded-[20px] border-primary border-2">
-                                <h2 className='text-lg lg:text-[39px] font-satoshi text-primary font-bold'>Budget Details</h2>
-                                <div className="border-primary border-2 my-8" />
+                            <div className="px-5 py-8 rounded-[20px] border-primary border-2">
+                                <h2 className='text-lg lg:text-3xl font-satoshi text-primary font-bold'>Budget Details</h2>
+                                <div className="border-primary border-2 mb-6 mt-4" />
                                 <div className="flex items-center justify-between w-full">
-                                    <h2 className='text-lg lg:text-[39px] font-satoshi text-primary font-bold'>
+                                    <h2 className='text-lg lg:text-3xl font-satoshi text-primary font-bold'>
                                         AUD {formatAmount(task?.customerBudget!, "USD", false)}
                                     </h2>
                                     <Button className='rounded-full text-sm lg:text-lg'>
@@ -124,8 +123,8 @@ const TaskDetailsPage = ({ params }: { params: { id: string } }) => {
                                     </Button>
                                 </div>
                             </div>
-                            <h2 className='text-primary font-bold text-lg lg:text-2xl'>Reference Images</h2>
-                            <Image src={task?.taskImage || ""} width={200} height={100} alt="Explore task" className='object-cover' />
+                            <h2 className='text-primary font-bold text-lg lg:text-xl'>Reference Images</h2>
+                            {task.taskImage ? <Image src={task.taskImage} width={200} height={100} alt="Explore task" className='object-cover' /> : <p>No image available</p>}
                         </div>
                     </div>
                 </>
