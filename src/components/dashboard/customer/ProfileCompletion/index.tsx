@@ -87,7 +87,7 @@ const CustomerProfileCompletion = () => {
                       <BiCheck className="size-3 text-violet-normal" />
                     ) : (
                       <Link href="/customer/profilr/edit-profile">
-                      <BiPlus className="size-3 text-slate-300" />
+                        <BiPlus className="size-3 text-slate-300" />
                       </Link>
                     )}
                   </span>
