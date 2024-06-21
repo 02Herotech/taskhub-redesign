@@ -120,9 +120,6 @@ const EditProfileModal = ({
       if (selectedFile && isEditingProfilePicture.isEditing) {
         setIsUploadImageLoading(true);
         let url;
-
-        console.log(selectedFile, "i am uploading image");
-
         if (isServiceProvider) {
           url =
             "https://smp.jacinthsolutions.com.au/api/v1/service_provider/profile_picture";
@@ -130,16 +127,18 @@ const EditProfileModal = ({
           url =
             "https://smp.jacinthsolutions.com.au/api/v1/customer/profile_picture";
         }
-        await axios.post(
-          url,
-          { image: selectedFile },
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-              "Content-Type": "multipart/form-data",
+        try {
+          await axios.post(
+            url,
+            { image: selectedFile },
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "multipart/form-data",
+              },
             },
-          },
-        );
+          );
+        } catch (error) {}
       } else {
         setSelectedDocument(selectedFile);
       }

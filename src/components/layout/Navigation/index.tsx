@@ -28,13 +28,15 @@ const Navigation = () => {
   const pathname = usePathname();
 
   // const authStatus = sessionStorage.getItem("auth");
-  // let auth: { token: string | null; roles: string[] | null } = {
-  //   token: null,
-  //   roles: null,
-  // };
-  // if (authStatus) {
-  //   auth = JSON.parse(authStatus);
-  // }
+  const authStatus = localStorage.getItem("auth");
+
+  let auth: { token: string | null; roles: string[] | null } = {
+    token: null,
+    roles: null,
+  };
+  if (authStatus) {
+    auth = JSON.parse(authStatus);
+  }
 
   const handleLogout = async () => {
     try {
@@ -97,22 +99,22 @@ const Navigation = () => {
     // eslint-disable-next-line
   }, [token]);
 
-  const currentLinks = !isAuth
-    ? homeLinks
-    : isServiceProvider
-      ? serviceProviderLinks
-      : customerLinks;
-  const notificationRoute = isServiceProvider
-    ? "/service-provider/notification"
-    : "/customer/notifications";
-  // const currentLinks = !auth.token
+  // const currentLinks = !isAuth
   //   ? homeLinks
-  //   : auth.roles && auth?.roles[0] === "SERVICE_PROVIDER"
+  //   : isServiceProvider
   //     ? serviceProviderLinks
   //     : customerLinks;
   // const notificationRoute = isServiceProvider
   //   ? "/service-provider/notification"
   //   : "/customer/notifications";
+  const currentLinks = !auth.token
+    ? homeLinks
+    : auth.roles && auth?.roles[0] === "SERVICE_PROVIDER"
+      ? serviceProviderLinks
+      : customerLinks;
+  const notificationRoute = isServiceProvider
+    ? "/service-provider/notification"
+    : "/customer/notifications";
 
   return (
     <>
