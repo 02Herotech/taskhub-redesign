@@ -121,6 +121,8 @@ const EditProfileModal = ({
         setIsUploadImageLoading(true);
         let url;
 
+        console.log(selectedFile, "i am uploading image");
+
         if (isServiceProvider) {
           url =
             "https://smp.jacinthsolutions.com.au/api/v1/service_provider/profile_picture";
@@ -142,8 +144,8 @@ const EditProfileModal = ({
         setSelectedDocument(selectedFile);
       }
       handleCloseModal();
-    } catch (error) {
-      console.log(error);
+    } catch (error: any) {
+      console.log(error.response.data);
     } finally {
       setIsUploadImageLoading(false);
     }

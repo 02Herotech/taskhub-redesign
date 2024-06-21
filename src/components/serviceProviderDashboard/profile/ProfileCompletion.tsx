@@ -49,11 +49,12 @@ const ProfileCompletion = ({ fetchedUserData }: ProfileCompletionType) => {
     setChartData((prev) => ({
       ...prev,
       total: profileProgressData.length,
-      completed: profileProgressData.filter((item) => item.status !== "")
-        .length,
+      completed: profileProgressData.filter(
+        (item) => item.status !== "" && item.status !== null,
+      ).length,
     }));
     // eslint-disable-next-line
-  }, [fetchedUserData]);
+  }, [fetchedUserData, user]);
 
   return (
     <section className="flex flex-col items-center gap-3 rounded-lg bg-[#EBE9F4] p-4 md:grid md:grid-cols-12">
