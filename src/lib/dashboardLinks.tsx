@@ -84,11 +84,11 @@ export const serviceProviderDashboardLinks: DashboardLinks[] = [
 
 export const customerDashboardDropdown = [
   {
-    label: "Password",
+    label: "Change Password",
     link: "/customer/password",
   },
   {
-    label: "Notification",
+    label: "Notification Settings",
     link: "/customer/notification-settings",
   },
 ];
