@@ -17,6 +17,7 @@ import icon1 from "../../../../public/assets/images/homepage/securityFeatures/ge
 import icon2 from "../../../../public/assets/images/homepage/securityFeatures/getStartedIcon2.png";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import TaskhubCanGlowingBox from "./TaskhubCanGlowBox";
 
 const Taskhub = () => {
     const { data: session } = useSession();
@@ -121,17 +122,6 @@ const Taskhub = () => {
                                     </div>
                                 </div>
 
-
-
-                                {/* <div className="flex space-x-2 shadow-md items-center text-[12px] bg-[#EEE5FC] rounded-xl px-4 py-2 absolute -top-[17em] left-12 xl:left-36 xl:py-3 xl:px-6">
-                            <Image src={icon2} width={25} alt="hand shake"></Image>
-                            <p className=" font-[700] text-[14px] text-primary">Task completed</p>
-                            <p className="text-[#969696] text-[14px]">Just now</p>
-                        </div>
-
-                       */}
-
-
                             </div>
                         </div>
                         <div className="flex space-x-2 shadow-md items-center text-[12px] bg-[#EEE5FC] rounded-[24px] px-3 py-3 xl:w-[320px] w-[300px] absolute xl:top-[160px] lg:top-[180px] -ml-20 ">
@@ -144,9 +134,9 @@ const Taskhub = () => {
 
                     <div className="mt-10 relative">
                         <div className="  ">
-                            <Image src={aiImage} width={350} alt="devon lane " className="z-0"></Image>
+                            <TaskhubCanGlowingBox />
                         </div>
-                        <div className="flex space-x-2 shadow-md items-center text-[12px] bg-[#EEE5FC] rounded-[24px] px-4 py-2 absolute xl:top-[165px] xl:right-[60px] lg:top-[175px] lg:right-[30px] xl:py-3 xl:px-6">
+                        <div className="flex space-x-2 shadow-md items-center text-[12px] bg-[#EEE5FC] rounded-[24px] px-4 py-2 absolute xl:top-[200px] xl:right-[20px] lg:top-[200px] lg:right-[-5px] xl:py-3 xl:px-6">
                             <Image src={icon2} width={25} alt="hand shake"></Image>
                             <p className=" font-[700] text-[14px] text-primary">Task completed</p>
                             <p className="text-[#969696] text-[14px]">Just now</p>
@@ -161,7 +151,7 @@ const Taskhub = () => {
                 <div className="lg:hidden  w-full   ">
                     <div className=" w-full  ">
                         <div className="relative">
-                            <div className="flex justify-end   ">
+                            <div className="flex justify-end sm:justify-center sm:items-center   ">
                                 <div className="flex shadow-md bg-white rounded-[30px] ">
                                     <Image src={image2} width={150} alt="devon lane " className="z-0"></Image>
 
@@ -193,11 +183,11 @@ const Taskhub = () => {
 
 
                         <div className="my-5 relative">
-                            <div className="  ">
-                                <Image src={aiImage} width={280} alt="devon lane " className="z-0"></Image>
+                            <div className=" sm:flex items-center justify-center  ">
+                                <TaskhubCanGlowingBox />
                             </div>
 
-                            <div className="flex space-x-2 shadow-md items-center text-[8px] bg-[#EEE5FC] rounded-[24px] px-4 py-2 absolute  -right-[30px]  ">
+                            <div className="flex space-x-2 shadow-md items-center text-[8px] bg-[#EEE5FC] rounded-[24px] px-4 py-2 absolute -right-[30px] sm:right-[25px] sm:top-[200px]  ">
                                 <Image src={icon2} width={25} alt="hand shake"></Image>
                                 <p className=" font-[700] text-[12px] text-primary">Task completed</p>
                                 <p className="text-[#969696] text-[12px]">Just now</p>
