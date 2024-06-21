@@ -63,7 +63,7 @@ const ServicePayment = () => {
           </h1>
         </div>
         <Link
-          href="/service-provider/dashboard/payment/withdrawl"
+          href="/service-provider/payment/withdrawl"
           className="relative rounded-full bg-orange-normal px-6 py-3 font-medium text-white"
         >
           Withdraw

@@ -27,6 +27,17 @@ const Navigation = () => {
   const [notifications, setNotifications] = useState<NotificationTypes[]>([]);
   const pathname = usePathname();
 
+  // const authStatus = sessionStorage.getItem("auth");
+  // const authStatus = localStorage.getItem("auth");
+
+  // let auth: { token: string | null; roles: string[] | null } = {
+  //   token: null,
+  //   roles: null,
+  // };
+  // if (authStatus) {
+  //   auth = JSON.parse(authStatus);
+  // }
+
   const handleLogout = async () => {
     try {
       await signOut();
@@ -96,6 +107,14 @@ const Navigation = () => {
   const notificationRoute = isServiceProvider
     ? "/service-provider/notification"
     : "/customer/notifications";
+  // const currentLinks = !auth.token
+  //   ? homeLinks
+  //   : auth.roles && auth?.roles[0] === "SERVICE_PROVIDER"
+  //     ? serviceProviderLinks
+  //     : customerLinks;
+  // const notificationRoute = isServiceProvider
+  //   ? "/service-provider/notification"
+  //   : "/customer/notifications";
 
   return (
     <>

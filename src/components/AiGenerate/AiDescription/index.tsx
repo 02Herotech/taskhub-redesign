@@ -8,9 +8,10 @@ import { IoCloseCircleOutline } from "react-icons/io5";
 import { BeatLoader } from "react-spinners";
 import icon1 from "../../../../public/assets/images/serviceProvider/AiButton.png";
 import icon2 from "../../../../public/assets/images/serviceProvider/AiButton2.png";
+import aiLine from "../../../../public/assets/images/serviceProvider/AiLine.svg";
 import Image from "next/image";
 import { TypeAnimation } from "react-type-animation";
-
+import AiLine from "./AiLine";
 interface Message {
   id: number;
   type: "user" | "ai";
@@ -194,7 +195,7 @@ const AiDesciption: React.FC<AiGenerateProps> = ({
   return (
     <div>
       {displayType === "card" ? (
-        <div className="relative ">
+        <div className="relative overflow-hidden ">
           <div className=" mb-5 flex flex-col space-y-6 rounded-[20px] bg-[#381F8C] p-4">
             <h2 className="text-lg font-extrabold text-white">
               Get personalized AI help
@@ -219,7 +220,7 @@ const AiDesciption: React.FC<AiGenerateProps> = ({
               </button>{" "}
             </span>
           </div>
-          <div className="absolute  right-2 top-[20%] h-full w-[20%] ">
+          <div className="hidden lg:block absolute  right-2 top-[20%] h-full w-[20%] ">
             {Array.from({ length: 7 }).map((_, index) => (
               <div
                 key={index}
@@ -230,7 +231,7 @@ const AiDesciption: React.FC<AiGenerateProps> = ({
                 }}
               ></div>
             ))}
-          </div>
+          </div>  
         </div>
       ) : (
         <button
@@ -359,9 +360,9 @@ const AiDesciption: React.FC<AiGenerateProps> = ({
                 ""
               )}
             </p>
-        
+
             <div className="rounded-[20px] lg:px-4 px-2 pb-2  font-medium border-[2px] border-primary ">
-              <form  className="flex items-center pt-2">
+              <form className="flex items-center pt-2">
                 <textarea
                   name="aiQuery"
                   placeholder="Enter a request here"
@@ -369,7 +370,7 @@ const AiDesciption: React.FC<AiGenerateProps> = ({
                   value={aiQuery}
                   className="w-full overflow-hidden text-wrap  
  bg-transparent px-2 text-[16px] font-normal text-primary border-none outline-none resize-none"
-                  required              
+                  required
                 />
                 <div
                   className=""

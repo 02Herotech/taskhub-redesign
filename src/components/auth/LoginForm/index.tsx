@@ -46,7 +46,11 @@ const LoginForm = () => {
           password: payload.password,
         },
       );
-
+      const authData = {
+        token: response.data.accessToken,
+        role: response.data.user.roles,
+      };
+      // sessionStorage.setItem("auth", JSON.stringify(authData));
       if (response.status === 200) {
         const userTypeRole = response.data.user.roles[0];
 
@@ -57,7 +61,6 @@ const LoginForm = () => {
           userType: userTypeRole,
         });
       }
-
       if (from) {
         router.push(from);
       } else {
@@ -72,16 +75,16 @@ const LoginForm = () => {
   };
 
   return (
-    <section className="w-full xl:w-[554px] mx-auto max-lg:p-5">
+    <section className="mx-auto w-full max-lg:p-5 xl:w-[554px]">
       <div className="space-y-10">
         <div className="space-y-4">
-          <h1 className="text-2xl lg:text-4xl text-[#190E3F] font-clashSemiBold">
+          <h1 className="font-clashSemiBold text-2xl text-[#190E3F] lg:text-4xl">
             Welcome to{" "}
             <span className="text-primary">
               <b>Task</b>hub
             </span>
           </h1>
-          <p className="text-xl lg:text-2xl text-tc-gray font-clashMedium">
+          <p className="font-clashMedium text-xl text-tc-gray lg:text-2xl">
             Join us for exclusive access to our services
           </p>
         </div>
@@ -89,7 +92,8 @@ const LoginForm = () => {
         <FormProvider {...methods}>
           <form
             onSubmit={methods.handleSubmit(onSubmit)}
-            className="w-full space-y-7 font-satoshi">
+            className="w-full space-y-7 font-satoshi"
+          >
             <Input
               focused
               name="emailAddress"
@@ -103,19 +107,22 @@ const LoginForm = () => {
               name="password"
               label="Password"
               placeholder="**********"
-              className=" placeholder:text-dark shadow-sm"
+              className=" shadow-sm placeholder:text-dark"
               rules={["required", "password"]}
               type="password"
             />
             {error && (
-              <div className="text-status-error-100 text-base font-semibold my-1">{error}</div>
+              <div className="my-1 text-base font-semibold text-status-error-100">
+                {error}
+              </div>
             )}
             <div className="space-y-8 lg:space-y-5">
               <div className="flex items-center justify-end">
                 <Button
                   tag="a"
                   href="/auth/forgot-password"
-                  className="flex items-center underline font-bold underline-offset-2">
+                  className="flex items-center font-bold underline underline-offset-2"
+                >
                   Forgot password
                 </Button>
               </div>
@@ -124,10 +131,11 @@ const LoginForm = () => {
                   type="submit"
                   loading={isLoading}
                   disabled={!isValid}
-                  className="w-[170px] rounded-full font-normal">
+                  className="w-[170px] rounded-full font-normal"
+                >
                   Login
                 </Button>
-                <h3 className="text-xl mt-8 font-satoshiBold text-[#190E3F]">
+                <h3 className="mt-8 font-satoshiBold text-xl text-[#190E3F]">
                   Don’t have an account?
                   <Link href="/auth" className="text-primary">
                     {" "}
@@ -136,7 +144,6 @@ const LoginForm = () => {
                 </h3>
               </div>
             </div>
-
           </form>
         </FormProvider>
       </div>
