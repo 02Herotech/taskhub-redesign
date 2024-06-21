@@ -14,8 +14,6 @@ const ProfileCompletion = ({ fetchedUserData }: ProfileCompletionType) => {
   const session = useSession();
   const user = session?.data?.user?.user;
 
-  console.log(user);
-
   const [chartData, setChartData] = useState({ total: 0, completed: 0 });
 
   const profileProgressData = [
