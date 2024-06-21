@@ -38,6 +38,7 @@ declare interface ListingDataType {
     categoryName: string;
   };
   stripeId: string;
+  negotiable: boolean;
   createdAt: number[];
   availableDays: string[];
   reviews: number[];

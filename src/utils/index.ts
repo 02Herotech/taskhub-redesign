@@ -65,14 +65,28 @@ export function formatDateFromNumberArray(dateArray: number[]) {
 export function formatDateFromNumberArrayToRelativeDate(
   dateArray: number[],
 ): string {
-  const [year, month, day] = dateArray;
-  const date = new Date(year, month - 1, day); // JavaScript Date object
+  const [year, month, day, hour = 0, minute = 0, second = 0] = dateArray;
+  const date = new Date(year, month - 1, day, hour, minute, second); // JavaScript Date object
   const now = new Date();
   const diffTime = date.getTime() - now.getTime();
-  const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+
+  const diffSeconds = Math.floor(diffTime / 1000);
+  const diffMinutes = Math.floor(diffSeconds / 60);
+  const diffHours = Math.floor(diffMinutes / 60);
+  const diffDays = Math.floor(diffHours / 24);
 
   if (diffDays === 0) {
-    return "today";
+    if (diffHours === 0) {
+      if (diffMinutes === 0) {
+        return diffSeconds === 0
+          ? "now"
+          : `${Math.abs(diffSeconds)} seconds ago`;
+      }
+      return diffMinutes === 1
+        ? "a minute ago"
+        : `${Math.abs(diffMinutes)} minutes ago`;
+    }
+    return diffHours === 1 ? "an hour ago" : `${Math.abs(diffHours)} hours ago`;
   } else if (diffDays === 1) {
     return "tomorrow";
   } else if (diffDays === -1) {

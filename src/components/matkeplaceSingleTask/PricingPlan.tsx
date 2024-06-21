@@ -13,6 +13,7 @@ interface PricingPlanProps {
   planThreeDescription: string | null;
   listingId: number;
   listingTitle: string | undefined;
+  negotiable: boolean;
 }
 
 const PricingPlan = ({
@@ -24,6 +25,7 @@ const PricingPlan = ({
   planThreeDescription,
   listingId,
   listingTitle,
+  negotiable,
 }: PricingPlanProps) => {
   const session = useSession();
   const isAuthenticated = session?.data?.user?.accessToken;
@@ -40,11 +42,13 @@ const PricingPlan = ({
     isAuthenticated: string | undefined;
     isServiceProvider: boolean;
     title: string;
+    negotiable: boolean;
   }>({
     pricing: 0,
     isAuthenticated,
     isServiceProvider,
     title: listingTitle ?? "",
+    negotiable,
   });
 
   const handleExpandText = (index: number) => {
@@ -113,12 +117,14 @@ const PricingPlan = ({
             </button>
           </div>
 
-          <div className="flex w-full justify-between gap-2 text-slate-500">
+          <div className="flex w-full items-start justify-between gap-2 text-slate-500">
             <p>{renderDescription(planOneDescription, 1)}</p>
             {planOneDescription.split(" ").length > 4 && (
               <button onClick={() => handleExpandText(1)}>
-                <span className="pt-2 text-sm font-bold text-violet-normal">
-                  Read more
+                <span className="whitespace-nowrap pt-2 text-sm font-bold text-violet-normal">
+                  {isTextExpanded.index === 1 && isTextExpanded.state
+                    ? "Read less"
+                    : "Read more"}
                 </span>
               </button>
             )}
@@ -143,13 +149,15 @@ const PricingPlan = ({
                 Book Task
               </button>
             </div>
-            <div className="flex w-full justify-between gap-2 text-slate-500">
+            <div className="flex w-full items-start justify-between gap-2 text-slate-500">
               <p>{renderDescription(planTwoDescription, 2)}</p>
               {planTwoDescription &&
                 planTwoDescription.split(" ").length > 4 && (
                   <button onClick={() => handleExpandText(2)}>
-                    <span className="pt-2 text-sm font-bold text-violet-normal">
-                      Read more
+                    <span className="whitespace-nowrap pt-2 text-sm font-bold text-violet-normal">
+                      {isTextExpanded.index === 2 && isTextExpanded.state
+                        ? "Read less"
+                        : "Read more"}
                     </span>
                   </button>
                 )}
@@ -175,13 +183,15 @@ const PricingPlan = ({
                 Book Task
               </button>
             </div>
-            <div className="flex w-full justify-between gap-2 text-slate-500">
+            <div className="flex w-full items-start justify-between gap-2 text-slate-500">
               <p>{renderDescription(planThreeDescription as string, 3)}</p>
               {planThreeDescription &&
                 planThreeDescription.split(" ").length > 4 && (
                   <button onClick={() => handleExpandText(3)}>
                     <span className="pt-2 text-sm font-bold text-violet-normal">
-                      Read more
+                      {isTextExpanded.index === 3 && isTextExpanded.state
+                        ? "Read less"
+                        : "Read more"}
                     </span>
                   </button>
                 )}
