@@ -73,7 +73,7 @@ const Navigation = () => {
       setCurrentLinks(
         !auth.token
           ? homeLinks
-          : auth?.roles![0] === "SERVICE_PROVIDER"
+          : auth.roles && auth?.roles[0] === "SERVICE_PROVIDER"
             ? serviceProviderLinks
             : customerLinks,
       );
