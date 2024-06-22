@@ -25,6 +25,11 @@ import Button from "@/components/global/Button";
 import Image from "next/image";
 import { handleFetchNotifications } from "@/lib/serviceproviderutil";
 
+const initialAuthState = {
+  token: null,
+  roles: null,
+};
+
 const Navigation = () => {
   const router = useRouter();
   const session = useSession();
@@ -35,30 +40,16 @@ const Navigation = () => {
   const [auth, setAuth] = useState<{
     token: string | null;
     roles: string[] | null;
-  }>({
-    token: null,
-    roles: null,
-  });
+  }>(initialAuthState);
   const [currentLinks, setCurrentLinks] = useState<LinkRouteTypes[]>([]);
 
   const handleLogout = async () => {
+    console.log(pathname);
     try {
       await signOut();
       await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/logout`);
-      localStorage.setItem(
-        "auth",
-        JSON.stringify({
-          token: null,
-          roles: null,
-        }),
-      );
-      console.log(pathname);
-      if (
-        pathname === "/provide-service" ||
-        pathname === "/customer/add-task"
-      ) {
-        router.push("/home");
-      }
+      setAuth(initialAuthState);
+      localStorage.setItem("auth", JSON.stringify(initialAuthState));
       router.push("/home");
     } catch (error: any) {
       console.log(error);
@@ -67,13 +58,18 @@ const Navigation = () => {
     }
   };
 
+  const profileImage = session?.data?.user.user.profileImage;
+  const userRole = session?.data?.user.user.roles;
+  const token = session?.data?.user?.accessToken;
+  const user = session?.data?.user?.user;
+  const isServiceProvider = userRole && userRole[0] === "SERVICE_PROVIDER";
+  const isAuth = session.status === "authenticated";
+
   useLayoutEffect(() => {
     setAuthLooading(true);
     const authStatus = localStorage.getItem("auth");
-    let auth: { token: string | null; roles: string[] | null } = {
-      token: null,
-      roles: null,
-    };
+    let auth: { token: string | null; roles: string[] | null } =
+      initialAuthState;
     if (authStatus) {
       auth = JSON.parse(authStatus);
       setAuth(auth);
@@ -87,13 +83,6 @@ const Navigation = () => {
     }
     setAuthLooading(false);
   }, []);
-
-  const profileImage = session?.data?.user.user.profileImage;
-  const userRole = session?.data?.user.user.roles;
-  const token = session?.data?.user?.accessToken;
-  const user = session?.data?.user?.user;
-  const isServiceProvider = userRole && userRole[0] === "SERVICE_PROVIDER";
-  const isAuth = session.status === "authenticated";
 
   const dropdownItems = [
     {
@@ -141,13 +130,15 @@ const Navigation = () => {
     ? "/service-provider/notification"
     : "/customer/notifications";
 
+  console.log(auth);
+
   return (
     <>
       <nav
         className={`fixed left-0 right-0 top-0 z-50 w-full ${currentLinks === homeLinks ? `bg-[#F5E2FC]` : `bg-white`} drop-shadow-sm`}
       >
         {authLooading ? (
-          <div className="container flex min-h-24 items-center justify-between px-7 py-4 lg:py-5 " />
+          <div className="container flex items-center justify-between px-7 py-4 lg:py-5 " />
         ) : (
           <div className="container flex items-center justify-between px-7 py-4 lg:py-5">
             <Link href="/">
