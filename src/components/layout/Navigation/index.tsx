@@ -155,7 +155,7 @@ const Navigation = () => {
       <nav
         className={`fixed left-0 right-0 top-0 z-50 w-full ${currentLinks === homeLinks ? `bg-[#F5E2FC]` : `bg-white`} drop-shadow-sm`}
       >
-        <div className="container flex items-center justify-between px-7 py-4 lg:px-14 lg:py-5">
+        <div className="container flex items-center justify-between px-7 py-4 lg:py-5">
           <Link href="/">
             <Logo />
           </Link>

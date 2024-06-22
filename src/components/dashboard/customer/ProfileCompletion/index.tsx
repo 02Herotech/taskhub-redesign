@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { BiCheck, BiPlus } from "react-icons/bi";
 import ProfilePieChart from "@/components/serviceProviderDashboard/profile/ProfilePieChart";
 import { useSession } from "next-auth/react";
+import Link from "next/link";
 
 const CustomerProfileCompletion = () => {
   const session = useSession();
@@ -85,7 +86,9 @@ const CustomerProfileCompletion = () => {
                     {item.status === "activated" ? (
                       <BiCheck className="size-3 text-violet-normal" />
                     ) : (
+                      <Link href="/customer/profilr/edit-profile">
                       <BiPlus className="size-3 text-slate-300" />
+                      </Link>
                     )}
                   </span>
                   <span> {item.title} </span>
