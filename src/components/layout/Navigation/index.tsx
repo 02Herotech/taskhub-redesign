@@ -41,21 +41,17 @@ const Navigation = () => {
   });
   const [currentLinks, setCurrentLinks] = useState<LinkRouteTypes[]>([]);
 
-  // const authStatus = sessionStorage.getItem("auth");
-  // const authStatus = localStorage.getItem("auth");
-
-  // let auth: { token: string | null; roles: string[] | null } = {
-  //   token: null,
-  //   roles: null,
-  // };
-  // if (authStatus) {
-  //   auth = JSON.parse(authStatus);
-  // }
-
   const handleLogout = async () => {
     try {
       await signOut();
       await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/logout`);
+      console.log(pathname);
+      if (
+        pathname === "/provide-service" ||
+        pathname === "/customer/add-task"
+      ) {
+        router.push("/home");
+      }
       router.push("/home");
     } catch (error: any) {
       console.log(error);
@@ -77,7 +73,7 @@ const Navigation = () => {
       setCurrentLinks(
         !auth.token
           ? homeLinks
-          : auth.roles && auth?.roles[0] === "SERVICE_PROVIDER"
+          : auth?.roles![0] === "SERVICE_PROVIDER"
             ? serviceProviderLinks
             : customerLinks,
       );
@@ -133,21 +129,6 @@ const Navigation = () => {
     }
     // eslint-disable-next-line
   }, [token]);
-
-  // const currentLinks = !isAuth
-  //   ? homeLinks
-  //   : isServiceProvider
-  //     ? serviceProviderLinks
-  //     : customerLinks;
-  // const notificationRoute = isServiceProvider
-  //   ? "/service-provider/notification"
-  //   : "/customer/notifications";
-
-  // const currentLinks = !auth.token
-  //   ? homeLinks
-  //   : auth.roles && auth?.roles[0] === "SERVICE_PROVIDER"
-  //     ? serviceProviderLinks
-  //     : customerLinks;
 
   const notificationRoute = isServiceProvider
     ? "/service-provider/notification"
