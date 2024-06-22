@@ -45,6 +45,13 @@ const Navigation = () => {
     try {
       await signOut();
       await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/logout`);
+      localStorage.setItem(
+        "auth",
+        JSON.stringify({
+          token: null,
+          roles: null,
+        }),
+      );
       console.log(pathname);
       if (
         pathname === "/provide-service" ||
