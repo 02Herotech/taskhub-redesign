@@ -79,6 +79,7 @@ const Invoice = ({
       gst: invoiceState.gst,
       platformCharge: Math.floor((Number(invoiceState.price) / 100) * 2),
     };
+
     try {
       setInvoiceState((prev) => ({ ...prev, loading: true }));
       const url =
@@ -138,7 +139,7 @@ const Invoice = ({
           <p className="text-center">{invoiceState.successData}</p>
           <div className="flex  items-center justify-center gap-10">
             <button
-              onClick={() => router.push("service-provider/jobs")}
+              onClick={() => router.push("/service-provider/jobs")}
               className="rounded-full bg-violet-normal px-4 py-2 font-semibold text-white transition-opacity duration-300 hover:opacity-90"
             >
               View Jobs

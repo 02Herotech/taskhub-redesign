@@ -56,7 +56,6 @@ const ServicesPage = () => {
         (item) =>
           item.bookingStage === "PAID" || item.bookingStage === "STARTED",
       );
-
       setOngoingBookingData(filteredOngoingData);
       setAcceptedBookingData(filteredAcceptedData);
     } catch (error) {

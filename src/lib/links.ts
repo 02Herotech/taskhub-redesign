@@ -1,4 +1,4 @@
-type Link = {
+export type LinkRouteTypes = {
   label: string;
   url?: string;
   sublinks?: {
@@ -11,7 +11,7 @@ type Link = {
   }[];
 };
 
-export const customerLinks: Link[] = [
+export const customerLinks: LinkRouteTypes[] = [
   {
     label: "Add a task",
     url: "/customer/add-task",
@@ -26,7 +26,7 @@ export const customerLinks: Link[] = [
   },
 ];
 
-export const serviceProviderLinks: Link[] = [
+export const serviceProviderLinks: LinkRouteTypes[] = [
   {
     label: "Provide a service",
     url: "/provide-service",
@@ -41,7 +41,7 @@ export const serviceProviderLinks: Link[] = [
   },
 ];
 
-export const homeLinks: Link[] = [
+export const homeLinks: LinkRouteTypes[] = [
   {
     label: "Home",
     url: "/",
@@ -60,7 +60,7 @@ export const homeLinks: Link[] = [
   },
 ];
 
-export const mobileServiceProviderLinks: Link[] = [
+export const mobileServiceProviderLinks: LinkRouteTypes[] = [
   {
     label: "Provide a service",
     url: "/provide-service",
@@ -110,39 +110,38 @@ export const mobileServiceProviderLinks: Link[] = [
   },
 ];
 
-export const mobileCustomerLinks: Link[] = [
-    {
-        label: "Add a task",
-        url: "/customer/add-task",
-    },
-    {
-        label: "Marketplace",
-        url: "/marketplace",
-    },
-    {
-        label: "Profile",
-        sublinks: [
-            {
-                label: "My Profile",
-                url: "/customer/profile",
-            },
-            {
-                label: "My Tasks",
-                url: "/customer/tasks",
-            },
-            {
-                label: "My Notifications",
-                url: "/customer/notifications",
-            },
-            {
-                label: "Payment settings",
-                url: "/customer/payment/payment-history",
-            },
-            {
-                label: "Settings",
-                url: "/customer/settings",
-            },
-        ]
-    }
+export const mobileCustomerLinks: LinkRouteTypes[] = [
+  {
+    label: "Add a task",
+    url: "/customer/add-task",
+  },
+  {
+    label: "Marketplace",
+    url: "/marketplace",
+  },
+  {
+    label: "Profile",
+    sublinks: [
+      {
+        label: "My Profile",
+        url: "/customer/profile",
+      },
+      {
+        label: "My Tasks",
+        url: "/customer/tasks",
+      },
+      {
+        label: "My Notifications",
+        url: "/customer/notifications",
+      },
+      {
+        label: "Payment settings",
+        url: "/customer/payment/payment-history",
+      },
+      {
+        label: "Settings",
+        url: "/customer/settings",
+      },
+    ],
+  },
 ];
-

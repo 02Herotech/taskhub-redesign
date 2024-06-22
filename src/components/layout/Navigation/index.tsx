@@ -3,7 +3,7 @@
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 import MobileNavigation from "../MobileNavigation";
 import { AnimatePresence } from "framer-motion";
 import { BsChat } from "react-icons/bs";
@@ -15,7 +15,12 @@ import { signOut, useSession } from "next-auth/react";
 import Logo from "../Logo";
 import axios from "axios";
 import PlaceholderImage from "../../../../public/assets/images/placeholder.jpeg";
-import { customerLinks, homeLinks, serviceProviderLinks } from "@/lib/links";
+import {
+  customerLinks,
+  homeLinks,
+  LinkRouteTypes,
+  serviceProviderLinks,
+} from "@/lib/links";
 import Button from "@/components/global/Button";
 import Image from "next/image";
 import { handleFetchNotifications } from "@/lib/serviceproviderutil";
@@ -26,6 +31,14 @@ const Navigation = () => {
   const [showMobileNav, setShowMobileNav] = useState(false);
   const [notifications, setNotifications] = useState<NotificationTypes[]>([]);
   const pathname = usePathname();
+  const [auth, setAuth] = useState<{
+    token: string | null;
+    roles: string[] | null;
+  }>({
+    token: null,
+    roles: null,
+  });
+  const [currentLinks, setCurrentLinks] = useState<LinkRouteTypes[]>([]);
 
   // const authStatus = sessionStorage.getItem("auth");
   // const authStatus = localStorage.getItem("auth");
@@ -49,6 +62,25 @@ const Navigation = () => {
       router.push("/home");
     }
   };
+
+  useLayoutEffect(() => {
+    const authStatus = localStorage.getItem("auth");
+    let auth: { token: string | null; roles: string[] | null } = {
+      token: null,
+      roles: null,
+    };
+    if (authStatus) {
+      auth = JSON.parse(authStatus);
+      setAuth(auth);
+      setCurrentLinks(
+        !auth.token
+          ? homeLinks
+          : auth.roles && auth?.roles[0] === "SERVICE_PROVIDER"
+            ? serviceProviderLinks
+            : customerLinks,
+      );
+    }
+  }, []);
 
   const profileImage = session?.data?.user.user.profileImage;
   const userRole = session?.data?.user.user.roles;
@@ -99,22 +131,24 @@ const Navigation = () => {
     // eslint-disable-next-line
   }, [token]);
 
-  const currentLinks = !isAuth
-    ? homeLinks
-    : isServiceProvider
-      ? serviceProviderLinks
-      : customerLinks;
-  const notificationRoute = isServiceProvider
-    ? "/service-provider/notification"
-    : "/customer/notifications";
-  // const currentLinks = !auth.token
+  // const currentLinks = !isAuth
   //   ? homeLinks
-  //   : auth.roles && auth?.roles[0] === "SERVICE_PROVIDER"
+  //   : isServiceProvider
   //     ? serviceProviderLinks
   //     : customerLinks;
   // const notificationRoute = isServiceProvider
   //   ? "/service-provider/notification"
   //   : "/customer/notifications";
+
+  // const currentLinks = !auth.token
+  //   ? homeLinks
+  //   : auth.roles && auth?.roles[0] === "SERVICE_PROVIDER"
+  //     ? serviceProviderLinks
+  //     : customerLinks;
+
+  const notificationRoute = isServiceProvider
+    ? "/service-provider/notification"
+    : "/customer/notifications";
 
   return (
     <>
@@ -153,7 +187,7 @@ const Navigation = () => {
             })}
           </ul>
           <div className="hidden items-center space-x-5 lg:flex">
-            {!isAuth ? (
+            {!auth.token ? (
               <div className="hidden items-center space-x-5 lg:flex">
                 <Link href="/auth">
                   <Button className="rounded-full">Sign Up</Button>
