@@ -44,17 +44,14 @@ const Navigation = () => {
   const [currentLinks, setCurrentLinks] = useState<LinkRouteTypes[]>([]);
 
   const handleLogout = async () => {
-    console.log(pathname);
     try {
-      await signOut();
-      await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/logout`);
       setAuth(initialAuthState);
       localStorage.setItem("auth", JSON.stringify(initialAuthState));
+      await signOut();
+      await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/logout`);
       router.push("/home");
     } catch (error: any) {
       console.log(error);
-    } finally {
-      router.push("/home");
     }
   };
 
