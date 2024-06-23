@@ -37,6 +37,7 @@ const NotificationComponent = () => {
     loading: false,
     listing: null,
   });
+  const [refreshPage, setRefreshPage] = useState(false);
 
   const oneWeekAgo = new Date();
   oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
@@ -72,7 +73,7 @@ const NotificationComponent = () => {
   useEffect(() => {
     handleFetchNotifications();
     // eslint-disable-next-line
-  }, [token]);
+  }, [token, refreshPage]);
 
   const fetchBookingById = async () => {
     try {
@@ -170,6 +171,7 @@ const NotificationComponent = () => {
       loading: false,
       listing: null,
     });
+    setRefreshPage(!refreshPage);
   };
 
   return (
@@ -178,7 +180,7 @@ const NotificationComponent = () => {
         <div className="flex min-h-80 items-center justify-center">
           <Loading />
         </div>
-      ) : notifications.length < 1 && currentCategory ? (
+      ) : allNotifications.length < 1 ? (
         <div className="flex min-h-96 w-full flex-col items-center justify-center gap-4 p-4 ">
           <span className="size-64">{marketPlaceModalIcon}</span>
           <p className="text-xl font-medium text-violet-normal">
@@ -254,22 +256,19 @@ const NotificationComponent = () => {
                             <Image
                               src={
                                 booking?.user?.profileImage ??
-                                "/assets/images/serviceProvider/jobs/checkicon.png"
+                                "/assets/images/serviceProvider/user.jpg"
                               }
                               alt="checkicon"
                               width={80}
                               height={80}
                               quality={100}
-                              className="size-12 flex-shrink-0 rounded-full object-cover"
+                              className="size-16 flex-shrink-0 rounded-full object-cover"
                             />
                             {/* </div> */}
                             <div className="space-y-">
                               <div className="flex items-start gap-2 ">
                                 <p className="cursor-pointer font-bold text-violet-normal">
-                                  {booking?.user.fullName}
-                                </p>
-                                <p className="cursor-pointer font-bold text-violet-normal">
-                                  {item.message}
+                                  {item.message} from {booking?.user.fullName}
                                 </p>
                               </div>
                               <p className="text-#716F78 font-satoshiMedium">
@@ -279,15 +278,10 @@ const NotificationComponent = () => {
                           </div>
 
                           {/* left handside */}
-                          <p className="col-span-3 cursor-pointer text-sm text-slate-500">
-                            {formatDateFromNumberArrayToRelativeDate([
-                              item.notificationTime[0],
-                              item.notificationTime[1],
-                              item.notificationTime[2],
-                              item.notificationTime[3],
-                              item.notificationTime[4],
-                              item.notificationTime[5],
-                            ])}
+                          <p className="col-span-3 cursor-pointer text-sm lowercase text-slate-500 first-letter:uppercase">
+                            {formatDateFromNumberArrayToRelativeDate(
+                              item.notificationTime,
+                            )}
                           </p>
                         </div>
                       );
@@ -383,7 +377,7 @@ const NotificationComponent = () => {
                           />
                           <div>
                             <p className="font-satoshiBold font-semibold text-violet-normal">
-                              {selectedNotification.booking?.bookingTitle}
+                              {selectedNotification.booking?.user.fullName}
                             </p>
                             <p className="text-[ #111111] font-satoshiMediumfont-semibold">
                               Location/

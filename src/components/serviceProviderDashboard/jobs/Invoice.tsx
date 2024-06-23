@@ -15,13 +15,16 @@ interface ModalPropType {
   isModalOpen: boolean;
   setIsModalOpen: Dispatch<SetStateAction<boolean>>;
   currentBooking: BookingType | undefined;
+  invoiceDraft: InvoiceDraftType | undefined;
 }
 
 const Invoice = ({
   isModalOpen,
   setIsModalOpen,
   currentBooking,
+  invoiceDraft,
 }: ModalPropType) => {
+  // setting invoice state
   const [invoiceState, setInvoiceState] = useState<{
     price: string | number;
     date: Date | null;
@@ -30,10 +33,17 @@ const Invoice = ({
     successData: string;
     loading: boolean;
   }>({
-    price: currentBooking?.price ?? "",
+    price: invoiceDraft?.price ?? currentBooking?.price ?? "",
     // @ts-expect-error "type not curruntly correct "
-    date: convertToDateInputFormat(currentBooking?.startDate) ?? null,
-    gst: currentBooking ? Math.floor((currentBooking.price / 100) * 10) : 0,
+    date:
+      invoiceDraft?.serviceStartOn ??
+      (currentBooking && convertToDateInputFormat(currentBooking?.startDate)) ??
+      null,
+    gst:
+      (invoiceDraft?.gst as number) ??
+      (currentBooking &&
+        Math.floor(((currentBooking.price / 100) as number) * 10)) ??
+      0,
     total: currentBooking
       ? Math.floor(
           currentBooking.price -
@@ -45,20 +55,9 @@ const Invoice = ({
     loading: false,
   });
 
-  const [invoiceDraftData, setInvoiceDraftData] = useState<
-    {
-      bookingId: 0;
-      subTotal: number;
-      total: number;
-      serviceStartOn: string;
-      issuedOn: string;
-      dueOn: string;
-      serviceProviderId: number | undefined;
-      customerId: number;
-      gst: number;
-      platformCharge: number;
-    }[]
-  >([]);
+  const [invoiceDraftData, setInvoiceDraftData] = useState<InvoiceDraftType[]>(
+    [],
+  );
 
   const router = useRouter();
   const session = useSession();
@@ -120,7 +119,7 @@ const Invoice = ({
 
   const safeInvoiceToDraft = () => {
     if (!currentBooking) return;
-    const invoiceData = {
+    const invoiceData: InvoiceDraftType = {
       bookingId: currentBooking.id,
       subTotal: invoiceState.total,
       total: currentBooking?.price,
@@ -131,6 +130,7 @@ const Invoice = ({
       customerId: currentBooking.user.id,
       gst: invoiceState.gst,
       platformCharge: Math.floor((Number(invoiceState.price) / 100) * 2),
+      price: invoiceState.price as number,
     };
     setInvoiceDraftData((prev) => {
       const updatedDrafts = prev.filter(

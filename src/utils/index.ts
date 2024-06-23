@@ -66,10 +66,14 @@ export function formatDateFromNumberArrayToRelativeDate(
   dateArray: number[],
 ): string {
   const [year, month, day, hour = 0, minute = 0, second = 0] = dateArray;
-  const date = new Date(year, month - 1, day, hour, minute, second); // JavaScript Date object
-  const now = new Date();
-  const diffTime = date.getTime() - now.getTime();
 
+  const notificationDate = new Date(year, month - 1, day, hour, minute, second);
+  const now = new Date();
+
+  // Calculate time difference in milliseconds
+  const diffTime = now.getTime() - notificationDate.getTime();
+
+  // Calculate differences in units
   const diffSeconds = Math.floor(diffTime / 1000);
   const diffMinutes = Math.floor(diffSeconds / 60);
   const diffHours = Math.floor(diffMinutes / 60);
