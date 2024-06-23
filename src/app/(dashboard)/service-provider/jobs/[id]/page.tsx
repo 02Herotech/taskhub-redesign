@@ -62,6 +62,11 @@ const ViewJobs = () => {
     }
   };
 
+  useEffect(() => {
+    fetchSingleBooking();
+    // eslint-disable-next-line
+  }, [token, requestStatus.data]);
+
   const handleAcceptBooking = async () => {
     try {
       setRequestStatus((prev) => ({ ...prev, isAcceptRequesting: true }));
@@ -118,10 +123,8 @@ const ViewJobs = () => {
       setRequestStatus((prev) => ({ ...prev, isRejectRequesting: false }));
     }
   };
-  useEffect(() => {
-    fetchSingleBooking();
-    // eslint-disable-next-line
-  }, [token, requestStatus.data]);
+
+  const handleFetchInvoiceDraft = () => {};
 
   return (
     <>
@@ -256,14 +259,23 @@ const ViewJobs = () => {
                 )}
                 {(currentBooking.bookingStage === "PROPOSED" ||
                   currentBooking.bookingStage === "ACCEPTED") && (
-                  <Link
-                    href={{
-                      pathname: "/message",
-                    }}
-                    className="rounded-full px-6 py-3 font-bold text-violet-normal  transition-colors duration-300 hover:bg-violet-200 max-md:px-4  max-md:py-2 max-md:text-sm"
-                  >
-                    Chat with Customer
-                  </Link>
+                  <div className="flex items-center gap-2">
+                    <Link
+                      href={{
+                        pathname: "/message",
+                      }}
+                      className="rounded-full border border-violet-normal px-6 py-3  font-bold text-violet-normal transition-colors duration-300 hover:bg-violet-200 max-md:px-4  max-md:py-2 max-md:text-sm"
+                    >
+                      Chat with Customer
+                    </Link>
+
+                    <button
+                      onClick={() => setIsModalOpen(true)}
+                      className="rounded-full bg-violet-active px-6 py-3 text-sm  font-bold text-violet-normal transition-opacity duration-300 hover:opacity-90 max-md:px-4 max-md:py-2 max-md:text-sm "
+                    >
+                      View Invoice draft
+                    </button>
+                  </div>
                 )}
               </div>
               {requestStatus.error && (

@@ -36,6 +36,8 @@ const Navigation = () => {
   const [showMobileNav, setShowMobileNav] = useState(false);
   const [notifications, setNotifications] = useState<NotificationTypes[]>([]);
   const [authLooading, setAuthLooading] = useState(true);
+  const [userProfile, setUserProfile] = useState<UserProfileTypes>();
+
   const pathname = usePathname();
   const [auth, setAuth] = useState<{
     token: string | null;
@@ -109,25 +111,45 @@ const Navigation = () => {
   useEffect(() => {
     if (user && user.id && token) {
       const fetchNotification = async () => {
-        const data: NotificationTypes[] = await handleFetchNotifications({
-          userId: user.id,
-          token,
-        });
-        const unreadNotifications = data.filter(
-          (notification) => notification.read === true,
-        );
-        setNotifications(unreadNotifications);
+        try {
+          const data: NotificationTypes[] = await handleFetchNotifications({
+            userId: user.id,
+            token,
+          });
+          const unreadNotifications = data.filter(
+            (notification) => notification.read === true,
+          );
+          setNotifications(unreadNotifications);
+        } catch (error) {
+          console.error(error);
+        }
       };
+
       fetchNotification();
+      const interval = setInterval(fetchNotification, 10000);
+      return () => clearInterval(interval);
     }
     // eslint-disable-next-line
   }, [token]);
 
+  useEffect(() => {
+    const fetchUserProfile = async () => {
+      try {
+        const url =
+          "https://smp.jacinthsolutions.com.au/api/v1/user/user-profile/" +
+          user?.id;
+        const { data } = await axios.get(url);
+        setUserProfile(data);
+      } catch (error: any) {
+        console.error(error.response.data);
+      }
+    };
+    fetchUserProfile();
+  }, []);
+
   const notificationRoute = isServiceProvider
     ? "/service-provider/notification"
     : "/customer/notifications";
-
-  console.log(auth);
 
   return (
     <>
@@ -135,7 +157,7 @@ const Navigation = () => {
         className={`fixed left-0 right-0 top-0 z-50 w-full ${currentLinks === homeLinks ? `bg-[#F5E2FC]` : `bg-white`} drop-shadow-sm`}
       >
         {authLooading ? (
-          <div className="container flex items-center justify-between px-7 py-4 lg:py-5 " />
+          <div className="container flex min-h-20 items-center justify-between px-7 py-4 lg:py-5 " />
         ) : (
           <div className="container flex items-center justify-between px-7 py-4 lg:py-5">
             <Link href="/">
@@ -207,7 +229,11 @@ const Navigation = () => {
                     trigger={() => (
                       <div className="flex cursor-pointer items-center space-x-1">
                         <Image
-                          src={profileImage || PlaceholderImage.src}
+                          src={
+                            userProfile?.profileImage ||
+                            profileImage ||
+                            PlaceholderImage.src
+                          }
                           alt="Profile"
                           className="size-[46px] rounded-full object-cover"
                           width={46}

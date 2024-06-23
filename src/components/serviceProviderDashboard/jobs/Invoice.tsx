@@ -44,6 +44,22 @@ const Invoice = ({
     successData: "",
     loading: false,
   });
+
+  const [invoiceDraftData, setInvoiceDraftData] = useState<
+    {
+      bookingId: 0;
+      subTotal: number;
+      total: number;
+      serviceStartOn: string;
+      issuedOn: string;
+      dueOn: string;
+      serviceProviderId: number | undefined;
+      customerId: number;
+      gst: number;
+      platformCharge: number;
+    }[]
+  >([]);
+
   const router = useRouter();
   const session = useSession();
   const token = session?.data?.user?.accessToken;
@@ -84,12 +100,13 @@ const Invoice = ({
       setInvoiceState((prev) => ({ ...prev, loading: true }));
       const url =
         "https://smp.jacinthsolutions.com.au/api/v1/booking/generate-invoice";
-      const response = await axios.post(url, invoiceData, {
+      await axios.post(url, invoiceData, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
       });
+      safeInvoiceToDraft();
       setInvoiceState((prev) => ({
         ...prev,
         successData: "Invoice successfully Generated and sent to customer",
@@ -99,6 +116,35 @@ const Invoice = ({
     } finally {
       setInvoiceState((prev) => ({ ...prev, loading: false }));
     }
+  };
+
+  const safeInvoiceToDraft = () => {
+    if (!currentBooking) return;
+    const invoiceData = {
+      bookingId: currentBooking.id,
+      subTotal: invoiceState.total,
+      total: currentBooking?.price,
+      serviceStartOn: formatDateAsYYYYMMDD(invoiceState.date as Date),
+      issuedOn: formatDateAsYYYYMMDD(todayDate),
+      dueOn: formatDateAsYYYYMMDD(tomorrowDate),
+      serviceProviderId: user?.id,
+      customerId: currentBooking.user.id,
+      gst: invoiceState.gst,
+      platformCharge: Math.floor((Number(invoiceState.price) / 100) * 2),
+    };
+    setInvoiceDraftData((prev) => {
+      const updatedDrafts = prev.filter(
+        (invoice) => invoice.bookingId !== invoiceData.bookingId,
+      );
+      const newDrafts = [...updatedDrafts, invoiceData];
+      localStorage.setItem("invoiceDraftData", JSON.stringify(newDrafts));
+      return newDrafts;
+    });
+    localStorage.setItem("invoiceDraftData", JSON.stringify(invoiceDraftData));
+    setInvoiceState((prev) => ({
+      ...prev,
+      successData: "Invoice successfully saved to draft",
+    }));
   };
 
   useEffect(() => {
@@ -123,8 +169,8 @@ const Invoice = ({
         onClick={() => setIsModalOpen(false)}
       ></div>
       {invoiceState.successData ? (
-        <div className="relative z-10 flex max-w-md flex-col items-center justify-center gap-4 rounded-lg bg-violet-light p-5 ">
-          <div className="size-10 rounded-full bg-violet-darker p-2">
+        <div className=" relative z-10 flex w-[90vw] max-w-md  flex-col items-center justify-center gap-4 rounded-lg bg-violet-light p-5 ">
+          <div className="size-10 rounded-full bg-emerald-600 p-2">
             <Image
               src={"/assets/images/serviceProvider/jobs/checkicon.png"}
               alt="checkicon"
@@ -133,10 +179,14 @@ const Invoice = ({
               className="h-full w-full"
             />
           </div>
-          <h2 className="font-satoshiBold text-2xl font-bold text-violet-normal">
+          <h2 className="font-satoshiBold text-2xl font-bold text-emerald-600">
             Success
           </h2>
-          <p className="text-center">{invoiceState.successData}</p>
+          <p className="text-center">
+            {invoiceState.successData.includes("draft")
+              ? "Invoice successfully saved to draft"
+              : "Invoice successfully Generated and sent to customer"}
+          </p>
           <div className="flex  items-center justify-center gap-10">
             <button
               onClick={() => router.push("/service-provider/jobs")}
@@ -273,7 +323,7 @@ const Invoice = ({
                   size={14}
                 />
               ) : (
-                "Done"
+                "Send"
               )}
             </button>
             <button
@@ -281,6 +331,12 @@ const Invoice = ({
               className=" rounded-full px-4 py-2 font-medium text-violet-normal"
             >
               Back
+            </button>
+            <button
+              onClick={safeInvoiceToDraft}
+              className=" rounded-full bg-violet-light px-4 py-2 font-medium text-violet-normal"
+            >
+              Save to draft
             </button>
           </div>
         </div>
