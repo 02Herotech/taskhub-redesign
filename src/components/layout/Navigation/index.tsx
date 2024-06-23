@@ -117,7 +117,7 @@ const Navigation = () => {
             token,
           });
           const unreadNotifications = data.filter(
-            (notification) => notification.read === true,
+            (notification) => notification.read === false,
           );
           setNotifications(unreadNotifications);
         } catch (error) {
