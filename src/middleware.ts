@@ -80,7 +80,6 @@ import { NextResponse } from "next/server";
 export default withAuth(
   async function middleware(req) {
     const token = await getToken({ req });
-    console.log("token", token);
     const isAuth = !!token;
     const isAuthPage = req.nextUrl.pathname.startsWith("/auth");
     if (isAuthPage) {
@@ -118,6 +117,5 @@ export const config = {
     "/customer/settings/:path*",
     "/customer/tasks/:path*",
     "/service-provider/:path*",
-    
   ],
 };
