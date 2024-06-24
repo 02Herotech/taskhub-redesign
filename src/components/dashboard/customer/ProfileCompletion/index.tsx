@@ -75,24 +75,24 @@ const CustomerProfileCompletion = () => {
                 return 0;
               })
               .map((item, index) => (
-                <button
-                  key={index}
-                  className={`flex items-center gap-2 rounded-full px-4 py-2 text-xs font-medium  ${item.status == "activated" ? "bg-violet-normal text-white" : " bg-slate-300 text-slate-700"} `}
-                  disabled={item.status === "activated"}
-                >
-                  <span
-                    className={`rounded-full ${item.status === "activated" ? "bg-white" : "bg-slate-600"} p-1`}
+                <Link href={item.status === "activated" ? `#` : `/customer/profile/edit-profile`}>
+                  <button
+                    key={index}
+                    className={`flex items-center gap-2 rounded-full px-4 py-2 text-xs font-medium  ${item.status == "activated" ? "bg-violet-normal text-white" : " bg-slate-300 text-slate-700"} `}
+                    disabled={item.status === "activated"}
                   >
-                    {item.status === "activated" ? (
-                      <BiCheck className="size-3 text-violet-normal" />
-                    ) : (
-                      <Link href="/customer/profilr/edit-profile">
+                    <span
+                      className={`rounded-full ${item.status === "activated" ? "bg-white" : "bg-slate-600"} p-1`}
+                    >
+                      {item.status === "activated" ? (
+                        <BiCheck className="size-3 text-violet-normal" />
+                      ) : (
                         <BiPlus className="size-3 text-slate-300" />
-                      </Link>
-                    )}
-                  </span>
-                  <span> {item.title} </span>
-                </button>
+                      )}
+                    </span>
+                    <span> {item.title} </span>
+                  </button>
+                </Link>
               ))}
           </div>
         </div>
