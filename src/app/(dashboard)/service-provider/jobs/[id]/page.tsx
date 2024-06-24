@@ -149,6 +149,7 @@ const ViewJobs = () => {
           isModalOpen={isModalOpen}
           setIsModalOpen={setIsModalOpen}
           currentBooking={currentBooking}
+          invoiceDraft={invoiceDraft}
         />
       )}
 
