@@ -30,7 +30,7 @@ import { updateUserProfile } from "@/store/Features/userProfile";
 
 const initialAuthState = {
   token: null,
-  roles: null,
+  role: null,
 };
 
 const Navigation = () => {
@@ -45,7 +45,7 @@ const Navigation = () => {
   const pathname = usePathname();
   const [auth, setAuth] = useState<{
     token: string | null;
-    roles: string[] | null;
+    role: string[] | null;
   }>(initialAuthState);
   const [currentLinks, setCurrentLinks] = useState<LinkRouteTypes[]>([]);
 
@@ -69,17 +69,18 @@ const Navigation = () => {
   useLayoutEffect(() => {
     setAuthLooading(true);
     const authStatus = localStorage.getItem("auth");
-    let auth: { token: string | null; roles: string[] | null } =
+    let auth: { token: string | null; role: string[] | null } =
       initialAuthState;
     if (authStatus) {
       auth = JSON.parse(authStatus);
       setAuth(auth);
       const activeLink = !auth.token
         ? homeLinks
-        : auth.roles && auth.roles[0] === "SERVICE_PROVIDER"
+        : auth.role && auth.role[0] === "SERVICE_PROVIDER"
           ? serviceProviderLinks
           : customerLinks;
       setCurrentLinks(activeLink);
+      console.log(activeLink);
     }
     setAuthLooading(false);
   }, []);

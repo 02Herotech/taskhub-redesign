@@ -39,7 +39,7 @@ const Page = () => {
   }, [token]);
 
   return (
-    <main className="space-y-8 p-4 lg:p-8">
+    <main className="space-y-8 p-4 max-md:pt-10 lg:p-8">
       <ProfileHeader />
       <section className=" flex flex-col flex-wrap gap-6 lg:grid lg:grid-cols-12">
         <motion.div
