@@ -4,6 +4,7 @@ import { marketPlaceModalIcon } from "@/lib/svgIcons";
 import Loading from "@/shared/loading";
 import {
   formatDateFromNumberArray,
+  formatDateFromNumberArrayToPastDate,
   formatDateFromNumberArrayToRelativeDate,
 } from "@/utils";
 import { truncateText } from "@/utils/marketplace";
@@ -237,6 +238,7 @@ const NotificationComponent = () => {
                       const booking = userBookings.find(
                         (singleBooking) => singleBooking.id === item.bookingId,
                       );
+                      console.log(item);
                       if (!booking) return;
                       return (
                         <div
@@ -279,7 +281,7 @@ const NotificationComponent = () => {
 
                           {/* left handside */}
                           <p className="col-span-3 cursor-pointer text-sm lowercase text-slate-500 first-letter:uppercase">
-                            {formatDateFromNumberArrayToRelativeDate(
+                            {formatDateFromNumberArrayToPastDate(
                               item.notificationTime,
                             )}
                           </p>
