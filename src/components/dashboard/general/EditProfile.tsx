@@ -15,6 +15,8 @@ import axios from "axios";
 import { defaultUserDetails } from "@/data/data";
 import { BeatLoader } from "react-spinners";
 import { formatDateAsYYYYMMDD } from "@/utils";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/store";
 
 const userDataSchema = z.object({
   firstName: z.string().min(2).optional(),
@@ -63,6 +65,8 @@ const EditProfile = () => {
   const [selectedDocument, setSelectedDocument] = useState<File | null>(null);
   const [isProfileUpdatedSuccessfully, setIsProfileUpdatedSuccessfully] =
     useState(false);
+
+  const userProfile = useSelector((state: RootState) => state.userProfile);
 
   const session = useSession();
   const user = session?.data?.user?.user;
@@ -273,7 +277,7 @@ const EditProfile = () => {
           <Image
             src={
               isEditingProfilePicture.image ??
-              user?.profileImage ??
+              userProfile.profile?.profileImage ??
               "/assets/images/serviceProvider/user.jpg"
             }
             alt="user"
@@ -370,9 +374,7 @@ const EditProfile = () => {
         {/* Bio */}
         {isServiceProvider && (
           <section>
-            <h3 className="text-lg font-bold text-primary">
-              Bio
-            </h3>
+            <h3 className="text-lg font-bold text-primary">Bio</h3>
             <label className="flex w-full flex-col gap-3 text-violet-normal">
               <span className="flex items-center justify-between">
                 <span>Bio Description</span>

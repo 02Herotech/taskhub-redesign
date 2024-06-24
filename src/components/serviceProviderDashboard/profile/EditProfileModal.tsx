@@ -1,5 +1,6 @@
 "use client";
 
+import { refreshUserProfile } from "@/store/Features/userProfile";
 import { dataURLtoFile } from "@/utils/service-provider";
 import axios from "axios";
 import { useSession } from "next-auth/react";
@@ -15,6 +16,7 @@ import React, {
 } from "react";
 import { BiCheck, BiXCircle } from "react-icons/bi";
 import { PiFileArrowDownDuotone } from "react-icons/pi";
+import { useDispatch } from "react-redux";
 import { BeatLoader } from "react-spinners";
 import Webcam from "react-webcam";
 
@@ -62,6 +64,7 @@ const EditProfileModal = ({
   const user = session?.data?.user?.user;
   const token = session?.data?.user?.accessToken;
   const isServiceProvider = user?.roles[0] === "SERVICE_PROVIDER";
+  const dispatch = useDispatch();
 
   const capture = useCallback(() => {
     if (webcamRef.current) {
@@ -138,8 +141,11 @@ const EditProfileModal = ({
               },
             },
           );
+          dispatch(refreshUserProfile());
         } catch (error: any) {
           console.error(error.response.data);
+        } finally {
+          dispatch(refreshUserProfile());
         }
       } else {
         setSelectedDocument(selectedFile);

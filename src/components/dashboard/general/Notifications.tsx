@@ -238,7 +238,6 @@ const NotificationComponent = () => {
                       const booking = userBookings.find(
                         (singleBooking) => singleBooking.id === item.bookingId,
                       );
-                      console.log(item);
                       if (!booking) return;
                       return (
                         <div

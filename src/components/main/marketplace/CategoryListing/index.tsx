@@ -24,12 +24,12 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
   const [isViewMore, setIsViewMore] = useState({ state: false });
   const [displayListing, setDisplayListing] = useState<ListingDataType[]>([]);
   const [page, setPage] = useState({ totalPages: 1, currentPage: 0 });
+  const [buttonNumbers, setButtonNumbers] = useState<number[]>([]);
 
-  const handleFetchCategory = async () => {
+  const handleFetchCategory = async (currentPage: number) => {
     const categoryId = categories.find(
       (item) => item.categoryName === category,
     );
-    const currentPage = page.currentPage;
     setIsLoading(true);
     try {
       if (!category) {
@@ -41,6 +41,7 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
           "https://smp.jacinthsolutions.com.au/api/v1/listing/all-active-listings/" +
           currentPage;
         const { data } = await axios.get(url);
+        setPage((prev) => ({ ...prev, totalPages: data.totalPages }));
         content = data.content;
       } else if (categoryId) {
         url =
@@ -48,6 +49,8 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
           categoryId.categoryName;
         const { data } = await axios.get(url);
         content = data;
+        console.log(data);
+        setPage((prev) => ({ ...prev, totalPages: data.totalPages }));
       }
       if (url) {
         setallListsting(content);
@@ -61,15 +64,14 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
   };
 
   useEffect(() => {
-    handleFetchCategory();
+    handleFetchCategory(page.currentPage);
     // eslint-disable-next-line
-  }, [category, page]);
+  }, [category, page.currentPage]);
 
   const getButtonNumbers = () => {
     const half = Math.floor(5 / 2);
     let start = Math.max(page.currentPage - half, 1);
     let end = start + 4;
-
     // Adjust start and end if they exceed boundaries
     if (end > page.totalPages) {
       end = page.totalPages;
@@ -85,7 +87,9 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
     return numbers;
   };
 
-  const buttonNumbers = getButtonNumbers();
+  useEffect(() => {
+    setButtonNumbers(getButtonNumbers());
+  }, [page]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -206,16 +210,31 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
           })}
         </div>
       )}
-      {isViewMore.state && (
-        <div className="mt-10 flex w-full items-center justify-center space-x-7">
+      {isViewMore.state && page.totalPages > 1 && (
+        <div className="mt-10 flex w-full items-center justify-center space-x-2">
           <button
             className="rounded-md bg-status-lightViolet p-2 transition-all duration-300 hover:bg-primary hover:text-white disabled:bg-status-lightViolet disabled:opacity-50 disabled:hover:bg-transparent"
-            disabled={page.currentPage === 1}
+            disabled={page.currentPage === 0}
+            onClick={() =>
+              setPage((prev) => ({
+                ...prev,
+                currentPage: prev.currentPage - 1,
+              }))
+            }
           >
             <IoIosArrowBack />
           </button>
           {buttonNumbers.map((item) => (
-            <button key={item} className="">
+            <button
+              key={item}
+              className={` ${item === page.currentPage + 1 ? " bg-violet-normal  text-white" : ""} rounded-md px-3.5 py-1 hover:bg-violet-200 `}
+              onClick={() =>
+                setPage((prev) => ({
+                  ...prev,
+                  currentPage: item - 1,
+                }))
+              }
+            >
               {item}
             </button>
           ))}
@@ -223,7 +242,13 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
           <button
             className="rounded-md bg-status-lightViolet p-2 hover:bg-primary disabled:bg-status-lightViolet disabled:opacity-50 disabled:hover:bg-transparent"
             // onClick={handleNextPage}
-            disabled={page.currentPage === page.totalPages}
+            disabled={page.currentPage + 1 === page.totalPages}
+            onClick={() =>
+              setPage((prev) => ({
+                ...prev,
+                currentPage: prev.currentPage + 1,
+              }))
+            }
           >
             <IoIosArrowForward />
           </button>

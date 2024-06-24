@@ -4,7 +4,7 @@ import React from "react";
 
 const Wallet = () => {
   return (
-    <section className="relative flex flex-col gap-4 overflow-hidden rounded-xl bg-[#C1BADB] p-6 ">
+    <section className="relative flex min-h-64 flex-col gap-4 overflow-hidden rounded-xl bg-[#C1BADB] p-6 ">
       <Image
         src={"/assets/images/serviceProvider/walletOverlay.png"}
         alt="overlay"

@@ -24,6 +24,9 @@ import {
 import Button from "@/components/global/Button";
 import Image from "next/image";
 import { handleFetchNotifications } from "@/lib/serviceproviderutil";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/store";
+import { updateUserProfile } from "@/store/Features/userProfile";
 
 const initialAuthState = {
   token: null,
@@ -36,7 +39,9 @@ const Navigation = () => {
   const [showMobileNav, setShowMobileNav] = useState(false);
   const [notifications, setNotifications] = useState<NotificationTypes[]>([]);
   const [authLooading, setAuthLooading] = useState(true);
-  const [userProfile, setUserProfile] = useState<UserProfileTypes>();
+  // const [userProfile, setUserProfile] = useState<UserProfileTypes>();
+  const dispatch = useDispatch();
+  const userProfile = useSelector((state: RootState) => state.userProfile);
 
   const pathname = usePathname();
   const [auth, setAuth] = useState<{
@@ -57,12 +62,10 @@ const Navigation = () => {
     }
   };
 
-  const profileImage = session?.data?.user.user.profileImage;
   const userRole = session?.data?.user.user.roles;
   const token = session?.data?.user?.accessToken;
   const user = session?.data?.user?.user;
   const isServiceProvider = userRole && userRole[0] === "SERVICE_PROVIDER";
-  const isAuth = session.status === "authenticated";
 
   useLayoutEffect(() => {
     setAuthLooading(true);
@@ -82,8 +85,6 @@ const Navigation = () => {
     }
     setAuthLooading(false);
   }, []);
-
-  // console.log("isServiceProvider", isServiceProvider)
 
   const dropdownItems = [
     {
@@ -141,13 +142,15 @@ const Navigation = () => {
           "https://smp.jacinthsolutions.com.au/api/v1/user/user-profile/" +
           user?.id;
         const { data } = await axios.get(url);
-        setUserProfile(data);
+        dispatch(updateUserProfile(data));
       } catch (error: any) {
         console.error(error.response.data);
       }
     };
     fetchUserProfile();
-  }, []);
+  }, [userProfile.refresh]);
+
+  console.log(userProfile.refresh, "refresh");
 
   const notificationRoute = isServiceProvider
     ? "/service-provider/notification"
@@ -232,8 +235,7 @@ const Navigation = () => {
                       <div className="flex cursor-pointer items-center space-x-1">
                         <Image
                           src={
-                            userProfile?.profileImage ||
-                            profileImage ||
+                            userProfile?.profile?.profileImage ||
                             PlaceholderImage.src
                           }
                           alt="Profile"
