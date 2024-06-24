@@ -13,7 +13,7 @@ const CustomerGauranteeData = [
   {
     id: 2,
     title: 'Getting the best provider required for your task',
-    details: ' In here we bring you some of the best services providers to get the work done for you in no time.'
+    details: ' In here we bring you some of the best service providers to get the work done for you in no time.'
   },
 
   {

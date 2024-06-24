@@ -40,7 +40,7 @@ const SPHowItWorks = () => {
         </h2>
 
         <p className='text-center lg:text-[35px] text-[20px] font-[600] font-clashMedium text-primary xl:w-[60%] lg:w-[85%] my-6'>
-          Earn your way to Financial <br /> freedom as a <span className='text-tc-orange'>Service provider</span>  on <br /> TaskHub
+          Earn your way to Financial <br /> freedom as a <span className='text-tc-orange'>Service provider</span>   on <br className='md:block hidden'/> TaskHub
         </p>
       </div>
 
@@ -110,9 +110,9 @@ const SPHowItWorks = () => {
           </div>
         </div>
 
-        <div className='lg:w-[40%]  flex flex-col space-y-6'>
+        <div className='lg:w-[40%]  flex flex-col space-y-6 lg:mt-0 mt-10'>
 
-          <div className='relative w-full lg:flex-none flex items-center justify-center lg:mt-0 mt-30'>
+          <div className='relative w-full lg:flex-none flex items-center justify-center'>
             <div className='relative lg:w-full w-[90%] mx-auto lg:h-[300px] h-[250px] rounded-[30px]'>
               <Image
                 src={ServiceProvider3}

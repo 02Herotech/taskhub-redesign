@@ -11,7 +11,6 @@ import icon2 from "../../../../public/assets/images/serviceProvider/AiButton2.pn
 import aiLine from "../../../../public/assets/images/serviceProvider/AiLine.svg";
 import Image from "next/image";
 import { TypeAnimation } from "react-type-animation";
-import AiLine from "./AiLine";
 interface Message {
   id: number;
   type: "user" | "ai";
