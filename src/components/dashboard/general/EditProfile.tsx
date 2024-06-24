@@ -250,7 +250,7 @@ const EditProfile = () => {
   }, [watchField.postcode]);
 
   return (
-    <main className=" relative p-4 lg:grid lg:grid-cols-12 lg:items-start lg:gap-6 lg:p-8 lg:py-16">
+    <main className=" relative p-4 lg:grid lg:grid-cols-12 lg:items-start lg:gap-6 lg:py-16">
       <EditProfileModal
         setIsFormModalShown={setIsFormModalShown}
         setDocumentImage={setDocumentImage}
@@ -264,11 +264,11 @@ const EditProfile = () => {
       {/* Top profile Image section */}
       <section className="col-span-3 flex flex-col items-center justify-center gap-1 pb-8 ">
         <button
-          className="relative mx-auto size-28 overflow-hidden rounded-full hover:shadow-md"
+          className="relative mx-auto size-32 overflow-hidden rounded-full hover:shadow-md"
           onClick={handleChangeProfilePicture}
         >
-          <span className="absolute right-3 top-2/3 z-10 rounded-full bg-white p-1 text-violet-normal">
-            <BiCamera className=" size-5" />
+          <span className="absolute right-3 top-2/3 z-10 rounded-full bg-[#EBE9F4] p-1 text-violet-normal">
+            <BiCamera className="size-5" />
           </span>
           <Image
             src={
@@ -277,8 +277,8 @@ const EditProfile = () => {
               "/assets/images/serviceProvider/user.jpg"
             }
             alt="user"
-            width={80}
-            height={80}
+            width={100}
+            height={100}
             className="h-full w-full rounded-full object-cover"
           />
         </button>
@@ -302,12 +302,12 @@ const EditProfile = () => {
       >
         {/* Personal information */}
         <section className="flex flex-col gap-8 ">
-          <h3 className="text-xl font-bold text-violet-dark lg:text-center">
+          <h3 className="text-lg font-bold text-primary">
             Personal Information
           </h3>
           <div className="flex flex-wrap justify-between gap-6 lg:col-span-8 lg:grid lg:grid-cols-2">
             {/* First name */}
-            <label className="flex w-full flex-col gap-3 text-lg  text-violet-normal ">
+            <label className="flex w-full flex-col gap-3 text-violet-normal ">
               <span className="flex items-center justify-between">
                 <span>First Name</span>
                 {!errors.firstName &&
@@ -324,7 +324,7 @@ const EditProfile = () => {
               />
             </label>
             {/* Last name */}
-            <label className="flex w-full flex-col gap-3 text-lg  text-violet-normal">
+            <label className="flex w-full flex-col gap-3 text-violet-normal">
               <span className="flex items-center justify-between">
                 <span>Last Name</span>
                 {!errors.lastName &&
@@ -341,7 +341,7 @@ const EditProfile = () => {
               />
             </label>
             {/* Date of birth */}
-            <label className="flex w-full flex-col gap-3 text-lg  text-violet-normal ">
+            <label className="flex w-full flex-col gap-3 text-violet-normal ">
               <span className="flex items-center justify-between">
                 <span> Date of Birth</span>
                 {!errors.dateOfBirth && watchField.dateOfBirth !== null && (
@@ -370,10 +370,10 @@ const EditProfile = () => {
         {/* Bio */}
         {isServiceProvider && (
           <section>
-            <h3 className="text-xl font-bold text-violet-dark lg:text-center">
+            <h3 className="text-lg font-bold text-primary">
               Bio
             </h3>
-            <label className="flex w-full flex-col  gap-3 text-lg  text-violet-normal">
+            <label className="flex w-full flex-col gap-3 text-violet-normal">
               <span className="flex items-center justify-between">
                 <span>Bio Description</span>
                 {!errors.bio &&
@@ -393,12 +393,12 @@ const EditProfile = () => {
 
         {/* contact details */}
         <section className="flex flex-col gap-4 ">
-          <h3 className="text-xl font-bold text-violet-dark lg:text-center">
+          <h3 className="text-lg font-bold text-primary">
             Contact Information
           </h3>
           <div className="flex flex-wrap gap-6 lg:col-span-8 lg:grid lg:grid-cols-2">
             {/* Phone number */}
-            <label className="flex w-full flex-col gap-3 text-lg  text-violet-normal  ">
+            <label className="flex w-full flex-col gap-3 text-violet-normal  ">
               <span className="flex items-center justify-between">
                 <span> Phone Number</span>
                 {!errors.phoneNumber &&
@@ -416,7 +416,7 @@ const EditProfile = () => {
               />
             </label>
             {/* Email Address */}
-            <label className="flex w-full flex-col gap-3 text-lg  text-violet-normal ">
+            <label className="flex w-full flex-col gap-3 text-violet-normal ">
               <span className="flex items-center justify-between">
                 <span>Email Address</span>
                 {!errors.emailAddress &&
@@ -436,13 +436,13 @@ const EditProfile = () => {
         </section>
         {/* Address Information */}
         <section className="flex flex-col gap-4 ">
-          <h3 className="text-xl font-bold text-violet-dark lg:text-center">
+          <h3 className="text-lg font-bold text-primary">
             Address Information
           </h3>
 
           <div className="flex flex-wrap gap-6 lg:col-span-8 lg:grid lg:grid-cols-2">
             {/* postcode */}
-            <label className="flex w-full flex-col gap-3 text-lg  text-violet-normal ">
+            <label className="flex w-full flex-col gap-3 text-violet-normal ">
               <span className="flex items-center justify-between">
                 <span>Postal Code</span>
                 {suburbList.length > 0 &&
@@ -460,7 +460,7 @@ const EditProfile = () => {
             </label>
 
             {/* suburb */}
-            <label className="flex w-full flex-col gap-3 text-lg  text-violet-normal ">
+            <label className="flex w-full flex-col gap-3 text-violet-normal ">
               <span className="flex items-center justify-between">
                 <span> Suburb</span>
                 {!errors.suburb &&
@@ -483,7 +483,7 @@ const EditProfile = () => {
             </label>
 
             {/* State */}
-            <label className="flex w-full flex-col gap-3 text-lg  text-violet-normal ">
+            <label className="flex w-full flex-col gap-3 text-violet-normal ">
               <span className="flex items-center justify-between">
                 <span> State</span>
                 {!errors.state &&
@@ -502,7 +502,7 @@ const EditProfile = () => {
         </section>
         {/* Identification Document */}
         <section className="flex flex-col gap-4 ">
-          <h3 className="text-xl font-bold text-violet-dark lg:text-center">
+          <h3 className="text-lg font-bold text-primary">
             Identification Document
           </h3>
           <div className="flex flex-col lg:col-span-8 lg:gap-8">
@@ -536,7 +536,7 @@ const EditProfile = () => {
 
               {/* Id Type Number */}
 
-              <label className="flex w-full flex-col gap-3 text-lg  text-violet-normal">
+              <label className="flex w-full flex-col gap-3 text-violet-normal">
                 <span className="flex items-center justify-between">
                   <span className="flex items-center justify-between gap-9">
                     <span>
@@ -567,7 +567,7 @@ const EditProfile = () => {
             </div>
 
             {/* Upload Identification Document */}
-            <label className="flex w-full flex-col gap-3 text-lg  text-violet-normal lg:max-w-64 ">
+            <label className="flex w-full flex-col gap-3 text-violet-normal lg:max-w-64 ">
               <span className="flex items-center justify-between">
                 <span className="flex items-center justify-between gap-9">
                   <span>Means of ID</span>

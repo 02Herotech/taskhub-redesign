@@ -25,6 +25,7 @@ const Tasks = () => {
     const [selectedService, setSelectedService] = useState<"REMOTE_SERVICE" | "PHYSICAL_SERVICE">("PHYSICAL_SERVICE");
     const [categoriesData, setCategoriesData] = useState<Category[]>([]);
     const [currentPage, setCurrentPage] = useState(1);
+    const [searchResultsPage, setSearchResultsPage] = useState(1);
     const itemsPerPage = 9;
     const [filteredData, setFilteredData] = useState<Task[]>([]);
     const [dataToRender, setDataToRender] = useState<Task[]>([]);
@@ -49,11 +50,16 @@ const Tasks = () => {
         fetchCategoriesData();
     }, []);
 
-    const handlePageChange = (pageNumber: number) => {
-        setCurrentPage(pageNumber);
+    const handlePageChange = (pageNumber: number, isSearch: boolean = false) => {
+        if (isSearch) {
+            setSearchResultsPage(pageNumber);
+        } else {
+            setCurrentPage(pageNumber);
+        }
     };
 
     const totalPages = Math.ceil(tasksData?.totalElements! / itemsPerPage); // Calculate total pages
+    const searchTotalPages = Math.ceil(searchResults?.totalElements! / itemsPerPage); // Calculate total pages for search results
 
     const handleFilterByCategory = (categoryId: number) => {
         if (!tasksData?.content) return;
@@ -477,26 +483,25 @@ const Tasks = () => {
                 {dataToRender.length > 0 && (
                     <div className="flex justify-center items-center my-4">
                         <button
-                            onClick={() => handlePageChange(currentPage - 1)}
-                            disabled={currentPage === 1}
-                            className={`bg-primary text-white mr-10 rounded max-lg:text-xs lg:rounded-[10px] h-[39px] w-[39px] flex items-center justify-center ${currentPage === 1 && 'bg-status-violet'}`}
+                            onClick={() => handlePageChange((searchText ? searchResultsPage : currentPage) - 1, searchText !== "")}
+                            disabled={searchText ? searchResultsPage === 1 : currentPage === 1}
+                            className={`bg-primary text-white mr-10 rounded max-lg:text-xs lg:rounded-[10px] h-[39px] w-[39px] flex items-center justify-center ${searchText ? searchResultsPage === 1 : currentPage === 1 ? 'bg-status-violet' : ''}`}
                         >
                             <FaChevronLeft />
                         </button>
-                        {Array.from({ length: totalPages }, (_, index) => (
+                        {Array.from({ length: searchText ? searchTotalPages : totalPages }, (_, index) => (
                             <button
                                 key={index}
-                                onClick={() => handlePageChange(index + 1)}
-                                className={`border font-bold rounded max-lg:text-xs mx-2 lg:rounded-[10px] h-[39px] w-[39px] flex items-center justify-center ${currentPage === index + 1 ? 'bg-primary text-white' : 'bg-white text-primary '}`}
+                                onClick={() => handlePageChange(index + 1, searchText !== "")}
+                                className={`border font-bold rounded max-lg:text-xs mx-2 lg:rounded-[10px] h-[39px] w-[39px] flex items-center justify-center ${searchText ? searchResultsPage === index + 1 : currentPage === index + 1 ? "bg-primary text-white" : ""}`}
                             >
                                 {index + 1}
                             </button>
                         ))}
                         <button
-                            onClick={() => handlePageChange(currentPage + 1)}
-                            disabled={currentPage === totalPages}
-                            className={`bg-primary text-white ml-10 rounded max-lg:text-xs lg:rounded-[10px] h-[39px] w-[39px] flex items-center justify-center ${currentPage === totalPages && 'bg-status-violet'
-                                }`}
+                            onClick={() => handlePageChange((searchText ? searchResultsPage : currentPage) + 1, searchText !== "")}
+                            disabled={searchText ? searchResultsPage === searchTotalPages : currentPage === totalPages}
+                            className={`bg-primary text-white ml-10 rounded max-lg:text-xs lg:rounded-[10px] h-[39px] w-[39px] flex items-center justify-center ${searchText ? searchResultsPage === searchTotalPages : currentPage === totalPages ? 'bg-status-violet' : ''}`}
                         >
                             <FaChevronRight />
                         </button>
