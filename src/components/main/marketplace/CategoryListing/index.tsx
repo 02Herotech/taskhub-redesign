@@ -49,7 +49,6 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
           categoryId.categoryName;
         const { data } = await axios.get(url);
         content = data;
-        console.log(data);
         setPage((prev) => ({ ...prev, totalPages: data.totalPages }));
       }
       if (url) {

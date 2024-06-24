@@ -39,7 +39,6 @@ const Navigation = () => {
   const [showMobileNav, setShowMobileNav] = useState(false);
   const [notifications, setNotifications] = useState<NotificationTypes[]>([]);
   const [authLooading, setAuthLooading] = useState(true);
-  // const [userProfile, setUserProfile] = useState<UserProfileTypes>();
   const dispatch = useDispatch();
   const userProfile = useSelector((state: RootState) => state.userProfile);
 
@@ -75,20 +74,15 @@ const Navigation = () => {
     if (authStatus) {
       auth = JSON.parse(authStatus);
       setAuth(auth);
-      setCurrentLinks(
-        !auth.token
-          ? homeLinks
-          : isServiceProvider
-            ? serviceProviderLinks
-            : customerLinks,
-      );
+      const activeLink = !auth.token
+        ? homeLinks
+        : auth.roles && auth.roles[0] === "SERVICE_PROVIDER"
+          ? serviceProviderLinks
+          : customerLinks;
+      setCurrentLinks(activeLink);
     }
     setAuthLooading(false);
   }, []);
-
-  console.log(auth);
-
-  // console.log("isServiceProvider", isServiceProvider)
 
   const dropdownItems = [
     {
@@ -147,15 +141,12 @@ const Navigation = () => {
           user?.id;
         const { data } = await axios.get(url);
         dispatch(updateUserProfile(data));
-        console.log(data, "data logged");
       } catch (error: any) {
         console.error(error.response.data);
       }
     };
     fetchUserProfile();
-  }, [userProfile.refresh]);
-
-  console.log(userProfile.refresh, "refresh");
+  }, [user?.id, userProfile.refresh, dispatch]);
 
   const notificationRoute = isServiceProvider
     ? "/service-provider/notification"
