@@ -1,9 +1,9 @@
 "use client"
 
+import Image from 'next/image';
 import Button from '@/components/global/Button'
 import { HiOutlineLocationMarker } from 'react-icons/hi'
 import { FiCalendar, FiClock } from "react-icons/fi";
-import Image from 'next/image';
 import { useGetTaskByIdQuery } from '@/services/tasks';
 import { dayOfWeekNames, formatAmount, monthNames, suffixes } from '@/lib/utils';
 import Loading from '@/shared/loading';
@@ -75,9 +75,15 @@ const TaskDetailsPage = ({ params }: { params: { id: string } }) => {
             ) : (
                 <>
                     <div className="flex items-center space-x-3 font-satoshi">
-                        <div className="w-6 h-6 rounded-full border mr-3 border-[#34A853] flex items-center justify-center">
-                            <div className="w-4 h-4 rounded-full bg-[#34A853] p-1" />
-                        </div>
+                        {availability === "Available" ? (
+                            <div className="w-6 h-6 rounded-full border mr-3 border-[#34A853] flex items-center justify-center">
+                                <div className="w-4 h-4 rounded-full bg-[#34A853] p-1" />
+                            </div>
+                        ) : (
+                            <div className="w-6 h-6 rounded-full border mr-3 border-status-error-100 flex items-center justify-center">
+                                <div className="w-4 h-4 rounded-full bg-status-error-100 p-1" />
+                            </div>
+                        )}
                         <p className='text-sm lg:text-[18px] font-bold'>
                             {availability}
                         </p>

@@ -250,7 +250,7 @@ const EditProfile = () => {
   }, [watchField.postcode]);
 
   return (
-    <main className=" relative p-4 lg:grid lg:grid-cols-12 lg:items-start lg:gap-6 lg:py-16">
+    <main className=" relative px-4 py-8 lg:grid lg:grid-cols-12 lg:items-start lg:gap-6 lg:py-16">
       <EditProfileModal
         setIsFormModalShown={setIsFormModalShown}
         setDocumentImage={setDocumentImage}
@@ -267,9 +267,9 @@ const EditProfile = () => {
           className="relative mx-auto size-32 overflow-hidden rounded-full hover:shadow-md"
           onClick={handleChangeProfilePicture}
         >
-          <span className="absolute right-3 top-2/3 z-10 rounded-full bg-[#EBE9F4] p-1 text-violet-normal">
+          <div className="absolute right-3 top-[80%] z-50 rounded-full bg-[#EBE9F4] p-1 text-violet-normal">
             <BiCamera className="size-5" />
-          </span>
+          </div>
           <Image
             src={
               isEditingProfilePicture.image ??

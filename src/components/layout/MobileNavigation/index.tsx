@@ -45,14 +45,13 @@ const MobileNavigation = ({ setShowMobileNav }: Props) => {
 
   const handleLogout = async () => {
     try {
-      await signOut();
 
+      await signOut({ callbackUrl: 'https://taskhub-redesign.vercel.app/home' })
       await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/logout`);
       router.push("/home");
-    } catch (error: any) {
-      console.log(error);
-    } finally {
-      router.push("/home");
+
+    } catch (error) {
+      console.error("Logout error:", error);
     }
   };
 
