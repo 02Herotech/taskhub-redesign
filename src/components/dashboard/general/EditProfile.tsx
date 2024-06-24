@@ -268,12 +268,12 @@ const EditProfile = () => {
       {/* Top profile Image section */}
       <section className="col-span-3 flex flex-col items-center justify-center gap-1 pb-8 ">
         <button
-          className="relative mx-auto size-32 overflow-hidden rounded-full hover:shadow-md"
+          className="relative mx-auto size-32 rounded-full hover:shadow-md"
           onClick={handleChangeProfilePicture}
         >
-          <div className="absolute right-3 top-[80%] z-50 rounded-full bg-[#EBE9F4] p-1 text-violet-normal">
+          <span className="absolute right-3 top-[80%] z-20 rounded-full bg-[#EBE9F4] p-1 text-violet-normal">
             <BiCamera className="size-5" />
-          </div>
+          </span>
           <Image
             src={
               isEditingProfilePicture.image ??
@@ -283,7 +283,7 @@ const EditProfile = () => {
             alt="user"
             width={100}
             height={100}
-            className="h-full w-full rounded-full object-cover"
+            className="size-32 h-full w-full rounded-full object-cover"
           />
         </button>
         <h2 className="text-xl font-bold text-slate-900">

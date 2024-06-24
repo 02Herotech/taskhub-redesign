@@ -15,7 +15,7 @@ import React, {
   useState,
 } from "react";
 import { BiCheck, BiXCircle } from "react-icons/bi";
-import { PiFileArrowDownDuotone } from "react-icons/pi";
+import { PiFileArrowDownDuotone, PiSealCheckFill } from "react-icons/pi";
 import { useDispatch } from "react-redux";
 import { BeatLoader } from "react-spinners";
 import Webcam from "react-webcam";
@@ -172,25 +172,32 @@ const EditProfileModal = ({
         </button>
 
         {isProfileUpdatedSuccessfully ? (
-          <div className="relative flex flex-col items-center justify-center gap-4">
-            <div className="size-14 rounded-full bg-green-500 p-2">
-              <Image
-                src={"/assets/images/serviceProvider/jobs/checkicon.png"}
-                alt="checkicon"
-                width={80}
-                height={80}
-                className="h-full w-full"
-              />
+          <div className=" flex flex-col items-center justify-center gap-4">
+            <div className="flex size-20 items-center justify-center rounded-full bg-[#C1F6C3] bg-opacity-60">
+              <div className=" flex size-14 items-center justify-center rounded-full bg-[#A6F8AA] p-2">
+                <PiSealCheckFill className="size-10 text-green-500" />
+              </div>
             </div>
-            <p className="text-center font-semibold text-green-500">
-              Your Update is recieved and awaiting approval
+            <p className="text-center font-satoshiBold text-2xl font-extrabold text-violet-normal">
+              Request Sent!
             </p>
-            <button
-              onClick={handleCloseModal}
-              className="rounded-full bg-violet-normal px-4 py-2 font-bold text-white"
-            >
-              Close
-            </button>
+            <p className="text-center font-semibold text-violet-darker">
+              You profile request has been sent and awaiting approval
+            </p>
+            <div className="flex items-center gap-6">
+              <button
+                onClick={handleCloseModal}
+                className="rounded-full bg-violet-active px-4 py-2 font-bold text-violet-dark max-sm:text-sm"
+              >
+                Close
+              </button>
+              <Link
+                href={"/marketplace"}
+                className="rounded-full bg-violet-normal px-4 py-2 font-bold text-white max-sm:text-sm"
+              >
+                Proceed to marketplace
+              </Link>
+            </div>
           </div>
         ) : isEditingProfilePicture.isEditing || isUploadInitiated ? (
           <div className=" flex flex-col items-center justify-center gap-5 space-y-3">

@@ -54,13 +54,11 @@ const Navigation = () => {
     try {
       setAuth(initialAuthState);
       localStorage.setItem("auth", JSON.stringify(initialAuthState));
-
-      await signOut({ callbackUrl: 'https://taskhub-redesign.vercel.app/home' })
+      await signOut();
       await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/logout`);
       router.push("/home");
-      
-    } catch (error) {
-      console.error("Logout error:", error);
+    } catch (error: any) {
+      console.log(error);
     }
   };
 
@@ -87,6 +85,10 @@ const Navigation = () => {
     }
     setAuthLooading(false);
   }, []);
+
+  console.log(auth);
+
+  // console.log("isServiceProvider", isServiceProvider)
 
   const dropdownItems = [
     {
@@ -145,6 +147,7 @@ const Navigation = () => {
           user?.id;
         const { data } = await axios.get(url);
         dispatch(updateUserProfile(data));
+        console.log(data, "data logged");
       } catch (error: any) {
         console.error(error.response.data);
       }
