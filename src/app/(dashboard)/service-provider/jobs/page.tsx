@@ -73,7 +73,7 @@ const Jobs = () => {
                         item?.user?.profileImage ??
                         "/assets/images/serviceProvider/user.jpg"
                       }
-                      alt={item?.user.fullName}
+                      alt={item?.user?.fullName}
                       width={200}
                       height={200}
                       className="h-full w-full object-cover "
@@ -83,14 +83,14 @@ const Jobs = () => {
                     <div className="flex flex-wrap justify-between gap-2 ">
                       <div>
                         <p className="text-lg font-semibold text-violet-normal ">
-                          {item.user.fullName}
+                          {item.user?.fullName}
                         </p>
                         <p className="text-violet-normal">
                           {item.bookingTitle}
                         </p>
                       </div>
                       <div className="space-y-2">
-                        <p className="text-sm font-bold text-orange-normal">
+                        <p className="text-sm font-bold text-orange-normal first-letter:uppercase">
                           <p>
                             {formatDateFromNumberArrayToRelativeDate(
                               item.startDate,

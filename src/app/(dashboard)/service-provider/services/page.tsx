@@ -138,7 +138,7 @@ const ServicesPage = () => {
                     item?.user?.profileImage ??
                     "/assets/images/serviceProvider/user.jpg"
                   }
-                  alt={item?.user.fullName}
+                  alt={item?.user?.fullName}
                   width={200}
                   height={200}
                   className="h-full w-full object-cover "
@@ -148,7 +148,7 @@ const ServicesPage = () => {
                 <div className="flex flex-wrap justify-between gap-2 ">
                   <div>
                     <p className="text-lg font-semibold text-violet-normal ">
-                      {item.user.fullName}
+                      {item?.user?.fullName}
                     </p>
                     <p className="text-violet-normal">{item.bookingTitle}</p>
                   </div>

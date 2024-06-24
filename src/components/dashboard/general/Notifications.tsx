@@ -6,6 +6,7 @@ import {
   formatDateFromNumberArray,
   formatDateFromNumberArrayToPastDate,
   formatDateFromNumberArrayToRelativeDate,
+  formatRelativeDate,
 } from "@/utils";
 import { truncateText } from "@/utils/marketplace";
 import axios from "axios";
@@ -269,7 +270,7 @@ const NotificationComponent = () => {
                             <div className="space-y-">
                               <div className="flex items-start gap-2 ">
                                 <p className="cursor-pointer font-bold text-violet-normal">
-                                  {item.message} from {booking?.user.fullName}
+                                  {item.message} from {booking?.user?.fullName}
                                 </p>
                               </div>
                               <p className="text-#716F78 font-satoshiMedium">
@@ -280,9 +281,7 @@ const NotificationComponent = () => {
 
                           {/* left handside */}
                           <p className="col-span-3 cursor-pointer text-sm lowercase text-slate-500 first-letter:uppercase">
-                            {formatDateFromNumberArrayToPastDate(
-                              item.notificationTime,
-                            )}
+                            {formatRelativeDate(item.notificationTime)}
                           </p>
                         </div>
                       );
@@ -328,7 +327,7 @@ const NotificationComponent = () => {
                                   <HiLocationMarker fill="#716F78" />
                                 </span>
                                 <span>
-                                  {selectedNotification.listing.suburb}
+                                  {selectedNotification.listing?.suburb}
                                 </span>
                               </p>
                             )}
@@ -367,7 +366,8 @@ const NotificationComponent = () => {
                         <div className="flex items-center gap-4">
                           <Image
                             src={
-                              selectedNotification.booking?.user.profileImage ??
+                              selectedNotification.booking?.user
+                                ?.profileImage ??
                               "/assets/images/serviceProvider/user.jpg"
                             }
                             alt="booking image"
@@ -378,7 +378,7 @@ const NotificationComponent = () => {
                           />
                           <div>
                             <p className="font-satoshiBold font-semibold text-violet-normal">
-                              {selectedNotification.booking?.user.fullName}
+                              {selectedNotification.booking?.user?.fullName}
                             </p>
                             <p className="text-[ #111111] font-satoshiMediumfont-semibold">
                               Location/

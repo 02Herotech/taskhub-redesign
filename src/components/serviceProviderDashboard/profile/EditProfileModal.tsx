@@ -102,13 +102,15 @@ const EditProfileModal = ({
   };
 
   const handleCloseModal = () => {
+    setIsFormModalShown(false);
     setImageSrc(null);
     setCameraActive(false);
-    setIsFormModalShown(false);
-    setIsUploadInitiated(false);
-    setSelectedFile(null);
-    setisEditingProfilePicture((prev) => ({ ...prev, isEditing: false }));
-    setIsProfileUpdatedSuccessfully(false);
+    const newTimeout = setTimeout(() => {
+      setisEditingProfilePicture((prev) => ({ ...prev, isEditing: false }));
+      setSelectedFile(null);
+      setIsProfileUpdatedSuccessfully(false);
+      setIsUploadInitiated(false);
+    }, 400);
   };
 
   const handleRemoveDocumentImage = () => {
@@ -162,10 +164,14 @@ const EditProfileModal = ({
     <section
       className={`fixed left-0 top-0 z-50 flex h-screen w-screen items-center justify-center bg-black bg-opacity-60 transition-opacity duration-500 ${isFormModalShown ? "pointer-events-auto opacity-100 " : "pointer-events-none opacity-0"} `}
     >
-      <div className="relative w-[90%] max-w-xl rounded-3xl bg-white p-4  lg:p-10 ">
+      <div
+        className="absolute left-0 top-0 h-full w-full"
+        onClick={handleCloseModal}
+      />
+      <div className="relative w-[90%] max-w-xl rounded-3xl bg-white p-4 py-12 lg:p-10 ">
         {/* close modal button */}
         <button
-          className="absolute right-6 top-3 rounded-full bg-violet-light p-2"
+          className="absolute right-4 top-2 rounded-full bg-violet-light p-2"
           onClick={handleCloseModal}
         >
           <BiXCircle className=" h-6 w-6 text-violet-normal" />

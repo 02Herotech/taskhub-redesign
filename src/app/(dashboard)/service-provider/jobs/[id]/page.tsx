@@ -35,7 +35,6 @@ const ViewJobs = () => {
   const router = useRouter();
   const session = useSession();
   const token = session?.data?.user?.accessToken;
-
   const { id } = useParams();
 
   const fetchSingleBooking = async () => {
@@ -172,7 +171,7 @@ const ViewJobs = () => {
                 <div>
                   <p className="text-xl font-bold uppercase">Requested by:</p>
                   <p className="text-lg font-bold text-orange-normal">
-                    {currentBooking.user.fullName}
+                    {currentBooking.user?.fullName}
                   </p>
                 </div>
                 <div>
@@ -195,7 +194,7 @@ const ViewJobs = () => {
                   <div className="size-16 overflow-hidden rounded-s-full">
                     <Image
                       src={
-                        currentBooking.user.profileImage ??
+                        currentBooking.user?.profileImage ??
                         "/assets/images/serviceProvider/user.jpg"
                       }
                       alt="user"

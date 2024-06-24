@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import React, { Dispatch, SetStateAction } from "react";
+import { PiSealCheckFill } from "react-icons/pi";
 
 interface ModalData {
   setIsModalOpen: Dispatch<SetStateAction<boolean>>;
@@ -27,14 +28,10 @@ const Congratulations = ({
         onClick={() => setShowCongratulations(false)}
       ></div>
       <div className="relative z-10 flex max-w-md flex-col items-center justify-center gap-4 rounded-lg bg-violet-light p-5 ">
-        <div className="size-10 rounded-full bg-violet-darker p-2">
-          <Image
-            src={"/assets/images/serviceProvider/jobs/checkicon.png"}
-            alt="checkicon"
-            width={80}
-            height={80}
-            className="h-full w-full"
-          />
+        <div className="flex size-20 items-center justify-center rounded-full bg-[#C1F6C3] bg-opacity-60">
+          <div className=" flex size-14 items-center justify-center rounded-full bg-[#A6F8AA] p-2">
+            <PiSealCheckFill className="size-10 text-green-500" />
+          </div>
         </div>
         <h2 className="font-satoshiBold text-2xl font-bold text-violet-normal">
           Task Accepted

@@ -250,7 +250,7 @@ const PricingModal = ({
             </p>
             <div className="flex items-center gap-6">
               <button
-                // onClick={}
+                onClick={() => setIsModalShown(false)}
                 className="rounded-full bg-violet-active px-4 py-2 font-bold text-violet-dark max-sm:text-sm"
               >
                 Close

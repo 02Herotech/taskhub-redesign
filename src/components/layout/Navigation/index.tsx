@@ -80,7 +80,6 @@ const Navigation = () => {
           ? serviceProviderLinks
           : customerLinks;
       setCurrentLinks(activeLink);
-      console.log(activeLink);
     }
     setAuthLooading(false);
   }, []);

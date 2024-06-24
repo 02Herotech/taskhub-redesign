@@ -90,7 +90,7 @@ const Invoice = ({
       issuedOn: formatDateAsYYYYMMDD(todayDate),
       dueOn: formatDateAsYYYYMMDD(tomorrowDate),
       serviceProviderId: user?.id,
-      customerId: currentBooking.user.id,
+      customerId: currentBooking.user?.id,
       gst: invoiceState.gst,
       platformCharge: Math.floor((Number(invoiceState.price) / 100) * 2),
     };
@@ -127,7 +127,7 @@ const Invoice = ({
       issuedOn: formatDateAsYYYYMMDD(todayDate),
       dueOn: formatDateAsYYYYMMDD(tomorrowDate),
       serviceProviderId: user?.id,
-      customerId: currentBooking.user.id,
+      customerId: currentBooking.user?.id,
       gst: invoiceState.gst,
       platformCharge: Math.floor((Number(invoiceState.price) / 100) * 2),
       price: invoiceState.price as number,
@@ -287,7 +287,7 @@ const Invoice = ({
                 <div>
                   <p className=" font-extrabold text-violet-dark  ">Bill To</p>
                   <p className="font-medium  text-[#4E5158]">
-                    {currentBooking?.user.fullName}
+                    {currentBooking?.user?.fullName}
                   </p>
                 </div>
                 <div>
