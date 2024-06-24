@@ -101,11 +101,11 @@ const ChangePassword = () => {
     };
 
     return (
-        <div className="p-4 lg:px-20 mt-[4rem]">
-            <div className="mt-14 mb-8 space-y-8">
+        <div className="p-4 lg:px-20 mt-10 lg:mt-14">
+            {/* <div className="mt-14 mb-8 space-y-8">
                 <h4 className='text-[#140B31] font-satoshiBold font-bold text-3xl lg:text-4xl'>Change Password</h4>
                 <div className='border-2 border-primary' />
-            </div>
+            </div> */}
             {!isPasswordVerified ? (
                 <main className="space-y-8">
                     <p className="flex items-start lg:items-center gap-x-2 rounded-xl bg-[#FFF0DA] p-5 font-normal text-tc-orange">

@@ -44,7 +44,7 @@ const CustomerTasksPage: React.FC = () => {
         <h4 className='text-[#140B31] font-satoshiBold font-bold text-2xl lg:text-4xl'>My Tasks</h4>
         <div className='border-[1.5px] border-primary' />
       </div> */}
-      <div className="flex items-center space-x-5">
+      <div className="hidden lg:flex items-center space-x-5 mt-10 lg:mt-14">
         <button
           className={`py-3 px-5 rounded-xl text-sm lg:text-base font-satoshiMedium ${activeTab === 'New tasks' ? 'bg-primary text-white' : 'bg-[#EBE9F4] text-[#140B31]'}`}
           onClick={() => handleTabClick('New tasks')}
@@ -64,6 +64,28 @@ const CustomerTasksPage: React.FC = () => {
           Completed tasks
         </button>
       </div>
+
+      <div className="lg:hidden flex items-center space-x-5 mt-10 lg:mt-14">
+        <button
+          className={`py-3 px-5 rounded-xl text-sm lg:text-base font-satoshiMedium ${activeTab === 'New tasks' ? 'bg-primary text-white' : 'bg-[#EBE9F4] text-[#140B31]'}`}
+          onClick={() => handleTabClick('New tasks')}
+        >
+          New
+        </button>
+        <button
+          className={`py-3 px-5 rounded-xl text-sm lg:text-base font-satoshiMedium ${activeTab === 'Ongoing tasks' ? 'bg-primary text-white' : 'bg-[#EBE9F4] text-[#140B31]'}`}
+          onClick={() => handleTabClick('Ongoing tasks')}
+        >
+          Ongoing
+        </button>
+        <button
+          className={`py-3 px-5 rounded-xl text-sm lg:text-base font-satoshiMedium ${activeTab === 'Completed tasks' ? 'bg-primary text-white' : 'bg-[#EBE9F4] text-[#140B31]'}`}
+          onClick={() => handleTabClick('Completed tasks')}
+        >
+          Completed
+        </button>
+      </div>
+      
       <div className="mt-10">
         {renderContent()}
       </div>

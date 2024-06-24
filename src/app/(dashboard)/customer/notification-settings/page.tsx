@@ -13,11 +13,11 @@ const NotificationOptions = [
 
 const NotificationsSettingsPage = () => {
     return (
-        <div className="p-4 lg:px-14 mt-[4rem]">
-            <div className="mt-14 mb-4 space-y-8">
+        <div className="p-4 lg:px-14 mt-10 lg:mt-14">
+            {/* <div className="mt-14 mb-4 space-y-8">
                 <h4 className='text-[#140B31] font-satoshiBold font-bold text-2xl lg:text-4xl'>Notification settings</h4>
                 <div className='border-2 border-primary' />
-            </div>
+            </div> */}
             <div className="py-3 px-6 lg:py-4 lg:px-8 bg-[#EBE9F4] rounded-2xl flex items-center justify-between">
                 <div className="space-y-3">
                     <h3 className="text-[#140B31] font-satoshiBold font-bold text-xl lg:text-2xl">Control how we notify you</h3>
