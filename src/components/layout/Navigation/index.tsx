@@ -75,13 +75,15 @@ const Navigation = () => {
       setCurrentLinks(
         !auth.token
           ? homeLinks
-          : auth.roles && auth?.roles[0] === "SERVICE_PROVIDER"
+          : isServiceProvider
             ? serviceProviderLinks
             : customerLinks,
       );
     }
     setAuthLooading(false);
   }, []);
+
+  // console.log("isServiceProvider", isServiceProvider)
 
   const dropdownItems = [
     {

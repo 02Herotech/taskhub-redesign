@@ -74,105 +74,107 @@ const MobileNavigation = ({ setShowMobileNav }: Props) => {
       >
         {/* <div className="relative min-h-screen font-satoshi"> */}
         <div className="">
-          <div className="flex w-full items-center justify-between">
-            <Logo />
-            <button onClick={() => setShowMobileNav(false)} type="button">
-              <IoMdCloseCircle className="h-9 w-9 text-primary" />
-            </button>
-          </div>
-          {!isAuth && (
-            <div className="mt-8 flex w-full items-center justify-center">
-              <button className="w-[250px] rounded-[50px] bg-[#FE9B07] px-3 py-2 text-[#FFF5E6] hover:bg-[#e79823] xl:text-[16px]">
-                <Link
-                  href={`/auth/sign-up?${serviceProviderParams.toString()}`}
-                  className="flex items-center justify-center"
-                >
-                  <p className="">Become a Service Provider</p>
-                </Link>
+          <div className="">
+            <div className="flex w-full items-center justify-between">
+              <Logo />
+              <button onClick={() => setShowMobileNav(false)} type="button">
+                <IoMdCloseCircle className="h-9 w-9 text-primary" />
               </button>
             </div>
-          )}
-        </div>
-        <ul className="space-y-5 my-8">
-          {currentLinks.map((link, index) => {
-            const isActive =
-              (link.url === "/" && pathname === "/") ||
-              (link.url !== "/" && pathname.includes(link.url!));
-
-            return (
-              <li key={link.label} className="w-full">
-                {link.sublinks ? (
-                  <>
-                    <button
-                      className="flex w-full items-center justify-between"
-                      onClick={() => toggleDropdown(index)}
-                    >
-                      <h4
-                        className={cn("text-lg font-medium text-primary", {
-                          "text-tc-orange": isActive,
-                        })}
-                      >
-                        {link.label}
-                      </h4>
-                      <FaAngleDown
-                        className={cn("size-4 text-primary transition-all", {
-                          "rotate-[180deg]": openDropdown,
-                        })}
-                      />
-                    </button>
-                    {openDropdown === index && (
-                      <ul>
-                        {link.sublinks.map((sublink) => (
-                          <li
-                            key={sublink.label}
-                            className="space-y-7 pl-2 pt-3 overflow-y-scroll"
-                          >
-                            <Link
-                              onClick={() => setShowMobileNav(false)}
-                              href={sublink.url}
-                              passHref
-                              className={cn(
-                                "text-lg font-medium text-primary",
-                                {
-                                  "text-tc-orange":
-                                    sublink.url === "/" && pathname === "/"
-                                      ? true
-                                      : sublink.url !== "/" &&
-                                        pathname.includes(sublink.url)
-                                        ? true
-                                        : false,
-                                },
-                              )}
-                            >
-                              {sublink.label}
-                            </Link>
-                          </li>
-                        ))}
-                      </ul>
-                    )}
-                  </>
-                ) : (
+            {!isAuth && (
+              <div className="mt-8 flex w-full items-center justify-center">
+                <button className="w-[250px] rounded-[50px] bg-[#FE9B07] px-3 py-2 text-[#FFF5E6] hover:bg-[#e79823] xl:text-[16px]">
                   <Link
-                    onClick={() => setShowMobileNav(false)}
-                    href={link.url!}
-                    passHref
-                    className={cn("text-lg font-medium text-primary", {
-                      "text-tc-orange": isActive,
-                    })}
+                    href={`/auth/sign-up?${serviceProviderParams.toString()}`}
+                    className="flex items-center justify-center"
                   >
-                    {link.label}
+                    <p className="">Become a Service Provider</p>
                   </Link>
-                )}
-              </li>
-            );
-          })}
-          <div
-            onClick={handleLogout}
-            className="cursor-pointer text-lg font-medium text-primary mb-10"
-          >
-            Logout
+                </button>
+              </div>
+            )}
           </div>
-        </ul>
+          <ul className="space-y-5 my-8">
+            {currentLinks.map((link, index) => {
+              const isActive =
+                (link.url === "/" && pathname === "/") ||
+                (link.url !== "/" && pathname.includes(link.url!));
+
+              return (
+                <li key={link.label} className="w-full">
+                  {link.sublinks ? (
+                    <>
+                      <button
+                        className="flex w-full items-center justify-between"
+                        onClick={() => toggleDropdown(index)}
+                      >
+                        <h4
+                          className={cn("text-lg font-medium text-primary", {
+                            "text-tc-orange": isActive,
+                          })}
+                        >
+                          {link.label}
+                        </h4>
+                        <FaAngleDown
+                          className={cn("size-4 text-primary transition-all", {
+                            "rotate-[180deg]": openDropdown,
+                          })}
+                        />
+                      </button>
+                      {openDropdown === index && (
+                        <ul>
+                          {link.sublinks.map((sublink) => (
+                            <li
+                              key={sublink.label}
+                              className="space-y-7 pl-2 pt-3 overflow-y-scroll"
+                            >
+                              <Link
+                                onClick={() => setShowMobileNav(false)}
+                                href={sublink.url}
+                                passHref
+                                className={cn(
+                                  "text-lg font-medium text-primary",
+                                  {
+                                    "text-tc-orange":
+                                      sublink.url === "/" && pathname === "/"
+                                        ? true
+                                        : sublink.url !== "/" &&
+                                          pathname.includes(sublink.url)
+                                          ? true
+                                          : false,
+                                  },
+                                )}
+                              >
+                                {sublink.label}
+                              </Link>
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+                    </>
+                  ) : (
+                    <Link
+                      onClick={() => setShowMobileNav(false)}
+                      href={link.url!}
+                      passHref
+                      className={cn("text-lg font-medium text-primary", {
+                        "text-tc-orange": isActive,
+                      })}
+                    >
+                      {link.label}
+                    </Link>
+                  )}
+                </li>
+              );
+            })}
+            <div
+              onClick={handleLogout}
+              className="cursor-pointer text-lg font-medium text-primary mb-10"
+            >
+              Logout
+            </div>
+          </ul>
+        </div>
         <div className="mt-8 w-full">
           {!isAuth && (
             <div className="my-5 flex w-full items-center justify-center space-x-5">
