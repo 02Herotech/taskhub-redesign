@@ -15,13 +15,16 @@ interface ModalPropType {
   isModalOpen: boolean;
   setIsModalOpen: Dispatch<SetStateAction<boolean>>;
   currentBooking: BookingType | undefined;
+  invoiceDraft: InvoiceDraftType | undefined;
 }
 
 const Invoice = ({
   isModalOpen,
   setIsModalOpen,
   currentBooking,
+  invoiceDraft,
 }: ModalPropType) => {
+  // setting invoice state
   const [invoiceState, setInvoiceState] = useState<{
     price: string | number;
     date: Date | null;
@@ -30,10 +33,17 @@ const Invoice = ({
     successData: string;
     loading: boolean;
   }>({
-    price: currentBooking?.price ?? "",
+    price: invoiceDraft?.price ?? currentBooking?.price ?? "",
     // @ts-expect-error "type not curruntly correct "
-    date: convertToDateInputFormat(currentBooking?.startDate) ?? null,
-    gst: currentBooking ? Math.floor((currentBooking.price / 100) * 10) : 0,
+    date:
+      invoiceDraft?.serviceStartOn ??
+      (currentBooking && convertToDateInputFormat(currentBooking?.startDate)) ??
+      null,
+    gst:
+      (invoiceDraft?.gst as number) ??
+      (currentBooking &&
+        Math.floor(((currentBooking.price / 100) as number) * 10)) ??
+      0,
     total: currentBooking
       ? Math.floor(
           currentBooking.price -
@@ -44,6 +54,11 @@ const Invoice = ({
     successData: "",
     loading: false,
   });
+
+  const [invoiceDraftData, setInvoiceDraftData] = useState<InvoiceDraftType[]>(
+    [],
+  );
+
   const router = useRouter();
   const session = useSession();
   const token = session?.data?.user?.accessToken;
@@ -79,16 +94,18 @@ const Invoice = ({
       gst: invoiceState.gst,
       platformCharge: Math.floor((Number(invoiceState.price) / 100) * 2),
     };
+
     try {
       setInvoiceState((prev) => ({ ...prev, loading: true }));
       const url =
         "https://smp.jacinthsolutions.com.au/api/v1/booking/generate-invoice";
-      const response = await axios.post(url, invoiceData, {
+      await axios.post(url, invoiceData, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
       });
+      safeInvoiceToDraft();
       setInvoiceState((prev) => ({
         ...prev,
         successData: "Invoice successfully Generated and sent to customer",
@@ -98,6 +115,36 @@ const Invoice = ({
     } finally {
       setInvoiceState((prev) => ({ ...prev, loading: false }));
     }
+  };
+
+  const safeInvoiceToDraft = () => {
+    if (!currentBooking) return;
+    const invoiceData: InvoiceDraftType = {
+      bookingId: currentBooking.id,
+      subTotal: invoiceState.total,
+      total: currentBooking?.price,
+      serviceStartOn: formatDateAsYYYYMMDD(invoiceState.date as Date),
+      issuedOn: formatDateAsYYYYMMDD(todayDate),
+      dueOn: formatDateAsYYYYMMDD(tomorrowDate),
+      serviceProviderId: user?.id,
+      customerId: currentBooking.user.id,
+      gst: invoiceState.gst,
+      platformCharge: Math.floor((Number(invoiceState.price) / 100) * 2),
+      price: invoiceState.price as number,
+    };
+    setInvoiceDraftData((prev) => {
+      const updatedDrafts = prev.filter(
+        (invoice) => invoice.bookingId !== invoiceData.bookingId,
+      );
+      const newDrafts = [...updatedDrafts, invoiceData];
+      localStorage.setItem("invoiceDraftData", JSON.stringify(newDrafts));
+      return newDrafts;
+    });
+    localStorage.setItem("invoiceDraftData", JSON.stringify(invoiceDraftData));
+    setInvoiceState((prev) => ({
+      ...prev,
+      successData: "Invoice successfully saved to draft",
+    }));
   };
 
   useEffect(() => {
@@ -122,8 +169,8 @@ const Invoice = ({
         onClick={() => setIsModalOpen(false)}
       ></div>
       {invoiceState.successData ? (
-        <div className="relative z-10 flex max-w-md flex-col items-center justify-center gap-4 rounded-lg bg-violet-light p-5 ">
-          <div className="size-10 rounded-full bg-violet-darker p-2">
+        <div className=" relative z-10 flex w-[90vw] max-w-md  flex-col items-center justify-center gap-4 rounded-lg bg-violet-light p-5 ">
+          <div className="size-10 rounded-full bg-emerald-600 p-2">
             <Image
               src={"/assets/images/serviceProvider/jobs/checkicon.png"}
               alt="checkicon"
@@ -132,13 +179,17 @@ const Invoice = ({
               className="h-full w-full"
             />
           </div>
-          <h2 className="font-satoshiBold text-2xl font-bold text-violet-normal">
+          <h2 className="font-satoshiBold text-2xl font-bold text-emerald-600">
             Success
           </h2>
-          <p className="text-center">{invoiceState.successData}</p>
+          <p className="text-center">
+            {invoiceState.successData.includes("draft")
+              ? "Invoice successfully saved to draft"
+              : "Invoice successfully Generated and sent to customer"}
+          </p>
           <div className="flex  items-center justify-center gap-10">
             <button
-              onClick={() => router.push("service-provider/jobs")}
+              onClick={() => router.push("/service-provider/jobs")}
               className="rounded-full bg-violet-normal px-4 py-2 font-semibold text-white transition-opacity duration-300 hover:opacity-90"
             >
               View Jobs
@@ -272,7 +323,7 @@ const Invoice = ({
                   size={14}
                 />
               ) : (
-                "Done"
+                "Send"
               )}
             </button>
             <button
@@ -280,6 +331,12 @@ const Invoice = ({
               className=" rounded-full px-4 py-2 font-medium text-violet-normal"
             >
               Back
+            </button>
+            <button
+              onClick={safeInvoiceToDraft}
+              className=" rounded-full bg-violet-light px-4 py-2 font-medium text-violet-normal"
+            >
+              Save to draft
             </button>
           </div>
         </div>

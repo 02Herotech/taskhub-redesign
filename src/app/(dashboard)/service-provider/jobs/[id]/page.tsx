@@ -28,6 +28,8 @@ const ViewJobs = () => {
     data: "",
     error: "",
   });
+
+  const [invoiceDraft, setInvoiceDraft] = useState<InvoiceDraftType>();
   const [showCongratulations, setShowCongratulations] = useState(false);
 
   const router = useRouter();
@@ -61,6 +63,11 @@ const ViewJobs = () => {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    fetchSingleBooking();
+    // eslint-disable-next-line
+  }, [token, requestStatus.data]);
 
   const handleAcceptBooking = async () => {
     try {
@@ -118,10 +125,17 @@ const ViewJobs = () => {
       setRequestStatus((prev) => ({ ...prev, isRejectRequesting: false }));
     }
   };
+
   useEffect(() => {
-    fetchSingleBooking();
-    // eslint-disable-next-line
-  }, [token, requestStatus.data]);
+    const tempInvoiceData = localStorage.getItem("invoiceDraftData");
+    if (tempInvoiceData && currentBooking) {
+      const invoiceArray: InvoiceDraftType[] = JSON.parse(tempInvoiceData);
+      const currentInvoice = invoiceArray.find(
+        (inovice) => inovice.bookingId === currentBooking?.id,
+      );
+      setInvoiceDraft(currentInvoice);
+    }
+  }, [currentBooking]);
 
   return (
     <>
@@ -229,7 +243,7 @@ const ViewJobs = () => {
                     </button>
                     <button
                       onClick={handleCancelBooking}
-                      className="rounded-full border border-violet-normal bg-violet-light px-6 py-3 text-sm font-medium  text-violet-normal transition-colors duration-300 hover:bg-violet-200 max-md:px-4 max-md:py-2 max-md:text-sm "
+                      className=" rounded-full border border-red-500 bg-violet-light px-6 py-3 text-sm font-bold  text-red-500 transition-colors duration-300 hover:bg-red-300 max-md:px-4 max-md:py-2 max-md:text-sm "
                     >
                       {requestStatus.isRejectRequesting ? (
                         <BeatLoader
@@ -256,14 +270,24 @@ const ViewJobs = () => {
                 )}
                 {(currentBooking.bookingStage === "PROPOSED" ||
                   currentBooking.bookingStage === "ACCEPTED") && (
-                  <Link
-                    href={{
-                      pathname: "/message",
-                    }}
-                    className="rounded-full px-6 py-3 font-bold text-violet-normal  transition-colors duration-300 hover:bg-violet-200 max-md:px-4  max-md:py-2 max-md:text-sm"
-                  >
-                    Chat with Customer
-                  </Link>
+                  <div className="flex items-center gap-2">
+                    <Link
+                      href={{
+                        pathname: "/message",
+                      }}
+                      className="rounded-full border border-violet-normal px-6 py-3  font-bold text-violet-normal transition-colors duration-300 hover:bg-violet-200 max-md:px-4  max-md:py-2 max-md:text-sm"
+                    >
+                      Chat with Customer
+                    </Link>
+                    {invoiceDraft && (
+                      <button
+                        onClick={() => setIsModalOpen(true)}
+                        className="rounded-full bg-violet-active px-6 py-3 text-sm  font-bold text-violet-normal transition-opacity duration-300 hover:opacity-90 max-md:px-4 max-md:py-2 max-md:text-sm "
+                      >
+                        View Invoice draft
+                      </button>
+                    )}
+                  </div>
                 )}
               </div>
               {requestStatus.error && (

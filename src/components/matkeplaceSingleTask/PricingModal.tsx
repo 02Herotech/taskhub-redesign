@@ -235,9 +235,9 @@ const PricingModal = ({
         </div>
       ) : isSubmittedSuccessful ? (
         <div className="relative z-10 flex w-[90vw] max-w-xl flex-col items-center justify-center gap-3 bg-violet-light p-3 px-4 lg:space-y-4 lg:p-10">
-          <div className="clip-triangle absolute left-0 top-0 h-full w-full bg-violet-active"></div>
+          <div className="clip-triangle absolute left-0 top-0 h-full w-full bg-violet-active" />
           <div className="relative flex flex-col items-center justify-center gap-4 bg-white p-6 lg:px-20 ">
-            <div className="size-10 rounded-full bg-violet-darker p-2">
+            <div className="size-14 rounded-full bg-emerald-900 p-2">
               <Image
                 src={"/assets/images/serviceProvider/jobs/checkicon.png"}
                 alt="checkicon"
@@ -246,7 +246,7 @@ const PricingModal = ({
                 className="h-full w-full"
               />
             </div>
-            <p className="text-center text-xl font-bold text-violet-normal">
+            <p className="text-center text-xl font-bold text-emerald-500">
               Booking Proposal successfully sent to the service provider
             </p>
             <Link

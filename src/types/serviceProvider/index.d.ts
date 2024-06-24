@@ -29,3 +29,17 @@ declare interface NotificationTypes {
   type: null;
   notificationTime: number[];
 }
+
+declare interface InvoiceDraftType {
+  bookingId: number;
+  subTotal: number;
+  total: number;
+  serviceStartOn: string;
+  issuedOn: string;
+  dueOn: string;
+  serviceProviderId: number | undefined;
+  customerId: number;
+  gst: number;
+  platformCharge: number;
+  price: number;
+}
