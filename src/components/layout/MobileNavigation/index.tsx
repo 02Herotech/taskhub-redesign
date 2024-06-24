@@ -72,7 +72,8 @@ const MobileNavigation = ({ setShowMobileNav }: Props) => {
         exit={{ x: 100, opacity: 0, transition: { type: "just", delay: 0.1 } }}
         className="container fixed right-0 top-0 z-50 flex h-screen w-full flex-col justify-between space-y-8 overflow-auto bg-white p-8 drop-shadow-md"
       >
-        <div className="relative h-screen font-satoshi">
+        {/* <div className="relative min-h-screen font-satoshi"> */}
+        <div className="">
           <div className="flex w-full items-center justify-between">
             <Logo />
             <button onClick={() => setShowMobileNav(false)} type="button">
@@ -91,137 +92,138 @@ const MobileNavigation = ({ setShowMobileNav }: Props) => {
               </button>
             </div>
           )}
-          <ul className="my-[40px] overflow-y-scroll h-[60vh] space-y-7">
-            {currentLinks.map((link, index) => {
-              const isActive =
-                (link.url === "/" && pathname === "/") ||
-                (link.url !== "/" && pathname.includes(link.url!));
+        </div>
+        <ul className="space-y-5 my-8">
+          {currentLinks.map((link, index) => {
+            const isActive =
+              (link.url === "/" && pathname === "/") ||
+              (link.url !== "/" && pathname.includes(link.url!));
 
-              return (
-                <li key={link.label} className="w-full">
-                  {link.sublinks ? (
-                    <>
-                      <button
-                        className="flex w-full items-center justify-between"
-                        onClick={() => toggleDropdown(index)}
-                      >
-                        <h4
-                          className={cn("text-lg font-medium text-primary", {
-                            "text-tc-orange": isActive,
-                          })}
-                        >
-                          {link.label}
-                        </h4>
-                        <FaAngleDown
-                          className={cn("size-4 text-primary transition-all", {
-                            "rotate-[180deg]": openDropdown,
-                          })}
-                        />
-                      </button>
-                      {openDropdown === index && (
-                        <ul>
-                          {link.sublinks.map((sublink) => (
-                            <li
-                              key={sublink.label}
-                              className="space-y-7 pl-2 pt-3"
-                            >
-                              <Link
-                                onClick={() => setShowMobileNav(false)}
-                                href={sublink.url}
-                                passHref
-                                className={cn(
-                                  "text-lg font-medium text-primary",
-                                  {
-                                    "text-tc-orange":
-                                      sublink.url === "/" && pathname === "/"
-                                        ? true
-                                        : sublink.url !== "/" &&
-                                            pathname.includes(sublink.url)
-                                          ? true
-                                          : false,
-                                  },
-                                )}
-                              >
-                                {sublink.label}
-                              </Link>
-                            </li>
-                          ))}
-                        </ul>
-                      )}
-                    </>
-                  ) : (
-                    <Link
-                      onClick={() => setShowMobileNav(false)}
-                      href={link.url!}
-                      passHref
-                      className={cn("text-lg font-medium text-primary", {
-                        "text-tc-orange": isActive,
-                      })}
+            return (
+              <li key={link.label} className="w-full">
+                {link.sublinks ? (
+                  <>
+                    <button
+                      className="flex w-full items-center justify-between"
+                      onClick={() => toggleDropdown(index)}
                     >
-                      {link.label}
-                    </Link>
-                  )}
-                </li>
-              );
-            })}
-            <div
-              onClick={handleLogout}
-              className="cursor-pointer text-lg font-medium text-primary"
-            >
-              Logout
-            </div>
-          </ul>
-          <div className="absolute bottom-0 w-full">
-            {!isAuth && (
-              <div className="my-5 flex w-full items-center justify-center space-x-5">
-                <Link href="/auth">
-                  <Button className="rounded-full">Sign Up</Button>
-                </Link>
-                <Link href="/auth/login">
-                  <Button
-                    theme="outline"
-                    className="rounded-full bg-transparent"
+                      <h4
+                        className={cn("text-lg font-medium text-primary", {
+                          "text-tc-orange": isActive,
+                        })}
+                      >
+                        {link.label}
+                      </h4>
+                      <FaAngleDown
+                        className={cn("size-4 text-primary transition-all", {
+                          "rotate-[180deg]": openDropdown,
+                        })}
+                      />
+                    </button>
+                    {openDropdown === index && (
+                      <ul>
+                        {link.sublinks.map((sublink) => (
+                          <li
+                            key={sublink.label}
+                            className="space-y-7 pl-2 pt-3 overflow-y-scroll"
+                          >
+                            <Link
+                              onClick={() => setShowMobileNav(false)}
+                              href={sublink.url}
+                              passHref
+                              className={cn(
+                                "text-lg font-medium text-primary",
+                                {
+                                  "text-tc-orange":
+                                    sublink.url === "/" && pathname === "/"
+                                      ? true
+                                      : sublink.url !== "/" &&
+                                        pathname.includes(sublink.url)
+                                        ? true
+                                        : false,
+                                },
+                              )}
+                            >
+                              {sublink.label}
+                            </Link>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </>
+                ) : (
+                  <Link
+                    onClick={() => setShowMobileNav(false)}
+                    href={link.url!}
+                    passHref
+                    className={cn("text-lg font-medium text-primary", {
+                      "text-tc-orange": isActive,
+                    })}
                   >
-                    Login
-                  </Button>
-                </Link>
-              </div>
-            )}
-            <div className="flex flex-col items-center justify-center space-y-8">
-              <SmallLogo />
-              <p className="text-center text-[13px] font-normal text-primary">
-                Online platform that connects Service Provider with Customers
-                who are seeking various services. The platform offers a wide
-                range of services.
-              </p>
-              <div className="flex items-center justify-center space-x-3">
-                <Link
-                  href="/faq"
-                  className="text-[13px] font-medium text-primary underline underline-offset-2"
+                    {link.label}
+                  </Link>
+                )}
+              </li>
+            );
+          })}
+          <div
+            onClick={handleLogout}
+            className="cursor-pointer text-lg font-medium text-primary mb-10"
+          >
+            Logout
+          </div>
+        </ul>
+        <div className="mt-8 w-full">
+          {!isAuth && (
+            <div className="my-5 flex w-full items-center justify-center space-x-5">
+              <Link href="/auth">
+                <Button className="rounded-full">Sign Up</Button>
+              </Link>
+              <Link href="/auth/login">
+                <Button
+                  theme="outline"
+                  className="rounded-full bg-transparent"
                 >
-                  FAQs
-                </Link>
-                <div className="h-[4px] w-[4px] rounded-full bg-primary" />
-                <Link
-                  href="/terms-and-conditions"
-                  className="text-[13px] font-medium text-primary underline underline-offset-2"
-                >
-                  Terms and Conditions
-                </Link>
-                <div className="h-[4px] w-[4px] rounded-full bg-primary" />
-                <Link
-                  href="/privacy"
-                  className="text-[13px] font-medium text-primary underline underline-offset-2"
-                >
-                  Privacy
-                </Link>
-              </div>
-              <h5 className="text-center text-[10px] text-black">
-                {currentYear} TaskHub. All Rights Reserved.
-              </h5>
+                  Login
+                </Button>
+              </Link>
             </div>
+          )}
+          <div className="flex flex-col items-center justify-center space-y-8">
+            <SmallLogo />
+            <p className="text-center text-[13px] font-normal text-primary">
+              Online platform that connects Service Provider with Customers
+              who are seeking various services. The platform offers a wide
+              range of services.
+            </p>
+            <div className="flex items-center justify-center space-x-3">
+              <Link
+                href="/faq"
+                className="text-[13px] font-medium text-primary underline underline-offset-2"
+              >
+                FAQs
+              </Link>
+              <div className="h-[4px] w-[4px] rounded-full bg-primary" />
+              <Link
+                href="/terms-and-conditions"
+                className="text-[13px] font-medium text-primary underline underline-offset-2"
+              >
+                Terms and Conditions
+              </Link>
+              <div className="h-[4px] w-[4px] rounded-full bg-primary" />
+              <Link
+                href="/privacy"
+                className="text-[13px] font-medium text-primary underline underline-offset-2"
+              >
+                Privacy
+              </Link>
+            </div>
+            <h5 className="text-center text-[10px] text-black">
+              {currentYear} TaskHub. All Rights Reserved.
+            </h5>
           </div>
         </div>
+        {/* </div> */}
       </motion.nav>
     </>
   );
