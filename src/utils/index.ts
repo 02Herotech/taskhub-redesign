@@ -163,6 +163,6 @@ export function formatDateFromNumberArrayToPastDate(
     const diffYears = Math.floor(Math.abs(diffDays) / 365);
     return `${diffYears} ${diffYears === 1 ? "year" : "years"} ago`;
   } else {
-    return `${Math.abs(diffDays)} days ago`;
+    return `${Math.abs(diffDays)} ${Math.abs(diffDays) === 1 ? "day" : "days"} ago`;
   }
 }
