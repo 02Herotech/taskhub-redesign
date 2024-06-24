@@ -46,19 +46,19 @@ const CustomerTasksPage: React.FC = () => {
       </div>
       <div className="flex items-center space-x-5">
         <button
-          className={`py-3 px-5 rounded-xl text-base lg:text-lg font-satoshiMedium ${activeTab === 'New tasks' ? 'bg-primary text-white' : 'bg-[#EBE9F4] text-[#140B31]'}`}
+          className={`py-3 px-5 rounded-xl text-sm lg:text-base font-satoshiMedium ${activeTab === 'New tasks' ? 'bg-primary text-white' : 'bg-[#EBE9F4] text-[#140B31]'}`}
           onClick={() => handleTabClick('New tasks')}
         >
           New tasks
         </button>
         <button
-          className={`py-3 px-5 rounded-xl text-base lg:text-lg font-satoshiMedium ${activeTab === 'Ongoing tasks' ? 'bg-primary text-white' : 'bg-[#EBE9F4] text-[#140B31]'}`}
+          className={`py-3 px-5 rounded-xl text-sm lg:text-base font-satoshiMedium ${activeTab === 'Ongoing tasks' ? 'bg-primary text-white' : 'bg-[#EBE9F4] text-[#140B31]'}`}
           onClick={() => handleTabClick('Ongoing tasks')}
         >
           Ongoing tasks
         </button>
         <button
-          className={`py-3 px-5 rounded-xl text-base lg:text-lg font-satoshiMedium ${activeTab === 'Completed tasks' ? 'bg-primary text-white' : 'bg-[#EBE9F4] text-[#140B31]'}`}
+          className={`py-3 px-5 rounded-xl text-sm lg:text-base font-satoshiMedium ${activeTab === 'Completed tasks' ? 'bg-primary text-white' : 'bg-[#EBE9F4] text-[#140B31]'}`}
           onClick={() => handleTabClick('Completed tasks')}
         >
           Completed tasks

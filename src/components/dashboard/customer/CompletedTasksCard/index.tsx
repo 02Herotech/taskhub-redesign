@@ -185,28 +185,28 @@ const CompletedTasksCard = ({ task }: TaskCardProps) => {
                 className="lg:rounded-4xl font-satoshi rounded-xl bg-[#EBE9F4] p-4 mb-4 flex flex-col justify-between h-full"
                 whileHover={{ scale: 1.02, transition: { duration: 0.2 } }}
             >
-                <div className="flex w-full justify-between space-x-2">
+                <div className="flex w-full justify-between items-center space-x-2">
                     <h2 className="overflow-hidden truncate text-ellipsis whitespace-nowrap py-4 text-xl font-satoshiBold font-bold text-primary lg:text-[30px]">
                         {task.taskBriefDescription}
                     </h2>
                     <div className="relative">
                         <button
                             onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                            className="p-3 flex items-center space-x-3 bg-primary text-white rounded-lg"
+                            className="p-2 flex items-center space-x-3 bg-primary text-white rounded-lg"
                         >
-                            <BsThreeDotsVertical />
+                            <BsThreeDotsVertical className="size-4" />
                         </button>
                         <div
                             className={`small-scrollbar right-0 absolute top-[calc(100%+0.2rem)] flex max-h-0 w-[190px] flex-col rounded-md bg-[#EBE9F4] transition-all duration-300 ${isDropdownOpen ? "max-h-64 overflow-y-auto border border-primary" : "max-h-0 overflow-hidden"
                                 }`}
                         >
-                            <div className="p-5 space-y-3 w-full">
+                            <div className="p-2 space-y-3 w-full">
                                 {dropDownItems.map((item, index) => (
                                     <button key={index} onClick={item.onClick} className="flex items-center space-x-3">
-                                        <span className="bg-[#140B31] p-1 rounded-full size-9 flex items-center justify-center text-white">
+                                        <span className="bg-[#140B31] p-1 rounded-full size-7 flex items-center justify-center text-white">
                                             {item.icon}
                                         </span>
-                                        <span className='lg:text-xl text-[#140B31] font-satoshiMedium'>{item.title}</span>
+                                        <span className='text-[#140B31] font-satoshiMedium'>{item.title}</span>
                                     </button>
                                 ))}
                             </div>
