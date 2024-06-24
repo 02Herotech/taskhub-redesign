@@ -15,20 +15,20 @@ const ExperienceData = [
   {
     id: 2,
     icon: <Image alt='' src={CheckSign} fill className='absolute' />,
-    details: 'Get connected to the right customer'
+    details: 'Get connected to the right service provider'
   },
   {
     id: 3,
     icon: <BsShieldFillCheck size={75} />,
     // icon: <Image alt='' src={MessageSign} fill className='absolute object-cover' />,
-    details: 'Communicate with customers via instant messaging'
+    details: 'Communicate with service providers via instant messaging'
   },
 ]
 const Experience = () => {
   return (
     <div>
       <div className='flex items-center justify-center my-10 lg:mt-20 w-full'>
-        <h2 className='lg:text-[30px] text-[18px] text-center  xl:w-[70%] w-full lg:w-[90%]  text-primary font-clashSemiBold font-[600]'>
+        <h2 className='lg:text-[30px] text-[16px] text-center  xl:w-[70%] w-full lg:w-[90%]  text-primary font-clashSemiBold font-[600]'>
           Get the best experience whether you <br /> “<span className='text-tc-orange underline' style={{ textDecorationColor: '#FE9B07' }}>Add a Task</span>” or “<span className='text-tc-orange underline' style={{ textDecorationColor: '#FE9B07' }}>Perform a Service</span>”.   </h2>
       </div>
 

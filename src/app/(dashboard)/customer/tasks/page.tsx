@@ -40,10 +40,10 @@ const CustomerTasksPage: React.FC = () => {
 
   return (
     <div className='p-4 lg:px-14 mt-[4rem]'>
-      <div className="mt-14 mb-8 space-y-8">
+      {/* <div className="mt-14 mb-8 space-y-8">
         <h4 className='text-[#140B31] font-satoshiBold font-bold text-2xl lg:text-4xl'>My Tasks</h4>
         <div className='border-[1.5px] border-primary' />
-      </div>
+      </div> */}
       <div className="flex items-center space-x-5">
         <button
           className={`py-3 px-5 rounded-xl text-sm lg:text-base font-satoshiMedium ${activeTab === 'New tasks' ? 'bg-primary text-white' : 'bg-[#EBE9F4] text-[#140B31]'}`}

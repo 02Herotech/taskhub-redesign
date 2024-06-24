@@ -31,7 +31,7 @@ const NotificationsSettingsPage = () => {
                 {NotificationOptions.map((option, index) => (
                     <div key={index} className="flex items-center justify-between space-x-5 lg:space-x-8 mb-5">
                         <h5 className="text-black text-sm lg:text-lg font-satoshiMedium">{option}</h5>
-                        <input type="checkbox" className="w-4 h-4 lg:w-5 lg:h-5" />
+                        <input type="checkbox" className="w-4 h-4 lg:w-5 lg:h-5 cursor-pointer" />
                     </div>
                 ))}
                 <div className="flex items-center justify-center lg:justify-end mt-6">
