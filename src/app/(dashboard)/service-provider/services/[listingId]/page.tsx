@@ -352,7 +352,7 @@ const EditListing = () => {
             className="absolute h-screen w-screen"
           />
           <div className="relative z-10 flex max-w-md flex-col items-center justify-center gap-4 rounded-lg bg-violet-light p-5 ">
-            <div className="size-10 rounded-full bg-violet-darker p-2">
+            <div className="size-10 rounded-full bg-green-500 p-2">
               <Image
                 src={"/assets/images/serviceProvider/jobs/checkicon.png"}
                 alt="checkicon"
@@ -361,7 +361,7 @@ const EditListing = () => {
                 className="h-full w-full"
               />
             </div>
-            <h2 className="font-satoshiBold text-2xl font-bold text-violet-normal">
+            <h2 className="font-satoshiBold text-2xl font-bold text-green-500">
               Service Updated sucessfully
             </h2>
             {/* <p className="text-center">

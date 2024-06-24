@@ -262,7 +262,6 @@ const EditProfile = () => {
         setSelectedDocument={setSelectedDocument}
       />
       {/* Top profile Image section */}
-
       <section className="col-span-3 flex flex-col items-center justify-center gap-1 pb-8 ">
         <button
           className="relative mx-auto size-28 overflow-hidden rounded-full hover:shadow-md"

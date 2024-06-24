@@ -53,7 +53,7 @@ const SingleListingCard = ({
             />
           </div>
           <div className="mt-2 flex h-full flex-col justify-between">
-            <h2 className="text-lg  font-bold md:text-lg">
+            <h2 className="text-lg font-bold  first-letter:uppercase md:text-lg">
               {truncateText(businessName, 20)}
             </h2>
             <div className="py-4 ">

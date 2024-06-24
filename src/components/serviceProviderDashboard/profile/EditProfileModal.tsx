@@ -166,10 +166,25 @@ const EditProfileModal = ({
         </button>
 
         {isProfileUpdatedSuccessfully ? (
-          <div>
-            <h1 className="text-center text-lg font-medium text-violet-darkHover">
-              Your Update is received and awaiting Approval
-            </h1>
+          <div className="relative flex flex-col items-center justify-center gap-4">
+            <div className="size-14 rounded-full bg-green-500 p-2">
+              <Image
+                src={"/assets/images/serviceProvider/jobs/checkicon.png"}
+                alt="checkicon"
+                width={80}
+                height={80}
+                className="h-full w-full"
+              />
+            </div>
+            <p className="text-center font-semibold text-green-500">
+              Your Update is recieved and awaiting approval
+            </p>
+            <button
+              onClick={handleCloseModal}
+              className="rounded-full bg-violet-normal px-4 py-2 font-bold text-white"
+            >
+              Close
+            </button>
           </div>
         ) : isEditingProfilePicture.isEditing || isUploadInitiated ? (
           <div className=" flex flex-col items-center justify-center gap-5 space-y-3">

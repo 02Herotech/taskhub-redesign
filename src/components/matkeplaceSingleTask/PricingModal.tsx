@@ -103,8 +103,6 @@ const PricingModal = ({
         bookingDescription: formState.description,
         bookingTitle: modalData.title,
       };
-
-      console.log(uploadData);
       const url = "https://smp.jacinthsolutions.com.au/api/v1/booking";
       const { data } = await axios.post(url, uploadData, {
         headers: {
@@ -226,10 +224,11 @@ const PricingModal = ({
               Kindly login to continue
             </p>
             <Link
-              href={`/auth/sign-up?${serviceProviderParams.toString()}`}
+              // href={`/auth/sign-up?${serviceProviderParams.toString()}`}
+              href={`/auth/login`}
               className="rounded-full bg-violet-normal px-6 py-3 font-bold text-white"
             >
-              Sign Up
+              Login
             </Link>
           </div>
         </div>
@@ -237,7 +236,7 @@ const PricingModal = ({
         <div className="relative z-10 flex w-[90vw] max-w-xl flex-col items-center justify-center gap-3 bg-violet-light p-3 px-4 lg:space-y-4 lg:p-10">
           <div className="clip-triangle absolute left-0 top-0 h-full w-full bg-violet-active" />
           <div className="relative flex flex-col items-center justify-center gap-4 bg-white p-6 lg:px-20 ">
-            <div className="size-14 rounded-full bg-emerald-900 p-2">
+            <div className="size-14 rounded-full bg-green-500 p-2">
               <Image
                 src={"/assets/images/serviceProvider/jobs/checkicon.png"}
                 alt="checkicon"
@@ -246,7 +245,7 @@ const PricingModal = ({
                 className="h-full w-full"
               />
             </div>
-            <p className="text-center text-xl font-bold text-emerald-500">
+            <p className="text-center text-xl font-bold text-green-500">
               Booking Proposal successfully sent to the service provider
             </p>
             <Link

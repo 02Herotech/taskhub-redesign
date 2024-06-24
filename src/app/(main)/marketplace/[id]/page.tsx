@@ -82,7 +82,7 @@ const Page = () => {
             {/* content */}
             <div className="container space-y-4 ">
               {/* <p className="font-medium">Recently Added</p> */}
-              <h3 className="lgtext-4xl font-satoshiMedium text-3xl font-bold ">
+              <h3 className="lgtext-4xl font-satoshiMedium text-3xl font-bold first-letter:uppercase ">
                 {displayData?.listingTitle}
               </h3>
               <p className="font-satoshiMedium text-xl font-medium">
