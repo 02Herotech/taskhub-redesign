@@ -75,9 +75,8 @@ const CustomerProfileCompletion = () => {
                 return 0;
               })
               .map((item, index) => (
-                <Link href={item.status === "activated" ? `#` : `/customer/profile/edit-profile`}>
+                <Link href={item.status === "activated" ? `#` : `/customer/profile/edit-profile`} key={index}>
                   <button
-                    key={index}
                     className={`flex items-center gap-2 rounded-full px-4 py-2 text-xs font-medium  ${item.status == "activated" ? "bg-violet-normal text-white" : " bg-slate-300 text-slate-700"} `}
                     disabled={item.status === "activated"}
                   >
