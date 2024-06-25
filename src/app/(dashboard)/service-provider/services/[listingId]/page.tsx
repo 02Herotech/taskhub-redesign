@@ -284,7 +284,6 @@ const EditListing = () => {
       }
       return acc;
     }, {});
-    console.log(body);
     try {
       const url =
         "https://smp.jacinthsolutions.com.au/api/v1/listing/update-listing/" +

@@ -3,8 +3,6 @@
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import { BiCalendar, BiCalendarCheck, BiLocationPlus } from "react-icons/bi";
-import { BsArrowUp, BsCalendarDay } from "react-icons/bs";
-import { CiClock2 } from "react-icons/ci";
 import { FaStar } from "react-icons/fa";
 
 import PricingPlan from "@/components/matkeplaceSingleTask/PricingPlan";
@@ -20,8 +18,6 @@ const Page = () => {
     state: false,
     image: "",
   });
-
-  console.log(currentListing);
 
   useEffect(() => {
     const tempList = localStorage.getItem("content");
@@ -40,7 +36,6 @@ const Page = () => {
           displayData.id;
         const { data } = await axios.get(url);
         setCurrentListing(data);
-        console.log(data);
       } catch (error: any) {
         console.log(error.response.data);
       }

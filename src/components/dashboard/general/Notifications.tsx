@@ -28,6 +28,7 @@ const NotificationComponent = () => {
   );
   const [bookingIds, setBookingIds] = useState<number[]>([]);
   const [userBookings, setUserBookings] = useState<BookingType[]>([]);
+  const [userListings, setUserListings] = useState<ListingDataType[]>([]);
   const [selectedNotification, setSelectedNotification] = useState<{
     notification: NotificationTypes | null;
     booking: BookingType | null;
@@ -46,6 +47,8 @@ const NotificationComponent = () => {
 
   const session = useSession();
   const token = session?.data?.user?.accessToken;
+  const isServiceProvider =
+    session?.data?.user?.user?.roles[0] === "SERVICE_PROVIDER";
   const userId = session?.data?.user?.user?.id;
 
   const handleFetchNotifications = async () => {
@@ -60,18 +63,17 @@ const NotificationComponent = () => {
         },
       });
       const tempdata: NotificationTypes[] = data;
-      tempdata.forEach((item) =>
-        setBookingIds((prev) => [...prev, item.bookingId]),
-      );
+      const newBookingIds = tempdata.map((item) => item.bookingId);
+      setBookingIds((prev) => [...prev, ...newBookingIds]);
       setAlNotifications(data);
-
       setNotifications(data);
     } catch (error: any) {
-      console.error(error.response.data);
+      console.error(error.response?.data || error);
     } finally {
       setLoading(false);
     }
   };
+
   useEffect(() => {
     handleFetchNotifications();
     // eslint-disable-next-line
@@ -91,6 +93,22 @@ const NotificationComponent = () => {
       const responses = await Promise.all(requests);
       const bookings = responses.map((response) => response.data);
       setUserBookings(bookings);
+      console.log(bookings);
+    } catch (error: any) {
+      console.error(error.response?.data || error.message);
+    }
+  };
+
+  const fetchListingById = async () => {
+    try {
+      const requests = userBookings.map((item) => {
+        const url = `https://smp.jacinthsolutions.com.au/api/v1/listing/${item.listing.id}`;
+        return axios.get(url);
+      });
+
+      const responses = await Promise.all(requests);
+      const listings = responses.map((response) => response.data);
+      setUserListings(listings);
     } catch (error: any) {
       console.error(error.response?.data || error.message);
     }
@@ -98,10 +116,14 @@ const NotificationComponent = () => {
 
   useEffect(() => {
     if (bookingIds.length > 0) {
-      fetchBookingById();
+      fetchBookingById().then(() => {
+        fetchListingById().catch((error) => {
+          console.log(error.response?.data || error);
+        });
+      });
     }
     // eslint-disable-next-line
-  }, [bookingIds]);
+  }, [bookingIds, userBookings]);
 
   const handleChangeCategory = (category: string) => {
     setCurrentCategory(category);
@@ -131,34 +153,31 @@ const NotificationComponent = () => {
   const showSelectedNotification = async ({
     notification,
     booking,
+    listing,
   }: {
     notification: NotificationTypes;
     booking: BookingType;
+    listing: ListingDataType;
   }) => {
-    setSelectedNotification((prev) => ({ ...prev, loading: true }));
+    setSelectedNotification({
+      loading: true,
+      notification,
+      booking,
+      listing,
+    });
 
-    setSelectedNotification((prev) => ({ ...prev, notification, booking }));
-    const selectedListingId = booking?.listing.id;
     const notificationId = notification.id;
-
     try {
       const url =
         "https://smp.jacinthsolutions.com.au/api/v1/notification/change-notification-status?notificationId=" +
         notificationId;
-      const response = await axios.post(
+      await axios.post(
         url,
         { notificationId },
         {
           headers: { Authorization: "Bearer " + token },
         },
       );
-    } catch (error: any) {
-      console.error(error.response.data);
-    }
-    try {
-      const url = `https://smp.jacinthsolutions.com.au/api/v1/listing/${selectedListingId}`;
-      const { data } = await axios.get(url);
-      setSelectedNotification((prev) => ({ ...prev, listing: data }));
     } catch (error: any) {
       console.error(error.response.data);
     } finally {
@@ -239,7 +258,11 @@ const NotificationComponent = () => {
                       const booking = userBookings.find(
                         (singleBooking) => singleBooking.id === item.bookingId,
                       );
-                      if (!booking) return;
+                      const listing = userListings.find(
+                        (singleListing) =>
+                          singleListing.id === booking?.listing.id,
+                      );
+                      if (!booking || !listing) return;
                       return (
                         <div
                           key={index}
@@ -247,6 +270,7 @@ const NotificationComponent = () => {
                             showSelectedNotification({
                               notification: item,
                               booking,
+                              listing,
                             })
                           }
                           className=" pointer-events-auto relative flex w-full cursor-pointer justify-between gap-2 rounded-md p-2  transition-shadow duration-300 hover:bg-violet-light lg:items-center"
@@ -257,7 +281,10 @@ const NotificationComponent = () => {
                           <div className=" flex gap-2 lg:items-center">
                             <Image
                               src={
-                                booking?.customer?.user?.profileImage ??
+                                (isServiceProvider
+                                  ? booking?.customer?.user?.profileImage
+                                  : listing?.serviceProvider.user
+                                      .profileImage) ??
                                 "/assets/images/serviceProvider/user.jpg"
                               }
                               alt="checkicon"
@@ -271,7 +298,9 @@ const NotificationComponent = () => {
                               <div className="flex items-start gap-2 ">
                                 <p className="cursor-pointer font-bold text-violet-normal">
                                   {item.message} from{" "}
-                                  {booking?.customer?.user?.fullName}
+                                  {isServiceProvider
+                                    ? booking?.customer?.user?.fullName
+                                    : listing?.serviceProvider?.user?.fullName}
                                 </p>
                               </div>
                               <p className="text-#716F78 font-satoshiMedium">
@@ -332,12 +361,6 @@ const NotificationComponent = () => {
                                 </span>
                               </p>
                             )}
-                            {/* <p className="text-[ #716F78] flex items-center gap-2 text-lg ">
-                              <span>
-                                <BsClock fill="#716F78" />
-                              </span>
-                              <span>Midday</span>
-                            </p> */}
                           </div>
                           <div className="flex items-center justify-between gap-4">
                             {selectedNotification.listing?.createdAt && (
@@ -367,8 +390,11 @@ const NotificationComponent = () => {
                         <div className="flex items-center gap-4">
                           <Image
                             src={
-                              selectedNotification.booking?.customer?.user
-                                ?.profileImage ??
+                              (isServiceProvider
+                                ? selectedNotification.booking?.customer?.user
+                                    ?.profileImage
+                                : selectedNotification.listing?.serviceProvider
+                                    .user.profileImage) ??
                               "/assets/images/serviceProvider/user.jpg"
                             }
                             alt="booking image"
@@ -379,10 +405,11 @@ const NotificationComponent = () => {
                           />
                           <div>
                             <p className="font-satoshiBold font-semibold text-violet-normal">
-                              {
-                                selectedNotification.booking?.customer?.user
-                                  ?.fullName
-                              }
+                              {isServiceProvider
+                                ? selectedNotification.booking?.customer?.user
+                                    ?.fullName
+                                : selectedNotification.listing?.serviceProvider
+                                    ?.user.fullName}
                             </p>
                             <p className="text-[ #111111] font-satoshiMediumfont-semibold">
                               Location/
