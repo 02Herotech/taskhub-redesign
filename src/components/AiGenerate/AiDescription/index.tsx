@@ -369,7 +369,7 @@ const AiDesciption: React.FC<AiGenerateProps> = ({
               )}
             </p>
 
-            <div className="rounded-[20px] lg:px-4 px-2 pb-2  font-medium border-[2px] border-primary ">
+            <div className="Ai-textarea-container rounded-[20px] lg:px-4 px-2 pb-2  font-medium border-[2px] border-primary ">
               <form className="flex items-center pt-2">
                 <textarea
                   name="aiQuery"
