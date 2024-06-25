@@ -191,6 +191,15 @@ const AiDesciption: React.FC<AiGenerateProps> = ({
     }
   }, [isNewQuery, conversation]);
 
+
+  useEffect(() => {
+    if (aiChatView) {
+      document.body.classList.add("no-AiScroll");
+    } else {
+      document.body.classList.remove("no-AiScroll");
+    }
+  }, [aiChatView]);
+
   return (
     <div>
       {displayType === "card" ? (
@@ -230,7 +239,7 @@ const AiDesciption: React.FC<AiGenerateProps> = ({
                 }}
               ></div>
             ))}
-          </div>  
+          </div>
         </div>
       ) : (
         <button
@@ -367,7 +376,7 @@ const AiDesciption: React.FC<AiGenerateProps> = ({
                   placeholder="Enter a request here"
                   onChange={handleInputChange}
                   value={aiQuery}
-                  className="w-full overflow-hidden text-wrap  
+                  className="w-full lg:overflow-hidden text-wrap  
  bg-transparent px-2 text-[16px] font-normal text-primary border-none outline-none resize-none"
                   required
                 />
@@ -383,12 +392,16 @@ const AiDesciption: React.FC<AiGenerateProps> = ({
                   </span>
                 </div>
               </form>
+
+            </div>
+            <span className="pt-1">
+
               {emptyQuerryField && (
-                <p className="font-clashDisplay text-center text-red-500">
+                <p className="font-clashDisplay text-center lg:text-sm text-xs text-red-500">
                   Kindly enter your request
                 </p>
               )}
-            </div>
+            </span>
           </div>
         </div>
       )}

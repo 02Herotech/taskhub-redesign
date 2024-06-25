@@ -3,6 +3,8 @@ import image1 from "../../../../public/assets/images/homepage/securityFeatures/l
 import DollarSign from "../../../../public/assets/images/homepage/howTaskhubWorks/customer/DollarSign.png";
 import CheckSign from "../../../../public/assets/images/homepage/howTaskhubWorks/customer/CheckSign.png";
 import MessageSign from "../../../../public/assets/images/homepage/howTaskhubWorks/customer/MessageSign.png";
+import { BiSolidBadgeDollar } from "react-icons/bi";
+import { BsFillPatchCheckFill, BsShieldFillCheck } from "react-icons/bs";
 
 const SecurityFeaturesData = [
     {
@@ -22,6 +24,23 @@ const SecurityFeaturesData = [
     },
 ]
 
+const SecurityFeaturesDataMobile = [
+    {
+        id: 1,
+        icon: <BiSolidBadgeDollar size={25} className="-ml-[2px] -mt-[2px]" />,
+        details: 'Payments with Enhanced Security'
+    },
+    {
+        id: 2,
+        icon: <BsFillPatchCheckFill size={20} />,
+        details: 'Reliable ratings and reviews'
+    },
+    {
+        id: 3,
+        icon: <BsShieldFillCheck size={20} />,
+        details: 'Coverage for peace of mind'
+    },
+  ]
 const SecurityFeatures = () => {
     return (
         <div className={` w-full  bg-gradient-to-b from-[#FAF2FD] via-[#FDF7FE] to-[#F6E1FD] `}>
@@ -64,11 +83,13 @@ const SecurityFeatures = () => {
                         <Image src={image1} fill alt="" className="absolute rounded-[150px]" />
                     </div>
                 </div>
+
+
                 <div className="flex flex-col gap-5 pb-10">
-                    {SecurityFeaturesData.map((feature) => (
+                    {SecurityFeaturesDataMobile.map((feature) => (
                         <div key={feature.id} className="flex items-center space-x-3">
                             <span className="relative h-[20px] w-[20px] text-[20px] text-[#FE9B07]">
-                                <Image alt="" src={feature.icon} fill className="absolute object-cover" />
+                                {feature.icon}
                             </span>
                             <p className="font-semibold text-[16px]">{feature.details}</p>
                         </div>
