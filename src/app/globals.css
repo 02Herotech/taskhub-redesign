@@ -112,3 +112,9 @@ body {
 .no-AiScroll {
   overflow: hidden;
 }
+
+.Ai-textarea-container {
+  flex: 1;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+}
