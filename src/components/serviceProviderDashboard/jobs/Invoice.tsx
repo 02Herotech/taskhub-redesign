@@ -35,7 +35,6 @@ const Invoice = ({
     loading: boolean;
   }>({
     price: invoiceDraft?.price ?? currentBooking?.price ?? "",
-    // @ts-expect-error "type not curruntly correct "
     date:
       invoiceDraft?.serviceStartOn ??
       (currentBooking && convertToDateInputFormat(currentBooking?.startDate)) ??
@@ -124,7 +123,7 @@ const Invoice = ({
       bookingId: currentBooking.id,
       subTotal: invoiceState.total,
       total: currentBooking?.price,
-      serviceStartOn: formatDateAsYYYYMMDD(invoiceState.date as Date),
+      serviceStartOn: invoiceState.date as Date,
       issuedOn: formatDateAsYYYYMMDD(todayDate),
       dueOn: formatDateAsYYYYMMDD(tomorrowDate),
       serviceProviderId: user?.id,
@@ -141,7 +140,7 @@ const Invoice = ({
       localStorage.setItem("invoiceDraftData", JSON.stringify(newDrafts));
       return newDrafts;
     });
-    localStorage.setItem("invoiceDraftData", JSON.stringify(invoiceDraftData));
+    // localStorage.setItem("invoiceDraftData", JSON.stringify(invoiceDraftData));
     setInvoiceState((prev) => ({
       ...prev,
       successData: "Invoice successfully saved to draft",
@@ -208,7 +207,9 @@ const Invoice = ({
             <label className="flex-grow rounded-lg bg-violet-light p-4 py-2 font-bold ">
               <span className="flex items-center gap-2 text-[#716F78] ">
                 <span>Amount</span>{" "}
-                <BsPencilSquare className="text-violet-normal" />
+                {!currentBooking?.invoiceSent && (
+                  <BsPencilSquare className="text-violet-normal" />
+                )}
               </span>
               <div className="flex w-full items-center gap-1">
                 <p>$ </p>
@@ -217,6 +218,7 @@ const Invoice = ({
                   name="price"
                   value={invoiceState.price}
                   placeholder={currentBooking?.price?.toString()}
+                  disabled={currentBooking?.invoiceSent}
                   className="w-full bg-violet-light py-2 outline-none"
                   onChange={(event) =>
                     setInvoiceState((prev) => ({
@@ -230,12 +232,15 @@ const Invoice = ({
             <label className="flex flex-grow flex-col gap-2 rounded-lg bg-violet-light p-4 py-2 font-bold ">
               <span className="flex items-center gap-2 text-[#716F78]">
                 <span>Start Date</span>
-                <BsPencilSquare className="text-violet-normal" />
+                {!currentBooking?.invoiceSent && (
+                  <BsPencilSquare className="text-violet-normal" />
+                )}
               </span>
               <DatePicker
                 selected={invoiceState.date as Date}
                 minDate={new Date()}
                 required
+                disabled={currentBooking?.invoiceSent}
                 onChange={(date: Date) =>
                   setInvoiceState((prev) => ({
                     ...prev,
@@ -309,32 +314,36 @@ const Invoice = ({
             <BiXCircle className="size-8 text-violet-normal" />
           </button>
           <div className="flex gap-2">
-            <button
-              onClick={generateInvoice}
-              className="rounded-full bg-violet-normal px-4 py-2 font-medium text-white"
-            >
-              {invoiceState.loading ? (
-                <BeatLoader
-                  color={"white"}
-                  loading={invoiceState.loading}
-                  size={14}
-                />
-              ) : (
-                "Send"
-              )}
-            </button>
+            {!currentBooking?.invoiceSent && (
+              <button
+                onClick={generateInvoice}
+                className="rounded-full bg-violet-normal px-4 py-2 font-medium text-white"
+              >
+                {invoiceState.loading ? (
+                  <BeatLoader
+                    color={"white"}
+                    loading={invoiceState.loading}
+                    size={14}
+                  />
+                ) : (
+                  "Send"
+                )}
+              </button>
+            )}
             <button
               onClick={() => setIsModalOpen(false)}
               className=" rounded-full px-4 py-2 font-medium text-violet-normal"
             >
               Back
             </button>
-            <button
-              onClick={safeInvoiceToDraft}
-              className=" rounded-full bg-violet-light px-4 py-2 font-medium text-violet-normal"
-            >
-              Save to draft
-            </button>
+            {!currentBooking?.invoiceSent && (
+              <button
+                onClick={safeInvoiceToDraft}
+                className=" rounded-full bg-violet-light px-4 py-2 font-medium text-violet-normal"
+              >
+                Save to draft
+              </button>
+            )}
           </div>
         </div>
       )}

@@ -34,7 +34,7 @@ declare interface InvoiceDraftType {
   bookingId: number;
   subTotal: number;
   total: number;
-  serviceStartOn: string;
+  serviceStartOn: date;
   issuedOn: string;
   dueOn: string;
   serviceProviderId: number | undefined;
