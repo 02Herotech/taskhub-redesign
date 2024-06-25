@@ -376,7 +376,7 @@ const AiDesciption: React.FC<AiGenerateProps> = ({
                   placeholder="Enter a request here"
                   onChange={handleInputChange}
                   value={aiQuery}
-                  className="w-full lg:overflow-hidden text-wrap  
+                  className="w-full text-wrap  
  bg-transparent px-2 text-[16px] font-normal text-primary border-none outline-none resize-none"
                   required
                 />
