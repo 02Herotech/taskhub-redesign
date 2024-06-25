@@ -171,7 +171,7 @@ const ViewJobs = () => {
                 <div>
                   <p className="text-xl font-bold uppercase">Requested by:</p>
                   <p className="text-lg font-bold text-orange-normal">
-                    {currentBooking.user?.fullName}
+                    {currentBooking?.customer?.user?.fullName}
                   </p>
                 </div>
                 <div>
@@ -194,7 +194,7 @@ const ViewJobs = () => {
                   <div className="size-16 overflow-hidden rounded-s-full">
                     <Image
                       src={
-                        currentBooking.user?.profileImage ??
+                        currentBooking?.customer?.user?.profileImage ??
                         "/assets/images/serviceProvider/user.jpg"
                       }
                       alt="user"

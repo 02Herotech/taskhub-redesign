@@ -352,31 +352,33 @@ const EditListing = () => {
             onClick={() => setShowModal(false)}
             className="absolute h-screen w-screen"
           />
-          <div className=" flex w-full max-w-lg flex-col items-center justify-center gap-4">
-            <div className="flex size-20 items-center justify-center rounded-full bg-[#C1F6C3] bg-opacity-60">
-              <div className=" flex size-14 items-center justify-center rounded-full bg-[#A6F8AA] p-2">
-                <PiSealCheckFill className="size-10 text-green-500" />
+          <div className=" relative z-10 flex w-[90vw] max-w-md  flex-col items-center justify-center gap-4 rounded-lg bg-white p-5 ">
+            <div className=" flex w-full max-w-lg flex-col items-center justify-center gap-4">
+              <div className="flex size-20 items-center justify-center rounded-full bg-[#C1F6C3] bg-opacity-60">
+                <div className=" flex size-14 items-center justify-center rounded-full bg-[#A6F8AA] p-2">
+                  <PiSealCheckFill className="size-10 text-green-500" />
+                </div>
               </div>
-            </div>
-            <p className="text-center font-satoshiBold text-2xl font-extrabold text-violet-normal">
-              Service Updated sucessfully
-            </p>
-            <p className="text-center font-semibold text-violet-darker">
-              Great! You can now view the update on the marketplace
-            </p>
-            <div className="flex items-center gap-6">
-              <button
-                onClick={() => setShowModal(false)}
-                className="rounded-full bg-violet-active px-4 py-2 font-bold text-violet-dark max-sm:text-sm"
-              >
-                Close
-              </button>
-              <Link
-                href={"/marketplace"}
-                className="rounded-full bg-violet-normal px-4 py-2 font-bold text-white max-sm:text-sm"
-              >
-                Proceed to marketplace
-              </Link>
+              <p className="text-center font-satoshiBold text-2xl font-extrabold text-violet-normal">
+                Success
+              </p>
+              <p className="text-center font-semibold text-violet-darker">
+                Great! You can now view the update on the marketplace
+              </p>
+              <div className="flex items-center gap-6">
+                <button
+                  onClick={() => setShowModal(false)}
+                  className="rounded-full bg-violet-active px-4 py-2 font-bold text-violet-dark max-sm:text-sm"
+                >
+                  Close
+                </button>
+                <Link
+                  href={"/marketplace"}
+                  className="rounded-full bg-violet-normal px-4 py-2 font-bold text-white max-sm:text-sm"
+                >
+                  Proceed to marketplace
+                </Link>
+              </div>
             </div>
           </div>
         </section>

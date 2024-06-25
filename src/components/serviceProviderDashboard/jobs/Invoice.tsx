@@ -10,6 +10,7 @@ import { useRouter } from "next/navigation";
 import { BeatLoader } from "react-spinners";
 import { BsPencilSquare } from "react-icons/bs";
 import Image from "next/image";
+import { PiSealCheckFill } from "react-icons/pi";
 
 interface ModalPropType {
   isModalOpen: boolean;
@@ -90,7 +91,7 @@ const Invoice = ({
       issuedOn: formatDateAsYYYYMMDD(todayDate),
       dueOn: formatDateAsYYYYMMDD(tomorrowDate),
       serviceProviderId: user?.id,
-      customerId: currentBooking.user?.id,
+      customerId: currentBooking.customer?.id,
       gst: invoiceState.gst,
       platformCharge: Math.floor((Number(invoiceState.price) / 100) * 2),
     };
@@ -127,7 +128,7 @@ const Invoice = ({
       issuedOn: formatDateAsYYYYMMDD(todayDate),
       dueOn: formatDateAsYYYYMMDD(tomorrowDate),
       serviceProviderId: user?.id,
-      customerId: currentBooking.user?.id,
+      customerId: currentBooking.customer?.id,
       gst: invoiceState.gst,
       platformCharge: Math.floor((Number(invoiceState.price) / 100) * 2),
       price: invoiceState.price as number,
@@ -169,20 +170,16 @@ const Invoice = ({
         onClick={() => setIsModalOpen(false)}
       ></div>
       {invoiceState.successData ? (
-        <div className=" relative z-10 flex w-[90vw] max-w-md  flex-col items-center justify-center gap-4 rounded-lg bg-violet-light p-5 ">
-          <div className="size-10 rounded-full bg-emerald-600 p-2">
-            <Image
-              src={"/assets/images/serviceProvider/jobs/checkicon.png"}
-              alt="checkicon"
-              width={80}
-              height={80}
-              className="h-full w-full"
-            />
+        <div className=" relative z-10 flex w-[90vw] max-w-md  flex-col items-center justify-center gap-4 rounded-lg bg-white p-5 ">
+          <div className="flex size-20 items-center justify-center rounded-full bg-[#C1F6C3] bg-opacity-60">
+            <div className=" flex size-14 items-center justify-center rounded-full bg-[#A6F8AA] p-2">
+              <PiSealCheckFill className="size-10 text-green-500" />
+            </div>
           </div>
-          <h2 className="font-satoshiBold text-2xl font-bold text-emerald-600">
+          <p className="text-center font-satoshiBold text-2xl font-extrabold text-violet-normal">
             Success
-          </h2>
-          <p className="text-center">
+          </p>
+          <p className="text-center font-semibold text-violet-darker">
             {invoiceState.successData.includes("draft")
               ? "Invoice successfully saved to draft"
               : "Invoice successfully Generated and sent to customer"}
@@ -287,7 +284,7 @@ const Invoice = ({
                 <div>
                   <p className=" font-extrabold text-violet-dark  ">Bill To</p>
                   <p className="font-medium  text-[#4E5158]">
-                    {currentBooking?.user?.fullName}
+                    {currentBooking?.customer?.user?.fullName}
                   </p>
                 </div>
                 <div>

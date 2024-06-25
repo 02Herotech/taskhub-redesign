@@ -32,7 +32,6 @@ const Jobs = () => {
         (item) => item.bookingStage === "PROPOSED",
       );
       setBookingData(filteredData);
-      console.log(filteredData);
     } catch (error) {
       console.error("An error occurred while fetching services:", error);
     } finally {
@@ -70,10 +69,10 @@ const Jobs = () => {
                   <div className="col-span-2 size-20 flex-shrink-0 overflow-hidden rounded-full border border-violet-normal lg:size-24">
                     <Image
                       src={
-                        item?.user?.profileImage ??
+                        item?.customer?.user?.profileImage ??
                         "/assets/images/serviceProvider/user.jpg"
                       }
-                      alt={item?.user?.fullName}
+                      alt={item?.customer?.user?.fullName}
                       width={200}
                       height={200}
                       className="h-full w-full object-cover "
@@ -83,7 +82,7 @@ const Jobs = () => {
                     <div className="flex flex-wrap justify-between gap-2 ">
                       <div>
                         <p className="text-lg font-semibold text-violet-normal ">
-                          {item.user?.fullName}
+                          {item?.customer?.user?.fullName}
                         </p>
                         <p className="text-violet-normal">
                           {item.bookingTitle}

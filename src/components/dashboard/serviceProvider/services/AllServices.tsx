@@ -12,6 +12,8 @@ import { BsPencilSquare, BsX } from "react-icons/bs";
 import Link from "next/link";
 import { BiDotsVertical, BiX } from "react-icons/bi";
 import DeleteListingModal from "./DeleteListingModal";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store";
 
 const AllServices = () => {
   const [loading, setLoading] = useState(false);
@@ -25,6 +27,7 @@ const AllServices = () => {
   const session = useSession();
   const token = session?.data?.user?.accessToken;
   const user = session?.data?.user?.user;
+  const { refresh } = useSelector((state: RootState) => state.userProfile);
 
   const fetchAllServices = async () => {
     try {
@@ -54,7 +57,7 @@ const AllServices = () => {
   useEffect(() => {
     fetchAllServices();
     // eslint-disable-next-line
-  }, [token]);
+  }, [token, refresh]);
 
   const handleShowDropdown = (id: number) => {
     if (id === showDropdown.id && showDropdown.isShown === true) {

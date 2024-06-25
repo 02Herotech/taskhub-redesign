@@ -257,7 +257,7 @@ const NotificationComponent = () => {
                           <div className=" flex gap-2 lg:items-center">
                             <Image
                               src={
-                                booking?.user?.profileImage ??
+                                booking?.customer?.user?.profileImage ??
                                 "/assets/images/serviceProvider/user.jpg"
                               }
                               alt="checkicon"
@@ -270,7 +270,8 @@ const NotificationComponent = () => {
                             <div className="space-y-">
                               <div className="flex items-start gap-2 ">
                                 <p className="cursor-pointer font-bold text-violet-normal">
-                                  {item.message} from {booking?.user?.fullName}
+                                  {item.message} from{" "}
+                                  {booking?.customer?.user?.fullName}
                                 </p>
                               </div>
                               <p className="text-#716F78 font-satoshiMedium">
@@ -366,7 +367,7 @@ const NotificationComponent = () => {
                         <div className="flex items-center gap-4">
                           <Image
                             src={
-                              selectedNotification.booking?.user
+                              selectedNotification.booking?.customer?.user
                                 ?.profileImage ??
                               "/assets/images/serviceProvider/user.jpg"
                             }
@@ -378,7 +379,10 @@ const NotificationComponent = () => {
                           />
                           <div>
                             <p className="font-satoshiBold font-semibold text-violet-normal">
-                              {selectedNotification.booking?.user?.fullName}
+                              {
+                                selectedNotification.booking?.customer?.user
+                                  ?.fullName
+                              }
                             </p>
                             <p className="text-[ #111111] font-satoshiMediumfont-semibold">
                               Location/
