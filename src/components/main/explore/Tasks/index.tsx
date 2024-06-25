@@ -58,7 +58,7 @@ const Tasks = () => {
             setCurrentPage(pageNumber);
         }
     };
-    
+
     const totalPages = Math.ceil(tasksData?.totalElements! / itemsPerPage); // Calculate total pages
     const searchTotalPages = Math.ceil(searchResults?.totalElements! / itemsPerPage); // Calculate total pages for search results
     const filteredTotalPages = Math.ceil(filteredData.length / itemsPerPage); // Calculate total pages for filtered data
@@ -187,7 +187,7 @@ const Tasks = () => {
                 </div> */}
                 <div className="flex w-full items-center justify-between">
                     <form className="flex items-center space-x-4 max-lg:my-4 max-lg:w-full max-lg:justify-between max-lg:px-1">
-                        <div className="flex h-[29px] items-center space-x-2 rounded-lg border border-status-violet bg-[#F1F1F2] px-4 max-sm:w-full lg:h-[40px] lg:w-[300px] lg:rounded-2xl">
+                        <div className="flex h-[29px] items-center space-x-2 rounded-lg border border-status-violet bg-[#F1F1F2] px-4 max-sm:w-full lg:h-[49px] lg:w-[300px] lg:rounded-2xl">
                             <CiSearch className="h-6 w-6 text-status-violet" />
                             <input
                                 placeholder="Search"
@@ -196,16 +196,16 @@ const Tasks = () => {
                                 className="w-full bg-[#F1F1F2] text-base outline-none placeholder:text-base focus:outline-none active:outline-none lg:py-3"
                             />
                         </div>
-                        <button type="button" className="flex h-[29px] w-[29px] items-center justify-center rounded-lg bg-primary lg:h-[40px] lg:w-[40px] lg:rounded-2xl">
+                        <button type="button" className="flex h-[29px] w-[29px] items-center justify-center rounded-lg bg-primary lg:h-[49px] lg:w-[49px] lg:rounded-2xl">
                             <CiSearch className="h-5 w-5 text-status-violet lg:h-7 lg:w-7" />
                         </button>
                     </form>
-                    <Button
+                    {/* <Button
                         theme="secondary"
-                        className="hidden h-[29px] items-center justify-center rounded-full bg-tc-orange px-14 font-bold text-white lg:flex lg:h-[40px]"
+                        className="hidden h-[29px] items-center justify-center rounded-full bg-tc-orange px-14 font-bold text-white lg:flex lg:h-[49px]"
                     >
                         1 New Task
-                    </Button>
+                    </Button> */}
                 </div>
             </section>
             <div className="hidden lg:flex lg:space-x-4 mt-10 items-center">
@@ -313,6 +313,7 @@ const Tasks = () => {
                 {/* Price */}
                 <div className="">
                     <Dropdown
+                        closeOnClick={false}
                         trigger={() => (
                             <div className="w-[130px] border-2 border-primary text-primary bg-[#F1F1F2] flex items-center justify-center space-x-2 font-semibold py-2 px-4 rounded-full">
                                 <h2 className="text-sm">Pricing</h2>
