@@ -153,11 +153,11 @@ const TransactionHistory = () => {
 
   return (
     <div className='p-4 lg:px-14 mt-14'>
-      <div className="mt-14 mb-8 space-y-8">
+      {/* <div className="mt-14 mb-8 space-y-8">
         <h4 className='text-[#140B31] font-satoshiBold font-bold text-2xl lg:text-4xl'>Payment settings</h4>
         <div className='border-[1.5px] border-primary' />
-      </div>
-      <div className="flex items-center space-x-2 mb-5 lg:mb-10">
+      </div> */}
+      <div className="flex items-center space-x-2 mb-5 lg:mb-10 mt-10 lg:mt-14">
         <Button className='px-2' onClick={router.back}>
           <IoArrowBackSharp className='size-7' />
         </Button>
