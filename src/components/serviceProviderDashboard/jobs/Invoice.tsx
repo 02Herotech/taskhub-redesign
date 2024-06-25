@@ -26,6 +26,7 @@ const Invoice = ({
   invoiceDraft,
 }: ModalPropType) => {
   // setting invoice state
+
   const [invoiceState, setInvoiceState] = useState<{
     price: string | number;
     date: Date | null;
@@ -34,23 +35,10 @@ const Invoice = ({
     successData: string;
     loading: boolean;
   }>({
-    price: invoiceDraft?.price ?? currentBooking?.price ?? "",
-    date:
-      invoiceDraft?.serviceStartOn ??
-      (currentBooking && convertToDateInputFormat(currentBooking?.startDate)) ??
-      null,
-    gst:
-      (invoiceDraft?.gst as number) ??
-      (currentBooking &&
-        Math.floor(((currentBooking.price / 100) as number) * 10)) ??
-      0,
-    total: currentBooking
-      ? Math.floor(
-          currentBooking.price -
-            (currentBooking.price / 100) * 10 -
-            (currentBooking.price / 100) * 2,
-        )
-      : 0,
+    price: "",
+    date: null,
+    gst: 0,
+    total: 0,
     successData: "",
     loading: false,
   });
@@ -63,6 +51,40 @@ const Invoice = ({
   const session = useSession();
   const token = session?.data?.user?.accessToken;
   const user = session?.data?.user?.user;
+
+  useEffect(() => {
+    setInvoiceState({
+      price:
+        invoiceDraft?.price !== undefined
+          ? invoiceDraft.price
+          : currentBooking?.price ?? "",
+      date:
+        invoiceDraft?.serviceStartOn !== undefined
+          ? invoiceDraft.serviceStartOn
+          : (currentBooking &&
+              convertToDateInputFormat(currentBooking?.startDate)) ??
+            null,
+      gst:
+        invoiceDraft?.gst !== undefined
+          ? invoiceDraft.gst
+          : currentBooking
+            ? Math.floor((currentBooking.price / 100) * 10)
+            : 0,
+      total:
+        invoiceDraft?.total !== undefined
+          ? invoiceDraft.total
+          : currentBooking
+            ? Math.floor(
+                currentBooking.price -
+                  (currentBooking.price / 100) * 10 -
+                  (currentBooking.price / 100) * 2,
+              )
+            : 0,
+
+      successData: "",
+      loading: false,
+    });
+  }, [currentBooking, invoiceDraft]);
 
   function convertToDateInputFormat(dateArray: number[]) {
     const [year, month, day] = dateArray;
@@ -85,7 +107,7 @@ const Invoice = ({
     const invoiceData = {
       bookingId: currentBooking.id,
       subTotal: invoiceState.total,
-      total: currentBooking?.price,
+      total: invoiceState.price,
       serviceStartOn: formatDateAsYYYYMMDD(invoiceState.date as Date),
       issuedOn: formatDateAsYYYYMMDD(todayDate),
       dueOn: formatDateAsYYYYMMDD(tomorrowDate),
@@ -122,7 +144,7 @@ const Invoice = ({
     const invoiceData: InvoiceDraftType = {
       bookingId: currentBooking.id,
       subTotal: invoiceState.total,
-      total: currentBooking?.price,
+      total: invoiceState.price as number,
       serviceStartOn: invoiceState.date as Date,
       issuedOn: formatDateAsYYYYMMDD(todayDate),
       dueOn: formatDateAsYYYYMMDD(tomorrowDate),
@@ -132,6 +154,7 @@ const Invoice = ({
       platformCharge: Math.floor((Number(invoiceState.price) / 100) * 2),
       price: invoiceState.price as number,
     };
+
     setInvoiceDraftData((prev) => {
       const updatedDrafts = prev.filter(
         (invoice) => invoice.bookingId !== invoiceData.bookingId,
