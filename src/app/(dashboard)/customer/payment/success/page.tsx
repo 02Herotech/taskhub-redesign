@@ -7,6 +7,7 @@ import { useSearchParams } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import { useEffect } from 'react';
 import axios from 'axios';
+import { GrFormCheckmark } from 'react-icons/gr';
 
 const SuccessPage = () => {
     const searchParams = useSearchParams();
@@ -43,10 +44,12 @@ const SuccessPage = () => {
 
     return (
         <div className="h-[80vh] flex items-center justify-center bg-white">
-            <div className="p-8 w-full text-center">
-                <Image src="/assets/images/customer/success.png" alt="Success" width={180} height={180} className="mx-auto mb-6" />
-                <h1 className="text-3xl font-bold mb-4">Payment Successful!</h1>
-                <p className="text-lg mb-6">Thank you for your payment. Your transaction has been completed successfully.</p>
+            <div className="p-8 max-w-lg text-center drop-shadow rounded-xl">
+                <div className="flex justify-center text-[1px] text-white">
+                    <GrFormCheckmark className="h-[50px] w-[50px] rounded-full bg-[#4CAF50] p-2 lg:h-[60px] lg:w-[60px]" />
+                </div>
+                <h1 className="text-3xl font-bold my-4 text-primary">Payment Approved!</h1>
+                <p className="text-lg mb-6 text-center">Your payment is successful and would be held securely until service is complete</p>
                 <Link href="/customer/tasks" className='flex items-center justify-center'>
                     <Button className='rounded-full'>
                         View tasks
