@@ -18,7 +18,7 @@ import { useSession } from "next-auth/react";
 import { GrFormCheckmark } from "react-icons/gr";
 import { FaSortDown } from "react-icons/fa6";
 import Dropdown from "@/components/global/Dropdown";
-import { useRouter} from "next/navigation";
+import { useRouter } from "next/navigation";
 import Loading from "@/components/global/loading/page";
 
 interface FormData {
@@ -690,299 +690,301 @@ const ProvideService: React.FC = () => {
         );
       case 2:
         return (
-          <div className="mb-10 space-y-10">
-            <form
-              onSubmit={nextPages}
-              className="space-y-10 font-satoshi font-medium "
-            >
-              <div className="space-y-4">
-                <h2 className="font-bold text-[13px] lg:text-[16px]">
-                  Choose the pricing plans.{" "}
-                  <span className="font-extrabold text-[#ff0000]">*</span>
-                </h2>
-                <div>
-                  <div className="flex items-center">
-                    <input
-                      type="checkbox"
-                      name="check"
-                      checked={negotiable}
-                      onChange={handleCheckboxChange}
-                      className="mr-2"
-                    />
-                    <span className="text-[#381F8C] text-[13px] lg:text-[16px]">
-                      Payment plans are negotiable
-                    </span>
+          <div className="mx-auto w-full">
+            <div className="mb-10 space-y-10">
+              <form
+                onSubmit={nextPages}
+                className="space-y-10 font-satoshi font-medium "
+              >
+                <div className="space-y-4">
+                  <h2 className="font-bold text-[13px] lg:text-[16px]">
+                    Choose the pricing plans.{" "}
+                    <span className="font-extrabold text-[#ff0000]">*</span>
+                  </h2>
+                  <div>
+                    <div className="flex items-center">
+                      <input
+                        type="checkbox"
+                        name="check"
+                        checked={negotiable}
+                        onChange={handleCheckboxChange}
+                        className="mr-2"
+                      />
+                      <span className="text-[#381F8C] text-[13px] lg:text-[16px]">
+                        Payment plans are negotiable
+                      </span>
+                    </div>
                   </div>
-                </div>
-                <div className="relative grid space-y-4 text-[13px] text-[#221354]">
-                  <input
-                    className={`rounded-2xl ${activePlanIndex === 0
+                  <div className="relative grid space-y-4 text-[13px] text-[#221354]">
+                    <input
+                      className={`rounded-2xl ${activePlanIndex === 0
                         ? " disabled bg-transparent p-1 text-lg font-bold text-status-darkViolet"
                         : "bg-[#EBE9F4] p-4 hover:bg-status-darkViolet hover:text-white "
-                      } cursor-pointer text-left outline-none placeholder:font-satoshiMedium placeholder:font-medium placeholder:text-[#2A1769] hover:placeholder:text-white `}
-                    name="physical"
-                    onClick={() => handlePlan(0)}
-                    placeholder="Plan 1"
-                    value="Plan 1"
-                    readOnly
-                  />
-                  {isOpen && activePlanIndex === 0 && (
-                    <div className="space-y-3">
-                      <label className="font-semibold text-[13px] lg:text-[16px]">
-                        Give Details about everything this plan includes
-                      </label>
-                      <div className="grid space-y-3 rounded-2xl border-2 pb-5">
-                        <textarea
-                          className={`h-[200px] rounded-2xl bg-[#EBE9F4] p-3 font-satoshiMedium placeholder:font-satoshiMedium placeholder:font-semibold  ${error.planDetails ? "border border-[#ff0000] outline-[#FF0000]" : "border-none outline-none"}`}
-                          placeholder="Casual Babysitting"
-                          name="planOneDescription"
-                          value={task.planOneDescription}
-                          onChange={handleChange}
-                        ></textarea>
-                        <label className="pl-2 font-satoshiMedium">Price</label>
-                        <div className="relative flex items-center space-x-2 pl-2">
-                          <input
-                            type="number"
-                            min="25"
-                            name="planOnePrice"
-                            value={
-                              task.planOnePrice !== null
-                                ? task.planOnePrice
-                                : ""
-                            }
-                            onChange={handlePrice}
-                            placeholder="500"
-                            className={` rounded-2xl bg-[#EBE9F4] p-3 pl-5 font-satoshiMedium text-[13px]  ${error.price ? "border border-[#ff0000] outline-[#FF0000]" : "border-none outline-none"}`}
-                          />
-                          <p className="absolute left-3 top-3">$</p>
-                          <p className="font-extraBold text-xs text-[#140B31]">
-                            Minimum AUD$25 + 10% GST inclusive
-                          </p>
+                        } cursor-pointer text-left outline-none placeholder:font-satoshiMedium placeholder:font-medium placeholder:text-[#2A1769] hover:placeholder:text-white `}
+                      name="physical"
+                      onClick={() => handlePlan(0)}
+                      placeholder="Plan 1"
+                      value="Plan 1"
+                      readOnly
+                    />
+                    {isOpen && activePlanIndex === 0 && (
+                      <div className="space-y-3">
+                        <label className="font-semibold text-[13px] lg:text-[16px]">
+                          Give Details about everything this plan includes
+                        </label>
+                        <div className="grid space-y-3 rounded-2xl border-2 pb-5">
+                          <textarea
+                            className={`h-[200px] rounded-2xl bg-[#EBE9F4] p-3 font-satoshiMedium placeholder:font-satoshiMedium placeholder:font-semibold  ${error.planDetails ? "border border-[#ff0000] outline-[#FF0000]" : "border-none outline-none"}`}
+                            placeholder="Casual Babysitting"
+                            name="planOneDescription"
+                            value={task.planOneDescription}
+                            onChange={handleChange}
+                          ></textarea>
+                          <label className="pl-2 font-satoshiMedium">Price</label>
+                          <div className="relative flex items-center space-x-2 pl-2">
+                            <input
+                              type="number"
+                              min="25"
+                              name="planOnePrice"
+                              value={
+                                task.planOnePrice !== null
+                                  ? task.planOnePrice
+                                  : ""
+                              }
+                              onChange={handlePrice}
+                              placeholder="500"
+                              className={` rounded-2xl bg-[#EBE9F4] p-3 pl-5 font-satoshiMedium text-[13px]  ${error.price ? "border border-[#ff0000] outline-[#FF0000]" : "border-none outline-none"}`}
+                            />
+                            <p className="absolute left-3 top-3">$</p>
+                            <p className="font-extraBold text-xs text-[#140B31]">
+                              Minimum AUD$25 + 10% GST inclusive
+                            </p>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  )}
-                  <input
-                    className={`rounded-2xl ${activePlanIndex === 1
+                    )}
+                    <input
+                      className={`rounded-2xl ${activePlanIndex === 1
                         ? " disabled bg-transparent p-1 text-lg font-bold text-status-darkViolet"
                         : "bg-[#EBE9F4] p-4 hover:bg-status-darkViolet hover:text-white"
-                      } cursor-pointer text-left outline-none placeholder:font-satoshiMedium placeholder:font-medium placeholder:text-[#2A1769] hover:placeholder:text-white`}
-                    name="physical"
-                    onClick={() => handlePlan(1)}
-                    placeholder="Plan 2  (Optional)"
-                    value="Plan 2  (Optional)"
-                    readOnly
-                  />
-                  {isOpen && activePlanIndex === 1 && (
-                    <div>
-                      <label className="font-bold text-[13px] lg:text-[16px]">
-                        Give Details about everything this plan includes
-                      </label>
-                      <div className="grid space-y-3 rounded-2xl border-2 pb-5">
-                        <textarea
-                          className="h-[200px] rounded-2xl bg-[#EBE9F4] p-3 font-satoshiMedium outline-none placeholder:font-satoshiMedium placeholder:font-medium"
-                          placeholder="Casual Babysitting"
-                          name="planTwoDescription"
-                          value={task.planTwoDescription}
-                          onChange={handleChange}
-                        ></textarea>
-                        <label className="pl-2 font-bold">Price</label>
-                        <div className="relative flex items-center space-x-2 pl-2">
-                          <input
-                            type="number"
-                            name="planTwoPrice"
-                            min="25"
-                            value={
-                              task.planTwoPrice !== null
-                                ? task.planTwoPrice
-                                : ""
-                            }
-                            onChange={handlePrice}
-                            placeholder="500"
-                            className="w-1/3 rounded-2xl bg-[#EBE9F4] p-3 pl-5 font-satoshiMedium text-[13px] outline-none"
-                          />
-                          <p className="absolute left-3 top-3">$</p>
-                          <p className="font-extraBold text-xs text-[#140B31]">
-                            Minimum AUD$25 + 10% GST inclusive
-                          </p>
+                        } cursor-pointer text-left outline-none placeholder:font-satoshiMedium placeholder:font-medium placeholder:text-[#2A1769] hover:placeholder:text-white`}
+                      name="physical"
+                      onClick={() => handlePlan(1)}
+                      placeholder="Plan 2  (Optional)"
+                      value="Plan 2  (Optional)"
+                      readOnly
+                    />
+                    {isOpen && activePlanIndex === 1 && (
+                      <div>
+                        <label className="font-bold text-[13px] lg:text-[16px]">
+                          Give Details about everything this plan includes
+                        </label>
+                        <div className="grid space-y-3 rounded-2xl border-2 pb-5">
+                          <textarea
+                            className="h-[200px] rounded-2xl bg-[#EBE9F4] p-3 font-satoshiMedium outline-none placeholder:font-satoshiMedium placeholder:font-medium"
+                            placeholder="Casual Babysitting"
+                            name="planTwoDescription"
+                            value={task.planTwoDescription}
+                            onChange={handleChange}
+                          ></textarea>
+                          <label className="pl-2 font-bold">Price</label>
+                          <div className="relative flex items-center space-x-2 pl-2">
+                            <input
+                              type="number"
+                              name="planTwoPrice"
+                              min="25"
+                              value={
+                                task.planTwoPrice !== null
+                                  ? task.planTwoPrice
+                                  : ""
+                              }
+                              onChange={handlePrice}
+                              placeholder="500"
+                              className="w-1/3 rounded-2xl bg-[#EBE9F4] p-3 pl-5 font-satoshiMedium text-[13px] outline-none"
+                            />
+                            <p className="absolute left-3 top-3">$</p>
+                            <p className="font-extraBold text-xs text-[#140B31]">
+                              Minimum AUD$25 + 10% GST inclusive
+                            </p>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  )}
-                  <input
-                    className={`rounded-2xl ${activePlanIndex === 2
+                    )}
+                    <input
+                      className={`rounded-2xl ${activePlanIndex === 2
                         ? " disabled bg-transparent p-1 text-lg font-bold text-status-darkViolet"
                         : "bg-[#EBE9F4] p-4 hover:bg-status-darkViolet hover:text-white"
-                      } cursor-pointer text-left outline-none placeholder:font-satoshiMedium placeholder:font-medium placeholder:text-[#2A1769] hover:placeholder:text-white`}
-                    name="physical"
-                    onClick={() => handlePlan(2)}
-                    placeholder="Plan 3  (Optional)"
-                    value="Plan 3  (Optional)"
-                    readOnly
-                  />
-                  {isOpen && activePlanIndex === 2 && (
-                    <div>
-                      <label className="font-bold text-[13px] lg:text-[16px]">
-                        Give Details about everything this plan includes
-                      </label>
-                      <div className="grid space-y-3 rounded-2xl border-2 pb-5">
-                        <textarea
-                          className="h-[200px] rounded-2xl bg-[#EBE9F4] p-3 font-satoshiMedium outline-none placeholder:font-satoshiMedium placeholder:font-medium"
-                          placeholder="Casual Babysitting"
-                          name="planThreeDescription"
-                          value={task.planThreeDescription}
-                          onChange={handleChange}
-                        ></textarea>
-                        <label className="pl-2 font-bold">Price</label>
-                        <div className="relative flex items-center space-x-2 pl-2">
-                          <input
-                            type="number"
-                            min="25"
-                            name="planThreePrice"
-                            value={
-                              task.planThreePrice !== null
-                                ? task.planThreePrice
-                                : ""
-                            }
-                            onChange={handlePrice}
-                            placeholder="500"
-                            className="w-1/3 rounded-2xl bg-[#EBE9F4] p-3 pl-5 font-satoshiMedium text-[13px] outline-none"
-                          />
-                          <p className="absolute left-3 top-3">$</p>
-                          <p className="font-extraBold text-xs text-[#140B31]">
-                            Minimum AUD$25 + 10% GST inclusive
-                          </p>
+                        } cursor-pointer text-left outline-none placeholder:font-satoshiMedium placeholder:font-medium placeholder:text-[#2A1769] hover:placeholder:text-white`}
+                      name="physical"
+                      onClick={() => handlePlan(2)}
+                      placeholder="Plan 3  (Optional)"
+                      value="Plan 3  (Optional)"
+                      readOnly
+                    />
+                    {isOpen && activePlanIndex === 2 && (
+                      <div>
+                        <label className="font-bold text-[13px] lg:text-[16px]">
+                          Give Details about everything this plan includes
+                        </label>
+                        <div className="grid space-y-3 rounded-2xl border-2 pb-5">
+                          <textarea
+                            className="h-[200px] rounded-2xl bg-[#EBE9F4] p-3 font-satoshiMedium outline-none placeholder:font-satoshiMedium placeholder:font-medium"
+                            placeholder="Casual Babysitting"
+                            name="planThreeDescription"
+                            value={task.planThreeDescription}
+                            onChange={handleChange}
+                          ></textarea>
+                          <label className="pl-2 font-bold">Price</label>
+                          <div className="relative flex items-center space-x-2 pl-2">
+                            <input
+                              type="number"
+                              min="25"
+                              name="planThreePrice"
+                              value={
+                                task.planThreePrice !== null
+                                  ? task.planThreePrice
+                                  : ""
+                              }
+                              onChange={handlePrice}
+                              placeholder="500"
+                              className="w-1/3 rounded-2xl bg-[#EBE9F4] p-3 pl-5 font-satoshiMedium text-[13px] outline-none"
+                            />
+                            <p className="absolute left-3 top-3">$</p>
+                            <p className="font-extraBold text-xs text-[#140B31]">
+                              Minimum AUD$25 + 10% GST inclusive
+                            </p>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  )}
+                    )}
+                  </div>
                 </div>
-              </div>
-              <div className="space-y-4">
-                <h2 className="font-satoshiMedium text-xl font-bold">
-                  Type of Service{" "}
-                  <span className="font-extrabold text-[#ff0000]">*</span>
-                </h2>
-                <div className="flex space-x-4 text-[13px] text-[#221354]">
-                  <input
-                    className={`rounded-2xl p-2 ${activeButtonIndex === 0
+                <div className="space-y-4">
+                  <h2 className="font-satoshiMedium text-xl font-bold">
+                    Type of Service{" "}
+                    <span className="font-extrabold text-[#ff0000]">*</span>
+                  </h2>
+                  <div className="flex space-x-4 text-[13px] text-[#221354]">
+                    <input
+                      className={`rounded-2xl p-2 w-[150px] lg:w-full ${activeButtonIndex === 0
                         ? "bg-status-purpleBase text-white"
                         : "bg-[#EBE9F4] placeholder:text-white hover:bg-status-purpleBase hover:text-white"
-                      } cursor-pointer outline-none font-satoshiBold text-status-darkpurple text-center`}
-                    name="physical"
-                    onClick={() => handleClick(0)}
-                    placeholder="Physical Services"
-                    value="Physical Services"
-                    readOnly
-                  />
-                  <input
-                    className={`rounded-2xl p-2 ${activeButtonIndex === 1
+                        } cursor-pointer outline-none font-satoshiBold text-status-darkpurple text-center`}
+                      name="physical"
+                      onClick={() => handleClick(0)}
+                      placeholder="Physical Services"
+                      value="Physical Services"
+                      readOnly
+                    />
+                    <input
+                      className={`rounded-2xl p-2 w-[150px] lg:w-full ${activeButtonIndex === 1
                         ? "bg-status-purpleBase text-white"
                         : "bg-[#EBE9F4] placeholder:text-white hover:bg-status-purpleBase hover:text-white "
-                      } cursor-pointer outline-none font-satoshiBold text-status-darkpurple text-center`}
-                    name="remote"
-                    onClick={() => {
-                      handleClick(1);
-                      setIsRemote("Remote");
-                    }}
-                    placeholder="Remote Services"
-                    value="Remote Services"
-                    readOnly
-                  />
-                </div>
-              </div>
-
-              {isOpen && activeButtonIndex === 1 && (
-                <input
-                  type="text"
-                  value={isRemote}
-                  readOnly
-                  className="rounded-2xl bg-[#EBE9F4] p-3 font-satoshiBold text-center "
-                />
-              )}
-              {isOpen && activeButtonIndex === 0 && (
-                <div className="flex flex-col font-satoshiMedium font-medium text-status-darkpurple lg:flex-row lg:space-x-3">
-                  <div className="flex space-x-4 lg:justify-normal">
-                    <div className="grid space-y-4">
-                      <label>
-                        Postal code{" "}
-                        <span className="font-extrabold text-[#ff0000]">*</span>
-                      </label>
-                      <input
-                        value={selectedCode}
-                        onChange={handleCode}
-                        name="postalCode"
-                        className={`w-[155px] cursor-pointer rounded-2xl bg-[#EBE9F4]  p-3 text-[13px] placeholder:font-bold sm:w-[200px]  lg:w-[140px] ${error.postalCode ? "border border-[#ff0000] outline-[#FF0000]" : "border-none outline-none"}`}
-                      />
-                    </div>
-
-                    <div className="relative grid space-y-4">
-                      <label>
-                        Suburb{" "}
-                        <span className="font-extrabold text-[#ff0000]">*</span>
-                      </label>
-                      <Dropdown
-                        trigger={() => (
-                          <div
-                            className={`flex h-full w-[150px] cursor-pointer appearance-none justify-between rounded-2xl bg-[#EBE9F4] p-3 font-satoshi text-[13px] font-light ${error.city ? "border border-[#ff0000] outline-[#FF0000]" : "border-none outline-none"}`}
-                          >
-                            <h2>{selectedCity}</h2>
-                            <FaSortDown />
-                          </div>
-                        )}
-                        className="small-scrollbar left-0 right-0 top-14 mx-auto max-h-64 overflow-y-auto bg-white transition-all duration-300"
-                      >
-                        {postalCodeData.map((data, index) => (
-                          <button
-                            type="button"
-                            className="block p-2 text-[12px] text-[#221354]"
-                            key={index}
-                            value={data.name}
-                            onClick={() => handleCity(data.name)}
-                          >
-                            {data.name}
-                          </button>
-                        ))}
-                      </Dropdown>
-                    </div>
-                  </div>
-                  <div className="grid space-y-4 ">
-                    <label>State/Territory</label>
-                    <input
-                      value={
-                        postalCodeData.length > 0
-                          ? postalCodeData[0].state.name
-                          : ""
-                      }
-                      onChange={handleChange}
-                      name="state"
-                      id="state"
-                      disabled
-                      className=" cursor-pointer rounded-2xl bg-[#EBE9F4] p-3 text-sm outline-none lg:w-[145px]"
+                        } cursor-pointer outline-none font-satoshiBold text-status-darkpurple text-center`}
+                      name="remote"
+                      onClick={() => {
+                        handleClick(1);
+                        setIsRemote("Remote");
+                      }}
+                      placeholder="Remote Services"
+                      value="Remote Services"
+                      readOnly
                     />
                   </div>
                 </div>
-              )}
-              <div className="text-[#FF0000]">
-                {error.planDetails ||
-                  error.price ||
-                  error.postalCode ||
-                  error.city}
-              </div>
-              <div className="flex justify-between">
-                <Button
-                  className="rounded-3xl"
-                  type="button"
-                  theme="outline"
-                  onClick={prevPage}
-                >
-                  Back
-                </Button>
-                <Button className="rounded-3xl" type="submit">
-                  Next
-                </Button>
-              </div>
-            </form>
+
+                {isOpen && activeButtonIndex === 1 && (
+                  <input
+                    type="text"
+                    value={isRemote}
+                    readOnly
+                    className="rounded-2xl bg-[#EBE9F4] p-3 font-satoshiBold text-center "
+                  />
+                )}
+                {isOpen && activeButtonIndex === 0 && (
+                  <div className="flex flex-col font-satoshiMedium font-medium text-status-darkpurple lg:flex-row lg:space-x-3">
+                    <div className="flex space-x-4 lg:justify-normal">
+                      <div className="grid space-y-4">
+                        <label>
+                          Postal code{" "}
+                          <span className="font-extrabold text-[#ff0000]">*</span>
+                        </label>
+                        <input
+                          value={selectedCode}
+                          onChange={handleCode}
+                          name="postalCode"
+                          className={`w-[155px] cursor-pointer rounded-2xl bg-[#EBE9F4]  p-3 text-[13px] placeholder:font-bold sm:w-[200px]  lg:w-[140px] ${error.postalCode ? "border border-[#ff0000] outline-[#FF0000]" : "border-none outline-none"}`}
+                        />
+                      </div>
+
+                      <div className="relative grid space-y-4">
+                        <label>
+                          Suburb{" "}
+                          <span className="font-extrabold text-[#ff0000]">*</span>
+                        </label>
+                        <Dropdown
+                          trigger={() => (
+                            <div
+                              className={`flex h-full w-[150px] cursor-pointer appearance-none justify-between rounded-2xl bg-[#EBE9F4] p-3 font-satoshi text-[13px] font-light ${error.city ? "border border-[#ff0000] outline-[#FF0000]" : "border-none outline-none"}`}
+                            >
+                              <h2>{selectedCity}</h2>
+                              <FaSortDown />
+                            </div>
+                          )}
+                          className="small-scrollbar left-0 right-0 top-14 mx-auto max-h-64 overflow-y-auto bg-white transition-all duration-300"
+                        >
+                          {postalCodeData.map((data, index) => (
+                            <button
+                              type="button"
+                              className="block p-2 text-[12px] text-[#221354]"
+                              key={index}
+                              value={data.name}
+                              onClick={() => handleCity(data.name)}
+                            >
+                              {data.name}
+                            </button>
+                          ))}
+                        </Dropdown>
+                      </div>
+                    </div>
+                    <div className="grid space-y-4 ">
+                      <label>State/Territory</label>
+                      <input
+                        value={
+                          postalCodeData.length > 0
+                            ? postalCodeData[0].state.name
+                            : ""
+                        }
+                        onChange={handleChange}
+                        name="state"
+                        id="state"
+                        disabled
+                        className=" cursor-pointer rounded-2xl bg-[#EBE9F4] p-3 text-sm outline-none lg:w-[145px]"
+                      />
+                    </div>
+                  </div>
+                )}
+                <div className="text-[#FF0000]">
+                  {error.planDetails ||
+                    error.price ||
+                    error.postalCode ||
+                    error.city}
+                </div>
+                <div className="flex justify-between">
+                  <Button
+                    className="rounded-3xl"
+                    type="button"
+                    theme="outline"
+                    onClick={prevPage}
+                  >
+                    Back
+                  </Button>
+                  <Button className="rounded-3xl" type="submit">
+                    Next
+                  </Button>
+                </div>
+              </form>
+            </div>
           </div>
         );
       case 3:
@@ -1294,15 +1296,15 @@ const ProvideService: React.FC = () => {
           <div className="mb-3 flex justify-center pt-4 font-bold md:space-x-5">
             <div
               className={`${currentPage === 1
-                  ? "text-status-purpleBase"
-                  : "text-status-purpleBase"
+                ? "text-status-purpleBase"
+                : "text-status-purpleBase"
                 }`}
             >
               <p className="flex items-center gap-1 text-[9px] md:text-[16px] lg:gap-3">
                 <span
                   className={`${currentPage === 1
-                      ? "bg-status-purpleBase text-white"
-                      : "bg-status-purpleBase text-white"
+                    ? "bg-status-purpleBase text-white"
+                    : "bg-status-purpleBase text-white"
                     } rounded-2xl border-none px-2 py-1 lg:px-3 lg:py-2`}
                 >
                   01
@@ -1315,15 +1317,15 @@ const ProvideService: React.FC = () => {
             </div>
             <div
               className={`${currentPage === 2 || currentPage === 3
-                  ? "text-status-purpleBase"
-                  : " text-[#716F78]"
+                ? "text-status-purpleBase"
+                : " text-[#716F78]"
                 }`}
             >
               <p className="flex items-center gap-1 text-[9px] md:text-[16px] lg:gap-3">
                 <span
                   className={`${currentPage === 2 || currentPage === 3
-                      ? "bg-status-purpleBase text-white"
-                      : "bg-[#EAE9EB] text-[#716F78]"
+                    ? "bg-status-purpleBase text-white"
+                    : "bg-[#EAE9EB] text-[#716F78]"
                     } rounded-2xl border-none px-2 py-1 lg:px-3 lg:py-2`}
                 >
                   02
@@ -1341,8 +1343,8 @@ const ProvideService: React.FC = () => {
               <p className="flex items-center gap-1 text-[9px] md:text-[16px] lg:gap-3">
                 <span
                   className={`${currentPage === 3
-                      ? "bg-status-purpleBase text-white"
-                      : "bg-[#EAE9EB] text-[#716F78]"
+                    ? "bg-status-purpleBase text-white"
+                    : "bg-[#EAE9EB] text-[#716F78]"
                     } rounded-2xl border-none px-2 py-1 lg:px-3 lg:py-2`}
                 >
                   03
@@ -1365,10 +1367,10 @@ const ProvideService: React.FC = () => {
                 <div className="h-1 w-2/3 overflow-hidden bg-[#EAE9EB]">
                   <div
                     className={`h-full ${currentPage === 1
+                      ? "bg-status-purpleBase"
+                      : currentPage === 2
                         ? "bg-status-purpleBase"
-                        : currentPage === 2
-                          ? "bg-status-purpleBase"
-                          : "bg-status-purpleBase"
+                        : "bg-status-purpleBase"
                       }`}
                     style={{ width: `${progress}%` }}
                   />
@@ -1476,8 +1478,8 @@ const ProvideService: React.FC = () => {
           >
             <div className="lg:px-24 px-16 py-10">
               <div className="relative grid items-center justify-center space-y-3">
-                  <div className="flex justify-center text-[1px] text-white">
-                    <Image src={imag} alt="image" />
+                <div className="flex justify-center text-[1px] text-white">
+                  <Image src={imag} alt="image" />
                 </div>
                 <p className=" text-center font-clashBold text-[32px] font-extrabold text-[#2A1769] lg:text-[42px]">
                   Service created
@@ -1486,8 +1488,8 @@ const ProvideService: React.FC = () => {
                   <p>Your Service Listing has been created!</p>
                   please click on the button to proceed to{" "}
                   marketplace
-                  </div>
-                  
+                </div>
+
                 <Image
                   src={image}
                   alt="image"
