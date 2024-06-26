@@ -49,11 +49,9 @@ const MareketPlace = () => {
   const router = useRouter();
   const isAuth = session.status === "authenticated";
   const isComplete = session?.data?.user?.user?.enabled;
-  const isServiceProvider =
-    session?.data?.user?.user?.roles[0] === "SERVICE_PROVIDER";
+  const isServiceProvider = session?.data?.user?.user?.roles[0] === "SERVICE_PROVIDER";
   const [showPopup, setShowPopup] = useState(false);
 
-  const token = session?.data?.user?.accessToken;
   // Setting user popup state
   useEffect(() => {
     const popupCookie = getCookie("showPopup");
