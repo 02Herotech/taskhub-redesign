@@ -153,6 +153,8 @@ declare interface UserProfileTypes {
     state: string | null;
     unitNumber: string | null;
   };
+  customerId?: number;
+  serviceProviderId?: number;
   profileImage: string | null;
   enabled: boolean | null;
   accountState: string;

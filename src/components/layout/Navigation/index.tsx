@@ -244,12 +244,12 @@ const Navigation = () => {
                     )}
                     className="-left-32 top-14"
                   >
-                    <div className="w-[200px] rounded-md bg-white">
+                        <div className="w-[200px] rounded-md bg-white p-3 space-y-2">
                       {dropdownItems.map((button, index) => (
                         <button
                           key={index}
                           onClick={button.onClick}
-                          className="dropdown-item text-md flex w-full items-center justify-between p-3 font-semibold text-primary transition-all hover:opacity-80"
+                          className="dropdown-item text-md flex w-full items-center justify-between font-semibold text-primary transition-all hover:opacity-80"
                         >
                           {button.label}
                         </button>

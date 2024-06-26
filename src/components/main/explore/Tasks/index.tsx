@@ -13,6 +13,8 @@ import Loading from "@/shared/loading";
 import Image from "next/image";
 import { CiSearch } from "react-icons/ci";
 import { IoMdArrowDropdown } from "react-icons/io";
+import { set } from "react-hook-form";
+import { useSession } from "next-auth/react";
 
 type Category = {
     id: number;
@@ -32,6 +34,8 @@ const Tasks = () => {
     const [filtersApplied, setFiltersApplied] = useState(false);
     const [searchText, setSearchText] = useState("");
     const [paginationLength, setPaginationLength] = useState(9);
+    const [showPriceDropdown, setShowPriceDropdown] = useState(false);
+    const session = useSession()
 
     const { data: tasksData, isLoading, refetch } = useGetActiveTasksQuery(currentPage);
     const { data: searchResults } = useSearchTaskByTextQuery({ text: searchText, pageNumber: currentPage });
@@ -166,10 +170,6 @@ const Tasks = () => {
             label: "Due date: Latest",
             onClick: () => handleFilterByDate("desc"),
         },
-        {
-            label: "Closest to me",
-            onClick: () => { },
-        },
     ];
 
 
@@ -187,7 +187,7 @@ const Tasks = () => {
                 </div> */}
                 <div className="flex w-full items-center justify-between">
                     <form className="flex items-center space-x-4 max-lg:my-4 max-lg:w-full max-lg:justify-between max-lg:px-1">
-                        <div className="flex h-[29px] items-center space-x-2 rounded-lg border border-status-violet bg-[#F1F1F2] px-4 max-sm:w-full lg:h-[49px] lg:w-[300px] lg:rounded-2xl">
+                        <div className="flex h-[29px] items-center space-x-2 rounded-lg border border-status-violet bg-[#F1F1F2] px-4 max-sm:w-full lg:h-[55px] lg:w-[300px] lg:rounded-2xl">
                             <CiSearch className="h-6 w-6 text-status-violet" />
                             <input
                                 placeholder="Search"
@@ -196,7 +196,7 @@ const Tasks = () => {
                                 className="w-full bg-[#F1F1F2] text-base outline-none placeholder:text-base focus:outline-none active:outline-none lg:py-3"
                             />
                         </div>
-                        <button type="button" className="flex h-[29px] w-[29px] items-center justify-center rounded-lg bg-primary lg:h-[49px] lg:w-[49px] lg:rounded-2xl">
+                        <button type="button" className="flex h-[29px] w-[29px] items-center justify-center rounded-lg bg-primary lg:h-[55px] lg:w-[55px] lg:rounded-2xl">
                             <CiSearch className="h-5 w-5 text-status-violet lg:h-7 lg:w-7" />
                         </button>
                     </form>
@@ -303,7 +303,7 @@ const Tasks = () => {
                                         }`}
                                     onClick={() => handleFilterByType('PHYSICAL_SERVICE')}
                                 >
-                                    In Person
+                                    Physical
                                 </button>
                             </div>
                         </div>
@@ -315,38 +315,43 @@ const Tasks = () => {
                     <Dropdown
                         closeOnClick={false}
                         trigger={() => (
-                            <div className="w-[130px] border-2 border-primary text-primary bg-[#F1F1F2] flex items-center justify-center space-x-2 font-semibold py-2 px-4 rounded-full">
+                            <div className="w-[130px] border-2 border-primary text-primary bg-[#F1F1F2] flex items-center justify-center space-x-2 font-semibold py-2 px-4 rounded-full" onClick={()=>setShowPriceDropdown(true)}>
                                 <h2 className="text-sm">Pricing</h2>
                                 <IoMdArrowDropdown />
                             </div>
                         )}
                         className='-left-24 top-14'>
-                        <form className='bg-white min-w-[240px] rounded-2xl flex items-center p-4'>
-                            <div className="space-y-8 w-full p-3">
-                                <h4 className="text-xl text-[#190E3F] font-medium">Price</h4>
-                                <div className="text-2xl text-black font-bold text-center mb-6">
-                                    ${priceValues[0]} - ${priceValues[1]}
+                        {showPriceDropdown && (
+                            <form className='bg-white min-w-[240px] rounded-2xl flex items-center p-4'>
+                                <div className="space-y-8 w-full p-3">
+                                    <h4 className="text-xl text-[#190E3F] font-medium">Price</h4>
+                                    <div className="text-2xl text-black font-bold text-center mb-6">
+                                        ${priceValues[0]} - ${priceValues[1]}
+                                    </div>
+                                    <ReactSlider
+                                        className="relative w-full h-2 bg-[#FE9B07] rounded-2xl"
+                                        thumbClassName="absolute h-6 w-6 bg-[#FE9B07] rounded-full cursor-grab transform -translate-y-1/2 top-1/2"
+                                        trackClassName="top-1/2 bg-[#FE9B07]"
+                                        value={priceValues}
+                                        min={5}
+                                        max={10000}
+                                        step={5}
+                                        onChange={(newValues) => setPriceValues(newValues as [number, number])}
+                                    />
+                                    <div className="flex items-center justify-between space-x-8 w-full">
+                                        <Button theme="outline" className="rounded-full" onClick={() => setPriceValues([5, 10000])}>
+                                            Cancel
+                                        </Button>
+                                        <Button className="rounded-full" onClick={() => {
+                                            handleFilterByPriceRange(priceValues[0], priceValues[1])
+                                            setShowPriceDropdown(false)
+                                        }}>
+                                            Apply
+                                        </Button>
+                                    </div>
                                 </div>
-                                <ReactSlider
-                                    className="relative w-full h-2 bg-[#FE9B07] rounded-2xl"
-                                    thumbClassName="absolute h-6 w-6 bg-[#FE9B07] rounded-full cursor-grab transform -translate-y-1/2 top-1/2"
-                                    trackClassName="top-1/2 bg-[#FE9B07]"
-                                    value={priceValues}
-                                    min={5}
-                                    max={10000}
-                                    step={5}
-                                    onChange={(newValues) => setPriceValues(newValues as [number, number])}
-                                />
-                                <div className="flex items-center justify-between space-x-8 w-full">
-                                    <Button theme="outline" className="rounded-full" onClick={() => setPriceValues([5, 10000])}>
-                                        Cancel
-                                    </Button>
-                                    <Button className="rounded-full" onClick={() => handleFilterByPriceRange(priceValues[0], priceValues[1])}>
-                                        Apply
-                                    </Button>
-                                </div>
-                            </div>
-                        </form>
+                            </form>
+                        )}
                     </Dropdown>
                 </div>
 

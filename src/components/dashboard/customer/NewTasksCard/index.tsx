@@ -19,7 +19,7 @@ type DropDownItem = {
     icon?: React.ReactNode;
 };
 
-const NewTasksCard = ({ task }: TaskCardProps) => {
+const       NewTasksCard = ({ task }: TaskCardProps) => {
     const dateArray = task.createdAt;
     const date = new Date(dateArray[0], dateArray[1] - 1, dateArray[2]);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);

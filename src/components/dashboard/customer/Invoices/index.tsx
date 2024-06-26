@@ -11,6 +11,8 @@ import { useSession } from 'next-auth/react';
 import CheckoutForm from '../CheckoutForm';
 import { useGetInvoiceByCustomerIdQuery } from '@/services/invoices';
 import Loading from '@/shared/loading';
+import { useSelector } from 'react-redux';
+import { RootState } from "@/store";
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY!);
 
@@ -46,7 +48,13 @@ const Invoices = () => {
         setClientSecret("");
     };
 
-    const { data: invoices, isLoading } = useGetInvoiceByCustomerIdQuery(id as unknown as number);
+    const { profile: user } = useSelector(
+        (state: RootState) => state.userProfile,
+    );
+
+    console.log("session", session)
+
+    const { data: invoices, isLoading } = useGetInvoiceByCustomerIdQuery(user?.customerId!);
 
     const fetchPaymentIntent = async () => {
         try {
