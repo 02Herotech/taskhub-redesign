@@ -12,12 +12,13 @@ import Button from "@/components/global/Button";
 import Link from "next/link";
 import image from "../../../../public/assets/images/customer/Task management.png";
 import img from "../../../../public/assets/images/blend.png";
+import imag from "../../../../public/assets/images/tickk.png";
 import AiDesciption from "@/components/AiGenerate/AiDescription";
 import { useSession } from "next-auth/react";
 import { GrFormCheckmark } from "react-icons/gr";
 import { FaSortDown } from "react-icons/fa6";
 import Dropdown from "@/components/global/Dropdown";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter} from "next/navigation";
 import Loading from "@/components/global/loading/page";
 
 interface FormData {
@@ -1475,8 +1476,8 @@ const ProvideService: React.FC = () => {
           >
             <div className="lg:px-24 px-16 py-10">
               <div className="relative grid items-center justify-center space-y-3">
-                <div className="flex justify-center text-[1px] text-white">
-                  <GrFormCheckmark className="h-[50px] w-[50px] rounded-full bg-[#FE9B07] p-2 lg:h-[60px] lg:w-[60px]" />
+                  <div className="flex justify-center text-[1px] text-white">
+                    <Image src={imag} alt="image" />
                 </div>
                 <p className=" text-center font-clashBold text-[32px] font-extrabold text-[#2A1769] lg:text-[42px]">
                   Service created
@@ -1485,7 +1486,8 @@ const ProvideService: React.FC = () => {
                   <p>Your Service Listing has been created!</p>
                   please click on the button to proceed to{" "}
                   marketplace
-                </div>
+                  </div>
+                  
                 <Image
                   src={image}
                   alt="image"
