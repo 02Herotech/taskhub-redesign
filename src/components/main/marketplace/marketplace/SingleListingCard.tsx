@@ -56,16 +56,20 @@ const SingleListingCard = ({
             <h2 className="text-lg font-bold  first-letter:uppercase md:text-lg">
               {truncateText(businessName, 20)}
             </h2>
-            {/* <div className="py-4 ">
-              <p className="text-xs">4.5</p>
+            <div className="py-4 ">
+              {/* <p className="text-xs">4.5</p> */}
               <div className="flex items-center gap-1 ">
+                {/* <BsStarFill className="size-3 fill-orange-normal" />
                 <BsStarFill className="size-3 fill-orange-normal" />
                 <BsStarFill className="size-3 fill-orange-normal" />
-                <BsStarFill className="size-3 fill-orange-normal" />
-                <BsStarFill className="size-3 fill-orange-normal" />
+                <BsStarFill className="size-3 fill-orange-normal" /> */}
+                <BsStarFill className="size-3 fill-violet-400" />
+                <BsStarFill className="size-3 fill-violet-400" />
+                <BsStarFill className="size-3 fill-violet-400" />
+                <BsStarFill className="size-3 fill-violet-400" />
                 <BsStarFill className="size-3 fill-violet-400" />
               </div>
-            </div> */}
+            </div>
 
             <div className="flex items-center justify-between gap-5">
               <div className="flex items-center gap-2">

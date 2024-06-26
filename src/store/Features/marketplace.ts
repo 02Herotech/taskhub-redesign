@@ -7,6 +7,7 @@ interface MarketSliceTypes {
   isFiltering: boolean;
   filteredData: ListingDataType[];
   isFilteringLoading: boolean;
+  totalPages: number;
 }
 
 const initialState: MarketSliceTypes = {
@@ -14,6 +15,7 @@ const initialState: MarketSliceTypes = {
   isFiltering: false,
   filteredData: [],
   isFilteringLoading: false,
+  totalPages: 0,
 };
 
 export const marketSlice = createSlice({
@@ -26,8 +28,8 @@ export const marketSlice = createSlice({
     },
     // working
     filterMarketPlace: (state, action) => {
-      const data = action.payload;
-      return { ...state, filteredData: data };
+      const { data, totalPages } = action.payload;
+      return { ...state, filteredData: data, totalPages };
     },
     setFilterLoadingState: (state, action) => {
       const loading = action.payload;

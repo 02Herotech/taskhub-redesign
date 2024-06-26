@@ -114,7 +114,12 @@ const MarketPlaceFilter = () => {
         url += params.join("&");
       }
       const response = await axios.get(url);
-      dispatch(filterMarketPlace(response.data.content));
+      dispatch(
+        filterMarketPlace({
+          data: response.data.content,
+          totalPages: response.data.totalPages,
+        }),
+      );
     } catch (error: any) {
       console.log(error.response.data || error);
     } finally {
@@ -197,7 +202,6 @@ const MarketPlaceFilter = () => {
               >
                 All
               </button>
-
               {/* -------------------------------- */}
               {/* Category */}
               <div className="relative">

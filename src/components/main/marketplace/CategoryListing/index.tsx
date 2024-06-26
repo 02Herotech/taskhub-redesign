@@ -14,7 +14,7 @@ interface CategoryListingProps {
 }
 
 const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
-  const { categories, isFiltering, filteredData } = useSelector(
+  const { categories, isFiltering, filteredData, totalPages } = useSelector(
     (state: RootState) => state.market,
   );
 
@@ -68,6 +68,10 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
     handleFetchCategory(page.currentPage);
     // eslint-disable-next-line
   }, [category, page.currentPage]);
+
+  useEffect(() => {
+    setPage((prev) => ({ ...prev, totalPages: totalPages }));
+  }, [totalPages]);
 
   const getButtonNumbers = () => {
     const half = Math.floor(5 / 2);
