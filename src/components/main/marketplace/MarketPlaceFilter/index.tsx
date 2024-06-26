@@ -114,9 +114,9 @@ const MarketPlaceFilter = () => {
         url += params.join("&");
       }
       const response = await axios.get(url);
-      dispatch(filterMarketPlace(response.data));
+      dispatch(filterMarketPlace(response.data.content));
     } catch (error: any) {
-      console.log(error.message);
+      console.log(error.response.data || error);
     } finally {
       dispatch(setFilterLoadingState(false));
     }
