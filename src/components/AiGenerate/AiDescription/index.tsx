@@ -297,7 +297,7 @@ const AiDesciption: React.FC<AiGenerateProps> = ({
 
       {aiChatView && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 lg:py-2 py-1">
-          <div ref={containerRef} className="mx-auto  h-[100%] w-[90%] rounded-[16px] bg-[#FFFFFF] lg:p-10 p-5  text-white md:w-[60%] lg:w-[50%]">
+          <div ref={containerRef} className="mx-auto  h-[100%] w-[90%] rounded-[16px] bg-[#FFFFFF] lg:p-10 lg:pt-7 p-5  text-white md:w-[60%] lg:w-[50%]">
             <div className=" flex justify-end">
               <div
                 className="flex h-[30px] w-[30px] items-center justify-center rounded-full bg-[#EBE9F4] hover:cursor-pointer"
@@ -315,7 +315,7 @@ const AiDesciption: React.FC<AiGenerateProps> = ({
               </p>
             </div>
 
-            <div className="conversation h-[60%] space-y-4 overflow-y-scroll    ">
+            <div className="conversation lg:h-[55%] h-[60%] space-y-4 overflow-y-scroll    ">
               {conversation.length === 0 && (
                 <div className="mx-auto w-full justify-between space-y-3 lg:flex lg:space-y-0">
                   {AiSuggestions.map((entry, index) => (
