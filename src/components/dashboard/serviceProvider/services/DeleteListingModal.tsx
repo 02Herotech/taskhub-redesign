@@ -1,10 +1,11 @@
 "use client";
+import { refreshUserProfile } from "@/store/Features/userProfile";
 import axios from "axios";
 import { useSession } from "next-auth/react";
-import { headers } from "next/headers";
 import React, { Dispatch, SetStateAction, useState } from "react";
 import { BsExclamationTriangle } from "react-icons/bs";
 import { PiSealCheckFill } from "react-icons/pi";
+import { useDispatch } from "react-redux";
 import { BeatLoader } from "react-spinners";
 
 interface ModalPropsType {
@@ -20,11 +21,13 @@ const DeleteListingModal = ({
 }: ModalPropsType) => {
   const session = useSession();
   const token = session?.data?.user?.accessToken;
+  const dispatch = useDispatch();
 
   const [loading, setLoading] = useState(false);
   const [success, setSucess] = useState(false);
 
   const handleCloseModal = () => {
+    success && dispatch(refreshUserProfile());
     setIsDeleteModalShown({ id: 0, isShown: false });
     setTimeout(() => {
       setSucess(false);
@@ -89,9 +92,13 @@ const DeleteListingModal = ({
         </div>
       ) : (
         <div className="flex w-[90vw] max-w-lg flex-col items-center justify-center gap-4  rounded-lg bg-violet-light p-5">
-          <span className="inline-block rounded-full bg-violet-darker p-2">
-            <PiSealCheckFill className="size-8" color="white" />
-          </span>
+          <div className="flex size-20 items-center justify-center rounded-full bg-[#C1F6C3] bg-opacity-60">
+            <div className="flex size-20 items-center justify-center rounded-full bg-[#C1F6C3] bg-opacity-60">
+              <div className=" flex size-14 items-center justify-center rounded-full bg-[#A6F8AA] p-2">
+                <PiSealCheckFill className="size-10 text-green-500" />
+              </div>
+            </div>
+          </div>
           <p className="text-center font-bold text-violet-darker ">
             Service successfully Deleted
           </p>

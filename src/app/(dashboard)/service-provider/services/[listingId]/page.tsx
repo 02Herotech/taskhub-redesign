@@ -5,12 +5,13 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
+import Link from "next/link";
 import { useParams } from "next/navigation";
 import React, { useEffect, useRef, useState } from "react";
 import { useForm, SubmitHandler, Controller, set } from "react-hook-form";
 import { BiChevronDown, BiX } from "react-icons/bi";
 import { BsTriangle, BsTriangleFill } from "react-icons/bs";
-import { PiFileArrowDownDuotone } from "react-icons/pi";
+import { PiFileArrowDownDuotone, PiSealCheckFill } from "react-icons/pi";
 import { RiPencilLine } from "react-icons/ri";
 import { BeatLoader } from "react-spinners";
 import { z } from "zod";
@@ -283,7 +284,6 @@ const EditListing = () => {
       }
       return acc;
     }, {});
-    console.log(body);
     try {
       const url =
         "https://smp.jacinthsolutions.com.au/api/v1/listing/update-listing/" +
@@ -351,29 +351,33 @@ const EditListing = () => {
             onClick={() => setShowModal(false)}
             className="absolute h-screen w-screen"
           />
-          <div className="relative z-10 flex max-w-md flex-col items-center justify-center gap-4 rounded-lg bg-violet-light p-5 ">
-            <div className="size-10 rounded-full bg-violet-darker p-2">
-              <Image
-                src={"/assets/images/serviceProvider/jobs/checkicon.png"}
-                alt="checkicon"
-                width={80}
-                height={80}
-                className="h-full w-full"
-              />
-            </div>
-            <h2 className="font-satoshiBold text-2xl font-bold text-violet-normal">
-              Service Updated sucessfully
-            </h2>
-            {/* <p className="text-center">
-              Y
-            </p> */}
-            <div className="flex  items-center justify-center gap-10">
-              <button
-                onClick={() => setShowModal(false)}
-                className="rounded-full bg-violet-normal px-4 py-2 font-semibold text-white transition-opacity duration-300 hover:opacity-90"
-              >
-                Close
-              </button>
+          <div className=" relative z-10 flex w-[90vw] max-w-md  flex-col items-center justify-center gap-4 rounded-lg bg-white p-5 ">
+            <div className=" flex w-full max-w-lg flex-col items-center justify-center gap-4">
+              <div className="flex size-20 items-center justify-center rounded-full bg-[#C1F6C3] bg-opacity-60">
+                <div className=" flex size-14 items-center justify-center rounded-full bg-[#A6F8AA] p-2">
+                  <PiSealCheckFill className="size-10 text-green-500" />
+                </div>
+              </div>
+              <p className="text-center font-satoshiBold text-2xl font-extrabold text-violet-normal">
+                Success
+              </p>
+              <p className="text-center font-semibold text-violet-darker">
+                Great! You can now view the update on the marketplace
+              </p>
+              <div className="flex items-center gap-6">
+                <button
+                  onClick={() => setShowModal(false)}
+                  className="rounded-full bg-violet-active px-4 py-2 font-bold text-violet-dark max-sm:text-sm"
+                >
+                  Close
+                </button>
+                <Link
+                  href={"/marketplace"}
+                  className="rounded-full bg-violet-normal px-4 py-2 font-bold text-white max-sm:text-sm"
+                >
+                  Proceed to marketplace
+                </Link>
+              </div>
             </div>
           </div>
         </section>

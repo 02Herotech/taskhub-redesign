@@ -10,6 +10,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import { BeatLoader } from "react-spinners";
 import { formatDate, formatTimeFromDate } from "@/utils";
 import Image from "next/image";
+import { PiSealCheckFill } from "react-icons/pi";
 
 interface ModalProps {
   setIsModalShown: Dispatch<SetStateAction<boolean>>;
@@ -103,8 +104,6 @@ const PricingModal = ({
         bookingDescription: formState.description,
         bookingTitle: modalData.title,
       };
-
-      console.log(uploadData);
       const url = "https://smp.jacinthsolutions.com.au/api/v1/booking";
       const { data } = await axios.post(url, uploadData, {
         headers: {
@@ -226,35 +225,43 @@ const PricingModal = ({
               Kindly login to continue
             </p>
             <Link
-              href={`/auth/sign-up?${serviceProviderParams.toString()}`}
+              // href={`/auth/sign-up?${serviceProviderParams.toString()}`}
+              href={`/auth/login`}
               className="rounded-full bg-violet-normal px-6 py-3 font-bold text-white"
             >
-              Sign Up
+              Login
             </Link>
           </div>
         </div>
       ) : isSubmittedSuccessful ? (
-        <div className="relative z-10 flex w-[90vw] max-w-xl flex-col items-center justify-center gap-3 bg-violet-light p-3 px-4 lg:space-y-4 lg:p-10">
-          <div className="clip-triangle absolute left-0 top-0 h-full w-full bg-violet-active" />
-          <div className="relative flex flex-col items-center justify-center gap-4 bg-white p-6 lg:px-20 ">
-            <div className="size-14 rounded-full bg-emerald-900 p-2">
-              <Image
-                src={"/assets/images/serviceProvider/jobs/checkicon.png"}
-                alt="checkicon"
-                width={80}
-                height={80}
-                className="h-full w-full"
-              />
+        <div className="relative z-10 flex w-[90vw] max-w-xl flex-col items-center justify-center gap-3 rounded-xl bg-white p-3 px-4 lg:space-y-4 lg:p-10">
+          <div className=" flex flex-col items-center justify-center gap-4">
+            <div className="flex size-20 items-center justify-center rounded-full bg-[#C1F6C3] bg-opacity-60">
+              <div className=" flex size-14 items-center justify-center rounded-full bg-[#A6F8AA] p-2">
+                <PiSealCheckFill className="size-10 text-green-500" />
+              </div>
             </div>
-            <p className="text-center text-xl font-bold text-emerald-500">
-              Booking Proposal successfully sent to the service provider
+            <p className="text-center font-satoshiBold text-2xl font-extrabold text-violet-normal">
+              Enquiry Sent
             </p>
-            <Link
-              href={`/marketplace`}
-              className="rounded-full bg-violet-normal px-6 py-3 font-bold text-white"
-            >
-              Proceed to marketplace
-            </Link>
+            <p className="text-center font-semibold text-violet-darker">
+              Great! The booking enquiry has been sent to the service provider
+              and you would get a response shortly.
+            </p>
+            <div className="flex items-center gap-6">
+              <button
+                onClick={() => setIsModalShown(false)}
+                className="rounded-full bg-violet-active px-4 py-2 font-bold text-violet-dark max-sm:text-sm"
+              >
+                Close
+              </button>
+              <Link
+                href={"/marketplace"}
+                className="rounded-full bg-violet-normal px-4 py-2 font-bold text-white max-sm:text-sm"
+              >
+                Proceed to marketplace
+              </Link>
+            </div>
           </div>
         </div>
       ) : (

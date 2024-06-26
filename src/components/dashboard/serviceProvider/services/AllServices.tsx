@@ -12,6 +12,8 @@ import { BsPencilSquare, BsX } from "react-icons/bs";
 import Link from "next/link";
 import { BiDotsVertical, BiX } from "react-icons/bi";
 import DeleteListingModal from "./DeleteListingModal";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store";
 
 const AllServices = () => {
   const [loading, setLoading] = useState(false);
@@ -25,6 +27,7 @@ const AllServices = () => {
   const session = useSession();
   const token = session?.data?.user?.accessToken;
   const user = session?.data?.user?.user;
+  const { refresh } = useSelector((state: RootState) => state.userProfile);
 
   const fetchAllServices = async () => {
     try {
@@ -54,7 +57,7 @@ const AllServices = () => {
   useEffect(() => {
     fetchAllServices();
     // eslint-disable-next-line
-  }, [token]);
+  }, [token, refresh]);
 
   const handleShowDropdown = (id: number) => {
     if (id === showDropdown.id && showDropdown.isShown === true) {
@@ -149,14 +152,14 @@ const AllServices = () => {
                     className="px-2"
                     onClick={() => handleShowDropdown(item.id)}
                   >
-                    <p className="text-xs"> 4.5 </p>
+                    {/* <p className="text-xs"> 4.5 </p>
                     <div className="flex items-center gap-1">
                       <FaStar size={10} color="gold" />
                       <FaStar size={10} color="gold" />
                       <FaStar size={10} color="gold" />
                       <FaStar size={10} color="gold" />
                       <FaStar size={10} color="grey" />
-                    </div>
+                    </div> */}
                     <div className="flex items-center justify-between gap-3">
                       <div className="flex items-center gap-2 py-3">
                         <Image
@@ -167,7 +170,7 @@ const AllServices = () => {
                           alt={user?.firstName ?? "user"}
                           width={20}
                           height={20}
-                          className="rounded-full"
+                          className="size-5 rounded-full"
                         />
                         <p className="text-xs">
                           {user?.firstName} {user?.lastName}

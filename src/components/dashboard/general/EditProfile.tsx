@@ -15,6 +15,8 @@ import axios from "axios";
 import { defaultUserDetails } from "@/data/data";
 import { BeatLoader } from "react-spinners";
 import { formatDateAsYYYYMMDD } from "@/utils";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/store";
 
 const userDataSchema = z.object({
   firstName: z.string().min(2).optional(),
@@ -63,6 +65,8 @@ const EditProfile = () => {
   const [selectedDocument, setSelectedDocument] = useState<File | null>(null);
   const [isProfileUpdatedSuccessfully, setIsProfileUpdatedSuccessfully] =
     useState(false);
+
+  const userProfile = useSelector((state: RootState) => state.userProfile);
 
   const session = useSession();
   const user = session?.data?.user?.user;
@@ -262,25 +266,24 @@ const EditProfile = () => {
         setSelectedDocument={setSelectedDocument}
       />
       {/* Top profile Image section */}
-
       <section className="col-span-3 flex flex-col items-center justify-center gap-1 pb-8 ">
         <button
-          className="relative mx-auto size-32 overflow-hidden rounded-full hover:shadow-md"
+          className="relative mx-auto size-32 rounded-full hover:shadow-md"
           onClick={handleChangeProfilePicture}
         >
-          <div className="absolute right-3 top-[80%] z-50 rounded-full bg-[#EBE9F4] p-1 text-violet-normal">
+          <span className="absolute right-3 top-[80%] z-20 rounded-full bg-[#EBE9F4] p-1 text-violet-normal">
             <BiCamera className="size-5" />
-          </div>
+          </span>
           <Image
             src={
               isEditingProfilePicture.image ??
-              user?.profileImage ??
+              userProfile.profile?.profileImage ??
               "/assets/images/serviceProvider/user.jpg"
             }
             alt="user"
             width={100}
             height={100}
-            className="h-full w-full rounded-full object-cover"
+            className="size-32 h-full w-full rounded-full object-cover"
           />
         </button>
         <h2 className="text-xl font-bold text-slate-900">
@@ -371,9 +374,7 @@ const EditProfile = () => {
         {/* Bio */}
         {isServiceProvider && (
           <section>
-            <h3 className="text-lg font-bold text-primary">
-              Bio
-            </h3>
+            <h3 className="text-lg font-bold text-primary">Bio</h3>
             <label className="flex w-full flex-col gap-3 text-violet-normal">
               <span className="flex items-center justify-between">
                 <span>Bio Description</span>

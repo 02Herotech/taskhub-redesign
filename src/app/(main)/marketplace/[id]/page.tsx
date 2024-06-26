@@ -3,8 +3,6 @@
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import { BiCalendar, BiCalendarCheck, BiLocationPlus } from "react-icons/bi";
-import { BsArrowUp, BsCalendarDay } from "react-icons/bs";
-import { CiClock2 } from "react-icons/ci";
 import { FaStar } from "react-icons/fa";
 
 import PricingPlan from "@/components/matkeplaceSingleTask/PricingPlan";
@@ -20,8 +18,6 @@ const Page = () => {
     state: false,
     image: "",
   });
-
-  console.log(currentListing);
 
   useEffect(() => {
     const tempList = localStorage.getItem("content");
@@ -40,7 +36,6 @@ const Page = () => {
           displayData.id;
         const { data } = await axios.get(url);
         setCurrentListing(data);
-        console.log(data);
       } catch (error: any) {
         console.log(error.response.data);
       }
@@ -82,7 +77,7 @@ const Page = () => {
             {/* content */}
             <div className="container space-y-4 ">
               {/* <p className="font-medium">Recently Added</p> */}
-              <h3 className="lgtext-4xl font-satoshiMedium text-3xl font-bold ">
+              <h3 className="lgtext-4xl font-satoshiMedium text-3xl font-bold first-letter:uppercase ">
                 {displayData?.listingTitle}
               </h3>
               <p className="font-satoshiMedium text-xl font-medium">
@@ -144,7 +139,7 @@ const Page = () => {
                       <p className="text-xl font-medium">
                         {displayData?.serviceProvider?.user?.fullName}
                       </p>
-                      <div>
+                      {/* <div>
                         <p className="text-xs text-slate-300 "> 4.5 </p>
                         <div className="flex items-center gap-2">
                           <FaStar fill="gold" />
@@ -156,7 +151,7 @@ const Page = () => {
                             color="rgb(203 213 225)"
                           />
                         </div>
-                      </div>
+                      </div> */}
                     </div>
                   </div>
                   <button className="rounded-full bg-[#381F8C] px-6 py-3 text-white">

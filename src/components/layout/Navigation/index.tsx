@@ -24,10 +24,13 @@ import {
 import Button from "@/components/global/Button";
 import Image from "next/image";
 import { handleFetchNotifications } from "@/lib/serviceproviderutil";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/store";
+import { updateUserProfile } from "@/store/Features/userProfile";
 
 const initialAuthState = {
   token: null,
-  roles: null,
+  role: null,
 };
 
 const Navigation = () => {
@@ -36,12 +39,13 @@ const Navigation = () => {
   const [showMobileNav, setShowMobileNav] = useState(false);
   const [notifications, setNotifications] = useState<NotificationTypes[]>([]);
   const [authLooading, setAuthLooading] = useState(true);
-  const [userProfile, setUserProfile] = useState<UserProfileTypes>();
+  const dispatch = useDispatch();
+  const userProfile = useSelector((state: RootState) => state.userProfile);
 
   const pathname = usePathname();
   const [auth, setAuth] = useState<{
     token: string | null;
-    roles: string[] | null;
+    role: string[] | null;
   }>(initialAuthState);
   const [currentLinks, setCurrentLinks] = useState<LinkRouteTypes[]>([]);
 
@@ -49,43 +53,36 @@ const Navigation = () => {
     try {
       setAuth(initialAuthState);
       localStorage.setItem("auth", JSON.stringify(initialAuthState));
-
-      await signOut({ callbackUrl: 'https://taskhub-redesign.vercel.app/home' })
+      await signOut();
       await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/logout`);
       router.push("/home");
-      
-    } catch (error) {
-      console.error("Logout error:", error);
+    } catch (error: any) {
+      console.log(error);
     }
   };
 
-  const profileImage = session?.data?.user.user.profileImage;
   const userRole = session?.data?.user.user.roles;
   const token = session?.data?.user?.accessToken;
   const user = session?.data?.user?.user;
   const isServiceProvider = userRole && userRole[0] === "SERVICE_PROVIDER";
-  const isAuth = session.status === "authenticated";
 
   useLayoutEffect(() => {
     setAuthLooading(true);
     const authStatus = localStorage.getItem("auth");
-    let auth: { token: string | null; roles: string[] | null } =
+    let auth: { token: string | null; role: string[] | null } =
       initialAuthState;
     if (authStatus) {
       auth = JSON.parse(authStatus);
       setAuth(auth);
-      setCurrentLinks(
-        !auth.token
-          ? homeLinks
-          : isServiceProvider
-            ? serviceProviderLinks
-            : customerLinks,
-      );
+      const activeLink = !auth.token
+        ? homeLinks
+        : auth.role && auth.role[0] === "SERVICE_PROVIDER"
+          ? serviceProviderLinks
+          : customerLinks;
+      setCurrentLinks(activeLink);
     }
     setAuthLooading(false);
   }, []);
-
-  // console.log("isServiceProvider", isServiceProvider)
 
   const dropdownItems = [
     {
@@ -143,13 +140,13 @@ const Navigation = () => {
           "https://smp.jacinthsolutions.com.au/api/v1/user/user-profile/" +
           user?.id;
         const { data } = await axios.get(url);
-        setUserProfile(data);
+        dispatch(updateUserProfile(data));
       } catch (error: any) {
         console.error(error.response.data);
       }
     };
     fetchUserProfile();
-  }, []);
+  }, [user?.id, userProfile.refresh, dispatch]);
 
   const notificationRoute = isServiceProvider
     ? "/service-provider/notification"
@@ -234,8 +231,7 @@ const Navigation = () => {
                       <div className="flex cursor-pointer items-center space-x-1">
                         <Image
                           src={
-                            userProfile?.profileImage ||
-                            profileImage ||
+                            userProfile?.profile?.profileImage ||
                             PlaceholderImage.src
                           }
                           alt="Profile"

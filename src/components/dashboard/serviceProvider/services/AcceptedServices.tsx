@@ -67,10 +67,10 @@ const AcceptedServices = ({
           <div className="col-span-2 size-20 flex-shrink-0 overflow-hidden rounded-full border border-violet-normal lg:size-24">
             <Image
               src={
-                item?.user?.profileImage ??
+                item?.customer?.user?.profileImage ??
                 "/assets/images/serviceProvider/user.jpg"
               }
-              alt={item?.user.fullName}
+              alt={item?.customer?.user?.fullName}
               width={200}
               height={200}
               quality={100}
@@ -81,12 +81,12 @@ const AcceptedServices = ({
             <div className="flex flex-wrap justify-between gap-2 ">
               <div>
                 <p className="text-lg font-semibold text-violet-normal ">
-                  {item.user.fullName}
+                  {item?.customer?.user?.fullName}
                 </p>
                 <p className="text-violet-normal">{item.bookingTitle}</p>
               </div>
               <div className="space-y-2">
-                <p className="text-sm font-bold text-orange-normal">
+                <p className="text-sm font-bold text-orange-normal first-letter:uppercase">
                   <p>
                     {formatDateFromNumberArrayToRelativeDate(item.startDate)}
                   </p>
@@ -123,12 +123,12 @@ const AcceptedServices = ({
                 </button>
               </div>
 
-              <button
+              {/* <button
                 className="rounded-full  px-4 py-2 text-xl font-bold text-red-500 transition-colors duration-300 hover:bg-red-100 "
                 onClick={() => handleReportservice(item.id)}
               >
                 Report
-              </button>
+              </button> */}
             </div>
           </div>
         </div>

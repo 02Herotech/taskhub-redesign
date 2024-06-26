@@ -108,3 +108,8 @@
 body {
   @apply font-satoshi text-dark;
 }
+
+.no-AiScroll {
+  overflow: hidden;
+}
+

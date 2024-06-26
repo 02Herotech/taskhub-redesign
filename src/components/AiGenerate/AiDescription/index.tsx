@@ -11,7 +11,6 @@ import icon2 from "../../../../public/assets/images/serviceProvider/AiButton2.pn
 import aiLine from "../../../../public/assets/images/serviceProvider/AiLine.svg";
 import Image from "next/image";
 import { TypeAnimation } from "react-type-animation";
-import AiLine from "./AiLine";
 interface Message {
   id: number;
   type: "user" | "ai";
@@ -65,6 +64,7 @@ const AiDesciption: React.FC<AiGenerateProps> = ({
   ) => {
     setAiQuery(event.target.value);
     setCurrentQuery(event.target.value);
+    adjustTextareaHeight();
   };
 
   const [aiChatView, showAiChatView] = useState(false);
@@ -192,6 +192,53 @@ const AiDesciption: React.FC<AiGenerateProps> = ({
     }
   }, [isNewQuery, conversation]);
 
+
+  useEffect(() => {
+    if (aiChatView) {
+      document.body.classList.add("no-AiScroll");
+    } else {
+      document.body.classList.remove("no-AiScroll");
+    }
+  }, [aiChatView]);
+
+  // To increase height of text area based on what is being typed
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [initialContainerHeight, setInitialContainerHeight] = useState<number | null>(null);
+
+
+  // const adjustTextareaHeight = () => {
+  //   if (textareaRef.current) {
+  //     textareaRef.current.style.height = "auto";
+  //     textareaRef.current.style.height = `${Math.min(textareaRef.current.scrollHeight, 100)}px`;
+  //   }
+  //   if (containerRef.current && textareaRef.current) {
+  //     if (initialContainerHeight === null) {
+  //       setInitialContainerHeight(containerRef.current.clientHeight);
+  //     }
+  //     const newContainerHeight = initialContainerHeight! + Math.min(textareaRef.current.scrollHeight, 100);
+  //     containerRef.current.style.height = `${newContainerHeight}px`;
+  //     containerRef.current.scrollTop = containerRef.current.scrollHeight;
+  //   }
+  // };
+
+
+  const adjustTextareaHeight = () => {
+    if (textareaRef.current && containerRef.current) {
+      textareaRef.current.style.height = "auto";
+      const newTextareaHeight = Math.min(
+        textareaRef.current.scrollHeight,
+        window.innerWidth < 1024 ? 72 : 100
+      );
+      textareaRef.current.style.height = `${newTextareaHeight}px`;
+    }
+  };
+
+  useEffect(() => {
+    adjustTextareaHeight();
+  }, [aiQuery]);
+
+
   return (
     <div>
       {displayType === "card" ? (
@@ -231,7 +278,7 @@ const AiDesciption: React.FC<AiGenerateProps> = ({
                 }}
               ></div>
             ))}
-          </div>  
+          </div>
         </div>
       ) : (
         <button
@@ -248,8 +295,8 @@ const AiDesciption: React.FC<AiGenerateProps> = ({
       )}
 
       {aiChatView && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-          <div className=" mx-auto h-[90%] w-[90%] rounded-[16px] bg-[#FFFFFF] p-10 text-white md:w-[60%] lg:w-[50%]">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 lg:pt-10 pt-2">
+          <div ref={containerRef} className="mx-auto lg:h-[90%] h-[100%] w-[90%] rounded-[16px] bg-[#FFFFFF] lg:p-10 p-5  text-white md:w-[60%] lg:w-[50%]">
             <div className=" flex justify-end">
               <div
                 className="flex h-[30px] w-[30px] items-center justify-center rounded-full bg-[#EBE9F4] hover:cursor-pointer"
@@ -368,9 +415,12 @@ const AiDesciption: React.FC<AiGenerateProps> = ({
                   placeholder="Enter a request here"
                   onChange={handleInputChange}
                   value={aiQuery}
-                  className="w-full overflow-hidden text-wrap  
- bg-transparent px-2 text-[16px] font-normal text-primary border-none outline-none resize-none"
+                  className="w-full text-wrap  
+ bg-transparent px-2 text-[16px] font-normal overflow-hidden text-primary border-none outline-none resize-none"
                   required
+                  ref={textareaRef}
+
+                  style={{ overflowY: "auto", maxHeight: "150px" }}
                 />
                 <div
                   className=""
@@ -384,12 +434,16 @@ const AiDesciption: React.FC<AiGenerateProps> = ({
                   </span>
                 </div>
               </form>
+
+            </div>
+            <span className="pt-1">
+
               {emptyQuerryField && (
-                <p className="font-clashDisplay text-center text-red-500">
+                <p className="font-clashDisplay text-center lg:text-lg text-xs text-red-500">
                   Kindly enter your request
                 </p>
               )}
-            </div>
+            </span>
           </div>
         </div>
       )}

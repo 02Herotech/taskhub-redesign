@@ -5,14 +5,18 @@ import { BiCheck, BiPlus } from "react-icons/bi";
 import ProfilePieChart from "./ProfilePieChart";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store";
 
 interface ProfileCompletionType {
   fetchedUserData: DefaultUserDetailsType;
 }
 
 const ProfileCompletion = ({ fetchedUserData }: ProfileCompletionType) => {
-  const session = useSession();
-  const user = session?.data?.user?.user;
+  // const user = session?.data?.user?.user;
+  const { profile: user } = useSelector(
+    (state: RootState) => state.userProfile,
+  );
 
   const [chartData, setChartData] = useState({ total: 0, completed: 0 });
 
@@ -55,7 +59,7 @@ const ProfileCompletion = ({ fetchedUserData }: ProfileCompletionType) => {
   }, [fetchedUserData, user]);
 
   return (
-    <section className="flex flex-col items-center gap-3 rounded-lg bg-[#EBE9F4] p-4 md:grid md:grid-cols-12">
+    <section className="flex min-h-64 flex-col items-center gap-3 rounded-lg bg-[#EBE9F4] p-4 md:grid md:grid-cols-12">
       <div className="col-span-4 max-md:max-w-40">
         {chartData && <ProfilePieChart chartData={chartData} />}
       </div>

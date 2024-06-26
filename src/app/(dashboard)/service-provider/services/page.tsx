@@ -135,10 +135,10 @@ const ServicesPage = () => {
               <div className="col-span-2 size-20 flex-shrink-0 overflow-hidden rounded-full border border-violet-normal lg:size-24">
                 <Image
                   src={
-                    item?.user?.profileImage ??
+                    item?.customer?.user?.profileImage ??
                     "/assets/images/serviceProvider/user.jpg"
                   }
-                  alt={item?.user.fullName}
+                  alt={item?.customer?.user?.fullName}
                   width={200}
                   height={200}
                   className="h-full w-full object-cover "
@@ -148,7 +148,7 @@ const ServicesPage = () => {
                 <div className="flex flex-wrap justify-between gap-2 ">
                   <div>
                     <p className="text-lg font-semibold text-violet-normal ">
-                      {item.user.fullName}
+                      {item?.customer?.user?.fullName}
                     </p>
                     <p className="text-violet-normal">{item.bookingTitle}</p>
                   </div>

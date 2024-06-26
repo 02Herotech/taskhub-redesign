@@ -71,7 +71,7 @@ export function formatDateFromNumberArrayToRelativeDate(
   const now = new Date();
 
   // Calculate time difference in milliseconds
-  const diffTime = now.getTime() - notificationDate.getTime();
+  const diffTime = notificationDate.getTime() - now.getTime();
 
   // Calculate differences in units
   const diffSeconds = Math.floor(diffTime / 1000);
@@ -84,13 +84,13 @@ export function formatDateFromNumberArrayToRelativeDate(
       if (diffMinutes === 0) {
         return diffSeconds === 0
           ? "now"
-          : `${Math.abs(diffSeconds)} seconds ago`;
+          : `in ${Math.abs(diffSeconds)} seconds`;
       }
       return diffMinutes === 1
-        ? "a minute ago"
-        : `${Math.abs(diffMinutes)} minutes ago`;
+        ? "in a minute"
+        : `in ${Math.abs(diffMinutes)} minutes`;
     }
-    return diffHours === 1 ? "an hour ago" : `${Math.abs(diffHours)} hours ago`;
+    return diffHours === 1 ? "in an hour" : `in ${Math.abs(diffHours)} hours`;
   } else if (diffDays === 1) {
     return "tomorrow";
   } else if (diffDays === -1) {
@@ -117,5 +117,84 @@ export function formatDateFromNumberArrayToRelativeDate(
   } else {
     const diffYears = Math.floor(Math.abs(diffDays) / 365);
     return `${diffYears} ${diffYears === 1 ? "year" : "years"} ago`;
+  }
+}
+
+export function formatDateFromNumberArrayToPastDate(
+  dateArray: number[],
+): string {
+  const [year, month, day, hour, minute, second] = dateArray;
+
+  const notificationDate = new Date(year, month - 1, day, hour, minute, second);
+  const now = new Date();
+
+  // Calculate time difference in milliseconds
+  const diffTime = now.getTime() - notificationDate.getTime();
+
+  console.log("Notification Date:", notificationDate);
+  console.log("Current Date:", now);
+
+  // Calculate differences in units
+  const diffSeconds = Math.floor(diffTime / 1000);
+  const diffMinutes = Math.floor(diffSeconds / 60);
+  const diffHours = Math.floor(diffMinutes / 60);
+  const diffDays = Math.floor(diffHours / 24);
+
+  console.log(diffMinutes, "minute");
+  console.log(diffHours, "Hours");
+  console.log(diffDays, "Days");
+
+  if (diffDays === 0) {
+    if (diffHours === 0) {
+      if (diffMinutes === 0) {
+        return diffSeconds <= 0
+          ? "now"
+          : `${Math.abs(diffSeconds)} seconds ago`;
+      }
+      return diffMinutes === 1
+        ? "a minute ago"
+        : `${Math.abs(diffMinutes)} minutes ago`;
+    }
+    return diffHours === 1 ? "an hour ago" : `${Math.abs(diffHours)} hours ago`;
+  } else if (diffDays === -1) {
+    return "yesterday";
+  } else if (diffDays < -1 && diffDays > -7) {
+    return `${Math.abs(diffDays)} ${Math.abs(diffDays) === 1 ? "day" : "days"} ago`;
+  } else if (diffDays <= -7 && diffDays > -30) {
+    const diffWeeks = Math.floor(Math.abs(diffDays) / 7);
+    return `${diffWeeks} ${diffWeeks === 1 ? "week" : "weeks"} ago`;
+  } else if (diffDays <= -30 && diffDays > -365) {
+    const diffMonths = Math.floor(Math.abs(diffDays) / 30);
+    return `${diffMonths} ${diffMonths === 1 ? "month" : "months"} ago`;
+  } else if (diffDays <= -365) {
+    const diffYears = Math.floor(Math.abs(diffDays) / 365);
+    return `${diffYears} ${diffYears === 1 ? "year" : "years"} ago`;
+  } else {
+    return `${Math.abs(diffDays)} ${Math.abs(diffDays) === 1 ? "day" : "days"} ago`;
+  }
+}
+
+export function formatRelativeDate(timestampArray: number[]): string {
+  const [year, month, day, hour = 0, minute = 0, second = 0] = timestampArray;
+  const now = new Date();
+  const timestamp = new Date(year, month - 1, day, hour, minute, second);
+
+  const elapsedMilliseconds = now.getTime() - timestamp.getTime();
+  const elapsedSeconds = Math.floor(elapsedMilliseconds / 1000 - 3600);
+
+  if (elapsedSeconds < 60) {
+    return "now";
+  } else if (elapsedSeconds < 3600) {
+    const minutesAgo = Math.floor(elapsedSeconds / 60);
+    return `${minutesAgo} minute${minutesAgo === 1 ? "" : "s"} ago`;
+  } else if (elapsedSeconds < 86400) {
+    const hoursAgo = Math.floor(elapsedSeconds / 3600);
+    return `${hoursAgo} hour${hoursAgo === 1 ? "" : "s"} ago`;
+  } else if (elapsedSeconds < 2592000) {
+    const daysAgo = Math.floor(elapsedSeconds / 86400);
+    return `${daysAgo} day${daysAgo === 1 ? "" : "s"} ago`;
+  } else {
+    const monthsAgo = Math.floor(elapsedSeconds / 2592000);
+    return `${monthsAgo} month${monthsAgo === 1 ? "" : "s"} ago`;
   }
 }

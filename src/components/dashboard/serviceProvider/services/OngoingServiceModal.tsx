@@ -6,7 +6,7 @@ import { useSession } from "next-auth/react";
 import Image from "next/image";
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { BiFlag, BiX } from "react-icons/bi";
-import { BsTriangleFill } from "react-icons/bs";
+import { BsExclamationTriangle, BsTriangleFill } from "react-icons/bs";
 import { GrFlagFill } from "react-icons/gr";
 import { PiSealCheckFill } from "react-icons/pi";
 import { useSelector } from "react-redux";
@@ -129,12 +129,12 @@ const OngoingServiceModal = ({ modalData, setModalData }: ModalType) => {
       ></div>
       {modalData.isStartService ? (
         <div className="flex w-[90vw] max-w-lg flex-col items-center justify-center gap-4  rounded-lg bg-violet-light p-5">
-          <span className="inline-block rounded-full bg-violet-darker p-2">
-            <PiSealCheckFill className="size-8" color="white" />
+          <span className="inline-block rounded-full bg-red-300 p-4">
+            <BsExclamationTriangle className="size-8 text-red-500 " />
           </span>
-          <h2 className="font-satoshiBold text-2xl font-bold text-violet-normal">
+          {/* <h2 className="font-satoshiBold text-2xl font-bold text-violet-normal">
             Report Sent
-          </h2>
+          </h2> */}
           <p className="text-center font-bold text-violet-darker ">
             {modalData.message}
           </p>
@@ -149,9 +149,11 @@ const OngoingServiceModal = ({ modalData, setModalData }: ModalType) => {
         </div>
       ) : modalData.isCompleteService ? (
         <div className="flex w-[90vw] max-w-lg flex-col items-center justify-center gap-4  rounded-lg bg-violet-light p-5">
-          <span className="inline-block rounded-full bg-violet-darker p-2">
-            <PiSealCheckFill className="size-8" color="white" />
-          </span>
+          <div className="flex size-20 items-center justify-center rounded-full bg-[#C1F6C3] bg-opacity-60">
+            <div className=" flex size-14 items-center justify-center rounded-full bg-[#A6F8AA] p-2">
+              <PiSealCheckFill className="size-10 text-green-500" />
+            </div>
+          </div>
           <h2 className="font-satoshiBold text-2xl font-bold text-violet-normal">
             Complete Service?
           </h2>

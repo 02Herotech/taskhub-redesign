@@ -1,5 +1,6 @@
 "use client";
 
+import { refreshUserProfile } from "@/store/Features/userProfile";
 import { dataURLtoFile } from "@/utils/service-provider";
 import axios from "axios";
 import { useSession } from "next-auth/react";
@@ -14,7 +15,8 @@ import React, {
   useState,
 } from "react";
 import { BiCheck, BiXCircle } from "react-icons/bi";
-import { PiFileArrowDownDuotone } from "react-icons/pi";
+import { PiFileArrowDownDuotone, PiSealCheckFill } from "react-icons/pi";
+import { useDispatch } from "react-redux";
 import { BeatLoader } from "react-spinners";
 import Webcam from "react-webcam";
 
@@ -62,6 +64,7 @@ const EditProfileModal = ({
   const user = session?.data?.user?.user;
   const token = session?.data?.user?.accessToken;
   const isServiceProvider = user?.roles[0] === "SERVICE_PROVIDER";
+  const dispatch = useDispatch();
 
   const capture = useCallback(() => {
     if (webcamRef.current) {
@@ -99,13 +102,15 @@ const EditProfileModal = ({
   };
 
   const handleCloseModal = () => {
+    setIsFormModalShown(false);
     setImageSrc(null);
     setCameraActive(false);
-    setIsFormModalShown(false);
-    setIsUploadInitiated(false);
-    setSelectedFile(null);
-    setisEditingProfilePicture((prev) => ({ ...prev, isEditing: false }));
-    setIsProfileUpdatedSuccessfully(false);
+    const newTimeout = setTimeout(() => {
+      setisEditingProfilePicture((prev) => ({ ...prev, isEditing: false }));
+      setSelectedFile(null);
+      setIsProfileUpdatedSuccessfully(false);
+      setIsUploadInitiated(false);
+    }, 400);
   };
 
   const handleRemoveDocumentImage = () => {
@@ -138,8 +143,11 @@ const EditProfileModal = ({
               },
             },
           );
+          dispatch(refreshUserProfile());
         } catch (error: any) {
           console.error(error.response.data);
+        } finally {
+          dispatch(refreshUserProfile());
         }
       } else {
         setSelectedDocument(selectedFile);
@@ -156,20 +164,46 @@ const EditProfileModal = ({
     <section
       className={`fixed left-0 top-0 z-50 flex h-screen w-screen items-center justify-center bg-black bg-opacity-60 transition-opacity duration-500 ${isFormModalShown ? "pointer-events-auto opacity-100 " : "pointer-events-none opacity-0"} `}
     >
-      <div className="relative w-[90%] max-w-xl rounded-3xl bg-white p-4  lg:p-10 ">
+      <div
+        className="absolute left-0 top-0 h-full w-full"
+        onClick={handleCloseModal}
+      />
+      <div className="relative w-[90%] max-w-xl rounded-3xl bg-white p-4 py-12 lg:p-10 ">
         {/* close modal button */}
         <button
-          className="absolute right-6 top-3 rounded-full bg-violet-light p-2"
+          className="absolute right-4 top-2 rounded-full bg-violet-light p-2"
           onClick={handleCloseModal}
         >
           <BiXCircle className=" h-6 w-6 text-violet-normal" />
         </button>
 
         {isProfileUpdatedSuccessfully ? (
-          <div>
-            <h1 className="text-center text-lg font-medium text-violet-darkHover">
-              Your Update is received and awaiting Approval
-            </h1>
+          <div className=" flex flex-col items-center justify-center gap-4">
+            <div className="flex size-20 items-center justify-center rounded-full bg-[#C1F6C3] bg-opacity-60">
+              <div className=" flex size-14 items-center justify-center rounded-full bg-[#A6F8AA] p-2">
+                <PiSealCheckFill className="size-10 text-green-500" />
+              </div>
+            </div>
+            <p className="text-center font-satoshiBold text-2xl font-extrabold text-violet-normal">
+              Request Sent!
+            </p>
+            <p className="text-center font-semibold text-violet-darker">
+              You profile request has been sent and awaiting approval
+            </p>
+            <div className="flex items-center gap-6">
+              <button
+                onClick={handleCloseModal}
+                className="rounded-full bg-violet-active px-4 py-2 font-bold text-violet-dark max-sm:text-sm"
+              >
+                Close
+              </button>
+              <Link
+                href={"/marketplace"}
+                className="rounded-full bg-violet-normal px-4 py-2 font-bold text-white max-sm:text-sm"
+              >
+                Proceed to marketplace
+              </Link>
+            </div>
           </div>
         ) : isEditingProfilePicture.isEditing || isUploadInitiated ? (
           <div className=" flex flex-col items-center justify-center gap-5 space-y-3">
