@@ -224,7 +224,6 @@ const AiDesciption: React.FC<AiGenerateProps> = ({
 
 
   const adjustTextareaHeight = () => {
-    console.log(textareaRef.current?.style.height)
     if (textareaRef.current && containerRef.current) {
       textareaRef.current.style.height = "auto";
       const newTextareaHeight = Math.min(
