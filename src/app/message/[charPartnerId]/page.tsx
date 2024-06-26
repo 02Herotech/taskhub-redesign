@@ -1,8 +1,23 @@
+"use client";
+
 // import { chatData } from "@/app/data/service-provider/user";
 import ChatNavigation from "@/components/main/message/ChatNavigation";
+import { RootState } from "@/store";
+import {
+  countNewMessages,
+  findChatMessage,
+  findChatMessages,
+  getUsers,
+} from "@/utils/message";
+import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
+import { useParams } from "next/navigation";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import Stomp from "stompjs";
+import SockJS from "sockjs-client";
+import { setActiveChatPatnerId, setMessages } from "@/store/Features/chat";
 
 const dummyChat = [
   {
@@ -51,8 +66,121 @@ const dummyChat = [
 
 const chatData = [{}];
 
+let stompClient: any = null;
+
 const ServiceProviderChat = () => {
+  // const [activeContact, setActiveContact] = useState<any>(null);
+  // const [chatMessages, setChatMessages] = useState<any>([]);
+  // const [contacts, setContacts] = useState<any>([]);
+
+  // const session = useSession();
+  // const dispatch = useDispatch();
+  // const { chatPartnerId } = useParams<{ chatPartnerId: string }>();
+
+  // const token = session?.data?.user?.accessToken;
+
+  // const { profile: user } = useSelector(
+  //   (state: RootState) => state.userProfile,
+  // );
+  // const { activeChatPatnerId, messages: storedMessages } = useSelector(
+  //   (state: RootState) => state.chat,
+  // );
+
+  // useEffect(() => {
+  //   if (chatPartnerId) {
+  //     dispatch(setActiveChatPatnerId(chatPartnerId));
+  //   }
+  // }, [chatPartnerId, dispatch]);
+
+  // useEffect(() => {
+  //   if (chatPartnerId && user && token) {
+  //     connect();
+  //     loadContacts();
+  //   }
+  // }, [chatPartnerId, user, token]);
+
+  // useEffect(() => {
+  //   if (token && user && chatPartnerId) {
+  //     findChatMessages({
+  //       recipientId: Number(chatPartnerId),
+  //       senderId: user.id,
+  //       token,
+  //     }).then((msgs) => {
+  //       setChatMessages(msgs);
+  //       dispatch(setMessages(msgs));
+  //     });
+  //   }
+  // }, [token, user, chatPartnerId, dispatch]);
+
+  // const connect = () => {
+  //   const socket = new SockJS(`${process.env.NEXT_PUBLIC_API_URL}/ws`);
+  //   const stompClient = Stomp.over(socket);
+  //   stompClient.connect({}, onConnected, onError);
+  // };
+
+  // const onConnected = () => {
+  //   console.log("connected");
+  //   stompClient.subscribe(
+  //     `/user/${user?.id}/queue/messages`,
+  //     onMessageReceived,
+  //   );
+  // };
+
+  // const onError = (err: any) => {
+  //   console.error(err);
+  // };
+
+  // const onMessageReceived = (msg: any) => {
+  //   const notification = JSON.parse(msg.body);
+  //   if (activeChatPatnerId === notification.senderId) {
+  //     findChatMessage(notification.id).then((message) => {
+  //       const newMessages = [...storedMessages, message];
+  //       dispatch(setMessages(newMessages));
+  //       setChatMessages(newMessages);
+  //     });
+  //   }
+  //   loadContacts();
+  // };
+
+  // const sendMessage = (msg: string) => {
+  //   if (msg.trim() !== "" && activeContact && user) {
+  //     const message = {
+  //       senderId: user.id,
+  //       recipientId: activeContact.id,
+  //       senderName: `${user.firstName} ${user.lastName}`,
+  //       recipientName: activeContact.name,
+  //       content: msg,
+  //       timestamp: new Date(),
+  //     };
+  //     stompClient.send("/app/chat", {}, JSON.stringify(message));
+
+  //     const newMessages = [...chatMessages, message];
+  //     dispatch(setMessages(newMessages));
+  //     setChatMessages(newMessages);
+  //   }
+  // };
+
+  // const loadContacts = async () => {
+  //   if (!token || !user) return;
+  //   const users = await getUsers({ token });
+  //   const contacts = await Promise.all(
+  //     users.map(async (contact: any) => {
+  //       const count = await countNewMessages({
+  //         recipientId: contact.id,
+  //         senderId: user.id,
+  //         token,
+  //       });
+  //       return { ...contact, newMessages: count };
+  //     }),
+  //   );
+  //   setContacts(contacts);
+  //   if (!activeContact && contacts.length > 0) {
+  //     setActiveContact(contacts[0]);
+  //   }
+  // };
+
   const handleReschedule = () => {};
+
   return (
     <main className="min-h-[calc(100vh-4rem)] space-y-5  p-4 lg:p-8 ">
       <section className="grid gap-10 divide-slate-400 lg:grid-cols-12 lg:divide-x ">

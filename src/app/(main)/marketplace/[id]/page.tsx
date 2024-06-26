@@ -58,10 +58,9 @@ const Page = () => {
               <div className="flex items-center   ">
                 <Image
                   src={displayData?.businessPictures[0] ?? ""}
-                  alt="bannerImage"
+                  alt={displayData?.businessPictures[0] ?? ""}
                   width={1600}
                   height={1600}
-                  layout="intrinsic"
                   quality={100}
                   onClick={() =>
                     setShowImageModal({
@@ -203,9 +202,9 @@ const Page = () => {
           <div className="flex flex-col gap-6 lg:grid lg:grid-cols-12">
             <Image
               src={displayData?.businessPictures[0] ?? ""}
-              alt="googlemap"
-              width={800}
-              height={500}
+              alt={displayData?.businessPictures[0] ?? ""}
+              width={1600}
+              height={1600}
               quality={100}
               onClick={() =>
                 setShowImageModal({

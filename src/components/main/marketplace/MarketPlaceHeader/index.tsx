@@ -57,9 +57,9 @@ const MarketPlaceHeader = () => {
             type="text"
             id="description"
             placeholder={
-              "In few words,  " + isServiceProvider
-                ? "what can you provide"
-                : "what do you need?"
+              isServiceProvider
+                ? " In few words, what can you provide"
+                : " In few words, what do you need?"
             }
             value={addDescription}
             onChange={(e) => setAddDescription(e.target.value)}

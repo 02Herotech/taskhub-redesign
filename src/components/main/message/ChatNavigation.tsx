@@ -1,11 +1,15 @@
 "use client";
 
+import { RootState } from "@/store";
+import { findChatMessages } from "@/utils/message";
+import { useSession } from "next-auth/react";
 // import { chatData } from "@/app/data/service-provider/user";
 import Image from "next/image";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { BiSearch } from "react-icons/bi";
+import { useSelector } from "react-redux";
 
 interface ChatDataType {
   id: string;
@@ -31,6 +35,7 @@ const ChatNavigation = () => {
   const [currentCategory, setCurrentCategory] = useState("All");
   const param = useSearchParams();
   const id = param.get("id");
+
   const handleChangeCategory = (category: string) => {
     setCurrentCategory(category);
   };
