@@ -10,6 +10,7 @@ import { useRouter } from "next/navigation";
 import { BeatLoader } from "react-spinners";
 import { BsPencilSquare } from "react-icons/bs";
 import Image from "next/image";
+import { PiSealCheckFill } from "react-icons/pi";
 
 interface ModalPropType {
   isModalOpen: boolean;
@@ -25,6 +26,7 @@ const Invoice = ({
   invoiceDraft,
 }: ModalPropType) => {
   // setting invoice state
+
   const [invoiceState, setInvoiceState] = useState<{
     price: string | number;
     date: Date | null;
@@ -33,24 +35,10 @@ const Invoice = ({
     successData: string;
     loading: boolean;
   }>({
-    price: invoiceDraft?.price ?? currentBooking?.price ?? "",
-    // @ts-expect-error "type not curruntly correct "
-    date:
-      invoiceDraft?.serviceStartOn ??
-      (currentBooking && convertToDateInputFormat(currentBooking?.startDate)) ??
-      null,
-    gst:
-      (invoiceDraft?.gst as number) ??
-      (currentBooking &&
-        Math.floor(((currentBooking.price / 100) as number) * 10)) ??
-      0,
-    total: currentBooking
-      ? Math.floor(
-          currentBooking.price -
-            (currentBooking.price / 100) * 10 -
-            (currentBooking.price / 100) * 2,
-        )
-      : 0,
+    price: "",
+    date: null,
+    gst: 0,
+    total: 0,
     successData: "",
     loading: false,
   });
@@ -63,6 +51,40 @@ const Invoice = ({
   const session = useSession();
   const token = session?.data?.user?.accessToken;
   const user = session?.data?.user?.user;
+
+  useEffect(() => {
+    setInvoiceState({
+      price:
+        invoiceDraft?.price !== undefined
+          ? invoiceDraft.price
+          : currentBooking?.price ?? "",
+      date:
+        invoiceDraft?.serviceStartOn !== undefined
+          ? invoiceDraft.serviceStartOn
+          : (currentBooking &&
+              convertToDateInputFormat(currentBooking?.startDate)) ??
+            null,
+      gst:
+        invoiceDraft?.gst !== undefined
+          ? invoiceDraft.gst
+          : currentBooking
+            ? Math.floor((currentBooking.price / 100) * 10)
+            : 0,
+      total:
+        invoiceDraft?.total !== undefined
+          ? invoiceDraft.total
+          : currentBooking
+            ? Math.floor(
+                currentBooking.price -
+                  (currentBooking.price / 100) * 10 -
+                  (currentBooking.price / 100) * 2,
+              )
+            : 0,
+
+      successData: "",
+      loading: false,
+    });
+  }, [currentBooking, invoiceDraft]);
 
   function convertToDateInputFormat(dateArray: number[]) {
     const [year, month, day] = dateArray;
@@ -85,12 +107,12 @@ const Invoice = ({
     const invoiceData = {
       bookingId: currentBooking.id,
       subTotal: invoiceState.total,
-      total: currentBooking?.price,
+      total: invoiceState.price,
       serviceStartOn: formatDateAsYYYYMMDD(invoiceState.date as Date),
       issuedOn: formatDateAsYYYYMMDD(todayDate),
       dueOn: formatDateAsYYYYMMDD(tomorrowDate),
       serviceProviderId: user?.id,
-      customerId: currentBooking.user?.id,
+      customerId: currentBooking.customer?.id,
       gst: invoiceState.gst,
       platformCharge: Math.floor((Number(invoiceState.price) / 100) * 2),
     };
@@ -122,16 +144,17 @@ const Invoice = ({
     const invoiceData: InvoiceDraftType = {
       bookingId: currentBooking.id,
       subTotal: invoiceState.total,
-      total: currentBooking?.price,
-      serviceStartOn: formatDateAsYYYYMMDD(invoiceState.date as Date),
+      total: invoiceState.price as number,
+      serviceStartOn: invoiceState.date as Date,
       issuedOn: formatDateAsYYYYMMDD(todayDate),
       dueOn: formatDateAsYYYYMMDD(tomorrowDate),
       serviceProviderId: user?.id,
-      customerId: currentBooking.user?.id,
+      customerId: currentBooking.customer?.id,
       gst: invoiceState.gst,
       platformCharge: Math.floor((Number(invoiceState.price) / 100) * 2),
       price: invoiceState.price as number,
     };
+
     setInvoiceDraftData((prev) => {
       const updatedDrafts = prev.filter(
         (invoice) => invoice.bookingId !== invoiceData.bookingId,
@@ -140,7 +163,7 @@ const Invoice = ({
       localStorage.setItem("invoiceDraftData", JSON.stringify(newDrafts));
       return newDrafts;
     });
-    localStorage.setItem("invoiceDraftData", JSON.stringify(invoiceDraftData));
+    // localStorage.setItem("invoiceDraftData", JSON.stringify(invoiceDraftData));
     setInvoiceState((prev) => ({
       ...prev,
       successData: "Invoice successfully saved to draft",
@@ -169,20 +192,16 @@ const Invoice = ({
         onClick={() => setIsModalOpen(false)}
       ></div>
       {invoiceState.successData ? (
-        <div className=" relative z-10 flex w-[90vw] max-w-md  flex-col items-center justify-center gap-4 rounded-lg bg-violet-light p-5 ">
-          <div className="size-10 rounded-full bg-emerald-600 p-2">
-            <Image
-              src={"/assets/images/serviceProvider/jobs/checkicon.png"}
-              alt="checkicon"
-              width={80}
-              height={80}
-              className="h-full w-full"
-            />
+        <div className=" relative z-10 flex w-[90vw] max-w-md  flex-col items-center justify-center gap-4 rounded-lg bg-white p-5 ">
+          <div className="flex size-20 items-center justify-center rounded-full bg-[#C1F6C3] bg-opacity-60">
+            <div className=" flex size-14 items-center justify-center rounded-full bg-[#A6F8AA] p-2">
+              <PiSealCheckFill className="size-10 text-green-500" />
+            </div>
           </div>
-          <h2 className="font-satoshiBold text-2xl font-bold text-emerald-600">
+          <p className="text-center font-satoshiBold text-2xl font-extrabold text-violet-normal">
             Success
-          </h2>
-          <p className="text-center">
+          </p>
+          <p className="text-center font-semibold text-violet-darker">
             {invoiceState.successData.includes("draft")
               ? "Invoice successfully saved to draft"
               : "Invoice successfully Generated and sent to customer"}
@@ -211,7 +230,9 @@ const Invoice = ({
             <label className="flex-grow rounded-lg bg-violet-light p-4 py-2 font-bold ">
               <span className="flex items-center gap-2 text-[#716F78] ">
                 <span>Amount</span>{" "}
-                <BsPencilSquare className="text-violet-normal" />
+                {!currentBooking?.invoiceSent && (
+                  <BsPencilSquare className="text-violet-normal" />
+                )}
               </span>
               <div className="flex w-full items-center gap-1">
                 <p>$ </p>
@@ -220,6 +241,7 @@ const Invoice = ({
                   name="price"
                   value={invoiceState.price}
                   placeholder={currentBooking?.price?.toString()}
+                  disabled={currentBooking?.invoiceSent}
                   className="w-full bg-violet-light py-2 outline-none"
                   onChange={(event) =>
                     setInvoiceState((prev) => ({
@@ -233,12 +255,15 @@ const Invoice = ({
             <label className="flex flex-grow flex-col gap-2 rounded-lg bg-violet-light p-4 py-2 font-bold ">
               <span className="flex items-center gap-2 text-[#716F78]">
                 <span>Start Date</span>
-                <BsPencilSquare className="text-violet-normal" />
+                {!currentBooking?.invoiceSent && (
+                  <BsPencilSquare className="text-violet-normal" />
+                )}
               </span>
               <DatePicker
                 selected={invoiceState.date as Date}
                 minDate={new Date()}
                 required
+                disabled={currentBooking?.invoiceSent}
                 onChange={(date: Date) =>
                   setInvoiceState((prev) => ({
                     ...prev,
@@ -287,7 +312,7 @@ const Invoice = ({
                 <div>
                   <p className=" font-extrabold text-violet-dark  ">Bill To</p>
                   <p className="font-medium  text-[#4E5158]">
-                    {currentBooking?.user?.fullName}
+                    {currentBooking?.customer?.user?.fullName}
                   </p>
                 </div>
                 <div>
@@ -312,32 +337,36 @@ const Invoice = ({
             <BiXCircle className="size-8 text-violet-normal" />
           </button>
           <div className="flex gap-2">
-            <button
-              onClick={generateInvoice}
-              className="rounded-full bg-violet-normal px-4 py-2 font-medium text-white"
-            >
-              {invoiceState.loading ? (
-                <BeatLoader
-                  color={"white"}
-                  loading={invoiceState.loading}
-                  size={14}
-                />
-              ) : (
-                "Send"
-              )}
-            </button>
+            {!currentBooking?.invoiceSent && (
+              <button
+                onClick={generateInvoice}
+                className="rounded-full bg-violet-normal px-4 py-2 font-medium text-white"
+              >
+                {invoiceState.loading ? (
+                  <BeatLoader
+                    color={"white"}
+                    loading={invoiceState.loading}
+                    size={14}
+                  />
+                ) : (
+                  "Send"
+                )}
+              </button>
+            )}
             <button
               onClick={() => setIsModalOpen(false)}
               className=" rounded-full px-4 py-2 font-medium text-violet-normal"
             >
               Back
             </button>
-            <button
-              onClick={safeInvoiceToDraft}
-              className=" rounded-full bg-violet-light px-4 py-2 font-medium text-violet-normal"
-            >
-              Save to draft
-            </button>
+            {!currentBooking?.invoiceSent && (
+              <button
+                onClick={safeInvoiceToDraft}
+                className=" rounded-full bg-violet-light px-4 py-2 font-medium text-violet-normal"
+              >
+                Save to draft
+              </button>
+            )}
           </div>
         </div>
       )}

@@ -88,11 +88,11 @@ const TaskDetailsPage = ({ params }: { params: { id: string } }) => {
                             {availability}
                         </p>
                     </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-10 space-x-5 w-full mt-10">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-10 lg:space-x-5 w-full mt-10">
                         <div className="space-y-7 lg:space-y-10 font-satoshi">
                             <h2 className="text-lg lg:text-4xl font-black text-primary">{task?.taskBriefDescription}</h2>
                             <div className="space-y-3 text-xs lg:text-xl">
-                                <h2 className='text-primary lg:text-2xl font-satoshiMedium font-bold'>Service purpose</h2>
+                                    <h2 className='text-primary lg:text-2xl font-satoshiMedium font-bold'>Task Description</h2>
                                 <p className='text-[#221354] font-satoshiMedium font-medium text-xl'>{task?.taskDescription}</p>
                             </div>
                             <div className="space-y-5">

@@ -119,13 +119,21 @@ declare interface BookingType {
   };
   price: number;
   bookingTitle: string;
+  customer: {
+    id: number;
+    user: {
+      id: number;
+      fullName: string;
+      profileImage: string | null;
+    };
+  };
+
   bookingDescription: string;
   bookingStage: string;
   listing: { id: number };
-  user: { id: number; fullName: string; profileImage: string | null };
   bookedAt: string;
   invoiceSent: boolean;
-  updatedAt: string;
+  updatedAt: string | null;
 }
 
 declare interface UserProfileTypes {

@@ -85,6 +85,10 @@ export const mobileServiceProviderLinks: LinkRouteTypes[] = [
         url: "/service-provider/services",
       },
       {
+        label: "View Jobs",
+        url: "/service-provider/services",
+      },
+      {
         label: "My Notifications",
         url: "/service-provider/notification",
       },
@@ -93,18 +97,32 @@ export const mobileServiceProviderLinks: LinkRouteTypes[] = [
         url: "/service-provider/payment",
       },
       {
-        label: "Settings",
-        url: "/service-provider/settings",
-        sublinks: [
-          {
-            label: "Password",
-            url: "/service-provider/dashboard/settings/security",
-          },
-          {
-            label: "notification",
-            url: "/service-provider/dashboard/settings/privacy",
-          },
-        ],
+        label: "Password Settings",
+        url: "/service-provider/settings/password",
+        // sublinks: [
+        //   {
+        //     label: "Password",
+        //     url: "/service-provider/dashboard/settings/security",
+        //   },
+        //   {
+        //     label: "Notification",
+        //     url: "/service-provider/dashboard/settings/privacy",
+        //   },
+        // ],
+      },
+      {
+        label: "Notification Settings",
+        url: "/service-provider/settings/notification",
+        // sublinks: [
+        //   {
+        //     label: "Password",
+        //     url: "/service-provider/dashboard/settings/security",
+        //   },
+        //   {
+        //     label: "Notification",
+        //     url: "/service-provider/dashboard/settings/privacy",
+        //   },
+        // ],
       },
     ],
   },

@@ -92,7 +92,7 @@ const MareketPlace = () => {
             <Image
               src="/assets/images/marketplace/complete-profile-2.png"
               alt="image"
-              className="absolute bottom-1 left-1 size-[100px] lg:size-[160px]"
+              className="absolute bottom-1 left-1  size-1/4 lg:size-[160px] "
               width={160}
               height={160}
             />

@@ -171,7 +171,7 @@ const ViewJobs = () => {
                 <div>
                   <p className="text-xl font-bold uppercase">Requested by:</p>
                   <p className="text-lg font-bold text-orange-normal">
-                    {currentBooking.user?.fullName}
+                    {currentBooking?.customer?.user?.fullName}
                   </p>
                 </div>
                 <div>
@@ -194,7 +194,7 @@ const ViewJobs = () => {
                   <div className="size-16 overflow-hidden rounded-s-full">
                     <Image
                       src={
-                        currentBooking.user?.profileImage ??
+                        currentBooking?.customer?.user?.profileImage ??
                         "/assets/images/serviceProvider/user.jpg"
                       }
                       alt="user"
@@ -257,12 +257,14 @@ const ViewJobs = () => {
                     </button>
                   </div>
                 ) : currentBooking.bookingStage === "ACCEPTED" ? (
-                  <button
-                    onClick={() => setIsModalOpen(true)}
-                    className="rounded-full bg-violet-normal px-6 py-3 text-sm font-medium text-white transition-opacity duration-300 hover:opacity-90 max-md:px-4 max-md:py-2 max-md:text-sm"
-                  >
-                    Generate Invoice
-                  </button>
+                  !currentBooking.invoiceSent && (
+                    <button
+                      onClick={() => setIsModalOpen(true)}
+                      className="rounded-full bg-violet-normal px-6 py-3 text-sm font-medium text-white transition-opacity duration-300 hover:opacity-90 max-md:px-4 max-md:py-2 max-md:text-sm"
+                    >
+                      Generate Invoice
+                    </button>
+                  )
                 ) : (
                   <p className="rounded-full bg-red-100 px-6 py-3 text-sm font-medium text-red-500  max-md:px-4 max-md:py-2 max-md:text-sm">
                     Booking Rejected
