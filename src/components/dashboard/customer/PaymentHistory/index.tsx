@@ -1,11 +1,14 @@
 "use client"
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { formatAmount } from "@/lib/utils";
 import Button from "@/components/global/Button";
 import Popup from '@/components/global/Popup';
 import { FiClock } from 'react-icons/fi';
 import { useSession } from 'next-auth/react';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/store';
+import axios from 'axios';
 
 type CustomerPaymentHistoryProps = {
     transactionTitle: string;
@@ -104,8 +107,39 @@ const PaymentHistory = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedPayment, setSelectedPayment] = useState<CustomerPaymentHistoryProps | null>(null);
     const todayDate = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
-    const session = useSession()
-    console.log(session)
+    const [paymentHistoryData, setPaymentHistoryData] = useState<CustomerPaymentHistoryProps[]>([]);
+    const [loading, setLoading] = useState(false);
+    const session = useSession();
+    const userToken = session.data?.user.accessToken;
+    const { profile: user } = useSelector(
+        (state: RootState) => state.userProfile,
+    );
+    const customerId = user?.id;
+
+    console.log('User', user);
+
+    const fetchCustomerTransactionHistory = async () => {
+        try {
+            setLoading(true);
+            const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/booking/all-receipts/2`, {
+                headers: {
+                    Authorization: `Bearer ${userToken}`,
+                },
+            });
+
+            console.log('Transaction data:', response);
+            setLoading(false);
+        } catch (error) {
+            setLoading(false);
+            console.log('Error fetching Transaction:', error);
+        }
+    };
+
+    useEffect(() => {
+        if (userToken) {
+            fetchCustomerTransactionHistory();
+        }
+    }, [userToken]);
 
     const handleLoadMore = () => {
         setVisibleTransactions(prevVisible => prevVisible + visibleTransactions);

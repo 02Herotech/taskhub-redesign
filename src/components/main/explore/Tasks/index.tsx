@@ -14,6 +14,7 @@ import Image from "next/image";
 import { CiSearch } from "react-icons/ci";
 import { IoMdArrowDropdown } from "react-icons/io";
 import { set } from "react-hook-form";
+import { useSession } from "next-auth/react";
 
 type Category = {
     id: number;
@@ -34,6 +35,7 @@ const Tasks = () => {
     const [searchText, setSearchText] = useState("");
     const [paginationLength, setPaginationLength] = useState(9);
     const [showPriceDropdown, setShowPriceDropdown] = useState(false);
+    const session = useSession()
 
     const { data: tasksData, isLoading, refetch } = useGetActiveTasksQuery(currentPage);
     const { data: searchResults } = useSearchTaskByTextQuery({ text: searchText, pageNumber: currentPage });
