@@ -27,7 +27,6 @@ const Invoices = () => {
     const todayDate = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
     const { data: session } = useSession();
     const userToken = session?.user?.accessToken;
-    const id = session?.user?.user.id;
     const firstName = session?.user?.user.firstName;
     const lastName = session?.user?.user.lastName;
     const fullName = `${firstName} ${lastName}`;
@@ -51,8 +50,6 @@ const Invoices = () => {
     const { profile: user } = useSelector(
         (state: RootState) => state.userProfile,
     );
-
-    console.log("session", session)
 
     const { data: invoices, isLoading } = useGetInvoiceByCustomerIdQuery(user?.customerId!);
 
