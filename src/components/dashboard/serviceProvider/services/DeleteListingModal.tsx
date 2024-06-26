@@ -27,6 +27,7 @@ const DeleteListingModal = ({
   const [success, setSucess] = useState(false);
 
   const handleCloseModal = () => {
+    success && dispatch(refreshUserProfile());
     setIsDeleteModalShown({ id: 0, isShown: false });
     setTimeout(() => {
       setSucess(false);
@@ -45,7 +46,6 @@ const DeleteListingModal = ({
         },
       });
       setSucess(true);
-      dispatch(refreshUserProfile());
     } catch (error: any) {
       console.log(error.response.data);
     } finally {
@@ -93,8 +93,10 @@ const DeleteListingModal = ({
       ) : (
         <div className="flex w-[90vw] max-w-lg flex-col items-center justify-center gap-4  rounded-lg bg-violet-light p-5">
           <div className="flex size-20 items-center justify-center rounded-full bg-[#C1F6C3] bg-opacity-60">
-            <div className=" flex size-14 items-center justify-center rounded-full bg-[#A6F8AA] p-2">
-              <PiSealCheckFill className="size-10 text-green-500" />
+            <div className="flex size-20 items-center justify-center rounded-full bg-[#C1F6C3] bg-opacity-60">
+              <div className=" flex size-14 items-center justify-center rounded-full bg-[#A6F8AA] p-2">
+                <PiSealCheckFill className="size-10 text-green-500" />
+              </div>
             </div>
           </div>
           <p className="text-center font-bold text-violet-darker ">

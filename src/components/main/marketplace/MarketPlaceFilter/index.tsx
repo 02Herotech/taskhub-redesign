@@ -92,7 +92,7 @@ const MarketPlaceFilter = () => {
       const { category, location, typeOfService, minPrice, maxPrice } =
         filterDataStructure;
       let url =
-        "https://smp.jacinthsolutions.com.au/api/v1/listing/filter-listings?";
+        "https://smp.jacinthsolutions.com.au/api/v1/listing/filter-listings/0?";
       const params = [];
 
       if (category) {

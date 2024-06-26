@@ -41,7 +41,7 @@ const SingleListingCard = ({
       className="group transition-transform duration-300 hover:-translate-y-2 "
     >
       <div className=" my-3 flex w-full justify-center">
-        <div className="flex w-full max-w-sm flex-col rounded-2xl  bg-[#EBE9F4] p-3 ">
+        <div className="flex w-full max-w-sm flex-col gap-2 rounded-2xl  bg-[#EBE9F4] p-3 ">
           <div className="">
             <Image
               src={displayImage}
@@ -52,11 +52,11 @@ const SingleListingCard = ({
               className="h-40  w-full rounded-xl border border-[#D9D9D9] object-cover transition-all  duration-300 group-hover:scale-105"
             />
           </div>
-          <div className="mt-2 flex h-full flex-col justify-between">
+          <div className="mt-2 flex h-full flex-col justify-between gap-2">
             <h2 className="text-lg font-bold  first-letter:uppercase md:text-lg">
               {truncateText(businessName, 20)}
             </h2>
-            <div className="py-4 ">
+            {/* <div className="py-4 ">
               <p className="text-xs">4.5</p>
               <div className="flex items-center gap-1 ">
                 <BsStarFill className="size-3 fill-orange-normal" />
@@ -65,7 +65,7 @@ const SingleListingCard = ({
                 <BsStarFill className="size-3 fill-orange-normal" />
                 <BsStarFill className="size-3 fill-violet-400" />
               </div>
-            </div>
+            </div> */}
 
             <div className="flex items-center justify-between gap-5">
               <div className="flex items-center gap-2">

@@ -123,12 +123,12 @@ const AcceptedServices = ({
                 </button>
               </div>
 
-              <button
+              {/* <button
                 className="rounded-full  px-4 py-2 text-xl font-bold text-red-500 transition-colors duration-300 hover:bg-red-100 "
                 onClick={() => handleReportservice(item.id)}
               >
                 Report
-              </button>
+              </button> */}
             </div>
           </div>
         </div>

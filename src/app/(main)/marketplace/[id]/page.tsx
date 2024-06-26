@@ -139,7 +139,7 @@ const Page = () => {
                       <p className="text-xl font-medium">
                         {displayData?.serviceProvider?.user?.fullName}
                       </p>
-                      <div>
+                      {/* <div>
                         <p className="text-xs text-slate-300 "> 4.5 </p>
                         <div className="flex items-center gap-2">
                           <FaStar fill="gold" />
@@ -151,7 +151,7 @@ const Page = () => {
                             color="rgb(203 213 225)"
                           />
                         </div>
-                      </div>
+                      </div> */}
                     </div>
                   </div>
                   <button className="rounded-full bg-[#381F8C] px-6 py-3 text-white">

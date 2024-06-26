@@ -45,10 +45,12 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
         content = data.content;
       } else if (categoryId) {
         url =
-          "https://smp.jacinthsolutions.com.au/api/v1/listing/filter-listings?category=" +
+          "https://smp.jacinthsolutions.com.au/api/v1/listing/filter-listings/" +
+          currentPage +
+          "?category=" +
           categoryId.categoryName;
         const { data } = await axios.get(url);
-        content = data;
+        content = data.content;
         setPage((prev) => ({ ...prev, totalPages: data.totalPages }));
       }
       if (url) {

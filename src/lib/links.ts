@@ -86,7 +86,7 @@ export const mobileServiceProviderLinks: LinkRouteTypes[] = [
       },
       {
         label: "View Jobs",
-        url: "/service-provider/services",
+        url: "/service-provider/jobs",
       },
       {
         label: "My Notifications",
