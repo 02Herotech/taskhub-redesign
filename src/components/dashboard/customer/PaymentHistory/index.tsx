@@ -114,14 +114,12 @@ const PaymentHistory = () => {
     const { profile: user } = useSelector(
         (state: RootState) => state.userProfile,
     );
-    const customerId = user?.id;
-
-    console.log('User', user);
+    const customerId = user?.customerId
 
     const fetchCustomerTransactionHistory = async () => {
         try {
             setLoading(true);
-            const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/booking/all-receipts/2`, {
+            const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/booking/all-receipts/${customerId}`, {
                 headers: {
                     Authorization: `Bearer ${userToken}`,
                 },
@@ -136,10 +134,10 @@ const PaymentHistory = () => {
     };
 
     useEffect(() => {
-        if (userToken) {
+        if (userToken && customerId) {
             fetchCustomerTransactionHistory();
         }
-    }, [userToken]);
+    }, [userToken, customerId]);
 
     const handleLoadMore = () => {
         setVisibleTransactions(prevVisible => prevVisible + visibleTransactions);
