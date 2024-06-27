@@ -78,7 +78,9 @@ const MarketPlaceFilter = () => {
         "https://smp.jacinthsolutions.com.au/api/v1/listing/text/0?text=" +
         searchInputData;
       const { data } = await axios.get(url);
-      dispatch(filterMarketPlace(data.content));
+      dispatch(
+        filterMarketPlace({ data: data.content, totalPages: data.totalPages }),
+      );
     } catch (error: any) {
       console.log(error.message);
     } finally {
