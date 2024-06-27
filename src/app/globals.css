@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+html {
+  scroll-behavior: smooth;
+}
+
 /* Custom styles */
 .phone-input input:focus {
   outline: none !important;
@@ -112,4 +116,3 @@ body {
 .no-AiScroll {
   overflow: hidden;
 }
-

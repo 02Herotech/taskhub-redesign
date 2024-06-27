@@ -34,7 +34,6 @@ const MobileNavigation = ({ setShowMobileNav }: Props) => {
   const isServiceProvider = userRole && userRole[0] === "SERVICE_PROVIDER";
   const isAuth = session.status === "authenticated";
   // const isCustomer = userRole && userRole[0] === "CUSTOMER";
-  // const notificationLength = session.data?.user.user.appNotificationList.length;
 
   const currentLinks = !isAuth
     ? homeLinks
@@ -45,11 +44,9 @@ const MobileNavigation = ({ setShowMobileNav }: Props) => {
 
   const handleLogout = async () => {
     try {
-
       await signOut({ callbackUrl: 'https://taskhub.com.au/home' })
       await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/logout`);
       router.push("/home");
-
     } catch (error) {
       console.error("Logout error:", error);
     }
@@ -93,7 +90,7 @@ const MobileNavigation = ({ setShowMobileNav }: Props) => {
               </div>
             )}
           </div>
-          <ul className="space-y-5 my-8">
+          <ul className="my-8 space-y-5">
             {currentLinks.map((link, index) => {
               const isActive =
                 (link.url === "/" && pathname === "/") ||
@@ -125,7 +122,7 @@ const MobileNavigation = ({ setShowMobileNav }: Props) => {
                           {link.sublinks.map((sublink) => (
                             <li
                               key={sublink.label}
-                              className="space-y-7 pl-2 pt-3 overflow-y-scroll"
+                              className="space-y-7 overflow-y-scroll pl-2 pt-3"
                             >
                               <Link
                                 onClick={() => setShowMobileNav(false)}
@@ -138,7 +135,7 @@ const MobileNavigation = ({ setShowMobileNav }: Props) => {
                                       sublink.url === "/" && pathname === "/"
                                         ? true
                                         : sublink.url !== "/" &&
-                                          pathname.includes(sublink.url)
+                                            pathname.includes(sublink.url)
                                           ? true
                                           : false,
                                   },
@@ -168,7 +165,7 @@ const MobileNavigation = ({ setShowMobileNav }: Props) => {
             })}
             <div
               onClick={handleLogout}
-              className="cursor-pointer text-lg font-medium text-primary mb-10"
+              className="mb-10 cursor-pointer text-lg font-medium text-primary"
             >
               Logout
             </div>
@@ -181,10 +178,7 @@ const MobileNavigation = ({ setShowMobileNav }: Props) => {
                 <Button className="rounded-full">Sign Up</Button>
               </Link>
               <Link href="/auth/login">
-                <Button
-                  theme="outline"
-                  className="rounded-full bg-transparent"
-                >
+                <Button theme="outline" className="rounded-full bg-transparent">
                   Login
                 </Button>
               </Link>
@@ -193,9 +187,9 @@ const MobileNavigation = ({ setShowMobileNav }: Props) => {
           <div className="flex flex-col items-center justify-center space-y-8">
             <SmallLogo />
             <p className="text-center text-[13px] font-normal text-primary">
-              Online platform that connects Service Provider with Customers
-              who are seeking various services. The platform offers a wide
-              range of services.
+              Online platform that connects Service Provider with Customers who
+              are seeking various services. The platform offers a wide range of
+              services.
             </p>
             <div className="flex items-center justify-center space-x-3">
               <Link
