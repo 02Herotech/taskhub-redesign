@@ -40,7 +40,6 @@ const Page = () => {
         console.log(error.response.data);
       }
     };
-
     fetchListing();
   }, [displayData]);
 
@@ -190,7 +189,7 @@ const Page = () => {
             planThreeDescription={displayData?.planThreeDescription ?? null}
             listingId={displayData?.id ?? 0}
             listingTitle={displayData?.listingTitle}
-            negotiable={displayData?.negotiable ?? false}
+            negotiable={currentListing?.negotiable ?? false}
           />
         </section>
 

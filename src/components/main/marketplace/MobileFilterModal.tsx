@@ -130,9 +130,7 @@ const MobileFilterModal = ({
         </div>
         {/* Pricing */}
         <div className="space-y-4">
-          <h2 className="text-2xl font-semibold text-violet-normal">
-            Type of Service
-          </h2>
+          <h2 className="text-2xl font-semibold text-violet-normal">Pricing</h2>
           <div className="flex flex-col  gap-2 px-4">
             <p className="text-sm text-violet-normal ">Price range</p>
             <div className="min-w-64 p-4">
