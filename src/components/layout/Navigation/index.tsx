@@ -27,7 +27,9 @@ import { handleFetchNotifications } from "@/lib/serviceproviderutil";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store";
 import {
+  removeUserProfile,
   setAuthLoading,
+  setUserProfileAuth,
   updateUserProfile,
 } from "@/store/Features/userProfile";
 
@@ -55,8 +57,8 @@ const Navigation = () => {
   const handleLogout = async () => {
     try {
       setAuth(initialAuthState);
-      localStorage.setItem("auth", JSON.stringify(initialAuthState));
-      await signOut({ callbackUrl: 'https://taskhub.com.au/home' });
+      dispatch(removeUserProfile());
+      await signOut({ callbackUrl: "https://taskhub.com.au/home" });
       await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/logout`);
       router.push("/home");
     } catch (error: any) {
@@ -83,6 +85,7 @@ const Navigation = () => {
           ? serviceProviderLinks
           : customerLinks;
       setCurrentLinks(activeLink);
+      dispatch(setUserProfileAuth(auth));
     }
     dispatch(setAuthLoading(false));
   }, []);

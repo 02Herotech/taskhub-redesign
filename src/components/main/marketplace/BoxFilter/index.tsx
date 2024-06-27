@@ -3,6 +3,7 @@
 import {
   filterMarketPlace,
   setFilterLoadingState,
+  setFilterParams,
 } from "@/store/Features/marketplace";
 import axios from "axios";
 import { IconType } from "react-icons";
@@ -21,14 +22,15 @@ const BoxFilter: React.FC<BoxFilterProper> = ({ category, Icon, id }) => {
     dispatch(setFilterLoadingState(true));
     try {
       const url =
-        "https://smp.jacinthsolutions.com.au/api/v1/listing/filter-listings?category=" +
+        "https://smp.jacinthsolutions.com.au/api/v1/listing/filter-listings/0?category=" +
         category;
       const { data } = await axios.get(url);
       dispatch(
         filterMarketPlace({ data: data.content, totalPages: data.totalPages }),
       );
+      dispatch(setFilterParams(`?category=${category}`));
     } catch (error: any) {
-      console.log(error.message);
+      console.log(error.response.message || error);
     } finally {
       dispatch(setFilterLoadingState(false));
     }

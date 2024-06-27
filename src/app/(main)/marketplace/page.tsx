@@ -49,7 +49,8 @@ const MareketPlace = () => {
   const router = useRouter();
   const isAuth = session.status === "authenticated";
   const isComplete = session?.data?.user?.user?.enabled;
-  const isServiceProvider = session?.data?.user?.user?.roles[0] === "SERVICE_PROVIDER";
+  const isServiceProvider =
+    session?.data?.user?.user?.roles[0] === "SERVICE_PROVIDER";
   const [showPopup, setShowPopup] = useState(false);
 
   // Setting user popup state
@@ -107,7 +108,7 @@ const MareketPlace = () => {
       {!isFiltering && <MarketPlaceHeader />}
 
       <div
-        className={`mx-auto flex max-w-screen-xl flex-col px-6 md:px-16  ${isFiltering ? "pt-16 " : "md:pt-32"}    `}
+        className={`mx-auto flex max-w-screen-xl flex-col px-6 md:px-16  ${isFiltering ? "pt-16 " : "lg:pt-32"}    `}
       >
         <MarketPlaceFilter />
         <div>
