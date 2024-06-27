@@ -12,6 +12,8 @@ const TaskDetailsPage = ({ params }: { params: { id: string } }) => {
     const id = params.id;
     const { data: task, isLoading } = useGetTaskByIdQuery(id as unknown as number);
 
+    console.log(task)
+
     if (!task) {
         return (
             <div className="w-full flex items-center justify-center h-[full]">

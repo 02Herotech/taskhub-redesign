@@ -1,6 +1,6 @@
 "use client";
 
-import { useGetCustomerCompletedTasksQuery, useGetTaskByCustomerIdQuery } from "@/services/tasks";
+import { useGetCustomerCompletedTasksQuery } from "@/services/tasks";
 import { useSession } from "next-auth/react";
 import Loading from "@/shared/loading";
 import CompletedTasksCard from "../CompletedTasksCard";
@@ -9,7 +9,7 @@ const TaskList: React.FC = () => {
     const session = useSession();
     const userId = session.data?.user?.user.id;
 
-    const { data: tasksData, isLoading } = useGetTaskByCustomerIdQuery(userId!, {
+    const { data: tasksData, isLoading } = useGetCustomerCompletedTasksQuery(userId!, {
         skip: !userId, // This will skip the query if userId is not available
     });
 

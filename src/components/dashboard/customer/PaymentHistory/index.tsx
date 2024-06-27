@@ -50,6 +50,9 @@ const PaymentHistory = () => {
         );
     }
 
+    const dateArray = selectedPayment?.createdAt
+    const formattedDate: string = dateArray ? new Date(Number(dateArray[0]), Number(dateArray[1]) - 1, Number(dateArray[2])).toLocaleDateString() : '';
+
     return (
         <div className="w-full bg-[#EBE9F4] rounded-[20px] p-4 font-satoshi">
             <h3 className="text-[#140B31] font-satoshiBold font-bold text-base mb-5">{todayDate}</h3>
@@ -58,23 +61,23 @@ const PaymentHistory = () => {
                     <h2 className="text-2xl font-bold text-primary text-center">No payment history found</h2>
                 </div>
             )}
-            <div className="space-y-5">
+            <div className="space-y-5 cursor-pointer">
                 {paymentHistoryData?.slice(0, visibleTransactions).map((payment, index) => (
                     <div
                         key={index}
-                        className="flex items-center max-lg:space-x-3 lg:justify-between px-5 py-3 border-b border-primary cursor-pointer"
+                        className="flex flex-col lg:flex-row items-start lg:items-center justify-between px-5 py-3 border-b border-primary"
                         onClick={() => handleCardClick(payment)}
                     >
-                        <div className="flex items-center w-full flex-1 space-x-5">
+                        <div className="flex items-center w-full lg:w-auto space-x-5 mb-3 lg:mb-0">
                             <div className="w-14 h-14 bg-[#C1BADB] rounded-full flex items-center justify-center">
                                 <div className="w-7 h-7 bg-white rounded-full" />
                             </div>
-                            <div className="">
+                            <div className="flex-grow">
                                 <h4 className="text-primary font-bold text-xl mb-1">{payment.bookingTitle}</h4>
                                 {/* <p className="text-[#716F78] font-satoshiMedium text-base">{payment.}</p> */}
                             </div>
                         </div>
-                        <h2 className="text-xl max-lg:mt-2 font-bold capitalize text-tc-orange lg:text-[22px]">
+                        <h2 className="text-xl font-bold capitalize text-tc-orange lg:text-[22px] lg:mt-0 mt-2">
                             AUD{formatAmount(payment.total, "USD", false)}
                         </h2>
                     </div>
@@ -97,13 +100,13 @@ const PaymentHistory = () => {
                             <h2 className='text-[#333236] font-satoshiMedium'>Transaction title:</h2>
                             <p className='text-[#2A1769] font-bold text-xl'>{selectedPayment.bookingTitle}</p>
                         </div>
-                        <div className="border-b border-[#C1BADB] flex items-center justify-between pb-2">
+                        {/* <div className="border-b border-[#C1BADB] flex items-center justify-between pb-2">
                             <h2 className='text-[#333236] font-satoshiMedium'>Service type:</h2>
-                            {/* <p className='text-[#2A1769] font-bold text-xl'>{selectedPayment.serviceType}</p> */}
-                        </div>
+                            <p className='text-[#2A1769] font-bold text-xl'>{selectedPayment.serviceType}</p>
+                        </div> */}
                         <div className="border-b border-[#C1BADB] flex items-center justify-between pb-2">
                             <h2 className='text-[#333236] font-satoshiMedium'>Date:</h2>
-                            <p className='text-[#2A1769] font-bold text-xl'>{selectedPayment.createdAt}</p>
+                            <p className='text-[#2A1769] font-bold text-xl'>{formattedDate}</p>
                         </div>
                         <div className="border-b border-[#C1BADB] flex items-center justify-between pb-2">
                             <h2 className='text-[#333236] font-satoshiMedium'>To:</h2>
