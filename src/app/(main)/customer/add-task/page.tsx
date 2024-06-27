@@ -15,6 +15,7 @@ import { useSession } from "next-auth/react";
 import image from "../../../../../public/assets/images/customer/Task management.png";
 import img from "../../../../../public/assets/images/blend.png";
 import imag from "../../../../../public/assets/images/contract.png";
+import imags from "../../../../public/assets/images/tickk.png";
 import imgg from "../../../../../public/assets/images/girl.png";
 import Image from "next/image";
 import Link from "next/link";
@@ -1065,9 +1066,9 @@ const AddTaskForm: React.FC = () => {
         >
           <div className="lg:px-24 py-10 px-12">
             <div className="relative grid items-center justify-center space-y-5">
-              <div className="flex justify-center text-[1px] text-white">
-                <GrFormCheckmark className="h-[50px] w-[50px] rounded-full bg-[#FE9B07] p-2 lg:h-[60px] lg:w-[60px]" />
-              </div>
+                <div className="flex justify-center text-[1px] text-white">
+                  <Image src={imags} alt="image" />
+                </div>
               <p className="font-clashDisplay text-center text-[25px] font-extrabold text-[#2A1769] lg:text-[37px] ">
                 Congratulations
                 </p>
