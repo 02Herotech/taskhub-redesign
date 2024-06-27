@@ -35,7 +35,6 @@ const Page = () => {
           "https://smp.jacinthsolutions.com.au/api/v1/listing/" +
           displayData.id;
         const { data } = await axios.get(url);
-        console.log(data);
         setCurrentListing(data);
       } catch (error: any) {
         console.log(error.response.data);
