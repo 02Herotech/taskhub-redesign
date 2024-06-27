@@ -13,6 +13,7 @@ import { useGetInvoiceByCustomerIdQuery } from '@/services/invoices';
 import Loading from '@/shared/loading';
 import { useSelector } from 'react-redux';
 import { RootState } from "@/store";
+import { Invoice } from '@/types/services/invoice';
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY!);
 
@@ -90,7 +91,7 @@ const Invoices = () => {
                 <Loading />
             </div>
         );
-    }
+    } 
 
     const stripeOptions = {
         clientSecret: clientSecret,
@@ -192,12 +193,12 @@ const Invoices = () => {
                                                 </div>
                                             </div>
                                             <div className="flex items-center max-lg:space-x-3 justify-between mb-6">
-                                                <div>
+                                                {/* <div>
                                                     <h2 className="text-xl text-[#001433] font-bold">
-                                                        1 day
+                                                        {selectedInvoice.}
                                                     </h2>
                                                     <h5 className="text-[#716F78]">Service duration</h5>
-                                                </div>
+                                                </div> */}
                                             </div>
                                             {error && (
                                                 <div className="text-status-error-100 text-base font-semibold my-1">{error}</div>

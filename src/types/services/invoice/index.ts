@@ -10,11 +10,6 @@ type ServiceProvider = {
     };
 };
 
-type User = {
-    name: string;
-    id: number;
-};
-
 type Customer = {
     id: number;
     user: {
@@ -27,20 +22,40 @@ type Customer = {
     };
 };
 
-type Invoice = {
+export type Invoice = {
     id: number;
+    bookingTitle: string;
+    serviceProvider: ServiceProvider;
+    bookingId: number;
+    customer: Customer;
     total: number;
-    subTotal: number;
     serviceStartOn: string;
     gst: number;
     platformCharge: number;
+    subTotal: number;
+    createdAt: any;
     invoiceNumber: string;
-    createdAt: string;
-    serviceProvider: ServiceProvider;
-    customer: Customer;
-    bookingId: number;
-    expiredAt: string;
-    updatedAt: string;
+    expiredAt: any;
+    updatedAt: any;
 };
 
-type GetInvoiceByCustomerIdResponse = Invoice[]
+export type GetInvoiceByCustomerIdResponse = Invoice[]
+
+export type Receipt = {
+    id: number;
+    bookingTitle: string;
+    serviceProvider: ServiceProvider;
+    bookingId: number;
+    customer: Customer;
+    total: number;
+    serviceStartOn: [number, number, number] | string;
+    gst: number;
+    platformCharge: number;
+    subTotal: number;
+    createdAt: [number, number, number] | string;
+    invoiceNumber: string;
+    expiredAt: [number, number, number] | string;
+    updatedAt: [number, number, number] | string;
+}
+
+export type GetReceiptByCustomerIdResponse = Receipt[]

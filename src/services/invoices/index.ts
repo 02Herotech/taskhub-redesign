@@ -1,3 +1,4 @@
+import { GetInvoiceByCustomerIdResponse, GetReceiptByCustomerIdResponse } from "@/types/services/invoice";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { getSession } from "next-auth/react";
 
@@ -66,9 +67,14 @@ export const invoice = createApi({
             query: (customerId) => getRequest(`/invoice/customer/${customerId}`),
             providesTags: ["Invoice"],
         }),
+        getReceiptsByCustomerId: builder.query<GetReceiptByCustomerIdResponse, number>({
+            query: (customerId) => getRequest(`/all-receipts/${customerId}`),
+            providesTags: ["Invoice"],
+        }),
     }),
 });
 
 export const {
     useGetInvoiceByCustomerIdQuery,
+    useGetReceiptsByCustomerIdQuery
 } = invoice;

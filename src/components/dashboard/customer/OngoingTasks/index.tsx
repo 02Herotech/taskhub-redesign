@@ -1,7 +1,6 @@
 "use client";
 
-import { useGetTaskByCustomerIdQuery } from "@/services/tasks";
-import NewTasksCard from "../NewTasksCard";
+import { useGetCustomerOngoingTasksQuery } from "@/services/tasks";
 import { useSession } from "next-auth/react";
 import Loading from "@/shared/loading";
 import Link from "next/link";
@@ -13,7 +12,7 @@ const TaskList = () => {
     const userId = sessionData?.user?.user.id;
 
     // Make the query only when the userId is available
-    const { data: tasksData, isLoading, error } = useGetTaskByCustomerIdQuery(userId!, {
+    const { data: tasksData, isLoading, error } = useGetCustomerOngoingTasksQuery(userId!, {
         skip: !userId,
     });
 
