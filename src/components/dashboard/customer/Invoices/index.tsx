@@ -91,7 +91,7 @@ const Invoices = () => {
                 <Loading />
             </div>
         );
-    }
+    } 
 
     const stripeOptions = {
         clientSecret: clientSecret,

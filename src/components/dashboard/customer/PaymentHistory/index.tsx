@@ -9,6 +9,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from '@/store';
 import { useGetInvoiceByCustomerIdQuery } from '@/services/invoices';
 import { Receipt } from '@/types/services/invoice';
+import Loading from '@/components/global/loading/page';
 
 const PaymentHistory = () => {
     const [visibleTransactions, setVisibleTransactions] = useState(4);
@@ -41,9 +42,22 @@ const PaymentHistory = () => {
         setSelectedPayment(null);
     };
 
+    if (!paymentHistoryData || isLoading) {
+        return (
+            <div className="w-full flex items-center justify-center h-[full]">
+                <Loading />
+            </div>
+        );
+    }
+
     return (
         <div className="w-full bg-[#EBE9F4] rounded-[20px] p-4 font-satoshi">
             <h3 className="text-[#140B31] font-satoshiBold font-bold text-base mb-5">{todayDate}</h3>
+            {paymentHistoryData.length === 0 && (
+                <div className="flex flex-col items-center justify-center space-y-5 h-[50vh]">
+                    <h2 className="text-2xl font-bold text-primary text-center">No payment history found</h2>
+                </div>
+            )}
             <div className="space-y-5">
                 {paymentHistoryData?.slice(0, visibleTransactions).map((payment, index) => (
                     <div
