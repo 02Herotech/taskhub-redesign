@@ -154,6 +154,8 @@ const PricingModal = ({
     }
   };
 
+  console.log(modalData.negotiable);
+
   useEffect(() => {
     const fetchData = async () => {
       if (formState.postcode) {
