@@ -15,7 +15,7 @@ import { useSession } from "next-auth/react";
 import image from "../../../../../public/assets/images/customer/Task management.png";
 import img from "../../../../../public/assets/images/blend.png";
 import imag from "../../../../../public/assets/images/contract.png";
-import imags from "../../../../public/assets/images/tickk.png";
+import imags from "../../../../../public/assets/images/tickk.png";
 import imgg from "../../../../../public/assets/images/girl.png";
 import Image from "next/image";
 import Link from "next/link";
