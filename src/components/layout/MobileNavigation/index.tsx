@@ -34,7 +34,7 @@ const MobileNavigation = ({ setShowMobileNav }: Props) => {
   const isServiceProvider = userRole && userRole[0] === "SERVICE_PROVIDER";
   const isAuth = session.status === "authenticated";
   // const isCustomer = userRole && userRole[0] === "CUSTOMER";
-  const notificationLength = session.data?.user.user.appNotificationList.length;
+  // const notificationLength = session.data?.user.user.appNotificationList.length;
 
   const currentLinks = !isAuth
     ? homeLinks
