@@ -13,6 +13,7 @@ import { useGetInvoiceByCustomerIdQuery } from '@/services/invoices';
 import Loading from '@/shared/loading';
 import { useSelector } from 'react-redux';
 import { RootState } from "@/store";
+import { Invoice } from '@/types/services/invoice';
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY!);
 

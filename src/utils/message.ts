@@ -10,6 +10,7 @@ export async function getUsers({ token }: { token: string }) {
 
   return data;
 }
+
 export async function countNewMessages({
   senderId,
   recipientId,
