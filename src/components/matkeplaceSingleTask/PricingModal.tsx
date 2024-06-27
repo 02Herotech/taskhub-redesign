@@ -11,6 +11,7 @@ import { BeatLoader } from "react-spinners";
 import { formatDate, formatTimeFromDate } from "@/utils";
 import Image from "next/image";
 import { PiSealCheckFill } from "react-icons/pi";
+import "../../styles/datePickOverflowHandle.css";
 
 interface ModalProps {
   setIsModalShown: Dispatch<SetStateAction<boolean>>;
@@ -291,6 +292,7 @@ const PricingModal = ({
                 }
                 className="w-full rounded-xl border border-slate-100 p-2 py-3 text-slate-700 shadow outline-none transition-shadow duration-300 hover:shadow-md lg:max-w-sm"
                 dateFormat="dd/MM/yyyy"
+                popperClassName="custom-datepicker-popper "
               />
             </div>
             {/* Time */}

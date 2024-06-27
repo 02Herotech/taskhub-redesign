@@ -26,7 +26,10 @@ import Image from "next/image";
 import { handleFetchNotifications } from "@/lib/serviceproviderutil";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store";
-import { updateUserProfile } from "@/store/Features/userProfile";
+import {
+  setAuthLoading,
+  updateUserProfile,
+} from "@/store/Features/userProfile";
 
 const initialAuthState = {
   token: null,
@@ -38,7 +41,7 @@ const Navigation = () => {
   const session = useSession();
   const [showMobileNav, setShowMobileNav] = useState(false);
   const [notifications, setNotifications] = useState<NotificationTypes[]>([]);
-  const [authLooading, setAuthLooading] = useState(true);
+  // const [authLooading, setAuthLooading] = useState(true);
   const dispatch = useDispatch();
   const userProfile = useSelector((state: RootState) => state.userProfile);
 
@@ -67,7 +70,7 @@ const Navigation = () => {
   const isServiceProvider = userRole && userRole[0] === "SERVICE_PROVIDER";
 
   useLayoutEffect(() => {
-    setAuthLooading(true);
+    dispatch(setAuthLoading(true));
     const authStatus = localStorage.getItem("auth");
     let auth: { token: string | null; role: string[] | null } =
       initialAuthState;
@@ -81,7 +84,7 @@ const Navigation = () => {
           : customerLinks;
       setCurrentLinks(activeLink);
     }
-    setAuthLooading(false);
+    dispatch(setAuthLoading(false));
   }, []);
 
   const dropdownItems = [
@@ -157,7 +160,7 @@ const Navigation = () => {
       <nav
         className={`fixed left-0 right-0 top-0 z-50 w-full ${currentLinks === homeLinks ? `bg-[#F5E2FC]` : `bg-white`} drop-shadow-sm`}
       >
-        {authLooading ? (
+        {userProfile.authLoading ? (
           <div className="container flex min-h-20 items-center justify-between px-7 py-4 lg:py-5 " />
         ) : (
           <div className="container flex items-center justify-between px-7 py-4 lg:py-5">
@@ -244,7 +247,7 @@ const Navigation = () => {
                     )}
                     className="-left-32 top-14"
                   >
-                        <div className="w-[200px] rounded-md bg-white p-3 space-y-2">
+                    <div className="w-[200px] space-y-2 rounded-md bg-white p-3">
                       {dropdownItems.map((button, index) => (
                         <button
                           key={index}

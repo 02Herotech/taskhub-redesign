@@ -1476,7 +1476,7 @@ const ProvideService: React.FC = () => {
               setIsSuccessPopupOpen(false);
             }}
           >
-            <div className="lg:px-24 px-16 py-10">
+            <div className="lg:px-24 px-10 py-10">
               <div className="relative grid items-center justify-center space-y-3">
                 <div className="flex justify-center text-[1px] text-white">
                   <Image src={imag} alt="image" />
@@ -1484,16 +1484,20 @@ const ProvideService: React.FC = () => {
                 <p className=" text-center font-clashBold text-[32px] font-extrabold text-[#2A1769] lg:text-[42px]">
                   Service created
                 </p>
-                <div className="text-center font-satoshiMedium lg:text-[20px]">
-                  <p>Your Service Listing has been created!</p>
+                <div className="lg:hidden text-center font-satoshiMedium lg:text-[20px]">
+                  Your Service Listing has been created!
                   please click on the button to proceed to{" "}
                   marketplace
                 </div>
-
+                  <div className="text-center hidden lg:block font-satoshiMedium lg:text-[20px]">
+                    Your Service Listing has been created!
+                    <p>please click on the button to proceed to{" "}
+                      marketplace</p>
+                  </div>
                 <Image
                   src={image}
                   alt="image"
-                  className="absolute -right-24 top-36  w-32 font-satoshiMedium lg:-right-20 lg:top-2/3"
+                  className="absolute -right-16 top-44  w-28 font-satoshiMedium lg:-right-24 lg:top-54"
                 />
                 <div className="flex justify-center">
                   <Link href="/marketplace">

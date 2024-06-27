@@ -14,6 +14,7 @@ import { BiDotsVertical, BiX } from "react-icons/bi";
 import DeleteListingModal from "./DeleteListingModal";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
+import { truncateText } from "@/utils/marketplace";
 
 const AllServices = () => {
   const [loading, setLoading] = useState(false);
@@ -145,21 +146,25 @@ const AllServices = () => {
                     </div>
                   </div>
                   <p className="px-2 text-3xl font-bold text-[#190E3F] ">
-                    {item.listingTitle}
+                    {truncateText(item.listingTitle, 10)}
                   </p>
 
                   <div
                     className="px-2"
                     onClick={() => handleShowDropdown(item.id)}
                   >
-                    {/* <p className="text-xs"> 4.5 </p>
+                    <p className="text-xs"> 4.5 </p>
                     <div className="flex items-center gap-1">
+                      {/* <FaStar size={10} color="gold" />
                       <FaStar size={10} color="gold" />
                       <FaStar size={10} color="gold" />
-                      <FaStar size={10} color="gold" />
-                      <FaStar size={10} color="gold" />
+                      <FaStar size={10} color="gold" /> */}
                       <FaStar size={10} color="grey" />
-                    </div> */}
+                      <FaStar size={10} color="grey" />
+                      <FaStar size={10} color="grey" />
+                      <FaStar size={10} color="grey" />
+                      <FaStar size={10} color="grey" />
+                    </div>
                     <div className="flex items-center justify-between gap-3">
                       <div className="flex items-center gap-2 py-3">
                         <Image
