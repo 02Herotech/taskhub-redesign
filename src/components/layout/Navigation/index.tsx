@@ -53,7 +53,7 @@ const Navigation = () => {
     try {
       setAuth(initialAuthState);
       localStorage.setItem("auth", JSON.stringify(initialAuthState));
-      await signOut();
+      await signOut({ callbackUrl: 'https://taskhub.com.au/home' });
       await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/logout`);
       router.push("/home");
     } catch (error: any) {
