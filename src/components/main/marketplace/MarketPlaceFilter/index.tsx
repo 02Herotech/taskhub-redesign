@@ -106,16 +106,18 @@ const MarketPlaceFilter = () => {
       if (typeOfService) {
         params.push(`typeOfService=${typeOfService}`);
       }
-      if (minPrice) {
+      if (minPrice > 5) {
         params.push(`minPrice=${minPrice}`);
       }
-      if (maxPrice) {
+      if (maxPrice < 1000) {
         params.push(`maxPrice=${maxPrice}`);
       }
       if (params.length > 0) {
         url += params.join("&");
       }
+
       const response = await axios.get(url);
+
       dispatch(
         filterMarketPlace({
           data: response.data.content,
