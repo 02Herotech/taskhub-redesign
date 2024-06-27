@@ -153,9 +153,9 @@ const EditProfile = () => {
         dateOfBirth: parseDate(userDetails.dateOfBirth) || null,
         phoneNumber: user.phoneNumber || "",
         emailAddress: user.emailAddress || "",
-        postcode: userDetails.postalCode || user.address.postCode || "",
-        suburb: userDetails.suburbs || user.address.suburb || "",
-        state: userDetails.state || user.address.state || "",
+        postcode: userDetails.postalCode || "",
+        suburb: userDetails.suburbs || "",
+        state: userDetails.state || "",
         idType:
           idTypeObject.find((item) => item.value === userDetails.idType)
             ?.label || "",
@@ -221,7 +221,7 @@ const EditProfile = () => {
       setIsFormModalShown(true);
       setIsEditingEnabled(false);
     } catch (error: any) {
-      console.log(error.response.data);
+      console.log(error);
     }
   };
 
