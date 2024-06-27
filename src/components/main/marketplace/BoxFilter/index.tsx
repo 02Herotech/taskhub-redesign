@@ -24,7 +24,9 @@ const BoxFilter: React.FC<BoxFilterProper> = ({ category, Icon, id }) => {
         "https://smp.jacinthsolutions.com.au/api/v1/listing/filter-listings?category=" +
         category;
       const { data } = await axios.get(url);
-      dispatch(filterMarketPlace(data));
+      dispatch(
+        filterMarketPlace({ data: data.content, totalPages: data.totalPages }),
+      );
     } catch (error: any) {
       console.log(error.message);
     } finally {
