@@ -184,16 +184,27 @@ const MarketPlaceFilter = () => {
             setIsMobileFilterModalShown={setIsMobileFilterModalShown}
             setfilterDataStructure={setfilterDataStructure}
             filterDataStructure={filterDataStructure}
+            // handleResetFilters={handleResetFilters}
           />
-          <button
-            className="flex w-full items-center justify-center gap-3 rounded-full border border-violet-normal bg-violet-light px-6 py-2 font-bold  text-violet-normal"
-            onClick={() => setIsMobileFilterModalShown(true)}
-          >
-            <span>
-              <GiSettingsKnobs />
-            </span>
-            Filter By
-          </button>
+          <div className="flex gap-4">
+            <button
+              className={`flex  items-center justify-center gap-3 rounded-full border border-violet-normal bg-violet-light px-6 py-2 font-bold text-violet-normal ${isFiltering ? "w-auto" : "w-full min-w-72"}`}
+              onClick={() => setIsMobileFilterModalShown(true)}
+            >
+              <span>
+                <GiSettingsKnobs />
+              </span>
+              Filter By
+            </button>
+            {isFiltering && (
+              <button
+                className="min-w-40 flex-grow cursor-pointer rounded-3xl bg-orange-normal px-4 py-2 text-base font-bold text-white"
+                onClick={handleResetFilters}
+              >
+                Reset filters
+              </button>
+            )}
+          </div>
         </div>
 
         <section className="flex flex-col gap-5">
