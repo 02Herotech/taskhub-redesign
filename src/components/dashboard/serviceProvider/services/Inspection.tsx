@@ -55,7 +55,7 @@ const InspectionServices = ({
                 <div className="flex flex-wrap justify-between gap-2 ">
                   <div>
                     <p className="text-lg font-semibold text-violet-normal ">
-                      {formatRelativeDate(item.jobEnd) || ""}
+                      {customer?.customer.user.fullName || ""}
                     </p>
                     <p className="text-violet-normal">{item.jobTitle}</p>
                   </div>
