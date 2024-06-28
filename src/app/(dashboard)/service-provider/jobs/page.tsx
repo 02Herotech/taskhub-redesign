@@ -64,9 +64,9 @@ const Jobs = () => {
               bookingData.map((item, index) => (
                 <div
                   key={index}
-                  className=" flex gap-3 border-b border-slate-200 p-4 lg:grid lg:grid-cols-12 lg:items-center lg:px-8 lg:py-4"
+                  className=" flex gap-3 border-b border-slate-200 p-2  lg:grid lg:grid-cols-12 lg:items-center lg:px-8 lg:py-4"
                 >
-                  <div className="col-span-2 size-20 flex-shrink-0 overflow-hidden rounded-full border border-violet-normal lg:size-24">
+                  <div className="col-span-2 size-16 flex-shrink-0 overflow-hidden rounded-full border border-violet-normal lg:size-24">
                     <Image
                       src={
                         item?.customer?.user?.profileImage ??
@@ -104,13 +104,13 @@ const Jobs = () => {
                     <div className="flex flex-wrap gap-3">
                       <Link
                         href={"/service-provider/jobs/" + item.id}
-                        className="rounded-full border border-violet-normal bg-violet-light px-6 py-3 text-sm font-medium text-violet-normal transition-colors duration-300 hover:bg-violet-200 max-md:px-4 max-md:py-2 max-md:text-sm "
+                        className="rounded-full border border-violet-normal bg-violet-light px-6 py-3 text-sm font-medium text-violet-normal transition-colors duration-300 hover:bg-violet-200 max-md:px-3 max-md:py-1 max-md:text-xs "
                       >
                         View Enquiry
                       </Link>
                       <Link
                         href={"/message"}
-                        className="rounded-full bg-violet-normal px-6 py-3 text-sm font-medium text-white transition-opacity duration-300 hover:opacity-90 max-md:px-4 max-md:py-2 max-md:text-sm"
+                        className="rounded-full border border-violet-normal bg-violet-normal px-6 py-3 text-sm font-medium text-white transition-opacity duration-300 hover:opacity-90 max-md:px-3 max-md:py-1 max-md:text-xs"
                       >
                         Chat With Customer
                       </Link>

@@ -18,6 +18,7 @@ import { RootState } from "@/store";
 import PaidServices from "@/components/dashboard/serviceProvider/services/PaidServices";
 import OngoingServies from "@/components/dashboard/serviceProvider/services/OngoingServices";
 import CompletedServices from "@/components/dashboard/serviceProvider/services/CompletedServices";
+import InspectionServices from "@/components/dashboard/serviceProvider/services/Inspection";
 
 const ServicesPage = () => {
   const [currentCategory, setCurrentCategory] = useState("services");
@@ -164,6 +165,12 @@ const ServicesPage = () => {
           Ongoing
         </button>
         <button
+          className={` rounded-lg px-4 py-2 text-sm font-medium transition-all duration-300 hover:opacity-90 lg:px-8 lg:py-3 ${currentCategory === "inspection" ? "bg-[#381F8C] text-white" : "bg-[#E1DDEE] text-[#381F8C] "} `}
+          onClick={() => setCurrentCategory("inspection")}
+        >
+          On inspection
+        </button>
+        <button
           className={` rounded-lg px-4 py-2 text-sm font-medium transition-all duration-300 hover:opacity-90 lg:px-8 lg:py-3 ${currentCategory === "completed" ? "bg-[#381F8C] text-white" : "bg-[#E1DDEE] text-[#381F8C] "} `}
           onClick={() => setCurrentCategory("completed")}
         >
@@ -192,8 +199,15 @@ const ServicesPage = () => {
           customerDetails={customerDetails}
           handleReportservice={handleReportService}
         />
+      ) : currentCategory === "inspection" ? (
+        <InspectionServices
+          jobs={jobs}
+          setModalData={setModalData}
+          customerDetails={customerDetails}
+          handleReportservice={handleReportService}
+        />
       ) : (
-        <CompletedServices />
+        <CompletedServices jobs={jobs} />
       )}
     </main>
   );

@@ -61,8 +61,6 @@ const PaidServices = ({
     }
   };
 
-  console.log(jobs);
-
   return (
     <div className="flex flex-col gap-8  pb-4">
       {jobs
@@ -122,7 +120,7 @@ const PaidServices = ({
                     <button
                       onClick={() => handleStartService(item.id)}
                       disabled={startJobState.loading}
-                      className="rounded-full bg-violet-normal px-6 py-3 text-sm font-medium text-white transition-opacity duration-300 hover:opacity-90 max-md:px-4 max-md:py-2 max-md:text-sm"
+                      className="rounded-full border border-violet-normal bg-violet-normal px-6 py-3 text-sm font-medium text-white transition-opacity duration-300 hover:opacity-90 max-md:px-3 max-md:py-1 max-md:text-xs"
                     >
                       {startJobState.loading && startJobState.id === item.id ? (
                         <BeatLoader
@@ -140,7 +138,7 @@ const PaidServices = ({
                   </div>
 
                   <button
-                    className="rounded-full  px-4 py-2 text-xl font-bold text-red-500 transition-colors duration-300 hover:bg-red-100 "
+                    className="rounded-full  px-4 py-2 text-xl font-bold text-red-500 transition-colors duration-300 hover:bg-red-100 max-md:px-3 max-md:py-1 max-md:text-xs "
                     onClick={() => handleReportservice(item.id)}
                   >
                     Report

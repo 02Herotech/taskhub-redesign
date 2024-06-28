@@ -99,7 +99,6 @@ const ViewJobs = () => {
   const handleCancelBooking = async () => {
     try {
       setRequestStatus((prev) => ({ ...prev, isRejectRequesting: true }));
-      console.log("Cancelling");
       const url =
         "https://smp.jacinthsolutions.com.au/api/v1/booking/reject-proposal?bookingId=" +
         currentBooking?.id;
@@ -113,7 +112,6 @@ const ViewJobs = () => {
         },
       );
       setRequestStatus((prev) => ({ ...prev, data: response.data }));
-      router.push("/service-provider/profile");
     } catch (error) {
       console.error("An error occurred while fetching services:", error);
       setRequestStatus((prev) => ({
