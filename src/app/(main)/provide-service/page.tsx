@@ -120,7 +120,7 @@ const ProvideService: React.FC = () => {
   const [subcategories, setSubcategories] = useState<Subcategory[]>([]);
   const [selectedDay, setSelectedDay] = useState("");
   const [selectedDays, setSelectedDays] = useState<string[]>([]);
-  const maxSize = 5 * 1024 * 1024; // 5MB in bytes
+  const maxSize = 5 * 1024 * 1024;3
   const [errs, setErrs] = useState({ image1: '', image2: '', image3: '', image4: '' })
   const daysOfWeek = [
     { value: "MONDAY", label: "Monday" },
@@ -132,7 +132,6 @@ const ProvideService: React.FC = () => {
     { value: "SUNDAY", label: "Sunday" },
   ];
 
-  // Handling getting the description from the marketplace when i user navigates from the marketplace
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const marketplaceDescription = urlParams.get("marketplaceDescription");
@@ -143,7 +142,6 @@ const ProvideService: React.FC = () => {
       }));
     }
   }, []);
-  // End of getting description from the marketplace
 
   useEffect(() => {
     const fetchPostalCodeData = async () => {
