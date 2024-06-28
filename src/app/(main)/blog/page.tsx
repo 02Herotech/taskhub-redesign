@@ -38,6 +38,92 @@ Before beginning the importation process, you should be familiar with the follow
       },
     ],
   },
+  {
+    id: 2,
+    bannerImage: "/assets/images/blog/blogImage2.png",
+    date: "20th April, 2024",
+    title: "How Long Does a Tax Rebate Take? Definition and When to Expect it",
+    readTime: "Read Time: 10 Mins.",
+    description: `There are several reasons why you may be owed a tax refund, or tax rebate, by HMRC. If you are employed and pay tax through PAYE, it is possible that your tax was calculated improperly, 
+or that your self-assessment tax return contained errors, resulting in an overpayment.
+If this is the case, you are owed a payback by HMRC. So, let’s dive straight into how long does 
+a tax rebate tak`,
+
+    subheader: "How Long Does a Tax Rebate Take?: Tax Refund Processing ",
+    subheaderList: [
+      {
+        title: "Times",
+        content:
+          "The question of how long a tax refund takes is fairly difficult to answer precisely because the main delay between applying for your tax refund and receiving the money is determined by HMRC's current processing times.Most tax rebates are awarded between 8-12 weeks after submitting your application, although this can vary.",
+      },
+      {
+        title: "What is a Tax Refund?",
+        content:
+          "Whether you have been overtaxed on your income or are entitled to specific tax benefits that can be reimbursed, you can receive a tax refund (or rebate) to recover some of your money. Although the tax system is generally efficient, there will be situations when errors occur and tax refunds are required. So, it's critical to stay on top of your finances and understand your tax situation to avoid paying more than you should. If you believe you have overpaid and have not yet received an automatic rebate, there is a mechanism for requesting a return",
+      },
+      {
+        title: " How is your tax obligation calculated?",
+        content: `The most typical reason for a tax relief is having paid too much income tax.
+If you earn more than the £12,570 personal tax-free threshold, you will have to pay income tax.
+However, personal income includes more than just wages.
+'Earned income' includes pension payments, life annuity income, and even investment interest.
+So, even if you do not have a high basic wage, your other sources of income may qualify you for
+higher tax rates.
+With so many different sources of personal income eligible, HMRC relies on your employer to 
+provide you with an appropriate tax code and on you to fill out an accurate declaration form to 
+calculate how much tax you should be paying.
+However, miscalculations do occur, so keep a tight eye on your tax numbers, especially if you 
+changed employment during the tax year`,
+      },
+      {
+        title: "How Long for Tax Refund to go into Bank?",
+        content: `Most tax refunds are issued within 21 days of filing your federal tax return. To have your refund sent immediately to your bank account, choose the direct deposit option when requested by the tax software`,
+      },
+    ],
+  },
+  {
+    id: 3,
+    bannerImage: "/assets/images/blog/blogImage3.png",
+    date: "20th April, 2024",
+    title: "How to Maximize Tax Return: 8 Hidden Tips",
+    readTime: "Read Time: 10 Mins.",
+    description: `There are several reasons why you may be owed a tax refund, or tax rebate, by HMRC. If you are employed and pay tax through PAYE, it is possible that your tax was calculated improperly, 
+or that your self-assessment tax return contained errors, resulting in an overpayment.
+If this is the case, you are owed a payback by HMRC. So, let’s dive straight into how long does 
+a tax rebate tak`,
+
+    subheader: "How Long Does a Tax Rebate Take?: Tax Refund Processing ",
+    subheaderList: [
+      {
+        title: "Times",
+        content:
+          "The question of how long a tax refund takes is fairly difficult to answer precisely because the main delay between applying for your tax refund and receiving the money is determined by HMRC's current processing times.Most tax rebates are awarded between 8-12 weeks after submitting your application, although this can vary.",
+      },
+      {
+        title: "What is a Tax Refund?",
+        content:
+          "Whether you have been overtaxed on your income or are entitled to specific tax benefits that can be reimbursed, you can receive a tax refund (or rebate) to recover some of your money. Although the tax system is generally efficient, there will be situations when errors occur and tax refunds are required. So, it's critical to stay on top of your finances and understand your tax situation to avoid paying more than you should. If you believe you have overpaid and have not yet received an automatic rebate, there is a mechanism for requesting a return",
+      },
+      {
+        title: " How is your tax obligation calculated?",
+        content: `The most typical reason for a tax relief is having paid too much income tax.
+If you earn more than the £12,570 personal tax-free threshold, you will have to pay income tax.
+However, personal income includes more than just wages.
+'Earned income' includes pension payments, life annuity income, and even investment interest.
+So, even if you do not have a high basic wage, your other sources of income may qualify you for
+higher tax rates.
+With so many different sources of personal income eligible, HMRC relies on your employer to 
+provide you with an appropriate tax code and on you to fill out an accurate declaration form to 
+calculate how much tax you should be paying.
+However, miscalculations do occur, so keep a tight eye on your tax numbers, especially if you 
+changed employment during the tax year`,
+      },
+      {
+        title: "How Long for Tax Refund to go into Bank?",
+        content: `Most tax refunds are issued within 21 days of filing your federal tax return. To have your refund sent immediately to your bank account, choose the direct deposit option when requested by the tax software`,
+      },
+    ],
+  },
 ];
 
 const page = () => {
@@ -46,19 +132,22 @@ const page = () => {
   }, []);
 
   return (
-    <main className="container mt-20 min-h-96 max-w-screen-2xl  space-y-8 py-10 ">
+    <main className="container mt-20 min-h-96 max-w-screen-2xl  space-y-8 px-4  py-10 md:px-8 lg:px-16 ">
       <h2 className="text-center font-clashBold text-4xl font-extrabold text-violet-normal">
         BLOG
       </h2>
 
-      <div className="space-y-4">
+      <div className=" space-y-16 lg:space-y-32">
         {blogsData.map((blog, index) => (
-          <article key={index} className="grid grid-cols-12 gap-8">
+          <article
+            key={index}
+            className="grid grid-cols-12 gap-8 px-4 lg:px-12"
+          >
             <section className="col-span-2 flex flex-col items-end ">
               <p className="font-clash text-4xl text-violet-normal ">
                 {blog.date.substring(0, 2)}
               </p>
-              <p className="font-clashSemiBold text-lg font-semibold text-violet-normal ">
+              <p className="max-sm:text-md font-clashSemiBold text-lg  font-semibold text-violet-normal ">
                 {blog.date.substring(4)}
               </p>
             </section>
@@ -72,13 +161,13 @@ const page = () => {
                   height={1600}
                 />
               </div>
-              <h2 className=" font-clashBold text-3xl font-bold text-violet-normal ">
+              <h2 className=" font-clashBold text-3xl font-bold text-violet-normal max-md:text-xl ">
                 {blog.title}
               </h2>
               <p className="text-lg  text-orange-normal">
                 Read Time : {blog.readTime}
               </p>
-              <h2 className="line-clamp-2 font-semibold text-violet-dark">
+              <h2 className="line-clamp-2   font-semibold text-violet-dark">
                 {blog.description}
               </h2>
               <div>

@@ -19,7 +19,7 @@ const page = () => {
   }, []);
   return (
     <main className="container mt-20 min-h-96 max-w-screen-2xl  space-y-8 py-10 ">
-      <h2 className="text-center font-clashBold text-4xl font-extrabold text-violet-normal">
+      <h2 className="text-center font-clashBold text-4xl font-extrabold text-violet-normal max-md:text-2xl">
         {blog?.title}
       </h2>
       <div>
@@ -31,19 +31,19 @@ const page = () => {
           height={1600}
         />
       </div>
-      <article className="grid grid-cols-12 gap-6">
-        <section className="col-span-8 space-y-9">
-          <div className="gap flex border-b border-b-violet-light py-4 lg:gap-12 ">
-            <p className="flex gap-2 text-lg font-semibold text-violet-normal ">
+      <article className="flex flex-col gap-6 lg:grid lg:grid-cols-12">
+        <section className="space-y-3 lg:col-span-8 lg:space-y-9">
+          <div className="gap flex flex-wrap border-b border-b-violet-light py-2 lg:gap-12 lg:py-4 ">
+            <p className="flex gap-2 text-lg font-semibold text-violet-normal max-md:text-sm ">
               <span>Posted on {blog?.date}</span>
               <span className="text-orange-normal">By Admin</span>
             </p>
-            <p className="flex gap-2 text-lg font-semibold text-violet-normal ">
+            <p className="flex gap-2 text-lg font-semibold  text-violet-normal max-md:text-sm ">
               <span>Read time</span>
               <span className="text-orange-normal"> {blog?.readTime} </span>
             </p>
           </div>
-          <p className="whitespace-pre-wrap  font-semibold text-violet-darkHover">
+          <p className="whitespace-pre-wrap  font-semibold  text-violet-darkHover">
             {blog?.description}
           </p>
           <div>
@@ -64,7 +64,7 @@ const page = () => {
             </div>
           </div>
         </section>
-        <section className="col-span-3 py-12">
+        <section className="py-12 lg:col-span-3">
           <h2 className="text-center font-clashBold text-2xl font-extrabold text-violet-normal">
             Featured Blog Post
           </h2>
