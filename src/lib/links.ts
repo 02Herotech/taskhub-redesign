@@ -24,6 +24,10 @@ export const customerLinks: LinkRouteTypes[] = [
     label: "Profile",
     url: "/customer/profile",
   },
+  {
+    label: "Blog",
+    url: "/blog",
+  },
 ];
 
 export const serviceProviderLinks: LinkRouteTypes[] = [
@@ -38,6 +42,10 @@ export const serviceProviderLinks: LinkRouteTypes[] = [
   {
     label: "Marketplace",
     url: "/marketplace",
+  },
+  {
+    label: "Blog",
+    url: "/blog",
   },
 ];
 
@@ -72,6 +80,10 @@ export const mobileServiceProviderLinks: LinkRouteTypes[] = [
   {
     label: "Marketplace",
     url: "/marketplace",
+  },
+  {
+    label: "Blog",
+    url: "/blog",
   },
   {
     label: "Profile",
@@ -136,6 +148,10 @@ export const mobileCustomerLinks: LinkRouteTypes[] = [
   {
     label: "Marketplace",
     url: "/marketplace",
+  },
+  {
+    label: "Blog",
+    url: "/blog",
   },
   {
     label: "Profile",

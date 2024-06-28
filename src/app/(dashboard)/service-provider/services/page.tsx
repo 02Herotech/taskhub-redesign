@@ -182,13 +182,13 @@ const ServicesPage = () => {
       </div>
       {currentCategory === "services" ? (
         <AllServices />
-      ) : currentCategory === "accepted" ? (
+      ) : currentCategory === "accepted" && jobs ? (
         <AcceptedServices
           setModalData={setModalData}
           acceptedBookingData={acceptedBookingData}
           handleReportservice={handleReportService}
         />
-      ) : currentCategory === "paid" ? (
+      ) : currentCategory === "paid" && jobs ? (
         <PaidServices
           jobs={jobs}
           setModalData={setModalData}
@@ -196,7 +196,7 @@ const ServicesPage = () => {
           customerDetails={customerDetails}
           handleReportservice={handleReportService}
         />
-      ) : currentCategory === "ongoing" ? (
+      ) : currentCategory === "ongoing" && jobs ? (
         <OngoingServies
           jobs={jobs}
           allBookings={allBookings}
@@ -204,7 +204,7 @@ const ServicesPage = () => {
           customerDetails={customerDetails}
           handleReportservice={handleReportService}
         />
-      ) : currentCategory === "inspection" ? (
+      ) : currentCategory === "inspection" && jobs ? (
         <InspectionServices
           jobs={jobs}
           allBookings={allBookings}
@@ -213,7 +213,9 @@ const ServicesPage = () => {
           handleReportservice={handleReportService}
         />
       ) : (
-        <CompletedServices jobs={jobs} customerDetails={customerDetails} />
+        jobs && (
+          <CompletedServices jobs={jobs} customerDetails={customerDetails} />
+        )
       )}
     </main>
   );

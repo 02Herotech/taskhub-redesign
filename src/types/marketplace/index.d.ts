@@ -163,3 +163,17 @@ declare interface UserProfileTypes {
   roles: string[];
   appNotificationList: any[];
 }
+
+declare interface BlogTypes {
+  id: number;
+  bannerImage: string;
+  date: string;
+  title: string;
+  readTime: string;
+  description: string;
+  subheader: string;
+  subheaderList: {
+    title: string;
+    content: string;
+  }[];
+}
