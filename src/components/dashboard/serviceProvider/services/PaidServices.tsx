@@ -16,31 +16,64 @@ interface AcceptedServicesPropsType {
   customerDetails: UserProfileTypes[] | null | undefined;
 }
 
-const OngoingServies = ({
+const PaidServices = ({
   setModalData,
   jobs,
   handleReportservice,
   customerDetails,
 }: AcceptedServicesPropsType) => {
-  const handleCompleteService = async (id: number) => {
-    setModalData((prev) => ({
-      ...prev,
-      isModalShown: true,
-      message: id,
-      isCompleteService: true,
-    }));
+  const [startJobState, setStartJobState] = useState({
+    id: 0,
+    loading: false,
+  });
+
+  const session = useSession();
+  const token = session?.data?.user?.accessToken;
+
+  const handleStartService = async (id: number) => {
+    try {
+      setStartJobState((prev) => ({ ...prev, loading: true, id }));
+      const url =
+        "https://smp.jacinthsolutions.com.au/api/v1/booking/start-task?jobId=" +
+        id;
+      const body = { jobId: id };
+      const { data } = await axios.post(url, body, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setModalData((prev) => ({
+        ...prev,
+        isModalShown: true,
+        message: data.message,
+        isStartService: true,
+      }));
+    } catch (error: any) {
+      console.log(error.response.data);
+      setModalData((prev) => ({
+        ...prev,
+        isModalShown: true,
+        isStartService: true,
+        message: "Customer has not paid for this service!!!",
+      }));
+    } finally {
+      setStartJobState((prev) => ({ ...prev, loading: false, id: 0 }));
+    }
   };
+
+  console.log(jobs);
 
   return (
     <div className="flex flex-col gap-8  pb-4">
       {jobs
-        .filter((job) => job.jobStatus === "IN_PROGRESS")
+        .filter((job) => job.jobStatus === "PENDING")
         .map((item, index) => {
           if (!customerDetails) return;
 
           const customer = customerDetails.find(
             (customer) => customer.id === item.customerId,
           );
+
           return (
             <div
               key={index}
@@ -87,10 +120,22 @@ const OngoingServies = ({
                   View Enquiry
                 </Link> */}
                     <button
-                      onClick={() => handleCompleteService(item.id)}
+                      onClick={() => handleStartService(item.id)}
+                      disabled={startJobState.loading}
                       className="rounded-full bg-violet-normal px-6 py-3 text-sm font-medium text-white transition-opacity duration-300 hover:opacity-90 max-md:px-4 max-md:py-2 max-md:text-sm"
                     >
-                      Complete
+                      {startJobState.loading && startJobState.id === item.id ? (
+                        <BeatLoader
+                          loading={
+                            startJobState.loading &&
+                            startJobState.id === item.id
+                          }
+                          color="white"
+                          size={20}
+                        />
+                      ) : (
+                        "Start Service"
+                      )}
                     </button>
                   </div>
 
@@ -109,4 +154,4 @@ const OngoingServies = ({
   );
 };
 
-export default OngoingServies;
+export default PaidServices;

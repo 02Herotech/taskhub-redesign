@@ -25,10 +25,6 @@ const AcceptedServices = ({
     loading: false,
   });
 
-  const { profile: user } = useSelector(
-    (state: RootState) => state.userProfile,
-  );
-
   const session = useSession();
   const token = session?.data?.user?.accessToken;
 
@@ -61,19 +57,6 @@ const AcceptedServices = ({
     } finally {
       setStartJobState((prev) => ({ ...prev, loading: false, id: 0 }));
     }
-  };
-
-  const handleGetJobsByServiceProvider = async () => {
-    try {
-      const url =
-        "https://smp.jacinthsolutions.com.au/api/v1/booking/job/service-provider/";
-      const response = await axios.get(url, {
-        headers: {
-          Authorization: "Bearer " + token,
-        },
-      });
-      console.log(response);
-    } catch (error) {}
   };
 
   return (
