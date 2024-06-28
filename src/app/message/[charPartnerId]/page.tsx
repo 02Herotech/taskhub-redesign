@@ -83,9 +83,9 @@ const ServiceProviderChat = () => {
   const { profile: user } = useSelector(
     (state: RootState) => state.userProfile,
   );
-  const { activeChatPatnerId, messages: storedMessages } = useSelector(
-    (state: RootState) => state.chat,
-  );
+  // const { activeChatPatnerId, messages: storedMessages } = useSelector(
+  //   (state: RootState) => state.chat,
+  // );
 
   useEffect(() => {
     if (chatPartnerId) {
@@ -94,10 +94,10 @@ const ServiceProviderChat = () => {
   }, [chatPartnerId, dispatch]);
 
   useEffect(() => {
-    if (chatPartnerId && user && token) {
+    // if (chatPartnerId && user && token) {
       connect();
       loadContacts();
-    }
+    // }
   }, []);
 
   useEffect(() => {
@@ -118,15 +118,24 @@ const ServiceProviderChat = () => {
     const socket = new SockJS(`https://smp.jacinthsolutions.com.au/ws`);
     const stompClient = Stomp.over(socket);
     stompClient.connect({}, onConnected, onError);
-    console.log("connected11");
+    console.log("Connexted")
   };
 
   const onConnected = () => {
-    console.log("connected");
+    console.log("Connexted1111")
     stompClient.subscribe(
       `/user/${user?.id}/queue/messages`,
       onMessageReceived,
     );
+    const message = {
+      senderId: user?.id,
+      recipientId: 2,
+      senderName: "Test User",
+      recipientName: "activeContact.name",
+      content: "This is a test message",
+      timestamp: new Date(),
+    };
+    stompClient.send("/app/chat", {}, JSON.stringify(message));
   };
 
   const onError = (err: any) => {
@@ -135,23 +144,27 @@ const ServiceProviderChat = () => {
 
   const onMessageReceived = (msg: any) => {
     const notification = JSON.parse(msg.body);
-    if (activeChatPatnerId === notification.senderId) {
-      findChatMessage(notification.id).then((message) => {
-        const newMessages = [...storedMessages, message];
-        dispatch(setMessages(newMessages));
-        setChatMessages(newMessages);
-      });
-    }
+    // if (activeChatPatnerId === notification.senderId) {
+    //   findChatMessage(notification.id).then((message) => {
+    //     const newMessages = [...storedMessages, message];
+    //     dispatch(setMessages(newMessages));
+    //     setChatMessages(newMessages);
+    //   });
+    // }
     loadContacts();
   };
 
   const sendMessage = (msg: string) => {
-    if (msg.trim() !== "" && activeContact && user) {
+    console.log("Message sent", msg);
+    console.log("Active contact", activeContact)
+    console.log("User", user)
+    
+    if (msg.trim() !== "" && user) {
       const message = {
         senderId: user.id,
-        recipientId: activeContact.id,
+        recipientId: 25,
         senderName: `${user.firstName} ${user.lastName}`,
-        recipientName: activeContact.name,
+        recipientName: "activeContact.name",
         content: msg,
         timestamp: new Date(),
       };
@@ -161,26 +174,41 @@ const ServiceProviderChat = () => {
       dispatch(setMessages(newMessages));
       setChatMessages(newMessages);
     }
-    console.log(msg);
   };
+
+  // useEffect(() => {
+  //   const message = {
+  //     senderId: user?.id,
+  //     recipientId: 2,
+  //     senderName: "Test User",
+  //     recipientName: "activeContact.name",
+  //     content: "This is a test message",
+  //     timestamp: new Date(),
+  //   };
+  //   stompClient.send("/app/chat", {}, JSON.stringify(message));
+  // }, [message]);
+
 
   const loadContacts = async () => {
     if (!token || !user) return;
-    const users = await getUsers({ token });
-    const contacts = await Promise.all(
-      users.map(async (contact: any) => {
-        const count = await countNewMessages({
-          recipientId: contact.id,
-          senderId: user.id,
-          token,
-        });
-        return { ...contact, newMessages: count };
-      }),
-    );
-    setContacts(contacts);
-    if (!activeContact && contacts.length > 0) {
-      setActiveContact(contacts[0]);
-    }
+    // const users = await getUsers({ token });
+    // const contacts = await Promise.all(
+    //   users.map(async (contact: any) => {
+    //     const count = await countNewMessages({
+    //       recipientId: 25,
+    //       senderId: user.id,
+    //       token,
+    //     });
+    //     return { ...contact, newMessages: count };
+    //   }),
+    // );
+    // setContacts(contacts);
+    // if (!activeContact && contacts.length > 0) {
+      setActiveContact({
+        id: 25,
+        name: "John Doe",
+      });
+    // }
   };
 
   const handleReschedule = () => {};
