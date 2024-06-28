@@ -1,10 +1,10 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { auth } from "../services/auth";
 import { task } from "@/services/tasks";
+import { booking } from "@/services/bookings";
 import marketReducer from "./Features/marketplace";
 import userProfileReducer from "./Features/userProfile";
 import chatReducer from "./Features/chat";
-import { booking } from "@/services/bookings";
 
 export const store = configureStore({
   reducer: {

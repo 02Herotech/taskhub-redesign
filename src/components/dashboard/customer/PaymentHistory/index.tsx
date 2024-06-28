@@ -7,7 +7,7 @@ import Popup from '@/components/global/Popup';
 import { FiClock } from 'react-icons/fi';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/store';
-import { useGetInvoiceByCustomerIdQuery } from '@/services/invoices';
+import { useGetInvoiceByCustomerIdQuery } from '@/services/bookings';
 import { Receipt } from '@/types/services/invoice';
 import Loading from '@/components/global/loading/page';
 import html2canvas from 'html2canvas';
