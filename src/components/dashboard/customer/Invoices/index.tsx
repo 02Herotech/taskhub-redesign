@@ -9,7 +9,7 @@ import { loadStripe } from '@stripe/stripe-js';
 import { Elements } from '@stripe/react-stripe-js';
 import { useSession } from 'next-auth/react';
 import CheckoutForm from '../CheckoutForm';
-import { useGetInvoiceByCustomerIdQuery } from '@/services/invoices';
+import { useGetInvoiceByCustomerIdQuery } from '@/services/bookings';
 import Loading from '@/shared/loading';
 import { useSelector } from 'react-redux';
 import { RootState } from "@/store";
