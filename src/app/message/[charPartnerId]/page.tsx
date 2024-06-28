@@ -15,8 +15,7 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import Stomp from "stompjs";
-import SockJS from "sockjs-client";
+
 import { setActiveChatPatnerId, setMessages } from "@/store/Features/chat";
 
 const dummyChat = [
@@ -67,7 +66,6 @@ const dummyChat = [
 const chatData = [{}];
 
 let stompClient: any = null;
-
 const ServiceProviderChat = () => {
   const [activeContact, setActiveContact] = useState<any>(null);
   const [chatMessages, setChatMessages] = useState<any>([]);
@@ -95,10 +93,10 @@ const ServiceProviderChat = () => {
 
   useEffect(() => {
     // if (chatPartnerId && user && token) {
-      connect();
-      loadContacts();
+    connect();
+    loadContacts();
     // }
-  }, []);
+  }, [user, token]);
 
   useEffect(() => {
     if (token && user && chatPartnerId) {
@@ -114,28 +112,25 @@ const ServiceProviderChat = () => {
   }, [token, user, chatPartnerId, dispatch]);
 
   const connect = () => {
+    const Stomp = require("stompjs");
+    var SockJS = require("sockjs-client");
     // const socket = new SockJS(`${process.env.NEXT_PUBLIC_API_URL}/ws`);
-    const socket = new SockJS(`https://smp.jacinthsolutions.com.au/ws`);
-    const stompClient = Stomp.over(socket);
+    const URL = `https://smp.jacinthsolutions.com.au/ws`;
+    SockJS = new SockJS(URL);
+    stompClient = Stomp.over(SockJS);
     stompClient.connect({}, onConnected, onError);
-    console.log("Connexted")
   };
 
   const onConnected = () => {
-    console.log("Connexted1111")
-    stompClient.subscribe(
-      `/user/${user?.id}/queue/messages`,
-      onMessageReceived,
-    );
-    const message = {
-      senderId: user?.id,
-      recipientId: 2,
-      senderName: "Test User",
-      recipientName: "activeContact.name",
-      content: "This is a test message",
-      timestamp: new Date(),
-    };
-    stompClient.send("/app/chat", {}, JSON.stringify(message));
+    console.log("Connected to websocket");
+    if (user?.id) {
+      console.log(` Subscribing to /user/${user?.id}/queue/messages`);
+      stompClient.subscribe(
+        `/user/${user?.id}/queue/messages`,
+        onMessageReceived,
+      );
+      console.log("subscribed");
+    }
   };
 
   const onError = (err: any) => {
@@ -143,8 +138,8 @@ const ServiceProviderChat = () => {
   };
 
   const onMessageReceived = (msg: any) => {
-    const notification = JSON.parse(msg.body);
-    // if (activeChatPatnerId === notification.senderId) {
+    // const notification = JSON.parse(msg.body);
+    // if (activeContact.id === notification.senderId) {
     //   findChatMessage(notification.id).then((message) => {
     //     const newMessages = [...storedMessages, message];
     //     dispatch(setMessages(newMessages));
@@ -156,9 +151,9 @@ const ServiceProviderChat = () => {
 
   const sendMessage = (msg: string) => {
     console.log("Message sent", msg);
-    console.log("Active contact", activeContact)
-    console.log("User", user)
-    
+    console.log("Active contact", activeContact);
+    console.log("User", user);
+
     if (msg.trim() !== "" && user) {
       const message = {
         senderId: user.id,
@@ -188,26 +183,26 @@ const ServiceProviderChat = () => {
   //   stompClient.send("/app/chat", {}, JSON.stringify(message));
   // }, [message]);
 
-
   const loadContacts = async () => {
     if (!token || !user) return;
-    // const users = await getUsers({ token });
-    // const contacts = await Promise.all(
-    //   users.map(async (contact: any) => {
-    //     const count = await countNewMessages({
-    //       recipientId: 25,
-    //       senderId: user.id,
-    //       token,
-    //     });
-    //     return { ...contact, newMessages: count };
-    //   }),
-    // );
-    // setContacts(contacts);
+    const users = await getUsers({ token });
+    console.log("chatted withs", users);
+    const contacts = await Promise.all(
+      users.map(async (contact: any) => {
+        const count = await countNewMessages({
+          recipientId: contact.id,
+          senderId: user.id,
+          token,
+        });
+        return { ...contact, newMessages: count };
+      }),
+    );
+    setContacts(contacts);
     // if (!activeContact && contacts.length > 0) {
-      setActiveContact({
-        id: 25,
-        name: "John Doe",
-      });
+    setActiveContact({
+      id: 25,
+      name: "John Doe",
+    });
     // }
   };
 
