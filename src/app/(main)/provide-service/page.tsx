@@ -331,7 +331,7 @@ const ProvideService: React.FC = () => {
     });
   };
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setTask({ ...task, negotiable: event.target.checked });
+    setnegotiable(event.target.checked);
   };
 
 
@@ -532,7 +532,7 @@ const ProvideService: React.FC = () => {
     switch (currentPage) {
       case 1:
         return (
-          <div className="mx-auto  w-[80%] lg:w-full">
+          <div className="mx-auto w-[90%] lg:w-full">
             <div className="mb-10 space-y-10 ">
               <form
                 className="w-full space-y-10 text-status-darkpurple"
@@ -692,7 +692,7 @@ const ProvideService: React.FC = () => {
         );
       case 2:
         return (
-          <div className="mx-auto w-full">
+          <div className="mx-auto w-[90%] lg:w-full">
             <div className="mb-10 space-y-10">
               <form
                 onSubmit={nextPages}
@@ -757,7 +757,7 @@ const ProvideService: React.FC = () => {
                               placeholder="500"
                               className={` rounded-2xl bg-[#EBE9F4] p-3 pl-5 font-satoshiMedium text-[13px]  ${error.price ? "border border-[#ff0000] outline-[#FF0000]" : "border-none outline-none"}`}
                             />
-                            <p className="absolute left-3 top-3">$</p>
+                            <p className="absolute left-3 top-3.5 lg:top-3">$</p>
                             <p className="font-extraBold text-xs text-[#140B31]">
                               Minimum AUD$25 + 10% GST inclusive
                             </p>
@@ -804,7 +804,7 @@ const ProvideService: React.FC = () => {
                               placeholder="500"
                               className="w-1/3 rounded-2xl bg-[#EBE9F4] p-3 pl-5 font-satoshiMedium text-[13px] outline-none"
                             />
-                            <p className="absolute left-3 top-3">$</p>
+                            <p className="absolute left-3 top-3.5 lg:top-3">$</p>
                             <p className="font-extraBold text-xs text-[#140B31]">
                               Minimum AUD$25 + 10% GST inclusive
                             </p>
@@ -851,7 +851,7 @@ const ProvideService: React.FC = () => {
                               placeholder="500"
                               className="w-1/3 rounded-2xl bg-[#EBE9F4] p-3 pl-5 font-satoshiMedium text-[13px] outline-none"
                             />
-                            <p className="absolute left-3 top-3">$</p>
+                            <p className="absolute left-3 top-3.5 lg:top-3">$</p>
                             <p className="font-extraBold text-xs text-[#140B31]">
                               Minimum AUD$25 + 10% GST inclusive
                             </p>
@@ -1408,7 +1408,7 @@ const ProvideService: React.FC = () => {
               <div>
                 <div
                   className={
-                    currentPage === 1 ? " mx-auto w-[80%] lg:w-full " : ""
+                    currentPage >= 1 ? " mx-auto w-[90%] lg:w-full " : ""
                   }
                 >
                   <h2 className="text-4xl font-medium text-status-darkpurple">
