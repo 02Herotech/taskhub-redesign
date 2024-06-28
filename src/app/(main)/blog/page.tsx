@@ -126,7 +126,7 @@ changed employment during the tax year`,
   },
 ];
 
-const page = () => {
+const BlogsAllPage = () => {
   useEffect(() => {
     localStorage.setItem("blogs", JSON.stringify(blogsData));
   }, []);
@@ -186,4 +186,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default BlogsAllPage;
