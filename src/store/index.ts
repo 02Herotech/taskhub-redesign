@@ -4,13 +4,13 @@ import { task } from "@/services/tasks";
 import marketReducer from "./Features/marketplace";
 import userProfileReducer from "./Features/userProfile";
 import chatReducer from "./Features/chat";
-import { invoice } from "@/services/invoices";
+import { booking } from "@/services/bookings";
 
 export const store = configureStore({
   reducer: {
     [auth.reducerPath]: auth.reducer,
     [task.reducerPath]: task.reducer,
-    [invoice.reducerPath]: invoice.reducer,
+    [booking.reducerPath]: booking.reducer,
     market: marketReducer,
     userProfile: userProfileReducer,
     chat: chatReducer,
@@ -19,7 +19,7 @@ export const store = configureStore({
     getDefaultMiddleware().concat(
       auth.middleware,
       task.middleware,
-      invoice.middleware,
+      booking.middleware,
     ),
 });
 
