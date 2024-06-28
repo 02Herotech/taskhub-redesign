@@ -3,7 +3,7 @@ import Image from "next/image";
 import { useParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
-const page = () => {
+const BlogsinglePage = () => {
   const [blog, setBlog] = useState<BlogTypes | null>(null);
   const { id } = useParams();
 
@@ -74,4 +74,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default BlogsinglePage;
