@@ -169,7 +169,7 @@ export const mobileCustomerLinks: LinkRouteTypes[] = [
         url: "/customer/notifications",
       },
       {
-        label: "Payment settings",
+        label: "Payments",
         url: "/customer/payment/payment-history",
       },
       {
