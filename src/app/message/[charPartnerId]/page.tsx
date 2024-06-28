@@ -15,8 +15,7 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import Stomp from "stompjs";
-import SockJS from "sockjs-client";
+
 import { setActiveChatPatnerId, setMessages } from "@/store/Features/chat";
 
 const dummyChat = [
@@ -67,7 +66,6 @@ const dummyChat = [
 const chatData = [{}];
 
 let stompClient: any = null;
-
 const ServiceProviderChat = () => {
   const [activeContact, setActiveContact] = useState<any>(null);
   const [chatMessages, setChatMessages] = useState<any>([]);
@@ -83,9 +81,9 @@ const ServiceProviderChat = () => {
   const { profile: user } = useSelector(
     (state: RootState) => state.userProfile,
   );
-  const { activeChatPatnerId, messages: storedMessages } = useSelector(
-    (state: RootState) => state.chat,
-  );
+  // const { activeChatPatnerId, messages: storedMessages } = useSelector(
+  //   (state: RootState) => state.chat,
+  // );
 
   useEffect(() => {
     if (chatPartnerId) {
@@ -94,11 +92,11 @@ const ServiceProviderChat = () => {
   }, [chatPartnerId, dispatch]);
 
   useEffect(() => {
-    if (chatPartnerId && user && token) {
-      connect();
-      loadContacts();
-    }
-  }, []);
+    // if (chatPartnerId && user && token) {
+    connect();
+    loadContacts();
+    // }
+  }, [user, token]);
 
   useEffect(() => {
     if (token && user && chatPartnerId) {
@@ -114,19 +112,25 @@ const ServiceProviderChat = () => {
   }, [token, user, chatPartnerId, dispatch]);
 
   const connect = () => {
+    const Stomp = require("stompjs");
+    var SockJS = require("sockjs-client");
     // const socket = new SockJS(`${process.env.NEXT_PUBLIC_API_URL}/ws`);
-    const socket = new SockJS(`https://smp.jacinthsolutions.com.au/ws`);
-    const stompClient = Stomp.over(socket);
+    const URL = `https://smp.jacinthsolutions.com.au/ws`;
+    SockJS = new SockJS(URL);
+    stompClient = Stomp.over(SockJS);
     stompClient.connect({}, onConnected, onError);
-    console.log("connected11");
   };
 
   const onConnected = () => {
-    console.log("connected");
-    stompClient.subscribe(
-      `/user/${user?.id}/queue/messages`,
-      onMessageReceived,
-    );
+    console.log("Connected to websocket");
+    if (user?.id) {
+      console.log(` Subscribing to /user/${user?.id}/queue/messages`);
+      stompClient.subscribe(
+        `/user/${user?.id}/queue/messages`,
+        onMessageReceived,
+      );
+      console.log("subscribed");
+    }
   };
 
   const onError = (err: any) => {
@@ -134,24 +138,28 @@ const ServiceProviderChat = () => {
   };
 
   const onMessageReceived = (msg: any) => {
-    const notification = JSON.parse(msg.body);
-    if (activeChatPatnerId === notification.senderId) {
-      findChatMessage(notification.id).then((message) => {
-        const newMessages = [...storedMessages, message];
-        dispatch(setMessages(newMessages));
-        setChatMessages(newMessages);
-      });
-    }
+    // const notification = JSON.parse(msg.body);
+    // if (activeContact.id === notification.senderId) {
+    //   findChatMessage(notification.id).then((message) => {
+    //     const newMessages = [...storedMessages, message];
+    //     dispatch(setMessages(newMessages));
+    //     setChatMessages(newMessages);
+    //   });
+    // }
     loadContacts();
   };
 
   const sendMessage = (msg: string) => {
-    if (msg.trim() !== "" && activeContact && user) {
+    console.log("Message sent", msg);
+    console.log("Active contact", activeContact);
+    console.log("User", user);
+
+    if (msg.trim() !== "" && user) {
       const message = {
         senderId: user.id,
-        recipientId: activeContact.id,
+        recipientId: 25,
         senderName: `${user.firstName} ${user.lastName}`,
-        recipientName: activeContact.name,
+        recipientName: "activeContact.name",
         content: msg,
         timestamp: new Date(),
       };
@@ -161,12 +169,24 @@ const ServiceProviderChat = () => {
       dispatch(setMessages(newMessages));
       setChatMessages(newMessages);
     }
-    console.log(msg);
   };
+
+  // useEffect(() => {
+  //   const message = {
+  //     senderId: user?.id,
+  //     recipientId: 2,
+  //     senderName: "Test User",
+  //     recipientName: "activeContact.name",
+  //     content: "This is a test message",
+  //     timestamp: new Date(),
+  //   };
+  //   stompClient.send("/app/chat", {}, JSON.stringify(message));
+  // }, [message]);
 
   const loadContacts = async () => {
     if (!token || !user) return;
     const users = await getUsers({ token });
+    console.log("chatted withs", users);
     const contacts = await Promise.all(
       users.map(async (contact: any) => {
         const count = await countNewMessages({
@@ -178,9 +198,12 @@ const ServiceProviderChat = () => {
       }),
     );
     setContacts(contacts);
-    if (!activeContact && contacts.length > 0) {
-      setActiveContact(contacts[0]);
-    }
+    // if (!activeContact && contacts.length > 0) {
+    setActiveContact({
+      id: 25,
+      name: "John Doe",
+    });
+    // }
   };
 
   const handleReschedule = () => {};
