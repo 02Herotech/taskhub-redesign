@@ -207,7 +207,7 @@ const ServicesPage = () => {
           handleReportservice={handleReportService}
         />
       ) : (
-        <CompletedServices jobs={jobs} />
+        <CompletedServices jobs={jobs} customerDetails={customerDetails} />
       )}
     </main>
   );

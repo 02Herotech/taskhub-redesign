@@ -75,9 +75,9 @@ const PaidServices = ({
           return (
             <div
               key={index}
-              className=" flex gap-3 border-b border-slate-200 p-4 lg:grid lg:grid-cols-12 lg:items-center lg:px-8 lg:py-4"
+              className=" flex gap-3 border-b border-slate-200  lg:grid lg:grid-cols-12 lg:items-center lg:px-8 lg:py-4"
             >
-              <div className="col-span-2 size-20 flex-shrink-0 overflow-hidden rounded-full border border-violet-normal lg:size-24">
+              <div className="col-span-2 size-16 flex-shrink-0 overflow-hidden rounded-full border border-violet-normal lg:size-24">
                 <Image
                   src={
                     customer?.profileImage ??
