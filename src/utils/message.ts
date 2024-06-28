@@ -1,7 +1,7 @@
 import axios from "axios";
 
 export async function getUsers({ token }: { token: string }) {
-  const url = process.env.NEXT_PUBLIC_API_URL + "/api/v1/user-crud/summaries";
+  const url = process.env.NEXT_PUBLIC_API_URL + "/chat/chatted-withs";
   const { data } = await axios.get(url, {
     headers: {
       Authorization: "Bearer " + token,

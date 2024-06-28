@@ -1,4 +1,8 @@
 "use client";
+import {
+  formatDateFromNumberArrayToRelativeDate,
+  formatRelativeDate,
+} from "@/utils";
 import Image from "next/image";
 import React, { useState } from "react";
 
@@ -7,26 +11,28 @@ interface AcceptedServicesPropsType {
   jobs: JobsType[];
   handleReportservice: (id: number) => Promise<void>;
   customerDetails: UserProfileTypes[] | null | undefined;
+  allBookings: BookingType[];
 }
 
 const InspectionServices = ({
   setModalData,
   jobs,
   handleReportservice,
+  allBookings,
+
   customerDetails,
 }: AcceptedServicesPropsType) => {
-  console.log(customerDetails);
-
   return (
     <div className="flex flex-col gap-8  pb-4">
       {jobs
         .filter((job) => job.jobStatus === "INSPECTION")
         .map((item, index) => {
-          if (!customerDetails) return;
+          if (!allBookings) return;
 
-          const customer = customerDetails.find(
-            (customer) => customer.id === item.customerId,
+          const customer = allBookings.find(
+            (booking) => booking.id === item.bookingId,
           );
+
           return (
             <div
               key={index}
@@ -35,10 +41,10 @@ const InspectionServices = ({
               <div className="col-span-2 size-16 flex-shrink-0 overflow-hidden rounded-full border border-violet-normal lg:size-24">
                 <Image
                   src={
-                    customer?.profileImage ??
+                    customer?.customer.user.profileImage ??
                     "/assets/images/serviceProvider/user.jpg"
                   }
-                  alt={customer?.firstName ?? ""}
+                  alt={customer?.customer.user.fullName ?? ""}
                   width={200}
                   height={200}
                   quality={100}
@@ -49,14 +55,15 @@ const InspectionServices = ({
                 <div className="flex flex-wrap justify-between gap-2 ">
                   <div>
                     <p className="text-lg font-semibold text-violet-normal ">
-                      {customer?.firstName} {customer?.lastName}
+                      {customer?.customer.user.fullName || ""}
                     </p>
                     <p className="text-violet-normal">{item.jobTitle}</p>
                   </div>
                   <div className="space-y-2">
                     <p className="text-sm font-bold text-orange-normal first-letter:uppercase">
                       <p>
-                        {/* {formatDateFromNumberArrayToRelativeDate(item.jobStart)} */}
+                        {formatDateFromNumberArrayToRelativeDate(item.jobEnd) ||
+                          ""}
                       </p>
                     </p>
                     <p className=" font-bold text-[#28272A]">

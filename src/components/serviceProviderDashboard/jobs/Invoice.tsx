@@ -52,6 +52,7 @@ const Invoice = ({
   const [invoiceDraftData, setInvoiceDraftData] = useState<InvoiceDraftType[]>(
     [],
   );
+  const [isDownloadingImage, setIsDownloadingImage] = useState(false);
   const invoiceContainerRef = useRef<HTMLDivElement>(null);
 
   const router = useRouter();
@@ -192,6 +193,7 @@ const Invoice = ({
 
   const handleDownloadImage = async () => {
     if (invoiceContainerRef.current) {
+      setIsDownloadingImage(true);
       const dataUrl = await toPng(invoiceContainerRef.current);
 
       // Create a link element and trigger a download
@@ -199,6 +201,7 @@ const Invoice = ({
       link.href = dataUrl;
       link.download = "invoice.png";
       link.click();
+      setIsDownloadingImage(false);
     }
   };
 
@@ -352,52 +355,56 @@ const Invoice = ({
             Note: The service charges and GST would be deducted from the total
             paid by the customer
           </p>
-          <button
-            className="absolute right-4 top-4"
-            onClick={() => setIsModalOpen((prev) => !prev)}
-          >
-            <BiXCircle className="size-8 text-violet-normal" />
-          </button>
-          <div className="flex gap-2">
-            {!currentBooking?.invoiceSent && (
-              <button
-                onClick={generateInvoice}
-                className="rounded-full bg-violet-normal px-4 py-2 font-medium text-white"
-              >
-                {invoiceState.loading ? (
-                  <BeatLoader
-                    color={"white"}
-                    loading={invoiceState.loading}
-                    size={14}
-                  />
-                ) : (
-                  "Send"
-                )}
-              </button>
-            )}
+          {!isDownloadingImage && (
             <button
-              onClick={() => setIsModalOpen(false)}
-              className=" rounded-full bg-orange-100 px-4 py-2 font-medium text-violet-normal transition-colors duration-300 hover:bg-orange-200"
+              className="absolute right-4 top-4"
+              onClick={() => setIsModalOpen((prev) => !prev)}
             >
-              Back
+              <BiXCircle className="size-8 text-violet-normal" />
             </button>
-            {!currentBooking?.invoiceSent && (
+          )}
+          {!isDownloadingImage && (
+            <div className="flex gap-2">
+              {!currentBooking?.invoiceSent && (
+                <button
+                  onClick={generateInvoice}
+                  className="rounded-full bg-violet-normal px-4 py-2 font-medium text-white"
+                >
+                  {invoiceState.loading ? (
+                    <BeatLoader
+                      color={"white"}
+                      loading={invoiceState.loading}
+                      size={14}
+                    />
+                  ) : (
+                    "Send"
+                  )}
+                </button>
+              )}
               <button
-                onClick={safeInvoiceToDraft}
-                className=" rounded-full bg-violet-light px-4 py-2 font-medium text-violet-normal"
+                onClick={() => setIsModalOpen(false)}
+                className=" rounded-full bg-orange-100 px-4 py-2 font-medium text-violet-normal transition-colors duration-300 hover:bg-orange-200"
               >
-                Save to draft
+                Back
               </button>
-            )}
-            {currentBooking?.invoiceSent && (
-              <button
-                onClick={handleDownloadImage}
-                className=" rounded-full bg-violet-normal px-4 py-2 font-medium text-white"
-              >
-                Download Invoice
-              </button>
-            )}
-          </div>
+              {!currentBooking?.invoiceSent && (
+                <button
+                  onClick={safeInvoiceToDraft}
+                  className=" rounded-full bg-violet-light px-4 py-2 font-medium text-violet-normal"
+                >
+                  Save to draft
+                </button>
+              )}
+              {currentBooking?.invoiceSent && (
+                <button
+                  onClick={handleDownloadImage}
+                  className=" rounded-full bg-violet-normal px-4 py-2 font-medium text-white"
+                >
+                  Download Invoice
+                </button>
+              )}
+            </div>
+          )}
         </div>
       )}
     </section>

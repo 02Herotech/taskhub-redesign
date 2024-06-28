@@ -249,7 +249,7 @@ const AiDesciption: React.FC<AiGenerateProps> = ({
               Get personalized AI help
             </h2>
             <p className="text-white">
-              Recommended for you , Get an automated content prompt for your
+              Recommended for you, Get an automated content prompt for your
               service description by clicking on{" "}
               <span className="text-[#FE9B07]">Generate with AI</span> button.
             </p>
@@ -257,9 +257,7 @@ const AiDesciption: React.FC<AiGenerateProps> = ({
               <button
                 onClick={AiChatView}
                 type="button"
-                className={` z-10 flex w-[200px] transform items-center  space-x-4 rounded-[20px]
-       bg-[#FE9B07] p-2 px-3 text-[] text-white transition-transform duration-300 ease-in-out  hover:scale-105
-      `}
+                className={` z-10 flex w-[200px] transform items-center  space-x-4 rounded-[20px] bg-[#FE9B07] p-2 px-3 text-white transition-transform duration-300 ease-in-out hover:scale-105`}
               >
                 <span className="mr-2">
                   <Image alt="" src={icon1} width={30} height={30} />
@@ -268,7 +266,7 @@ const AiDesciption: React.FC<AiGenerateProps> = ({
               </button>{" "}
             </span>
           </div>
-          <div className="hidden lg:block absolute  right-2 top-[20%] h-full w-[20%] ">
+          <div className="hidden lg:block absolute right-2 top-[20%] h-full w-[20%] ">
             {Array.from({ length: 7 }).map((_, index) => (
               <div
                 key={index}
@@ -315,7 +313,7 @@ const AiDesciption: React.FC<AiGenerateProps> = ({
               </p>
             </div>
 
-            <div className="conversation lg:h-[55%] h-[60%] space-y-4 overflow-y-scroll    ">
+            <div className="conversation h-[75%] space-y-4 overflow-y-scroll">
               {conversation.length === 0 && (
                 <div className="mx-auto w-full justify-between space-y-3 lg:flex lg:space-y-0">
                   {AiSuggestions.map((entry, index) => (
@@ -409,42 +407,34 @@ const AiDesciption: React.FC<AiGenerateProps> = ({
               )}
             </p>
 
-            <div className="rounded-[20px] lg:px-4 px-2 pb-2  font-medium border-[2px] border-primary ">
-              <form className="flex items-center pt-2">
-                <textarea
-                  name="aiQuery"
-                  placeholder="Enter a request here"
-                  onChange={handleInputChange}
-                  value={aiQuery}
-                  className="w-full text-wrap  
- bg-transparent px-2 text-[16px] font-normal overflow-hidden text-primary border-none outline-none resize-none"
-                  required
-                  ref={textareaRef}
-
-                  style={{ overflowY: "auto", maxHeight: "150px" }}
+            <form className="flex items-center pt-2 rounded-[20px] lg:px-4 px-2 font-medium border-[2px] border-primary ">
+              <textarea
+                name="aiQuery"
+                placeholder="Enter a request here"
+                onChange={handleInputChange}
+                value={aiQuery}
+                className="w-full text-wrap bg-transparent px-2 text-[16px] font-normal overflow-auto text-primary border-none outline-none"
+                required
+                ref={textareaRef}
+              />
+              <div
+                className=""
+                onClick={handleAiChatQuery}
+              >
+                <BiSend
+                  size={26}
+                  className="transform text-primary ease-in-out hover:scale-110 hover:cursor-pointer"
                 />
-                <div
-                  className=""
-                  onClick={handleAiChatQuery}
-                >
-                  <span>
-                    <BiSend
-                      size={26}
-                      className="transform text-primary ease-in-out hover:scale-110 hover:cursor-pointer"
-                    />
-                  </span>
-                </div>
-              </form>
+              </div>
+            </form>
+            {emptyQuerryField && (
+              <span className="pt-1">
 
-            </div>
-            <span className="pt-1">
-
-              {emptyQuerryField && (
                 <p className="font-clashDisplay text-center lg:text-lg text-xs text-red-500">
                   Kindly enter your request
                 </p>
-              )}
-            </span>
+              </span>
+            )}
           </div>
         </div>
       )}

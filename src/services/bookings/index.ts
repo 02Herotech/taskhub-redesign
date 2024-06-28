@@ -45,9 +45,9 @@ const postRequest = (url: string, details: unknown) => ({
     body: details,
 });
 
-export const invoice = createApi({
-    reducerPath: "invoice",
-    tagTypes: ["Invoice"],
+export const booking = createApi({
+    reducerPath: "booking",
+    tagTypes: ["Booking"],
     baseQuery: fetchBaseQuery({
         baseUrl: process.env.NEXT_PUBLIC_API_URL + "/booking",
         prepareHeaders: async (headers) => {
@@ -65,11 +65,11 @@ export const invoice = createApi({
     endpoints: (builder) => ({
         getInvoiceByCustomerId: builder.query<GetInvoiceByCustomerIdResponse, number>({
             query: (customerId) => getRequest(`/invoice/customer/${customerId}`),
-            providesTags: ["Invoice"],
+            providesTags: ["Booking"],
         }),
         getReceiptsByCustomerId: builder.query<GetReceiptByCustomerIdResponse, number>({
             query: (customerId) => getRequest(`/all-receipts/${customerId}`),
-            providesTags: ["Invoice"],
+            providesTags: ["Booking"],
         }),
     }),
 });
@@ -77,4 +77,4 @@ export const invoice = createApi({
 export const {
     useGetInvoiceByCustomerIdQuery,
     useGetReceiptsByCustomerIdQuery
-} = invoice;
+} = booking;

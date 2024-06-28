@@ -71,11 +71,12 @@ declare interface JobsType {
   customerId: number;
   providerId: number;
   jobTitle: string;
+  bookingId: number;
   taskTime: number[];
   jobDescription: string;
   createdAt: number[];
-  jobStart: string | null;
-  jobEnd: string | null;
+  jobStart: number[];
+  jobEnd: number[];
   total: number;
   jobStatus: string;
   customerAcceptance: string;
