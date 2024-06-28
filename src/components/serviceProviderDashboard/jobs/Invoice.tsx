@@ -1,16 +1,22 @@
 "use client";
 import axios from "axios";
 import { useSession } from "next-auth/react";
-import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
+import React, {
+  Dispatch,
+  SetStateAction,
+  useEffect,
+  useState,
+  useRef,
+} from "react";
 import { BiXCircle } from "react-icons/bi";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { formatDateAsYYYYMMDD, formatDateFromNumberArray } from "@/utils";
+import { formatDateAsYYYYMMDD } from "@/utils";
 import { useRouter } from "next/navigation";
 import { BeatLoader } from "react-spinners";
 import { BsPencilSquare } from "react-icons/bs";
-import Image from "next/image";
 import { PiSealCheckFill } from "react-icons/pi";
+import { toPng } from "html-to-image";
 
 interface ModalPropType {
   isModalOpen: boolean;
@@ -46,6 +52,7 @@ const Invoice = ({
   const [invoiceDraftData, setInvoiceDraftData] = useState<InvoiceDraftType[]>(
     [],
   );
+  const invoiceContainerRef = useRef<HTMLDivElement>(null);
 
   const router = useRouter();
   const session = useSession();
@@ -183,6 +190,18 @@ const Invoice = ({
     // eslint-disable-next-line
   }, [invoiceState.price]);
 
+  const handleDownloadImage = async () => {
+    if (invoiceContainerRef.current) {
+      const dataUrl = await toPng(invoiceContainerRef.current);
+
+      // Create a link element and trigger a download
+      const link = document.createElement("a");
+      link.href = dataUrl;
+      link.download = "invoice.png";
+      link.click();
+    }
+  };
+
   return (
     <section
       className={`fixed left-0 top-0 z-50 flex h-screen w-screen items-center justify-center bg-black bg-opacity-70 transition-opacity duration-300 ${isModalOpen ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-0"} `}
@@ -216,7 +235,10 @@ const Invoice = ({
           </div>
         </div>
       ) : (
-        <div className=" relative w-[90vw] max-w-xl  space-y-3 rounded-xl bg-white p-3 py-10 lg:p-6">
+        <div
+          ref={invoiceContainerRef}
+          className=" relative w-[90vw] max-w-xl  space-y-3 rounded-xl bg-white p-3 py-10 lg:p-6"
+        >
           <div>
             <h1 className="font-clashBold text-3xl font-extrabold leading-6 text-violet-dark">
               Paid Invoice
@@ -355,7 +377,7 @@ const Invoice = ({
             )}
             <button
               onClick={() => setIsModalOpen(false)}
-              className=" rounded-full px-4 py-2 font-medium text-violet-normal"
+              className=" rounded-full bg-orange-100 px-4 py-2 font-medium text-violet-normal transition-colors duration-300 hover:bg-orange-200"
             >
               Back
             </button>
@@ -365,6 +387,14 @@ const Invoice = ({
                 className=" rounded-full bg-violet-light px-4 py-2 font-medium text-violet-normal"
               >
                 Save to draft
+              </button>
+            )}
+            {currentBooking?.invoiceSent && (
+              <button
+                onClick={handleDownloadImage}
+                className=" rounded-full bg-violet-normal px-4 py-2 font-medium text-white"
+              >
+                Download Invoice
               </button>
             )}
           </div>

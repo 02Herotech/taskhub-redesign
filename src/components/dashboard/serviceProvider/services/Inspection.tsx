@@ -1,13 +1,6 @@
 "use client";
-import { RootState } from "@/store";
-import { formatDateFromNumberArrayToRelativeDate } from "@/utils";
-import axios from "axios";
-import { useSession } from "next-auth/react";
 import Image from "next/image";
-import Link from "next/link";
 import React, { useState } from "react";
-import { useSelector } from "react-redux";
-import { BeatLoader } from "react-spinners";
 
 interface AcceptedServicesPropsType {
   setModalData: React.Dispatch<React.SetStateAction<ModalDataType>>;
@@ -16,25 +9,18 @@ interface AcceptedServicesPropsType {
   customerDetails: UserProfileTypes[] | null | undefined;
 }
 
-const OngoingServies = ({
+const InspectionServices = ({
   setModalData,
   jobs,
   handleReportservice,
   customerDetails,
 }: AcceptedServicesPropsType) => {
-  const handleCompleteService = async (id: number) => {
-    setModalData((prev) => ({
-      ...prev,
-      isModalShown: true,
-      message: id,
-      isCompleteService: true,
-    }));
-  };
+  console.log(customerDetails);
 
   return (
     <div className="flex flex-col gap-8  pb-4">
       {jobs
-        .filter((job) => job.jobStatus === "IN_PROGRESS")
+        .filter((job) => job.jobStatus === "INSPECTION")
         .map((item, index) => {
           if (!customerDetails) return;
 
@@ -86,12 +72,12 @@ const OngoingServies = ({
                 >
                   View Enquiry
                 </Link> */}
-                    <button
+                    {/* <button
                       onClick={() => handleCompleteService(item.id)}
-                      className="rounded-full border border-violet-normal bg-violet-normal px-6 py-3 text-sm font-medium text-white transition-opacity duration-300 hover:opacity-90 max-md:px-3 max-md:py-1 max-md:text-xs"
+                      className="rounded-full bg-violet-normal px-6 py-3 text-sm font-medium text-white transition-opacity duration-300 hover:opacity-90 max-md:px-4 max-md:py-2 max-md:text-sm"
                     >
                       Complete
-                    </button>
+                    </button> */}
                   </div>
 
                   <button
@@ -109,4 +95,4 @@ const OngoingServies = ({
   );
 };
 
-export default OngoingServies;
+export default InspectionServices;

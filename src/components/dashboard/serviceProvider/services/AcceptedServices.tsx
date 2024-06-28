@@ -25,10 +25,6 @@ const AcceptedServices = ({
     loading: false,
   });
 
-  const { profile: user } = useSelector(
-    (state: RootState) => state.userProfile,
-  );
-
   const session = useSession();
   const token = session?.data?.user?.accessToken;
 
@@ -63,27 +59,14 @@ const AcceptedServices = ({
     }
   };
 
-  const handleGetJobsByServiceProvider = async () => {
-    try {
-      const url =
-        "https://smp.jacinthsolutions.com.au/api/v1/booking/job/service-provider/";
-      const response = await axios.get(url, {
-        headers: {
-          Authorization: "Bearer " + token,
-        },
-      });
-      console.log(response);
-    } catch (error) {}
-  };
-
   return (
     <div className="flex flex-col gap-8  pb-4">
       {acceptedBookingData.map((item, index) => (
         <div
           key={index}
-          className=" flex gap-3 border-b border-slate-200 p-4 lg:grid lg:grid-cols-12 lg:items-center lg:px-8 lg:py-4"
+          className=" flex gap-3 border-b border-slate-200  lg:grid lg:grid-cols-12 lg:items-center lg:px-8 lg:py-4"
         >
-          <div className="col-span-2 size-20 flex-shrink-0 overflow-hidden rounded-full border border-violet-normal lg:size-24">
+          <div className="col-span-2 size-16 flex-shrink-0 overflow-hidden rounded-full border border-violet-normal lg:size-24">
             <Image
               src={
                 item?.customer?.user?.profileImage ??
@@ -119,14 +102,14 @@ const AcceptedServices = ({
               <div className="flex flex-wrap gap-3">
                 <Link
                   href={"/service-provider/jobs/" + item.id}
-                  className="rounded-full border border-violet-normal bg-violet-light px-6 py-3 text-sm font-medium text-violet-normal transition-colors duration-300 hover:bg-violet-200 max-md:px-4 max-md:py-2 max-md:text-sm "
+                  className="rounded-full border border-violet-normal bg-violet-light px-6 py-3 text-sm font-medium text-violet-normal transition-colors duration-300 hover:bg-violet-200 max-md:px-3 max-md:py-1 max-md:text-xs "
                 >
                   View Enquiry
                 </Link>
-                <button
+                {/* <button
                   onClick={() => handleStartService(item.id)}
                   disabled={startJobState.loading}
-                  className="rounded-full bg-violet-normal px-6 py-3 text-sm font-medium text-white transition-opacity duration-300 hover:opacity-90 max-md:px-4 max-md:py-2 max-md:text-sm"
+                  className="rounded-full border border-violet-normal bg-violet-normal px-6 py-3 text-sm font-medium text-white transition-opacity duration-300 hover:opacity-90 max-md:px-3 max-md:py-1 max-md:text-xs"
                 >
                   {startJobState.loading && startJobState.id === item.id ? (
                     <BeatLoader
@@ -139,7 +122,7 @@ const AcceptedServices = ({
                   ) : (
                     "Start Service"
                   )}
-                </button>
+                </button> */}
               </div>
 
               {/* <button

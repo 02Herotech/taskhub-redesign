@@ -4,6 +4,7 @@ import {
   filterMarketPlace,
   resetFilter,
   setFilterLoadingState,
+  setFilterParams,
 } from "@/store/Features/marketplace";
 import { BsTriangleFill, BsX } from "react-icons/bs";
 import { FormEvent, useEffect, useState } from "react";
@@ -78,11 +79,12 @@ const MarketPlaceFilter = () => {
         "https://smp.jacinthsolutions.com.au/api/v1/listing/text/0?text=" +
         searchInputData;
       const { data } = await axios.get(url);
+      dispatch(setFilterParams(`?text=${searchInputData}`));
       dispatch(
         filterMarketPlace({ data: data.content, totalPages: data.totalPages }),
       );
     } catch (error: any) {
-      console.log(error.message);
+      console.log(error.response?.data || error);
     } finally {
       dispatch(setFilterLoadingState(false));
     }
@@ -115,15 +117,14 @@ const MarketPlaceFilter = () => {
       if (params.length > 0) {
         url += params.join("&");
       }
-
       const response = await axios.get(url);
-
       dispatch(
         filterMarketPlace({
           data: response.data.content,
           totalPages: response.data.totalPages,
         }),
       );
+      dispatch(setFilterParams(`?${params.join("&")}`));
     } catch (error: any) {
       console.log(error.response.data || error);
     } finally {

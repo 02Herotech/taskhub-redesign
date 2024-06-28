@@ -154,8 +154,6 @@ const PricingModal = ({
     }
   };
 
-  console.log(modalData.negotiable);
-
   useEffect(() => {
     const fetchData = async () => {
       if (formState.postcode) {
@@ -294,7 +292,7 @@ const PricingModal = ({
                 }
                 className="w-full rounded-xl border border-slate-100 p-2 py-3 text-slate-700 shadow outline-none transition-shadow duration-300 hover:shadow-md lg:max-w-sm"
                 dateFormat="dd/MM/yyyy"
-                popperClassName="custom-datepicker-popper "
+                popperClassName="custom-datepicker-popper"
               />
             </div>
             {/* Time */}
