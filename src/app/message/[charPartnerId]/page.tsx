@@ -98,7 +98,7 @@ const ServiceProviderChat = () => {
       connect();
       loadContacts();
     }
-  }, [chatPartnerId, user, token]);
+  }, []);
 
   useEffect(() => {
     if (token && user && chatPartnerId) {
@@ -114,9 +114,11 @@ const ServiceProviderChat = () => {
   }, [token, user, chatPartnerId, dispatch]);
 
   const connect = () => {
-    const socket = new SockJS(`${process.env.NEXT_PUBLIC_API_URL}/ws`);
-    // const stompClient = Stomp.over(socket);
-    // stompClient.connect({}, onConnected, onError);
+    // const socket = new SockJS(`${process.env.NEXT_PUBLIC_API_URL}/ws`);
+    const socket = new SockJS(`https://smp.jacinthsolutions.com.au/ws`);
+    const stompClient = Stomp.over(socket);
+    stompClient.connect({}, onConnected, onError);
+    console.log("connected11")
   };
 
   const onConnected = () => {
@@ -236,11 +238,11 @@ const ServiceProviderChat = () => {
           </article>
 
           {/* -------chat */}
-          <div className="no-scrollbar flex max-h-full min-h-[60%] w-full flex-col justify-end gap-4 overflow-y-auto ">
+          <div className="no-scrollbar flex max-h-full min-h-[60%] w-full flex-col justify-end gap-4 overflow-y-auto">
             {dummyChat.map((item, index) => (
               <div
                 key={index}
-                className={` flex w-full ${item.sender === "user" ? "justify-end" : " "}`}
+                className={` flex w-full ${item.sender === "user" ? "justify-end" : "justify-start"}`}
               >
                 <p
                   key={index}
