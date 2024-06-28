@@ -10,6 +10,7 @@ import Reviews from "@/components/matkeplaceSingleTask/Reviews";
 import { formatDateFromNumberArray } from "@/utils";
 import axios from "axios";
 import ImageModal from "@/components/main/marketplace/ImageModal";
+import { useParams } from "next/navigation";
 
 const Page = () => {
   const [displayData, setDisplayData] = useState<ListingDataType>();
@@ -18,6 +19,8 @@ const Page = () => {
     state: false,
     image: "",
   });
+
+  const { id } = useParams();
 
   useEffect(() => {
     const tempList = localStorage.getItem("content");
@@ -31,9 +34,7 @@ const Page = () => {
     const fetchListing = async () => {
       try {
         if (!displayData) return;
-        const url =
-          "https://smp.jacinthsolutions.com.au/api/v1/listing/" +
-          displayData.id;
+        const url = "https://smp.jacinthsolutions.com.au/api/v1/listing/" + id;
         const { data } = await axios.get(url);
         setCurrentListing(data);
       } catch (error: any) {
@@ -180,17 +181,19 @@ const Page = () => {
             </div>
           </article>
           {/* ----------------- pricing plan ---------------- */}
-          <PricingPlan
-            planOnePrice={displayData?.planOnePrice ?? 0}
-            planTwoPrice={displayData?.planTwoPrice ?? null}
-            planThreePrice={displayData?.planThreePrice ?? null}
-            planOneDescription={displayData?.planOneDescription ?? ""}
-            planTwoDescription={displayData?.planTwoDescription ?? null}
-            planThreeDescription={displayData?.planThreeDescription ?? null}
-            listingId={displayData?.id ?? 0}
-            listingTitle={displayData?.listingTitle}
-            negotiable={currentListing?.negotiable ?? false}
-          />
+          {currentListing && displayData && (
+            <PricingPlan
+              planOnePrice={displayData.planOnePrice}
+              planTwoPrice={displayData.planTwoPrice}
+              planThreePrice={displayData.planThreePrice}
+              planOneDescription={displayData.planOneDescription}
+              planTwoDescription={displayData.planTwoDescription}
+              planThreeDescription={displayData.planThreeDescription}
+              listingId={displayData.id}
+              listingTitle={displayData.listingTitle}
+              negotiable={currentListing.negotiable}
+            />
+          )}
         </section>
 
         {/* Portfolio */}

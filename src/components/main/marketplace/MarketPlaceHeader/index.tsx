@@ -11,7 +11,9 @@ import { RootState } from "@/store";
 const MarketPlaceHeader = () => {
   // Setting the add description state
   const [addDescription, setAddDescription] = useState("");
-  const { authLoading } = useSelector((state: RootState) => state.userProfile);
+  const { authLoading, userProfileAuth } = useSelector(
+    (state: RootState) => state.userProfile,
+  );
 
   const session = useSession();
   const router = useRouter();
@@ -19,7 +21,8 @@ const MarketPlaceHeader = () => {
   const userRole = session?.data?.user?.user?.roles;
   const token = session?.data?.user?.accessToken;
 
-  const isServiceProvider = userRole && userRole[0] === "SERVICE_PROVIDER";
+  const isServiceProvider =
+    userProfileAuth.role && userProfileAuth.role[0] === "SERVICE_PROVIDER";
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -34,10 +37,11 @@ const MarketPlaceHeader = () => {
     }
   };
 
-  console.log(authLoading);
+  console.log(userProfileAuth);
+
   return (
     <div
-      className={`${styles.headerCover} min-h-64 w-full py-20 md:mt-16 lg:mt-20 `}
+      className={`${styles.headerCover} min-h-96 w-full py-20 md:mt-16 lg:mt-20 `}
     >
       {!authLoading && (
         <div className="relative mx-auto flex flex-col items-center justify-center space-y-8 px-5 text-white md:max-w-full md:px-0  ">

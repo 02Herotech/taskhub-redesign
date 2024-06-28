@@ -20,6 +20,7 @@ import { FaSortDown } from "react-icons/fa6";
 import Dropdown from "@/components/global/Dropdown";
 import { useRouter } from "next/navigation";
 import Loading from "@/components/global/loading/page";
+import ProgressBar from "@/components/global/progressbar";
 
 interface FormData {
   listingTitle: string;
@@ -330,8 +331,9 @@ const ProvideService: React.FC = () => {
     });
   };
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setnegotiable(event.target.checked);
+    setTask({ ...task, negotiable: event.target.checked });
   };
+
 
   const handleChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -1292,7 +1294,7 @@ const ProvideService: React.FC = () => {
         <title>TaskHub | Provide Service</title>
       </Head>
       <div className="w-full">
-        <div className="fixed left-0 top-20 z-10 w-full border-t-2 bg-white shadow-md">
+        <div className="fixed hidden lg:block left-0 top-20 z-10 w-full border-t-2 bg-white shadow-md">
           <div className="mb-3 flex justify-center pt-4 font-bold md:space-x-5">
             <div
               className={`${currentPage === 1
@@ -1382,6 +1384,7 @@ const ProvideService: React.FC = () => {
             </div>
           </div>
         </div>
+        <ProgressBar currentPage={currentPage} progress={progress}/>
         <div className="pt-24">
           <div className="mt-8 lg:flex">
             {currentPage === 1 && (

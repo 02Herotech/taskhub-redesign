@@ -8,6 +8,8 @@ interface MarketSliceTypes {
   filteredData: ListingDataType[];
   isFilteringLoading: boolean;
   totalPages: number;
+  filterParams: string;
+  filterCurrentPage: number;
 }
 
 const initialState: MarketSliceTypes = {
@@ -16,6 +18,8 @@ const initialState: MarketSliceTypes = {
   filteredData: [],
   isFilteringLoading: false,
   totalPages: 0,
+  filterParams: "",
+  filterCurrentPage: 0,
 };
 
 export const marketSlice = createSlice({
@@ -39,12 +43,17 @@ export const marketSlice = createSlice({
         isFiltering: true,
       };
     },
+    setFilterParams: (state, action) => {
+      return { ...state, filterParams: action.payload };
+    },
+    setFilterCurrentPage: (state, action) => {
+      return { ...state, filterCurrentPage: action.payload };
+    },
     resetFilter: (state) => {
+      const categories = state.categories;
       return {
-        ...state,
-        isFiltering: false,
-        search: { isSearching: false, searchData: "" },
-        filteredData: [],
+        ...initialState,
+        categories,
       };
     },
   },
@@ -55,6 +64,8 @@ export const {
   resetFilter,
   filterMarketPlace,
   setFilterLoadingState,
+  setFilterCurrentPage,
+  setFilterParams,
 } = marketSlice.actions;
 
 export default marketSlice.reducer;

@@ -8,15 +8,18 @@ import { RootState } from "@/store";
 import Image from "next/image";
 import SingleListingCard from "../marketplace/SingleListingCard";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
+import {
+  filterMarketPlace,
+  setFilterLoadingState,
+} from "@/store/Features/marketplace";
 
 interface CategoryListingProps {
   category: string;
 }
 
 const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
-  const { categories, isFiltering, filteredData, totalPages } = useSelector(
-    (state: RootState) => state.market,
-  );
+  const { categories, isFiltering, filteredData, totalPages, filterParams } =
+    useSelector((state: RootState) => state.market);
 
   const [isLoading, setIsLoading] = useState(true);
   const [allListsting, setallListsting] = useState<ListingDataType[]>([]);
@@ -25,6 +28,8 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
   const [displayListing, setDisplayListing] = useState<ListingDataType[]>([]);
   const [page, setPage] = useState({ totalPages: 1, currentPage: 0 });
   const [buttonNumbers, setButtonNumbers] = useState<number[]>([]);
+
+  const dispatch = useDispatch();
 
   const handleFetchCategory = async (currentPage: number) => {
     const categoryId = categories.find(
@@ -40,19 +45,16 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
         url =
           "https://smp.jacinthsolutions.com.au/api/v1/listing/all-active-listings/" +
           currentPage;
-        const { data } = await axios.get(url);
-        setPage((prev) => ({ ...prev, totalPages: data.totalPages }));
-        content = data.content;
       } else if (categoryId) {
         url =
           "https://smp.jacinthsolutions.com.au/api/v1/listing/filter-listings/" +
           currentPage +
           "?category=" +
           categoryId.categoryName;
-        const { data } = await axios.get(url);
-        content = data.content;
-        setPage((prev) => ({ ...prev, totalPages: data.totalPages }));
       }
+      const { data } = await axios.get(url as string);
+      content = data.content;
+      setPage((prev) => ({ ...prev, totalPages: data.totalPages }));
       if (url) {
         setallListsting(content);
         setDisplayListing(content);
@@ -64,8 +66,43 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
     }
   };
 
+  const handlePaginateFiltering = async () => {
+    try {
+      setIsLoading(true);
+      dispatch(setFilterLoadingState(true));
+      let url = "";
+      if (filterParams.includes("?text=")) {
+        url =
+          "https://smp.jacinthsolutions.com.au/api/v1/listing/text/" +
+          page.currentPage +
+          filterParams;
+      } else {
+        url =
+          "https://smp.jacinthsolutions.com.au/api/v1/listing/filter-listings/" +
+          page.currentPage +
+          filterParams;
+      }
+      // const { data } = await axios.get(url);
+      // dispatch(
+      //   filterMarketPlace({
+      //     data: data.content,
+      //     totalPages: data.totalPages,
+      //   }),
+      // );
+    } catch (error: any) {
+      console.log(error.response?.data || error);
+    } finally {
+      setIsLoading(false);
+      dispatch(setFilterLoadingState(false));
+    }
+  };
+
   useEffect(() => {
-    handleFetchCategory(page.currentPage);
+    if (isFiltering) {
+      handlePaginateFiltering();
+    } else {
+      handleFetchCategory(page.currentPage);
+    }
     // eslint-disable-next-line
   }, [category, page.currentPage]);
 

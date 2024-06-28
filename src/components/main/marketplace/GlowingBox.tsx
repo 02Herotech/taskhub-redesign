@@ -19,7 +19,7 @@ const GlowingBox = () => {
 
   return (
     <div
-      className={`absolute right-4 top-[calc(100%+5rem)] text-violet-normal max-sm:hidden lg:right-20 {${!isServiceProvider && "hidden"}} `}
+      className={`absolute right-4 top-[calc(100%+5rem)] text-violet-normal max-lg:hidden lg:right-20 {${!isServiceProvider && "hidden"}} `}
     >
       <div className=" glowing relative w-screen max-w-md space-y-2 rounded-2xl bg-violet-light p-4 ">
         <div className="flex items-center gap-6  ">

@@ -5,15 +5,18 @@ import { createSlice } from "@reduxjs/toolkit";
 interface InitialStateType {
   profile: UserProfileTypes | null;
   refresh: boolean;
-  auth: { role: ["CUSTOMER" | "SERVICE_PROVIDER"]; token: string | null };
+  userProfileAuth: {
+    role: ["CUSTOMER" | "SERVICE_PROVIDER"] | null;
+    token: string | null;
+  };
   authLoading: boolean;
 }
 
 const initialState: InitialStateType = {
   profile: null,
   refresh: false,
-  auth: { role: ["CUSTOMER"], token: null },
-  authLoading: false,
+  userProfileAuth: { role: ["CUSTOMER"], token: null },
+  authLoading: true,
 };
 
 export const userProfileSlice = createSlice({
@@ -27,11 +30,15 @@ export const userProfileSlice = createSlice({
     refreshUserProfile: (state) => {
       return { ...state, refresh: !state.refresh };
     },
-    setAuth: (state, action) => {
-      return { ...state, setAuth: action.payload };
+    setUserProfileAuth: (state, action) => {
+      return { ...state, userProfileAuth: action.payload };
     },
     setAuthLoading: (state, action) => {
       return { ...state, authLoading: action.payload };
+    },
+    removeUserProfile: (state) => {
+      localStorage.removeItem("auth");
+      return { ...initialState };
     },
   },
 });
@@ -39,8 +46,9 @@ export const userProfileSlice = createSlice({
 export const {
   updateUserProfile,
   refreshUserProfile,
-  setAuth,
+  setUserProfileAuth,
   setAuthLoading,
+  removeUserProfile,
 } = userProfileSlice.actions;
 
 export default userProfileSlice.reducer;
