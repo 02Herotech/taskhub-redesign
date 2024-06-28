@@ -76,7 +76,7 @@ const TaskDetailsPage = ({ params }: { params: { id: string } }) => {
                 </div>
             ) : (
                 <>
-                    <div className="flex items-center space-x-3 font-satoshi">
+                    {/* <div className="flex items-center space-x-3 font-satoshi">
                         {availability === "Available" ? (
                             <div className="w-6 h-6 rounded-full border mr-3 border-[#34A853] flex items-center justify-center">
                                 <div className="w-4 h-4 rounded-full bg-[#34A853] p-1" />
@@ -89,12 +89,12 @@ const TaskDetailsPage = ({ params }: { params: { id: string } }) => {
                         <p className='text-sm lg:text-[18px] font-bold'>
                             {availability}
                         </p>
-                    </div>
+                    </div> */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-10 lg:space-x-5 w-full mt-10">
                         <div className="space-y-7 lg:space-y-10 font-satoshi">
                             <h2 className="text-lg lg:text-4xl font-black text-primary">{task?.taskBriefDescription}</h2>
-                            <div className="space-y-3 text-xs lg:text-xl">
-                                    <h2 className='text-primary lg:text-2xl font-satoshiMedium font-bold'>Task Description</h2>
+                            <div className="space-y-3">
+                                <h2 className='text-primary lg:text-2xl font-satoshiMedium font-bold'>Task Description</h2>
                                 <p className='text-[#221354] font-satoshiMedium font-medium text-xl'>{task?.taskDescription}</p>
                             </div>
                             <div className="space-y-5">
