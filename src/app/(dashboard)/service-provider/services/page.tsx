@@ -28,6 +28,7 @@ const ServicesPage = () => {
   const [acceptedBookingData, setAcceptedBookingData] = useState<BookingType[]>(
     [],
   );
+  const [allBookings, setAllBookings] = useState<BookingType[]>([]);
   const [jobs, setJobs] = useState<JobsType[]>([]);
   const [loading, setLoading] = useState(false);
   const [customerDetails, setCustomerDetails] = useState<
@@ -62,6 +63,7 @@ const ServicesPage = () => {
         },
       });
       const data: BookingType[] = response.data;
+      setAllBookings(data);
       const filteredAcceptedData = data.filter(
         (item) => item.bookingStage === "ACCEPTED",
       );
@@ -122,10 +124,11 @@ const ServicesPage = () => {
   }, [token, user]);
 
   useEffect(() => {
-    if (jobs) {
+    if (jobs && allBookings) {
       fetchCustomerDetails();
+      // const jobsBookingId = jobs.map((job) => job.bookingId === allBookings[]);
     }
-  }, [jobs]);
+  }, [jobs, allBookings]);
 
   const handleReportService = async (id: number) => {
     setModalData((prev) => ({
@@ -189,12 +192,14 @@ const ServicesPage = () => {
         <PaidServices
           jobs={jobs}
           setModalData={setModalData}
+          allBookings={allBookings}
           customerDetails={customerDetails}
           handleReportservice={handleReportService}
         />
       ) : currentCategory === "ongoing" ? (
         <OngoingServies
           jobs={jobs}
+          allBookings={allBookings}
           setModalData={setModalData}
           customerDetails={customerDetails}
           handleReportservice={handleReportService}
@@ -202,6 +207,7 @@ const ServicesPage = () => {
       ) : currentCategory === "inspection" ? (
         <InspectionServices
           jobs={jobs}
+          allBookings={allBookings}
           setModalData={setModalData}
           customerDetails={customerDetails}
           handleReportservice={handleReportService}

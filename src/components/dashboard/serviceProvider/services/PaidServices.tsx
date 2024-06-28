@@ -1,6 +1,9 @@
 "use client";
 import { RootState } from "@/store";
-import { formatDateFromNumberArrayToRelativeDate } from "@/utils";
+import {
+  formatDateFromNumberArrayToRelativeDate,
+  formatRelativeDate,
+} from "@/utils";
 import axios from "axios";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
@@ -14,6 +17,7 @@ interface AcceptedServicesPropsType {
   jobs: JobsType[];
   handleReportservice: (id: number) => Promise<void>;
   customerDetails: UserProfileTypes[] | null | undefined;
+  allBookings: BookingType[];
 }
 
 const PaidServices = ({
@@ -21,6 +25,7 @@ const PaidServices = ({
   jobs,
   handleReportservice,
   customerDetails,
+  allBookings,
 }: AcceptedServicesPropsType) => {
   const [startJobState, setStartJobState] = useState({
     id: 0,
@@ -66,10 +71,10 @@ const PaidServices = ({
       {jobs
         .filter((job) => job.jobStatus === "PENDING")
         .map((item, index) => {
-          if (!customerDetails) return;
+          if (!allBookings) return;
 
-          const customer = customerDetails.find(
-            (customer) => customer.id === item.customerId,
+          const customer = allBookings.find(
+            (booking) => booking.id === item.bookingId,
           );
 
           return (
@@ -80,10 +85,10 @@ const PaidServices = ({
               <div className="col-span-2 size-16 flex-shrink-0 overflow-hidden rounded-full border border-violet-normal lg:size-24">
                 <Image
                   src={
-                    customer?.profileImage ??
+                    customer?.customer.user.profileImage ??
                     "/assets/images/serviceProvider/user.jpg"
                   }
-                  alt={customer?.firstName ?? ""}
+                  alt={customer?.customer.user.fullName ?? ""}
                   width={200}
                   height={200}
                   quality={100}
@@ -94,14 +99,15 @@ const PaidServices = ({
                 <div className="flex flex-wrap justify-between gap-2 ">
                   <div>
                     <p className="text-lg font-semibold text-violet-normal ">
-                      {customer?.firstName} {customer?.lastName}
+                      {customer?.customer.user.fullName}
                     </p>
                     <p className="text-violet-normal">{item.jobTitle}</p>
                   </div>
                   <div className="space-y-2">
                     <p className="text-sm font-bold text-orange-normal first-letter:uppercase">
                       <p>
-                        {/* {formatDateFromNumberArrayToRelativeDate(item.jobStart)} */}
+                        {formatDateFromNumberArrayToRelativeDate(item.jobEnd) ||
+                          ""}
                       </p>
                     </p>
                     <p className=" font-bold text-[#28272A]">
