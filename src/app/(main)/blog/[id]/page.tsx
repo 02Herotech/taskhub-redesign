@@ -68,9 +68,9 @@ const BlogsinglePage = () => {
                     {item.content.list?.map((text) => (
                       <p
                         key={text}
-                        className=" flex items-center gap-2 font-satoshiMedium text-violet-normal   "
+                        className=" flex gap-3 py-2 font-satoshiMedium text-violet-normal   "
                       >
-                        <span className="size-1.5 rounded-full bg-violet-normal p-1.5" />
+                        <span className="size-1 rounded-full bg-violet-normal p-1" />
                         <span>{text}</span>
                       </p>
                     ))}
@@ -78,6 +78,12 @@ const BlogsinglePage = () => {
                 </div>
               ))}
             </div>
+            <h2 className="text-2xl font-semibold text-violet-darker">
+              Conclusion
+            </h2>
+            <p className="whitespace-pre-wrap  font-satoshiMedium  text-violet-darkHover">
+              {blog?.conclusion}
+            </p>
           </div>
         </section>
 
