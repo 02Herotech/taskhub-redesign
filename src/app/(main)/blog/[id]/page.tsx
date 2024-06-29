@@ -58,11 +58,23 @@ const BlogsinglePage = () => {
               {blog?.subheaderList.map((item, index) => (
                 <div key={item.title} className="space-y-2">
                   <p className="flex gap-2 text-lg font-semibold text-violet-normal">
-                    <span> {index + 1} </span> <span>{item.title}</span>
+                    {blog.isSubheaderListNumbered && <span> {index + 1} </span>}
+                    <span>{item.title}</span>
                   </p>
                   <p className="whitespace-pre-wrap  font-satoshiMedium text-violet-darker">
-                    {item.content}
+                    {item.content.subtitle}
                   </p>
+                  <div className="ml-4 space-y-3 lg:ml-8">
+                    {item.content.list?.map((text) => (
+                      <p
+                        key={text}
+                        className=" flex items-center gap-2 font-satoshiMedium text-violet-normal   "
+                      >
+                        <span className="size-1.5 rounded-full bg-violet-normal p-1.5" />
+                        <span>{text}</span>
+                      </p>
+                    ))}
+                  </div>
                 </div>
               ))}
             </div>

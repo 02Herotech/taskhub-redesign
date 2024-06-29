@@ -173,8 +173,13 @@ declare interface BlogTypes {
   readTime: string;
   description: string;
   subheader: string;
+  isSubheaderListNumbered: boolean;
   subheaderList: {
     title: string;
-    content: string;
+    content: {
+      subtitle: string;
+      list?: string[];
+    };
   }[];
+  conclusion: string;
 }

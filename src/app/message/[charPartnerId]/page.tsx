@@ -63,6 +63,15 @@ const dummyChat = [
   },
 ];
 
+interface MessageTypes {
+  senderId: number;
+  recipientId: number;
+  senderName: string;
+  recipientName: string;
+  content: string;
+  timestamp: Date;
+}
+
 const chatData = [{}];
 
 let stompClient: any = null;
@@ -71,6 +80,7 @@ const ServiceProviderChat = () => {
   const [chatMessages, setChatMessages] = useState<any>([]);
   const [contacts, setContacts] = useState<any>([]);
   const [message, setMessage] = useState("");
+  const [allMessages, setAllMessages] = useState<MessageTypes[]>([]);
 
   const session = useSession();
   const dispatch = useDispatch();
@@ -200,7 +210,7 @@ const ServiceProviderChat = () => {
     setContacts(contacts);
     // if (!activeContact && contacts.length > 0) {
     setActiveContact({
-      id: 25,
+      id: 24,
       name: "John Doe",
     });
     // }
@@ -262,7 +272,7 @@ const ServiceProviderChat = () => {
 
           {/* -------chat */}
           <div className="no-scrollbar flex max-h-full min-h-[60%] w-full flex-col justify-end gap-4 overflow-y-auto">
-            {dummyChat.map((item, index) => (
+            {/* {dummyChat.map((item, index) => (
               <div
                 key={index}
                 className={` flex w-full ${item.sender === "user" ? "justify-end" : "justify-start"}`}
@@ -274,7 +284,7 @@ const ServiceProviderChat = () => {
                   <span>{item.message}</span>
                 </p>
               </div>
-            ))}
+            ))} */}
           </div>
 
           <div className="flex gap-2 ">
@@ -286,8 +296,7 @@ const ServiceProviderChat = () => {
               className="size-8 rounded-full"
             />
             <div className="relative w-full">
-              <input
-                type="text"
+              <textarea
                 className="w-full rounded-md bg-violet-light p-3 pr-16 outline-none"
                 value={message}
                 onChange={(event) => setMessage(event.target.value)}
