@@ -4,7 +4,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 interface InitialStateType {
   activeChatPatnerId: number;
-  contacts: any[];
+  contacts: ChatContactTypes[];
   messages: any[];
 }
 

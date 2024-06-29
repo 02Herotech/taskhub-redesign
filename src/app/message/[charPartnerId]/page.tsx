@@ -160,20 +160,26 @@ const ServiceProviderChat = () => {
   };
 
   const sendMessage = (msg: string) => {
-    console.log("Message sent", msg);
-    console.log("Active contact", activeContact);
-    console.log("User", user);
-
     if (msg.trim() !== "" && user) {
       const message = {
         senderId: user.id,
-        recipientId: 25,
+        recipientId: 24,
         senderName: `${user.firstName} ${user.lastName}`,
-        recipientName: "activeContact.name",
+        recipientName: "Anthony",
         content: msg,
         timestamp: new Date(),
       };
-      stompClient.send("/app/chat", {}, JSON.stringify(message));
+      try {
+        if (stompClient.connected) {
+          console.error("STOMP client is very much connected");
+          stompClient.send("/app/chat", {}, JSON.stringify(message));
+        } else {
+          console.error("STOMP client is not connected");
+          return;
+        }
+      } catch (error: any) {
+        console.log(error.response.data || error.message || error);
+      }
 
       const newMessages = [...chatMessages, message];
       dispatch(setMessages(newMessages));
@@ -297,7 +303,7 @@ const ServiceProviderChat = () => {
             />
             <div className="relative w-full">
               <textarea
-                className="w-full rounded-md bg-violet-light p-3 pr-16 outline-none"
+                className="small-scrollbar max-h-20 w-full resize-none rounded-md bg-violet-light p-3 pr-16 outline-none"
                 value={message}
                 onChange={(event) => setMessage(event.target.value)}
                 onKeyDown={(event) => {

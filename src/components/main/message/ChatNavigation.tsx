@@ -1,7 +1,8 @@
 "use client";
 
 import { RootState } from "@/store";
-import { findChatMessages } from "@/utils/message";
+import { setContacts } from "@/store/Features/chat";
+import { countNewMessages, findChatMessages, getUsers } from "@/utils/message";
 import { useSession } from "next-auth/react";
 // import { chatData } from "@/app/data/service-provider/user";
 import Image from "next/image";
@@ -9,36 +10,45 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { BiSearch } from "react-icons/bi";
-import { useSelector } from "react-redux";
-
-interface ChatDataType {
-  id: string;
-  name: string;
-  image: string;
-  chatNo: string;
-  lastMessage: string;
-  date: string;
-}
-
-const chatData: ChatDataType[] = [
-  {
-    id: "1",
-    name: "Anthony dev",
-    image: "/assets/images/serviceProvider/user.jpg",
-    chatNo: "1",
-    lastMessage: "I need a dancer",
-    date: "Today",
-  },
-];
+import { useDispatch, useSelector } from "react-redux";
 
 const ChatNavigation = () => {
   const [currentCategory, setCurrentCategory] = useState("All");
+
+  const { userProfileAuth: auth, profile: user } = useSelector(
+    (state: RootState) => state.userProfile,
+  );
+  const { contacts } = useSelector((state: RootState) => state.chat);
+  const dispatch = useDispatch();
+
   const param = useSearchParams();
   const id = param.get("id");
 
   const handleChangeCategory = (category: string) => {
     setCurrentCategory(category);
   };
+
+  const loadContacts = async () => {
+    if (!auth.token || !user) return;
+    const users = await getUsers({ token: auth.token });
+    const contacts = await Promise.all(
+      users.map(async (contact: any) => {
+        const count = await countNewMessages({
+          recipientId: contact.id,
+          senderId: user.id,
+          token: auth.token as string,
+        });
+        return { ...contact, newMessages: count };
+      }),
+    );
+    dispatch(setContacts(contacts));
+  };
+
+  let reload = 3;
+
+  useEffect(() => {
+    loadContacts();
+  }, [auth, reload]);
 
   return (
     <section className="col-span-5 space-y-9">
@@ -67,18 +77,17 @@ const ChatNavigation = () => {
       </form>
 
       <article className="flex max-h-[55vh] flex-col gap-4 overflow-y-auto">
-        {chatData.length > 0 ? (
-          chatData.map((item, index) => (
+        {contacts.length > 0 ? (
+          contacts.map((item, index) => (
             <Link
               href={{
                 pathname: "/message/" + item.id,
-                query: "id=" + item.id,
               }}
               key={index}
-              className={`flex cursor-pointer gap-3 rounded-lg border border-slate-100 p-3 transition-all  duration-300 ${id === item.id ? "bg-violet-100 hover:bg-opacity-90" : "hover:bg-violet-50"}`}
+              className={`flex cursor-pointer gap-3 rounded-lg border border-slate-100 p-3 transition-all  duration-300 ${Number(id) === item.id ? "bg-violet-100 hover:bg-opacity-90" : "hover:bg-violet-50"}`}
             >
               <Image
-                src={item.image}
+                src={item.profilePicture ?? ""}
                 alt={item.name}
                 width={60}
                 height={60}
@@ -90,16 +99,16 @@ const ChatNavigation = () => {
                   <p className="cursor-pointer font-medium text-violet-normal">
                     {item.name}
                   </p>
-                  <p className="cursor-pointer text-sm text-slate-500 ">
+                  {/* <p className="cursor-pointer text-sm text-slate-500 ">
                     {item.date}
-                  </p>
+                  </p> */}
                 </div>
                 <div className="flex w-full cursor-pointer items-center justify-between">
-                  <p className="cursor-pointer text-sm font-medium text-violet-dark ">
+                  {/* <p className="cursor-pointer text-sm font-medium text-violet-dark ">
                     {item.lastMessage}
-                  </p>
+                  </p> */}
                   <p className="cursor-pointer rounded-md bg-violet-light p-1 text-xs">
-                    {item.chatNo}
+                    {item.newMessages}
                   </p>
                 </div>
               </div>
