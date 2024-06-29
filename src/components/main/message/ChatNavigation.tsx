@@ -1,5 +1,6 @@
 "use client";
 
+import Loading from "@/components/global/loading/page";
 import { RootState } from "@/store";
 import { setContacts } from "@/store/Features/chat";
 import { countNewMessages, findChatMessages, getUsers } from "@/utils/message";
@@ -14,6 +15,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 const ChatNavigation = () => {
   const [currentCategory, setCurrentCategory] = useState("All");
+  const [loading, setLoading] = useState(false);
 
   const { userProfileAuth: auth, profile: user } = useSelector(
     (state: RootState) => state.userProfile,
@@ -30,18 +32,25 @@ const ChatNavigation = () => {
 
   const loadContacts = async () => {
     if (!auth.token || !user) return;
-    const users = await getUsers({ token: auth.token });
-    const contacts = await Promise.all(
-      users.map(async (contact: any) => {
-        const count = await countNewMessages({
-          recipientId: contact.id,
-          senderId: user.id,
-          token: auth.token as string,
-        });
-        return { ...contact, newMessages: count };
-      }),
-    );
-    dispatch(setContacts(contacts));
+    try {
+      setLoading(true);
+      const users = await getUsers({ token: auth.token });
+      const contacts = await Promise.all(
+        users.map(async (contact: any) => {
+          const count = await countNewMessages({
+            recipientId: contact.id,
+            senderId: user.id,
+            token: auth.token as string,
+          });
+          return { ...contact, newMessages: count };
+        }),
+      );
+      dispatch(setContacts(contacts));
+    } catch (error: any) {
+      console.error(error.response.data || error.message || error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   let reload = 3;
@@ -51,7 +60,7 @@ const ChatNavigation = () => {
   }, [auth, reload]);
 
   return (
-    <section className="col-span-5 space-y-9">
+    <section className="container col-span-5 mx-auto max-w-screen-2xl space-y-9">
       <div className="flex flex-wrap items-center gap-4">
         <button
           className={`rounded-md px-4  py-2 font-medium transition-all duration-300 hover:opacity-90 ${currentCategory === "All" ? "bg-violet-normal text-white" : "bg-violet-light text-violet-normal hover:bg-violet-200"} `}
@@ -77,17 +86,24 @@ const ChatNavigation = () => {
       </form>
 
       <article className="flex max-h-[55vh] flex-col gap-4 overflow-y-auto">
-        {contacts.length > 0 ? (
+        {loading ? (
+          <div className="flex min-h-96 items-center justify-center">
+            <Loading />
+          </div>
+        ) : contacts.length > 0 ? (
           contacts.map((item, index) => (
             <Link
               href={{
                 pathname: "/message/" + item.id,
               }}
               key={index}
-              className={`flex cursor-pointer gap-3 rounded-lg border border-slate-100 p-3 transition-all  duration-300 ${Number(id) === item.id ? "bg-violet-100 hover:bg-opacity-90" : "hover:bg-violet-50"}`}
+              className={`flex cursor-pointer items-center gap-3 rounded-lg border border-slate-100 p-3 transition-all  duration-300 ${Number(id) === item.id ? "bg-violet-100 hover:bg-opacity-90" : "hover:bg-violet-50"}`}
             >
               <Image
-                src={item.profilePicture ?? ""}
+                src={
+                  item.profilePicture ??
+                  "/assets/images/serviceProvider/user.jpg"
+                }
                 alt={item.name}
                 width={60}
                 height={60}
@@ -96,18 +112,10 @@ const ChatNavigation = () => {
               />
               <div className="w-full space-y-4">
                 <div className="flex w-full cursor-pointer items-center justify-between">
-                  <p className="cursor-pointer font-medium text-violet-normal">
+                  <p className="cursor-pointer font-satoshiMedium text-2xl  font-semibold text-violet-normal">
                     {item.name}
                   </p>
-                  {/* <p className="cursor-pointer text-sm text-slate-500 ">
-                    {item.date}
-                  </p> */}
-                </div>
-                <div className="flex w-full cursor-pointer items-center justify-between">
-                  {/* <p className="cursor-pointer text-sm font-medium text-violet-dark ">
-                    {item.lastMessage}
-                  </p> */}
-                  <p className="cursor-pointer rounded-md bg-violet-light p-1 text-xs">
+                  <p className="cursor-pointer rounded-md bg-orange-normal  p-1 px-2 text-lg text-white">
                     {item.newMessages}
                   </p>
                 </div>
