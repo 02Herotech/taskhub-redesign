@@ -64,11 +64,11 @@ const BlogsinglePage = () => {
                   <p className="whitespace-pre-wrap  font-satoshiMedium text-violet-darker">
                     {item.content.subtitle}
                   </p>
-                  <div className="ml-4 space-y-3 lg:ml-8">
+                  <div className="ml-4 space-y-3 py-2 lg:ml-8">
                     {item.content.list?.map((text) => (
                       <p
                         key={text}
-                        className=" flex gap-3 py-2 font-satoshiMedium text-violet-normal   "
+                        className=" flex items-center gap-3 font-satoshiMedium text-violet-normal   "
                       >
                         <span className="size-1 rounded-full bg-violet-normal p-1" />
                         <span>{text}</span>
