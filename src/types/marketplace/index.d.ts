@@ -169,6 +169,7 @@ declare interface BlogTypes {
   bannerImage: string;
   date: string;
   title: string;
+  blogType: string;
   readTime: string;
   description: string;
   subheader: string;

@@ -11,6 +11,7 @@ const blogsData: BlogTypes[] = [
     date: "20th April, 2024",
     title: "How to Start Import Business in Australia in 9 Key Steps",
     readTime: "Read Time: 10 Mins.",
+    blogType: "Finance",
     description: `Are you interested in learning how to start import business in Australia? If so, we will provide you with thorough information to answer your question. \n
 Before we get started, let's look at why you'd start an import firm in Australia and how the export-import industry works.\n
  In January 2024, Australia's imports climbed by 1.3% over the previous month, reaching a three-month high of AUD 36.48 billion.\n
@@ -48,7 +49,7 @@ Before beginning the importation process, you should be familiar with the follow
 or that your self-assessment tax return contained errors, resulting in an overpayment.
 If this is the case, you are owed a payback by HMRC. So, let’s dive straight into how long does 
 a tax rebate tak`,
-
+    blogType: "Finance",
     subheader: "How Long Does a Tax Rebate Take?: Tax Refund Processing ",
     subheaderList: [
       {
@@ -87,6 +88,7 @@ changed employment during the tax year`,
     date: "20th April, 2024",
     title: "How to Maximize Tax Return: 8 Hidden Tips",
     readTime: "Read Time: 10 Mins.",
+    blogType: "Business",
     description: `There are several reasons why you may be owed a tax refund, or tax rebate, by HMRC. If you are employed and pay tax through PAYE, it is possible that your tax was calculated improperly, 
 or that your self-assessment tax return contained errors, resulting in an overpayment.
 If this is the case, you are owed a payback by HMRC. So, let’s dive straight into how long does 
