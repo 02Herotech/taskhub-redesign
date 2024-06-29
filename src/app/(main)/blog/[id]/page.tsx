@@ -47,9 +47,12 @@ const BlogsinglePage = () => {
               <span className="text-orange-normal"> {blog?.readTime} </span>
             </p>
           </div>
-          <p className="whitespace-pre-wrap  font-satoshiMedium  text-violet-darkHover">
-            {blog?.description}
-          </p>
+          <p
+            className="whitespace-pre-wrap  font-satoshiMedium  text-violet-darkHover"
+            dangerouslySetInnerHTML={{ __html: blog?.description || "" }}
+          />
+          {/* {blog?.description}
+          </p> */}
           <div className="space-y-5">
             <h2 className="text-2xl font-semibold text-violet-darker">
               {blog?.subheader}
@@ -81,9 +84,10 @@ const BlogsinglePage = () => {
             <h2 className="text-2xl font-semibold text-violet-darker">
               Conclusion
             </h2>
-            <p className="whitespace-pre-wrap  font-satoshiMedium  text-violet-darkHover">
-              {blog?.conclusion}
-            </p>
+            <p
+              className="whitespace-pre-wrap  font-satoshiMedium  text-violet-darkHover"
+              dangerouslySetInnerHTML={{ __html: blog?.conclusion || "" }}
+            />
           </div>
         </section>
 

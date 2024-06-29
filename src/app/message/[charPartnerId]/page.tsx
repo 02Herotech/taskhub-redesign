@@ -16,7 +16,11 @@ import { useParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import { setActiveChatPatnerId, setMessages } from "@/store/Features/chat";
+import {
+  setActiveChatPatnerId,
+  setContacts,
+  setMessages,
+} from "@/store/Features/chat";
 
 const dummyChat = [
   {
@@ -78,7 +82,6 @@ let stompClient: any = null;
 const ServiceProviderChat = () => {
   const [activeContact, setActiveContact] = useState<any>(null);
   const [chatMessages, setChatMessages] = useState<any>([]);
-  const [contacts, setContacts] = useState<any>([]);
   const [message, setMessage] = useState("");
   const [allMessages, setAllMessages] = useState<MessageTypes[]>([]);
 
@@ -91,9 +94,9 @@ const ServiceProviderChat = () => {
   const { profile: user } = useSelector(
     (state: RootState) => state.userProfile,
   );
-  // const { activeChatPatnerId, messages: storedMessages } = useSelector(
-  //   (state: RootState) => state.chat,
-  // );
+  const { activeChatPatnerId, messages: storedMessages } = useSelector(
+    (state: RootState) => state.chat,
+  );
 
   useEffect(() => {
     if (chatPartnerId) {
@@ -167,7 +170,7 @@ const ServiceProviderChat = () => {
         senderName: `${user.firstName} ${user.lastName}`,
         recipientName: "Anthony",
         content: msg,
-        timestamp: new Date(),
+        timestamp: new Date().toISOString(),
       };
       try {
         if (stompClient.connected) {
@@ -201,25 +204,22 @@ const ServiceProviderChat = () => {
 
   const loadContacts = async () => {
     if (!token || !user) return;
-    const users = await getUsers({ token });
-    console.log("chatted withs", users);
-    const contacts = await Promise.all(
-      users.map(async (contact: any) => {
-        const count = await countNewMessages({
-          recipientId: contact.id,
-          senderId: user.id,
-          token,
-        });
-        return { ...contact, newMessages: count };
-      }),
-    );
-    setContacts(contacts);
-    // if (!activeContact && contacts.length > 0) {
-    setActiveContact({
-      id: 24,
-      name: "John Doe",
-    });
-    // }
+    try {
+      const users = await getUsers({ token: token });
+      const contacts = await Promise.all(
+        users.map(async (contact: any) => {
+          const count = await countNewMessages({
+            recipientId: contact.id,
+            senderId: user.id,
+            token: token as string,
+          });
+          return { ...contact, newMessages: count };
+        }),
+      );
+      dispatch(setContacts(contacts));
+    } catch (error: any) {
+      console.error(error.response.data || error.message || error);
+    }
   };
 
   const handleReschedule = () => {};

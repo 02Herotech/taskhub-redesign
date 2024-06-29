@@ -60,7 +60,7 @@ const ChatNavigation = () => {
   }, [auth, reload]);
 
   return (
-    <section className="container col-span-5 mx-auto max-w-screen-2xl space-y-9">
+    <section className=" col-span-5 mx-auto  space-y-9">
       <div className="flex flex-wrap items-center gap-4">
         <button
           className={`rounded-md px-4  py-2 font-medium transition-all duration-300 hover:opacity-90 ${currentCategory === "All" ? "bg-violet-normal text-white" : "bg-violet-light text-violet-normal hover:bg-violet-200"} `}
@@ -112,10 +112,10 @@ const ChatNavigation = () => {
               />
               <div className="w-full space-y-4">
                 <div className="flex w-full cursor-pointer items-center justify-between">
-                  <p className="cursor-pointer font-satoshiMedium text-2xl  font-semibold text-violet-normal">
+                  <p className="cursor-pointer font-satoshiMedium text-lg  font-semibold text-violet-normal">
                     {item.name}
                   </p>
-                  <p className="cursor-pointer rounded-md bg-orange-normal  p-1 px-2 text-lg text-white">
+                  <p className="cursor-pointer rounded-md bg-orange-normal  p-1 px-2  text-white">
                     {item.newMessages}
                   </p>
                 </div>

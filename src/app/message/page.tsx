@@ -3,7 +3,7 @@ import Image from "next/image";
 
 const ServiceProviderMessage = () => {
   return (
-    <main className="space-y-5 p-4 lg:p-8">
+    <main className="container max-w-screen-2xl space-y-5 p-4 lg:p-8">
       <section className="grid min-h-[calc(100vh-10rem)] gap-10 divide-x divide-slate-400 lg:grid-cols-12 ">
         <ChatNavigation />
         <section className="col-span-7 flex items-center justify-center max-md:hidden">
