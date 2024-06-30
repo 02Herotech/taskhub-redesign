@@ -66,7 +66,7 @@ const Jobs = () => {
         recipientId: customerId,
         senderName: `${user.firstName} ${user.lastName}`,
         recipientName: fullName,
-        content: "Hello" + fullName,
+        content: "Hello " + fullName,
         timestamp: new Date().toISOString(),
       };
       try {
