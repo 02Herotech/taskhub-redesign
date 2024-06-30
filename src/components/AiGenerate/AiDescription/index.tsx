@@ -313,7 +313,7 @@ const AiDesciption: React.FC<AiGenerateProps> = ({
               </p>
             </div>
 
-            <div className="conversation h-[75%] space-y-4 overflow-y-scroll">
+            <div className="conversation lg:h-[60%] h-[55%] space-y-4 overflow-y-scroll">
               {conversation.length === 0 && (
                 <div className="mx-auto w-full justify-between space-y-3 lg:flex lg:space-y-0">
                   {AiSuggestions.map((entry, index) => (
