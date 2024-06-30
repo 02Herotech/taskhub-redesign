@@ -55,11 +55,10 @@ const ServiceProviderChat = () => {
           const displayMessages: ChatMessageDisplayedType[] = msgs.map(
             (msg: ChatMessageRecievedType) => ({
               content: msg.content,
-              status: msg.status,
+              senderId: msg.senderId,
               time: msg.timestamp,
             }),
           );
-          console.log(msgs);
           setChatMessages(displayMessages);
         })
         .catch((error: any) => {
@@ -219,22 +218,26 @@ const ServiceProviderChat = () => {
           </article>
 
           {/* -------chat */}
-          <div className="no-scrollbar flex max-h-full min-h-[60%] w-full flex-col justify-end gap-4 overflow-y-auto">
-            {chatMessages &&
-              chatMessages.map((item, index) => (
-                <div
-                  key={index}
-                  className={` flex w-full ${item.senderId === user?.id ? "justify-end" : "justify-start"}`}
-                >
-                  <p
-                    key={index}
-                    className={` flex w-fit max-w-xs rounded-md p-2 text-sm ${item.senderId === user?.id ? " bg-violet-normal text-right text-white" : " bg-orange-light text-left text-violet-dark "}`}
-                  >
-                    <span>{item.content}</span>
-                  </p>
-                </div>
-              ))}
-          </div>
+          {user && (
+            <div className="no-scrollbar flex max-h-full min-h-[60%] w-full flex-col justify-end gap-4 overflow-y-auto">
+              {chatMessages &&
+                chatMessages.map((item, index) => {
+                  return (
+                    <div
+                      key={index}
+                      className={` flex w-full ${item.senderId === user.id ? "justify-end" : "justify-start"}`}
+                    >
+                      <p
+                        key={index}
+                        className={` flex w-fit max-w-xs rounded-md p-2 text-sm ${item.senderId === user.id ? " bg-violet-normal text-right text-white" : " bg-orange-light text-left text-violet-dark "}`}
+                      >
+                        <span>{item.content}</span>
+                      </p>
+                    </div>
+                  );
+                })}
+            </div>
+          )}
 
           <div className="flex gap-2 ">
             <Image
