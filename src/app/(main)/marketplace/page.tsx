@@ -63,7 +63,7 @@ const MareketPlace = () => {
   }, [isAuth, isComplete]);
 
   return (
-    <main className="">
+    <main className="mx-auto max-w-screen-2xl">
       {showPopup && (
         <Popup isOpen={showPopup} onClose={() => setShowPopup(false)}>
           <div className="relative h-[312px] max-lg:mx-5 lg:w-[577px]">

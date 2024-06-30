@@ -14,7 +14,16 @@ import { useDispatch, useSelector } from "react-redux";
 
 const ChatNavigation = () => {
   const [currentCategory, setCurrentCategory] = useState("All");
+  const [searchData, setSearchData] = useState("");
   const [loading, setLoading] = useState(false);
+  const [filteredContact, setFilteredContact] = useState<{
+    contact: ChatContactTypes[];
+    loading: boolean;
+    isFiltering: boolean;
+  }>({ contact: [], loading: false, isFiltering: false });
+  const [displayContacts, setDisplayContacts] = useState<ChatContactTypes[]>(
+    [],
+  );
 
   const { userProfileAuth: auth, profile: user } = useSelector(
     (state: RootState) => state.userProfile,
@@ -25,12 +34,38 @@ const ChatNavigation = () => {
   const { chatPartnerId } = useParams();
   const handleChangeCategory = (category: string) => {
     setCurrentCategory(category);
+    if (category === "Unread") {
+      setFilteredContact((prev) => ({
+        ...prev,
+        isFiltering: true,
+      }));
+      const unreadContacts = contacts.filter(
+        (item) => item.newMessages && item.newMessages > 0,
+      );
+      setFilteredContact((prev) => ({ ...prev, contact: unreadContacts }));
+      return;
+    }
+    setFilteredContact((prev) => ({
+      ...prev,
+      isFiltering: false,
+    }));
+  };
+
+  const handleFilterContactBySearch = () => {
+    setFilteredContact((prev) => ({
+      ...prev,
+      isFiltering: searchData.length > 0,
+    }));
+    const filteredContact = contacts.filter((contact) =>
+      contact.name.includes(searchData),
+    );
+    setFilteredContact((prev) => ({ ...prev, contact: filteredContact }));
   };
 
   const loadContacts = async () => {
     if (!auth.token || !user) return;
     try {
-      // setLoading(true);
+      setLoading(true);
       const users = await getUsers({ token: auth.token });
       const contacts = await Promise.all(
         users.map(async (contact: any) => {
@@ -51,13 +86,21 @@ const ChatNavigation = () => {
     } catch (error: any) {
       console.error(error.response.data || error.message || error);
     } finally {
-      // setLoading(false);
+      setLoading(false);
     }
   };
 
   useEffect(() => {
     loadContacts();
   }, [auth]);
+
+  useEffect(() => {
+    const newContacts = filteredContact.isFiltering
+      ? filteredContact.contact
+      : contacts;
+
+    setDisplayContacts(newContacts);
+  }, [filteredContact, contacts]);
 
   return (
     <section className=" col-span-5 mx-auto  space-y-9">
@@ -75,23 +118,28 @@ const ChatNavigation = () => {
           Unread Messages
         </button>
       </div>
-      <form className="flex items-center gap-3">
+      <div className="flex items-center gap-3">
         <input
           type="text"
+          value={searchData}
+          onChange={(event) => setSearchData(event.target.value)}
           className="w-full rounded-lg border border-slate-100 bg-violet-50 p-3 shadow hover:shadow-md"
         />
-        <button className="rounded-lg bg-violet-normal p-3 text-white transition-opacity duration-300 hover:opacity-90 ">
+        <button
+          onClick={handleFilterContactBySearch}
+          className="rounded-lg bg-violet-normal p-3 text-white transition-opacity duration-300 hover:opacity-90 "
+        >
           <BiSearch className="size-6" />
         </button>
-      </form>
+      </div>
 
       <article className="small-scrollbar flex max-h-[55vh] flex-col gap-4 overflow-y-auto">
         {loading ? (
           <div className="flex min-h-96 items-center justify-center">
             <Loading />
           </div>
-        ) : contacts.length > 0 ? (
-          contacts.map((item, index) => (
+        ) : displayContacts.length > 0 ? (
+          displayContacts.map((item, index) => (
             <Link
               href={{
                 pathname: "/message/" + item.id,

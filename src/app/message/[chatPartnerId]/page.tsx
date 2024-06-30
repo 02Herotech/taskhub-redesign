@@ -46,7 +46,6 @@ const ServiceProviderChat = () => {
   // finds current chat patner messages
   useEffect(() => {
     if (token && user) {
-      setLoading(true);
       findChatMessages({
         recipientId: Number(chatPartnerId),
         senderId: user.id,
@@ -62,7 +61,6 @@ const ServiceProviderChat = () => {
           );
           console.log(msgs);
           setChatMessages(displayMessages);
-          setLoading(false);
         })
         .catch((error: any) => {
           console.log(error.response.data || error.message || error);
@@ -114,7 +112,7 @@ const ServiceProviderChat = () => {
     if (msg.trim() !== "" && user) {
       const message = {
         senderId: user.id,
-        recipientId: 24,
+        recipientId: Number(chatPartnerId),
         senderName: `${user.firstName} ${user.lastName}`,
         recipientName: "Anthony",
         content: msg,
@@ -227,28 +225,22 @@ const ServiceProviderChat = () => {
           </article>
 
           {/* -------chat */}
-          {loading ? (
-            <div>
-              <Loading />
-            </div>
-          ) : (
-            <div className="no-scrollbar flex max-h-full min-h-[60%] w-full flex-col justify-end gap-4 overflow-y-auto">
-              {chatMessages &&
-                chatMessages.map((item, index) => (
-                  <div
+          <div className="no-scrollbar flex max-h-full min-h-[60%] w-full flex-col justify-end gap-4 overflow-y-auto">
+            {chatMessages &&
+              chatMessages.map((item, index) => (
+                <div
+                  key={index}
+                  className={` flex w-full ${item.status === "DELIVERED" ? "justify-end" : "justify-start"}`}
+                >
+                  <p
                     key={index}
-                    className={` flex w-full ${item.status === "DELIVERED" ? "justify-end" : "justify-start"}`}
+                    className={` flex w-fit max-w-xs rounded-md p-2 text-sm ${item.status === "DELIVERED" ? " bg-violet-normal text-right text-white" : " bg-orange-light text-left text-violet-dark "}`}
                   >
-                    <p
-                      key={index}
-                      className={` flex w-fit max-w-xs rounded-md p-2 text-sm ${item.status === "DELIVERED" ? " bg-violet-normal text-right text-white" : " bg-orange-light text-left text-violet-dark "}`}
-                    >
-                      <span>{item.content}</span>
-                    </p>
-                  </div>
-                ))}
-            </div>
-          )}
+                    <span>{item.content}</span>
+                  </p>
+                </div>
+              ))}
+          </div>
 
           <div className="flex gap-2 ">
             <Image

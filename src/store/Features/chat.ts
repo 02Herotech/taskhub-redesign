@@ -1,6 +1,8 @@
 "use client";
 
-import { createSlice } from "@reduxjs/toolkit";
+import { countNewMessages, getUsers } from "@/utils/message";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { RootState } from "..";
 
 interface InitialStateType {
   contacts: ChatContactTypes[];
@@ -41,5 +43,40 @@ export const {
   setNewMessage,
   updateStompClient,
 } = chatSlice.actions;
+
+interface LoadContactsArgs {
+  token: string;
+  userId: number;
+}
+// Define the async thunk with parameters
+export const loadContacts = createAsyncThunk<
+  ChatContactTypes[], // Return type
+  LoadContactsArgs, // Argument type
+  { state: RootState } // ThunkAPI type
+>("chat/loadContacts", async ({ token, userId }, { dispatch }) => {
+  if (!token || !userId) return [];
+
+  try {
+    const users = await getUsers({ token: token });
+    const contacts = await Promise.all(
+      users.map(async (contact: any) => {
+        const count = await countNewMessages({
+          recipientId: contact.id,
+          senderId: userId,
+          token: token,
+        });
+        return { ...contact, newMessages: count };
+      }),
+    );
+    const allUnreadMessages = contacts.reduce(
+      (accumulator, contact) => accumulator + contact.newMessages,
+      0,
+    );
+    dispatch(setTotalUnreadMessages(allUnreadMessages));
+    return contacts;
+  } catch (error: any) {
+    throw error;
+  }
+});
 
 export default chatSlice.reducer;
