@@ -1,7 +1,7 @@
 "use client";
 
 import { countNewMessages, getUsers } from "@/utils/message";
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "..";
 
 interface InitialStateType {
@@ -104,6 +104,21 @@ export const chatSlice = createSlice({
     updateStompClient: (state, action) => {
       return { ...state, stompClient: action.payload };
     },
+    // extraReducers: (builder) => {
+    //   builder
+    //     .addCase(
+    //       loadContacts.fulfilled,
+    //       (state, action: PayloadAction<ChatContactTypes[]>) => {
+    //         state.contacts = action.payload;
+    //       },
+    //     )
+    //     .addCase(loadContacts.rejected, (state, action) => {
+    //       // Handle any errors here if needed
+    //     })
+    //     .addCase(sendMessage.rejected, (state, action) => {
+    //       // Handle any errors here if needed
+    //     });
+    // },
   },
 });
 

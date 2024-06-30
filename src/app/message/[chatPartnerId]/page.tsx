@@ -120,6 +120,15 @@ const ServiceProviderChat = () => {
       };
       try {
         stompClient.send("/app/chat", {}, JSON.stringify(message));
+        const newMessages: ChatMessageDisplayedType[] = [
+          ...(chatMessages || []),
+          {
+            content: msg,
+            status: "DELIVERED",
+            time: new Date().toISOString(),
+          },
+        ];
+        setChatMessages(newMessages);
       } catch (error: any) {
         console.log(error.response.data || error.message || error);
       }

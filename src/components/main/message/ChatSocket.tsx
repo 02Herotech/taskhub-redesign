@@ -33,7 +33,6 @@ const ChatSocket = () => {
   };
 
   const onConnected = () => {
-    // setIsWebSocketConnected(true);
     if (user) {
       stompClient.subscribe(
         `/user/${user.id}/queue/messages`,
@@ -51,7 +50,6 @@ const ChatSocket = () => {
 
   useEffect(() => {
     if (stompClient) {
-      console.log("Initializing WebSocket connection");
       connectSocket();
     } else {
       connect();
@@ -80,7 +78,6 @@ const ChatSocket = () => {
       dispatch(setContacts(contacts));
     } catch (error: any) {
       console.error(error.response.data || error.message || error);
-    } finally {
     }
   };
 
