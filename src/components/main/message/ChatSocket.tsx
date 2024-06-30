@@ -45,6 +45,7 @@ const ChatSocket = () => {
   };
 
   const onMessageReceived = (msg: any) => {
+    console.log("Message recieved", msg);
     dispatch(setNewMessage(msg));
   };
 
