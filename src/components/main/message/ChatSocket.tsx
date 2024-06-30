@@ -1,12 +1,17 @@
 "use client";
 
 import { RootState } from "@/store";
-import { setNewMessage, updateStompClient } from "@/store/Features/chat";
+import {
+  setContacts,
+  setNewMessage,
+  setTotalUnreadMessages,
+  updateStompClient,
+} from "@/store/Features/chat";
+import { countNewMessages, getUsers } from "@/utils/message";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 const ChatSocket = () => {
-  // const [isWebSocketConnected, setIsWebSocketConnected] = useState(false);
   const dispatch = useDispatch();
 
   const { profile: user, userProfileAuth: auth } = useSelector(
@@ -52,6 +57,36 @@ const ChatSocket = () => {
       connect();
     }
   }, [stompClient]);
+
+  const loadContacts = async () => {
+    if (!auth.token || !user) return;
+    try {
+      const users = await getUsers({ token: auth.token });
+      const contacts = await Promise.all(
+        users.map(async (contact: any) => {
+          const count = await countNewMessages({
+            recipientId: contact.id,
+            senderId: user.id,
+            token: auth.token as string,
+          });
+          return { ...contact, newMessages: count };
+        }),
+      );
+      const allUnreadMessages = contacts.reduce(
+        (accumulator, contact) => accumulator + contact.newMessages,
+        0,
+      );
+      dispatch(setTotalUnreadMessages(allUnreadMessages));
+      dispatch(setContacts(contacts));
+    } catch (error: any) {
+      console.error(error.response.data || error.message || error);
+    } finally {
+    }
+  };
+
+  useEffect(() => {
+    loadContacts();
+  }, [auth]);
 
   return <div className="hidden" />;
 };

@@ -30,7 +30,7 @@ const ChatNavigation = () => {
   const loadContacts = async () => {
     if (!auth.token || !user) return;
     try {
-      setLoading(true);
+      // setLoading(true);
       const users = await getUsers({ token: auth.token });
       const contacts = await Promise.all(
         users.map(async (contact: any) => {
@@ -51,7 +51,7 @@ const ChatNavigation = () => {
     } catch (error: any) {
       console.error(error.response.data || error.message || error);
     } finally {
-      setLoading(false);
+      // setLoading(false);
     }
   };
 
