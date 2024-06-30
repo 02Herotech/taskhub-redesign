@@ -63,8 +63,7 @@ export async function findChatMessage({
   id: number;
   token: string;
 }) {
-  const url =
-    process.env.NEXT_PUBLIC_API_URL + "/api/v1/user-crud/messages/" + id;
+  const url = "https://smp.jacinthsolutions.com.au/api/v1/chat/messages/" + id;
   const { data } = await axios.get(url, {
     headers: {
       Authorization: "Bearer " + token,

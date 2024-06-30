@@ -2,7 +2,12 @@
 
 import ChatNavigation from "@/components/main/message/ChatNavigation";
 import { RootState } from "@/store";
-import { countNewMessages, findChatMessages, getUsers } from "@/utils/message";
+import {
+  countNewMessages,
+  findChatMessage,
+  findChatMessages,
+  getUsers,
+} from "@/utils/message";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
@@ -40,6 +45,7 @@ const ServiceProviderChat = () => {
     loadContacts();
   }, []);
 
+  // finds current chat patner messages
   useEffect(() => {
     if (token && user) {
       setLoading(true);
@@ -66,6 +72,7 @@ const ServiceProviderChat = () => {
     }
   }, [token, user, chatPartnerId]);
 
+  // finds current chat partner contact details
   useEffect(() => {
     if (contacts) {
       const foundContact = contacts.find(
@@ -74,8 +81,8 @@ const ServiceProviderChat = () => {
       setContact(foundContact);
     }
   }, [contacts]);
-  console.log(contact);
 
+  // connects to web socket
   const connect = () => {
     const Stomp = require("stompjs");
     var SockJS = require("sockjs-client");
@@ -85,34 +92,44 @@ const ServiceProviderChat = () => {
     stompClient.connect({}, onConnected, onError);
   };
 
+  // on connected suscribe to current logged in user
   const onConnected = () => {
-    console.log("Connected to websocket");
     if (user?.id) {
-      console.log(` Subscribing to /user/${user?.id}/queue/messages`);
       stompClient.subscribe(
         `/user/${user?.id}/queue/messages`,
         onMessageReceived,
       );
-      console.log("subscribed");
     }
   };
 
+  // if error log error
   const onError = (err: any) => {
     console.error(err);
   };
 
+  // display new messages as they are received
   const onMessageReceived = (msg: any) => {
-    // const notification = JSON.parse(msg.body);
-    // if (activeContact.id === notification.senderId) {
-    //   findChatMessage(notification.id).then((message) => {
-    //     const newMessages = [...storedMessages, message];
-    //     dispatch(setMessages(newMessages));
-    //     setChatMessages(newMessages);
-    //   });
-    // }
+    const notification = JSON.parse(msg.body);
+    console.log(notification, "recieving new messages");
+    if (chatPartnerId === notification.senderId) {
+      findChatMessage(notification.id).then((message) => {
+        const displayMessage: ChatMessageDisplayedType = {
+          content: message.content,
+          status: message.status,
+          time: message.timestamp,
+        };
+        console.log("newLy received displayed message", displayMessage);
+        const newMessages: ChatMessageDisplayedType[] = [
+          ...(chatMessages || []),
+          displayMessage,
+        ];
+        setChatMessages(newMessages);
+      });
+    }
     loadContacts();
   };
 
+  // handle send messages to chat partner
   const sendMessage = (msg: string) => {
     if (msg.trim() !== "" && user) {
       const message = {
@@ -141,6 +158,7 @@ const ServiceProviderChat = () => {
     }
   };
 
+  // handle load contacts from the database
   const loadContacts = async () => {
     if (!token || !user) return;
     try {
@@ -167,6 +185,7 @@ const ServiceProviderChat = () => {
     }
   };
 
+  // Reschedule the booking
   const handleReschedule = () => {};
 
   return (
