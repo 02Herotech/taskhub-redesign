@@ -1,133 +1,84 @@
 "use client";
 
-// import { chatData } from "@/app/data/service-provider/user";
 import ChatNavigation from "@/components/main/message/ChatNavigation";
 import { RootState } from "@/store";
-import {
-  countNewMessages,
-  findChatMessage,
-  findChatMessages,
-  getUsers,
-} from "@/utils/message";
+import { countNewMessages, findChatMessages, getUsers } from "@/utils/message";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-
-import {
-  setActiveChatPatnerId,
-  setContacts,
-  setMessages,
-} from "@/store/Features/chat";
-
-const dummyChat = [
-  {
-    message: "My budget is $480. Can it be done for that?",
-    sender: "customer",
-  },
-  {
-    message: "That’s fine, i would send the invoice over shortly.",
-    sender: "user",
-  },
-  {
-    message: "My budget is $480. Can it be done for that?",
-    sender: "customer",
-  },
-  {
-    message: "That’s fine, i would send the invoice over shortly.",
-    sender: "user",
-  },
-  {
-    message:
-      "Hello, My name is Kelly and i want to have a blocked drain in my office.",
-    sender: "customer",
-  },
-  {
-    message:
-      "Hello i am John, i can fix it for $500. Where is your office located?",
-    sender: "user",
-  },
-  {
-    message: "My budget is $480. Can it be done for that?",
-    sender: "customer",
-  },
-  {
-    message: "That’s fine, i would send the invoice over shortly.",
-    sender: "user",
-  },
-  {
-    message: "My budget is $480. Can it be done for that?",
-    sender: "customer",
-  },
-  {
-    message: "That’s fine, i would send the invoice over shortly.",
-    sender: "user",
-  },
-];
-
-interface MessageTypes {
-  senderId: number;
-  recipientId: number;
-  senderName: string;
-  recipientName: string;
-  content: string;
-  timestamp: Date;
-}
+import { setContacts, setTotalUnreadMessages } from "@/store/Features/chat";
+import Loading from "@/shared/loading";
 
 const chatData = [{}];
 
 let stompClient: any = null;
 const ServiceProviderChat = () => {
-  const [activeContact, setActiveContact] = useState<any>(null);
-  const [chatMessages, setChatMessages] = useState<any>([]);
+  const [chatMessages, setChatMessages] = useState<
+    ChatMessageDisplayedType[] | null
+  >([]);
   const [message, setMessage] = useState("");
-  const [allMessages, setAllMessages] = useState<MessageTypes[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [contact, setContact] = useState<ChatContactTypes | null>();
 
   const session = useSession();
   const dispatch = useDispatch();
-  const { chatPartnerId } = useParams<{ chatPartnerId: string }>();
+  const { chatPartnerId } = useParams();
 
-  const token = session?.data?.user?.accessToken;
-
-  const { profile: user } = useSelector(
+  const { profile: user, userProfileAuth: auth } = useSelector(
     (state: RootState) => state.userProfile,
   );
-  const { activeChatPatnerId, messages: storedMessages } = useSelector(
-    (state: RootState) => state.chat,
-  );
+  const { contacts } = useSelector((state: RootState) => state.chat);
+
+  const token = session?.data?.user?.accessToken;
+  const isServiceProvider = auth?.role?.[0] === "SERVICE_PROVIDER";
 
   useEffect(() => {
-    if (chatPartnerId) {
-      dispatch(setActiveChatPatnerId(chatPartnerId));
-    }
-  }, [chatPartnerId, dispatch]);
-
-  useEffect(() => {
-    // if (chatPartnerId && user && token) {
     connect();
     loadContacts();
-    // }
-  }, [user, token]);
+  }, []);
 
   useEffect(() => {
-    if (token && user && chatPartnerId) {
+    if (token && user) {
+      setLoading(true);
       findChatMessages({
         recipientId: Number(chatPartnerId),
         senderId: user.id,
         token,
-      }).then((msgs) => {
-        setChatMessages(msgs);
-        dispatch(setMessages(msgs));
-      });
+      })
+        .then((msgs) => {
+          const displayMessages: ChatMessageDisplayedType[] = msgs.map(
+            (msg: ChatMessageRecievedType) => ({
+              content: msg.content,
+              status: msg.status,
+              time: msg.timestamp,
+            }),
+          );
+          console.log(msgs);
+          setChatMessages(displayMessages);
+          setLoading(false);
+        })
+        .catch((error: any) => {
+          console.log(error.response.data || error.message || error);
+        });
     }
-  }, [token, user, chatPartnerId, dispatch]);
+  }, [token, user, chatPartnerId]);
+
+  useEffect(() => {
+    if (contacts) {
+      const foundContact = contacts.find(
+        (item) => Number(chatPartnerId) === item.id,
+      );
+      setContact(foundContact);
+    }
+  }, [contacts]);
+  console.log(contact);
 
   const connect = () => {
     const Stomp = require("stompjs");
     var SockJS = require("sockjs-client");
-    // const socket = new SockJS(`${process.env.NEXT_PUBLIC_API_URL}/ws`);
     const URL = `https://smp.jacinthsolutions.com.au/ws`;
     SockJS = new SockJS(URL);
     stompClient = Stomp.over(SockJS);
@@ -173,34 +124,22 @@ const ServiceProviderChat = () => {
         timestamp: new Date().toISOString(),
       };
       try {
-        if (stompClient.connected) {
-          console.error("STOMP client is very much connected");
-          stompClient.send("/app/chat", {}, JSON.stringify(message));
-        } else {
-          console.error("STOMP client is not connected");
-          return;
-        }
+        stompClient.send("/app/chat", {}, JSON.stringify(message));
+        const newMessages: ChatMessageDisplayedType[] = [
+          ...(chatMessages || []),
+          {
+            content: msg,
+            status: "DELIVERED",
+            time: new Date().toISOString(),
+          },
+        ];
+        setChatMessages(newMessages);
       } catch (error: any) {
+        console.error("STOMP client is not connected");
         console.log(error.response.data || error.message || error);
       }
-
-      const newMessages = [...chatMessages, message];
-      dispatch(setMessages(newMessages));
-      setChatMessages(newMessages);
     }
   };
-
-  // useEffect(() => {
-  //   const message = {
-  //     senderId: user?.id,
-  //     recipientId: 2,
-  //     senderName: "Test User",
-  //     recipientName: "activeContact.name",
-  //     content: "This is a test message",
-  //     timestamp: new Date(),
-  //   };
-  //   stompClient.send("/app/chat", {}, JSON.stringify(message));
-  // }, [message]);
 
   const loadContacts = async () => {
     if (!token || !user) return;
@@ -216,6 +155,12 @@ const ServiceProviderChat = () => {
           return { ...contact, newMessages: count };
         }),
       );
+      const allUnreadMessages = contacts.reduce(
+        (accumulator, contact) => accumulator + contact.newMessages,
+        0,
+      );
+      console.log(allUnreadMessages);
+      dispatch(setTotalUnreadMessages(allUnreadMessages));
       dispatch(setContacts(contacts));
     } catch (error: any) {
       console.error(error.response.data || error.message || error);
@@ -236,36 +181,43 @@ const ServiceProviderChat = () => {
           <article className="space-y-4">
             <div className="flex cursor-pointer gap-3 ">
               <Image
-                src="/assets/images/serviceProvider/jobs/kelly.png"
+                src={
+                  contact?.profilePicture ??
+                  "/assets/images/serviceProvider/user.jpg"
+                }
                 alt="user"
                 width={60}
                 height={60}
-                className="size-16 rounded-full"
+                className="size-16 rounded-full object-cover max-sm:size-12"
               />
               <div className="w-full space-y-4">
                 <div className="flex w-full cursor-pointer items-center justify-between">
-                  <p className="cursor-pointer font-medium text-violet-normal">
+                  {/* <p className="cursor-pointer font-medium text-violet-normal">
                     Drain Blockage fix Service Request
-                  </p>
-                  <p className="cursor-pointer text-sm text-slate-500 ">$480</p>
+                  </p> */}
+                  {/* <p className="cursor-pointer text-sm text-slate-500 ">$480</p> */}
                 </div>
                 <div className="flex w-full cursor-pointer items-center justify-between">
-                  <p className="cursor-pointer text-sm font-medium text-violet-dark ">
-                    Kelly M
+                  <p className="cursor-pointer font-satoshiBold font-bold text-violet-dark ">
+                    {contact?.name}
                   </p>
-                  <p className="cursor-pointer rounded-md bg-violet-light p-1 text-xs">
+                  {/* <p className="cursor-pointer rounded-md bg-violet-light p-1 text-xs">
                     In Progress
-                  </p>
+                  </p> */}
                 </div>
               </div>
             </div>
             {/* ==== */}
             <div className="flex flex-wrap gap-4">
               <Link
-                href="/service-proider/dashboard/services"
+                href={
+                  isServiceProvider
+                    ? "/service-provider/services"
+                    : "/customer/tasks"
+                }
                 className={`rounded-full border border-violet-normal bg-violet-light px-4 py-2 text-sm font-medium text-violet-normal transition-all duration-300 hover:bg-violet-200 hover:opacity-90 `}
               >
-                View Task
+                {isServiceProvider ? "View Service" : "View Task"}
               </Link>
               <button
                 className={`rounded-full border border-violet-normal bg-violet-light px-4 py-2 text-sm font-medium text-violet-normal transition-all duration-300 hover:bg-violet-200 hover:opacity-90 `}
@@ -277,21 +229,28 @@ const ServiceProviderChat = () => {
           </article>
 
           {/* -------chat */}
-          <div className="no-scrollbar flex max-h-full min-h-[60%] w-full flex-col justify-end gap-4 overflow-y-auto">
-            {/* {dummyChat.map((item, index) => (
-              <div
-                key={index}
-                className={` flex w-full ${item.sender === "user" ? "justify-end" : "justify-start"}`}
-              >
-                <p
-                  key={index}
-                  className={` flex w-fit max-w-xs rounded-md p-2 text-sm ${item.sender === "user" ? " bg-violet-normal text-right text-white" : " bg-orange-light text-left text-violet-dark "}`}
-                >
-                  <span>{item.message}</span>
-                </p>
-              </div>
-            ))} */}
-          </div>
+          {loading ? (
+            <div>
+              <Loading />
+            </div>
+          ) : (
+            <div className="no-scrollbar flex max-h-full min-h-[60%] w-full flex-col justify-end gap-4 overflow-y-auto">
+              {chatMessages &&
+                chatMessages.map((item, index) => (
+                  <div
+                    key={index}
+                    className={` flex w-full ${item.status === "DELIVERED" ? "justify-end" : "justify-start"}`}
+                  >
+                    <p
+                      key={index}
+                      className={` flex w-fit max-w-xs rounded-md p-2 text-sm ${item.status === "DELIVERED" ? " bg-violet-normal text-right text-white" : " bg-orange-light text-left text-violet-dark "}`}
+                    >
+                      <span>{item.content}</span>
+                    </p>
+                  </div>
+                ))}
+            </div>
+          )}
 
           <div className="flex gap-2 ">
             <Image

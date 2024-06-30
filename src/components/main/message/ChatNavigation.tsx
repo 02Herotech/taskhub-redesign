@@ -2,13 +2,12 @@
 
 import Loading from "@/components/global/loading/page";
 import { RootState } from "@/store";
-import { setContacts } from "@/store/Features/chat";
-import { countNewMessages, findChatMessages, getUsers } from "@/utils/message";
-import { useSession } from "next-auth/react";
-// import { chatData } from "@/app/data/service-provider/user";
+import { setContacts, setTotalUnreadMessages } from "@/store/Features/chat";
+import { countNewMessages, getUsers } from "@/utils/message";
+
 import Image from "next/image";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
+import { useParams, useSearchParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { BiSearch } from "react-icons/bi";
 import { useDispatch, useSelector } from "react-redux";
@@ -23,9 +22,7 @@ const ChatNavigation = () => {
   const { contacts } = useSelector((state: RootState) => state.chat);
   const dispatch = useDispatch();
 
-  const param = useSearchParams();
-  const id = param.get("id");
-
+  const { chatPartnerId } = useParams();
   const handleChangeCategory = (category: string) => {
     setCurrentCategory(category);
   };
@@ -45,6 +42,12 @@ const ChatNavigation = () => {
           return { ...contact, newMessages: count };
         }),
       );
+      const allUnreadMessages = contacts.reduce(
+        (accumulator, contact) => accumulator + contact.newMessages,
+        0,
+      );
+      console.log(allUnreadMessages);
+      dispatch(setTotalUnreadMessages(allUnreadMessages));
       dispatch(setContacts(contacts));
     } catch (error: any) {
       console.error(error.response.data || error.message || error);
@@ -53,11 +56,9 @@ const ChatNavigation = () => {
     }
   };
 
-  let reload = 3;
-
   useEffect(() => {
     loadContacts();
-  }, [auth, reload]);
+  }, [auth]);
 
   return (
     <section className=" col-span-5 mx-auto  space-y-9">
@@ -85,7 +86,7 @@ const ChatNavigation = () => {
         </button>
       </form>
 
-      <article className="flex max-h-[55vh] flex-col gap-4 overflow-y-auto">
+      <article className="small-scrollbar flex max-h-[55vh] flex-col gap-4 overflow-y-auto">
         {loading ? (
           <div className="flex min-h-96 items-center justify-center">
             <Loading />
@@ -97,7 +98,7 @@ const ChatNavigation = () => {
                 pathname: "/message/" + item.id,
               }}
               key={index}
-              className={`flex cursor-pointer items-center gap-3 rounded-lg border border-slate-100 p-3 transition-all  duration-300 ${Number(id) === item.id ? "bg-violet-100 hover:bg-opacity-90" : "hover:bg-violet-50"}`}
+              className={`flex cursor-pointer items-center gap-3 rounded-lg border border-slate-100 p-3 transition-all  duration-300 ${Number(chatPartnerId) === item.id ? "bg-violet-100 hover:bg-opacity-90" : "hover:bg-violet-50"}`}
             >
               <Image
                 src={
@@ -115,9 +116,11 @@ const ChatNavigation = () => {
                   <p className="cursor-pointer font-satoshiMedium text-lg  font-semibold text-violet-normal">
                     {item.name}
                   </p>
-                  <p className="cursor-pointer rounded-md bg-orange-normal  p-1 px-2  text-white">
-                    {item.newMessages}
-                  </p>
+                  {(item.newMessages as number) > 0 && (
+                    <p className="cursor-pointer rounded-md bg-orange-normal  p-1 px-2  text-white">
+                      {item.newMessages}
+                    </p>
+                  )}
                 </div>
               </div>
             </Link>

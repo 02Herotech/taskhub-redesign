@@ -141,10 +141,11 @@ const Navigation = () => {
 
   useEffect(() => {
     const fetchUserProfile = async () => {
+      if (!user) return;
       try {
         const url =
           "https://smp.jacinthsolutions.com.au/api/v1/user/user-profile/" +
-          user?.id;
+          user.id;
         const { data } = await axios.get(url);
         dispatch(updateUserProfile(data));
       } catch (error: any) {
@@ -152,7 +153,7 @@ const Navigation = () => {
       }
     };
     fetchUserProfile();
-  }, [user?.id, userProfile.refresh, dispatch]);
+  }, [user, userProfile.refresh, dispatch]);
 
   const notificationRoute = isServiceProvider
     ? "/service-provider/notification"

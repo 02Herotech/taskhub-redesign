@@ -44,8 +44,7 @@ export async function findChatMessages({
   token: string;
 }) {
   const url =
-    process.env.NEXT_PUBLIC_API_URL +
-    "/api/v1/user-crud/messages/" +
+    "https://smp.jacinthsolutions.com.au/api/v1/chat/messages/" +
     senderId +
     "/" +
     recipientId;
