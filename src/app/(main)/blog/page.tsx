@@ -199,7 +199,7 @@ or that your self-assessment tax return contained errors, resulting in an overpa
 If this is the case, you are owed a payback by HMRC. So, let’s dive straight into how long does 
 a tax rebate tak`,
 
-    subheader: "HHow to Maximize Tax Return: 8 Hidden Tips",
+    subheader: "How to Maximize Tax Return: 8 Hidden Tips",
     isSubheaderListNumbered: true,
     subheaderList: [
       {
