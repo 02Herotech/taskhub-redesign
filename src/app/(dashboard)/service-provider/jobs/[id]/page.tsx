@@ -33,6 +33,7 @@ const ViewJobs = () => {
 
   const [invoiceDraft, setInvoiceDraft] = useState<InvoiceDraftType>();
   const [showCongratulations, setShowCongratulations] = useState(false);
+  const [messageLoading, setMessageLoading] = useState(false);
 
   const { profile: user } = useSelector(
     (state: RootState) => state.userProfile,
@@ -141,7 +142,7 @@ const ViewJobs = () => {
     }
   }, [currentBooking]);
 
-  const handleMessageCustomer = ({
+  const handleMessageCustomer = async ({
     customerId,
     fullName,
   }: {
@@ -158,11 +159,13 @@ const ViewJobs = () => {
         timestamp: new Date().toISOString(),
       };
       try {
-        console.log("message", message);
-        stompClient.send("/app/chat", {}, JSON.stringify(message));
+        setMessageLoading(true);
+        await stompClient.send("/app/chat", {}, JSON.stringify(message));
         router.push("/message/" + customerId);
       } catch (error: any) {
         console.log(error.response.data || error.message || error);
+      } finally {
+        setMessageLoading(false);
       }
     }
   };
@@ -311,9 +314,14 @@ const ViewJobs = () => {
                           fullName: currentBooking?.customer.user.fullName,
                         })
                       }
+                      disabled={messageLoading}
                       className="rounded-full border border-violet-normal px-6 py-3  font-bold text-violet-normal transition-colors duration-300 hover:bg-violet-200 max-md:px-4  max-md:py-2 max-md:text-sm"
                     >
-                      Chat with Customer
+                      {messageLoading ? (
+                        <BeatLoader loading={messageLoading} color="white" />
+                      ) : (
+                        "Chat With Customer"
+                      )}
                     </button>
                     {invoiceDraft && (
                       <button

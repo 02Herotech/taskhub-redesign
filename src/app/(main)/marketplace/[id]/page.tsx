@@ -13,6 +13,7 @@ import ImageModal from "@/components/main/marketplace/ImageModal";
 import { useParams, useRouter } from "next/navigation";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
+import { BeatLoader } from "react-spinners";
 
 const Page = () => {
   const [displayData, setDisplayData] = useState<ListingDataType>();
@@ -21,6 +22,7 @@ const Page = () => {
     state: false,
     image: "",
   });
+  const [messageLoading, setMessageLoading] = useState(false);
 
   const router = useRouter();
   const { id } = useParams();
@@ -52,7 +54,7 @@ const Page = () => {
     fetchListing();
   }, [displayData]);
 
-  const handleMessageCustomer = ({
+  const handleMessageCustomer = async ({
     customerId,
     fullName,
   }: {
@@ -69,11 +71,13 @@ const Page = () => {
         timestamp: new Date().toISOString(),
       };
       try {
-        console.log("message", message);
-        stompClient.send("/app/chat", {}, JSON.stringify(message));
+        setMessageLoading(true);
+        await stompClient.send("/app/chat", {}, JSON.stringify(message));
         router.push("/message/" + customerId);
       } catch (error: any) {
         console.log(error.response.data || error.message || error);
+      } finally {
+        setMessageLoading(false);
       }
     }
   };
@@ -212,9 +216,14 @@ const Page = () => {
                             currentListing?.serviceProvider.user.fullName,
                         })
                       }
+                      disabled={messageLoading}
                       className="rounded-full bg-[#381F8C] px-6 py-3 text-white"
                     >
-                      Message
+                      {messageLoading ? (
+                        <BeatLoader loading={messageLoading} color="white" />
+                      ) : (
+                        "Message"
+                      )}
                     </button>
                   )}
                 </div>
