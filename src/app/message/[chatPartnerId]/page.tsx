@@ -109,28 +109,18 @@ const ServiceProviderChat = () => {
   }, [newMessage]);
 
   const sendMessage = (msg: string) => {
-    if (msg.trim() !== "" && user) {
+    if (msg.trim() !== "" && user && contact) {
       const message = {
         senderId: user.id,
         recipientId: Number(chatPartnerId),
         senderName: `${user.firstName} ${user.lastName}`,
-        recipientName: "Anthony",
+        recipientName: contact.name,
         content: msg,
         timestamp: new Date().toISOString(),
       };
       try {
         stompClient.send("/app/chat", {}, JSON.stringify(message));
-        const newMessages: ChatMessageDisplayedType[] = [
-          ...(chatMessages || []),
-          {
-            content: msg,
-            status: "DELIVERED",
-            time: new Date().toISOString(),
-          },
-        ];
-        setChatMessages(newMessages);
       } catch (error: any) {
-        console.error("STOMP client is not connected");
         console.log(error.response.data || error.message || error);
       }
     }
