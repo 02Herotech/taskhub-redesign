@@ -43,16 +43,24 @@ const Navigation = () => {
   const session = useSession();
   const [showMobileNav, setShowMobileNav] = useState(false);
   const [notifications, setNotifications] = useState<NotificationTypes[]>([]);
-  // const [authLooading, setAuthLooading] = useState(true);
-  const dispatch = useDispatch();
-  const userProfile = useSelector((state: RootState) => state.userProfile);
-
-  const pathname = usePathname();
   const [auth, setAuth] = useState<{
     token: string | null;
     role: string[] | null;
   }>(initialAuthState);
   const [currentLinks, setCurrentLinks] = useState<LinkRouteTypes[]>([]);
+
+  const dispatch = useDispatch();
+  const userProfile = useSelector((state: RootState) => state.userProfile);
+  const { totalUnreadMessages } = useSelector((state: RootState) => state.chat);
+
+  const pathname = usePathname();
+
+  const userRole = session?.data?.user.user.roles;
+  const token = session?.data?.user?.accessToken;
+  const user = session?.data?.user?.user;
+  const isServiceProvider = userRole && userRole[0] === "SERVICE_PROVIDER";
+
+  console.log(userProfile.profile);
 
   const handleLogout = async () => {
     try {
@@ -65,11 +73,6 @@ const Navigation = () => {
       console.log(error);
     }
   };
-
-  const userRole = session?.data?.user.user.roles;
-  const token = session?.data?.user?.accessToken;
-  const user = session?.data?.user?.user;
-  const isServiceProvider = userRole && userRole[0] === "SERVICE_PROVIDER";
 
   useLayoutEffect(() => {
     dispatch(setAuthLoading(true));
@@ -215,11 +218,14 @@ const Navigation = () => {
                 </div>
               ) : (
                 <>
+                  {/* UnreadMessages */}
                   <Link href="/message" className="relative cursor-pointer">
                     <BsChat className="size-[22px] text-black" />
-                    {/* display a number chat nummber here */}
-                    {/* <span className="absolute -right-1 -top-1 flex size-5 items-center justify-center rounded-full bg-tc-orange text-xs text-white">
-                  </span> */}
+                    {totalUnreadMessages > 0 && (
+                      <span className="absolute -right-1 -top-1 flex size-5 items-center justify-center rounded-full bg-tc-orange text-xs text-white">
+                        {totalUnreadMessages}
+                      </span>
+                    )}
                   </Link>
                   <button
                     className="relative cursor-pointer"
