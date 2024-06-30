@@ -46,7 +46,6 @@ const ChatNavigation = () => {
         (accumulator, contact) => accumulator + contact.newMessages,
         0,
       );
-      console.log(allUnreadMessages);
       dispatch(setTotalUnreadMessages(allUnreadMessages));
       dispatch(setContacts(contacts));
     } catch (error: any) {

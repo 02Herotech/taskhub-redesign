@@ -17,9 +17,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { setContacts, setTotalUnreadMessages } from "@/store/Features/chat";
 import Loading from "@/shared/loading";
 
-const chatData = [{}];
-
-let stompClient: any = null;
 const ServiceProviderChat = () => {
   const [chatMessages, setChatMessages] = useState<
     ChatMessageDisplayedType[] | null
@@ -35,13 +32,14 @@ const ServiceProviderChat = () => {
   const { profile: user, userProfileAuth: auth } = useSelector(
     (state: RootState) => state.userProfile,
   );
-  const { contacts } = useSelector((state: RootState) => state.chat);
+  const { contacts, newMessage, stompClient } = useSelector(
+    (state: RootState) => state.chat,
+  );
 
   const token = session?.data?.user?.accessToken;
   const isServiceProvider = auth?.role?.[0] === "SERVICE_PROVIDER";
 
   useEffect(() => {
-    connect();
     loadContacts();
   }, []);
 
@@ -82,54 +80,36 @@ const ServiceProviderChat = () => {
     }
   }, [contacts]);
 
-  // connects to web socket
-  const connect = () => {
-    const Stomp = require("stompjs");
-    var SockJS = require("sockjs-client");
-    const URL = `https://smp.jacinthsolutions.com.au/ws`;
-    SockJS = new SockJS(URL);
-    stompClient = Stomp.over(SockJS);
-    stompClient.connect({}, onConnected, onError);
-  };
+  // update as new messages are received
+  useEffect(() => {
+    const onMessageReceived = () => {
+      const notification = JSON.parse(newMessage);
 
-  // on connected suscribe to current logged in user
-  const onConnected = () => {
-    if (user?.id) {
-      stompClient.subscribe(
-        `/user/${user?.id}/queue/messages`,
-        onMessageReceived,
-      );
-    }
-  };
+      console.log(notification, "recieving new messages");
 
-  // if error log error
-  const onError = (err: any) => {
-    console.error(err);
-  };
+      if (chatPartnerId === notification.senderId) {
+        findChatMessage(notification.id).then((message) => {
+          const displayMessage: ChatMessageDisplayedType = {
+            content: message.content,
+            status: message.status,
+            time: message.timestamp,
+          };
 
-  // display new messages as they are received
-  const onMessageReceived = (msg: any) => {
-    const notification = JSON.parse(msg.body);
-    console.log(notification, "recieving new messages");
-    if (chatPartnerId === notification.senderId) {
-      findChatMessage(notification.id).then((message) => {
-        const displayMessage: ChatMessageDisplayedType = {
-          content: message.content,
-          status: message.status,
-          time: message.timestamp,
-        };
-        console.log("newLy received displayed message", displayMessage);
-        const newMessages: ChatMessageDisplayedType[] = [
-          ...(chatMessages || []),
-          displayMessage,
-        ];
-        setChatMessages(newMessages);
-      });
-    }
-    loadContacts();
-  };
+          console.log("newLy received displayed message", displayMessage);
 
-  // handle send messages to chat partner
+          const newMessages: ChatMessageDisplayedType[] = [
+            ...(chatMessages || []),
+            displayMessage,
+          ];
+          setChatMessages(newMessages);
+        });
+      }
+      loadContacts();
+    };
+
+    onMessageReceived();
+  }, [newMessage]);
+
   const sendMessage = (msg: string) => {
     if (msg.trim() !== "" && user) {
       const message = {
@@ -177,7 +157,6 @@ const ServiceProviderChat = () => {
         (accumulator, contact) => accumulator + contact.newMessages,
         0,
       );
-      console.log(allUnreadMessages);
       dispatch(setTotalUnreadMessages(allUnreadMessages));
       dispatch(setContacts(contacts));
     } catch (error: any) {
@@ -273,7 +252,9 @@ const ServiceProviderChat = () => {
 
           <div className="flex gap-2 ">
             <Image
-              src="/assets/images/serviceProvider/jobs/kelly.png"
+              src={
+                user?.profileImage ?? "/assets/images/serviceProvider/user.jpg"
+              }
               width={50}
               height={50}
               alt="user"

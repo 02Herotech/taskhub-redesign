@@ -32,6 +32,7 @@ import {
   setUserProfileAuth,
   updateUserProfile,
 } from "@/store/Features/userProfile";
+import ChatSocket from "@/components/main/message/ChatSocket";
 
 const initialAuthState = {
   token: null,
@@ -59,8 +60,6 @@ const Navigation = () => {
   const token = session?.data?.user?.accessToken;
   const user = session?.data?.user?.user;
   const isServiceProvider = userRole && userRole[0] === "SERVICE_PROVIDER";
-
-  console.log(userProfile.profile);
 
   const handleLogout = async () => {
     try {
@@ -167,6 +166,7 @@ const Navigation = () => {
       <nav
         className={`fixed left-0 right-0 top-0 z-50 w-full ${currentLinks === homeLinks ? `bg-[#F5E2FC]` : `bg-white`} drop-shadow-sm`}
       >
+        <ChatSocket />
         {userProfile.authLoading ? (
           <div className="container flex min-h-20 items-center justify-between px-7 py-4 lg:py-5 " />
         ) : (

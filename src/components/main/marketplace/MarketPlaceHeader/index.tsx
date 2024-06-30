@@ -18,7 +18,6 @@ const MarketPlaceHeader = () => {
   const session = useSession();
   const router = useRouter();
 
-  const userRole = session?.data?.user?.user?.roles;
   const token = session?.data?.user?.accessToken;
 
   const isServiceProvider =
@@ -36,8 +35,6 @@ const MarketPlaceHeader = () => {
       );
     }
   };
-
-  console.log(userProfileAuth);
 
   return (
     <div
