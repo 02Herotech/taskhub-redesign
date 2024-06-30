@@ -28,6 +28,7 @@ const ServicesPage = () => {
   const [acceptedBookingData, setAcceptedBookingData] = useState<BookingType[]>(
     [],
   );
+  const [allBookings, setAllBookings] = useState<BookingType[]>([]);
   const [jobs, setJobs] = useState<JobsType[]>([]);
   const [loading, setLoading] = useState(false);
   const [customerDetails, setCustomerDetails] = useState<
@@ -62,6 +63,7 @@ const ServicesPage = () => {
         },
       });
       const data: BookingType[] = response.data;
+      setAllBookings(data);
       const filteredAcceptedData = data.filter(
         (item) => item.bookingStage === "ACCEPTED",
       );
@@ -122,10 +124,11 @@ const ServicesPage = () => {
   }, [token, user]);
 
   useEffect(() => {
-    if (jobs) {
+    if (jobs && allBookings) {
       fetchCustomerDetails();
+      // const jobsBookingId = jobs.map((job) => job.bookingId === allBookings[]);
     }
-  }, [jobs]);
+  }, [jobs, allBookings]);
 
   const handleReportService = async (id: number) => {
     setModalData((prev) => ({
@@ -179,35 +182,40 @@ const ServicesPage = () => {
       </div>
       {currentCategory === "services" ? (
         <AllServices />
-      ) : currentCategory === "accepted" ? (
+      ) : currentCategory === "accepted" && jobs ? (
         <AcceptedServices
           setModalData={setModalData}
           acceptedBookingData={acceptedBookingData}
           handleReportservice={handleReportService}
         />
-      ) : currentCategory === "paid" ? (
+      ) : currentCategory === "paid" && jobs ? (
         <PaidServices
           jobs={jobs}
           setModalData={setModalData}
+          allBookings={allBookings}
           customerDetails={customerDetails}
           handleReportservice={handleReportService}
         />
-      ) : currentCategory === "ongoing" ? (
+      ) : currentCategory === "ongoing" && jobs ? (
         <OngoingServies
           jobs={jobs}
+          allBookings={allBookings}
           setModalData={setModalData}
           customerDetails={customerDetails}
           handleReportservice={handleReportService}
         />
-      ) : currentCategory === "inspection" ? (
+      ) : currentCategory === "inspection" && jobs ? (
         <InspectionServices
           jobs={jobs}
+          allBookings={allBookings}
           setModalData={setModalData}
           customerDetails={customerDetails}
           handleReportservice={handleReportService}
         />
       ) : (
-        <CompletedServices jobs={jobs} customerDetails={customerDetails} />
+        jobs && (
+          <CompletedServices jobs={jobs} customerDetails={customerDetails} />
+        )
       )}
     </main>
   );

@@ -32,6 +32,7 @@ import {
   setUserProfileAuth,
   updateUserProfile,
 } from "@/store/Features/userProfile";
+import ChatSocket from "@/components/main/message/ChatSocket";
 
 const initialAuthState = {
   token: null,
@@ -43,16 +44,22 @@ const Navigation = () => {
   const session = useSession();
   const [showMobileNav, setShowMobileNav] = useState(false);
   const [notifications, setNotifications] = useState<NotificationTypes[]>([]);
-  // const [authLooading, setAuthLooading] = useState(true);
-  const dispatch = useDispatch();
-  const userProfile = useSelector((state: RootState) => state.userProfile);
-
-  const pathname = usePathname();
   const [auth, setAuth] = useState<{
     token: string | null;
     role: string[] | null;
   }>(initialAuthState);
   const [currentLinks, setCurrentLinks] = useState<LinkRouteTypes[]>([]);
+
+  const dispatch = useDispatch();
+  const userProfile = useSelector((state: RootState) => state.userProfile);
+  const { totalUnreadMessages } = useSelector((state: RootState) => state.chat);
+
+  const pathname = usePathname();
+
+  const userRole = session?.data?.user.user.roles;
+  const token = session?.data?.user?.accessToken;
+  const user = session?.data?.user?.user;
+  const isServiceProvider = userRole && userRole[0] === "SERVICE_PROVIDER";
 
   const handleLogout = async () => {
     try {
@@ -65,11 +72,6 @@ const Navigation = () => {
       console.log(error);
     }
   };
-
-  const userRole = session?.data?.user.user.roles;
-  const token = session?.data?.user?.accessToken;
-  const user = session?.data?.user?.user;
-  const isServiceProvider = userRole && userRole[0] === "SERVICE_PROVIDER";
 
   useLayoutEffect(() => {
     dispatch(setAuthLoading(true));
@@ -141,10 +143,11 @@ const Navigation = () => {
 
   useEffect(() => {
     const fetchUserProfile = async () => {
+      if (!user) return;
       try {
         const url =
           "https://smp.jacinthsolutions.com.au/api/v1/user/user-profile/" +
-          user?.id;
+          user.id;
         const { data } = await axios.get(url);
         dispatch(updateUserProfile(data));
       } catch (error: any) {
@@ -152,7 +155,7 @@ const Navigation = () => {
       }
     };
     fetchUserProfile();
-  }, [user?.id, userProfile.refresh, dispatch]);
+  }, [user, userProfile.refresh, dispatch]);
 
   const notificationRoute = isServiceProvider
     ? "/service-provider/notification"
@@ -163,6 +166,7 @@ const Navigation = () => {
       <nav
         className={`fixed left-0 right-0 top-0 z-50 w-full ${currentLinks === homeLinks ? `bg-[#F5E2FC]` : `bg-white`} drop-shadow-sm`}
       >
+        <ChatSocket />
         {userProfile.authLoading ? (
           <div className="container flex min-h-20 items-center justify-between px-7 py-4 lg:py-5 " />
         ) : (
@@ -214,11 +218,14 @@ const Navigation = () => {
                 </div>
               ) : (
                 <>
+                  {/* UnreadMessages */}
                   <Link href="/message" className="relative cursor-pointer">
                     <BsChat className="size-[22px] text-black" />
-                    {/* display a number chat nummber here */}
-                    {/* <span className="absolute -right-1 -top-1 flex size-5 items-center justify-center rounded-full bg-tc-orange text-xs text-white">
-                  </span> */}
+                    {totalUnreadMessages > 0 && (
+                      <span className="absolute -right-1 -top-1 flex size-5 items-center justify-center rounded-full bg-tc-orange text-xs text-white">
+                        {totalUnreadMessages}
+                      </span>
+                    )}
                   </Link>
                   <button
                     className="relative cursor-pointer"

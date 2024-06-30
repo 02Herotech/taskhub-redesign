@@ -3,15 +3,17 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 interface InitialStateType {
-  activeChatPatnerId: number;
-  contacts: any[];
-  messages: any[];
+  contacts: ChatContactTypes[];
+  totalUnreadMessages: number;
+  newMessage: any;
+  stompClient: any;
 }
 
 const initialState: InitialStateType = {
-  activeChatPatnerId: 0,
   contacts: [],
-  messages: [],
+  totalUnreadMessages: 0,
+  newMessage: null,
+  stompClient: null,
 };
 
 export const chatSlice = createSlice({
@@ -21,16 +23,23 @@ export const chatSlice = createSlice({
     setContacts: (state, action) => {
       return { ...state, contacts: action.payload };
     },
-    setActiveChatPatnerId: (state, action) => {
-      return { ...state, activeChatPatnerId: action.payload };
+    setTotalUnreadMessages: (state, action) => {
+      return { ...state, totalUnreadMessages: action.payload };
     },
-    setMessages: (state, action) => {
-      return { ...state, messages: action.payload };
+    setNewMessage: (state, action) => {
+      return { ...state, newMessage: action.payload };
+    },
+    updateStompClient: (state, action) => {
+      return { ...state, stompClient: action.payload };
     },
   },
 });
 
-export const { setContacts, setActiveChatPatnerId, setMessages } =
-  chatSlice.actions;
+export const {
+  setContacts,
+  setTotalUnreadMessages,
+  setNewMessage,
+  updateStompClient,
+} = chatSlice.actions;
 
 export default chatSlice.reducer;
