@@ -87,7 +87,7 @@ const ServiceProviderChat = () => {
 
       console.log(notification, "recieving new messages");
 
-      if (chatPartnerId === notification.senderId) {
+      if (notification && chatPartnerId === notification.senderId) {
         findChatMessage(notification.id).then((message) => {
           const displayMessage: ChatMessageDisplayedType = {
             content: message.content,
