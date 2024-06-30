@@ -190,14 +190,14 @@ const ContactUsPage = () => {
                                 <path d="M15.7015 45.5719C2.4582 26.6473 0 24.7051 0 17.75C0 8.22306 7.83499 0.5 17.5 0.5C27.165 0.5 35 8.22306 35 17.75C35 24.7051 32.5418 26.6473 19.2985 45.5719C18.4294 46.8094 16.5705 46.8093 15.7015 45.5719ZM17.5 24.9375C21.5271 24.9375 24.7917 21.7196 24.7917 17.75C24.7917 13.7804 21.5271 10.5625 17.5 10.5625C13.4729 10.5625 10.2083 13.7804 10.2083 17.75C10.2083 21.7196 13.4729 24.9375 17.5 24.9375Z" fill="#FE9B07" />
                             </svg>
                             <div className="">
-                                <h4 className="font-bold text-base lg:text-xl text-primary">Sydney Australia</h4>
+                                <h4 className="font-bold text-base lg:text-xl text-primary">Queensland Australia</h4>
                                 <a
                                     href="https://www.google.com/maps/search/?api=1&query=290+Maryam+Springs+260%2C+Courbevoie%2C+Sydney+Australia"
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     className="text-[#190E3F] text-xs lg:text-base font-medium hover:underline"
                                 >
-                                    290 Maryam Springs 260, Courbevoie
+                                    Liberty drive, Flagstone 4280
                                 </a>
                             </div>
                         </div>
@@ -208,7 +208,7 @@ const ContactUsPage = () => {
                             </svg>
                             <div className="">
                                 <h4 className="font-bold text-base lg:text-xl text-primary">Call Us</h4>
-                                <a href="tel:+61245673890" className="text-[#190E3F] text-xs lg:text-base font-medium">(+61) 245-673-890</a>
+                                <a href="tel:+61245673890" className="text-[#190E3F] text-xs lg:text-base font-medium">(+61) 0426131854</a>
                             </div>
                         </div>
 
