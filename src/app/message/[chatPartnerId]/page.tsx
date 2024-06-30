@@ -82,19 +82,14 @@ const ServiceProviderChat = () => {
   useEffect(() => {
     const onMessageReceived = () => {
       const notification = JSON.parse(newMessage);
-
-      console.log(notification, "recieving new messages");
-
       if (notification && chatPartnerId === notification.senderId) {
         findChatMessage(notification.id).then((message) => {
+          console.log("notification chat", message);
           const displayMessage: ChatMessageDisplayedType = {
             content: message.content,
-            status: message.status,
+            senderId: message.senderId,
             time: message.timestamp,
           };
-
-          console.log("newLy received displayed message", displayMessage);
-
           const newMessages: ChatMessageDisplayedType[] = [
             ...(chatMessages || []),
             displayMessage,
@@ -124,7 +119,7 @@ const ServiceProviderChat = () => {
           ...(chatMessages || []),
           {
             content: msg,
-            status: "DELIVERED",
+            senderId: user.id,
             time: new Date().toISOString(),
           },
         ];
@@ -229,11 +224,11 @@ const ServiceProviderChat = () => {
               chatMessages.map((item, index) => (
                 <div
                   key={index}
-                  className={` flex w-full ${item.status === "DELIVERED" ? "justify-end" : "justify-start"}`}
+                  className={` flex w-full ${item.senderId === user?.id ? "justify-end" : "justify-start"}`}
                 >
                   <p
                     key={index}
-                    className={` flex w-fit max-w-xs rounded-md p-2 text-sm ${item.status === "DELIVERED" ? " bg-violet-normal text-right text-white" : " bg-orange-light text-left text-violet-dark "}`}
+                    className={` flex w-fit max-w-xs rounded-md p-2 text-sm ${item.senderId === user?.id ? " bg-violet-normal text-right text-white" : " bg-orange-light text-left text-violet-dark "}`}
                   >
                     <span>{item.content}</span>
                   </p>

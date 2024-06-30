@@ -20,5 +20,5 @@ declare interface ChatMessageRecievedType {
 declare interface ChatMessageDisplayedType {
   content: string;
   time: string;
-  status: string;
+  senderId: number;
 }
