@@ -60,8 +60,13 @@ const ChatSocket = () => {
   };
 
   const onMessageReceived = (msg: any) => {
-    console.log("Message received", msg);
-    dispatch(setNewMessage(msg));
+    try {
+      const parsedMessage = JSON.parse(msg.body);
+      console.log("Message received", parsedMessage);
+      dispatch(setNewMessage(parsedMessage));
+    } catch (error) {
+      console.error("Error parsing message body:", error);
+    }
   };
 
   useEffect(() => {

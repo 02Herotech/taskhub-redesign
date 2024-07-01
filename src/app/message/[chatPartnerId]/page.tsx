@@ -80,9 +80,8 @@ const ServiceProviderChat = () => {
   // update as new messages are received
   useEffect(() => {
     const onMessageReceived = () => {
-      const notification = JSON.parse(newMessage);
-      if (notification && chatPartnerId === notification.senderId) {
-        findChatMessage(notification.id).then((message) => {
+      if (newMessage && chatPartnerId === newMessage.senderId) {
+        findChatMessage(newMessage.id).then((message) => {
           console.log("notification chat", message);
           const displayMessage: ChatMessageDisplayedType = {
             content: message.content,
