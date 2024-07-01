@@ -137,8 +137,8 @@ const ServiceProviderChat = () => {
       const contacts = await Promise.all(
         users.map(async (contact: any) => {
           const count = await countNewMessages({
-            recipientId: contact.id,
-            senderId: user.id,
+            recipientId: user.id,
+            senderId: contact.id,
             token: token as string,
           });
           return { ...contact, newMessages: count };

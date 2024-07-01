@@ -62,37 +62,37 @@ const ChatNavigation = () => {
     setFilteredContact((prev) => ({ ...prev, contact: filteredContact }));
   };
 
-  const loadContacts = async () => {
-    if (!auth.token || !user) return;
-    try {
-      setLoading(true);
-      const users = await getUsers({ token: auth.token });
-      const contacts = await Promise.all(
-        users.map(async (contact: any) => {
-          const count = await countNewMessages({
-            recipientId: contact.id,
-            senderId: user.id,
-            token: auth.token as string,
-          });
-          return { ...contact, newMessages: count };
-        }),
-      );
-      const allUnreadMessages = contacts.reduce(
-        (accumulator, contact) => accumulator + contact.newMessages,
-        0,
-      );
-      dispatch(setTotalUnreadMessages(allUnreadMessages));
-      dispatch(setContacts(contacts));
-    } catch (error: any) {
-      console.error(error.response.data || error.message || error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  // const loadContacts = async () => {
+  //   if (!auth.token || !user) return;
+  //   try {
+  //     setLoading(true);
+  //     const users = await getUsers({ token: auth.token });
+  //     const contacts = await Promise.all(
+  //       users.map(async (contact: any) => {
+  //         const count = await countNewMessages({
+  //           recipientId: contact.id,
+  //           senderId: user.id,
+  //           token: auth.token as string,
+  //         });
+  //         return { ...contact, newMessages: count };
+  //       }),
+  //     );
+  //     const allUnreadMessages = contacts.reduce(
+  //       (accumulator, contact) => accumulator + contact.newMessages,
+  //       0,
+  //     );
+  //     dispatch(setTotalUnreadMessages(allUnreadMessages));
+  //     dispatch(setContacts(contacts));
+  //   } catch (error: any) {
+  //     console.error(error.response.data || error.message || error);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
-  useEffect(() => {
-    loadContacts();
-  }, [auth]);
+  // useEffect(() => {
+  //   loadContacts();
+  // }, [auth]);
 
   useEffect(() => {
     const newContacts = filteredContact.isFiltering

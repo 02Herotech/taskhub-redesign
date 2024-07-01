@@ -8,18 +8,20 @@ import {
   updateStompClient,
 } from "@/store/Features/chat";
 import { countNewMessages, getUsers } from "@/utils/message";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 const ChatSocket = () => {
   const dispatch = useDispatch();
-
   const { profile: user, userProfileAuth: auth } = useSelector(
     (state: RootState) => state.userProfile,
   );
   const { stompClient } = useSelector((state: RootState) => state.chat);
+  const [reconnectAttempts, setReconnectAttempts] = useState(0);
+  const maxReconnectAttempts = 5;
+  const reconnectInterval = 5000; // 5 seconds
+  const reconnectTimeout = useRef<NodeJS.Timeout | null>(null);
 
-  // connects to web socket
   const connect = () => {
     const Stomp = require("stompjs");
     var SockJS = require("sockjs-client");
@@ -38,14 +40,27 @@ const ChatSocket = () => {
         `/user/${user.id}/queue/messages`,
         onMessageReceived,
       );
+      setReconnectAttempts(0); // Reset the reconnect attempts on successful connection
     }
   };
+
   const onError = (err: any) => {
-    console.error(err);
+    console.error("WebSocket connection error:", err);
+    if (reconnectAttempts < maxReconnectAttempts) {
+      if (reconnectTimeout.current) {
+        clearTimeout(reconnectTimeout.current);
+      }
+      reconnectTimeout.current = setTimeout(() => {
+        setReconnectAttempts((prev) => prev + 1);
+        connect();
+      }, reconnectInterval);
+    } else {
+      console.error("Max reconnect attempts reached");
+    }
   };
 
   const onMessageReceived = (msg: any) => {
-    console.log("Message recieved", msg);
+    console.log("Message received", msg);
     dispatch(setNewMessage(msg));
   };
 
@@ -64,8 +79,8 @@ const ChatSocket = () => {
       const contacts = await Promise.all(
         users.map(async (contact: any) => {
           const count = await countNewMessages({
-            recipientId: contact.id,
-            senderId: user.id,
+            recipientId: user.id,
+            senderId: contact.id,
             token: auth.token as string,
           });
           return { ...contact, newMessages: count };
@@ -85,6 +100,14 @@ const ChatSocket = () => {
   useEffect(() => {
     loadContacts();
   }, [auth]);
+
+  useEffect(() => {
+    return () => {
+      if (reconnectTimeout.current) {
+        clearTimeout(reconnectTimeout.current);
+      }
+    };
+  }, []);
 
   return <div className="hidden" />;
 };
