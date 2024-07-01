@@ -18,7 +18,6 @@ const MarketPlaceHeader = () => {
   const session = useSession();
   const router = useRouter();
 
-  const userRole = session?.data?.user?.user?.roles;
   const token = session?.data?.user?.accessToken;
 
   const isServiceProvider =
@@ -37,11 +36,9 @@ const MarketPlaceHeader = () => {
     }
   };
 
-  console.log(userProfileAuth);
-
   return (
     <div
-      className={`${styles.headerCover} min-h-96 w-full py-20 md:mt-16 lg:mt-20 `}
+      className={`${styles.headerCover} min-h-96 w-full max-w-screen-2xl py-20 md:mt-16 lg:mt-20 `}
     >
       {!authLoading && (
         <div className="relative mx-auto flex flex-col items-center justify-center space-y-8 px-5 text-white md:max-w-full md:px-0  ">

@@ -1,7 +1,7 @@
 import axios from "axios";
 
 export async function getUsers({ token }: { token: string }) {
-  const url = process.env.NEXT_PUBLIC_API_URL + "/chat/chatted-withs";
+  const url = "https://smp.jacinthsolutions.com.au/api/v1/chat/chatted-withs";
   const { data } = await axios.get(url, {
     headers: {
       Authorization: "Bearer " + token,
@@ -21,8 +21,7 @@ export async function countNewMessages({
   token: string;
 }) {
   const url =
-    process.env.NEXT_PUBLIC_API_URL +
-    "/api/v1/user-crud/messages/" +
+    "https://smp.jacinthsolutions.com.au/api/v1/chat/messages/" +
     senderId +
     "/" +
     recipientId +
@@ -32,7 +31,6 @@ export async function countNewMessages({
       Authorization: "Bearer " + token,
     },
   });
-
   return data;
 }
 
@@ -46,8 +44,7 @@ export async function findChatMessages({
   token: string;
 }) {
   const url =
-    process.env.NEXT_PUBLIC_API_URL +
-    "/api/v1/user-crud/messages/" +
+    "https://smp.jacinthsolutions.com.au/api/v1/chat/messages/" +
     senderId +
     "/" +
     recipientId;
@@ -66,8 +63,7 @@ export async function findChatMessage({
   id: number;
   token: string;
 }) {
-  const url =
-    process.env.NEXT_PUBLIC_API_URL + "/api/v1/user-crud/messages/" + id;
+  const url = "https://smp.jacinthsolutions.com.au/api/v1/chat/messages/" + id;
   const { data } = await axios.get(url, {
     headers: {
       Authorization: "Bearer " + token,

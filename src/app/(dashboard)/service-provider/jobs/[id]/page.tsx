@@ -3,6 +3,7 @@
 import Congratulations from "@/components/dashboard/serviceProvider/jobs/Congratulations";
 import Invoice from "@/components/serviceProviderDashboard/jobs/Invoice";
 import Loading from "@/shared/loading";
+import { RootState } from "@/store";
 import {
   formatDateFromNumberArray,
   formatDateFromNumberArrayToRelativeDate,
@@ -15,6 +16,7 @@ import Link from "next/link";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { IoLocationOutline } from "react-icons/io5";
+import { useSelector } from "react-redux";
 import { BeatLoader } from "react-spinners";
 
 const ViewJobs = () => {
@@ -31,6 +33,12 @@ const ViewJobs = () => {
 
   const [invoiceDraft, setInvoiceDraft] = useState<InvoiceDraftType>();
   const [showCongratulations, setShowCongratulations] = useState(false);
+  const [messageLoading, setMessageLoading] = useState(false);
+
+  const { profile: user } = useSelector(
+    (state: RootState) => state.userProfile,
+  );
+  const { stompClient } = useSelector((state: RootState) => state.chat);
 
   const router = useRouter();
   const session = useSession();
@@ -133,6 +141,34 @@ const ViewJobs = () => {
       setInvoiceDraft(currentInvoice);
     }
   }, [currentBooking]);
+
+  const handleMessageCustomer = async ({
+    customerId,
+    fullName,
+  }: {
+    customerId: number;
+    fullName: string;
+  }) => {
+    if (user) {
+      const message = {
+        senderId: user.id,
+        recipientId: customerId,
+        senderName: `${user.firstName} ${user.lastName}`,
+        recipientName: fullName,
+        content: "Hello " + fullName,
+        timestamp: new Date().toISOString(),
+      };
+      try {
+        setMessageLoading(true);
+        await stompClient.send("/app/chat", {}, JSON.stringify(message));
+        router.push("/message/" + customerId);
+      } catch (error: any) {
+        console.log(error.response.data || error.message || error);
+      } finally {
+        setMessageLoading(false);
+      }
+    }
+  };
 
   return (
     <>
@@ -271,14 +307,22 @@ const ViewJobs = () => {
                 {(currentBooking.bookingStage === "PROPOSED" ||
                   currentBooking.bookingStage === "ACCEPTED") && (
                   <div className="flex items-center gap-2">
-                    <Link
-                      href={{
-                        pathname: "/message",
-                      }}
+                    <button
+                      onClick={() =>
+                        handleMessageCustomer({
+                          customerId: currentBooking?.customer.user.id,
+                          fullName: currentBooking?.customer.user.fullName,
+                        })
+                      }
+                      disabled={messageLoading}
                       className="rounded-full border border-violet-normal px-6 py-3  font-bold text-violet-normal transition-colors duration-300 hover:bg-violet-200 max-md:px-4  max-md:py-2 max-md:text-sm"
                     >
-                      Chat with Customer
-                    </Link>
+                      {messageLoading ? (
+                        <BeatLoader loading={messageLoading} color="white" />
+                      ) : (
+                        "Chat With Customer"
+                      )}
+                    </button>
                     {invoiceDraft && (
                       <button
                         onClick={() => setIsModalOpen(true)}

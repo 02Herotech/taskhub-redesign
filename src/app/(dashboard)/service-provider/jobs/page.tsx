@@ -2,19 +2,30 @@
 
 import { marketPlaceModalIcon } from "@/lib/svgIcons";
 import Loading from "@/shared/loading";
+import { RootState } from "@/store";
 import { formatDateFromNumberArrayToRelativeDate } from "@/utils";
 import axios from "axios";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { BeatLoader } from "react-spinners";
 
 const Jobs = () => {
   const [bookingData, setBookingData] = useState<BookingType[]>([]);
   const [loading, setLoading] = useState(false);
+  const [messageLoading, setMessageLoading] = useState(false);
 
+  const router = useRouter();
   const session = useSession();
   const token = session?.data?.user?.accessToken;
+
+  const { profile: user } = useSelector(
+    (state: RootState) => state.userProfile,
+  );
+  const { stompClient } = useSelector((state: RootState) => state.chat);
 
   const fetchAllBookings = async () => {
     if (!token) return;
@@ -43,6 +54,34 @@ const Jobs = () => {
     fetchAllBookings();
     // eslint-disable-next-line
   }, [token]);
+
+  const handleMessageCustomer = async ({
+    customerId,
+    fullName,
+  }: {
+    customerId: number;
+    fullName: string;
+  }) => {
+    if (user) {
+      const message = {
+        senderId: user.id,
+        recipientId: customerId,
+        senderName: `${user.firstName} ${user.lastName}`,
+        recipientName: fullName,
+        content: "Hello " + fullName,
+        timestamp: new Date().toISOString(),
+      };
+      try {
+        setMessageLoading(true);
+        await stompClient.send("/app/chat", {}, JSON.stringify(message));
+        router.push("/message/" + customerId);
+      } catch (error: any) {
+        console.log(error.response.data || error.message || error);
+      } finally {
+        setMessageLoading(false);
+      }
+    }
+  };
 
   return (
     <>
@@ -108,12 +147,22 @@ const Jobs = () => {
                       >
                         View Enquiry
                       </Link>
-                      <Link
-                        href={"/message"}
+                      <button
+                        onClick={() =>
+                          handleMessageCustomer({
+                            customerId: item.customer.user.id,
+                            fullName: item.customer.user.fullName,
+                          })
+                        }
+                        disabled={messageLoading}
                         className="rounded-full border border-violet-normal bg-violet-normal px-6 py-3 text-sm font-medium text-white transition-opacity duration-300 hover:opacity-90 max-md:px-3 max-md:py-1 max-md:text-xs"
                       >
-                        Chat With Customer
-                      </Link>
+                        {messageLoading ? (
+                          <BeatLoader loading={messageLoading} color="white" />
+                        ) : (
+                          "Chat With Customer"
+                        )}
+                      </button>
                     </div>
                   </div>
                 </div>

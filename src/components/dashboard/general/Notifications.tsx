@@ -89,11 +89,9 @@ const NotificationComponent = () => {
           },
         });
       });
-
       const responses = await Promise.all(requests);
       const bookings = responses.map((response) => response.data);
       setUserBookings(bookings);
-      console.log(bookings);
     } catch (error: any) {
       console.error(error.response?.data || error.message);
     }
