@@ -148,6 +148,7 @@ const AddTaskForm: React.FC = () => {
         const response = await axios.get(
           `https://smp.jacinthsolutions.com.au/api/v1/util/locations/search?postcode=${selectedCode}`,
         );
+        console.log(response.data)
         setPostalCodeData(response.data as PostalCodeData[]);
       } catch (error) {
         console.error("Error fetching postal code data:", error);
@@ -987,12 +988,12 @@ const AddTaskForm: React.FC = () => {
               <Image
                 src={imag}
                 alt="image"
-                className="absolute -right-12 top-28 w-24 lg:-right-24 lg:top-1/3 lg:w-36 "
+                className="absolute -right-16 top-20 w-24 lg:-right-24 lg:top-1/3 lg:w-36 "
               />
               <Image
                 src={imgg}
                 alt="image"
-                className="absolute -left-12 top-12 w-12 lg:-left-[100px] lg:-top-12 lg:w-28"
+                className="absolute -left-12 top-0 w-16 lg:-left-[100px] lg:-top-12 lg:w-28"
               />
               <div className="flex space-x-3 justify-center">
                 <button
