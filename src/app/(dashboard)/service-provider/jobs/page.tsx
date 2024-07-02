@@ -12,6 +12,7 @@ import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { BeatLoader } from "react-spinners";
+import { stompClient } from "@/lib/stompClient";
 
 const Jobs = () => {
   const [bookingData, setBookingData] = useState<BookingType[]>([]);
@@ -25,7 +26,7 @@ const Jobs = () => {
   const { profile: user } = useSelector(
     (state: RootState) => state.userProfile,
   );
-  const { stompClient } = useSelector((state: RootState) => state.chat);
+  // const { stompClient } = useSelector((state: RootState) => state.chat);
 
   const fetchAllBookings = async () => {
     if (!token) return;

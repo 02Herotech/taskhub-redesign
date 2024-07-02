@@ -15,7 +15,7 @@ import { useParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setContacts, setTotalUnreadMessages } from "@/store/Features/chat";
-import Loading from "@/shared/loading";
+import { stompClient } from "@/lib/stompClient";
 
 const ServiceProviderChat = () => {
   const [chatMessages, setChatMessages] = useState<
@@ -32,7 +32,7 @@ const ServiceProviderChat = () => {
   const { profile: user, userProfileAuth: auth } = useSelector(
     (state: RootState) => state.userProfile,
   );
-  const { contacts, newMessage, stompClient } = useSelector(
+  const { contacts, newMessage } = useSelector(
     (state: RootState) => state.chat,
   );
 

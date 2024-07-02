@@ -7,6 +7,7 @@ import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { BeatLoader } from "react-spinners";
 import "../../styles/serviceProviderStyles.css";
+import { stompClient } from "@/lib/stompClient";
 
 interface MessageButtonProps {
   recipientId: string;
@@ -25,7 +26,7 @@ const MessageButton = ({
   const { profile: user } = useSelector(
     (state: RootState) => state.userProfile,
   );
-  const { stompClient } = useSelector((state: RootState) => state.chat);
+  // const { stompClient } = useSelector((state: RootState) => state.chat);
 
   const handleSendMessage = async () => {
     setMessageLoading(true);

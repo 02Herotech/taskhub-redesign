@@ -10,24 +10,36 @@ import {
 import { countNewMessages, getUsers } from "@/utils/message";
 import React, { useEffect, useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { stompClient } from "@/lib/stompClient";
 
 const ChatSocket = () => {
   const dispatch = useDispatch();
   const { profile: user, userProfileAuth: auth } = useSelector(
     (state: RootState) => state.userProfile,
   );
-  const { stompClient } = useSelector((state: RootState) => state.chat);
+  // const { stompClient } = useSelector((state: RootState) => state.chat);
   const [reconnectAttempts, setReconnectAttempts] = useState(0);
   const maxReconnectAttempts = 5;
   const reconnectInterval = 5000; // 5 seconds
   const reconnectTimeout = useRef<NodeJS.Timeout | null>(null);
 
   const connect = () => {
-    const Stomp = require("stompjs");
-    var SockJS = require("sockjs-client");
-    const URL = `https://smp.jacinthsolutions.com.au/ws`;
-    SockJS = new SockJS(URL);
-    dispatch(updateStompClient(Stomp.over(SockJS)));
+    // const Stomp = require("stompjs");
+    // var SockJS = require("sockjs-client");
+    // const URL = `https://smp.jacinthsolutions.com.au/ws`;
+    // SockJS = new SockJS(URL);
+    // dispatch(updateStompClient(Stomp.over(SockJS)));
+  };
+
+  const onMessageReceived = (msg: any) => {
+    console.log("recieving message");
+    try {
+      const parsedMessage = JSON.parse(msg.body);
+      console.log("Message received", parsedMessage);
+      dispatch(setNewMessage(parsedMessage));
+    } catch (error) {
+      console.error("Error parsing message body:", error);
+    }
   };
 
   const connectSocket = () => {
@@ -56,16 +68,6 @@ const ChatSocket = () => {
       }, reconnectInterval);
     } else {
       console.error("Max reconnect attempts reached");
-    }
-  };
-
-  const onMessageReceived = (msg: any) => {
-    try {
-      const parsedMessage = JSON.parse(msg.body);
-      console.log("Message received", parsedMessage);
-      dispatch(setNewMessage(parsedMessage));
-    } catch (error) {
-      console.error("Error parsing message body:", error);
     }
   };
 
