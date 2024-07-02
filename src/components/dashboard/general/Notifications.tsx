@@ -3,24 +3,15 @@ import MessageButton from "@/components/global/MessageButton";
 import { typeData } from "@/data/marketplace/data";
 import { marketPlaceModalIcon } from "@/lib/svgIcons";
 import Loading from "@/shared/loading";
-import { RootState } from "@/store";
-import {
-  formatDateFromNumberArray,
-  formatDateFromNumberArrayToPastDate,
-  formatDateFromNumberArrayToRelativeDate,
-  formatRelativeDate,
-} from "@/utils";
+import { formatDateFromNumberArray, formatRelativeDate } from "@/utils";
 import { truncateText } from "@/utils/marketplace";
 import axios from "axios";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
-import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { BiCalendarEvent } from "react-icons/bi";
 import { FaArrowLeftLong } from "react-icons/fa6";
 import { HiLocationMarker } from "react-icons/hi";
-import { useSelector } from "react-redux";
-import { BeatLoader } from "react-spinners";
 
 const NotificationComponent = () => {
   const [currentCategory, setCurrentCategory] = useState("All");

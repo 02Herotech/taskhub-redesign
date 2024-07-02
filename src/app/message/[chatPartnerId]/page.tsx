@@ -77,27 +77,27 @@ const ServiceProviderChat = () => {
     }
   }, [contacts]);
 
+  const onMessageReceived = async () => {
+    if (newMessage && chatPartnerId === newMessage.senderId) {
+      findChatMessage(newMessage.id).then((message) => {
+        console.log("newly recieved messages", message);
+        const displayMessage: ChatMessageDisplayedType = {
+          content: message.content,
+          senderId: message.senderId,
+          time: message.timestamp,
+        };
+        const newMessages: ChatMessageDisplayedType[] = [
+          ...(chatMessages || []),
+          displayMessage,
+        ];
+        setChatMessages(newMessages);
+      });
+      await loadContacts();
+    }
+  };
+
   // update as new messages are received
   useEffect(() => {
-    const onMessageReceived = async () => {
-      if (newMessage && chatPartnerId === newMessage.senderId) {
-        findChatMessage(newMessage.id).then((message) => {
-          console.log("notification chat", message);
-          const displayMessage: ChatMessageDisplayedType = {
-            content: message.content,
-            senderId: message.senderId,
-            time: message.timestamp,
-          };
-          const newMessages: ChatMessageDisplayedType[] = [
-            ...(chatMessages || []),
-            displayMessage,
-          ];
-          setChatMessages(newMessages);
-        });
-        await loadContacts();
-      }
-    };
-
     onMessageReceived();
   }, [newMessage]);
 
@@ -122,6 +122,7 @@ const ServiceProviderChat = () => {
           },
         ];
         setChatMessages(newMessages);
+        loadContacts();
       } catch (error: any) {
         console.log(error.response.data || error.message || error);
       }
@@ -130,6 +131,7 @@ const ServiceProviderChat = () => {
 
   // handle load contacts from the database
   const loadContacts = async () => {
+    console.log("loading contacts from the database");
     if (!token || !user) return;
     try {
       const users = await getUsers({ token: token });
@@ -143,6 +145,7 @@ const ServiceProviderChat = () => {
           return { ...contact, newMessages: count };
         }),
       );
+      console.log(contact);
       const allUnreadMessages = contacts.reduce(
         (accumulator, contact) => accumulator + contact.newMessages,
         0,
