@@ -79,7 +79,7 @@ const ServiceProviderChat = () => {
 
   // update as new messages are received
   useEffect(() => {
-    const onMessageReceived = () => {
+    const onMessageReceived = async () => {
       if (newMessage && chatPartnerId === newMessage.senderId) {
         findChatMessage(newMessage.id).then((message) => {
           console.log("notification chat", message);
@@ -94,8 +94,8 @@ const ServiceProviderChat = () => {
           ];
           setChatMessages(newMessages);
         });
+        await loadContacts();
       }
-      loadContacts();
     };
 
     onMessageReceived();
