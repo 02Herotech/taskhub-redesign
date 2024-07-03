@@ -1265,16 +1265,16 @@ const ProvideService: React.FC = () => {
               <div className="text-red-600">
                 {err.image || err.availableDays}
               </div>
-              <div className="flex justify-between">
+              <div className="flex justify-between flex-wrap gap-3">
                 <Button
-                  className="rounded-3xl"
+                  className="rounded-3xl w-full lg:w-1/3"
                   theme="outline"
                   type="button"
                   onClick={prevPage}
                 >
                   Back
                 </Button>
-                <Button className="rounded-3xl" type="submit">
+                <Button className="rounded-3xl w-full lg:w-1/3" type="submit">
                   Post Listing
                 </Button>
               </div>

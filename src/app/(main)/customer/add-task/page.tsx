@@ -869,13 +869,13 @@ const AddTaskForm: React.FC = () => {
               </div>
               <div className="flex justify-between flex-wrap-reverse gap-3">
                 {isAuthenticated && (
-                  <Button className="rounded-3xl w-full lg:w-10" type="submit">
+                  <Button className="rounded-3xl w-full lg:w-[200px]" type="submit">
                     Confirm Task
                   </Button>
                 )}
                 {!isAuthenticated && (
                   <Button
-                    className="rounded-3xl w-full lg:w-10"
+                    className="rounded-3xl w-full lg:w-[200px]"
                     type="button"
                     onClick={() => setIsSuccessPopup(true)}
                   >
