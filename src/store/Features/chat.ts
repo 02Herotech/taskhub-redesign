@@ -29,6 +29,7 @@ export const chatSlice = createSlice({
       return { ...state, totalUnreadMessages: action.payload };
     },
     setNewMessage: (state, action) => {
+      console.log(action.payload, "this is the payload");
       return { ...state, newMessage: action.payload };
     },
     updateStompClient: (state, action) => {

@@ -1,21 +1,15 @@
 "use client";
+import MessageButton from "@/components/global/MessageButton";
 import { typeData } from "@/data/marketplace/data";
 import { marketPlaceModalIcon } from "@/lib/svgIcons";
 import Loading from "@/shared/loading";
-import {
-  formatDateFromNumberArray,
-  formatDateFromNumberArrayToPastDate,
-  formatDateFromNumberArrayToRelativeDate,
-  formatRelativeDate,
-} from "@/utils";
+import { formatDateFromNumberArray, formatRelativeDate } from "@/utils";
 import { truncateText } from "@/utils/marketplace";
 import axios from "axios";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
-import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { BiCalendarEvent } from "react-icons/bi";
-import { BsClock } from "react-icons/bs";
 import { FaArrowLeftLong } from "react-icons/fa6";
 import { HiLocationMarker } from "react-icons/hi";
 
@@ -419,12 +413,22 @@ const NotificationComponent = () => {
                           </div>
                         </div>
                         <div className="flex justify-end">
-                          <Link
-                            href={"/message"}
-                            className="rounded-full bg-orange-normal px-6 py-3 font-bold text-white"
-                          >
-                            Send a message
-                          </Link>
+                          <MessageButton
+                            recipientId={
+                              isServiceProvider
+                                ? selectedNotification.booking?.customer?.user?.id.toString() ||
+                                  ""
+                                : selectedNotification.listing?.serviceProvider?.user.id.toString() ||
+                                  ""
+                            }
+                            recipientName={
+                              isServiceProvider
+                                ? selectedNotification.booking?.customer?.user
+                                    ?.fullName || ""
+                                : selectedNotification.listing?.serviceProvider
+                                    ?.user.fullName || ""
+                            }
+                          />
                         </div>
                       </article>
                     </div>

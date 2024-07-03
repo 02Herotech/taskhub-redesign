@@ -18,7 +18,7 @@ import React, { useEffect, useState } from "react";
 import { IoLocationOutline } from "react-icons/io5";
 import { useSelector } from "react-redux";
 import { BeatLoader } from "react-spinners";
-
+import { stompClient } from "@/lib/stompClient";
 const ViewJobs = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -38,7 +38,7 @@ const ViewJobs = () => {
   const { profile: user } = useSelector(
     (state: RootState) => state.userProfile,
   );
-  const { stompClient } = useSelector((state: RootState) => state.chat);
+  // const { stompClient } = useSelector((state: RootState) => state.chat);
 
   const router = useRouter();
   const session = useSession();

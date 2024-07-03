@@ -30,7 +30,6 @@ const SingleListingCard = ({
   singleListing,
 }: ListingCardProps) => {
   const handlestoreListingId = (listingId: number, posterId: number) => {
-    console.log(singleListing);
     localStorage.setItem("content", JSON.stringify(singleListing));
   };
 

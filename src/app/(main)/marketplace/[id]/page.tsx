@@ -10,10 +10,10 @@ import Reviews from "@/components/matkeplaceSingleTask/Reviews";
 import { formatDateFromNumberArray } from "@/utils";
 import axios from "axios";
 import ImageModal from "@/components/main/marketplace/ImageModal";
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
-import { BeatLoader } from "react-spinners";
+import MessageButton from "@/components/global/MessageButton";
 
 const Page = () => {
   const [displayData, setDisplayData] = useState<ListingDataType>();
@@ -22,15 +22,12 @@ const Page = () => {
     state: false,
     image: "",
   });
-  const [messageLoading, setMessageLoading] = useState(false);
 
-  const router = useRouter();
   const { id } = useParams();
 
-  const { profile: user } = useSelector(
+  const { userProfileAuth: auth } = useSelector(
     (state: RootState) => state.userProfile,
   );
-  const { stompClient } = useSelector((state: RootState) => state.chat);
 
   useEffect(() => {
     const tempList = localStorage.getItem("content");
@@ -53,34 +50,6 @@ const Page = () => {
     };
     fetchListing();
   }, [displayData]);
-
-  const handleMessageCustomer = async ({
-    customerId,
-    fullName,
-  }: {
-    customerId: number;
-    fullName: string;
-  }) => {
-    if (user) {
-      const message = {
-        senderId: user.id,
-        recipientId: customerId,
-        senderName: `${user.firstName} ${user.lastName}`,
-        recipientName: fullName,
-        content: "Hello" + fullName,
-        timestamp: new Date().toISOString(),
-      };
-      try {
-        setMessageLoading(true);
-        await stompClient.send("/app/chat", {}, JSON.stringify(message));
-        router.push("/message/" + customerId);
-      } catch (error: any) {
-        console.log(error.response.data || error.message || error);
-      } finally {
-        setMessageLoading(false);
-      }
-    }
-  };
 
   return (
     <>
@@ -207,25 +176,16 @@ const Page = () => {
                       </div>
                     </div>
                   </div>
-                  {currentListing && (
-                    <button
-                      onClick={() =>
-                        handleMessageCustomer({
-                          customerId: currentListing?.serviceProvider.user.id,
-                          fullName:
-                            currentListing?.serviceProvider.user.fullName,
-                        })
-                      }
-                      disabled={messageLoading}
-                      className="rounded-full bg-[#381F8C] px-6 py-3 text-white"
-                    >
-                      {messageLoading ? (
-                        <BeatLoader loading={messageLoading} color="white" />
-                      ) : (
-                        "Message"
-                      )}
-                    </button>
-                  )}
+                  {currentListing &&
+                    auth.token &&
+                    auth.role?.[0] === "CUSTOMER" && (
+                      <MessageButton
+                        recipientId={currentListing.serviceProvider.user.id.toString()}
+                        recipientName={
+                          currentListing?.serviceProvider.user.fullName
+                        }
+                      />
+                    )}
                 </div>
                 <p className="font-medium">
                   {/* @ts-ignore */}

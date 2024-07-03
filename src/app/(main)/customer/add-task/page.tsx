@@ -8,7 +8,7 @@ import { IoIosArrowForward } from "react-icons/io";
 import { PiFileArrowDownDuotone } from "react-icons/pi";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { GrFormCheckmark} from "react-icons/gr";
+import { GrFormCheckmark } from "react-icons/gr";
 import Popup from "@/components/global/Popup";
 import Button from "@/components/global/Button";
 import { useSession } from "next-auth/react";
@@ -65,7 +65,7 @@ const AddTaskForm: React.FC = () => {
   const token = session?.data?.user.accessToken;
   const isAuthenticated = session.status === "authenticated";
   const [currentPage, setCurrentPage] = useState(1);
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
   const defaultImageSrc =
     "https://static.wixstatic.com/media/7d1889_ab302adc66e943f9b6be9de260cbc40f~mv2.png";
   const [task, setTask] = useState<FormData>({
@@ -106,7 +106,7 @@ const AddTaskForm: React.FC = () => {
   const [wordCounts, setWordCounts] = useState(0);
   const [isSuccessPopup, setIsSuccessPopup] = useState(false);
   const maxSize = 5 * 1024 * 1024; // 5MB in bytes
-  const [errs, setErrs] = useState("")
+  const [errs, setErrs] = useState("");
 
   // Handling getting the description from the marketplace when i user navigates from the marketplace
   useEffect(() => {
@@ -122,6 +122,7 @@ const AddTaskForm: React.FC = () => {
   // End of getting description from the marketplace
 
   const handleLoginNavigation = () => {
+    setCookie("redirectToAddTask", "/customer/add-task", { maxAge: 10000 });
     router.push(
       "/auth/sign-up?userType=Service+Provider?from=/customer/add-task",
     );
@@ -149,7 +150,7 @@ const AddTaskForm: React.FC = () => {
         const response = await axios.get(
           `https://smp.jacinthsolutions.com.au/api/v1/util/locations/search?postcode=${selectedCode}`,
         );
-        console.log(response.data)
+        console.log(response.data);
         setPostalCodeData(response.data as PostalCodeData[]);
       } catch (error) {
         console.error("Error fetching postal code data:", error);
@@ -323,12 +324,12 @@ const AddTaskForm: React.FC = () => {
     const uploadedFile = event.target.files?.[0];
     if (uploadedFile) {
       if (uploadedFile.size > maxSize) {
-        setErrs('File size exceeds 5MB.');
+        setErrs("File size exceeds 5MB.");
       } else {
         setTask({ ...task, taskImage: uploadedFile });
         const reader = new FileReader();
         reader.readAsDataURL(uploadedFile);
-        setErrs('');
+        setErrs("");
       }
     }
   };
@@ -409,7 +410,7 @@ const AddTaskForm: React.FC = () => {
 
   const timeout = (ms: number) => {
     return new Promise((_, reject) => {
-      setTimeout(() => reject(new Error('Request timed out')), ms);
+      setTimeout(() => reject(new Error("Request timed out")), ms);
     });
   };
 
@@ -463,7 +464,7 @@ const AddTaskForm: React.FC = () => {
                 Authorization: `Bearer ${token}`,
                 "Content-Type": "multipart/form-data",
               },
-            }
+            },
           ),
           timeout(10000),
         ]);
@@ -504,7 +505,7 @@ const AddTaskForm: React.FC = () => {
             >
               <div className="grid space-y-3">
                 <div className="flex items-center justify-between">
-                  <label className="font-semibold text-status-darkpurple text-[13px] lg:text-[16px]">
+                  <label className="text-[13px] font-semibold text-status-darkpurple lg:text-[16px]">
                     Write a short title for the task you need done{" "}
                     <span className="font-extrabold text-[#ff0000]">*</span>
                   </label>
@@ -528,7 +529,7 @@ const AddTaskForm: React.FC = () => {
               </div>
               <div className="relative grid space-y-4">
                 <div className="flex items-center justify-between">
-                  <label className="font-semibold text-[13px] lg:text-[16px]">
+                  <label className="text-[13px] font-semibold lg:text-[16px]">
                     What category best describes your task?{" "}
                     <span className="font-extrabold text-[#ff0000]">*</span>
                   </label>
@@ -567,7 +568,7 @@ const AddTaskForm: React.FC = () => {
               </div>
               <div className="relative grid space-y-3">
                 <div className="flex items-center justify-between">
-                  <label className="flex font-semibold text-[13px] lg:text-[16px]">
+                  <label className="flex text-[13px] font-semibold lg:text-[16px]">
                     Give a description of your task {""}{" "}
                     <span className="font-extrabold text-[#ff0000]">*</span>
                   </label>
@@ -586,7 +587,7 @@ const AddTaskForm: React.FC = () => {
                 ></textarea>
               </div>
               <div className=" space-y-3">
-                <label className="font-satoshiBold font-bold text-status-darkpurple text-[13px] lg:text-[16px]">
+                <label className="font-satoshiBold text-[13px] font-bold text-status-darkpurple lg:text-[16px]">
                   Upload an Image (Optional)
                 </label>
                 {task.taskImage ? (
@@ -636,9 +637,7 @@ const AddTaskForm: React.FC = () => {
                     />
                   </label>
                 )}
-                {errs && (
-                  <div className="text-red-500 font-bold">{errs}</div>
-                )}
+                {errs && <div className="font-bold text-red-500">{errs}</div>}
               </div>
 
               <div className="space-y-5 ">
@@ -718,26 +717,28 @@ const AddTaskForm: React.FC = () => {
         return (
           <div className="mb-10 space-y-10">
             <div className="space-y-4">
-              <h2 className="font-satoshiBold font-bold text-status-darkpurple text-[13px] lg:text-[16px]">
+              <h2 className="font-satoshiBold text-[13px] font-bold text-status-darkpurple lg:text-[16px]">
                 Type of Service{" "}
                 <span className="font-extrabold text-[#ff0000]">*</span>
               </h2>
               <div className="flex space-x-4 text-[13px] text-[#221354]">
                 <button
-                  className={`rounded-2xl p-2 ${activeButtonIndex === 0
+                  className={`rounded-2xl p-2 ${
+                    activeButtonIndex === 0
                       ? "bg-status-purpleBase text-white"
                       : "bg-[#EBE9F4] hover:bg-status-purpleBase hover:text-white"
-                    } outline-none`}
+                  } outline-none`}
                   name="physical"
                   onClick={() => handleClick(0)}
                 >
                   Physical Service
                 </button>
                 <button
-                  className={`rounded-2xl p-2 ${activeButtonIndex === 1
+                  className={`rounded-2xl p-2 ${
+                    activeButtonIndex === 1
                       ? "bg-status-purpleBase text-white"
                       : "bg-[#EBE9F4] hover:bg-status-purpleBase hover:text-white"
-                    } outline-none`}
+                  } outline-none`}
                   name="remote"
                   onClick={() => {
                     handleClick(1);
@@ -763,7 +764,12 @@ const AddTaskForm: React.FC = () => {
                   <div className="flex space-x-4">
                     <div className="grid space-y-4">
                       <div className="flex items-center justify-between">
-                        <label>Postal code <span className="text-[#ff0000] font-extrabold">*</span></label>
+                        <label>
+                          Postal code{" "}
+                          <span className="font-extrabold text-[#ff0000]">
+                            *
+                          </span>
+                        </label>
                         {selectedCode && (
                           <div className="h-[16px] w-[16px] rounded-3xl bg-[#4CAF50] text-[16px] font-extrabold text-white">
                             <GrFormCheckmark />
@@ -780,7 +786,12 @@ const AddTaskForm: React.FC = () => {
 
                     <div className="grid space-y-4">
                       <div className="flex items-center justify-between">
-                        <label>Suburb <span className="text-[#ff0000] font-extrabold">*</span></label>
+                        <label>
+                          Suburb{" "}
+                          <span className="font-extrabold text-[#ff0000]">
+                            *
+                          </span>
+                        </label>
                         {selectedCity && (
                           <div className="h-[16px] w-[16px] rounded-3xl bg-[#4CAF50] text-[16px] font-extrabold text-white">
                             <GrFormCheckmark />
@@ -831,7 +842,10 @@ const AddTaskForm: React.FC = () => {
               )}
               <div className="relative grid space-y-4 font-bold text-status-darkpurple">
                 <div className="flex items-center justify-between">
-                  <label className="text-[13px] lg:text-[16px]">Budget <span className="text-[#ff0000] font-extrabold">*</span></label>
+                  <label className="text-[13px] lg:text-[16px]">
+                    Budget{" "}
+                    <span className="font-extrabold text-[#ff0000]">*</span>
+                  </label>
                   {task.customerBudget && (
                     <div className="h-[16px] w-[16px] rounded-3xl bg-[#4CAF50] text-[16px] font-extrabold text-white">
                       <GrFormCheckmark />
@@ -892,17 +906,19 @@ const AddTaskForm: React.FC = () => {
         <div className="fixed hidden lg:block left-0 top-20 z-10 w-full border-t-2 bg-white shadow-md">
           <div className="mb-3 flex justify-center space-x-5 pt-4">
             <div
-              className={`${currentPage === 1
+              className={`${
+                currentPage === 1
                   ? "text-status-purpleBase"
                   : "text-status-purpleBase"
-                }`}
+              }`}
             >
               <p className="flex items-center gap-2 text-[12px] md:text-[16px] lg:gap-3">
                 <span
-                  className={`${currentPage === 1
+                  className={`${
+                    currentPage === 1
                       ? "bg-status-purpleBase text-white"
                       : "bg-status-purpleBase text-white"
-                    } flex h-[37px] w-[47px] items-center justify-center rounded-[22px] border-none p-3 font-satoshiBold`}
+                  } flex h-[37px] w-[47px] items-center justify-center rounded-[22px] border-none p-3 font-satoshiBold`}
                 >
                   01
                 </span>{" "}
@@ -913,15 +929,17 @@ const AddTaskForm: React.FC = () => {
               </p>
             </div>
             <div
-              className={`${currentPage === 2 ? "text-status-purpleBase" : " text-[#716F78]"
-                }`}
+              className={`${
+                currentPage === 2 ? "text-status-purpleBase" : " text-[#716F78]"
+              }`}
             >
               <p className="flex items-center gap-2 text-[12px] md:text-[16px] lg:gap-3">
                 <span
-                  className={`${currentPage === 2
+                  className={`${
+                    currentPage === 2
                       ? "bg-status-purpleBase text-white"
                       : "bg-[#EAE9EB] text-[#716F78]"
-                    } flex h-[37px] w-[47px] items-center justify-center rounded-[22px] border-none p-3 font-satoshiBold`}
+                  } flex h-[37px] w-[47px] items-center justify-center rounded-[22px] border-none p-3 font-satoshiBold`}
                 >
                   02
                 </span>{" "}
@@ -938,12 +956,13 @@ const AddTaskForm: React.FC = () => {
               {/* Progress bar */}
               <div className="h-1 w-2/3 overflow-hidden bg-[#EAE9EB]">
                 <div
-                  className={`h-full ${currentPage === 1
+                  className={`h-full ${
+                    currentPage === 1
                       ? "bg-status-purpleBase"
                       : currentPage === 2
                         ? "bg-status-purpleBase"
                         : "bg-status-purpleBase"
-                    }`}
+                  }`}
                   style={{ width: `${progress}%` }}
                 />
               </div>
@@ -976,16 +995,18 @@ const AddTaskForm: React.FC = () => {
             setIsSuccessPopupOpen(false);
           }}
         >
-          <div className="lg:px-24 px-16 py-10">
+          <div className="px-16 py-10 lg:px-24">
             <div className="relative grid items-center justify-center space-y-5">
               <p className="text-center font-clashBold text-[20px] font-extrabold text-[#2A1769] md:text-[36px] lg:text-[37px] ">
                 You are almost done!!!
               </p>
               <div>
-              <p className="text-center text-[14px] lg:text-[20px] ">
-                Please sign up to finish adding your first </p>
-              <p className="text-center text-[14px] lg:text-[20px] ">task and
-                  manage all your tasks.</p>
+                <p className="text-center text-[14px] lg:text-[20px] ">
+                  Please sign up to finish adding your first{" "}
+                </p>
+                <p className="text-center text-[14px] lg:text-[20px] ">
+                  task and manage all your tasks.
+                </p>
               </div>
               <Image
                 src={imag}
@@ -997,7 +1018,7 @@ const AddTaskForm: React.FC = () => {
                 alt="image"
                 className="absolute -left-12 top-0 w-16 lg:-left-[100px] lg:-top-12 lg:w-28"
               />
-              <div className="flex space-x-3 justify-center">
+              <div className="flex justify-center space-x-3">
                 <button
                   onClick={handleLoginNavigation}
                   className="rounded-2xl border border-status-purpleBase p-2 text-[14px] font-semibold text-status-purpleBase outline-none md:w-[100px]"
@@ -1021,17 +1042,17 @@ const AddTaskForm: React.FC = () => {
             setIsSuccessPopupOpen(false);
           }}
         >
-          <div className="lg:px-24 py-10 px-16">
+          <div className="px-16 py-10 lg:px-24">
             <div className="relative grid items-center justify-center space-y-5">
               <p className="font-clashDisplay text-center text-[20px] font-extrabold text-[#2A1769] md:text-[36px] lg:text-[37px] ">
                 You are almost done!!!
               </p>
               <div>
-              <p className="text-center text-[14px] lg:text-[20px]">
-                Please proceed to update your profile
-              </p>
-              <p className="text-center text-[14px] lg:text-[20px]">
-                before your Task can be posted
+                <p className="text-center text-[14px] lg:text-[20px]">
+                  Please proceed to update your profile
+                </p>
+                <p className="text-center text-[14px] lg:text-[20px]">
+                  before your Task can be posted
                 </p>
               </div>
               <Image
@@ -1067,23 +1088,22 @@ const AddTaskForm: React.FC = () => {
             setIsSuccessPopupOpen(false);
           }}
         >
-          <div className="lg:px-24 py-10 px-12">
+          <div className="px-12 py-10 lg:px-24">
             <div className="relative grid items-center justify-center space-y-5">
-                <div className="flex justify-center text-[1px] text-white">
-                  <Image src={imags} alt="image" />
-                </div>
+              <div className="flex justify-center text-[1px] text-white">
+                <Image src={imags} alt="image" />
+              </div>
               <p className="font-clashDisplay text-center text-[25px] font-extrabold text-[#2A1769] lg:text-[37px] ">
                 Congratulations
+              </p>
+              <div>
+                <p className="text-center lg:text-[20px]">
+                  Your task has been posted!
                 </p>
-                <div>
-              <p className="lg:text-[20px] text-center">
-                Your task has been posted! 
+                <p className="text-center lg:text-[20px]">
+                  please click on the button to proceed to marketplace
                 </p>
-                <p className="lg:text-[20px] text-center">
-                  please click on the button to
-                  proceed to marketplace
-                  </p>
-                </div>
+              </div>
               <Image
                 src={image}
                 alt="image"

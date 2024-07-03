@@ -8,6 +8,7 @@ import { signIn } from "next-auth/react";
 import Link from "next/link";
 import { useState } from "react";
 import axios from "axios";
+import { getCookie } from "cookies-next";
 
 type SignInRequest = {
   emailAddress: string;
@@ -62,10 +63,16 @@ const LoginForm = () => {
           userType: userTypeRole,
         });
       }
-      if (from) {
-        router.push(from);
+      const newRedirectToAddTask = getCookie("redirectToAddTask");
+
+      if (newRedirectToAddTask) {
+        router.push(newRedirectToAddTask);
       } else {
-        router.push("/marketplace");
+        if (from) {
+          router.push(from);
+        } else {
+          router.push("/marketplace");
+        }
       }
 
       setIsLoading(false);
