@@ -63,10 +63,10 @@ const Navigation = () => {
 
   const handleLogout = async () => {
     try {
+      await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/logout`);
       setAuth(initialAuthState);
       dispatch(removeUserProfile());
       await signOut({ callbackUrl: "https://taskhub.com.au/home" });
-      await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/logout`);
       router.push("/home");
     } catch (error: any) {
       console.log(error);
@@ -174,12 +174,34 @@ const Navigation = () => {
             <Link href="/">
               <Logo />
             </Link>
-            <button
-              onClick={() => setShowMobileNav((state) => !state)}
-              className="lg:hidden"
-            >
-              <RiMenu3Fill className="h-9 w-9 text-primary" />
-            </button>
+            <div className="flex items-center gap-3 lg:hidden">
+              <Link href="/message" className="relative cursor-pointer">
+                <BsChat className="size-6 text-black" />
+                {totalUnreadMessages > 0 && (
+                  <span className="absolute -right-1 -top-1 flex size-5 items-center justify-center rounded-full bg-tc-orange text-xs text-white">
+                    {totalUnreadMessages}
+                  </span>
+                )}
+              </Link>
+              <button
+                className="relative cursor-pointer"
+                onClick={() => router.push(notificationRoute)}
+              >
+                <IoMdNotificationsOutline className="size-7 text-black" />
+                {/* display notification length here */}
+                {notifications.length > 0 && (
+                  <div className="absolute -right-1 -top-1 flex size-5 items-center justify-center rounded-full bg-tc-orange text-xs text-white">
+                    {notifications.length}
+                  </div>
+                )}
+              </button>
+              <button
+                onClick={() => setShowMobileNav((state) => !state)}
+                className="lg:hidden"
+              >
+                <RiMenu3Fill className="h-9 w-9 text-primary" />
+              </button>
+            </div>
             <ul className="hidden items-center space-x-8 lg:flex">
               {currentLinks.map((link) => {
                 return (

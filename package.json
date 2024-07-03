@@ -15,6 +15,7 @@
     "@stripe/stripe-js": "^3.5.0",
     "@types/html2canvas": "^1.0.0",
     "@types/jspdf": "^2.0.0",
+    "@types/react-scroll-to-bottom": "^4.2.5",
     "axios": "^1.6.8",
     "chart.js": "^4.4.3",
     "clsx": "^2.1.1",

@@ -36,8 +36,8 @@ const ChatSocket = () => {
 
   const onMessageReceived = (msg: any) => {
     const parsedMessage = JSON.parse(msg.body);
-    console.log("Message received", parsedMessage);
     dispatch(setNewMessage(parsedMessage));
+    loadContacts();
   };
 
   const onError = (err: any) => {

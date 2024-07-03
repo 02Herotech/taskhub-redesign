@@ -60,7 +60,7 @@ export async function findChatMessage({
   id,
   token,
 }: {
-  id: number;
+  id: string;
   token: string;
 }) {
   const url = "https://smp.jacinthsolutions.com.au/api/v1/chat/messages/" + id;
