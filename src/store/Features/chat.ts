@@ -8,14 +8,12 @@ interface InitialStateType {
   contacts: ChatContactTypes[];
   totalUnreadMessages: number;
   newMessage: any;
-  stompClient: any;
 }
 
 const initialState: InitialStateType = {
   contacts: [],
   totalUnreadMessages: 0,
   newMessage: null,
-  stompClient: null,
 };
 
 export const chatSlice = createSlice({
@@ -32,18 +30,11 @@ export const chatSlice = createSlice({
       console.log(action.payload, "this is the payload");
       return { ...state, newMessage: action.payload };
     },
-    updateStompClient: (state, action) => {
-      return { ...state, stompClient: action.payload };
-    },
   },
 });
 
-export const {
-  setContacts,
-  setTotalUnreadMessages,
-  setNewMessage,
-  updateStompClient,
-} = chatSlice.actions;
+export const { setContacts, setTotalUnreadMessages, setNewMessage } =
+  chatSlice.actions;
 
 interface LoadContactsArgs {
   token: string;

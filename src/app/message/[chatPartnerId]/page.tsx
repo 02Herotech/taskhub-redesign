@@ -145,7 +145,7 @@ const ServiceProviderChat = () => {
           return { ...contact, newMessages: count };
         }),
       );
-      console.log(contact);
+      console.log(contacts);
       const allUnreadMessages = contacts.reduce(
         (accumulator, contact) => accumulator + contact.newMessages,
         0,

@@ -5,7 +5,6 @@ import {
   setContacts,
   setNewMessage,
   setTotalUnreadMessages,
-  updateStompClient,
 } from "@/store/Features/chat";
 import { countNewMessages, getUsers } from "@/utils/message";
 import React, { useEffect, useState, useRef } from "react";
@@ -17,43 +16,28 @@ const ChatSocket = () => {
   const { profile: user, userProfileAuth: auth } = useSelector(
     (state: RootState) => state.userProfile,
   );
-  // const { stompClient } = useSelector((state: RootState) => state.chat);
+
   const [reconnectAttempts, setReconnectAttempts] = useState(0);
   const maxReconnectAttempts = 5;
   const reconnectInterval = 5000; // 5 seconds
   const reconnectTimeout = useRef<NodeJS.Timeout | null>(null);
 
   const connect = () => {
-    // const Stomp = require("stompjs");
-    // var SockJS = require("sockjs-client");
-    // const URL = `https://smp.jacinthsolutions.com.au/ws`;
-    // SockJS = new SockJS(URL);
-    // dispatch(updateStompClient(Stomp.over(SockJS)));
-  };
-
-  const onMessageReceived = (msg: any) => {
-    console.log("recieving message");
-    try {
-      const parsedMessage = JSON.parse(msg.body);
-      console.log("Message received", parsedMessage);
-      dispatch(setNewMessage(parsedMessage));
-    } catch (error) {
-      console.error("Error parsing message body:", error);
-    }
-  };
-
-  const connectSocket = () => {
     stompClient.connect({}, onConnected, onError);
   };
 
   const onConnected = () => {
-    if (user) {
-      stompClient.subscribe(
-        `/user/${user.id}/queue/messages`,
-        onMessageReceived,
-      );
-      setReconnectAttempts(0); // Reset the reconnect attempts on successful connection
-    }
+    stompClient.subscribe(
+      `/user/${user?.id}/queue/messages`,
+      onMessageReceived,
+    );
+    setReconnectAttempts(0);
+  };
+
+  const onMessageReceived = (msg: any) => {
+    const parsedMessage = JSON.parse(msg.body);
+    console.log("Message received", parsedMessage);
+    dispatch(setNewMessage(parsedMessage));
   };
 
   const onError = (err: any) => {
@@ -70,14 +54,6 @@ const ChatSocket = () => {
       console.error("Max reconnect attempts reached");
     }
   };
-
-  useEffect(() => {
-    if (stompClient) {
-      connectSocket();
-    } else {
-      connect();
-    }
-  }, [stompClient]);
 
   const loadContacts = async () => {
     if (!auth.token || !user) return;
@@ -105,8 +81,11 @@ const ChatSocket = () => {
   };
 
   useEffect(() => {
-    loadContacts();
-  }, [auth]);
+    if (user) {
+      connect();
+      loadContacts();
+    }
+  }, [user]);
 
   useEffect(() => {
     return () => {
