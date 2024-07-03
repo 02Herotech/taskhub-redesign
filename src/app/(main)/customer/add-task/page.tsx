@@ -24,6 +24,7 @@ import { setCookie, getCookie } from "cookies-next";
 import { FaSortDown } from "react-icons/fa6";
 import Dropdown from "@/components/global/Dropdown";
 import Loading from "@/components/global/loading/page";
+import Progress from "@/components/global/progress";
 
 interface FormData {
   taskBriefDescription: string;
@@ -705,7 +706,7 @@ const AddTaskForm: React.FC = () => {
               </div>
               <Button
                 type="submit"
-                className="w-[100px] rounded-3xl p-3 text-white"
+                className="lg:w-[100px] rounded-3xl p-3 text-white w-full"
               >
                 Next
               </Button>
@@ -866,15 +867,15 @@ const AddTaskForm: React.FC = () => {
                   errors.service ||
                   errors.customerBudget}
               </div>
-              <div className="flex justify-between">
+              <div className="flex justify-between flex-wrap-reverse gap-3">
                 {isAuthenticated && (
-                  <Button className="rounded-3xl" type="submit">
+                  <Button className="rounded-3xl w-full lg:w-[200px]" type="submit">
                     Confirm Task
                   </Button>
                 )}
                 {!isAuthenticated && (
                   <Button
-                    className="rounded-3xl"
+                    className="rounded-3xl w-full lg:w-[200px]"
                     type="button"
                     onClick={() => setIsSuccessPopup(true)}
                   >
@@ -884,7 +885,7 @@ const AddTaskForm: React.FC = () => {
                 <button
                   type="button"
                   onClick={prevPage}
-                  className="w-[100px] rounded-3xl bg-[#EBE9F4] p-2 text-[14px] font-bold outline-none hover:bg-status-violet hover:text-white"
+                  className="lg:w-[100px] w-full  rounded-3xl bg-[#EBE9F4] p-2 text-[14px] font-bold outline-none hover:bg-status-violet hover:text-white"
                 >
                   Back
                 </button>
@@ -902,7 +903,7 @@ const AddTaskForm: React.FC = () => {
         <title>TaskHub | Add Task</title>
       </Head>
       <div className="w-full">
-        <div className="fixed left-0 top-20 z-10 w-full border-t-2 bg-white shadow-md">
+        <div className="fixed hidden lg:block left-0 top-20 z-10 w-full border-t-2 bg-white shadow-md">
           <div className="mb-3 flex justify-center space-x-5 pt-4">
             <div
               className={`${
@@ -971,6 +972,7 @@ const AddTaskForm: React.FC = () => {
             </div>
           </div>
         </div>
+        <Progress currentPage={currentPage} progress={progress} />
         <div className="pt-28">
           <div className="mt-8 flex items-center justify-center p-4 font-medium lg:p-0">
             <div>
