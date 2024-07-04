@@ -101,6 +101,7 @@ const AiDesciption: React.FC<AiGenerateProps> = ({
         ...newConversation,
         { id: generateId(), type: "ai", text: data },
       ]);
+      setAiQuery("");
     } catch (error) {
       console.error("Error fetching AI response:", error);
     } finally {
