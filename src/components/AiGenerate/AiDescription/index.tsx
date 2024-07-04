@@ -296,7 +296,7 @@ const AiDesciption: React.FC<AiGenerateProps> = ({
 
       {aiChatView && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 lg:py-2 py-1">
-          <div ref={containerRef} className="mx-auto h-[90%] w-[90%] rounded-[16px] bg-[#FFFFFF] lg:p-10 lg:pt-7 p-5 lg:!pb-20 text-white md:w-[60%] lg:w-[50%] overflow-hidden">
+          <div ref={containerRef} className="mx-auto h-[90%] w-[90%] relative rounded-[16px] bg-[#FFFFFF] lg:p-10 lg:pt-7 p-5 lg:!pb-20 text-white md:w-[60%] lg:w-[50%] overflow-hidden">
             <div className="flex justify-end">
               <div
                 className="flex h-[30px] w-[30px] items-center justify-center rounded-full bg-[#EBE9F4] hover:cursor-pointer"
@@ -405,7 +405,7 @@ const AiDesciption: React.FC<AiGenerateProps> = ({
               )}
             </p>
 
-            <div className="flex items-center pt-2 rounded-[20px] lg:px-4 px-2 font-medium border-[2px] border-primary min-h-16">
+            <div className="flex items-center pt-2 rounded-[20px] lg:px-4 px-2 font-medium border-[2px] border-primary min-h-16 bottom-4">
               <textarea
                 name="aiQuery"
                 placeholder="Enter a request here"
