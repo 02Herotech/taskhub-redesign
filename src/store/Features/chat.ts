@@ -3,19 +3,24 @@
 import { countNewMessages, getUsers } from "@/utils/message";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { RootState } from "..";
+import { number } from "zod";
+
+interface NewMessagePropsTypes {
+  id: string;
+  senderId: number;
+  senderName: string;
+}
 
 interface InitialStateType {
   contacts: ChatContactTypes[];
   totalUnreadMessages: number;
-  newMessage: any;
-  stompClient: any;
+  newMessage: null | NewMessagePropsTypes;
 }
 
 const initialState: InitialStateType = {
   contacts: [],
   totalUnreadMessages: 0,
   newMessage: null,
-  stompClient: null,
 };
 
 export const chatSlice = createSlice({
@@ -29,21 +34,14 @@ export const chatSlice = createSlice({
       return { ...state, totalUnreadMessages: action.payload };
     },
     setNewMessage: (state, action) => {
-      console.log(action.payload, "this is the payload");
-      return { ...state, newMessage: action.payload };
-    },
-    updateStompClient: (state, action) => {
-      return { ...state, stompClient: action.payload };
+      const newMessage = action.payload;
+      return { ...state, newMessage };
     },
   },
 });
 
-export const {
-  setContacts,
-  setTotalUnreadMessages,
-  setNewMessage,
-  updateStompClient,
-} = chatSlice.actions;
+export const { setContacts, setTotalUnreadMessages, setNewMessage } =
+  chatSlice.actions;
 
 interface LoadContactsArgs {
   token: string;

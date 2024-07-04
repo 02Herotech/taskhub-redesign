@@ -12,17 +12,17 @@ import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setContacts, setTotalUnreadMessages } from "@/store/Features/chat";
 import { stompClient } from "@/lib/stompClient";
+import ScrollToBottom from "react-scroll-to-bottom";
 
 const ServiceProviderChat = () => {
   const [chatMessages, setChatMessages] = useState<
     ChatMessageDisplayedType[] | null
   >([]);
   const [message, setMessage] = useState("");
-  const [loading, setLoading] = useState(false);
   const [contact, setContact] = useState<ChatContactTypes | null>();
 
   const session = useSession();
@@ -35,6 +35,7 @@ const ServiceProviderChat = () => {
   const { contacts, newMessage } = useSelector(
     (state: RootState) => state.chat,
   );
+  const inputRef = useRef<HTMLTextAreaElement>(null);
 
   const token = session?.data?.user?.accessToken;
   const isServiceProvider = auth?.role?.[0] === "SERVICE_PROVIDER";
@@ -42,6 +43,17 @@ const ServiceProviderChat = () => {
   useEffect(() => {
     loadContacts();
   }, []);
+
+  const handleFocus = () => {
+    document.body.style.overflow = "auto";
+    setTimeout(() => {
+      inputRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+    }, 300); // Delay to account for keyboard animation
+  };
+
+  const handleBlur = () => {
+    document.body.style.overflow = "hidden"; // Revert to non-scrollable
+  };
 
   // finds current chat patner messages
   useEffect(() => {
@@ -78,21 +90,24 @@ const ServiceProviderChat = () => {
   }, [contacts]);
 
   const onMessageReceived = async () => {
-    if (newMessage && chatPartnerId === newMessage.senderId) {
-      findChatMessage(newMessage.id).then((message) => {
-        console.log("newly recieved messages", message);
-        const displayMessage: ChatMessageDisplayedType = {
-          content: message.content,
-          senderId: message.senderId,
-          time: message.timestamp,
-        };
-        const newMessages: ChatMessageDisplayedType[] = [
-          ...(chatMessages || []),
-          displayMessage,
-        ];
-        setChatMessages(newMessages);
-      });
-      await loadContacts();
+    if (newMessage && chatPartnerId === newMessage.senderId.toString()) {
+      findChatMessage({
+        id: newMessage.id,
+        token: token as string,
+      })
+        .then((message) => {
+          const displayMessage: ChatMessageDisplayedType = {
+            content: message.content,
+            senderId: message.senderId,
+            time: message.timestamp,
+          };
+          const newMessages: ChatMessageDisplayedType[] = [
+            ...(chatMessages || []),
+            displayMessage,
+          ];
+          setChatMessages(newMessages);
+        })
+        .catch((error) => console.error(error));
     }
   };
 
@@ -131,7 +146,6 @@ const ServiceProviderChat = () => {
 
   // handle load contacts from the database
   const loadContacts = async () => {
-    console.log("loading contacts from the database");
     if (!token || !user) return;
     try {
       const users = await getUsers({ token: token });
@@ -145,7 +159,6 @@ const ServiceProviderChat = () => {
           return { ...contact, newMessages: count };
         }),
       );
-      console.log(contact);
       const allUnreadMessages = contacts.reduce(
         (accumulator, contact) => accumulator + contact.newMessages,
         0,
@@ -161,14 +174,14 @@ const ServiceProviderChat = () => {
   const handleReschedule = () => {};
 
   return (
-    <main className="min-h-[calc(100vh-4rem)] space-y-5  p-4 lg:p-8 ">
+    <main className="h-[calc(100vh-5rem)] space-y-5 overflow-hidden   p-4 lg:p-8 ">
       <section className="grid gap-10 divide-slate-400 lg:grid-cols-12 lg:divide-x ">
         <section className="col-span-5 h-full max-md:hidden ">
           <ChatNavigation />
         </section>
 
         {/* Organize this */}
-        <section className="flex h-[calc(100vh-7rem)] w-full flex-col justify-between space-y-4 lg:col-span-7  lg:h-[calc(100vh-8rem)] lg:px-4 ">
+        <section className="flex h-[calc(100vh-7rem)] w-full flex-col justify-between space-y-4  lg:col-span-7  lg:h-[calc(100vh-8rem)] lg:px-4 ">
           <article className="space-y-4">
             <div className="flex cursor-pointer gap-3 ">
               <Image
@@ -221,24 +234,26 @@ const ServiceProviderChat = () => {
 
           {/* -------chat */}
           {user && (
-            <div className="no-scrollbar flex max-h-full min-h-[60%] w-full flex-col justify-end gap-4 overflow-y-auto">
-              {chatMessages &&
-                chatMessages.map((item, index) => {
-                  return (
-                    <div
-                      key={index}
-                      className={` flex w-full ${item.senderId === user.id ? "justify-end" : "justify-start"}`}
-                    >
-                      <p
+            <ScrollToBottom className="no-scrollbar max-h-full min-h-[60%] overflow-y-scroll">
+              <div className=" flex w-full flex-col justify-end gap-4">
+                {chatMessages &&
+                  chatMessages.map((item, index) => {
+                    return (
+                      <div
                         key={index}
-                        className={` flex w-fit max-w-xs rounded-md p-2 text-sm ${item.senderId === user.id ? " bg-violet-normal text-right text-white" : " bg-orange-light text-left text-violet-dark "}`}
+                        className={` flex w-full ${item.senderId === user.id ? "justify-end" : "justify-start"}`}
                       >
-                        <span>{item.content}</span>
-                      </p>
-                    </div>
-                  );
-                })}
-            </div>
+                        <p
+                          key={index}
+                          className={` flex w-fit max-w-xs rounded-md p-2 text-sm ${item.senderId === user.id ? " bg-violet-normal text-right text-white" : " bg-orange-light text-left text-violet-dark "}`}
+                        >
+                          <span>{item.content}</span>
+                        </p>
+                      </div>
+                    );
+                  })}
+              </div>
+            </ScrollToBottom>
           )}
 
           <div className="flex gap-2 ">
@@ -255,7 +270,10 @@ const ServiceProviderChat = () => {
               <textarea
                 className="small-scrollbar max-h-20 w-full resize-none rounded-md bg-violet-light p-3 pr-16 outline-none"
                 value={message}
+                ref={inputRef}
                 onChange={(event) => setMessage(event.target.value)}
+                onFocus={handleFocus}
+                onBlur={handleBlur}
                 onKeyDown={(event) => {
                   if (event.key === "Enter") {
                     sendMessage(message);

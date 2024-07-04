@@ -98,39 +98,13 @@ const AcceptedServices = ({
                 </p>
               </div>
             </div>
-            <div className="flex items-center justify-between">
-              <div className="flex flex-wrap gap-3">
-                <Link
-                  href={"/service-provider/jobs/" + item.id}
-                  className="rounded-full border border-violet-normal bg-violet-light px-6 py-3 text-sm font-medium text-violet-normal transition-colors duration-300 hover:bg-violet-200 max-md:px-3 max-md:py-1 max-md:text-xs "
-                >
-                  View Enquiry
-                </Link>
-                {/* <button
-                  onClick={() => handleStartService(item.id)}
-                  disabled={startJobState.loading}
-                  className="rounded-full border border-violet-normal bg-violet-normal px-6 py-3 text-sm font-medium text-white transition-opacity duration-300 hover:opacity-90 max-md:px-3 max-md:py-1 max-md:text-xs"
-                >
-                  {startJobState.loading && startJobState.id === item.id ? (
-                    <BeatLoader
-                      loading={
-                        startJobState.loading && startJobState.id === item.id
-                      }
-                      color="white"
-                      size={20}
-                    />
-                  ) : (
-                    "Start Service"
-                  )}
-                </button> */}
-              </div>
-
-              {/* <button
-                className="rounded-full  px-4 py-2 text-xl font-bold text-red-500 transition-colors duration-300 hover:bg-red-100 "
-                onClick={() => handleReportservice(item.id)}
+            <div className="flex w-full items-center">
+              <Link
+                href={"/service-provider/jobs/" + item.id}
+                className="mb-2 rounded-full border border-violet-normal bg-violet-light px-6 py-3 text-center text-sm font-medium text-violet-normal transition-colors duration-300 hover:bg-violet-200 max-md:w-full  max-md:text-xs "
               >
-                Report
-              </button> */}
+                View Enquiry
+              </Link>
             </div>
           </div>
         </div>
