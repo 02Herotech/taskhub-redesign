@@ -391,25 +391,19 @@ const Tasks = () => {
                             <div className='bg-white rounded-2xl px-8 py-10 space-y-8 font-satoshi h-[500px] small-scrollbar overflow-y-auto'>
                                 <h3 className="font-bold text-primary text-2xl">Filter by</h3>
                                 <form action="" className="space-y-8">
-                                    <div className="flex items-center space-x-3 text-primary">
-                                        <input type="checkbox" />
-                                        <label htmlFor="" className="font-medium text-lg">Available task only</label>
-                                    </div>
-                                    <div className="flex items-center space-x-3 text-primary">
-                                        <input type="checkbox" />
-                                        <label htmlFor="" className="font-medium text-lg">Task with no offers only</label>
-                                    </div>
-                                    <div className="flex items-center justify-between w-full">
-                                        <Button theme="outline" className="rounded-full">
-                                            Cancel
-                                        </Button>
-                                        <Button className="rounded-full" onClick={() => {
-                                            handleFilterByType(selectedService)
-                                            setShowMobileFilters(false)
-                                        }}>
-                                            Apply
-                                        </Button>
-                                    </div>
+                                    {categoriesData.map((category, index) => (
+                                        <div
+                                            key={index}
+                                            onClick={() => {
+                                                handleFilterByCategory(category.id)
+                                                setShowMobileFilters(false)
+                                            }}
+                                            className='flex w-full transition-all text-status-darkViolet text-base font-bold hover:text-tc-orange cursor-pointer items-center justify-between p-2'>
+                                            <div className="">
+                                                {category?.categoryName}
+                                            </div>
+                                        </div>
+                                    ))}
                                 </form>
 
                                 <form action="" className="space-y-8 mt-5">
