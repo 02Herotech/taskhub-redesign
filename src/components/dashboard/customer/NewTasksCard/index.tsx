@@ -8,6 +8,8 @@ import { FaRegEdit } from "react-icons/fa";
 import { motion } from "framer-motion";
 import { dayOfWeekNames, formatAmount, monthNames, suffixes } from "@/lib/utils";
 import { CustomerTasks } from "@/types/services/tasks";
+import axios from "axios";
+import { useSession } from "next-auth/react";
 
 interface TaskCardProps {
     task: CustomerTasks;
@@ -19,10 +21,12 @@ type DropDownItem = {
     icon?: React.ReactNode;
 };
 
-const       NewTasksCard = ({ task }: TaskCardProps) => {
+const NewTasksCard = ({ task }: TaskCardProps) => {
     const dateArray = task.createdAt;
     const date = new Date(dateArray[0], dateArray[1] - 1, dateArray[2]);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    const session = useSession()
+    const token = session.data?.user.accessToken;
 
     const day = date.getDate();
     const daySuffix = (day === 11 || day === 12 || day === 13) ? "th" : suffixes[day % 10] || suffixes[0];
@@ -32,9 +36,28 @@ const       NewTasksCard = ({ task }: TaskCardProps) => {
         {
             title: "Edit Task",
             onClick: () => setIsDropdownOpen(false),
-            icon: <FaRegEdit className="text-white" />,
+            icon: <FaRegEdit className="text-white size-4" />,
         },
     ];
+
+    // const handleEditTask = async () => {
+    //     console.log("Edit Task");
+    //     try {
+    //         const url =
+    //             "https://smp.jacinthsolutions.com.au/api/v1/listing/update-listing/" +
+    //             task.id;
+    //         await axios.patch(url, body, {
+    //             headers: {
+    //                 Authorization: `Bearer ${token}`,
+    //                 "Content-Type": "multipart/form-data",
+    //             },
+    //         });
+    //         // setShowModal(true);
+    //     } catch (error: any) {
+    //         console.log(error.response.data);
+    //         // setErrorMessage(error.response.data.message);
+    //     }
+    // }
 
     return (
         <motion.div
@@ -56,13 +79,13 @@ const       NewTasksCard = ({ task }: TaskCardProps) => {
                         className={`small-scrollbar right-0 absolute top-[calc(100%+0.2rem)] flex max-h-0 w-[190px] flex-col rounded-md bg-[#EBE9F4] transition-all duration-300 ${isDropdownOpen ? "max-h-64 overflow-y-auto border border-primary" : "max-h-0 overflow-hidden"
                             }`}
                     >
-                        <div className="p-2 space-y-2 w-full">
+                        <div className="px-2 py-1">
                             {dropDownItems.map((item, index) => (
                                 <button key={index} onClick={item.onClick} className="flex items-center space-x-3">
-                                    <span className="bg-[#140B31] p-1 rounded-full size-9 flex items-center justify-center text-white">
+                                    <span className="bg-[#140B31] p-1 rounded-full flex items-center justify-center">
                                         {item.icon}
                                     </span>
-                                    <span className='lg:text-lg text-[#140B31] font-satoshiMedium'>{item.title}</span>
+                                    <span className='text-sm text-[#140B31] font-satoshiMedium'>{item.title}</span>
                                 </button>
                             ))}
                         </div>
