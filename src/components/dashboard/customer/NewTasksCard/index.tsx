@@ -8,6 +8,8 @@ import { FaRegEdit } from "react-icons/fa";
 import { motion } from "framer-motion";
 import { dayOfWeekNames, formatAmount, monthNames, suffixes } from "@/lib/utils";
 import { CustomerTasks } from "@/types/services/tasks";
+import axios from "axios";
+import { useSession } from "next-auth/react";
 
 interface TaskCardProps {
     task: CustomerTasks;
@@ -19,10 +21,12 @@ type DropDownItem = {
     icon?: React.ReactNode;
 };
 
-const       NewTasksCard = ({ task }: TaskCardProps) => {
+const NewTasksCard = ({ task }: TaskCardProps) => {
     const dateArray = task.createdAt;
     const date = new Date(dateArray[0], dateArray[1] - 1, dateArray[2]);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    const session = useSession()
+    const token = session.data?.user.accessToken;
 
     const day = date.getDate();
     const daySuffix = (day === 11 || day === 12 || day === 13) ? "th" : suffixes[day % 10] || suffixes[0];
@@ -35,6 +39,25 @@ const       NewTasksCard = ({ task }: TaskCardProps) => {
             icon: <FaRegEdit className="text-white size-4" />,
         },
     ];
+
+    // const handleEditTask = async () => {
+    //     console.log("Edit Task");
+    //     try {
+    //         const url =
+    //             "https://smp.jacinthsolutions.com.au/api/v1/listing/update-listing/" +
+    //             task.id;
+    //         await axios.patch(url, body, {
+    //             headers: {
+    //                 Authorization: `Bearer ${token}`,
+    //                 "Content-Type": "multipart/form-data",
+    //             },
+    //         });
+    //         // setShowModal(true);
+    //     } catch (error: any) {
+    //         console.log(error.response.data);
+    //         // setErrorMessage(error.response.data.message);
+    //     }
+    // }
 
     return (
         <motion.div
