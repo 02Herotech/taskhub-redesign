@@ -8,7 +8,7 @@ import { signIn } from "next-auth/react";
 import Link from "next/link";
 import { useState } from "react";
 import axios from "axios";
-import { getCookie } from "cookies-next";
+import { deleteCookie, getCookie } from "cookies-next";
 
 type SignInRequest = {
   emailAddress: string;
@@ -74,8 +74,8 @@ const LoginForm = () => {
           router.push("/marketplace");
         }
       }
-
       setIsLoading(false);
+      deleteCookie("redirectToAddTask");
     } catch (error: any) {
       setIsLoading(false);
       setError(error.response.data.message);

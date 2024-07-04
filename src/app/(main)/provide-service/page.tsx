@@ -681,7 +681,7 @@ const ProvideService: React.FC = () => {
                     errors.category ||
                     errors.subCategory}
                 </div>
-                <Button className="rounded-3xl" type="submit">
+                <Button className="rounded-3xl w-full lg:w-1/3" type="submit">
                   Next
                 </Button>
               </form>
@@ -755,7 +755,7 @@ const ProvideService: React.FC = () => {
                               placeholder="500"
                               className={` rounded-2xl bg-[#EBE9F4] p-3 pl-5 font-satoshiMedium text-[13px]  ${error.price ? "border border-[#ff0000] outline-[#FF0000]" : "border-none outline-none"}`}
                             />
-                            <p className="absolute left-3 top-3.5 lg:top-3">$</p>
+                            <p className="absolute left-3 top-3">$</p>
                             <p className="font-extraBold text-xs text-[#140B31]">
                               Minimum AUD$25 + 10% GST inclusive
                             </p>
@@ -802,7 +802,7 @@ const ProvideService: React.FC = () => {
                               placeholder="500"
                               className="w-1/3 rounded-2xl bg-[#EBE9F4] p-3 pl-5 font-satoshiMedium text-[13px] outline-none"
                             />
-                            <p className="absolute left-3 top-3.5 lg:top-3">$</p>
+                            <p className="absolute left-3 top-3">$</p>
                             <p className="font-extraBold text-xs text-[#140B31]">
                               Minimum AUD$25 + 10% GST inclusive
                             </p>
@@ -849,7 +849,7 @@ const ProvideService: React.FC = () => {
                               placeholder="500"
                               className="w-1/3 rounded-2xl bg-[#EBE9F4] p-3 pl-5 font-satoshiMedium text-[13px] outline-none"
                             />
-                            <p className="absolute left-3 top-3.5 lg:top-3">$</p>
+                            <p className="absolute left-3 top-3">$</p>
                             <p className="font-extraBold text-xs text-[#140B31]">
                               Minimum AUD$25 + 10% GST inclusive
                             </p>
@@ -970,16 +970,16 @@ const ProvideService: React.FC = () => {
                     error.postalCode ||
                     error.city}
                 </div>
-                <div className="flex justify-between">
+                <div className="flex lg:justify-between flex-wrap gap-3">
                   <Button
-                    className="rounded-3xl"
+                    className="rounded-3xl w-full lg:w-1/3"
                     type="button"
                     theme="outline"
                     onClick={prevPage}
                   >
                     Back
                   </Button>
-                  <Button className="rounded-3xl" type="submit">
+                  <Button className="rounded-3xl w-full lg:w-1/3" type="submit">
                     Next
                   </Button>
                 </div>
@@ -1265,16 +1265,16 @@ const ProvideService: React.FC = () => {
               <div className="text-red-600">
                 {err.image || err.availableDays}
               </div>
-              <div className="flex justify-between">
+              <div className="flex justify-between flex-wrap gap-3">
                 <Button
-                  className="rounded-3xl"
+                  className="rounded-3xl w-full lg:w-1/3"
                   theme="outline"
                   type="button"
                   onClick={prevPage}
                 >
                   Back
                 </Button>
-                <Button className="rounded-3xl" type="submit">
+                <Button className="rounded-3xl w-full lg:w-1/3" type="submit">
                   Post Listing
                 </Button>
               </div>
@@ -1382,7 +1382,7 @@ const ProvideService: React.FC = () => {
             </div>
           </div>
         </div>
-        <ProgressBar currentPage={currentPage} progress={progress}/>
+        <ProgressBar currentPage={currentPage} progress={progress} setCurrentPage={setCurrentPage}/>
         <div className="pt-24">
           <div className="mt-8 lg:flex">
             {currentPage === 1 && (

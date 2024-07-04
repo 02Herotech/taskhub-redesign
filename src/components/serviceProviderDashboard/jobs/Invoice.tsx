@@ -193,6 +193,7 @@ const Invoice = ({
 
   const handleDownloadImage = async () => {
     if (invoiceContainerRef.current) {
+      console.log("downloading image");
       setIsDownloadingImage(true);
       const dataUrl = await toPng(invoiceContainerRef.current);
 
@@ -244,7 +245,7 @@ const Invoice = ({
         >
           <div>
             <h1 className="font-clashBold text-3xl font-extrabold leading-6 text-violet-dark">
-              Paid Invoice
+              {!currentBooking?.invoiceSent && "Make an "} Offer
             </h1>
             <p className="text-sm text-violet-active ">
               {currentBooking?.bookingTitle}
@@ -400,7 +401,7 @@ const Invoice = ({
                   onClick={handleDownloadImage}
                   className=" rounded-full bg-violet-normal px-4 py-2 font-medium text-white"
                 >
-                  Download Invoice
+                  Download Offer
                 </button>
               )}
             </div>

@@ -8,7 +8,7 @@ interface ProgressBarProps {
     setCurrentPage: React.Dispatch<React.SetStateAction<number>>;
 }
 
-const ProgressBar: React.FC<ProgressBarProps> = ({ currentPage, progress, setCurrentPage }) => {
+const Progress: React.FC<ProgressBarProps> = ({ currentPage, progress, setCurrentPage }) => {
     const router = useRouter();
 
     const handleBackClick = () => {
@@ -22,11 +22,9 @@ const ProgressBar: React.FC<ProgressBarProps> = ({ currentPage, progress, setCur
     const getTitle = () => {
         switch (currentPage) {
             case 1:
-                return 'Service Description';
+                return 'Task Details';
             case 2:
-                return 'Service Details';
-            case 3:
-                return 'Image Upload';
+                return 'Location and Budget';
             default:
                 return '';
         }
@@ -37,21 +35,20 @@ const ProgressBar: React.FC<ProgressBarProps> = ({ currentPage, progress, setCur
             <div className="flex items-center justify-evenly p-4">
                 <FaArrowLeftLong
                     className="text-status-purpleBase text-2xl cursor-pointer"
-                    aria-label="Back"
                     onClick={handleBackClick}
                 />
                 <h2 className="text-[#381F8C] text-xl font-clashBold">{getTitle()}</h2>
             </div>
             <div className="flex items-center px-4">
-                <div className="h-1 w-full bg-[#EAE9EB]" aria-label="Progress Bar">
+                <div className="h-1 w-full bg-[#EAE9EB]">
                     <div className="h-full bg-status-purpleBase" style={{ width: `${progress}%` }}></div>
                 </div>
             </div>
             <div className="flex items-center justify-end px-4">
-                <span className="text-status-purpleBase ml-2">{`Step ${currentPage} of 3`}</span>
+                <span className="text-status-purpleBase ml-2">{`Step ${currentPage} of 2`}</span>
             </div>
         </div>
     );
 };
 
-export default ProgressBar;
+export default Progress;

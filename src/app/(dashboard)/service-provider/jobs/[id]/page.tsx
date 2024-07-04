@@ -9,21 +9,20 @@ import {
   formatDateFromNumberArrayToRelativeDate,
 } from "@/utils";
 import axios from "axios";
-import { error } from "console";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
-import Link from "next/link";
-import { useParams, useRouter, useSearchParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { IoLocationOutline } from "react-icons/io5";
 import { useSelector } from "react-redux";
 import { BeatLoader } from "react-spinners";
 import { stompClient } from "@/lib/stompClient";
+import MessageButton from "@/components/global/MessageButton";
 const ViewJobs = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [currentBooking, setCurrentBooking] = useState<BookingType>();
-  const [currentListing, setCurrentListing] = useState<ListingDataType>();
+  // const [currentListing, setCurrentListing] = useState<ListingDataType>();
   const [requestStatus, setRequestStatus] = useState({
     isAcceptRequesting: false,
     isRejectRequesting: false,
@@ -33,14 +32,7 @@ const ViewJobs = () => {
 
   const [invoiceDraft, setInvoiceDraft] = useState<InvoiceDraftType>();
   const [showCongratulations, setShowCongratulations] = useState(false);
-  const [messageLoading, setMessageLoading] = useState(false);
 
-  const { profile: user } = useSelector(
-    (state: RootState) => state.userProfile,
-  );
-  // const { stompClient } = useSelector((state: RootState) => state.chat);
-
-  const router = useRouter();
   const session = useSession();
   const token = session?.data?.user?.accessToken;
   const { id } = useParams();
@@ -56,14 +48,7 @@ const ViewJobs = () => {
         },
       });
       const bookingData = response.data;
-      const listingId = bookingData.listing.id;
       setCurrentBooking(bookingData);
-
-      const listingUrl =
-        "https://smp.jacinthsolutions.com.au/api/v1/listing/" + listingId;
-      const listingResponse = await axios.get(listingUrl);
-      const listingData = listingResponse.data;
-      setCurrentListing(listingData);
     } catch (error) {
       console.error("An error occurred while fetching services:", error);
     } finally {
@@ -141,34 +126,6 @@ const ViewJobs = () => {
       setInvoiceDraft(currentInvoice);
     }
   }, [currentBooking]);
-
-  const handleMessageCustomer = async ({
-    customerId,
-    fullName,
-  }: {
-    customerId: number;
-    fullName: string;
-  }) => {
-    if (user) {
-      const message = {
-        senderId: user.id,
-        recipientId: customerId,
-        senderName: `${user.firstName} ${user.lastName}`,
-        recipientName: fullName,
-        content: "Hello " + fullName,
-        timestamp: new Date().toISOString(),
-      };
-      try {
-        setMessageLoading(true);
-        await stompClient.send("/app/chat", {}, JSON.stringify(message));
-        router.push("/message/" + customerId);
-      } catch (error: any) {
-        console.log(error.response.data || error.message || error);
-      } finally {
-        setMessageLoading(false);
-      }
-    }
-  };
 
   return (
     <>
@@ -296,7 +253,7 @@ const ViewJobs = () => {
                       onClick={() => setIsModalOpen(true)}
                       className="rounded-full bg-violet-normal px-6 py-3 text-sm font-medium text-white transition-opacity duration-300 hover:opacity-90 max-md:px-4 max-md:py-2 max-md:text-sm"
                     >
-                      Generate Invoice
+                      Make An Offer
                     </button>
                   )
                 ) : (
@@ -307,28 +264,19 @@ const ViewJobs = () => {
                 {(currentBooking.bookingStage === "PROPOSED" ||
                   currentBooking.bookingStage === "ACCEPTED") && (
                   <div className="flex items-center gap-2">
-                    <button
-                      onClick={() =>
-                        handleMessageCustomer({
-                          customerId: currentBooking?.customer.user.id,
-                          fullName: currentBooking?.customer.user.fullName,
-                        })
-                      }
-                      disabled={messageLoading}
-                      className="rounded-full border border-violet-normal px-6 py-3  font-bold text-violet-normal transition-colors duration-300 hover:bg-violet-200 max-md:px-4  max-md:py-2 max-md:text-sm"
-                    >
-                      {messageLoading ? (
-                        <BeatLoader loading={messageLoading} color="white" />
-                      ) : (
-                        "Chat With Customer"
-                      )}
-                    </button>
+                    <MessageButton
+                      recipientId={currentBooking?.customer.user.id.toString()}
+                      recipientName={currentBooking?.customer.user.fullName}
+                      message="Chat With Customer"
+                      className="border border-violet-normal bg-transparent text-violet-normal  hover:bg-violet-100"
+                    />
+
                     {invoiceDraft && (
                       <button
                         onClick={() => setIsModalOpen(true)}
                         className="rounded-full bg-violet-active px-6 py-3 text-sm  font-bold text-violet-normal transition-opacity duration-300 hover:opacity-90 max-md:px-4 max-md:py-2 max-md:text-sm "
                       >
-                        View Invoice draft
+                        View Saved Offer
                       </button>
                     )}
                   </div>

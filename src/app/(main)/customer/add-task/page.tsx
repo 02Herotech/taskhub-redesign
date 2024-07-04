@@ -24,6 +24,7 @@ import { setCookie, getCookie } from "cookies-next";
 import { FaSortDown } from "react-icons/fa6";
 import Dropdown from "@/components/global/Dropdown";
 import Loading from "@/components/global/loading/page";
+import Progress from "@/components/global/progress";
 
 interface FormData {
   taskBriefDescription: string;
@@ -33,7 +34,9 @@ interface FormData {
   taskType: string;
   customerBudget: number | null;
   termAccepted: boolean;
-  taskAddress: string[];
+  suburb: string;
+  state: string;
+  postCode: string;
   categoryId: number | null;
   taskDescription: string;
 }
@@ -73,7 +76,9 @@ const AddTaskForm: React.FC = () => {
     taskTime: getCookie("taskTime") || "",
     taskDate: getCookie("taskDate") || "",
     taskType: getCookie("taskType") || "",
-    taskAddress: [],
+    suburb: getCookie("suburb") || "",
+    state: getCookie("state") || "",
+    postCode: getCookie("postCode")||"",
     customerBudget: getCookie("categoryId")
       ? parseInt(getCookie("categoryId") as string)
       : null,
@@ -134,9 +139,9 @@ const AddTaskForm: React.FC = () => {
     setCookie("taskTime", task.taskTime, { maxAge: 120 });
     setCookie("taskDate", task.taskDate, { maxAge: 120 });
     setCookie("taskType", task.taskType, { maxAge: 120 });
-    setCookie("taskAddress", JSON.stringify(task.taskAddress), {
-      maxAge: 120,
-    });
+    setCookie("suburb", task.suburb, { maxAge: 120 });
+    setCookie("postCode", task.postCode, { maxAge: 120 });
+    setCookie("state", task.state, { maxAge: 120 });
     setCookie("customerBudget", task.customerBudget, { maxAge: 120 });
     setCookie("hubTime", task.termAccepted, { maxAge: 120 });
     setCookie("categoryId", task.categoryId?.toString(), { maxAge: 120 });
@@ -436,15 +441,12 @@ const AddTaskForm: React.FC = () => {
           const type = "REMOTE_SERVICE";
           finalTask = { ...finalTask, taskType: type };
         } else {
-          const Address = [
-            selectedCode,
-            selectedCity,
-            postalCodeData[0].state.name,
-          ];
           finalTask = {
             ...finalTask,
             taskType: "PHYSICAL_SERVICE",
-            taskAddress: Address,
+            suburb: selectedCity,
+            postCode: selectedCode,
+            state: postalCodeData[0].state.name
           };
         }
 
@@ -475,7 +477,9 @@ const AddTaskForm: React.FC = () => {
           taskDate: "",
           taskType: "",
           termAccepted: false,
-          taskAddress: [],
+          suburb: "",
+          state: "",
+          postCode: "",
           customerBudget: null,
           categoryId: null,
           taskDescription: "",
@@ -705,7 +709,7 @@ const AddTaskForm: React.FC = () => {
               </div>
               <Button
                 type="submit"
-                className="w-[100px] rounded-3xl p-3 text-white"
+                className="lg:w-[100px] rounded-3xl p-3 text-white w-full"
               >
                 Next
               </Button>
@@ -778,7 +782,7 @@ const AddTaskForm: React.FC = () => {
                       <input
                         value={selectedCode}
                         onChange={handleCode}
-                        name="postalCode"
+                        name="postCode"
                         className={`w-[155px] cursor-pointer  rounded-2xl bg-[#EBE9F4] p-3 text-[13px] placeholder:font-bold ${error.postalCode ? "border border-[#ff0000] outline-[#FF0000]" : "border-none outline-none"}`}
                       />
                     </div>
@@ -858,7 +862,7 @@ const AddTaskForm: React.FC = () => {
                   placeholder="500"
                   className={`appearance-none rounded-2xl bg-[#EBE9F4] p-3 pl-6 text-[13px] placeholder:font-bold ${error.customerBudget ? "border border-[#ff0000] outline-[#FF0000]" : "border-none outline-none"}`}
                 />
-                <p className="absolute left-3 top-7 lg:top-8">$</p>
+                <p className="absolute left-3 top-8">$</p>
               </div>
               <div className="text-[#FF0000]">
                 {errors.city ||
@@ -866,15 +870,15 @@ const AddTaskForm: React.FC = () => {
                   errors.service ||
                   errors.customerBudget}
               </div>
-              <div className="flex justify-between">
+              <div className="flex justify-between flex-wrap-reverse gap-3">
                 {isAuthenticated && (
-                  <Button className="rounded-3xl" type="submit">
+                  <Button className="rounded-3xl w-full lg:w-[200px]" type="submit">
                     Confirm Task
                   </Button>
                 )}
                 {!isAuthenticated && (
                   <Button
-                    className="rounded-3xl"
+                    className="rounded-3xl w-full lg:w-[200px]"
                     type="button"
                     onClick={() => setIsSuccessPopup(true)}
                   >
@@ -884,7 +888,7 @@ const AddTaskForm: React.FC = () => {
                 <button
                   type="button"
                   onClick={prevPage}
-                  className="w-[100px] rounded-3xl bg-[#EBE9F4] p-2 text-[14px] font-bold outline-none hover:bg-status-violet hover:text-white"
+                  className="lg:w-[100px] w-full  rounded-3xl bg-[#EBE9F4] p-2 text-[14px] font-bold outline-none hover:bg-status-violet hover:text-white"
                 >
                   Back
                 </button>
@@ -902,7 +906,7 @@ const AddTaskForm: React.FC = () => {
         <title>TaskHub | Add Task</title>
       </Head>
       <div className="w-full">
-        <div className="fixed left-0 top-20 z-10 w-full border-t-2 bg-white shadow-md">
+        <div className="fixed hidden lg:block left-0 top-20 z-10 w-full border-t-2 bg-white shadow-md">
           <div className="mb-3 flex justify-center space-x-5 pt-4">
             <div
               className={`${
@@ -971,6 +975,7 @@ const AddTaskForm: React.FC = () => {
             </div>
           </div>
         </div>
+        <Progress currentPage={currentPage} progress={progress} setCurrentPage={setCurrentPage} />
         <div className="pt-28">
           <div className="mt-8 flex items-center justify-center p-4 font-medium lg:p-0">
             <div>
