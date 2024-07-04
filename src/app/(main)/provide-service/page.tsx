@@ -1382,7 +1382,7 @@ const ProvideService: React.FC = () => {
             </div>
           </div>
         </div>
-        <ProgressBar currentPage={currentPage} progress={progress}/>
+        <ProgressBar currentPage={currentPage} progress={progress} setCurrentPage={setCurrentPage}/>
         <div className="pt-24">
           <div className="mt-8 lg:flex">
             {currentPage === 1 && (

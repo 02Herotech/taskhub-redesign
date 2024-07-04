@@ -972,7 +972,7 @@ const AddTaskForm: React.FC = () => {
             </div>
           </div>
         </div>
-        <Progress currentPage={currentPage} progress={progress} />
+        <Progress currentPage={currentPage} progress={progress} setCurrentPage={setCurrentPage} />
         <div className="pt-28">
           <div className="mt-8 flex items-center justify-center p-4 font-medium lg:p-0">
             <div>
