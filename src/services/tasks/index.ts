@@ -41,9 +41,9 @@ const deleteRequest = (url: string) => ({
   method: "DELETE",
 });
 
-const putRequest = (url: string, details: unknown) => ({
+const patchRequest = (url: string, details: unknown) => ({
   url,
-  method: "PUT",
+  method: "PATCH",
   body: details,
 });
 
@@ -134,6 +134,10 @@ export const task = createApi({
     searchTaskByText: builder.query<GetTasksResponse, GetTaskByTextRequest>({
       query: (credentials) => getRequest(`/text/${credentials.pageNumber}?text=${credentials.text}`),
       providesTags: ["Task"],
+    }),
+    updateTask: builder.mutation<void, { id: number; details: unknown }>({
+      query: (credentials) => patchRequest(`/update-task/${credentials.id}`, credentials.details),
+      invalidatesTags: ["Task"],
     }),
   }),
 });

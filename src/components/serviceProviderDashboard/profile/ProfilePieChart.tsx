@@ -26,7 +26,7 @@ const ProfilePieChart = ({ chartData }: ProfilePieChartPropType) => {
       <p className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-[calc(50%+0.5rem)] text-xl font-bold text-orange-normal">
         {Math.floor((chartData.completed / chartData.total) * 100)}
       </p>
-      <Pie data={data} />;
+      <Pie data={data} />
     </div>
   );
 };
