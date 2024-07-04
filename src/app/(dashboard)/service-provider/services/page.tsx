@@ -142,39 +142,39 @@ const ServicesPage = () => {
   return (
     <main className=" relative space-y-8 p-4 lg:p-8">
       <OngoingServiceModal modalData={modalData} setModalData={setModalData} />
-      <div className="flex flex-wrap gap-2 lg:gap-6">
+      <div className="flex gap-2 overflow-auto py-2 lg:flex-wrap lg:gap-6">
         <button
-          className={` rounded-lg px-4 py-2 text-sm font-medium transition-all duration-300 hover:opacity-90 max-md:text-sm lg:px-8 lg:py-3 ${currentCategory === "services" ? "bg-[#381F8C] text-white" : "bg-[#E1DDEE] text-[#381F8C] "} `}
+          className={` flex-shrink-0 rounded-lg px-4 py-2 text-sm font-medium transition-all duration-300 hover:opacity-90 max-md:text-sm lg:px-8 lg:py-3 ${currentCategory === "services" ? "bg-[#381F8C] text-white" : "bg-[#E1DDEE] text-[#381F8C] "} `}
           onClick={() => setCurrentCategory("services")}
         >
           My Services
         </button>
         <button
-          className={`rounded-lg px-4 py-2 text-sm font-medium transition-all duration-300 hover:opacity-90 lg:px-8 lg:py-3 ${currentCategory === "accepted" ? "bg-[#381F8C] text-white" : "bg-[#E1DDEE] text-[#381F8C] "} `}
+          className={`flex-shrink-0  rounded-lg px-4 py-2 text-sm font-medium transition-all duration-300 hover:opacity-90 lg:px-8 lg:py-3 ${currentCategory === "accepted" ? "bg-[#381F8C] text-white" : "bg-[#E1DDEE] text-[#381F8C] "} `}
           onClick={() => setCurrentCategory("accepted")}
         >
           Accepted
         </button>
         <button
-          className={`rounded-lg px-4 py-2 text-sm font-medium transition-all duration-300 hover:opacity-90 lg:px-8 lg:py-3 ${currentCategory === "paid" ? "bg-[#381F8C] text-white" : "bg-[#E1DDEE] text-[#381F8C] "} `}
+          className={`flex-shrink-0  rounded-lg px-4 py-2 text-sm font-medium transition-all duration-300 hover:opacity-90 lg:px-8 lg:py-3 ${currentCategory === "paid" ? "bg-[#381F8C] text-white" : "bg-[#E1DDEE] text-[#381F8C] "} `}
           onClick={() => setCurrentCategory("paid")}
         >
           Paid
         </button>
         <button
-          className={` rounded-lg px-4 py-2 text-sm font-medium transition-all duration-300 hover:opacity-90 lg:px-8 lg:py-3 ${currentCategory === "ongoing" ? "bg-[#381F8C] text-white" : "bg-[#E1DDEE] text-[#381F8C] "} `}
+          className={`flex-shrink-0  rounded-lg px-4 py-2 text-sm font-medium transition-all duration-300 hover:opacity-90 lg:px-8 lg:py-3 ${currentCategory === "ongoing" ? "bg-[#381F8C] text-white" : "bg-[#E1DDEE] text-[#381F8C] "} `}
           onClick={() => setCurrentCategory("ongoing")}
         >
           Ongoing
         </button>
         <button
-          className={` rounded-lg px-4 py-2 text-sm font-medium transition-all duration-300 hover:opacity-90 lg:px-8 lg:py-3 ${currentCategory === "inspection" ? "bg-[#381F8C] text-white" : "bg-[#E1DDEE] text-[#381F8C] "} `}
+          className={`flex-shrink-0  rounded-lg px-4 py-2 text-sm font-medium transition-all duration-300 hover:opacity-90 lg:px-8 lg:py-3 ${currentCategory === "inspection" ? "bg-[#381F8C] text-white" : "bg-[#E1DDEE] text-[#381F8C] "} `}
           onClick={() => setCurrentCategory("inspection")}
         >
           On inspection
         </button>
         <button
-          className={` rounded-lg px-4 py-2 text-sm font-medium transition-all duration-300 hover:opacity-90 lg:px-8 lg:py-3 ${currentCategory === "completed" ? "bg-[#381F8C] text-white" : "bg-[#E1DDEE] text-[#381F8C] "} `}
+          className={`flex-shrink-0  rounded-lg px-4 py-2 text-sm font-medium transition-all duration-300 hover:opacity-90 lg:px-8 lg:py-3 ${currentCategory === "completed" ? "bg-[#381F8C] text-white" : "bg-[#E1DDEE] text-[#381F8C] "} `}
           onClick={() => setCurrentCategory("completed")}
         >
           Completed
@@ -193,23 +193,18 @@ const ServicesPage = () => {
           jobs={jobs}
           setModalData={setModalData}
           allBookings={allBookings}
-          customerDetails={customerDetails}
-          handleReportservice={handleReportService}
         />
       ) : currentCategory === "ongoing" && jobs ? (
         <OngoingServies
           jobs={jobs}
           allBookings={allBookings}
           setModalData={setModalData}
-          customerDetails={customerDetails}
           handleReportservice={handleReportService}
         />
       ) : currentCategory === "inspection" && jobs ? (
         <InspectionServices
           jobs={jobs}
           allBookings={allBookings}
-          setModalData={setModalData}
-          customerDetails={customerDetails}
           handleReportservice={handleReportService}
         />
       ) : (

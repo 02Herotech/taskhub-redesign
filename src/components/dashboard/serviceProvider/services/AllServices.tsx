@@ -75,7 +75,7 @@ const AllServices = () => {
           <Loading />
         </div>
       ) : (
-        <section className="relative flex flex-wrap gap-4 ">
+        <section className="relative flex flex-wrap gap-4  max-lg:justify-center ">
           <DeleteListingModal
             isDeleteModalShown={isDeleteModalShown}
             setIsDeleteModalShown={setIsDeleteModalShown}
@@ -95,7 +95,6 @@ const AllServices = () => {
               <motion.div
                 key={index}
                 className=" group cursor-pointer space-y-8 rounded-xl bg-[#EBE9F4] p-2 transition-all duration-300 "
-                // onClick={() => handleNavigateCard(index)}
                 initial={{ opacity: 0, translateY: "5rem" }}
                 whileInView={{ opacity: 1, translateY: "0" }}
                 transition={{ duration: 0.5 }}

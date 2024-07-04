@@ -253,7 +253,7 @@ const ViewJobs = () => {
                       onClick={() => setIsModalOpen(true)}
                       className="rounded-full bg-violet-normal px-6 py-3 text-sm font-medium text-white transition-opacity duration-300 hover:opacity-90 max-md:px-4 max-md:py-2 max-md:text-sm"
                     >
-                      Generate Invoice
+                      Make An Offer
                     </button>
                   )
                 ) : (
@@ -268,6 +268,7 @@ const ViewJobs = () => {
                       recipientId={currentBooking?.customer.user.id.toString()}
                       recipientName={currentBooking?.customer.user.fullName}
                       message="Chat With Customer"
+                      className="border border-violet-normal bg-transparent text-violet-normal  hover:bg-violet-100"
                     />
 
                     {invoiceDraft && (
@@ -275,7 +276,7 @@ const ViewJobs = () => {
                         onClick={() => setIsModalOpen(true)}
                         className="rounded-full bg-violet-active px-6 py-3 text-sm  font-bold text-violet-normal transition-opacity duration-300 hover:opacity-90 max-md:px-4 max-md:py-2 max-md:text-sm "
                       >
-                        View Invoice draft
+                        View Saved Offer
                       </button>
                     )}
                   </div>
