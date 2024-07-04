@@ -109,7 +109,7 @@ const Tasks = () => {
         setFiltersApplied(true);
     };
 
-    const handleSortByLocation = (location: string) => {
+    const handleFilterByLocation = (location: string) => {
         if (!tasksData?.content) return;
         const filtered = tasksData.content.filter((item) => item.taskAddress === location);
         setFilteredData(filtered);
@@ -258,7 +258,7 @@ const Tasks = () => {
                             {locationData.map((location, index) => (
                                 <div
                                     key={index}
-                                    onClick={() => handleSortByLocation(location)}
+                                    onClick={() => handleFilterByLocation(location)}
                                     className='flex w-full transition-all text-status-darkViolet text-base font-bold hover:text-tc-orange cursor-pointer items-center justify-between p-2'>
                                     <div className="">
                                         {location}
@@ -390,17 +390,18 @@ const Tasks = () => {
                         {showMobileFilters && (
                             <div className='bg-white rounded-2xl px-8 py-10 space-y-8 font-satoshi h-[500px] small-scrollbar overflow-y-auto'>
                                 <h3 className="font-bold text-primary text-2xl">Filter by</h3>
-                                <form action="" className="space-y-8">
-                                    {categoriesData.map((category, index) => (
+                                <form action="" className="space-y-6">
+                                    {locationData.map((location, index) => (
                                         <div
                                             key={index}
                                             onClick={() => {
-                                                handleFilterByCategory(category.id)
+                                                handleFilterByLocation(location)
                                                 setShowMobileFilters(false)
                                             }}
-                                            className='flex w-full transition-all text-status-darkViolet text-base font-bold hover:text-tc-orange cursor-pointer items-center justify-between p-2'>
+                                            className='flex w-full transition-all text-status-darkViolet text-base font-bold hover:text-tc-orange cursor-pointer items-center space-x-3'>
+                                            <div className="w-3 h-3 bg-tc-orange rounded-full" />
                                             <div className="">
-                                                {category?.categoryName}
+                                                {location}
                                             </div>
                                         </div>
                                     ))}
