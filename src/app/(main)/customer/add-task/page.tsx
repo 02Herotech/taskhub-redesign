@@ -34,7 +34,9 @@ interface FormData {
   taskType: string;
   customerBudget: number | null;
   termAccepted: boolean;
-  taskAddress: string[];
+  suburb: string;
+  state: string;
+  postCode: string;
   categoryId: number | null;
   taskDescription: string;
 }
@@ -74,7 +76,9 @@ const AddTaskForm: React.FC = () => {
     taskTime: getCookie("taskTime") || "",
     taskDate: getCookie("taskDate") || "",
     taskType: getCookie("taskType") || "",
-    taskAddress: [],
+    suburb: getCookie("suburb") || "",
+    state: getCookie("state") || "",
+    postCode: getCookie("postCode")||"",
     customerBudget: getCookie("categoryId")
       ? parseInt(getCookie("categoryId") as string)
       : null,
@@ -135,9 +139,9 @@ const AddTaskForm: React.FC = () => {
     setCookie("taskTime", task.taskTime, { maxAge: 120 });
     setCookie("taskDate", task.taskDate, { maxAge: 120 });
     setCookie("taskType", task.taskType, { maxAge: 120 });
-    setCookie("taskAddress", JSON.stringify(task.taskAddress), {
-      maxAge: 120,
-    });
+    setCookie("suburb", task.suburb, { maxAge: 120 });
+    setCookie("postCode", task.postCode, { maxAge: 120 });
+    setCookie("state", task.state, { maxAge: 120 });
     setCookie("customerBudget", task.customerBudget, { maxAge: 120 });
     setCookie("hubTime", task.termAccepted, { maxAge: 120 });
     setCookie("categoryId", task.categoryId?.toString(), { maxAge: 120 });
@@ -437,15 +441,12 @@ const AddTaskForm: React.FC = () => {
           const type = "REMOTE_SERVICE";
           finalTask = { ...finalTask, taskType: type };
         } else {
-          const Address = [
-            selectedCode,
-            selectedCity,
-            postalCodeData[0].state.name,
-          ];
           finalTask = {
             ...finalTask,
             taskType: "PHYSICAL_SERVICE",
-            taskAddress: Address,
+            suburb: selectedCity,
+            postCode: selectedCode,
+            state: postalCodeData[0].state.name
           };
         }
 
@@ -476,7 +477,9 @@ const AddTaskForm: React.FC = () => {
           taskDate: "",
           taskType: "",
           termAccepted: false,
-          taskAddress: [],
+          suburb: "",
+          state: "",
+          postCode: "",
           customerBudget: null,
           categoryId: null,
           taskDescription: "",
@@ -779,7 +782,7 @@ const AddTaskForm: React.FC = () => {
                       <input
                         value={selectedCode}
                         onChange={handleCode}
-                        name="postalCode"
+                        name="postCode"
                         className={`w-[155px] cursor-pointer  rounded-2xl bg-[#EBE9F4] p-3 text-[13px] placeholder:font-bold ${error.postalCode ? "border border-[#ff0000] outline-[#FF0000]" : "border-none outline-none"}`}
                       />
                     </div>
