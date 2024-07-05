@@ -93,21 +93,21 @@ const ServiceProviderChat = () => {
     }
   }, [contacts]);
 
-  const refreshClient = () => {
-    if (subscription) {
-      subscription.unsubscribe();
-    }
-    if (stompClient.connected) {
-      const newSubscription = stompClient.subscribe(
-        `/user/${user?.id}/queue/messages`,
-        onMessageReceived,
-      );
-      dispatch(setSubscription(newSubscription));
-    }
-  };
+  // const refreshClient = () => {
+  //   if (subscription) {
+  //     subscription.unsubscribe();
+  //   }
+  //   if (stompClient.connected) {
+  //     const newSubscription = stompClient.subscribe(
+  //       `/user/${user?.id}/queue/messages`,
+  //       onMessageReceived,
+  //     );
+  //     dispatch(setSubscription(newSubscription));
+  //   }
+  // };
 
   const onMessageReceived = async () => {
-    refreshClient();
+    // refreshClient();
     if (newMessage && chatPartnerId === newMessage.senderId.toString()) {
       findChatMessage({
         id: newMessage.id,
