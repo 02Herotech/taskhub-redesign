@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { FaChevronLeft, FaChevronRight, FaSortDown } from "react-icons/fa";
+import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import { useGetActiveTasksQuery, useSearchTaskByTextQuery } from "@/services/tasks";
 import { Task } from "@/types/services/tasks";
 import Dropdown from "@/components/global/Dropdown";
@@ -10,7 +10,6 @@ import Button from "@/components/global/Button";
 import ReactSlider from "react-slider";
 import axios from "axios";
 import Loading from "@/shared/loading";
-import Image from "next/image";
 import { CiSearch } from "react-icons/ci";
 import { IoMdArrowDropdown } from "react-icons/io";
 import { locationData } from "@/data/marketplace/data";
@@ -22,7 +21,6 @@ type Category = {
 
 const Tasks = () => {
     const [priceValues, setPriceValues] = useState<[number, number]>([5, 10000]);
-    const [locationValues, setLocationValues] = useState<[number, number]>([1, 50]);
     const [selectedService, setSelectedService] = useState<"REMOTE_SERVICE" | "PHYSICAL_SERVICE">("PHYSICAL_SERVICE");
     const [categoriesData, setCategoriesData] = useState<Category[]>([]);
     const [currentPage, setCurrentPage] = useState(1);
@@ -65,7 +63,7 @@ const Tasks = () => {
     const totalPages = Math.ceil(tasksData?.totalElements! / itemsPerPage); // Calculate total pages
     const searchTotalPages = Math.ceil(searchResults?.totalElements! / itemsPerPage); // Calculate total pages for search results
     const filteredTotalPages = Math.ceil(filteredData.length / itemsPerPage); // Calculate total pages for filtered data
-    console.log("paginationLength", paginationLength);
+    console.log("tasksData", tasksData);
 
     const handleFilterByCategory = (categoryId: number) => {
         if (!tasksData?.content) return;
@@ -111,7 +109,7 @@ const Tasks = () => {
 
     const handleFilterByLocation = (location: string) => {
         if (!tasksData?.content) return;
-        const filtered = tasksData.content.filter((item) => item.taskAddress === location);
+        const filtered = tasksData.content.filter((item) => item.state === location);
         setFilteredData(filtered);
         setFiltersApplied(true);
     }

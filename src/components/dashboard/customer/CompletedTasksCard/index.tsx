@@ -219,7 +219,7 @@ const CompletedTasksCard = ({ task }: TaskCardProps) => {
                         <HiOutlineLocationMarker className="h-5 w-5 font-bold text-[#716F78]" />
                         <div className="flex items-center space-x-2 font-medium text-[#716F78] w-2/3">
                             <p className="overflow-hidden truncate text-ellipsis whitespace-nowrap text-[15px] lg:text-lg">
-                                {task.taskAddress || `No location`}
+                                {task.state || `No location`}
                             </p>
                         </div>
                         <div className="flex items-center space-x-2 font-medium text-[#716F78]">
