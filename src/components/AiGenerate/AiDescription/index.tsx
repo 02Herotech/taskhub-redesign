@@ -242,7 +242,7 @@ const AiDesciption: React.FC<AiGenerateProps> = ({
 
 
   return (
-    <div>
+    <div className=" flex flex-col justify-between">
       {displayType === "card" ? (
         <div className="relative overflow-hidden ">
           <div className=" mb-5 flex flex-col space-y-6 rounded-[20px] bg-[#381F8C] p-4">
@@ -296,7 +296,7 @@ const AiDesciption: React.FC<AiGenerateProps> = ({
 
       {aiChatView && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 lg:py-2 py-1">
-          <div ref={containerRef} className="mx-auto h-[90%] w-[90%] relative rounded-[16px] bg-[#FFFFFF] lg:p-10 lg:pt-7 p-5 lg:!pb-20 text-white md:w-[60%] lg:w-[50%] overflow-hidden">
+          <div ref={containerRef} className="mx-auto h-[90%] w-[90%] rounded-[16px] bg-[#FFFFFF] lg:p-10 lg:pt-7 p-5 lg:!pb-20 text-white md:w-[60%] lg:w-[50%] overflow-hidden">
             <div className="flex justify-end">
               <div
                 className="flex h-[30px] w-[30px] items-center justify-center rounded-full bg-[#EBE9F4] hover:cursor-pointer"
@@ -405,17 +405,16 @@ const AiDesciption: React.FC<AiGenerateProps> = ({
               )}
             </p>
 
-            <div className="flex items-center pt-2 rounded-[20px] lg:px-4 px-2 font-medium border-[2px] border-primary min-h-16 bottom-10">
+            <div className="flex items-center pt-2 rounded-[20px] lg:px-4 px-2 mb-3 font-medium border-[2px] border-primary">
               <textarea
                 name="aiQuery"
                 placeholder="Enter a request here"
                 onChange={handleInputChange}
                 value={aiQuery}
                 ref={textareaRef}
-                className="w-full flex-1 bg-transparent px-2 text-[16px] font-normal text-primary border-none outline-none resize-none"
+                className="w-full flex-1 bg-transparent px-2 text-[16px] font-normal text-primary border-none outline-none resize-none max-h-16 lg:max-h-20"
                 required
                 rows={1}
-                style={{ maxHeight: '200px' }}
               />
               <BiSend
                 onClick={handleAiChatQuery}
