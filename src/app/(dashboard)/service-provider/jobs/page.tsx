@@ -73,7 +73,7 @@ const Jobs = () => {
                       recipientId: item.customer.user.id.toString(),
                       recipientName: item.customer.user.fullName,
                       message: "Chat With Customer",
-                      className: "w-full",
+                      className: "max-md:w-full",
                     }}
                   />
                 </div>

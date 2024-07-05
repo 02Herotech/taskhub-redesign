@@ -4,6 +4,7 @@ import { RootState } from "@/store";
 import {
   setContacts,
   setNewMessage,
+  setSubscription,
   setTotalUnreadMessages,
 } from "@/store/Features/chat";
 import { countNewMessages, getUsers } from "@/utils/message";

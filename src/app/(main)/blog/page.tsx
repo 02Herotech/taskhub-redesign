@@ -10,7 +10,7 @@ const blogsData: BlogTypes[] = [
     bannerImage: "/assets/images/blog/blogImage1.png",
     date: "20th April, 2024",
     title: "How to Start Import Business in Australia in 9 Key Steps",
-    readTime: "Read Time: 10 Mins.",
+    readTime: "10 Mins.",
     blogType: "Finance",
     description: `Are you interested in learning how to start import business in Australia? If so, we will provide you with thorough information to answer your question. \n
 Before we get started, let's look at why you'd start an import firm in Australia and how the export-import industry works.\n
@@ -106,7 +106,7 @@ Implementing a cost-efficient SEO strategy on your company's website is an excel
     bannerImage: "/assets/images/blog/blogImage2.png",
     date: "20th April, 2024",
     title: "How Long Does a Tax Rebate Take? Definition and When to Expect it",
-    readTime: "Read Time: 10 Mins.",
+    readTime: "10 Mins.",
     description: `There are several reasons why you may be owed a tax refund, or tax rebate, by HMRC. If you are employed and pay tax through PAYE, it is possible that your tax was calculated improperly, 
 or that your self-assessment tax return contained errors, resulting in an overpayment.
 If this is the case, you are owed a payback by HMRC. So, let’s dive straight into how long does 
@@ -192,7 +192,7 @@ Unbiased can immediately link you with a certified accountant who can assist you
     bannerImage: "/assets/images/blog/blogImage3.png",
     date: "20th April, 2024",
     title: "How to Maximize Tax Return: 8 Hidden Tips",
-    readTime: "Read Time: 10 Mins.",
+    readTime: "10 Mins.",
     blogType: "Business",
     description: `There are several reasons why you may be owed a tax refund, or tax rebate, by HMRC. If you are employed and pay tax through PAYE, it is possible that your tax was calculated improperly, 
 or that your self-assessment tax return contained errors, resulting in an overpayment.
@@ -287,7 +287,7 @@ However, you can increase your tax withholding to take advantage of those tax sa
     bannerImage: "/assets/images/blog/blogImage4.jpg",
     date: "20th April, 2024",
     title: "How to start a car rental business in Australia",
-    readTime: "Read Time: 10 Mins.",
+    readTime: "10 Mins.",
     blogType: "Business",
     description: `Car rental companies rent out automobiles, trucks, vans, and buses. When starting this type of business, you must first identify your specialization.
 
@@ -401,7 +401,7 @@ Finally, we'll leave you with Ronnie's advice for entrepreneurs wishing to enter
     bannerImage: "/assets/images/blog/blogImage5.jpg",
     date: "20th April, 2024",
     title: "How to start a cleaning business in Australia",
-    readTime: "Read Time: 10 Mins.",
+    readTime: "10 Mins.",
     blogType: "Business",
     description: `Do you want to start a cleaning business in Australia? Here's a thorough guide to doing it, covering everything from legal requirements to marketing ideas.
 
@@ -528,7 +528,7 @@ We hope that the steps in this comprehensive guide will help you get your new cl
     bannerImage: "/assets/images/blog/blogImage6.jpg",
     date: "20th April, 2024",
     title: "How to Start a Business in Australia With no Money",
-    readTime: "Read Time: 10 Mins.",
+    readTime: "10 Mins.",
     blogType: "Business",
     description: `Despite the struggles of the last year, the Australian government has provided small company owners with a variety of grants and incentives. 
 
@@ -672,7 +672,7 @@ With Taskhub, you can select your business type whether remote or in-person. You
     bannerImage: "/assets/images/blog/blogImage7.png",
     date: "20th April, 2024",
     title: "ABN Registration Australia: Everything You Should",
-    readTime: "Read Time: 10 Mins.",
+    readTime: "10 Mins.",
     blogType: "Finance",
     description: `Anyone who has started a business or opted to go it alone as a sole trader understands that there can be an infinite mountain of paperwork and forms to fill out, and it can be tempting to skip or postpone what you can.
 

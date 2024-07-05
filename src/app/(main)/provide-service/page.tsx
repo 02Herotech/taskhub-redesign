@@ -538,7 +538,7 @@ const ProvideService: React.FC = () => {
               >
                 <div className="grid space-y-4">
                   <div className="flex items-center justify-between gap-3">
-                    <label className="font-semibold text-[13px] lg:text-[16px]">
+                    <label className="font-semibold text-[12px] lg:text-[16px]">
                       Write a short title that accurately describes your service.{" "}
                       <span className="font-extrabold text-[#ff0000]">*</span>
                     </label>

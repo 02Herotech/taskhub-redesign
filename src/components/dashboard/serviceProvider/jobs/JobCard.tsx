@@ -91,7 +91,7 @@ const JobCard = ({
             {viewJob && (
               <Link
                 href={"/service-provider/jobs/" + itemId}
-                className="mb-2 rounded-full border border-violet-normal bg-violet-light px-6 py-3 text-center text-sm font-medium text-violet-normal transition-colors duration-300 hover:bg-violet-200 max-md:w-full  max-md:text-xs "
+                className="mb-2 whitespace-nowrap rounded-full border border-violet-normal bg-violet-light px-6 py-3 text-center text-sm font-medium text-violet-normal transition-colors duration-300 hover:bg-violet-200 max-md:w-full  max-md:text-xs "
               >
                 View Enquiry
               </Link>

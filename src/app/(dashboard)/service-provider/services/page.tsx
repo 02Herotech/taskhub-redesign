@@ -183,16 +183,13 @@ const ServicesPage = () => {
       {currentCategory === "services" ? (
         <AllServices />
       ) : currentCategory === "accepted" && jobs ? (
-        <AcceptedServices
-          setModalData={setModalData}
-          acceptedBookingData={acceptedBookingData}
-          handleReportservice={handleReportService}
-        />
+        <AcceptedServices acceptedBookingData={acceptedBookingData} />
       ) : currentCategory === "paid" && jobs ? (
         <PaidServices
           jobs={jobs}
           setModalData={setModalData}
           allBookings={allBookings}
+          handleReportService={handleReportService}
         />
       ) : currentCategory === "ongoing" && jobs ? (
         <OngoingServies

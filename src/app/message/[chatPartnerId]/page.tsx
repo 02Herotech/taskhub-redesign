@@ -14,7 +14,11 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setContacts, setTotalUnreadMessages } from "@/store/Features/chat";
+import {
+  setContacts,
+  setSubscription,
+  setTotalUnreadMessages,
+} from "@/store/Features/chat";
 import { stompClient } from "@/lib/stompClient";
 import ScrollToBottom from "react-scroll-to-bottom";
 
@@ -32,7 +36,7 @@ const ServiceProviderChat = () => {
   const { profile: user, userProfileAuth: auth } = useSelector(
     (state: RootState) => state.userProfile,
   );
-  const { contacts, newMessage } = useSelector(
+  const { contacts, newMessage, subscription } = useSelector(
     (state: RootState) => state.chat,
   );
   const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -89,7 +93,21 @@ const ServiceProviderChat = () => {
     }
   }, [contacts]);
 
+  // const refreshClient = () => {
+  //   if (subscription) {
+  //     subscription.unsubscribe();
+  //   }
+  //   if (stompClient.connected) {
+  //     const newSubscription = stompClient.subscribe(
+  //       `/user/${user?.id}/queue/messages`,
+  //       onMessageReceived,
+  //     );
+  //     dispatch(setSubscription(newSubscription));
+  //   }
+  // };
+
   const onMessageReceived = async () => {
+    // refreshClient();
     if (newMessage && chatPartnerId === newMessage.senderId.toString()) {
       findChatMessage({
         id: newMessage.id,
@@ -223,12 +241,6 @@ const ServiceProviderChat = () => {
               >
                 {isServiceProvider ? "View Service" : "View Task"}
               </Link>
-              <button
-                className={`rounded-full border border-violet-normal bg-violet-light px-4 py-2 text-sm font-medium text-violet-normal transition-all duration-300 hover:bg-violet-200 hover:opacity-90 `}
-                // onClick={() => handleReschedule()}
-              >
-                Reschedule
-              </button>
             </div>
           </article>
 
