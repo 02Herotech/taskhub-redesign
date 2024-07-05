@@ -14,8 +14,8 @@ const links: LinksProps[] = [
         link: '/customer/payment/payment-history'
     },
     {
-        title: 'My invoices',
-        link: '/customer/payment/invoices'
+        title: 'My Offers',
+        link: '/customer/payment/offers'
     }
 ]
 
