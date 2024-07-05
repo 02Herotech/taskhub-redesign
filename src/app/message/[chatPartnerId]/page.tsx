@@ -241,12 +241,6 @@ const ServiceProviderChat = () => {
               >
                 {isServiceProvider ? "View Service" : "View Task"}
               </Link>
-              <button
-                className={`rounded-full border border-violet-normal bg-violet-light px-4 py-2 text-sm font-medium text-violet-normal transition-all duration-300 hover:bg-violet-200 hover:opacity-90 `}
-                // onClick={() => handleReschedule()}
-              >
-                Reschedule
-              </button>
             </div>
           </article>
 
