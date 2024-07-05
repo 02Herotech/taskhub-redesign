@@ -14,7 +14,9 @@ export type Task = {
     hubTime: string | null;
     taskType: string;
     taskStatus: string;
-    taskAddress: string | null;
+    state: string | null;
+    postCode: string | number | null;
+    suburb: string | null;
     createdAt: [number, number, number];
     customerBudget: number;
     active: boolean;
@@ -35,7 +37,9 @@ export type CustomerTasks = {
     hubTime: string | null;
     taskType: string;
     taskStatus: string;
-    taskAddress: string | null;
+    state: string | null;
+    postCode: string | number | null;
+    suburb: string | null;
     createdAt: [number, number, number];
     customerBudget: number;
     active: boolean;
@@ -43,7 +47,7 @@ export type CustomerTasks = {
 
 export type GetCustomerTasksResponse = CustomerTasks[];
 
-export type GetTasksRequest =  number;
+export type GetTasksRequest = number;
 
 export type GetTasksResponse = {
     totalElements: number;

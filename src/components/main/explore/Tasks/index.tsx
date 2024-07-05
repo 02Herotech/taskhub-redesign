@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { FaChevronLeft, FaChevronRight, FaSortDown } from "react-icons/fa";
+import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import { useGetActiveTasksQuery, useSearchTaskByTextQuery } from "@/services/tasks";
 import { Task } from "@/types/services/tasks";
 import Dropdown from "@/components/global/Dropdown";
@@ -10,7 +10,6 @@ import Button from "@/components/global/Button";
 import ReactSlider from "react-slider";
 import axios from "axios";
 import Loading from "@/shared/loading";
-import Image from "next/image";
 import { CiSearch } from "react-icons/ci";
 import { IoMdArrowDropdown } from "react-icons/io";
 import { locationData } from "@/data/marketplace/data";
@@ -22,7 +21,6 @@ type Category = {
 
 const Tasks = () => {
     const [priceValues, setPriceValues] = useState<[number, number]>([5, 10000]);
-    const [locationValues, setLocationValues] = useState<[number, number]>([1, 50]);
     const [selectedService, setSelectedService] = useState<"REMOTE_SERVICE" | "PHYSICAL_SERVICE">("PHYSICAL_SERVICE");
     const [categoriesData, setCategoriesData] = useState<Category[]>([]);
     const [currentPage, setCurrentPage] = useState(1);
@@ -65,7 +63,7 @@ const Tasks = () => {
     const totalPages = Math.ceil(tasksData?.totalElements! / itemsPerPage); // Calculate total pages
     const searchTotalPages = Math.ceil(searchResults?.totalElements! / itemsPerPage); // Calculate total pages for search results
     const filteredTotalPages = Math.ceil(filteredData.length / itemsPerPage); // Calculate total pages for filtered data
-    console.log("paginationLength", paginationLength);
+    console.log("tasksData", tasksData);
 
     const handleFilterByCategory = (categoryId: number) => {
         if (!tasksData?.content) return;
@@ -109,9 +107,9 @@ const Tasks = () => {
         setFiltersApplied(true);
     };
 
-    const handleSortByLocation = (location: string) => {
+    const handleFilterByLocation = (location: string) => {
         if (!tasksData?.content) return;
-        const filtered = tasksData.content.filter((item) => item.taskAddress === location);
+        const filtered = tasksData.content.filter((item) => item.state === location);
         setFilteredData(filtered);
         setFiltersApplied(true);
     }
@@ -258,7 +256,7 @@ const Tasks = () => {
                             {locationData.map((location, index) => (
                                 <div
                                     key={index}
-                                    onClick={() => handleSortByLocation(location)}
+                                    onClick={() => handleFilterByLocation(location)}
                                     className='flex w-full transition-all text-status-darkViolet text-base font-bold hover:text-tc-orange cursor-pointer items-center justify-between p-2'>
                                     <div className="">
                                         {location}
@@ -390,17 +388,18 @@ const Tasks = () => {
                         {showMobileFilters && (
                             <div className='bg-white rounded-2xl px-8 py-10 space-y-8 font-satoshi h-[500px] small-scrollbar overflow-y-auto'>
                                 <h3 className="font-bold text-primary text-2xl">Filter by</h3>
-                                <form action="" className="space-y-8">
-                                    {categoriesData.map((category, index) => (
+                                <form action="" className="space-y-6">
+                                    {locationData.map((location, index) => (
                                         <div
                                             key={index}
                                             onClick={() => {
-                                                handleFilterByCategory(category.id)
+                                                handleFilterByLocation(location)
                                                 setShowMobileFilters(false)
                                             }}
-                                            className='flex w-full transition-all text-status-darkViolet text-base font-bold hover:text-tc-orange cursor-pointer items-center justify-between p-2'>
+                                            className='flex w-full transition-all text-status-darkViolet text-base font-bold hover:text-tc-orange cursor-pointer items-center space-x-3'>
+                                            <div className="w-3 h-3 bg-tc-orange rounded-full" />
                                             <div className="">
-                                                {category?.categoryName}
+                                                {location}
                                             </div>
                                         </div>
                                     ))}

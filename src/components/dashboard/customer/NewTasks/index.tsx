@@ -1,7 +1,7 @@
 "use client";
 
 import { useGetTaskByCustomerIdQuery } from "@/services/tasks";
-import NewTasksCard from "../NewTasksCard";
+// import NewTasksCard from "../NewTasksCard";
 import { useSession } from "next-auth/react";
 import Loading from "@/shared/loading";
 import Link from "next/link";
@@ -34,9 +34,9 @@ const TaskList = () => {
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
-          {tasksData?.map((task, index) => (
+          {/* {tasksData?.map((task, index) => (
             <NewTasksCard key={index} task={task} />
-          ))}
+          ))} */}
         </div>
       )}
     </>
