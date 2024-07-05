@@ -405,7 +405,7 @@ const AiDesciption: React.FC<AiGenerateProps> = ({
               )}
             </p>
 
-            <div className="flex items-center pt-2 rounded-[20px] lg:px-4 px-2 font-medium border-[2px] border-primary min-h-16 bottom-4">
+            <div className="flex items-center pt-2 rounded-[20px] lg:px-4 px-2 font-medium border-[2px] border-primary min-h-16 bottom-10">
               <textarea
                 name="aiQuery"
                 placeholder="Enter a request here"
