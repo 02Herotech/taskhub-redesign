@@ -101,7 +101,6 @@ const AiDesciption: React.FC<AiGenerateProps> = ({
         ...newConversation,
         { id: generateId(), type: "ai", text: data },
       ]);
-      setAiQuery("");
     } catch (error) {
       console.error("Error fetching AI response:", error);
     } finally {
@@ -242,7 +241,7 @@ const AiDesciption: React.FC<AiGenerateProps> = ({
 
 
   return (
-    <div className=" flex flex-col justify-between">
+    <div>
       {displayType === "card" ? (
         <div className="relative overflow-hidden ">
           <div className=" mb-5 flex flex-col space-y-6 rounded-[20px] bg-[#381F8C] p-4">
@@ -296,31 +295,33 @@ const AiDesciption: React.FC<AiGenerateProps> = ({
 
       {aiChatView && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 lg:py-2 py-1">
-          <div ref={containerRef} className="mx-auto h-[90%] w-[90%] rounded-[16px] bg-[#FFFFFF] lg:p-10 lg:pt-7 p-5 lg:!pb-20 text-white md:w-[60%] lg:w-[50%] overflow-hidden">
-            <div className="flex justify-end">
-              <div
-                className="flex h-[30px] w-[30px] items-center justify-center rounded-full bg-[#EBE9F4] hover:cursor-pointer"
-                onClick={AiChatView}
-              >
-                <IoCloseCircleOutline color="#4E5158" size={20} className="" />
+          <div ref={containerRef} className="mx-auto flex flex-col justify-between h-[80%] w-[90%] rounded-[16px] bg-[#FFFFFF] lg:p-10 lg:pt-7 p-5 text-white md:w-[60%] lg:w-[50%]">
+            <div className="">
+              <div className=" flex justify-end">
+                <div
+                  className="flex h-[30px] w-[30px] items-center justify-center rounded-full bg-[#EBE9F4] hover:cursor-pointer"
+                  onClick={AiChatView}
+                >
+                  <IoCloseCircleOutline color="#4E5158" size={20} className="" />
+                </div>
+              </div>
+              <div>
+                <h2 className="font-clashBold text-[25px] text-primary lg:text-[35px]">
+                  Hello, {userName}
+                </h2>
+                <p className="pb-3 font-clashMedium text-[16px] text-[#716F78]">
+                  Here are some suggested questions you can ask me?
+                </p>
               </div>
             </div>
-            <div>
-              <h2 className="font-clashBold text-[25px] text-primary lg:text-[35px]">
-                Hello, {userName}
-              </h2>
-              <p className="pb-3 font-clashMedium text-[16px] text-[#716F78]">
-                Here are some suggested questions you can ask me?
-              </p>
-            </div>
 
-            <div className="conversation h-[70%] space-y-4 overflow-auto">
+            <div className="conversation lg:h-[60%] h-[55%] space-y-4 overflow-y-auto flex-1">
               {conversation.length === 0 && (
                 <div className="mx-auto w-full justify-between space-y-3 lg:flex lg:space-y-0">
                   {AiSuggestions.map((entry, index) => (
                     <p
                       key={index}
-                      className="mr-[5%] rounded-[13px] border border-primary bg-white p-2 font-satoshiMedium text-[14px] text-primary transition-all duration-500 hover:translate-x-1 hover:translate-y-1 hover:transform hover:cursor-pointer lg:w-[49%]"
+                      className="mr-[5%] rounded-[13px] border border-primary bg-white p-2 font-satoshiMedium text-[14px] text-primary transition-all  duration-500 hover:translate-x-1 hover:translate-y-1 hover:transform hover:cursor-pointer lg:w-[49%] "
                       onClick={() => getAiSuggestions(index)}
                     >
                       {entry}
@@ -345,6 +346,7 @@ const AiDesciption: React.FC<AiGenerateProps> = ({
                         <Image alt="" src={icon2} width={20} height={20} />
                       </span>
                       <p className="w-[85%] font-satoshiMedium text-primary">
+                        {" "}
                         {entry.text}
                       </p>
                     </div>
@@ -373,7 +375,9 @@ const AiDesciption: React.FC<AiGenerateProps> = ({
                   )}
 
                   {animationFinished[entry.id] && (
-                    <p className={`mt-6 ${entry.type === "user" ? "hidden" : "my-2 w-full"}`}>
+                    <p
+                      className={`mt-6 ${entry.type === "user" ? "hidden" : "my-2 w-full"}`}
+                    >
                       <span className="font-satoshi text-[15px] font-bold text-primary">
                         Are you happy with this suggestion? you can
                       </span>{" "}
@@ -397,39 +401,45 @@ const AiDesciption: React.FC<AiGenerateProps> = ({
               <div ref={conversationEndRef} />
             </div>
 
-            <p className="h-[15px] mb-1">
-              {AiLoading ? (
-                <BeatLoader className="text-primary" size={12} />
-              ) : (
-                ""
+            <div className="">
+              <p className="h-[15px] mb-1 ">
+                {AiLoading ? (
+                  <BeatLoader className="text-primary" size={12} />
+                ) : (
+                  ""
+                )}
+              </p>
+
+              <form className="flex items-center pt-2 rounded-[20px] lg:px-4 px-2 font-medium border-[2px] border-primary">
+                <textarea
+                  name="aiQuery"
+                  placeholder="Enter a request here"
+                  onChange={handleInputChange}
+                  value={aiQuery}
+                  className="w-full text-wrap bg-transparent px-2 text-[16px] font-normal overflow-auto text-primary border-none outline-none max-h-16"
+                  required
+                  rows={1}
+                  ref={textareaRef}
+                />
+                <div
+                  className=""
+                  onClick={handleAiChatQuery}
+                >
+                  <BiSend
+                    size={26}
+                    className="transform text-primary ease-in-out hover:scale-110 hover:cursor-pointer"
+                  />
+                </div>
+              </form>
+              {emptyQuerryField && (
+                <span className="pt-1">
+
+                  <p className="font-clashDisplay text-center lg:text-lg text-xs text-red-500">
+                    Kindly enter your request
+                  </p>
+                </span>
               )}
-            </p>
-
-            <div className="flex items-center pt-2 rounded-[20px] lg:px-4 px-2 mb-3 font-medium border-[2px] border-primary">
-              <textarea
-                name="aiQuery"
-                placeholder="Enter a request here"
-                onChange={handleInputChange}
-                value={aiQuery}
-                ref={textareaRef}
-                className="w-full flex-1 bg-transparent px-2 text-[16px] font-normal text-primary border-none outline-none resize-none max-h-16 lg:max-h-20"
-                required
-                rows={1}
-              />
-              <BiSend
-                onClick={handleAiChatQuery}
-                size={26}
-                className="transform text-primary ease-in-out hover:scale-110 hover:cursor-pointer"
-              />
             </div>
-
-            {emptyQuerryField && (
-              <span className="pt-1">
-                <p className="font-clashDisplay text-center lg:text-lg text-xs text-red-500">
-                  Kindly enter your request
-                </p>
-              </span>
-            )}
           </div>
         </div>
       )}
