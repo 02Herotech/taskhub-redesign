@@ -293,11 +293,20 @@ const AddTaskForm: React.FC = () => {
   const handlePrice = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
     const numberValue = value === "" ? 0 : parseFloat(value);
-    setTask({
-      ...task,
-      [name]: numberValue,
-    });
+
+    if (numberValue <= 0) {
+      setTask({
+        ...task,
+        [name]: null,
+      });
+    } else {
+      setTask({
+        ...task,
+        [name]: numberValue,
+      });
+    }
   };
+
 
   const handleChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
