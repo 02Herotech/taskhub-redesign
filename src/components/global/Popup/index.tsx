@@ -6,10 +6,9 @@ interface PopupProps {
     isOpen: boolean;
     onClose: () => void;
     children: React.ReactNode;
-    popupTitle?: any;
 }
 
-const Popup: React.FC<PopupProps> = ({ isOpen, onClose, children, popupTitle }) => {
+const Popup: React.FC<PopupProps> = ({ isOpen, onClose, children }) => {
     const popupRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
@@ -54,15 +53,9 @@ const Popup: React.FC<PopupProps> = ({ isOpen, onClose, children, popupTitle }) 
                 >
                     <motion.div
                         ref={popupRef}
-                        className="relative flex flex-col z-10 rounded-xl bg-white shadow-lg w-full max-w-lg"
+                        className="relative flex justify-center z-10 rounded-xl bg-white shadow-lg"
                         variants={popupVariants}
                     >
-                        {popupTitle && (
-                            <div className="w-full p-2">
-                                {popupTitle}
-                                <div className="border-b-2 border-[#140B31] w-full mt-1" />
-                            </div>
-                        )}
                         <div className="absolute top-0 right-0 p-2 cursor-pointer z-10">
                             <button
                                 onClick={onClose}
@@ -71,9 +64,7 @@ const Popup: React.FC<PopupProps> = ({ isOpen, onClose, children, popupTitle }) 
                                 <IoMdClose className="w-[24px] h-[24px] border-2 border-primary rounded-3xl" />
                             </button>
                         </div>
-                        <main className="">
-                            {children}
-                        </main>
+                        {children}
                     </motion.div>
                 </motion.div>
             )}
