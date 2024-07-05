@@ -18,8 +18,6 @@ const ChatSocket = () => {
     (state: RootState) => state.userProfile,
   );
 
-  const { subscription } = useSelector((state: RootState) => state.chat);
-
   const [reconnectAttempts, setReconnectAttempts] = useState(0);
   const maxReconnectAttempts = 5;
   const reconnectInterval = 5000; // 5 seconds
@@ -30,11 +28,10 @@ const ChatSocket = () => {
   };
 
   const onConnected = () => {
-    const newSubscription = stompClient.subscribe(
+    stompClient.subscribe(
       `/user/${user?.id}/queue/messages`,
       onMessageReceived,
     );
-    dispatch(setSubscription(newSubscription));
     setReconnectAttempts(0);
   };
 
