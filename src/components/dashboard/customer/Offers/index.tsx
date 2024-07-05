@@ -145,7 +145,7 @@ const Offers = () => {
                 </div>
                 <div className="">
                   <h4 className="mb-1 text-xl font-bold text-primary">
-                    {data.serviceProvider.user.firstName} sent you an invoice
+                    {data.serviceProvider.user.firstName} sent you an offer
                   </h4>
                   <p className="font-satoshiMedium text-base text-[#716F78]">
                     {data.bookingTitle}{" "}
@@ -157,7 +157,7 @@ const Offers = () => {
                 className="rounded-full max-lg:mt-2"
                 onClick={() => handleCardClick(data)}
               >
-                View Invoice
+                View Offer
               </Button>
             </div>
           ))}
@@ -176,7 +176,7 @@ const Offers = () => {
 
         {isModalOpen && selectedInvoice && (
           <Popup isOpen={isModalOpen} onClose={closeModal}>
-            <div className="relative min-h-[200px] rounded-2xl bg-[#EBE9F4] p-5 font-satoshi lg:max-w-[877px] lg:px-7 lg:py-10">
+            <div className="relative min-h-[200px] rounded-2xl bg-[#EBE9F4] p-5 font-satoshi lg:w-[600px] lg:px-7 lg:py-10">
               {clientSecret && initiatePayment ? (
                 <Elements stripe={stripePromise} options={stripeOptions}>
                   <CheckoutForm
@@ -187,10 +187,10 @@ const Offers = () => {
               ) : (
                 <>
                   <h3 className="font-clashSemiBold text-3xl text-[#060D1F]">
-                    Invoice Details
+                    Offer Details
                   </h3>
                   <p className="text-md text-[#546276]">
-                    {selectedInvoice.serviceProvider.user.firstName}
+                      {selectedInvoice.bookingTitle}
                   </p>
                   <div className="mt-5 flex flex-col justify-between space-y-3">
                     <div className="rounded-[20px] bg-[#C1BADB] p-4">
