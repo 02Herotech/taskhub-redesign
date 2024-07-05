@@ -15,12 +15,14 @@ interface InitialStateType {
   contacts: ChatContactTypes[];
   totalUnreadMessages: number;
   newMessage: null | NewMessagePropsTypes;
+  subscription: any;
 }
 
 const initialState: InitialStateType = {
   contacts: [],
   totalUnreadMessages: 0,
   newMessage: null,
+  subscription: null,
 };
 
 export const chatSlice = createSlice({
@@ -37,11 +39,18 @@ export const chatSlice = createSlice({
       const newMessage = action.payload;
       return { ...state, newMessage };
     },
+    setSubscription: (state, action) => {
+      return { ...state, subscription: action.payload };
+    },
   },
 });
 
-export const { setContacts, setTotalUnreadMessages, setNewMessage } =
-  chatSlice.actions;
+export const {
+  setContacts,
+  setTotalUnreadMessages,
+  setNewMessage,
+  setSubscription,
+} = chatSlice.actions;
 
 interface LoadContactsArgs {
   token: string;

@@ -4,6 +4,7 @@ import { RootState } from "@/store";
 import {
   setContacts,
   setNewMessage,
+  setSubscription,
   setTotalUnreadMessages,
 } from "@/store/Features/chat";
 import { countNewMessages, getUsers } from "@/utils/message";
@@ -17,6 +18,8 @@ const ChatSocket = () => {
     (state: RootState) => state.userProfile,
   );
 
+  const { subscription } = useSelector((state: RootState) => state.chat);
+
   const [reconnectAttempts, setReconnectAttempts] = useState(0);
   const maxReconnectAttempts = 5;
   const reconnectInterval = 5000; // 5 seconds
@@ -27,10 +30,11 @@ const ChatSocket = () => {
   };
 
   const onConnected = () => {
-    stompClient.subscribe(
+    const newSubscription = stompClient.subscribe(
       `/user/${user?.id}/queue/messages`,
       onMessageReceived,
     );
+    dispatch(setSubscription(newSubscription));
     setReconnectAttempts(0);
   };
 

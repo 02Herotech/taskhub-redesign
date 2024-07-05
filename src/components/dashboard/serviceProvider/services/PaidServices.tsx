@@ -1,33 +1,22 @@
 "use client";
-import { RootState } from "@/store";
-import {
-  formatDateFromNumberArrayToRelativeDate,
-  formatRelativeDate,
-} from "@/utils";
-import axios from "axios";
 import { useSession } from "next-auth/react";
-import Image from "next/image";
-import Link from "next/link";
 import React, { useState } from "react";
-import { useSelector } from "react-redux";
-import { BeatLoader } from "react-spinners";
 import JobCard from "../jobs/JobCard";
+import axios from "axios";
 
-interface AcceptedServicesPropsType {
+interface PaidServicesPropsType {
   setModalData: React.Dispatch<React.SetStateAction<ModalDataType>>;
   jobs: JobsType[];
-  handleReportservice: (id: number) => Promise<void>;
-  customerDetails: UserProfileTypes[] | null | undefined;
   allBookings: BookingType[];
+  handleReportService: (id: number) => Promise<void>;
 }
 
 const PaidServices = ({
   setModalData,
   jobs,
-  handleReportservice,
-  customerDetails,
   allBookings,
-}: AcceptedServicesPropsType) => {
+  handleReportService,
+}: PaidServicesPropsType) => {
   const [startJobState, setStartJobState] = useState({
     id: 0,
     loading: false,
@@ -87,6 +76,7 @@ const PaidServices = ({
               title={item.jobTitle}
               startDate={item.jobEnd}
               startJob={() => handleStartService(item.id)}
+              reportJob={() => handleReportService(item.id)}
               price={item.total}
             />
           );
