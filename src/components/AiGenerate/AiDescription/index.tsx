@@ -252,7 +252,7 @@ const AiDesciption: React.FC<AiGenerateProps> = ({
   return (
     <div>
       {displayType === "card" ? (
-        <div className="relative overflow-hidden ">
+        <div className="relative overflow-hidden">
           <div className=" mb-5 flex flex-col space-y-6 rounded-[20px] bg-[#381F8C] p-4">
             <h2 className="text-lg font-extrabold text-white">
               Get personalized AI help
@@ -292,8 +292,7 @@ const AiDesciption: React.FC<AiGenerateProps> = ({
         <button
           onClick={AiChatView}
           type="button"
-          className={` flex transform items-center
-       space-x-4 border-none bg-none font-satoshiBold font-extrabold text-primary transition-transform  duration-300 ease-in-out hover:scale-105`}
+          className={`flex transform items-center space-x-4 border-none bg-none font-satoshiBold font-extrabold text-primary transition-transform  duration-300 ease-in-out hover:scale-105`}
         >
           Generate with AI
           <span className="ml-2">
@@ -304,7 +303,7 @@ const AiDesciption: React.FC<AiGenerateProps> = ({
 
       {aiChatView && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 lg:py-2 py-1">
-          <div ref={containerRef} className="mx-auto flex flex-col justify-between h-[80%] w-[90%] rounded-[16px] bg-[#FFFFFF] lg:p-10 lg:pt-7 p-5 text-white md:w-[60%] lg:w-[50%]">
+          <div ref={containerRef} className="mx-auto flex flex-col justify-between h-full lg:h-[80%] w-[90%] rounded-[16px] bg-[#FFFFFF] lg:p-10 lg:pt-7 p-5 text-white md:w-[60%] lg:w-[50%]">
             <div className="">
               <div className=" flex justify-end">
                 <div
@@ -419,7 +418,7 @@ const AiDesciption: React.FC<AiGenerateProps> = ({
                 )}
               </p>
 
-              <form className="flex items-center pt-2 rounded-[20px] lg:px-4 px-2 font-medium border-[2px] border-primary">
+              <form className="flex items-center py-2 rounded-[20px] lg:px-4 px-2 font-medium border-[2px] border-primary">
                 {/* <textarea
                   name="aiQuery"
                   placeholder="Enter a request here"
@@ -431,7 +430,7 @@ const AiDesciption: React.FC<AiGenerateProps> = ({
                   ref={textareaRef}
                 /> */}
                 <textarea
-                  className="small-scrollbar max-h-20 w-full resize-none rounded-md bg-violet-light p-3 pr-16 outline-none"
+                  className="small-scrollbar max-h-20 w-full resize-none text-black rounded-md p-3 pr-16 outline-none"
                   value={aiQuery}
                   ref={textareaRef}
                   onChange={handleInputChange}
