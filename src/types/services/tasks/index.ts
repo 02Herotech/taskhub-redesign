@@ -4,7 +4,7 @@ export type Task = {
     posterId: number;
     taskBriefDescription: string;
     taskDescription: string;
-    taskImage: string;
+    taskImage: any;
     category: {
         id: number;
         categoryName: string;
@@ -27,7 +27,7 @@ export type CustomerTasks = {
     posterId: number;
     taskBriefDescription: string;
     taskDescription: string;
-    taskImage: string;
+    taskImage: any;
     taskTime: string;
     taskDate: [number, number, number];
     category: {

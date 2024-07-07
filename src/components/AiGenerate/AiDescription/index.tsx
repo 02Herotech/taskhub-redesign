@@ -204,7 +204,16 @@ const AiDesciption: React.FC<AiGenerateProps> = ({
   // To increase height of text area based on what is being typed
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
-  const [initialContainerHeight, setInitialContainerHeight] = useState<number | null>(null);
+  const handleFocus = () => {
+    document.body.style.overflow = "auto";
+    setTimeout(() => {
+      textareaRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+    }, 300); // Delay to account for keyboard animation
+  };
+
+  const handleBlur = () => {
+    document.body.style.overflow = "hidden"; // Revert to non-scrollable
+  };
 
 
   // const adjustTextareaHeight = () => {
@@ -411,7 +420,7 @@ const AiDesciption: React.FC<AiGenerateProps> = ({
               </p>
 
               <form className="flex items-center pt-2 rounded-[20px] lg:px-4 px-2 font-medium border-[2px] border-primary">
-                <textarea
+                {/* <textarea
                   name="aiQuery"
                   placeholder="Enter a request here"
                   onChange={handleInputChange}
@@ -420,6 +429,21 @@ const AiDesciption: React.FC<AiGenerateProps> = ({
                   required
                   rows={1}
                   ref={textareaRef}
+                /> */}
+                <textarea
+                  className="small-scrollbar max-h-20 w-full resize-none rounded-md bg-violet-light p-3 pr-16 outline-none"
+                  value={aiQuery}
+                  ref={textareaRef}
+                  onChange={handleInputChange}
+                  onFocus={handleFocus}
+                  onBlur={handleBlur}
+                  // onKeyDown={(event) => {
+                  //   if (event.key === "Enter") {
+                  //     sendMessage(message);
+                  //     setMessage("");
+                  //   }
+                  // }}
+                  placeholder="Enter a request here"
                 />
                 <div
                   className=""

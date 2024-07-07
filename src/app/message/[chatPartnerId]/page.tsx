@@ -275,7 +275,7 @@ const ServiceProviderChat = () => {
               }
               width={50}
               height={50}
-              alt="user"
+              alt="user"  
               className="size-8 rounded-full"
             />
             <div className="relative w-full">

@@ -56,6 +56,21 @@ html {
   text-overflow: ellipsis;
 }
 
+.no-input-default-style {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  border: none;
+  background: none;
+  padding: 0;
+  margin: 0;
+  box-shadow: none;
+  outline: none;
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
+}
+
 @layer base {
   @font-face {
     font-family: Clash;
