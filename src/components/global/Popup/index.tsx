@@ -6,9 +6,10 @@ interface PopupProps {
     isOpen: boolean;
     onClose: () => void;
     children: React.ReactNode;
+    popUpTitle?: React.ReactNode;
 }
 
-const Popup: React.FC<PopupProps> = ({ isOpen, onClose, children }) => {
+const Popup: React.FC<PopupProps> = ({ isOpen, onClose, children, popUpTitle }) => {
     const popupRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
@@ -53,9 +54,14 @@ const Popup: React.FC<PopupProps> = ({ isOpen, onClose, children }) => {
                 >
                     <motion.div
                         ref={popupRef}
-                        className="relative flex justify-center z-10 rounded-xl bg-white shadow-lg"
+                        className="relative flex justify-between items-center z-10 rounded-xl bg-white shadow-lg"
                         variants={popupVariants}
                     >
+                        {popUpTitle && (
+                            <div className="absolute top-0 left-0 p-2 z-10">
+                                {popUpTitle}
+                            </div>
+                        )}
                         <div className="absolute top-0 right-0 p-2 cursor-pointer z-10">
                             <button
                                 onClick={onClose}

@@ -45,6 +45,8 @@ const TaskCard = ({ task }: TaskCardProps) => {
     }
   }, [task.taskDate]);
 
+  console.log("task", task)
+
   return (
     <motion.div
       className="lg:rounded-4xl cursor-pointer rounded-xl bg-[#EBE9F4] p-5"
@@ -54,7 +56,7 @@ const TaskCard = ({ task }: TaskCardProps) => {
       }}
       onClick={() => router.push(`/explore/task-details/${task.id}`)}
     >
-      <div className="flex w-full items-center justify-between space-x-2">
+      <div className="flex w-full items-center justify-between space-x-4">
         <h2 className="overflow-hidden truncate text-ellipsis whitespace-nowrap py-4 text-2xl font-bold text-primary lg:text-[30px]">
           {task.taskBriefDescription}
         </h2>
@@ -72,7 +74,7 @@ const TaskCard = ({ task }: TaskCardProps) => {
       <div className="flex w-full my-3 items-center space-x-2 font-medium text-[#716F78]">
         <HiOutlineLocationMarker className="h-6 w-6 font-bold" />
         <h5 className="overflow-hidden truncate text-ellipsis whitespace-nowrap py-1 text-[14px]">
-          {task.state || `Remote`}
+          {task.state ? `${task.postCode}, ${task.suburb}, ${task.state}` : "Remote"}
         </h5>
       </div>
       <div className="my-4 flex items-center space-x-2">
