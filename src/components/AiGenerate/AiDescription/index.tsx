@@ -303,7 +303,7 @@ const AiDesciption: React.FC<AiGenerateProps> = ({
 
       {aiChatView && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 lg:py-2 py-1">
-          <div ref={containerRef} className="mx-auto flex flex-col justify-between h-full lg:h-[85%] w-[90%] rounded-[16px] bg-[#FFFFFF] lg:p-10 lg:pt-7 p-5 text-white md:w-[60%] lg:w-[50%]">
+          <div ref={containerRef} className="mx-auto flex flex-col justify-between h-full lg:h-[95%] w-[90%] rounded-[16px] bg-[#FFFFFF] lg:p-10 lg:pt-7 p-5 text-white md:w-[60%] lg:w-[50%]">
             <div className="">
               <div className=" flex justify-end">
                 <div
