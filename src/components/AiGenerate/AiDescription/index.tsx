@@ -303,7 +303,7 @@ const AiDesciption: React.FC<AiGenerateProps> = ({
 
       {aiChatView && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 lg:py-2 py-1">
-          <div ref={containerRef} className="mx-auto flex flex-col justify-between h-full lg:h-[80%] w-[90%] rounded-[16px] bg-[#FFFFFF] lg:p-10 lg:pt-7 p-5 text-white md:w-[60%] lg:w-[50%]">
+          <div ref={containerRef} className="mx-auto flex flex-col justify-between h-full lg:h-[85%] w-[90%] rounded-[16px] bg-[#FFFFFF] lg:p-10 lg:pt-7 p-5 text-white md:w-[60%] lg:w-[50%]">
             <div className="">
               <div className=" flex justify-end">
                 <div
@@ -323,7 +323,7 @@ const AiDesciption: React.FC<AiGenerateProps> = ({
               </div>
             </div>
 
-            <div className="conversation lg:h-[60%] h-[55%] space-y-4 overflow-y-auto flex-1">
+            <div className="conversation lg:h-[70%] h-[55%] space-y-4 overflow-y-auto flex-1">
               {conversation.length === 0 && (
                 <div className="mx-auto w-full justify-between space-y-3 lg:flex lg:space-y-0">
                   {AiSuggestions.map((entry, index) => (
@@ -418,7 +418,7 @@ const AiDesciption: React.FC<AiGenerateProps> = ({
                 )}
               </p>
 
-              <form className="flex items-center py-2 rounded-[20px] lg:px-4 px-2 font-medium border-[2px] border-primary">
+              <form className="flex items-center space-x-4 py-2 rounded-[20px] lg:px-4 px-2 font-medium border-[2px] border-primary">
                 {/* <textarea
                   name="aiQuery"
                   placeholder="Enter a request here"
