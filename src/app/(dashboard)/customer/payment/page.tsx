@@ -136,7 +136,7 @@
 
 "use client"
 
-import Invoices from "@/components/dashboard/customer/Invoices";
+import Invoices from "@/components/dashboard/customer/Offers";
 import CustomerPaymentHistory from "@/components/dashboard/customer/PaymentHistory";
 import Button from "@/components/global/Button"
 import { useRouter } from "next/navigation";

@@ -17,7 +17,7 @@ import { Invoice } from "@/types/services/invoice";
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY!);
 
-const Invoices = () => {
+const Offers = () => {
   const [visibleTransactions, setVisibleTransactions] = useState(4);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedInvoice, setSelectedInvoice] = useState<Invoice | null>(null);
@@ -56,7 +56,7 @@ const Invoices = () => {
     (state: RootState) => state.userProfile,
   );
 
-  const { data: invoices, isLoading } = useGetInvoiceByCustomerIdQuery(
+  const { data: offers, isLoading } = useGetInvoiceByCustomerIdQuery(
     user?.customerId!,
   );
 
@@ -94,7 +94,7 @@ const Invoices = () => {
     }
   }, [isModalOpen, userToken]);
 
-  if (!invoices || isLoading) {
+  if (!offers || isLoading) {
     return (
       <div className="flex h-[full] w-full items-center justify-center">
         <Loading />
@@ -112,7 +112,7 @@ const Invoices = () => {
         <h3 className="mb-5 font-satoshiBold text-base font-bold text-[#140B31]">
           {todayDate}
         </h3>
-        {invoices.length === 0 && (
+        {offers.length === 0 && (
           <div className="flex h-[50vh] flex-col items-center justify-center space-y-5">
             <h2 className="text-center text-2xl font-bold text-primary">
               No invoice found
@@ -120,7 +120,7 @@ const Invoices = () => {
           </div>
         )}
         <div className="space-y-5">
-          {invoices.slice(0, visibleTransactions).map((data, index) => (
+          {offers.slice(0, visibleTransactions).map((data, index) => (
             <div
               key={index}
               className="flex justify-between border-b border-primary px-5 py-3 max-lg:flex-col lg:items-center"
@@ -145,7 +145,7 @@ const Invoices = () => {
                 </div>
                 <div className="">
                   <h4 className="mb-1 text-xl font-bold text-primary">
-                    {data.serviceProvider.user.firstName} sent you an invoice
+                    {data.serviceProvider.user.firstName} sent you an offer
                   </h4>
                   <p className="font-satoshiMedium text-base text-[#716F78]">
                     {data.bookingTitle}{" "}
@@ -157,11 +157,11 @@ const Invoices = () => {
                 className="rounded-full max-lg:mt-2"
                 onClick={() => handleCardClick(data)}
               >
-                View Invoice
+                View Offer
               </Button>
             </div>
           ))}
-          {visibleTransactions < invoices.length && (
+          {visibleTransactions < offers.length && (
             <div className="flex items-center justify-center">
               <Button
                 onClick={handleLoadMore}
@@ -176,7 +176,7 @@ const Invoices = () => {
 
         {isModalOpen && selectedInvoice && (
           <Popup isOpen={isModalOpen} onClose={closeModal}>
-            <div className="relative min-h-[200px] rounded-2xl bg-[#EBE9F4] p-5 font-satoshi lg:max-w-[877px] lg:px-7 lg:py-10">
+            <div className="relative min-h-[200px] rounded-2xl bg-[#EBE9F4] p-5 font-satoshi lg:w-[600px] lg:px-7 lg:py-10">
               {clientSecret && initiatePayment ? (
                 <Elements stripe={stripePromise} options={stripeOptions}>
                   <CheckoutForm
@@ -187,10 +187,10 @@ const Invoices = () => {
               ) : (
                 <>
                   <h3 className="font-clashSemiBold text-3xl text-[#060D1F]">
-                    Invoice Details
+                    Offer Details
                   </h3>
                   <p className="text-md text-[#546276]">
-                    {selectedInvoice.serviceProvider.user.firstName}
+                      {selectedInvoice.bookingTitle}
                   </p>
                   <div className="mt-5 flex flex-col justify-between space-y-3">
                     <div className="rounded-[20px] bg-[#C1BADB] p-4">
@@ -277,4 +277,4 @@ const Invoices = () => {
   );
 };
 
-export default Invoices;
+export default Offers;
