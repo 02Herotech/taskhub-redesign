@@ -419,17 +419,17 @@ const AiDesciption: React.FC<AiGenerateProps> = ({
               </p>
 
               <form className="flex items-center space-x-4 py-2 rounded-[20px] lg:px-4 px-2 font-medium border-[2px] border-primary">
-                {/* <textarea
+                <textarea
                   name="aiQuery"
                   placeholder="Enter a request here"
                   onChange={handleInputChange}
                   value={aiQuery}
-                  className="w-full text-wrap bg-transparent px-2 text-[16px] font-normal overflow-auto text-primary border-none outline-none max-h-16"
+                  className="small-scrollbar max-h-20 w-full resize-none text-black rounded-md p-3 outline-none"
                   required
-                  rows={1}
+                  // rows={1}
                   ref={textareaRef}
-                /> */}
-                <textarea
+                />
+                {/* <textarea
                   className="small-scrollbar max-h-20 w-full resize-none text-black rounded-md p-3 outline-none"
                   value={aiQuery}
                   ref={textareaRef}
@@ -443,7 +443,7 @@ const AiDesciption: React.FC<AiGenerateProps> = ({
                   //   }
                   // }}
                   placeholder="Enter a request here"
-                />
+                /> */}
                 <div
                   className=""
                   onClick={handleAiChatQuery}
