@@ -430,7 +430,7 @@ const AiDesciption: React.FC<AiGenerateProps> = ({
                   ref={textareaRef}
                 /> */}
                 <textarea
-                  className="small-scrollbar max-h-20 w-full resize-none text-black rounded-md p-3 pr-16 outline-none"
+                  className="small-scrollbar max-h-20 w-full resize-none text-black rounded-md p-3 outline-none"
                   value={aiQuery}
                   ref={textareaRef}
                   onChange={handleInputChange}
