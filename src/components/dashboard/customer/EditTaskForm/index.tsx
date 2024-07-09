@@ -32,7 +32,6 @@ interface CustomInputProps {
 
 const EditTaskForm = ({ task }: TaskCardProps) => {
     const [activeEditModalLink, setActiveEditModalLink] = useState<string>("Task Details");
-    const [error, setError] = useState("");
     const [categories, setCategories] = useState<{ id: number; categoryName: string }[]>([]);
     const [postalCodes, setPostalCodes] = useState<PostalCodeData[]>([]);
     const [updatedTaskType, setUpdatedTaskType] = useState<string>(task.taskType);
@@ -44,6 +43,7 @@ const EditTaskForm = ({ task }: TaskCardProps) => {
     const [updatedDate, setUpdatedDate] = useState<Date | null>(null);
     const [updatedTime, setUpdatedTime] = useState<Date | null>(null);
     const [loading, setLoading] = useState(false);
+    const [error, setError] = useState("");
 
     const { data: session } = useSession();
     const token = session?.user.accessToken;
@@ -51,8 +51,8 @@ const EditTaskForm = ({ task }: TaskCardProps) => {
     const [taskData, setTaskData] = useState({
         taskBriefDescription: task.taskBriefDescription,
         taskImage: updatedImage ? updatedImage : task.taskImage,
-        taskTime: task.taskTime,
-        taskDate: task.taskDate,
+        taskTime: updatedTime ? updatedTime : task.taskTime,
+        taskDate: updatedDate ? updatedDate : task.taskDate,
         taskType: updatedTaskType ? updatedTaskType : task.taskType,
         suburb: updatedSuburb ? updatedSuburb : task.suburb,
         state: updatedState ? updatedState : task.state,
@@ -66,7 +66,7 @@ const EditTaskForm = ({ task }: TaskCardProps) => {
         const fetchPostalCodeData = async () => {
             try {
                 const response = await axios.get(
-                    `https://smp.jacinthsolutions.com.au/api/v1/util/locations/search?postcode=${updatedPostCode}`,
+                    `https://smp.jacinthsolutions.com.au/api/v1/util/locations/search?postcode=${taskData.postCode}`,
                 );
                 setPostalCodes(response.data as PostalCodeData[]);
             } catch (error) {
@@ -215,8 +215,6 @@ const EditTaskForm = ({ task }: TaskCardProps) => {
         </button>
     );
 
-    console.log("Task Data", taskData)
-
     return (
         <div className='pt-14 lg:px-5'>
             <div className="border-b-2 border-[#140B31] w-full" />
@@ -354,7 +352,7 @@ const EditTaskForm = ({ task }: TaskCardProps) => {
                                             />
                                         </label>
                                     )}
-                                    
+
                                 </div>
 
                                 <div className="space-y-5">

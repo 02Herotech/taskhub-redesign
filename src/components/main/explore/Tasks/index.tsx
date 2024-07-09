@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import { useGetActiveTasksQuery, useSearchTaskByTextQuery } from "@/services/tasks";
 import { Task } from "@/types/services/tasks";
@@ -13,15 +13,24 @@ import Loading from "@/shared/loading";
 import { CiSearch } from "react-icons/ci";
 import { IoMdArrowDropdown } from "react-icons/io";
 import { locationData } from "@/data/marketplace/data";
+import { IoCloseCircle } from "react-icons/io5";
+import { set } from "zod";
 
 type Category = {
     id: number;
     categoryName: string;
 };
 
-const Tasks = () => {
+type FilterState = {
+    category: string | null;
+    location: string | null;
+    serviceType: "REMOTE_SERVICE" | "PHYSICAL_SERVICE" | null;
+    price: [number, number] | null;
+    other: string | null;
+};
+
+const Tasks: React.FC = () => {
     const [priceValues, setPriceValues] = useState<[number, number]>([5, 10000]);
-    const [selectedService, setSelectedService] = useState<"REMOTE_SERVICE" | "PHYSICAL_SERVICE">("PHYSICAL_SERVICE");
     const [categoriesData, setCategoriesData] = useState<Category[]>([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [searchResultsPage, setSearchResultsPage] = useState(1);
@@ -33,6 +42,17 @@ const Tasks = () => {
     const [paginationLength, setPaginationLength] = useState(9);
     const [showPriceDropdown, setShowPriceDropdown] = useState(false);
     const [showMobileFilters, setShowMobileFilters] = useState(false);
+    const [selectedFilter, setSelectedFilter] = useState<string>("");
+    const [selectedCategory, setSelectedCategory] = useState("")
+    const [selectedLocation, setSelectedLocation] = useState("")
+    const [selectedServiceType, setSelectedServiceType] = useState("")
+    const [activeFilters, setActiveFilters] = useState<FilterState>({
+        category: null,
+        location: null,
+        serviceType: null,
+        price: null,
+        other: null
+    });
 
     const { data: tasksData, isLoading, refetch } = useGetActiveTasksQuery(currentPage);
     const { data: searchResults } = useSearchTaskByTextQuery({ text: searchText, pageNumber: currentPage });
@@ -40,9 +60,7 @@ const Tasks = () => {
     useEffect(() => {
         const fetchCategoriesData = async () => {
             try {
-                const response = await axios.get(
-                    `${process.env.NEXT_PUBLIC_API_URL}/util/all-categories`,
-                );
+                const response = await axios.get<Category[]>(`${process.env.NEXT_PUBLIC_API_URL}/util/all-categories`);
                 setCategoriesData(response.data);
             } catch (error) {
                 console.log(error);
@@ -60,67 +78,116 @@ const Tasks = () => {
         }
     };
 
-    const totalPages = Math.ceil(tasksData?.totalElements! / itemsPerPage); // Calculate total pages
-    const searchTotalPages = Math.ceil(searchResults?.totalElements! / itemsPerPage); // Calculate total pages for search results
-    const filteredTotalPages = Math.ceil(filteredData.length / itemsPerPage); // Calculate total pages for filtered data
-    console.log("tasksData", tasksData);
+    const totalPages = Math.ceil(tasksData?.totalElements! / itemsPerPage);
+    const searchTotalPages = Math.ceil(searchResults?.totalElements! / itemsPerPage);
+    const filteredTotalPages = Math.ceil(filteredData.length / itemsPerPage);
 
-    const handleFilterByCategory = (categoryId: number) => {
+    const applyFilters = (filters: FilterState) => {
         if (!tasksData?.content) return;
-        const filtered = tasksData.content.filter((item) => item.category.id === categoryId);
+        let filtered = tasksData.content;
+
+        if (filters.category !== null) {
+            filtered = filtered.filter(item => item.category.categoryName === filters.category);
+        }
+
+        if (filters.location !== null) {
+            filtered = filtered.filter(item => item.state === filters.location);
+        }
+
+        if (filters.serviceType !== null) {
+            filtered = filtered.filter(item => item.taskType === filters.serviceType);
+        }
+
+        if (filters.price !== null) {
+            filtered = filtered.filter(item =>
+                filters.price !== null &&
+                item.customerBudget >= filters.price[0] &&
+                item.customerBudget <= filters.price[1]
+            );
+        }
+
+        if (filters.other === "priceDesc") {
+            // show the tasks in descending order of price
+            filtered = [...filtered].sort((a, b) => b.customerBudget - a.customerBudget);
+        } else if (filters.other === "priceAsc") {
+            // show the tasks in ascending order of price
+            filtered = [...filtered].sort((a, b) => a.customerBudget - b.customerBudget);
+        } else if (filters.other === "dateAsc") {
+            // show the tasks in ascending order of due date
+            filtered = [...filtered].sort((a, b) => {
+                if (!a.taskDate || !b.taskDate) return 0;
+                return new Date(Date.UTC(a.taskDate[0], a.taskDate[1] - 1, a.taskDate[2])).getTime() -
+                    new Date(Date.UTC(b.taskDate[0], b.taskDate[1] - 1, b.taskDate[2])).getTime();
+            });
+        } else if (filters.other === "dateDesc") {
+            // show the tasks in descending order of due date
+            filtered = [...filtered].sort((a, b) => {
+                if (!a.taskDate || !b.taskDate) return 0;
+                return new Date(Date.UTC(b.taskDate[0], b.taskDate[1] - 1, b.taskDate[2])).getTime() -
+                    new Date(Date.UTC(a.taskDate[0], a.taskDate[1] - 1, a.taskDate[2])).getTime();
+            });
+        }
+
         setFilteredData(filtered);
         setFiltersApplied(true);
+    }
+
+    console.log(tasksData?.content)
+
+    const handleFilterByCategory = (categoryName: string) => {
+        const newFilters = { ...activeFilters, category: categoryName };
+        setSelectedCategory(categoryName)
+        setActiveFilters(newFilters);
+        applyFilters(newFilters);
     }
 
     const handleFilterByPriceRange = (minPrice: number, maxPrice: number) => {
-        if (!tasksData?.content) return;
-        const filtered = tasksData.content.filter((item) => item.customerBudget >= minPrice && item.customerBudget <= maxPrice);
-        setFilteredData(filtered);
-        setFiltersApplied(true);
+        const newFilters = { ...activeFilters, price: [minPrice, maxPrice] as [number, number] };
+        setActiveFilters(newFilters);
+        applyFilters(newFilters);
     };
 
     const handleFilterByType = (type: "REMOTE_SERVICE" | "PHYSICAL_SERVICE") => {
-        if (!tasksData?.content) return;
-        setSelectedService(type);
-        const filtered = tasksData.content.filter((item) => item.taskType === type);
-        setFilteredData(filtered);
-        setFiltersApplied(true);
-    };
-
-    const handleFilterByDate = (order: "asc" | "desc") => {
-        if (!tasksData?.content) return;
-        const sortedData = [...tasksData.content].sort((a, b) => {
-            const dateA = new Date(a.taskTime).getTime();
-            const dateB = new Date(b.taskTime).getTime();
-            return order === "asc" ? dateA - dateB : dateB - dateA;
-        });
-        setFilteredData(sortedData);
-        setFiltersApplied(true);
-    };
-
-    const handleSortByPrice = (order: "asc" | "desc") => {
-        if (!tasksData?.content) return;
-        const sortedData = [...tasksData.content].sort((a, b) => {
-            return order === "asc" ? a.customerBudget - b.customerBudget : b.customerBudget - a.customerBudget;
-        });
-        setFilteredData(sortedData);
-        setFiltersApplied(true);
+        const newFilters = { ...activeFilters, serviceType: type };
+        setSelectedServiceType(type === "REMOTE_SERVICE" ? "Remote" : "Physical")
+        setActiveFilters(newFilters);
+        applyFilters(newFilters);
     };
 
     const handleFilterByLocation = (location: string) => {
-        if (!tasksData?.content) return;
-        const filtered = tasksData.content.filter((item) => item.state === location);
-        setFilteredData(filtered);
-        setFiltersApplied(true);
+        const newFilters = { ...activeFilters, location };
+        setSelectedLocation(location)
+        setActiveFilters(newFilters);
+        applyFilters(newFilters);
     }
 
+    const handleSortByPrice = (order: "asc" | "desc") => {
+        const newFilters = { ...activeFilters, other: order === "asc" ? "priceAsc" : "priceDesc" };
+        setActiveFilters(newFilters);
+        applyFilters(newFilters);
+    };
+
+    const handleFilterByDate = (order: "asc" | "desc") => {
+        const newFilters = { ...activeFilters, other: order === "asc" ? "dateAsc" : "dateDesc" };
+        setActiveFilters(newFilters);
+        applyFilters(newFilters);
+    };
+
     const resetFilters = () => {
+        const initialFilters: FilterState = {
+            category: null,
+            location: null,
+            serviceType: null,
+            price: null,
+            other: null
+        };
+        setActiveFilters(initialFilters);
         setFilteredData([]);
         setFiltersApplied(false);
+        setSearchText("");
         refetch();
     };
 
-    // Originally, render the tasksData.content but once a filter is applied, render the filteredData and if it's empty, show no filter result found
     useEffect(() => {
         if (filteredData.length > 0) {
             setDataToRender(filteredData);
@@ -160,55 +227,68 @@ const Tasks = () => {
     const otherOptionsDropdown = [
         {
             label: "Price: High to low",
-            onClick: () => handleSortByPrice("desc"),
+            onClick: () => {
+                handleSortByPrice("desc")
+                setSelectedFilter("Price: High to low")
+            },
         },
         {
             label: "Price: Low to high",
-            onClick: () => handleSortByPrice("asc"),
+            onClick: () => {
+                handleSortByPrice("asc")
+                setSelectedFilter("Price: Low to high")
+            },
         },
         {
-            label: "Due date: Earliest",
-            onClick: () => handleFilterByDate("asc"),
+            label: "Date: Ascending",
+            onClick: () => {
+                handleFilterByDate("asc")
+                setSelectedFilter("Date: Ascending")
+            },
         },
         {
-            label: "Due date: Latest",
-            onClick: () => handleFilterByDate("desc"),
+            label: "Date: Descending",
+            onClick: () => {
+                handleFilterByDate("desc")
+                setSelectedFilter("Date: Descending")
+            },
         },
     ];
+
+    type FilterKey = keyof FilterState;
+
+    const removeFilter = (filter: FilterKey) => {
+        const newFilters = { ...activeFilters };
+        newFilters[filter] = null;
+        setActiveFilters(newFilters);
+        setFilteredData({ ...filteredData, [filter]: null } as any);
+        applyFilters(newFilters);
+        setSearchText("");
+    };
 
     return (
         <section className="py-10 container">
             {/* Search bar */}
             <section className="pt-10">
-                {/* <div className="relative mt-7 h-[124px] lg:h-[473px] mb-10">
-                    <Image
-                        src="/assets/images/explore/google-map.png"
-                        alt="map"
-                        fill
-                        className="object-cover"
-                    />
-                </div> */}
                 <div className="flex w-full items-center justify-between">
-                    <form className="flex items-center space-x-4 max-lg:my-4 max-lg:w-full max-lg:justify-between max-lg:px-1">
+                    <div className="flex items-center space-x-4 max-lg:my-4 max-lg:w-full max-lg:justify-between max-lg:px-1">
                         <div className="flex h-[29px] items-center space-x-2 rounded-lg border border-status-violet bg-[#F1F1F2] px-4 max-sm:w-full lg:h-[55px] lg:w-[300px] lg:rounded-2xl">
                             <CiSearch className="h-6 w-6 text-status-violet" />
                             <input
                                 placeholder="Search"
-                                onChange={(e) => setSearchText(e.target.value)}
+                                onChange={(e) => {
+                                    setFiltersApplied(false);
+                                    setSearchText(e.target.value)
+                                }}
                                 type="search"
+                                value={searchText}
                                 className="w-full bg-[#F1F1F2] text-base outline-none placeholder:text-base focus:outline-none active:outline-none lg:py-3"
                             />
                         </div>
                         <button type="button" className="flex h-[29px] w-[29px] items-center justify-center rounded-lg bg-primary lg:h-[55px] lg:w-[55px] lg:rounded-2xl">
                             <CiSearch className="h-5 w-5 text-status-violet lg:h-7 lg:w-7" />
                         </button>
-                    </form>
-                    {/* <Button
-                        theme="secondary"
-                        className="hidden h-[29px] items-center justify-center rounded-full bg-tc-orange px-14 font-bold text-white lg:flex lg:h-[49px]"
-                    >
-                        1 New Task
-                    </Button> */}
+                    </div>
                 </div>
             </section>
             <div className="hidden lg:flex lg:space-x-4 mt-10 items-center">
@@ -220,9 +300,9 @@ const Tasks = () => {
                 <div className="">
                     <Dropdown
                         trigger={() => (
-                            <div className="w-[130px] border-2 border-primary text-primary bg-[#F1F1F2] flex items-center justify-center space-x-2 font-semibold py-2 px-4 rounded-full">
-                                <h2 className="text-sm">Category</h2>
-                                <IoMdArrowDropdown />
+                            <div className={`w-full cursor-pointer border-2 ${activeFilters.category !== null ? 'border-tc-orange text-tc-orange' : 'border-primary text-primary'}  bg-[#F1F1F2] flex items-center justify-center space-x-2 font-semibold py-2 px-4 rounded-full`}>
+                                <h2 className="text-sm">{activeFilters.category !== null ? selectedCategory : "Category"}</h2>
+                                {activeFilters.category ? <IoCloseCircle className="text-tc-orange cursor-pointer size-7 absolute -top-4 -right-3" onClick={() => removeFilter("category")} /> : <IoMdArrowDropdown />}
                             </div>
                         )}
                         className='left-0 right-0 top-14'
@@ -231,7 +311,7 @@ const Tasks = () => {
                             {categoriesData.map((category, index) => (
                                 <div
                                     key={index}
-                                    onClick={() => handleFilterByCategory(category.id)}
+                                    onClick={() => handleFilterByCategory(category.categoryName)}
                                     className='flex w-full transition-all text-status-darkViolet text-base font-bold hover:text-tc-orange cursor-pointer items-center justify-between p-2'>
                                     <div className="">
                                         {category?.categoryName}
@@ -246,9 +326,9 @@ const Tasks = () => {
                 <div className="">
                     <Dropdown
                         trigger={() => (
-                            <div className="w-[130px] border-2 border-primary text-primary bg-[#F1F1F2] flex items-center justify-center space-x-2 font-semibold py-2 px-4 rounded-full">
-                                <h2 className="text-sm">Location</h2>
-                                <IoMdArrowDropdown />
+                            <div className={`w-full cursor-pointer border-2 ${activeFilters.location !== null ? 'border-tc-orange text-tc-orange' : 'border-primary text-primary'} bg-[#F1F1F2] flex items-center justify-center space-x-2 font-semibold py-2 px-4 rounded-full`}>
+                                <h2 className="text-sm">{activeFilters.location !== null ? selectedLocation : "Location"}</h2>
+                                {activeFilters.location ? <IoCloseCircle className="text-tc-orange cursor-pointer size-7 absolute -top-4 -right-3" onClick={() => removeFilter("location")} /> : <IoMdArrowDropdown />}
                             </div>
                         )}
                         className='-left-24 top-14'>
@@ -271,25 +351,23 @@ const Tasks = () => {
                 <div className="">
                     <Dropdown
                         trigger={() => (
-                            <div id="typeOfService" className="w-[200px] border-2 border-primary bg-[#F1F1F2] flex items-center justify-center space-x-2 text-primary font-semibold py-2 px-4 rounded-full">
-                                <h2 className="text-sm">Type of service</h2>
-                                <IoMdArrowDropdown />
+                            <div id="typeOfService" className={`w-full cursor-pointer border-2 ${activeFilters.serviceType !== null ? 'border-tc-orange text-tc-orange' : 'border-primary text-primary'} bg-[#F1F1F2] flex items-center justify-center space-x-2 font-semibold py-2 px-4 rounded-full`}>
+                                <h2 className="text-sm">{activeFilters.serviceType !== null ? selectedServiceType : "Type of service"}</h2>
+                                {activeFilters.serviceType ? <IoCloseCircle className="text-tc-orange cursor-pointer size-7 absolute -top-4 -right-3" onClick={() => removeFilter("serviceType")} /> : <IoMdArrowDropdown />}
                             </div>
                         )}
                         className='-left-24 top-14'>
-                        <div className='bg-white min-w-[240px] rounded-2xl p-4 space-y-8'>
-                            <h4 className="text-xl text-[#190E3F] font-medium">Type of service</h4>
+                        <div className='bg-white min-w-[240px] rounded-2xl p-5 space-y-5'>
+                            <h4 className="text-xl text-black font-semibold">Type of service</h4>
                             <div className="flex mb-6 w-full rounded-full bg-orange-100">
                                 <button
-                                    className={`px-6 py-2 rounded-full text-status-darkViolet font-bold text-lg focus:outline-none ${selectedService === 'REMOTE_SERVICE' ? 'bg-orange-500 flex-1' : 'bg-transparent'
-                                        }`}
+                                    className={`px-6 py-2 rounded-full text-status-darkViolet font-bold text-lg focus:outline-none ${activeFilters.serviceType === 'REMOTE_SERVICE' ? 'bg-orange-500 flex-1' : 'bg-transparent'}`}
                                     onClick={() => handleFilterByType('REMOTE_SERVICE')}
                                 >
                                     Remote
                                 </button>
                                 <button
-                                    className={`px-6 py-2 rounded-full text-status-darkViolet font-bold text-lg focus:outline-none ${selectedService === 'PHYSICAL_SERVICE' ? 'bg-orange-500  flex-1' : 'bg-transparent'
-                                        }`}
+                                    className={`px-6 py-2 rounded-full text-status-darkViolet font-bold text-lg focus:outline-none ${activeFilters.serviceType === 'PHYSICAL_SERVICE' ? 'bg-orange-500  flex-1' : 'bg-transparent'}`}
                                     onClick={() => handleFilterByType('PHYSICAL_SERVICE')}
                                 >
                                     Physical
@@ -299,81 +377,103 @@ const Tasks = () => {
                     </Dropdown>
                 </div>
 
-                {/* Price */}
-                <div className="">
+                {/* Price range */}
+                <div className="relative">
                     <Dropdown
-                        closeOnClick={false}
                         trigger={() => (
-                            <div className="w-[130px] border-2 border-primary text-primary bg-[#F1F1F2] flex items-center justify-center space-x-2 font-semibold py-2 px-4 rounded-full" onClick={() => setShowPriceDropdown(true)}>
+                            <div className={`w-full cursor-pointer border-2 ${activeFilters.price !== null ? 'border-tc-orange text-tc-orange' : 'border-primary text-primary'} bg-[#F1F1F2] flex items-center justify-center space-x-2 font-semibold py-2 px-4 rounded-full`}>
                                 <h2 className="text-sm">Pricing</h2>
-                                <IoMdArrowDropdown />
+                                {activeFilters.price ? (
+                                    <IoCloseCircle
+                                        className="text-tc-orange cursor-pointer size-7 absolute -top-4 -right-3"
+                                        onClick={() => {
+                                            setPriceValues([5, 10000]);
+                                            setActiveFilters({ ...activeFilters, price: null });
+                                            applyFilters({ ...activeFilters, price: null });
+                                        }}
+                                    />
+                                ) : (
+                                    <IoMdArrowDropdown />
+                                )}
                             </div>
                         )}
                         className='-left-24 top-14'>
-                        {showPriceDropdown && (
-                            <form className='bg-white min-w-[240px] rounded-2xl flex items-center p-4'>
-                                <div className="space-y-8 w-full p-3">
-                                    <h4 className="text-xl text-[#190E3F] font-medium">Price</h4>
-                                    <div className="text-2xl text-black font-bold text-center mb-6">
-                                        ${priceValues[0]} - ${priceValues[1]}
-                                    </div>
-                                    <ReactSlider
-                                        className="relative w-full h-2 bg-[#FE9B07] rounded-2xl"
-                                        thumbClassName="absolute h-6 w-6 bg-[#FE9B07] rounded-full cursor-grab transform -translate-y-1/2 top-1/2"
-                                        trackClassName="top-1/2 bg-[#FE9B07]"
-                                        value={priceValues}
-                                        min={5}
-                                        max={10000}
-                                        step={5}
-                                        onChange={(newValues) => setPriceValues(newValues as [number, number])}
-                                    />
-                                    <div className="flex items-center justify-between space-x-8 w-full">
-                                        <Button theme="outline" className="rounded-full" onClick={() => setPriceValues([5, 10000])}>
-                                            Cancel
-                                        </Button>
-                                        <Button className="rounded-full" onClick={() => {
-                                            handleFilterByPriceRange(priceValues[0], priceValues[1])
-                                            setShowPriceDropdown(false)
-                                        }}>
-                                            Apply
-                                        </Button>
-                                    </div>
-                                </div>
-                            </form>
-                        )}
+                        <div className='bg-white min-w-[240px] rounded-2xl p-5 space-y-6'>
+                            <h4 className="text-xl text-black font-semibold">Price</h4>
+                            <div className="flex justify-center space-x-2 text-lg text-status-darkViolet font-bold">
+                                <span>${priceValues[0]}</span>
+                                <span>-</span>
+                                <span>${priceValues[1]}</span>
+                            </div>
+                            <ReactSlider
+                                className="relative w-full h-2 bg-[#FE9B07] rounded-2xl"
+                                thumbClassName="absolute h-6 w-6 bg-[#FE9B07] rounded-full cursor-grab transform -translate-y-1/2 top-1/2"
+                                trackClassName="top-1/2 bg-[#FE9B07]"
+                                min={5}
+                                max={10000}
+                                defaultValue={[5, 10000]}
+                                onChange={(values) => setPriceValues(values as [number, number])}
+                                onAfterChange={(values) => handleFilterByPriceRange(values[0], values[1])}
+                            />
+                            <div className="flex items-center justify-between space-x-8 w-full">
+                                <Button theme="outline" className="rounded-full" onClick={() => setPriceValues([5, 10000])}>
+                                    Cancel
+                                </Button>
+                                <Button className="rounded-full" onClick={() => {
+                                    handleFilterByPriceRange(priceValues[0], priceValues[1])
+                                    setShowPriceDropdown(false)
+                                }}>
+                                    Apply
+                                </Button>
+                            </div>
+                        </div>
                     </Dropdown>
                 </div>
 
-                {/* Others */}
-                <div className="">
+                {/* Other options */}
+                <div className="relative">
                     <Dropdown
                         trigger={() => (
-                            <div className="w-[130px] border-2 border-primary text-primary bg-[#F1F1F2] flex items-center justify-center space-x-2 font-semibold py-2 px-4 rounded-full">
-                                <h2 className="text-sm">Others</h2>
-                                <IoMdArrowDropdown />
+                            <div className={`w-full relative cursor-pointer border-2 ${activeFilters.other !== null ? 'border-tc-orange text-tc-orange' : 'border-primary text-primary'} bg-[#F1F1F2] flex items-center justify-center space-x-2 font-semibold py-2 px-4 rounded-full`}>
+                                <h2 className="text-sm">{selectedFilter != "" ? selectedFilter : "Others"}</h2>
+                                {activeFilters.other ? (
+                                    <IoCloseCircle
+                                        className="text-tc-orange cursor-pointer size-7 absolute -top-4 -right-3"
+                                        onClick={() => {
+                                            setActiveFilters({ ...activeFilters, other: null });
+                                            applyFilters({ ...activeFilters, other: null });
+                                        }}
+                                    />
+                                ) : (
+                                    <IoMdArrowDropdown />
+                                )}
                             </div>
                         )}
-                        className='left-0 right-0 top-14'>
-                        <form className='bg-white rounded-2xl p-4 min-w-[240px]'>
+                        className='-left-24 top-14'>
+                        <div className='bg-white min-w-[200px] rounded-2xl p-5 space-y-5'>
+                            <h4 className="text-xl text-black font-semibold">Others</h4>
                             {otherOptionsDropdown.map((option, index) => (
                                 <div
                                     key={index}
                                     onClick={option.onClick}
-                                    className='flex w-full transition-all text-[#140B31] overflow-y-auto text-base font-bold hover:text-tc-orange cursor-pointer items-center justify-between p-2'>
+                                    className='flex w-full transition-all text-status-darkViolet text-base font-bold hover:text-tc-orange cursor-pointer items-center justify-between'>
                                     <div className="">
                                         {option.label}
                                     </div>
                                 </div>
                             ))}
-                        </form>
+                        </div>
                     </Dropdown>
                 </div>
 
+                <Button className="rounded-full bg-tc-orange border-none text-center w-[100px] text-sm" onClick={resetFilters}>
+                    Reset filters
+                </Button>
             </div>
 
-            {/* Mobile filters */}
+            {/* Mobile filters */}  
             <div className="flex items-center justify-center w-full">
-                <div className="lg:hidden mt-5">
+                <div className="lg:hidden flex justify-between items-center space-x-4 mt-5">
                     <Dropdown
                         trigger={() => (
                             <Button theme="outline" className="flex items-center space-x-4 rounded-full w-[270px]" onClick={() => setShowMobileFilters(true)}>
@@ -396,7 +496,7 @@ const Tasks = () => {
                                                 handleFilterByLocation(location)
                                                 setShowMobileFilters(false)
                                             }}
-                                            className='flex w-full transition-all text-status-darkViolet text-base font-bold hover:text-tc-orange cursor-pointer items-center space-x-3'>
+                                            className='flex w-full transition-all text-primary text-base font-medium hover:text-tc-orange cursor-pointer items-center space-x-3'>
                                             <div className="w-3 h-3 bg-tc-orange rounded-full" />
                                             <div className="">
                                                 {location}
@@ -408,12 +508,12 @@ const Tasks = () => {
                                 <form action="" className="space-y-8 mt-5">
                                     <h3 className="font-bold text-status-darkViolet text-2xl">Services</h3>
                                     {categoriesData.map((category, index) => (
-                                        <div className="flex items-center space-x-3 cursor-pointer hover:underline" key={index} onClick={() => {
-                                            handleFilterByCategory(category.id)
+                                        <div className="flex items-center space-x-3 cursor-pointer hover:text-tc-orange" key={index} onClick={() => {
+                                            handleFilterByCategory(category.categoryName)
                                             setShowMobileFilters(false)
                                         }}>
                                             <div className="w-3 h-3 bg-tc-orange rounded-full" />
-                                            <div className="font-medium text-lg text-primary">{category.categoryName}</div>
+                                            <div className="font-medium text-base text-primary hover:text-tc-orange">{category.categoryName}</div>
                                         </div>
                                     ))}
                                 </form>
@@ -501,8 +601,12 @@ const Tasks = () => {
                             </div>
                         )}
                     </Dropdown>
+                    <Button className="rounded-full text-center w-full text-sm" onClick={resetFilters}>
+                        Reset filters
+                    </Button>
                 </div>
             </div>
+
 
             <div className="w-full">
                 {renderContent()}
@@ -535,7 +639,7 @@ const Tasks = () => {
                 )}
             </div>
         </section>
-    );
+    )
 };
 
 export default Tasks;
