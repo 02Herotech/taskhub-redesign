@@ -4,21 +4,15 @@ import axios from 'axios';
 import { useSession } from 'next-auth/react';
 import React, { useEffect, useState } from 'react'
 import { FaSortDown } from 'react-icons/fa6';
-import { GrFormCheckmark } from 'react-icons/gr';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { CustomerTasks } from '@/types/services/tasks';
 import { PiFileArrowDownDuotone } from 'react-icons/pi';
 import Image from 'next/image';
-import { set } from 'zod';
 
 interface TaskCardProps {
     task: CustomerTasks;
-}
-
-interface Item {
-    id: number;
-    categoryName: string;
+    // closeModal: () => void;
 }
 
 interface PostalCodeData {
@@ -36,82 +30,53 @@ interface CustomInputProps {
     onClick?: () => void;
 }
 
-const EditTaskForm = ({ task }: TaskCardProps, { closeModal }: any) => {
+const EditTaskForm = ({ task }: TaskCardProps) => {
     const [activeEditModalLink, setActiveEditModalLink] = useState<string>("Task Details");
+    const [error, setError] = useState("");
+    const [categories, setCategories] = useState<{ id: number; categoryName: string }[]>([]);
+    const [postalCodes, setPostalCodes] = useState<PostalCodeData[]>([]);
+    const [updatedTaskType, setUpdatedTaskType] = useState<string>(task.taskType);
+    const [updatedPostCode, setUpdatedPostCode] = useState<any>(task.postCode);
+    const [updatedSuburb, setUpdatedSuburb] = useState<string>(task.suburb!);
+    const [updatedState, setUpdatedState] = useState<string>(task.state!);
+    const [updatedCustomerBudget, setUpdatedCustomerBudget] = useState<string>(task.customerBudget.toString());
+    const [updatedImage, setUpdatedImage] = useState(null)
     const [updatedDate, setUpdatedDate] = useState<Date | null>(null);
     const [updatedTime, setUpdatedTime] = useState<Date | null>(null);
-    const [updatedBriefDescription, setUpdateBriefDescription] = useState("")
-    const [updatedImage, setUpdatedImage] = useState<File | Blob | null | undefined>(null)
-    const [updatedSuburb, setUpdatedSuburb] = useState("")
-    const [updatedState, setUpdatedState] = useState("")
-    const [updatedPostCode, setUpdatedPostCode] = useState<PostalCodeData[]>([])
-    const [updatedCustomerBudget, setUpdatedCustomerBudget] = useState("")
-    const [updatedCategoryId, setUpdatedCategoryId] = useState<null | number>(null)
-    const [updatedTaskDescription, setUpdatedTaskDescription] = useState("")
-    const [updatedTaskType, setUpdatedTaskType] = useState("")
-    const [updatedCategoryName, setUpdatedCategoryName] = useState<string>("")
-    const [selectedServiceType, setSelectedServiceType] = useState<string>("Physical")
-    const [wordCount, setWordCount] = useState(0);
-    const [items, setItems] = useState<Item[]>([]);
-    const [error, setError] = useState("")
-    const maxSize = 5 * 1024 * 1024; // 5MB in bytes
+    const [loading, setLoading] = useState(false);
 
     const { data: session } = useSession();
     const token = session?.user.accessToken;
 
     const [taskData, setTaskData] = useState({
-        taskBriefDescription: updatedBriefDescription ? updatedBriefDescription : task.taskBriefDescription,
+        taskBriefDescription: task.taskBriefDescription,
         taskImage: updatedImage ? updatedImage : task.taskImage,
-        taskTime: updatedTime ? updatedTime : task.taskTime,
-        taskDate: updatedDate ? updatedDate : task.taskDate,
+        taskTime: task.taskTime,
+        taskDate: task.taskDate,
         taskType: updatedTaskType ? updatedTaskType : task.taskType,
         suburb: updatedSuburb ? updatedSuburb : task.suburb,
         state: updatedState ? updatedState : task.state,
         postCode: updatedPostCode ? updatedPostCode : task.postCode,
-        customerBudget: updatedCustomerBudget ? updatedCustomerBudget : task.customerBudget,
-        categoryId: updatedCategoryId ? updatedCategoryId : task.category.id,
-        taskDescription: updatedTaskDescription ? updatedTaskDescription : task.taskDescription,
+        customerBudget: task.customerBudget,
+        categoryId: task.category.id,
+        taskDescription: task.taskDescription,
     });
-
-
-    // const handleChange = (
-    //     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-    // ) => {
-    //     const wordArray = event.target.value.split(/\s+/).filter(Boolean);
-    //     if (wordArray.length <= 10) {
-    //         setTaskData({
-    //             ...taskData,
-    //             [event.target.name]: event.target.value,
-    //         });
-    //         setWordCount(wordArray.length);
-    //     }
-    // };
-
-    console.log(updatedPostCode)
-
-    const getImageURL = () => {
-        if (task.taskImage instanceof File) {
-            return URL.createObjectURL(task.taskImage);
-        }
-        return "";
-    };
-    const imageURL = getImageURL();
 
     useEffect(() => {
         const fetchPostalCodeData = async () => {
             try {
                 const response = await axios.get(
-                    `https://smp.jacinthsolutions.com.au/api/v1/util/locations/search?postcode=${task.postCode}`,
+                    `https://smp.jacinthsolutions.com.au/api/v1/util/locations/search?postcode=${updatedPostCode}`,
                 );
-                setUpdatedPostCode(response.data as PostalCodeData[]);
+                setPostalCodes(response.data as PostalCodeData[]);
             } catch (error) {
                 console.error("Error fetching postal code data:", error);
-                setUpdatedPostCode([]);
+                setPostalCodes([]);
             }
         };
 
         fetchPostalCodeData();
-    }, [task.postCode]);
+    }, [taskData.postCode, updatedPostCode]);
 
     useEffect(() => {
         const fetchAllCategories = async () => {
@@ -119,8 +84,7 @@ const EditTaskForm = ({ task }: TaskCardProps, { closeModal }: any) => {
                 const response = await axios.get(
                     "https://smp.jacinthsolutions.com.au/api/v1/util/all-categories",
                 );
-                const data: Item[] = response.data;
-                setItems(data);
+                setCategories(response.data);
             } catch (error) {
                 console.error("Error fetching items:", error);
             }
@@ -129,25 +93,10 @@ const EditTaskForm = ({ task }: TaskCardProps, { closeModal }: any) => {
         fetchAllCategories();
     }, []);
 
-    const CustomInput: React.FC<CustomInputProps> = ({ value, onClick }) => (
-        <button
-            className={`flex cursor-pointer justify-between rounded-2xl bg-[#EBE9F4] px-2 py-1 text-[12px] placeholder:text-[14px] placeholder:font-bold hover:bg-status-darkpurple hover:text-white lg:w-[150px] lg:text-[14px] border border-tc-gray outline-none"}`}
-            onClick={onClick}
-            type="button"
-        >
-            {value || "Choose Date"} <FaSortDown />
-        </button>
-    );
-
-    const CustomInputs: React.FC<CustomInputProps> = ({ value, onClick }) => (
-        <button
-            className={`flex cursor-pointer justify-between rounded-2xl bg-[#EBE9F4] px-2 py-1 text-[12px]  placeholder:text-[14px] placeholder:font-bold hover:bg-status-darkpurple hover:text-white lg:w-[150px] lg:text-[14px] border border-tc-gray outline-none"}`}
-            onClick={onClick}
-            type="button"
-        >
-            {value || "Choose Time"} <FaSortDown />
-        </button>
-    );
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        const { name, value } = e.target;
+        setTaskData(prev => ({ ...prev, [name]: value }));
+    };
 
     const handleDateChange = (date: Date | null) => {
         setUpdatedDate(date);
@@ -178,45 +127,100 @@ const EditTaskForm = ({ task }: TaskCardProps, { closeModal }: any) => {
         return "";
     };
 
-    const handletaskImageUpload = (
-        event: React.ChangeEvent<HTMLInputElement>,
-    ) => {
-        const uploadedFile = event.target.files?.[0];
-        if (uploadedFile) {
-            if (uploadedFile.size > maxSize) {
+    const dateString = formatDateToString(updatedDate);
+    const timeString = formatTimeToString(updatedTime);
+
+    const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files?.[0];
+        if (file) {
+            if (file.size > 5 * 1024 * 1024) {
                 setError("File size exceeds 5MB.");
             } else {
-                setUpdatedImage(uploadedFile);
+                setTaskData(prev => ({ ...prev, taskImage: file }));
                 const reader = new FileReader();
-                reader.readAsDataURL(uploadedFile);
+                reader.readAsDataURL(file);
                 setError("");
             }
         }
     };
 
-    const dateString = formatDateToString(updatedDate);
-    const timeString = formatTimeToString(updatedTime);
+    // const handletaskImageUpload = (
+    //     event: React.ChangeEvent<HTMLInputElement>,
+    // ) => {
+    //     const uploadedFile = event.target.files?.[0];
+    //     if (uploadedFile) {
+    //         if (uploadedFile.size > maxSize) {
+    //             setErrs("File size exceeds 5MB.");
+    //         } else {
+    //             setTask({ ...task, taskImage: uploadedFile });
 
-    const handleEditTask = async () => {
+    //             setErrs("");
+    //         }
+    //     }
+    // };
+
+    const convertUrlToBlob = async (url: string): Promise<Blob> => {
+        const response = await fetch(url);
+        const blob = await response.blob();
+        return blob;
+    };
+
+    const getImageURL = () => {
+        if (task.taskImage instanceof File) {
+            return URL.createObjectURL(task.taskImage);
+        }
+        return "";
+    };
+    const imageURL = getImageURL();
+
+    const handleSubmit = async () => {
         try {
-            const url = process.env.NEXT_PUBLIC_API_URL + "/task/update-task/" + task.id;
-            await axios.patch(url, taskData, {
+            setLoading(true);
+            const formData = new FormData();
+            Object.entries(taskData).forEach(([key, value]) => formData.append(key, String(value)));
+
+            const url = `${process.env.NEXT_PUBLIC_API_URL}/task/update-task/${task.id}`;
+            await axios.patch(url, formData, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                     "Content-Type": "multipart/form-data",
                 },
             });
-            // setShowModal(true);
+            setLoading(false);
+            // closeModal();
         } catch (error: any) {
-            console.log(error.response.data);
-            // setErrorMessage(error.response.data.message);
+            setLoading(false);
+            console.error(error.response?.data);
+            setError(error.response?.data?.message || "An error occurred");
         }
-    }
+    };
+
+    const CustomInput: React.FC<CustomInputProps> = ({ value, onClick }) => (
+        <button
+            className={`flex cursor-pointer justify-between rounded-2xl bg-[#EBE9F4] px-2 py-1 text-[12px] placeholder:text-[14px] placeholder:font-bold hover:bg-status-darkpurple hover:text-white lg:w-[150px] lg:text-[14px] border border-tc-gray outline-none"}`}
+            onClick={onClick}
+            type="button"
+        >
+            {value || "Choose Date"} <FaSortDown />
+        </button>
+    );
+
+    const CustomInputs: React.FC<CustomInputProps> = ({ value, onClick }) => (
+        <button
+            className={`flex cursor-pointer justify-between rounded-2xl bg-[#EBE9F4] px-2 py-1 text-[12px]  placeholder:text-[14px] placeholder:font-bold hover:bg-status-darkpurple hover:text-white lg:w-[150px] lg:text-[14px] border border-tc-gray outline-none"}`}
+            onClick={onClick}
+            type="button"
+        >
+            {value || "Choose Time"} <FaSortDown />
+        </button>
+    );
+
+    console.log("Task Data", taskData)
 
     return (
         <div className='pt-14 lg:px-5'>
             <div className="border-b-2 border-[#140B31] w-full" />
-            <div className="rounded-2xl min-h-[200px] w-full lg:w-[850px] font-satoshi overflow-y-auto">
+            <div className="rounded-2xl min-h-[200px] min-w-[80%] lg:w-[850px] font-satoshi overflow-y-auto">
                 <div className="lg:flex h-full lg:space-x-3 p-2">
                     <div className="hidden lg:block border-r-2 border-[#140B31] pr-8 space-y-5 pt-5">
                         <div className={`cursor-pointer text-lg font-bold ${activeEditModalLink === "Task Details" ? "bg-tc-orange rounded-lg pl-2 pr-5 py-2 text-white" : "text-primary"}`} onClick={() => setActiveEditModalLink("Task Details")}>Task Details</div>
@@ -224,100 +228,64 @@ const EditTaskForm = ({ task }: TaskCardProps, { closeModal }: any) => {
                     </div>
                     <div className="flex-1 w-full p-4 lg:px-5">
                         {activeEditModalLink === "Task Details" && (
-                            <div className="space-y-8">
-                                {/* Brief Description */}
+                            <div className="space-y-8 w-full">
                                 <div className="grid space-y-3">
-                                    <div className="flex items-center justify-between">
-                                        <label className="text-[13px] font-semibold text-status-darkpurple lg:text-[16px]">
-                                            Write a short title for the task you need done{" "}
-                                            <span className="font-extrabold text-[#ff0000]">*</span>
-                                        </label>
-                                        {/* {wordCount > 3 && (
-                                            <div className="h-[16px] w-[16px] rounded-3xl bg-[#4CAF50] text-[16px] font-extrabold text-white">
-                                                <GrFormCheckmark />
-                                            </div>
-                                        )} */}
-                                    </div>
+                                    <label className="text-[13px] font-semibold text-status-darkpurple lg:text-[16px]">
+                                        Write a short title for the task you need done
+                                    </label>
                                     <textarea
-                                        className={`h-full w-full rounded-2xl bg-[#EBE9F4] p-3 placeholder:text-[#C1BADB] border-none outline-none"}`}
+                                        className="h-full w-full rounded-2xl bg-[#EBE9F4] p-3 placeholder:text-[#C1BADB] border-none outline-none"
                                         placeholder="e.g, I need a junior league coach."
                                         name="taskBriefDescription"
-                                        value={updatedBriefDescription ? updatedBriefDescription : task.taskBriefDescription}
-                                        onChange={(e) => setUpdateBriefDescription(e.target.value)}
+                                        value={taskData.taskBriefDescription}
+                                        onChange={handleInputChange}
                                         style={{ resize: "none", overflow: "hidden" }}
                                     ></textarea>
-                                    {/* <div className="text-right text-sm text-status-darkpurple">
-                                        {wordCount}/10 words
-                                    </div> */}
                                 </div>
 
-                                {/* Category */}
                                 <div className="relative grid space-y-4">
-                                    <div className="flex items-center justify-between">
-                                        <label className="text-[13px] font-semibold lg:text-[16px]">
-                                            What category best describes your task?{" "}
-                                            <span className="font-extrabold text-[#ff0000]">*</span>
-                                        </label>
-                                        {/* {updatedCategoryId || task.category.id && (
-                                            <div className="h-[16px] w-[16px] rounded-3xl bg-[#4CAF50] text-[16px] font-extrabold text-white">
-                                                <GrFormCheckmark />
-                                            </div>
-                                        )} */}
-                                    </div>
+                                    <label className="text-[13px] font-semibold text-status-darkpurple lg:text-[16px]">
+                                        What category best describes your task?
+                                    </label>
                                     <Dropdown
                                         trigger={() => (
-                                            <div
-                                                className={`flex h-full w-full cursor-pointer appearance-none justify-between rounded-2xl bg-[#EBE9F4] p-3 text-[13px] text-status-darkpurple border-none outline-none"}`}
-                                            >
-                                                <h2>{updatedCategoryName ? updatedCategoryName : task.category.categoryName}</h2>
+                                            <div className="flex h-full w-full cursor-pointer appearance-none justify-between rounded-2xl bg-[#EBE9F4] p-3 text-[13px] text-status-darkpurple border-none outline-none">
+                                                <h2>{categories.find(category => category.id === taskData.categoryId)?.categoryName || "Select Category"}</h2>
                                                 <FaSortDown className="text-status-darkpurple" />
                                             </div>
                                         )}
                                         className="small-scrollbar left-0 right-0 top-14 mx-auto max-h-64 overflow-y-auto bg-white transition-all duration-300"
                                     >
-                                        {items.map((item) => (
+                                        {categories.map((category) => (
                                             <button
                                                 type="button"
-                                                key={item.id}
-                                                value={item.id}
+                                                key={category.id}
                                                 className="block p-2 font-satoshiBold text-[12px] font-bold text-[#381F8C]"
-                                                onClick={() => {
-                                                    setUpdatedCategoryId(item.id);
-                                                    setUpdatedCategoryName(item.categoryName);
-                                                }}
+                                                onClick={() => setTaskData(prev => ({ ...prev, categoryId: category.id }))}
                                             >
-                                                {item.categoryName}
+                                                {category.categoryName}
                                             </button>
                                         ))}
                                     </Dropdown>
                                 </div>
 
-                                {/* Description */}
                                 <div className="relative grid space-y-3">
-                                    <div className="flex items-center justify-between">
-                                        <label className="flex text-[13px] font-semibold lg:text-[16px]">
-                                            Give a description of your task {""}{" "}
-                                            <span className="font-extrabold text-[#ff0000]">*</span>
-                                        </label>
-                                        {/* {wordCount > 15 && (
-                                            <div className="h-[16px] w-[16px] rounded-3xl bg-[#4CAF50] text-[16px] font-extrabold text-white">
-                                                <GrFormCheckmark />
-                                            </div>
-                                        )} */}
-                                    </div>
+                                    <label className="text-[13px] font-semibold text-status-darkpurple lg:text-[16px]">
+                                        Give a description of your task
+                                    </label>
                                     <textarea
-                                        className={`h-[150px] rounded-2xl bg-[#EBE9F4] p-3 placeholder:text-[#C1BADB] resize-none border-none outline-none small-scrollbar`}
-                                        placeholder="Arts and Craft"
-                                        name="description"
-                                        value={updatedTaskDescription ? updatedTaskDescription : task.taskDescription}
-                                        onChange={(e) => setUpdatedTaskDescription(e.target.value)}
+                                        className="h-[150px] rounded-2xl bg-[#EBE9F4] p-3 placeholder:text-[#C1BADB] resize-none border-none outline-none small-scrollbar"
+                                        placeholder="Describe your task"
+                                        name="taskDescription"
+                                        value={taskData.taskDescription}
+                                        onChange={handleInputChange}
                                     ></textarea>
                                 </div>
 
                                 <div className="flex items-center justify-end space-x-3">
                                     <Button
                                         theme="outline"
-                                        onClick={closeModal}
+                                        // onClick={closeModal}
                                         type="button"
                                         className="rounded-full px-10"
                                     >
@@ -336,73 +304,69 @@ const EditTaskForm = ({ task }: TaskCardProps, { closeModal }: any) => {
                         )}
 
                         {activeEditModalLink === "Location" && (
-                            <div className="space-y-8">
-                                {/* Date, Time and Image */}
+                            <div className="space-y-8 w-full">
                                 <div className="space-y-3">
-                                    <label className="font-satoshiBold text-[13px] font-bold text-status-darkpurple lg:text-[16px]">
+                                    <label className="text-[13px] font-semibold text-status-darkpurple lg:text-[16px]">
                                         Upload an Image (Optional)
                                     </label>
-                                    <div className="flex space-x-5">
-                                        <div className="relative flex h-48 items-center justify-center rounded-lg border-2 border-dashed border-[#EBE9F4] p-4">
-                                            <Image
-                                                src={updatedImage ? updatedImage as unknown as string : task.taskImage}
-                                                width={130}
-                                                height={130}
-                                                alt="Uploaded Task"
-                                                className="h-full w-full object-contain"
-                                            />
-                                            <input
-                                                id="file-upload"
-                                                type="file"
-                                                readOnly
-                                                disabled
-                                                name="image"
-                                                className="hidden"
-                                                onChange={handletaskImageUpload}
-                                            />
-                                        </div>
-                                        <div className="flex items-end space-x-1">
-                                            <label
-                                                htmlFor="file-upload"
-                                                className="flex h-48 flex-1 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed p-4 "
-                                            >
-                                                <PiFileArrowDownDuotone className="text-xl text-[#a3a1ac]" />
-                                                <span className="text-center font-bold text-[#a3a1ac]">
-                                                    File Upload supports: JPG, PDF, PNG.
-                                                </span>
+                                    {taskData.taskImage ? (
+                                        <div className="flex items-end ">
+                                            <div className="relative flex h-48 w-1/2 items-center justify-center rounded-lg border-2 border-dashed border-[#EBE9F4] p-4">
+                                                <img
+                                                    src={imageURL}
+                                                    alt="Uploaded Task"
+                                                    className="h-full w-full object-contain"
+                                                    width="100%"
+                                                    height="100%"
+                                                />
                                                 <input
                                                     id="file-upload"
                                                     type="file"
-                                                    accept=".png, .jpg, .jpeg, .gif"
+                                                    name="image"
                                                     className="hidden"
-                                                    onChange={handletaskImageUpload}
+                                                    onChange={handleImageUpload}
                                                 />
-                                            </label>
-                                            <Button
-                                                className="rounded-lg bg-tc-gray px-3 border-none py-1 text-white"
-                                                onClick={() => setUpdatedImage(null)}
+                                            </div>
+                                            <button
+                                                className="rounded-lg bg-tc-gray px-3 py-1 text-white"
+                                                onClick={() => {
+                                                    setUpdatedImage(null)
+                                                }}
                                             >
                                                 Remove
-                                            </Button>
+                                            </button>
                                         </div>
-                                    </div>
-
-                                    {error && <div className="font-bold text-red-500">{error}</div>}
+                                    ) : (
+                                        <label
+                                            htmlFor="file-upload"
+                                            className="flex h-48 w-1/2 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-[#a3a1ac] p-4 "
+                                        >
+                                            <PiFileArrowDownDuotone className="text-xl text-[#a3a1ac]" />
+                                            <span className="text-center font-bold text-[#a3a1ac]">
+                                                File Upload supports: JPG, PDF, PNG.
+                                            </span>
+                                            <input
+                                                id="file-upload"
+                                                type="file"
+                                                accept=".png, .jpg, .jpeg, .gif"
+                                                className="hidden"
+                                                onChange={handleImageUpload}
+                                            />
+                                        </label>
+                                    )}
+                                    
                                 </div>
+
                                 <div className="space-y-5">
-                                    <label
-                                        htmlFor="taskTime"
-                                        className="test-[20px] font-satoshiBold font-bold text-status-darkpurple"
-                                    >
-                                        Set Day and Time{" "}
-                                        <span className="font-extrabold text-[#ff0000]">*</span>
+                                    <label className="text-[13px] font-semibold text-status-darkpurple lg:text-[16px]">
+                                        Set Day and Time
                                     </label>
                                     <div className="flex items-center space-x-6">
                                         <div className="flex items-center space-x-3">
                                             <div className="relative">
                                                 <DatePicker
-                                                    selected={updatedTime}
-                                                    onChange={handleTimeChange}
+                                                    selected={updatedDate}
+                                                    onChange={handleDateChange}
                                                     showTimeSelect
                                                     showTimeSelectOnly
                                                     timeFormat="HH:mm"
@@ -413,13 +377,13 @@ const EditTaskForm = ({ task }: TaskCardProps, { closeModal }: any) => {
                                                     name="taskTime"
                                                     // disabled={termAccepted}
                                                     customInput={<CustomInputs />}
-                                                    className="w-full cursor-pointer rounded-2xl  bg-[#EBE9F4] px-2 py-1 outline-none placeholder:text-[14px] placeholder:font-bold"
+                                                    className="w-full cursor-pointer rounded-2xl bg-[#EBE9F4] px-2 py-1 outline-none placeholder:text-[14px] placeholder:font-bold"
                                                 />
                                             </div>
                                             <div className="relative">
                                                 <DatePicker
-                                                    selected={updatedDate}
-                                                    onChange={handleDateChange}
+                                                    selected={updatedTime}
+                                                    onChange={handleTimeChange}
                                                     dateFormat="dd-MM-yyyy"
                                                     minDate={new Date()}
                                                     placeholderText="Choose Date"
@@ -430,22 +394,25 @@ const EditTaskForm = ({ task }: TaskCardProps, { closeModal }: any) => {
                                                     className="w-full cursor-pointer rounded-2xl bg-[#EBE9F4] px-2 py-1 outline-none placeholder:text-[14px] placeholder:font-bold"
                                                 />
                                             </div>
-                                        </div>
-                                        <div className="flex items-center">
-                                            <input
-                                                type="checkbox"
-                                                name="check"
-                                                // checked={termAccepted}
-                                                // disabled={accepted}
-                                                // onChange={handleCheckboxChange}
-                                                className="mr-2"
-                                            />
-                                            <span className="text-[12px] font-semibold text-primary">
-                                                I’m Flexible
-                                            </span>
+                                            <div>
+                                                <div className="flex items-center">
+                                                    <input
+                                                        type="checkbox"
+                                                        name="check"
+                                                        // checked={termAccepted}
+                                                        // disabled={accepted}
+                                                        // onChange={handleCheckboxChange}
+                                                        className="mr-2"
+                                                    />
+                                                    <span className="text-[12px] text-status-darkpurple">
+                                                        I’m Flexible
+                                                    </span>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
+
                                 <div className="flex items-center justify-end space-x-3">
                                     <Button
                                         theme="outline"
@@ -456,7 +423,6 @@ const EditTaskForm = ({ task }: TaskCardProps, { closeModal }: any) => {
                                         Back
                                     </Button>
                                     <Button
-                                        theme="primary"
                                         type="button"
                                         onClick={() => setActiveEditModalLink("Budget")}
                                         className="rounded-full px-10"
@@ -470,32 +436,29 @@ const EditTaskForm = ({ task }: TaskCardProps, { closeModal }: any) => {
                         {activeEditModalLink === "Budget" && (
                             <div className="space-y-8">
                                 <div className="space-y-4">
-                                    <h2 className="font-satoshiBold text-[13px] font-bold text-status-darkpurple lg:text-[16px]">
+                                    <h2 className="text-[13px] font-semibold text-status-darkpurple lg:text-[16px]">
                                         Type of Service{" "}
-                                        <span className="font-extrabold text-[#ff0000]">*</span>
                                     </h2>
                                     <div className="flex space-x-4 text-[13px] text-[#221354]">
                                         <button
-                                            className={`rounded-2xl p-2 ${selectedServiceType === "Physical"
+                                            className={`rounded-2xl p-2 ${updatedTaskType === "PHYSICAL_SERVICE"
                                                 ? "bg-status-purpleBase text-white"
                                                 : "bg-[#EBE9F4] hover:bg-status-purpleBase hover:text-white"
                                                 } outline-none`}
                                             name="physical"
                                             onClick={() => {
-                                                setSelectedServiceType("Physical")
                                                 setUpdatedTaskType("PHYSICAL_SERVICE")
                                             }}
                                         >
                                             Physical Service
                                         </button>
                                         <button
-                                            className={`rounded-2xl p-2 ${selectedServiceType === "Remote"
+                                            className={`rounded-2xl p-2 ${updatedTaskType === "REMOTE_SERVICE"
                                                 ? "bg-status-purpleBase text-white"
                                                 : "bg-[#EBE9F4] hover:bg-status-purpleBase hover:text-white"
                                                 } outline-none`}
                                             name="remote"
                                             onClick={() => {
-                                                setSelectedServiceType("Remote")
                                                 setUpdatedTaskType("REMOTE_SERVICE")
                                             }}
                                         >
@@ -504,7 +467,7 @@ const EditTaskForm = ({ task }: TaskCardProps, { closeModal }: any) => {
                                     </div>
                                 </div>
                                 <div className="space-y-5">
-                                    {selectedServiceType === "Remote" && (
+                                    {updatedTaskType === "REMOTE_SERVICE" && (
                                         <input
                                             type="text"
                                             name="remote"
@@ -513,64 +476,48 @@ const EditTaskForm = ({ task }: TaskCardProps, { closeModal }: any) => {
                                             className=" rounded-2xl bg-[#EBE9F4] p-3 "
                                         />
                                     )}
-                                    {selectedServiceType === "Physical" && (
+                                    {updatedTaskType === "PHYSICAL_SERVICE" && (
                                         <>
                                             <div className="space-y-10 font-bold text-status-darkpurple ">
                                                 <div className="flex space-x-4">
                                                     <div className="grid space-y-4">
                                                         <div className="flex items-center justify-between">
-                                                            <label>
+                                                            <label className='text-[13px] font-semibold text-status-darkpurple lg:text-[16px]'>
                                                                 Postal code{" "}
-                                                                <span className="font-extrabold text-[#ff0000]">
-                                                                    *
-                                                                </span>
                                                             </label>
-                                                            {/* {selectedCode && (
-                                                            <div className="h-[16px] w-[16px] rounded-3xl bg-[#4CAF50] text-[16px] font-extrabold text-white">
-                                                                <GrFormCheckmark />
-                                                            </div>
-                                                        )} */}
                                                         </div>
                                                         <input
-                                                            // value={updatedPostCode. ? updatedPostCode : task.postCode}
-                                                            // onChange={(e) => setUpdatedPostCode(e.target.value)}
+                                                            value={updatedPostCode}
+                                                            onChange={(e) => setUpdatedPostCode(e.target.value)}
                                                             name="postCode"
-                                                            className={`w-[155px] cursor-pointer  rounded-2xl bg-[#EBE9F4] p-3 text-[13px] placeholder:font-bold border border-none outline-none"}`}
+                                                            className={`w-[155px] cursor-pointer  rounded-2xl bg-[#EBE9F4] p-3 text-[13px] placeholder:font-bold border-none outline-none"}`}
                                                         />
                                                     </div>
 
                                                     <div className="grid space-y-4">
                                                         <div className="flex items-center justify-between">
-                                                            <label>
+                                                            <label className='text-[13px] font-semibold text-status-darkpurple lg:text-[16px]'>
                                                                 Suburb{" "}
-                                                                <span className="font-extrabold text-[#ff0000]">
-                                                                    *
-                                                                </span>
                                                             </label>
-                                                            {/* {selectedCity && (
-                                                            <div className="h-[16px] w-[16px] rounded-3xl bg-[#4CAF50] text-[16px] font-extrabold text-white">
-                                                                <GrFormCheckmark />
-                                                            </div>
-                                                        )} */}
                                                         </div>
                                                         <Dropdown
                                                             trigger={() => (
                                                                 <div
                                                                     className={`flex h-full w-[150px] cursor-pointer appearance-none justify-between rounded-2xl bg-[#EBE9F4] p-3 font-satoshi text-[13px] font-light border-none outline-none"}`}
                                                                 >
-                                                                    <h2>{updatedSuburb ? updatedSuburb : task.suburb}</h2>
+                                                                    <h2>{updatedState}</h2>
                                                                     <FaSortDown />
                                                                 </div>
                                                             )}
                                                             className="small-scrollbar left-0 right-0 top-14 mx-auto max-h-64 overflow-y-auto bg-white transition-all duration-300"
                                                         >
-                                                            {updatedPostCode.map((data, index) => (
+                                                            {postalCodes.map((data, index) => (
                                                                 <button
                                                                     type="button"
                                                                     className="block p-2 text-[12px] text-[#221354]"
                                                                     key={index}
                                                                     value={data.name}
-                                                                    onClick={() => setUpdatedSuburb(data.name)}
+                                                                    onClick={() => setUpdatedState(data.name)}
                                                                 >
                                                                     {data.name}
                                                                 </button>
@@ -579,14 +526,14 @@ const EditTaskForm = ({ task }: TaskCardProps, { closeModal }: any) => {
                                                     </div>
                                                 </div>
                                                 <div className="grid space-y-4 ">
-                                                    <label>State/Territory</label>
+                                                    <label className='text-[13px] font-semibold text-status-darkpurple lg:text-[16px]'>State/Territory</label>
                                                     <input
                                                         value={
-                                                            task.state
-                                                                ? task.state
-                                                                : updatedPostCode[0].state.name
+                                                            postalCodes.length > 0
+                                                                ? postalCodes[0].state.name
+                                                                : ""
                                                         }
-                                                        onChange={() => setUpdatedState(updatedPostCode[0].state.name)}
+                                                        onChange={handleInputChange}
                                                         name="state"
                                                         id="state"
                                                         disabled
@@ -595,9 +542,8 @@ const EditTaskForm = ({ task }: TaskCardProps, { closeModal }: any) => {
                                                 </div>
                                             </div>
                                             <div className="flex items-center justify-between">
-                                                <label className="text-[13px] lg:text-[16px]">
+                                                <label className="text-[13px] font-semibold text-status-darkpurple lg:text-[16px]">
                                                     Budget{" "}
-                                                    <span className="font-extrabold text-[#ff0000]">*</span>
                                                 </label>
                                                 {/* {task.customerBudget && (
                                                 <div className="h-[16px] w-[16px] rounded-3xl bg-[#4CAF50] text-[16px] font-extrabold text-white">
@@ -618,7 +564,7 @@ const EditTaskForm = ({ task }: TaskCardProps, { closeModal }: any) => {
                                             </div>
                                         </>
                                     )}
-
+                                    {error && <div className="font-bold text-red-500">{error}</div>}
                                     <div className="flex items-center justify-end space-x-3">
                                         <Button
                                             theme="outline"
@@ -630,7 +576,8 @@ const EditTaskForm = ({ task }: TaskCardProps, { closeModal }: any) => {
                                         </Button>
                                         <Button
                                             theme="primary"
-                                            onClick={handleEditTask}
+                                            loading={loading}
+                                            onClick={handleSubmit}
                                             className="rounded-full px-10"
                                         >
                                             Save changes
@@ -643,8 +590,8 @@ const EditTaskForm = ({ task }: TaskCardProps, { closeModal }: any) => {
                 </div>
             </div>
         </div>
-    )
-}
+    );
 
+};
 
-export default EditTaskForm
+export default EditTaskForm;

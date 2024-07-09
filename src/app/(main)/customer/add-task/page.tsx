@@ -76,7 +76,7 @@ const AddTaskForm: React.FC = () => {
     taskTime: getCookie("taskTime") || "",
     taskDate: getCookie("taskDate") || "",
     taskType: getCookie("taskType") || "",
-    suburb: getCookie("suburb") || "",
+    suburb: getCookie("suburb") || "", 
     state: getCookie("state") || "",
     postCode: getCookie("postCode")||"",
     customerBudget: getCookie("categoryId")
@@ -826,7 +826,7 @@ const AddTaskForm: React.FC = () => {
                       </Dropdown>
                     </div>
                   </div>
-                  <div className="grid space-y-4 ">
+                  <div className="grid space-y-4"> 
                     <label>State/Territory</label>
                     <input
                       value={
