@@ -7,7 +7,7 @@ import Popup from '@/components/global/Popup';
 import { FiClock } from 'react-icons/fi';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/store';
-import { useGetInvoiceByCustomerIdQuery } from '@/services/bookings';
+import { useGetReceiptsByCustomerIdQuery } from '@/services/bookings';
 import { Receipt } from '@/types/services/invoice';
 import Loading from '@/components/global/loading/page';
 import html2canvas from 'html2canvas';
@@ -23,7 +23,7 @@ const PaymentHistory = () => {
     );
     const pdfRef = useRef(null)
 
-    const { data: paymentHistoryData, isLoading, refetch } = useGetInvoiceByCustomerIdQuery(user?.customerId!);
+    const { data: paymentHistoryData, isLoading, refetch } = useGetReceiptsByCustomerIdQuery(user?.customerId!);
 
     useEffect(() => {
         if (user) {
@@ -135,7 +135,7 @@ const PaymentHistory = () => {
                             <div className="space-y-4">
                                 <div className="border-b border-[#C1BADB] flex items-center justify-between px-4">
                                     <h2 className='text-[#333236] font-satoshiMedium'>Transaction ID:</h2>
-                                    <p className='text-primary font-bold text-xl'>#{selectedPayment.bookingId}</p>
+                                    <p className='text-primary font-bold text-xl'>#{selectedPayment.id}</p>
                                 </div>
                                 <div className="border-b border-[#C1BADB] flex items-center justify-between px-4">
                                     <h2 className='text-[#333236] font-satoshiMedium'>Transaction title:</h2>
@@ -143,11 +143,11 @@ const PaymentHistory = () => {
                                 </div>
                                 <div className="border-b border-[#C1BADB] flex items-center justify-between px-4">
                                     <h2 className='text-[#333236] font-satoshiMedium'>From:</h2>
-                                    <p className='text-primary font-bold text-xl'>{selectedPayment.customer.user.firstName} {selectedPayment.customer.user.lastName}</p>
+                                    <p className='text-primary font-bold text-xl'>{user?.firstName} {user?.lastName}</p>
                                 </div>
                                 <div className="border-b border-[#C1BADB] flex items-center justify-between px-4">
                                     <h2 className='text-[#333236] font-satoshiMedium'>To:</h2>
-                                    <p className='text-primary font-bold text-xl'>{selectedPayment.serviceProvider.user.firstName} {selectedPayment.serviceProvider.user.lastName}</p>
+                                    <p className='text-primary font-bold text-xl'>{selectedPayment.serviceProvider.user.fullName}</p>
                                 </div>
                                 <div className="border-b border-[#C1BADB] flex items-center justify-between px-4">
                                     <h2 className='text-[#333236] font-satoshiMedium'>Date:</h2>

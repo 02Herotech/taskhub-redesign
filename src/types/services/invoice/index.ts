@@ -3,6 +3,7 @@ type ServiceProvider = {
     user: {
         emailAddresses: string;
         firstName: string;
+        fullName: string;
         id: number;
         lastName: string;
         profileImage: string;
@@ -42,20 +43,13 @@ export type Invoice = {
 export type GetInvoiceByCustomerIdResponse = Invoice[]
 
 export type Receipt = {
-    id: number;
+    bookingCategory: string;
     bookingTitle: string;
+    createdAt: [number, number, number, number, number, number, number];
+    id: number;
+    invoiceId: number;
     serviceProvider: ServiceProvider;
-    bookingId: number;
-    customer: Customer;
     total: number;
-    serviceStartOn: [number, number, number] | string;
-    gst: number;
-    platformCharge: number;
-    subTotal: number;
-    createdAt: [number, number, number] | string;
-    invoiceNumber: string;
-    expiredAt: [number, number, number] | string;
-    updatedAt: [number, number, number] | string;
 }
 
 export type GetReceiptByCustomerIdResponse = Receipt[]
