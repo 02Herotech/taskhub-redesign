@@ -95,10 +95,10 @@ const NewTasksCard = ({ task }: TaskCardProps) => {
                 <p className="text-[#2A1769] text-sm font-satoshiMedium line-clamp-3">{task.taskDescription}</p>
                 <div className="mt-auto">
                     <div className="flex justify-between items-center my-2">
-                        <HiOutlineLocationMarker className="h-5 w-5 font-bold text-[#716F78]" />
                         <div className="flex items-center space-x-2 font-medium text-[#716F78] w-2/3">
+                            <HiOutlineLocationMarker className="h-5 w-5 font-bold text-[#716F78]" />
                             <p className="overflow-hidden truncate text-ellipsis whitespace-nowrap text-[15px] lg:text-lg">
-                                {task.state || `No location`}
+                                {task.state || `Remote`}
                             </p>
                         </div>
                         <div className="flex items-center space-x-2 font-medium text-[#716F78]">
@@ -109,7 +109,7 @@ const NewTasksCard = ({ task }: TaskCardProps) => {
                     <div className="flex justify-between items-end">
                         <div className="flex items-center space-x-2 font-medium text-[#716F78]">
                             <FiCalendar className="h-5 w-5 font-bold" />
-                            <h5 className="text-[15px] lg:text-lg">{formattedDate}</h5>
+                            <h5 className="text-[15px] lg:text-lg">{task.taskDate || "Flexible"}</h5>
                         </div>
                         <h2 className="text-2xl font-bold capitalize text-tc-orange lg:text-[20px]">
                             {formatAmount(task.customerBudget, "USD", false)}
