@@ -65,6 +65,11 @@ export type GetFilterTaskByPriceRequest = {
     maxPrice: number;
 };
 
+export type GetFilterTaskByCategoryRequest = {
+    page: number;
+    categoryId: number;
+};
+
 export type GetFilterTaskByTypeRequest = {
     page: number;
     type: string;

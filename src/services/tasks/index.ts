@@ -1,5 +1,6 @@
 import {
   GetCustomerTasksResponse,
+  GetFilterTaskByCategoryRequest,
   GetFilterTaskByPriceRequest,
   GetFilterTaskByTypeRequest,
   GetSingleTasksResponse,
@@ -115,6 +116,9 @@ export const task = createApi({
       query: (pageNumber) => getRequest(`/task-price-desc/${pageNumber}`),
       providesTags: ["Task"],
     }),
+    filterTaskByCategoryId: builder.query<GetTasksResponse, GetFilterTaskByCategoryRequest>({
+      query: (credentials) => getRequest(`/filter-by-category/${credentials.categoryId}?pageNumber=${credentials.categoryId}`),
+    }),
     getTaskByCustomerId: builder.query<GetCustomerTasksResponse, number>({
       query: (customerId) => getRequest(`/tasks-by-customerId/${customerId}`),
       providesTags: ["Task"],
@@ -156,4 +160,5 @@ export const {
   useGetCustomerCompletedTasksQuery,
   useDeleteTaskMutation,
   useSearchTaskByTextQuery,
+  useFilterTaskByCategoryIdQuery
 } = task;

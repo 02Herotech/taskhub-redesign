@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import { useGetActiveTasksQuery, useSearchTaskByTextQuery } from "@/services/tasks";
 import { Task } from "@/types/services/tasks";
@@ -14,7 +14,6 @@ import { CiSearch } from "react-icons/ci";
 import { IoMdArrowDropdown } from "react-icons/io";
 import { locationData } from "@/data/marketplace/data";
 import { IoCloseCircle } from "react-icons/io5";
-import { set } from "zod";
 
 type Category = {
     id: number;
@@ -56,6 +55,7 @@ const Tasks: React.FC = () => {
 
     const { data: tasksData, isLoading, refetch } = useGetActiveTasksQuery(currentPage);
     const { data: searchResults } = useSearchTaskByTextQuery({ text: searchText, pageNumber: currentPage });
+    console.log(tasksData)
 
     useEffect(() => {
         const fetchCategoriesData = async () => {
@@ -70,19 +70,19 @@ const Tasks: React.FC = () => {
         fetchCategoriesData();
     }, []);
 
-    const handlePageChange = (pageNumber: number, isSearch: boolean = false) => {
+    const handlePageChange = useCallback((pageNumber: number, isSearch: boolean = false) => {
         if (isSearch) {
             setSearchResultsPage(pageNumber);
         } else {
             setCurrentPage(pageNumber);
         }
-    };
+    }, []);
 
-    const totalPages = Math.ceil(tasksData?.totalElements! / itemsPerPage);
-    const searchTotalPages = Math.ceil(searchResults?.totalElements! / itemsPerPage);
+    const totalPages = Math.ceil((tasksData?.totalElements || 0) / itemsPerPage);
+    const searchTotalPages = Math.ceil((searchResults?.totalElements || 0) / itemsPerPage);
     const filteredTotalPages = Math.ceil(filteredData.length / itemsPerPage);
 
-    const applyFilters = (filters: FilterState) => {
+    const applyFilters = useCallback((filters: FilterState) => {
         if (!tasksData?.content) return;
         let filtered = tasksData.content;
 
@@ -98,80 +98,94 @@ const Tasks: React.FC = () => {
             filtered = filtered.filter(item => item.taskType === filters.serviceType);
         }
 
-        if (filters.price !== null) {
-            filtered = filtered.filter(item =>
-                filters.price !== null &&
-                item.customerBudget >= filters.price[0] &&
-                item.customerBudget <= filters.price[1]
-            );
-        }
+        // if (filters.price !== null) {
+        //     filtered = filtered.filter(item =>
+        //         item.customerBudget >= filters.price[0] &&
+        //         item.customerBudget <= filters.price[1]
+        //     );
+        // }
 
-        if (filters.other === "priceDesc") {
-            // show the tasks in descending order of price
-            filtered = [...filtered].sort((a, b) => b.customerBudget - a.customerBudget);
-        } else if (filters.other === "priceAsc") {
-            // show the tasks in ascending order of price
-            filtered = [...filtered].sort((a, b) => a.customerBudget - b.customerBudget);
-        } else if (filters.other === "dateAsc") {
-            // show the tasks in ascending order of due date
-            filtered = [...filtered].sort((a, b) => {
-                if (!a.taskDate || !b.taskDate) return 0;
-                return new Date(Date.UTC(a.taskDate[0], a.taskDate[1] - 1, a.taskDate[2])).getTime() -
-                    new Date(Date.UTC(b.taskDate[0], b.taskDate[1] - 1, b.taskDate[2])).getTime();
-            });
-        } else if (filters.other === "dateDesc") {
-            // show the tasks in descending order of due date
-            filtered = [...filtered].sort((a, b) => {
-                if (!a.taskDate || !b.taskDate) return 0;
-                return new Date(Date.UTC(b.taskDate[0], b.taskDate[1] - 1, b.taskDate[2])).getTime() -
-                    new Date(Date.UTC(a.taskDate[0], a.taskDate[1] - 1, a.taskDate[2])).getTime();
-            });
+        if (filters.other) {
+            switch (filters.other) {
+                case "priceDesc":
+                    filtered.sort((a, b) => b.customerBudget - a.customerBudget);
+                    break;
+                case "priceAsc":
+                    filtered.sort((a, b) => a.customerBudget - b.customerBudget);
+                    break;
+                case "dateAsc":
+                    filtered.sort((a, b) => new Date(a.taskTime).getTime() - new Date(b.taskTime).getTime());
+                    break;
+                case "dateDesc":
+                    filtered.sort((a, b) => new Date(b.taskTime).getTime() - new Date(a.taskTime).getTime());
+                    break;
+            }
         }
 
         setFilteredData(filtered);
         setFiltersApplied(true);
-    }
+    }, [tasksData]);
 
-    console.log(tasksData?.content)
+    const updateFilter = useCallback((key: keyof FilterState, value: any) => {
+        setActiveFilters(prev => {
+            const newFilters = { ...prev, [key]: value };
+            applyFilters(newFilters);
+            return newFilters;
+        });
+    }, [applyFilters]);
 
-    const handleFilterByCategory = (categoryName: string) => {
-        const newFilters = { ...activeFilters, category: categoryName };
-        setSelectedCategory(categoryName)
-        setActiveFilters(newFilters);
-        applyFilters(newFilters);
-    }
+    const handleFilterByCategory = useCallback((categoryName: string) => {
+        updateFilter('category', categoryName);
+    }, [updateFilter]);
 
-    const handleFilterByPriceRange = (minPrice: number, maxPrice: number) => {
-        const newFilters = { ...activeFilters, price: [minPrice, maxPrice] as [number, number] };
-        setActiveFilters(newFilters);
-        applyFilters(newFilters);
-    };
+    const handleFilterByPriceRange = useCallback((minPrice: number, maxPrice: number) => {
+        updateFilter('price', [minPrice, maxPrice]);
+    }, [updateFilter]);
 
-    const handleFilterByType = (type: "REMOTE_SERVICE" | "PHYSICAL_SERVICE") => {
-        const newFilters = { ...activeFilters, serviceType: type };
-        setSelectedServiceType(type === "REMOTE_SERVICE" ? "Remote" : "Physical")
-        setActiveFilters(newFilters);
-        applyFilters(newFilters);
-    };
+    const handleFilterByType = useCallback((type: "REMOTE_SERVICE" | "PHYSICAL_SERVICE") => {
+        updateFilter('serviceType', type);
+    }, [updateFilter]);
 
-    const handleFilterByLocation = (location: string) => {
-        const newFilters = { ...activeFilters, location };
-        setSelectedLocation(location)
-        setActiveFilters(newFilters);
-        applyFilters(newFilters);
-    }
+    const handleFilterByLocation = useCallback((location: string) => {
+        updateFilter('location', location);
+    }, [updateFilter]);
 
-    const handleSortByPrice = (order: "asc" | "desc") => {
-        const newFilters = { ...activeFilters, other: order === "asc" ? "priceAsc" : "priceDesc" };
-        setActiveFilters(newFilters);
-        applyFilters(newFilters);
-    };
+    const handleSortByPrice = useCallback((order: "asc" | "desc") => {
+        updateFilter('other', order === "asc" ? "priceAsc" : "priceDesc");
+    }, [updateFilter]);
 
-    const handleFilterByDate = (order: "asc" | "desc") => {
-        const newFilters = { ...activeFilters, other: order === "asc" ? "dateAsc" : "dateDesc" };
-        setActiveFilters(newFilters);
-        applyFilters(newFilters);
-    };
+    const handleFilterByDate = useCallback((order: "asc" | "desc") => {
+        updateFilter('other', order === "asc" ? "dateAsc" : "dateDesc");
+    }, [updateFilter]);
+
+    // const resetFilters = useCallback(() => {
+    //     setActiveFilters({
+    //         category: null,
+    //         location: null,
+    //         serviceType: null,
+    //         price: null,
+    //         other: null
+    //     });
+    //     setFilteredData([]);
+    //     setFiltersApplied(false);
+    //     refetch();
+    // }, [refetch]);
+
+    useEffect(() => {
+        if (filteredData.length > 0) {
+            setDataToRender(filteredData);
+            setPaginationLength(filteredTotalPages);
+        } else if (filtersApplied && filteredData.length === 0) {
+            setDataToRender([]);
+            setPaginationLength(filteredTotalPages)
+        } else if (searchText !== "") {
+            setDataToRender(searchResults?.content || []);
+            setPaginationLength(searchTotalPages);
+        } else {
+            setDataToRender(tasksData?.content || []);
+            setPaginationLength(totalPages);
+        }
+    }, [filteredData, tasksData, filtersApplied, searchText, searchResults, filteredTotalPages, searchTotalPages, totalPages]);
 
     const resetFilters = () => {
         const initialFilters: FilterState = {
@@ -200,7 +214,7 @@ const Tasks: React.FC = () => {
             setPaginationLength(searchTotalPages);
         } else {
             setDataToRender(tasksData?.content || []);
-            setPaginationLength(totalPages);
+            setPaginationLength(tasksData?.totalPages!);
         }
     }, [filteredData, tasksData, filtersApplied, searchText, searchResults]);
 
@@ -466,7 +480,7 @@ const Tasks: React.FC = () => {
                     </Dropdown>
                 </div>
 
-                <Button className="rounded-full bg-tc-orange border-none text-center w-[100px] text-sm" onClick={resetFilters}>
+                <Button className="rounded-full bg-tc-orange border-none text-center text-sm" onClick={resetFilters}>
                     Reset filters
                 </Button>
             </div>

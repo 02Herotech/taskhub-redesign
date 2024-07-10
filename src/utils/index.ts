@@ -131,9 +131,6 @@ export function formatDateFromNumberArrayToPastDate(
   // Calculate time difference in milliseconds
   const diffTime = now.getTime() - notificationDate.getTime();
 
-  console.log("Notification Date:", notificationDate);
-  console.log("Current Date:", now);
-
   // Calculate differences in units
   const diffSeconds = Math.floor(diffTime / 1000);
   const diffMinutes = Math.floor(diffSeconds / 60);
