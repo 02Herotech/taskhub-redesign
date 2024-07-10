@@ -7,13 +7,13 @@ import { FaSortDown } from 'react-icons/fa6';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { CustomerTasks } from '@/types/services/tasks';
-import { PiFileArrowDownDuotone, PiSealCheckFill } from 'react-icons/pi';
+import { PiSealCheckFill } from 'react-icons/pi';
 import Image from 'next/image';
 import { z } from "zod";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { typeData } from "@/data/marketplace/data";
-import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 interface TaskCardProps {
     task: CustomerTasks;
@@ -39,7 +39,7 @@ const EditTaskForm = ({ task, setShowEditModal }: TaskCardProps) => {
     const [activeEditModalLink, setActiveEditModalLink] = useState<string>("Task Details");
     const [categories, setCategories] = useState<{ id: number; categoryName: string }[]>([]);
     const [updatedPostCode, setUpdatedPostCode] = useState<any>(task.postCode);
-    // const [updatedCustomerBudget, setUpdatedCustomerBudget] = useState<string>(task.customerBudget.toString());
+    const [updatedCustomerBudget, setUpdatedCustomerBudget] = useState<string>(task.customerBudget.toString());
     const [updatedDate, setUpdatedDate] = useState<Date | null>(null);
     const [updatedTime, setUpdatedTime] = useState<Date | null>(null);
     const [error, setError] = useState("");
@@ -48,9 +48,11 @@ const EditTaskForm = ({ task, setShowEditModal }: TaskCardProps) => {
     const [suburbList, setSuburbList] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState<string>(task.category.categoryName);
     const [showSuccessModal, setShowSuccessModal] = useState(false);
+    const [isFlexible, setIsFlexible] = useState(false);
 
     const { data: session } = useSession();
     const token = session?.user.accessToken;
+    const router = useRouter();
 
     const taskSchema = z.object({
         taskBriefDescription: z
@@ -195,9 +197,9 @@ const EditTaskForm = ({ task, setShowEditModal }: TaskCardProps) => {
             suburb: data.suburb,
             state: data.state,
             taskImage,
-            taskDate: data.taskDate,
-            taskTime: data.taskTime,
-            customerBudget: data.customerBudget
+            taskDate: isFlexible ? null : dateString,
+            taskTime: isFlexible ? "Flexible" : timeString,
+            customerBudget: updatedCustomerBudget,
         }).reduce((acc, [key, value]) => {
             if (
                 value !== null &&
@@ -218,7 +220,7 @@ const EditTaskForm = ({ task, setShowEditModal }: TaskCardProps) => {
                     "Content-Type": "multipart/form-data",
                 },
             });
-            setShowEditModal(false);
+            // setShowEditModal(false);
             setShowSuccessModal(true);
         } catch (error: any) {
             console.log(error.response.data);
@@ -254,13 +256,12 @@ const EditTaskForm = ({ task, setShowEditModal }: TaskCardProps) => {
         setUpdatedTime(time);
     };
 
-    const formatDateToString = (date: Date | null) => {
+    const formatDateToLocalDateString = (date: Date | null ) => {
         if (date) {
-            // Formatting the date as "dd-MM-yyyy"
-            const day = String(date.getDate()).padStart(2, "0");
-            const month = String(date.getMonth() + 1).padStart(2, "0");
             const year = date.getFullYear();
-            return `${day}-${month}-${year}`;
+            const month = String(date.getMonth() + 1).padStart(2, "0");
+            const day = String(date.getDate()).padStart(2, "0");
+            return `${year}-${month}-${day}`;
         }
         return "";
     };
@@ -275,7 +276,7 @@ const EditTaskForm = ({ task, setShowEditModal }: TaskCardProps) => {
         return "";
     };
 
-    const dateString = formatDateToString(updatedDate);
+    const dateString = formatDateToLocalDateString(updatedDate);
     const timeString = formatTimeToString(updatedTime);
 
     const CustomInput: React.FC<CustomInputProps> = ({ value, onClick }) => (
@@ -298,12 +299,17 @@ const EditTaskForm = ({ task, setShowEditModal }: TaskCardProps) => {
         </button>
     );
 
+    console.log("date and time", dateString, timeString)
+
     return (
         <div className='pt-14 lg:px-5'>
             {showSuccessModal && (
                 <section className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-70">
                     <div
-                        onClick={() => setShowSuccessModal(false)}
+                        onClick={() => {
+                            setShowSuccessModal(false)
+                            setShowEditModal(false)
+                        }}
                         className="absolute h-screen w-screen"
                     />
                     <div className=" relative z-10 flex w-[90vw] max-w-md  flex-col items-center justify-center gap-4 rounded-lg bg-white p-5 ">
@@ -316,22 +322,21 @@ const EditTaskForm = ({ task, setShowEditModal }: TaskCardProps) => {
                             <p className="text-center font-satoshiBold text-2xl font-extrabold text-violet-normal">
                                 Task edited successfully
                             </p>
-                            <p className="text-center font-semibold text-violet-darker">
+                            {/* <p className="text-center font-semibold text-violet-darker">
                                 Great! You can now view the task on your dashboard.
-                            </p>
+                            </p> */}
                             <div className="flex items-center gap-6">
                                 <button
-                                    onClick={() => setShowSuccessModal(false)}
+                                    onClick={() => {
+                                        setShowSuccessModal(false)
+                                        setShowEditModal(false)
+                                        router.refresh()
+                                    }}
                                     className="rounded-full bg-violet-active px-4 py-2 font-bold text-violet-dark max-sm:text-sm"
                                 >
                                     Close
                                 </button>
-                                <Link
-                                    href="/customer/tasks"
-                                    className="rounded-full bg-violet-normal px-4 py-2 font-bold text-white max-sm:text-sm"
-                                >
-                                    Proceed to dashboard
-                                </Link>
+                                
                             </div>
                         </div>
                     </div>
@@ -468,8 +473,8 @@ const EditTaskForm = ({ task, setShowEditModal }: TaskCardProps) => {
                                         <div className="flex items-center space-x-3">
                                             <div className="relative">
                                                 <DatePicker
-                                                    selected={updatedDate}
-                                                    onChange={handleDateChange}
+                                                    selected={updatedTime}
+                                                    onChange={handleTimeChange}
                                                     showTimeSelect
                                                     showTimeSelectOnly
                                                     timeFormat="HH:mm"
@@ -485,8 +490,8 @@ const EditTaskForm = ({ task, setShowEditModal }: TaskCardProps) => {
                                             </div>
                                             <div className="relative">
                                                 <DatePicker
-                                                    selected={updatedTime}
-                                                    onChange={handleTimeChange}
+                                                    selected={updatedDate}
+                                                    onChange={handleDateChange}
                                                     dateFormat="dd-MM-yyyy"
                                                     minDate={new Date()}
                                                     placeholderText="Choose Date"
@@ -502,9 +507,9 @@ const EditTaskForm = ({ task, setShowEditModal }: TaskCardProps) => {
                                                     <input
                                                         type="checkbox"
                                                         name="check"
-                                                        // checked={termAccepted}
+                                                        checked={isFlexible}
                                                         // disabled={accepted}
-                                                        // onChange={handleCheckboxChange}
+                                                        onChange={() => setIsFlexible(!isFlexible)}
                                                         className="mr-2"
                                                     />
                                                     <span className="text-[12px] text-status-darkpurple">

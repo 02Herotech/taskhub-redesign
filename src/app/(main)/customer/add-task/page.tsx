@@ -427,6 +427,8 @@ const AddTaskForm: React.FC = () => {
     });
   };
 
+  console.log("date and time", dateString, timeString)
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setLoading(true);
@@ -464,7 +466,6 @@ const AddTaskForm: React.FC = () => {
           finalTask = { ...finalTask, taskImage: defaultImageBlob };
         }
 
-        console.log(finalTask);
         await Promise.race([
           axios.post(
             "https://smp.jacinthsolutions.com.au/api/v1/task/post",
