@@ -124,7 +124,7 @@ const JobCard = ({
           </div>
 
           {reportJob && (
-            <div className="flex justify-end">
+            <div className="flex items-center justify-end">
               <button
                 className=" rounded-full px-4  py-2 text-xl font-bold text-red-500 transition-colors duration-300 hover:bg-red-100 max-md:hidden max-md:px-3 max-md:py-1 max-md:text-xs "
                 onClick={reportJob}
