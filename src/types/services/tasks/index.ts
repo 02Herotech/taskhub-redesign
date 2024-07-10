@@ -4,7 +4,7 @@ export type Task = {
     posterId: number;
     taskBriefDescription: string;
     taskDescription: string;
-    taskImage: string;
+    taskImage: any;
     category: {
         id: number;
         categoryName: string;
@@ -14,7 +14,9 @@ export type Task = {
     hubTime: string | null;
     taskType: string;
     taskStatus: string;
-    taskAddress: string | null;
+    state: string | null;
+    postCode: string | number | null;
+    suburb: string | null;
     createdAt: [number, number, number];
     customerBudget: number;
     active: boolean;
@@ -25,7 +27,7 @@ export type CustomerTasks = {
     posterId: number;
     taskBriefDescription: string;
     taskDescription: string;
-    taskImage: string;
+    taskImage: any;
     taskTime: string;
     taskDate: [number, number, number];
     category: {
@@ -35,7 +37,9 @@ export type CustomerTasks = {
     hubTime: string | null;
     taskType: string;
     taskStatus: string;
-    taskAddress: string | null;
+    state: string | null;
+    postCode: string | number | null;
+    suburb: string | null;
     createdAt: [number, number, number];
     customerBudget: number;
     active: boolean;
@@ -43,7 +47,7 @@ export type CustomerTasks = {
 
 export type GetCustomerTasksResponse = CustomerTasks[];
 
-export type GetTasksRequest =  number;
+export type GetTasksRequest = number;
 
 export type GetTasksResponse = {
     totalElements: number;
@@ -59,6 +63,11 @@ export type GetFilterTaskByPriceRequest = {
     page: number;
     minPrice: number;
     maxPrice: number;
+};
+
+export type GetFilterTaskByCategoryRequest = {
+    page: number;
+    categoryId: number;
 };
 
 export type GetFilterTaskByTypeRequest = {

@@ -46,6 +46,7 @@ const ServiceProviderChat = () => {
 
   useEffect(() => {
     loadContacts();
+    // eslint-disable-next-line
   }, []);
 
   const handleFocus = () => {
@@ -91,29 +92,19 @@ const ServiceProviderChat = () => {
       );
       setContact(foundContact);
     }
+    // eslint-disable-next-line 
   }, [contacts]);
 
-  // const refreshClient = () => {
-  //   if (subscription) {
-  //     subscription.unsubscribe();
-  //   }
-  //   if (stompClient.connected) {
-  //     const newSubscription = stompClient.subscribe(
-  //       `/user/${user?.id}/queue/messages`,
-  //       onMessageReceived,
-  //     );
-  //     dispatch(setSubscription(newSubscription));
-  //   }
-  // };
 
   const onMessageReceived = async () => {
-    // refreshClient();
+    console.log("new messages received")
     if (newMessage && chatPartnerId === newMessage.senderId.toString()) {
       findChatMessage({
         id: newMessage.id,
         token: token as string,
       })
         .then((message) => {
+          console.log(message)
           const displayMessage: ChatMessageDisplayedType = {
             content: message.content,
             senderId: message.senderId,
@@ -126,12 +117,15 @@ const ServiceProviderChat = () => {
           setChatMessages(newMessages);
         })
         .catch((error) => console.error(error));
+      console.log()
+      loadContacts()
     }
   };
 
   // update as new messages are received
   useEffect(() => {
     onMessageReceived();
+    // eslint-disable-next-line
   }, [newMessage]);
 
   const sendMessage = (msg: string) => {
@@ -275,7 +269,7 @@ const ServiceProviderChat = () => {
               }
               width={50}
               height={50}
-              alt="user"
+              alt="user"  
               className="size-8 rounded-full"
             />
             <div className="relative w-full">

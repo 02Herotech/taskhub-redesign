@@ -1,11 +1,11 @@
 "use client";
 
 import { useGetTaskByCustomerIdQuery } from "@/services/tasks";
-import NewTasksCard from "../NewTasksCard";
 import { useSession } from "next-auth/react";
 import Loading from "@/shared/loading";
 import Link from "next/link";
 import Button from "@/components/global/Button";
+import NewTasksCard from "../NewTasksCard";
 
 const TaskList = () => {
   const { data: sessionData, status: sessionStatus } = useSession();

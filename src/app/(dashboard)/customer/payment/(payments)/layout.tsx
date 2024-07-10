@@ -14,8 +14,8 @@ const links: LinksProps[] = [
         link: '/customer/payment/payment-history'
     },
     {
-        title: 'My invoices',
-        link: '/customer/payment/invoices'
+        title: 'My Offers',
+        link: '/customer/payment/offers'
     }
 ]
 
@@ -45,7 +45,7 @@ const TransactionHistoryLayout = ({ children }: AuthLayoutProps) => {
                     <div className="flex items-center space-x-10">
                         {links.map((link, index) => (
                             <Link key={index} href={link.link} className="flex items-center space-x-3">
-                                <div className={`size-5 rounded-full ${pathname === link.link ? 'bg-white border-primary border-4' : 'bg-primary'}`} />
+                                <div className={`size-5 rounded-full ${pathname === link.link ? 'bg-primary' : 'bg-white border-primary border-4'}`} />
                                 <h2 className={`text-[#140B31] lg:text-lg font-satoshiMedium`}>{link.title}</h2>
                             </Link>
                         ))}

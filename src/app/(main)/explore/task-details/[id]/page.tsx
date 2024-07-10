@@ -101,7 +101,7 @@ const TaskDetailsPage = ({ params }: { params: { id: string } }) => {
                                 <h4 className='text-primary lg:text-2xl font-satoshiMedium font-bold'>Location</h4>
                                 <div className="flex items-center space-x-2 w-full text-[#716F78]">
                                     <HiOutlineLocationMarker className="h-6 w-6 font-bold" />
-                                    <h5 className="text-[15px] lg:text-xl font-satoshiMedium font-medium">{task?.taskAddress || "Location unavailable"}</h5>
+                                        <h5 className="text-[15px] lg:text-xl font-satoshiMedium font-medium">{task.state ? `${task.postCode}, ${task.suburb}, ${task.state}` : "Remote"}</h5>
                                 </div>
                             </div>
 

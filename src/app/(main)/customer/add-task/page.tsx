@@ -76,7 +76,7 @@ const AddTaskForm: React.FC = () => {
     taskTime: getCookie("taskTime") || "",
     taskDate: getCookie("taskDate") || "",
     taskType: getCookie("taskType") || "",
-    suburb: getCookie("suburb") || "",
+    suburb: getCookie("suburb") || "", 
     state: getCookie("state") || "",
     postCode: getCookie("postCode")||"",
     customerBudget: getCookie("categoryId")
@@ -293,11 +293,20 @@ const AddTaskForm: React.FC = () => {
   const handlePrice = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
     const numberValue = value === "" ? 0 : parseFloat(value);
-    setTask({
-      ...task,
-      [name]: numberValue,
-    });
+
+    if (numberValue <= 0) {
+      setTask({
+        ...task,
+        [name]: null,
+      });
+    } else {
+      setTask({
+        ...task,
+        [name]: numberValue,
+      });
+    }
   };
+
 
   const handleChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -418,6 +427,8 @@ const AddTaskForm: React.FC = () => {
     });
   };
 
+  console.log("date and time", dateString, timeString)
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setLoading(true);
@@ -455,7 +466,6 @@ const AddTaskForm: React.FC = () => {
           finalTask = { ...finalTask, taskImage: defaultImageBlob };
         }
 
-        console.log(finalTask);
         await Promise.race([
           axios.post(
             "https://smp.jacinthsolutions.com.au/api/v1/task/post",
@@ -826,7 +836,7 @@ const AddTaskForm: React.FC = () => {
                       </Dropdown>
                     </div>
                   </div>
-                  <div className="grid space-y-4 ">
+                  <div className="grid space-y-4"> 
                     <label>State/Territory</label>
                     <input
                       value={
