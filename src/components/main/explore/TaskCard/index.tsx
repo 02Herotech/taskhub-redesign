@@ -45,8 +45,6 @@ const TaskCard = ({ task }: TaskCardProps) => {
     }
   }, [task.taskDate]);
 
-  console.log("task", task)
-
   return (
     <motion.div
       className="lg:rounded-4xl cursor-pointer rounded-xl bg-[#EBE9F4] p-5"

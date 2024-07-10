@@ -57,7 +57,7 @@ const NewTasksCard = ({ task }: TaskCardProps) => {
                     )}
                     onClose={() => setIsEditModalOpen(false)}
                 >
-                    <EditTaskForm task={task} />
+                    <EditTaskForm setShowEditModal={setIsEditModalOpen} task={task} />
                 </Popup>
             )}
             <motion.div

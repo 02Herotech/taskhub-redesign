@@ -20,7 +20,7 @@ const daysData: string[] = [
   "MONDAY",
   "TUESDAY",
   "WEDNESDAY",
-  "THURSDAY",
+  "THURSDAY", 
   "FRIDAY",
   "SATURDAY",
   "SUNDAY",
