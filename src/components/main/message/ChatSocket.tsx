@@ -7,10 +7,11 @@ import {
   setTotalUnreadMessages,
 } from "@/store/Features/chat";
 import { countNewMessages, getUsers } from "@/utils/message";
-import React, { useEffect, useState, useRef, useCallback } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { stompClient } from "@/lib/stompClient";
 import { AnyAction, Dispatch } from "@reduxjs/toolkit";
+
 
 interface Message {
   body: string;
@@ -27,14 +28,11 @@ const ChatSocket: React.FC = () => {
     (state: RootState) => state.userProfile,
   );
 
-  const [reconnectAttempts, setReconnectAttempts] = useState(0);
-  const maxReconnectAttempts = 5;
-  const reconnectInterval = 5000; // 5 seconds
-  const reconnectTimeout = useRef<NodeJS.Timeout | null>(null);
-
   const connect = useCallback(() => {
-    if(!user) return
-    stompClient.connect({}, onConnected, onError);
+    if(user){
+      stompClient.connect({}, onConnected, onError);
+    }
+    // eslint-disable-next-line
   }, [user]);
 
   const onConnected = useCallback(() => {
@@ -43,35 +41,26 @@ const ChatSocket: React.FC = () => {
         `/user/${user.id}/queue/messages`,
         onMessageReceived,
       );
-      setReconnectAttempts(0);
     }
+    // eslint-disable-next-line
   }, [user]);
 
   const onMessageReceived = useCallback(
     (msg: Message) => {
       const parsedMessage = JSON.parse(msg.body);
+      console.log("received message: ", parsedMessage)
       dispatch(setNewMessage(parsedMessage));
       loadContacts();
     },
+    // eslint-disable-next-line
     [dispatch],
   );
 
   const onError = useCallback(
     (err: any) => {
       console.error("WebSocket connection error:", err);
-      if (reconnectAttempts < maxReconnectAttempts) {
-        if (reconnectTimeout.current) {
-          clearTimeout(reconnectTimeout.current);
-        }
-        reconnectTimeout.current = setTimeout(() => {
-          setReconnectAttempts((prev) => prev + 1);
-          connect();
-        }, reconnectInterval);
-      } else {
-        console.error("Max reconnect attempts reached");
-      }
     },
-    [connect, reconnectAttempts],
+    [],
   );
 
   const loadContacts = useCallback(async () => {
@@ -105,14 +94,6 @@ const ChatSocket: React.FC = () => {
       loadContacts();
     }
   }, [user, connect, loadContacts]);
-
-  useEffect(() => {
-    return () => {
-      if (reconnectTimeout.current) {
-        clearTimeout(reconnectTimeout.current);
-      }
-    };
-  }, []);
 
   return <div className="hidden" />;
 };

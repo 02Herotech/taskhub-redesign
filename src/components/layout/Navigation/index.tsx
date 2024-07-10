@@ -52,7 +52,7 @@ const Navigation = () => {
 
   const dispatch = useDispatch();
   const userProfile = useSelector((state: RootState) => state.userProfile);
-  const { totalUnreadMessages } = useSelector((state: RootState) => state.chat);
+  const { totalUnreadMessages, newMessage } = useSelector((state: RootState) => state.chat);
 
   const pathname = usePathname();
 
@@ -90,6 +90,7 @@ const Navigation = () => {
       dispatch(setUserProfileAuth(auth));
     }
     dispatch(setAuthLoading(false));
+    // eslint-disable-next-line
   }, []);
 
   const dropdownItems = [
