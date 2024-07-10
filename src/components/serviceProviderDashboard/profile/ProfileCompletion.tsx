@@ -60,11 +60,14 @@ const ProfileCompletion = ({ fetchedUserData }: ProfileCompletionType) => {
 
   return (
     <section className="flex min-h-64 flex-col items-center gap-3 rounded-lg bg-[#EBE9F4] p-4 md:grid md:grid-cols-12">
+      <h2 className="text-center text-3xl font-bold text-[#140B31] lg:hidden ">
+        Profile Completion
+      </h2>
       <div className="col-span-4 max-md:max-w-40">
         {chartData && <ProfilePieChart chartData={chartData} />}
       </div>
       <div className="col-span-8 space-y-4 ">
-        <h2 className="text-3xl font-bold text-[#140B31] ">
+        <h2 className="text-3xl font-bold text-[#140B31] max-lg:hidden ">
           Profile Completion
         </h2>
         <div className="flex flex-wrap gap-4 ">
