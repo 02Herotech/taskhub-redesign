@@ -3,8 +3,7 @@ import Tasks from '@/components/main/explore/Tasks'
 
 const ExplorePage = () => {
   return (
-    <div className='my-14'>
-      {/* <ExploreMap /> */}
+    <div className='mt-14'>
       <Tasks />
     </div>
   )
