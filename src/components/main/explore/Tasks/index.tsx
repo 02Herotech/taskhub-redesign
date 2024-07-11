@@ -12,9 +12,9 @@ import { fetchAllMarketplaseCategories } from "@/lib/marketplace";
 import { filterExploreTasks, resetFilter, setFilterLoadingState, setFilterParams, updateCategories } from "@/store/Features/explore";
 import { BsTriangleFill, BsX } from "react-icons/bs";
 import { truncateText } from "@/utils/marketplace";
-import MobileFilterModal from "../../marketplace/MobileFilterModal";
 import { GiSettingsKnobs } from "react-icons/gi";
 import ExploreCategoryLising from "../ExploreCategoryListing";
+import ExploreMobileFilterModal from "../MobileFIlter";
 
 const Tasks: React.FC = () => {
     const dispatch = useDispatch();
@@ -90,7 +90,7 @@ const Tasks: React.FC = () => {
             const { category, location, typeOfService, minPrice, maxPrice } =
                 filterDataStructure;
             let url =
-                "https://smp.jacinthsolutions.com.au/api/v1/listing/filter-listings/0?";
+                "https://smp.jacinthsolutions.com.au/api/v1/task/filter-tasks/0?";
             const params = [];
 
             if (category) {
@@ -423,19 +423,6 @@ const Tasks: React.FC = () => {
                                             }}
                                         />
                                     </div>
-                                    <input
-                                        type="number"
-                                        className="my-1 w-full rounded-full border border-orange-normal p-3 text-center outline-none "
-                                        max={99999}
-                                        min={5}
-                                        onChange={(event) =>
-                                            setfilterDataStructure((prev) => ({
-                                                ...prev,
-                                                minPrice: Number(event.target.value),
-                                                maxPrice: Number(event.target.value),
-                                            }))
-                                        }
-                                    />
                                     <div className="flex items-center gap-4 ">
                                         <button
                                             onClick={() => handleShowDropdown("pricing")}
@@ -459,7 +446,7 @@ const Tasks: React.FC = () => {
             </section>
 
             <div className="relative flex justify-center md:hidden ">
-                <MobileFilterModal
+                <ExploreMobileFilterModal
                     isMobileFilterModalShown={isMobileFilterModalShown}
                     setIsMobileFilterModalShown={setIsMobileFilterModalShown}
                     setfilterDataStructure={setfilterDataStructure}
@@ -468,7 +455,7 @@ const Tasks: React.FC = () => {
                 />
                 <div className="flex gap-4">
                     <button
-                        className={`flex  items-center justify-center gap-3 rounded-full border border-violet-normal bg-violet-light px-6 py-2 font-bold text-violet-normal ${isFiltering ? "w-auto" : "w-full min-w-72"}`}
+                        className={`flex items-center justify-center gap-3 rounded-full border border-violet-normal bg-violet-light px-6 py-2 font-bold text-violet-normal ${isFiltering ? "w-auto" : "w-full min-w-72"}`}
                         onClick={() => setIsMobileFilterModalShown(true)}
                     >
                         <span>
@@ -493,42 +480,22 @@ const Tasks: React.FC = () => {
                     <div className="min-h-80 items-center justify-center p-4">
                         <Loading />
                     </div>
-                ) : isFiltering && (
+                ) : isFiltering ? (
                     <div>
                         <ExploreCategoryLising category="All" />
                     </div>
-                )}
-            </div>
-            {/* <div className="w-full">
-                {renderContent()}
-                {dataToRender.length > 0 && (
-                    <div className="flex justify-center items-center my-4">
-                        <button
-                            onClick={() => handlePageChange((searchText ? searchResultsPage : currentPage) - 1, searchText !== "")}
-                            disabled={searchText ? searchResultsPage === 1 : currentPage === 1}
-                            className={`bg-primary text-white mr-10 rounded max-lg:text-xs lg:rounded-[10px] h-[39px] w-[39px] flex items-center justify-center ${searchText ? searchResultsPage === 1 : currentPage === 1 ? 'bg-status-violet' : ''}`}
-                        >
-                            <FaChevronLeft />
-                        </button>
-                        {Array.from({ length: paginationLength }, (_, index) => (
-                            <button
-                                key={index}
-                                onClick={() => handlePageChange(index + 1, searchText !== "")}
-                                className={`border font-bold rounded max-lg:text-xs mx-2 lg:rounded-[10px] h-[39px] w-[39px] flex items-center justify-center ${searchText ? searchResultsPage === index + 1 : currentPage === index + 1 ? "bg-primary text-white" : ""}`}
-                            >
-                                {index + 1}
-                            </button>
-                        ))}
-                        <button
-                            onClick={() => handlePageChange((searchText ? searchResultsPage : currentPage) + 1, searchText !== "")}
-                            disabled={searchText ? searchResultsPage === searchTotalPages : currentPage === totalPages}
-                            className={`bg-primary text-white ml-10 rounded max-lg:text-xs lg:rounded-[10px] h-[39px] w-[39px] flex items-center justify-center ${searchText ? searchResultsPage === searchTotalPages : currentPage === totalPages ? 'bg-status-violet' : ''}`}
-                        >
-                            <FaChevronRight />
-                        </button>
+                ) : (
+                    <div>
+                        {categories.length < 1 ? (
+                            <Loading />
+                        ) : (
+                            <div>
+                                <ExploreCategoryLising category="All" />
+                            </div>
+                        )}
                     </div>
                 )}
-            </div> */}
+            </div>
         </section>
     )
 };
