@@ -53,11 +53,7 @@ const ExploreCategoryLising: React.FC<ExploreCategoryLisingProps> = ({ category 
                     "?category=" +
                     categoryId.categoryName;
             }
-            const { data } = await axios.get(url as string, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            });
+            const { data } = await axios.get(url as string);
             content = data.content;
             setPage((prev) => ({ ...prev, totalPages: data.totalPages }));
             if (url) {
@@ -149,19 +145,7 @@ const ExploreCategoryLising: React.FC<ExploreCategoryLisingProps> = ({ category 
     }, [allTasks]);
 
     return (
-        <div className="h-full w-full py-4 ">
-            <div className="mb-3 flex items-center justify-between">
-                <div className="flex w-full items-center justify-between gap-4">
-                    <h1 className=" text-xl font-bold text-violet-darkHover md:text-2xl">
-                        {!isFiltering
-                            ? category
-                            : filteredData.length > 0
-                                ? filteredData[0].category.categoryName
-                                : ""}
-                    </h1>
-                </div>
-            </div>
-
+        <div className="h-full w-full py-10">
             {ErrorMsg && (
                 <div className="flex min-h-64 w-full flex-col items-center justify-center gap-4 md:h-[100px]">
                     <p className="sm:text[13px] text-center font-semibold text-red-500 md:text-[16px]">
@@ -182,7 +166,7 @@ const ExploreCategoryLising: React.FC<ExploreCategoryLisingProps> = ({ category 
                             height={200}
                         />
                         <p className="text-lg text-violet-normal">
-                            No Task Available at the moment
+                            No Task Found
                         </p>
                     </div>
                 ) : (
@@ -206,11 +190,11 @@ const ExploreCategoryLising: React.FC<ExploreCategoryLisingProps> = ({ category 
                         height={200}
                     />
                     <p className="text-lg text-violet-normal">
-                        No Task Available at the moment
+                        No Task Found
                     </p>
                 </div>
             ) : (
-                <div className="my-2 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
+                <div className="my-2 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
                     {displayTasks.map((item, index) => {
                         return (
                             <TaskCard
@@ -224,7 +208,7 @@ const ExploreCategoryLising: React.FC<ExploreCategoryLisingProps> = ({ category 
             {page.totalPages > 1 && (
                 <div className="mt-10 flex w-full items-center justify-center space-x-2">
                     <button
-                        className="rounded-md bg-status-lightViolet p-2 transition-all duration-300 hover:bg-primary hover:text-white disabled:bg-status-lightViolet disabled:opacity-50 disabled:hover:bg-transparent"
+                        className="rounded-md bg-status-lightViolet p-4 transition-all duration-300 hover:bg-primary hover:text-white disabled:bg-status-lightViolet disabled:opacity-50 disabled:hover:bg-transparent"
                         disabled={page.currentPage === 0}
                         onClick={() =>
                             setPage((prev) => ({
@@ -238,7 +222,7 @@ const ExploreCategoryLising: React.FC<ExploreCategoryLisingProps> = ({ category 
                     {buttonNumbers.map((item) => (
                         <button
                             key={item}
-                            className={` ${item === page.currentPage + 1 ? " bg-violet-normal  text-white" : ""} rounded-md px-3.5 py-1 hover:bg-violet-200 `}
+                            className={` ${item === page.currentPage + 1 ? " bg-violet-normal  text-white" : ""} rounded-md px-5 py-3 hover:bg-violet-200 `}
                             onClick={() =>
                                 setPage((prev) => ({
                                     ...prev,
@@ -251,7 +235,7 @@ const ExploreCategoryLising: React.FC<ExploreCategoryLisingProps> = ({ category 
                     ))}
 
                     <button
-                        className="rounded-md bg-status-lightViolet p-2 hover:bg-primary disabled:bg-status-lightViolet disabled:opacity-50 disabled:hover:bg-transparent"
+                        className="rounded-md bg-status-lightViolet p-4 hover:bg-primary disabled:bg-status-lightViolet hover:text-white disabled:opacity-50 disabled:hover:bg-transparent"
                         // onClick={handleNextPage}
                         disabled={page.currentPage + 1 === page.totalPages}
                         onClick={() =>

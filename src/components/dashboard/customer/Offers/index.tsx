@@ -63,6 +63,9 @@ const Offers = () => {
   const fetchPaymentIntent = async () => {
     try {
       setLoading(true);
+      if (error != "") {
+        setError("");
+      }
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}/booking/payment-intent-stripe/${selectedInvoice?.id}`,
         {
@@ -85,8 +88,13 @@ const Offers = () => {
       setLoading(false);
       console.log("Error fetching payment intent:", error);
       setError("An error occurred, please try again later ...");
+
+      setTimeout(() => {
+        setError("");
+      }, 5000);
     }
   };
+
 
   useEffect(() => {
     if (isModalOpen && userToken) {
