@@ -5,6 +5,7 @@ import { booking } from "@/services/bookings";
 import marketReducer from "./Features/marketplace";
 import userProfileReducer from "./Features/userProfile";
 import chatReducer from "./Features/chat";
+import exploreReducer from "./Features/explore";
 
 export const store = configureStore({
   reducer: {
@@ -14,6 +15,7 @@ export const store = configureStore({
     market: marketReducer,
     userProfile: userProfileReducer,
     chat: chatReducer,
+    explore: exploreReducer
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(
