@@ -37,7 +37,7 @@ const JobCard = ({
   completeJob,
 }: CardPropsTypes) => {
   return (
-    <div className=" flex gap-3 border-b border-slate-200 py-4  lg:grid lg:grid-cols-12 lg:items-center lg:px-8 lg:py-4">
+    <div className=" max-md:p-4 max-md:border max-md:rounded-xl max-md:border-violet-normal  flex gap-3 md:border-b border-slate-200 py-4  lg:grid lg:grid-cols-12 lg:items-center lg:px-8 lg:py-4">
       <div className="col-span-2 size-16 flex-shrink-0 overflow-hidden rounded-full border border-violet-normal max-md:hidden lg:size-24 ">
         <Image
           src={imageUrl ?? "/assets/images/serviceProvider/user.jpg"}

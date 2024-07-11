@@ -60,9 +60,8 @@ const Page = () => {
         >
           <Wallet />
         </motion.div>
-
         <motion.div
-          className="col-span-5"
+          className="col-span-5 max-md:hidden"
           initial={{ opacity: 0, translateY: "5rem" }}
           whileInView={{ opacity: 1, translateY: "0" }}
           transition={{ duration: 1.5 }}
@@ -70,13 +69,32 @@ const Page = () => {
           <Barge />
         </motion.div>
         <motion.div
-          className="col-span-7"
+          className="col-span-7 max-md:hidden"
           initial={{ opacity: 0, translateY: "5rem" }}
           whileInView={{ opacity: 1, translateY: "0" }}
           transition={{ duration: 1.2 }}
         >
           <CompletionRate />
         </motion.div>
+
+        <div className="flex items-center gap-6 w-full md:hidden overflow-auto " >
+          <motion.div
+            className=" flex-shrink-0 "
+            initial={{ opacity: 0, translateY: "5rem" }}
+            whileInView={{ opacity: 1, translateY: "0" }}
+            transition={{ duration: 1.5 }}
+          >
+            <Barge />
+          </motion.div>
+          <motion.div
+            className="flex-shrink-0"
+            initial={{ opacity: 0, translateY: "5rem" }}
+            whileInView={{ opacity: 1, translateY: "0" }}
+            transition={{ duration: 1.2 }}
+          >
+            <CompletionRate />
+          </motion.div>
+        </div>
       </section>
     </main>
   );
