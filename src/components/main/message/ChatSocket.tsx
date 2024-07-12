@@ -92,6 +92,7 @@ const ChatSocket: React.FC = () => {
         console.error("Max reconnect attempts reached");
       }
     },
+    // eslint-disable-next-line
     [reconnectAttempts],
   );
 
