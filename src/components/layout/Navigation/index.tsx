@@ -33,6 +33,7 @@ import {
   updateUserProfile,
 } from "@/store/Features/userProfile";
 import ChatSocket from "@/components/main/message/ChatSocket";
+import { HamburgerIcon } from "@/lib/svgIcons";
 
 const initialAuthState = {
   token: null,
@@ -52,7 +53,9 @@ const Navigation = () => {
 
   const dispatch = useDispatch();
   const userProfile = useSelector((state: RootState) => state.userProfile);
-  const { totalUnreadMessages, newMessage } = useSelector((state: RootState) => state.chat);
+  const { totalUnreadMessages, newMessage } = useSelector(
+    (state: RootState) => state.chat,
+  );
 
   const pathname = usePathname();
 
@@ -200,7 +203,7 @@ const Navigation = () => {
                 onClick={() => setShowMobileNav((state) => !state)}
                 className="lg:hidden"
               >
-                <RiMenu3Fill className="h-9 w-9 text-primary" />
+                {HamburgerIcon}
               </button>
             </div>
             <ul className="hidden items-center space-x-8 lg:flex">

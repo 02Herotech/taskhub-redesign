@@ -155,12 +155,12 @@ const ViewJobs = () => {
         <main className=" relative mt-28 flex min-h-[70vh] items-center justify-center space-y-8 p-4 lg:p-4">
           <section className="w-[90vw] max-w-2xl space-y-4 rounded-xl bg-violet-light p-4 lg:p-8 ">
             <header className="flex justify-between gap-2">
-              <section className="flex flex-col gap-4 text-violet-normal w-full">
-                <div className=" flex justify-between items-center w-full " >
+              <section className="flex w-full flex-col gap-4 text-violet-normal">
+                <div className=" flex w-full items-center justify-between ">
                   <p className="font-clash text-xl font-bold">
                     {currentBooking.bookingTitle}
                   </p>
-                  <div className="rounded-full md:hidden border border-[#14782F]">
+                  <div className="rounded-full border border-[#14782F] md:hidden">
                     <div className="size-10 overflow-hidden rounded-s-full">
                       <Image
                         src={
@@ -176,7 +176,7 @@ const ViewJobs = () => {
                   </div>
                 </div>
                 {/* ----------- */}
-                <div className="flex justify-between gap-4 md:flex-col" >
+                <div className="flex justify-between gap-4 md:flex-col">
                   <div>
                     <p className="text-xl font-bold uppercase">Requested by:</p>
                     <p className="text-lg font-bold text-orange-normal">
@@ -190,32 +190,30 @@ const ViewJobs = () => {
                       Est. Budget: $ {currentBooking.price}
                     </p>
                   </div>
-
                 </div>
                 {/* ---------- */}
-                <div className="flex justify-between gap-4 md:flex-col" >
-                    <div>
-                      <p className="font-bold uppercase">To be Started:</p>
-                      <p className="font-bold">
-                        {formatDateFromNumberArrayToRelativeDate(
-                          currentBooking.startDate,
-                        )}
-                      </p>
-                    </div>
-                    <p className="flex items-center gap-2 text-sm font-bold text-violet-dark ">
-                      <span>
-                        <IoLocationOutline />
-                      </span>
-                      <span>
-                        {currentBooking.userAddress.state}{" "}
-                        {currentBooking.userAddress.suburb}
-                      </span>
+                <div className="flex justify-between gap-4 md:flex-col">
+                  <div>
+                    <p className="font-bold uppercase">To be Started:</p>
+                    <p className="font-bold">
+                      {formatDateFromNumberArrayToRelativeDate(
+                        currentBooking.startDate,
+                      )}
+                    </p>
+                  </div>
+                  <p className="flex items-center gap-2 text-sm font-bold text-violet-dark ">
+                    <span>
+                      <IoLocationOutline />
+                    </span>
+                    <span>
+                      {currentBooking.userAddress.state}{" "}
+                      {currentBooking.userAddress.suburb}
+                    </span>
                   </p>
-
                 </div>
               </section>
               {/* left image side */}
-              <section className=" max-md:hidden" >
+              <section className=" max-md:hidden">
                 <div className="rounded-full border border-[#14782F] p-2">
                   <div className="size-16 overflow-hidden rounded-s-full">
                     <Image
@@ -235,7 +233,6 @@ const ViewJobs = () => {
 
             {/* --- */}
             <div className="space-y-4">
-             
               <p className="font-bold uppercase text-violet-dark ">
                 Job Description:
               </p>
@@ -244,10 +241,10 @@ const ViewJobs = () => {
               </p>
               <div className="flex flex-wrap gap-4">
                 {currentBooking.bookingStage === "PROPOSED" ? (
-                  <div className="flex w-full gap-4">
+                  <div className="flex w-full gap-4 max-md:flex-col md:w-fit  ">
                     <button
                       onClick={handleAcceptBooking}
-                      className=" max-md:w-full rounded-full bg-violet-normal px-6 py-3 text-sm font-medium text-white transition-opacity duration-300 hover:opacity-90 max-md:px-4 max-md:py-2 max-md:text-sm"
+                      className="rounded-full bg-violet-normal px-6 py-3 text-sm font-medium text-white transition-opacity duration-300 hover:opacity-90 max-md:w-full max-md:px-4 max-md:py-2 max-md:text-sm"
                     >
                       {requestStatus.isAcceptRequesting ? (
                         <BeatLoader
@@ -261,7 +258,7 @@ const ViewJobs = () => {
                     </button>
                     <button
                       onClick={handleCancelBooking}
-                      className=" max-md:w-full  rounded-full border border-red-500 bg-violet-light px-6 py-3 text-sm font-bold  text-red-500 transition-colors duration-300 hover:bg-red-300 max-md:px-4 max-md:py-2 max-md:text-sm "
+                      className=" rounded-full  border border-red-500 bg-violet-light px-6 py-3 text-sm font-bold text-red-500  transition-colors duration-300 hover:bg-red-100 max-md:w-full max-md:px-4 max-md:py-2 max-md:text-sm "
                     >
                       {requestStatus.isRejectRequesting ? (
                         <BeatLoader
@@ -278,7 +275,7 @@ const ViewJobs = () => {
                   !currentBooking.invoiceSent && (
                     <button
                       onClick={() => setIsModalOpen(true)}
-                      className="rounded-full bg-violet-normal px-6 py-3 text-sm font-medium text-white transition-opacity duration-300 hover:opacity-90 max-md:px-4 max-md:py-2 max-md:text-sm"
+                      className="rounded-full bg-violet-normal px-6 py-3 text-sm font-medium text-white transition-opacity duration-300 hover:opacity-90 max-md:w-full max-md:px-4 max-md:py-2 max-md:text-sm"
                     >
                       Make An Offer
                     </button>
@@ -290,18 +287,18 @@ const ViewJobs = () => {
                 )}
                 {(currentBooking.bookingStage === "PROPOSED" ||
                   currentBooking.bookingStage === "ACCEPTED") && (
-                  <div className="flex w-full items-center max-md:flex-col gap-2">
+                  <div className="flex w-fit items-center gap-2 max-md:w-full max-md:flex-col">
                     <MessageButton
                       recipientId={currentBooking?.customer.user.id.toString()}
                       recipientName={currentBooking?.customer.user.fullName}
                       message="Chat With Customer"
-                      className="border max-md:w-full  border-violet-normal bg-transparent text-violet-normal  hover:bg-violet-100"
+                      className="border border-violet-normal  bg-transparent text-violet-normal hover:bg-violet-100  max-md:w-full max-md:px-4 max-md:py-2 "
                     />
 
                     {invoiceDraft && (
                       <button
                         onClick={() => setIsModalOpen(true)}
-                        className="rounded-full bg-violet-active px-6 py-3 text-sm  font-bold text-violet-normal transition-opacity duration-300 hover:opacity-90 max-md:px-4 max-md:py-2 max-md:text-sm "
+                        className="rounded-full bg-violet-active px-6 py-3 text-sm font-bold  text-violet-normal transition-opacity duration-300 hover:opacity-90 max-md:w-full max-md:px-4 max-md:py-2 max-md:text-sm "
                       >
                         View Saved Offer
                       </button>

@@ -109,6 +109,39 @@ export const SettingsIcon = (
   </svg>
 );
 
+export const HamburgerIcon = (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+    <path
+      d="M21 10H7"
+      stroke="black"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+    <path
+      d="M21 6H3"
+      stroke="black"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+    <path
+      d="M21 14H3"
+      stroke="black"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+    <path
+      d="M21 18H7"
+      stroke="black"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+  </svg>
+);
+
 export const PaymentSvg = (
   <svg
     width="193"

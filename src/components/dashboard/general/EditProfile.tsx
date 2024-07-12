@@ -276,11 +276,10 @@ const EditProfile = () => {
           </span>
           <Image
             src={
-              isEditingProfilePicture.image ??
               userProfile.profile?.profileImage ??
               "/assets/images/serviceProvider/user.jpg"
             }
-            alt="user"
+            alt=""
             width={100}
             height={100}
             className="size-32 h-full w-full rounded-full object-cover"
@@ -616,7 +615,7 @@ const EditProfile = () => {
 
         {/* ----------------- submit  button -------------------- */}
         <div className="flex lg:items-end lg:justify-end lg:px-24">
-          <button className="w-fit rounded-full border border-violet-normal bg-violet-light px-6 py-3 font-medium text-violet-normal transition-all duration-300 hover:bg-violet-200 hover:shadow-md">
+          <button className="w-fit rounded-full border border-violet-normal bg-violet-light px-6 py-3 font-satoshiBold font-bold  text-violet-normal transition-all duration-300 hover:bg-violet-200 hover:shadow-md">
             {isSubmitting ? (
               <BeatLoader color={"white"} loading={isSubmitting} size={14} />
             ) : (
