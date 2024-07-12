@@ -86,7 +86,7 @@ const Offers = () => {
       setLoading(false);
     } catch (error) {
       setLoading(false);
-      console.log("Error fetching payment intent:", error);
+      console.log("Error fetching payment intent::", error);
       setError("An error occurred, please try again later ...");
 
       setTimeout(() => {
