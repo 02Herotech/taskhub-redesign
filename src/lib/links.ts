@@ -70,26 +70,10 @@ export const homeLinks: LinkRouteTypes[] = [
 
 export const mobileServiceProviderLinks: LinkRouteTypes[] = [
   {
-    label: "Provide a service",
-    url: "/provide-service",
-  },
-  {
-    label: "Explore Tasks",
-    url: "/explore",
-  },
-  {
-    label: "Marketplace",
-    url: "/marketplace",
-  },
-  {
-    label: "Blog",
-    url: "/blog",
-  },
-  {
-    label: "Profile",
+    label: "My Dashboard",
     sublinks: [
       {
-        label: "My Profile",
+        label: "Profile",
         url: "/service-provider/profile",
       },
       {
@@ -105,59 +89,40 @@ export const mobileServiceProviderLinks: LinkRouteTypes[] = [
         url: "/service-provider/notification",
       },
       {
-        label: "Payments and wallet",
+        label: "Payment and wallet",
         url: "/service-provider/payment",
       },
       {
-        label: "Password Settings",
+        label: "Settings",
         url: "/service-provider/settings/password",
-        // sublinks: [
-        //   {
-        //     label: "Password",
-        //     url: "/service-provider/dashboard/settings/security",
-        //   },
-        //   {
-        //     label: "Notification",
-        //     url: "/service-provider/dashboard/settings/privacy",
-        //   },
-        // ],
       },
-      {
-        label: "Notification Settings",
-        url: "/service-provider/settings/notification",
-        // sublinks: [
-        //   {
-        //     label: "Password",
-        //     url: "/service-provider/dashboard/settings/security",
-        //   },
-        //   {
-        //     label: "Notification",
-        //     url: "/service-provider/dashboard/settings/privacy",
-        //   },
-        // ],
-      },
+
     ],
   },
-];
-
-export const mobileCustomerLinks: LinkRouteTypes[] = [
   {
-    label: "Add a task",
-    url: "/customer/add-task",
+    label: "Explore Tasks",
+    url: "/explore",
   },
   {
     label: "Marketplace",
     url: "/marketplace",
   },
   {
-    label: "Blog",
-    url: "/blog",
+    label: "Messages",
+    url: "/message",
   },
   {
-    label: "Profile",
+    label: "Contact us", 
+    url: "/contact",
+  }
+];
+
+export const mobileCustomerLinks: LinkRouteTypes[] = [
+  {
+    label: "My Dashboard",
     sublinks: [
       {
-        label: "My Profile",
+        label: "Profile",
         url: "/customer/profile",
       },
       {
@@ -169,7 +134,7 @@ export const mobileCustomerLinks: LinkRouteTypes[] = [
         url: "/customer/notifications",
       },
       {
-        label: "Payments",
+        label: "Payment",
         url: "/customer/payment/payment-history",
       },
       {
@@ -178,4 +143,16 @@ export const mobileCustomerLinks: LinkRouteTypes[] = [
       },
     ],
   },
+  {
+    label: "Marketplace",
+    url: "/marketplace",
+  },
+  {
+    label: "Messages",
+    url: "/message",
+  },
+  {
+    label: "Contact us",
+    url: "/contact",
+  }
 ];

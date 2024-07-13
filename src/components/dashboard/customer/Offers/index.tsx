@@ -63,9 +63,6 @@ const Offers = () => {
   const fetchPaymentIntent = async () => {
     try {
       setLoading(true);
-      if (error != "") {
-        setError("");
-      }
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}/booking/payment-intent-stripe/${selectedInvoice?.id}`,
         {
@@ -86,21 +83,37 @@ const Offers = () => {
       setLoading(false);
     } catch (error) {
       setLoading(false);
-      console.log("Error fetching payment intent::", error);
+      console.log("Error fetching payment intent:", error);
       setError("An error occurred, please try again later ...");
-
-      setTimeout(() => {
-        setError("");
-      }, 5000);
     }
   };
-
 
   useEffect(() => {
     if (isModalOpen && userToken) {
       fetchPaymentIntent();
     }
   }, [isModalOpen, userToken]);
+
+  const groupOffersByDate = (offers: Invoice[]) => {
+    const grouped = offers.reduce((acc, offer) => {
+      const date = new Date(offer.createdAt).toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      });
+      if (!acc[date]) {
+        acc[date] = [];
+      }
+      acc[date].push(offer);
+      return acc;
+    }, {} as Record<string, Invoice[]>);
+
+    return Object.entries(grouped).sort((a, b) =>
+      new Date(b[0]).getTime() - new Date(a[0]).getTime()
+    );
+  };
+
+  const groupedOffers = groupOffersByDate(offers!);
 
   if (!offers || isLoading) {
     return (
@@ -117,9 +130,9 @@ const Offers = () => {
   return (
     <>
       <div className="w-full rounded-[20px] bg-[#EBE9F4] p-4 font-satoshi">
-        <h3 className="mb-5 font-satoshiBold text-base font-bold text-[#140B31]">
+        {/* <h3 className="mb-5 font-satoshiBold text-base font-bold text-[#140B31]">
           {todayDate}
-        </h3>
+        </h3> */}
         {offers.length === 0 && (
           <div className="flex h-[50vh] flex-col items-center justify-center space-y-5">
             <h2 className="text-center text-2xl font-bold text-primary">
@@ -128,45 +141,54 @@ const Offers = () => {
           </div>
         )}
         <div className="space-y-5">
-          {offers.slice(0, visibleTransactions).map((data, index) => (
-            <div
-              key={index}
-              className="flex justify-between border-b border-primary px-5 py-3 max-lg:flex-col lg:items-center"
-            >
-              <div className="flex items-center space-x-5">
-                <div className="flex h-14 w-14 items-center justify-center rounded-full bg-[#C1BADB]">
-                  <svg
-                    width="20"
-                    height="25"
-                    viewBox="0 0 20 25"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
+          {groupedOffers.slice(0, visibleTransactions).map(([date, dateOffers]) => (
+            <div key={date} className="mb-8">
+              <h3 className="mb-5 font-satoshiBold text-base font-bold text-[#140B31]">
+                {date}
+              </h3>
+              <div className="space-y-5">
+                {dateOffers.map((offer, index) => (
+                  <div
+                    key={index}
+                    className="flex justify-between border-b border-primary px-5 py-3 max-lg:flex-col lg:items-center"
                   >
-                    <path
-                      d="M13.8571 6.11111H6.14286M13.8571 11.2222H6.14286M13.8571 16.3333H8.71429M1 1H19V24L17.6731 22.8704C17.2071 22.4735 16.6136 22.2553 15.9998 22.2553C15.386 22.2553 14.7925 22.4735 14.3264 22.8704L12.9996 24L11.674 22.8704C11.2079 22.4732 10.6141 22.2548 10 22.2548C9.38593 22.2548 8.79213 22.4732 8.326 22.8704L7.00043 24L5.67357 22.8704C5.20753 22.4735 4.61399 22.2553 4.00021 22.2553C3.38643 22.2553 2.7929 22.4735 2.32686 22.8704L1 24V1Z"
-                      stroke="white"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                </div>
-                <div className="">
-                  <h4 className="mb-1 text-xl font-bold text-primary">
-                    {data.serviceProvider.user.firstName} sent you an offer
-                  </h4>
-                  <p className="font-satoshiMedium text-base text-[#716F78]">
-                    {data.bookingTitle}{" "}
-                  </p>
-                </div>
+                    <div className="flex items-center space-x-5">
+                      <div className="flex h-14 w-14 items-center justify-center rounded-full bg-[#C1BADB]">
+                        <svg
+                          width="20"
+                          height="25"
+                          viewBox="0 0 20 25"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M13.8571 6.11111H6.14286M13.8571 11.2222H6.14286M13.8571 16.3333H8.71429M1 1H19V24L17.6731 22.8704C17.2071 22.4735 16.6136 22.2553 15.9998 22.2553C15.386 22.2553 14.7925 22.4735 14.3264 22.8704L12.9996 24L11.674 22.8704C11.2079 22.4732 10.6141 22.2548 10 22.2548C9.38593 22.2548 8.79213 22.4732 8.326 22.8704L7.00043 24L5.67357 22.8704C5.20753 22.4735 4.61399 22.2553 4.00021 22.2553C3.38643 22.2553 2.7929 22.4735 2.32686 22.8704L1 24V1Z"
+                            stroke="white"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          />
+                        </svg>
+                      </div>
+                      <div className="">
+                        <h4 className="mb-1 text-xl font-bold text-primary">
+                          {offer.serviceProvider.user.firstName} sent you an offer
+                        </h4>
+                        <p className="font-satoshiMedium text-base text-[#716F78]">
+                          {offer.bookingTitle}{" "}
+                        </p>
+                      </div>
+                    </div>
+                    <Button
+                      theme="outline"
+                      className="rounded-full max-lg:mt-2"
+                      onClick={() => handleCardClick(offer)}
+                    >
+                      View Offer
+                    </Button>
+                  </div>
+                ))}
               </div>
-              <Button
-                theme="outline"
-                className="rounded-full max-lg:mt-2"
-                onClick={() => handleCardClick(data)}
-              >
-                View Offer
-              </Button>
             </div>
           ))}
           {visibleTransactions < offers.length && (
