@@ -20,16 +20,6 @@ interface TaskCardProps {
     setShowEditModal: (value: boolean) => void;
 }
 
-interface PostalCodeData {
-    name: string;
-    postcode: string;
-    state: {
-        name: string;
-        abbreviation: string;
-    };
-    locality: string;
-}
-
 interface CustomInputProps {
     value?: string;
     onClick?: () => void;
@@ -56,17 +46,17 @@ const EditTaskForm = ({ task, setShowEditModal }: TaskCardProps) => {
 
     const taskSchema = z.object({
         taskBriefDescription: z
-            .string()
-            .min(3, "Minimum of 3 characters")
-            .refine((str) => str.split(" ").filter(Boolean).length > 0, {
-                message: `Title must have ${1} word or more`,
-            }),
+            .string(),
+            // .min(3, "Minimum of 3 characters")
+            // .refine((str) => str.split(" ").filter(Boolean).length > 0, {
+            //     message: `Title must have ${1} word or more`,
+            // }),
         taskDescription: z
-            .string()
-            .min(10, "Minimum of 10 characters")
-            .refine((str) => str.split(" ").filter(Boolean).length >= 5, {
-                message: `Description must have ${5} words or more`,
-            }),
+            .string(),
+            // .min(10, "Minimum of 10 characters")
+            // .refine((str) => str.split(" ").filter(Boolean).length >= 5, {
+            //     message: `Description must have ${5} words or more`,
+            // }),
         category: z.string(),
         taskType: z.string(),
         postCode: z.string().nullable().optional(),
@@ -90,6 +80,8 @@ const EditTaskForm = ({ task, setShowEditModal }: TaskCardProps) => {
     } = useForm<taskZodType>({
         resolver: zodResolver(taskSchema),
     });
+
+    console.log("errors", errors);
 
     useEffect(() => {
         if (task) {
@@ -186,8 +178,8 @@ const EditTaskForm = ({ task, setShowEditModal }: TaskCardProps) => {
         imageRef?.current?.click();
     };
 
-    const handleUpdateListing: SubmitHandler<taskZodType> = async (data) => {
-        setError("");
+    const handleUpdateTask: SubmitHandler<taskZodType> = async (data) => {
+        console.log("data sent ", data)
         const body = Object.entries({
             taskBriefDescription: data.taskBriefDescription,
             taskDescription: data.taskDescription,
@@ -299,7 +291,6 @@ const EditTaskForm = ({ task, setShowEditModal }: TaskCardProps) => {
         </button>
     );
 
-    console.log("date and time", dateString, timeString)
 
     return (
         <div className='pt-14 lg:px-5'>
@@ -349,7 +340,7 @@ const EditTaskForm = ({ task, setShowEditModal }: TaskCardProps) => {
                         <div className={`cursor-pointer text-lg font-bold ${activeEditModalLink === "Task Details" ? "bg-tc-orange rounded-lg pl-2 pr-5 py-2 text-white" : "text-primary"}`} onClick={() => setActiveEditModalLink("Task Details")}>Task Details</div>
                         <div className={`cursor-pointer text-lg font-bold ${activeEditModalLink === "Location" || activeEditModalLink === "Budget" ? "bg-tc-orange rounded-lg pl-2 pr-5 py-2 text-white" : "text-primary"}`} onClick={() => setActiveEditModalLink("Location")}>Location and Budget</div>
                     </div>
-                    <form className="flex-1 w-full p-4 lg:px-5" onSubmit={handleSubmit(handleUpdateListing)}>
+                    <form className="flex-1 w-full p-4 lg:px-5" onSubmit={handleSubmit(handleUpdateTask)}>
                         {activeEditModalLink === "Task Details" && (
                             <div className="space-y-8 w-full">
                                 <div className="grid space-y-3">
@@ -643,7 +634,7 @@ const EditTaskForm = ({ task, setShowEditModal }: TaskCardProps) => {
                                         </div>
                                     </div>
 
-                                    {/* {error && <div className="font-bold text-red-500">{error}</div>} */}
+                                    {/* {errors && <div className="font-bold text-red-500">{errors.}</div>} */}
                                     <div className="flex items-center justify-end space-x-3">
                                         <Button
                                             theme="outline"
