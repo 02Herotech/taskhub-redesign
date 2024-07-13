@@ -1,4 +1,5 @@
 import MessageButton from "@/components/global/MessageButton";
+import { cn } from "@/lib/utils";
 import { formatDateFromNumberArrayToRelativeDate } from "@/utils";
 import Image from "next/image";
 import Link from "next/link";
@@ -37,7 +38,7 @@ const JobCard = ({
   completeJob,
 }: CardPropsTypes) => {
   return (
-    <div className=" max-md:p-4 max-md:border max-md:rounded-xl max-md:border-violet-normal  flex gap-3 md:border-b border-slate-200 py-4  lg:grid lg:grid-cols-12 lg:items-center lg:px-8 lg:py-4">
+    <div className=" flex gap-3 border-slate-200 py-4  max-md:rounded-xl max-md:border max-md:border-violet-normal max-md:p-4 md:border-b  lg:grid lg:grid-cols-12 lg:items-center lg:px-8 lg:py-4">
       <div className="col-span-2 size-16 flex-shrink-0 overflow-hidden rounded-full border border-violet-normal max-md:hidden lg:size-24 ">
         <Image
           src={imageUrl ?? "/assets/images/serviceProvider/user.jpg"}
@@ -87,7 +88,7 @@ const JobCard = ({
           </div>
         </div>
         <div className="flex items-center justify-between">
-          <div className="flex w-full items-center gap-2 max-md:flex-col ">
+          <div className="flex w-full gap-2 max-md:flex-col ">
             {viewJob && (
               <Link
                 href={"/service-provider/jobs/" + itemId}
@@ -99,7 +100,7 @@ const JobCard = ({
             {startJob && (
               <button
                 onClick={startJob}
-                className="mb-2 rounded-full border bg-violet-normal px-6 py-3 text-center text-sm font-medium text-white transition-opacity duration-300 hover:opacity-90 max-md:w-full  max-md:text-xs "
+                className="mb-2 rounded-full border border-violet-normal bg-violet-normal px-6 py-3 text-center text-sm font-medium text-white transition-opacity duration-300 hover:opacity-90 max-md:w-full  max-md:text-xs "
               >
                 Start Service
               </button>
@@ -107,9 +108,9 @@ const JobCard = ({
             {completeJob && (
               <button
                 onClick={completeJob}
-                className="mb-2 rounded-full border bg-violet-normal px-6 py-3 text-center text-sm font-medium text-white transition-opacity duration-300 hover:opacity-90 max-md:w-full  max-md:text-xs "
+                className="mb-2 rounded-full border border-violet-normal bg-violet-normal px-6 py-3 text-center text-sm font-medium text-white transition-opacity duration-300 hover:opacity-90 max-md:w-full  max-md:text-xs "
               >
-                Start Service
+                Complete Service
               </button>
             )}
 
@@ -118,7 +119,10 @@ const JobCard = ({
                 recipientId={sendMessage.recipientId}
                 recipientName={sendMessage.recipientName}
                 message={sendMessage.message}
-                className={sendMessage.className}
+                className={cn(
+                  "mb-2 rounded-full border border-violet-normal bg-violet-normal px-6 py-3 text-center text-sm font-medium text-white transition-opacity duration-300 hover:opacity-90 max-md:w-full  max-md:text-xs ",
+                  sendMessage.className,
+                )}
               />
             )}
           </div>
