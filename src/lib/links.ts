@@ -1,6 +1,11 @@
+import { FiLogOut } from 'react-icons/fi';
+import { AboutUsSvg, BlogSvg, ContactUsSvg, DashboardSvg, HomeSvg, LoginSvg, MarketPlaceSvg, MessagesSvg } from './svgIcons';
+import React from "react";
+
 export type LinkRouteTypes = {
   label: string;
   url?: string;
+  icon?: React.ReactNode;
   sublinks?: {
     label: string;
     url: string;
@@ -10,6 +15,39 @@ export type LinkRouteTypes = {
     }[];
   }[];
 };
+
+export const homeMobileLinks: LinkRouteTypes[] = [
+  {
+    label: "Home",
+    url: "/home",
+    icon: HomeSvg
+  },
+  {
+    label: "Marketplace",
+    url: "/marketplace",
+    icon: MarketPlaceSvg  
+  },
+  {
+    label: "Log in",
+    url: "/auth/login",
+    icon: LoginSvg
+  },
+  {
+    label: "Blog",
+    url: "/blog",
+    icon: BlogSvg
+  },
+  {
+    label: "About us",
+    url: "/about",
+    icon: AboutUsSvg
+  },
+  {
+    label: "Contact Us",
+    url: "/contact",
+    icon: ContactUsSvg
+  },
+];
 
 export const customerLinks: LinkRouteTypes[] = [
   {
@@ -71,6 +109,7 @@ export const homeLinks: LinkRouteTypes[] = [
 export const mobileServiceProviderLinks: LinkRouteTypes[] = [
   {
     label: "My Dashboard",
+    icon: DashboardSvg,
     sublinks: [
       {
         label: "Profile",
@@ -102,24 +141,29 @@ export const mobileServiceProviderLinks: LinkRouteTypes[] = [
   {
     label: "Explore Tasks",
     url: "/explore",
+    icon: MarketPlaceSvg
   },
   {
     label: "Marketplace",
     url: "/marketplace",
+    icon: MarketPlaceSvg
   },
   {
     label: "Messages",
     url: "/message",
+    icon: MessagesSvg
   },
   {
-    label: "Contact us", 
+    label: "Contact us",
     url: "/contact",
+    icon: ContactUsSvg
   }
 ];
 
 export const mobileCustomerLinks: LinkRouteTypes[] = [
   {
     label: "My Dashboard",
+    icon: DashboardSvg,
     sublinks: [
       {
         label: "Profile",
@@ -146,13 +190,16 @@ export const mobileCustomerLinks: LinkRouteTypes[] = [
   {
     label: "Marketplace",
     url: "/marketplace",
+    icon: MarketPlaceSvg
   },
   {
     label: "Messages",
     url: "/message",
+    icon: MessagesSvg
   },
   {
     label: "Contact us",
     url: "/contact",
+    icon: ContactUsSvg
   }
 ];
