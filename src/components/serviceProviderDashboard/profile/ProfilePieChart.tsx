@@ -29,6 +29,12 @@ const ProfilePieChart = ({ chartData }: ProfilePieChartPropType) => {
         enabled: false, // Disable the tooltip
       },
     },
+    interaction: {
+      mode: undefined, // Disable all interactions
+    },
+    hover: {
+      mode: undefined, // Disable hover effects
+    },
   };
 
   return (
