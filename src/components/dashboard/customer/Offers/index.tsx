@@ -95,6 +95,10 @@ const Offers = () => {
   }, [isModalOpen, userToken]);
 
   const groupOffersByDate = (offers: Invoice[]) => {
+    if (!offers || !Array.isArray(offers)) {
+      return [];
+    }
+    
     const grouped = offers.reduce((acc, offer) => {
       const date = new Date(offer.createdAt).toLocaleDateString("en-US", {
         year: "numeric",
