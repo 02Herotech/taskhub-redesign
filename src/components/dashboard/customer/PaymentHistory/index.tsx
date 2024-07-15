@@ -116,7 +116,7 @@ const PaymentHistory = () => {
     const formattedDate: string = dateArray ? new Date(Number(dateArray[0]), Number(dateArray[1]) - 1, Number(dateArray[2])).toLocaleDateString() : '';
 
     return (
-        <div className="w-full bg-[#EBE9F4] rounded-[20px] p-4 font-satoshi">
+        <div className="w-full bg-[#EBE9F4] rounded-[20px] p-4 font-satoshi relative">
             <div className="flex items-center justify-end mb-4">
                 <div className="relative flex items-center">
                     {selectedDate && (
@@ -135,24 +135,25 @@ const PaymentHistory = () => {
                         />
                     </div>
                     {isDatePickerOpen && (
-                        <DatePicker
-                            selected={selectedDate}
-                            onChange={(date: Date) => {
-                                setSelectedDate(date);
-                                setIsDatePickerOpen(false);
-                            }}
-                            onClickOutside={() => setIsDatePickerOpen(false)}
-                            maxDate={getYesterday()}
-                            inline
-                            className="absolute right-0 top-8 z-10"
-                            renderDayContents={(day, date) => {
-                                return (
-                                    <div title={date! > getYesterday() ? "Only past dates can be selected" : undefined}>
-                                        {day}
-                                    </div>
-                                );
-                            }}
-                        />
+                        <div className="absolute right-0 top-full z-50 mt-2">
+                            <DatePicker
+                                selected={selectedDate}
+                                onChange={(date: Date) => {
+                                    setSelectedDate(date);
+                                    setIsDatePickerOpen(false);
+                                }}
+                                onClickOutside={() => setIsDatePickerOpen(false)}
+                                maxDate={getYesterday()}
+                                inline
+                                renderDayContents={(day, date) => {
+                                    return (
+                                        <div title={date! > getYesterday() ? "Only past dates can be selected" : undefined}>
+                                            {day}
+                                        </div>
+                                    );
+                                }}
+                            />
+                        </div>
                     )}
                 </div>
             </div>

@@ -188,7 +188,7 @@ const NotificationComponent = () => {
   };
 
   return (
-    <main className="mt-24  py-4 lg:p-8">
+    <main className="mt-24 py-4 lg:p-8">
       {loading ? (
         <div className="flex min-h-80 items-center justify-center">
           <Loading />
@@ -268,7 +268,7 @@ const NotificationComponent = () => {
                           className=" pointer-events-auto relative flex w-full cursor-pointer justify-between gap-2 rounded-md p-2  transition-shadow duration-300 hover:bg-violet-light lg:items-center"
                         >
                           <div
-                            className={`absolute left-0 top-0 size-2 rounded-full  p-1.5 ${!item.read && "bg-orange-normal"} `}
+                            className={`absolute left-0 top-0 size-2 rounded-full p-1.5 ${!item.read && "bg-orange-normal"} `}
                           />
                           <div className=" flex gap-2 lg:items-center">
                             <Image
@@ -302,7 +302,7 @@ const NotificationComponent = () => {
                           </div>
 
                           {/* left handside */}
-                          <p className="col-span-3 cursor-pointer text-sm lowercase text-slate-500 first-letter:uppercase">
+                          <p className="col-span-3 cursor-pointer text-center text-xs lg:text-sm lowercase text-slate-500 first-letter:uppercase">
                             {formatRelativeDate(item.notificationTime)}
                           </p>
                         </div>
