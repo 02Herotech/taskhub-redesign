@@ -90,8 +90,6 @@ const MobileNavigation: React.FC<Props> = ({ showMobileNav, setShowMobileNav }) 
             )}
           </div>
 
-
-
           <ul className="my-8 space-y-4">
             {currentLinks.map((link) => {
               const isActive =
