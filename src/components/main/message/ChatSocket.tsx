@@ -11,7 +11,11 @@ import React, { useEffect, useState, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { stompClient } from "@/lib/stompClient";
 import { AnyAction, Dispatch } from "@reduxjs/toolkit";
-import useSocket from "@/hooks/useSocket";
+
+// @ts-ignore
+import io from "socket.io-client";
+
+// import useSocket from "@/hooks/useSocket";
 
 interface Message {
   body: string;
@@ -27,36 +31,47 @@ const ChatSocket: React.FC = () => {
   const { profile: user, userProfileAuth: auth } = useSelector(
     (state: RootState) => state.userProfile,
   );
+  const socket = io("https://smp.jacinthsolutions.com.au");
 
-  const socket = useSocket("https://smp.jacinthsolutions.com.au");
+  const onMessageReceived = (message: any) => {
+    console.log("Message from server:", message);
+  };
+
+  const onConnected = useCallback(() => {
+    if (user) {
+      socket.emit("join", user.id);
+      socket.on("message", onMessageReceived);
+    }
+  }, [user]);
 
   useEffect(() => {
     if (!socket) return;
     if (!user) return;
 
-    // socket.on("connect")
+    socket.on("connect", () => {
+      onConnected();
+      console.log("Connected to server");
+    });
 
-    console.log("initializing web socket");
-    socket.on("connected", (message) => {
-      console.log("Connected to server", message);
+    socket.on("connected", (message: any) => {
+      console.log("New message:", message);
     });
 
     socket.on("disconnect", () => {
-      console.log("Disconnected from server");
+      console.log("Disconnected from the server");
     });
-
-    // socket.on("message", (message: string) => {
-    //   console.log("New message:", message);
-    // });
+    console.log(socket);
 
     return () => {
       if (socket) {
         socket.off("connect");
         socket.off("disconnect");
-        socket.off("message");
+        socket.off("connect_error");
+        socket.off("error");
+        // socket.off('message');
       }
     };
-  }, [socket]);
+  }, [socket, user]);
 
   // const connect = useCallback(() => {
   //   if (user) {

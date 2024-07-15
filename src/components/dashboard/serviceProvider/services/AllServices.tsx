@@ -43,7 +43,8 @@ const AllServices = () => {
           Authorization: "Bearer " + token,
         },
       });
-      const data = response.data;
+      let data = response.data;
+      data = data.reverse();
       if (!data.content) {
         throw new Error("Response content is missing");
       }

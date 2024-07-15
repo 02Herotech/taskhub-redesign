@@ -74,7 +74,7 @@ const PaidServices = ({
               fullName={customer?.customer.user.fullName as string}
               itemId={item.id}
               title={item.jobTitle}
-              startDate={item.jobEnd}
+              startDate={item.jobStart}
               startJob={() => handleStartService(item.id)}
               reportJob={() => handleReportService(item.id)}
               price={item.total}
