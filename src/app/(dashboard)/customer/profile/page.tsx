@@ -5,8 +5,38 @@ import { motion } from "framer-motion";
 import CustomerProfileCompletion from "@/components/dashboard/customer/ProfileCompletion";
 import CustomerBadge from "@/components/dashboard/customer/Badge";
 import TopActivities from "@/components/dashboard/customer/TopActivities";
+import { defaultUserDetails } from "@/data/data";
+import { useEffect, useState } from "react";
+import { useSession } from "next-auth/react";
+import axios from "axios";
 
 const CustomerProfilePage = () => {
+  const [fetchedUserData, setFetchedUserData] = useState(defaultUserDetails);
+
+  const session = useSession();
+  const user = session?.data?.user?.user;
+  const token = session?.data?.user?.accessToken;
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      if (!token) return;
+      try {
+        const url =
+          "https://smp.jacinthsolutions.com.au/api/v1/service_provider/profile";
+        const { data } = await axios.get(url, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "multipart/form-data",
+          },
+        });
+        setFetchedUserData(data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchUserData();
+  }, [token]);
+
   return (
     <main className="space-y-8 p-4 lg:p-8 mt-[5rem]">
       <ProfileHeader />
@@ -17,7 +47,9 @@ const CustomerProfilePage = () => {
           whileInView={{ opacity: 1, translateY: "0" }}
           transition={{ duration: 0.5 }}
         >
-          <CustomerProfileCompletion />
+          {fetchedUserData.firstName && (
+            <CustomerProfileCompletion fetchedUserData={fetchedUserData} />
+          )}
         </motion.div>
         <div className="col-span-6 space-y-5">
           <motion.div
