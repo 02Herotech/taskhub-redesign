@@ -190,15 +190,7 @@ export const mobileCustomerLinks: LinkRouteTypes[] = [
             url: "/customer/password",
           },
           {
-            label: "Change Password",
-            url: "/customer/password",
-          },
-          {
-            label: "Change Password",
-            url: "/customer/password",
-          },
-          {
-            label: "Notification",
+            label: "Notification settings",
             url: "/customer/notification",
           }
         ],

@@ -4,7 +4,6 @@ import React, { useEffect, useState } from "react";
 import { BiCheck, BiPlus } from "react-icons/bi";
 import ProfilePieChart from "./ProfilePieChart";
 import Link from "next/link";
-import { useSession } from "next-auth/react";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
 
@@ -81,7 +80,7 @@ const ProfileCompletion = ({ fetchedUserData }: ProfileCompletionType) => {
             .map((item, index) => (
               <Link
                 href={
-                  item.status ? "#" : "/service-provider/profile/edit-profile"
+                  item.status ? "#" : "/service-provider/profile/edit-profile" 
                 }
                 key={index}
                 className={`flex items-center gap-2 rounded-full px-4 py-2 text-xs font-medium  ${item.status ? "bg-violet-normal text-white" : " bg-slate-300 text-slate-700"} `}
