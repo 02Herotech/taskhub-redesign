@@ -11,6 +11,7 @@ import React, { useEffect, useState, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { stompClient } from "@/lib/stompClient";
 import { AnyAction, Dispatch } from "@reduxjs/toolkit";
+import useSocket from "@/hooks/useSocket";
 
 interface Message {
   body: string;
@@ -27,69 +28,99 @@ const ChatSocket: React.FC = () => {
     (state: RootState) => state.userProfile,
   );
 
-  const connect = useCallback(() => {
-    if (user) {
-      stompClient.connect({}, onConnected, onError);
-    }
-    // eslint-disable-next-line
-  }, [user]);
-
-  const onConnected = useCallback(() => {
-    if (user) {
-      stompClient.subscribe(
-        `/user/${user.id}/queue/messages`,
-        onMessageReceived,
-      );
-    }
-    // eslint-disable-next-line
-  }, [user]);
-
-  const onMessageReceived = useCallback(
-    (msg: Message) => {
-      const parsedMessage = JSON.parse(msg.body);
-      console.log("received message: ", parsedMessage);
-      dispatch(setNewMessage(parsedMessage));
-      loadContacts();
-    },
-    // eslint-disable-next-line
-    [dispatch],
-  );
-
-  const onError = useCallback((err: any) => {
-    console.error("WebSocket connection error:", err);
-  }, []);
-
-  const loadContacts = useCallback(async () => {
-    if (!auth.token || !user) return;
-    try {
-      const users = await getUsers({ token: auth.token as string });
-      const contacts = await Promise.all(
-        users.map(async (contact: Contact) => {
-          const count = await countNewMessages({
-            recipientId: user.id,
-            senderId: contact.id,
-            token: auth.token as string,
-          });
-          return { ...contact, newMessages: count };
-        }),
-      );
-      const allUnreadMessages = contacts.reduce(
-        (accumulator, contact) => accumulator + (contact.newMessages || 0),
-        0,
-      );
-      dispatch(setTotalUnreadMessages(allUnreadMessages));
-      dispatch(setContacts(contacts));
-    } catch (error: any) {
-      console.error(error.response?.data || error.message || error);
-    }
-  }, [auth.token, user, dispatch]);
+  const socket = useSocket("https://smp.jacinthsolutions.com.au");
 
   useEffect(() => {
-    if (user) {
-      connect();
-      loadContacts();
-    }
-  }, [user, connect, loadContacts]);
+    if (!socket) return;
+    if (!user) return;
+
+    // socket.on("connect")
+
+    console.log("initializing web socket");
+    socket.on("connected", (message) => {
+      console.log("Connected to server", message);
+    });
+
+    socket.on("disconnect", () => {
+      console.log("Disconnected from server");
+    });
+
+    // socket.on("message", (message: string) => {
+    //   console.log("New message:", message);
+    // });
+
+    return () => {
+      if (socket) {
+        socket.off("connect");
+        socket.off("disconnect");
+        socket.off("message");
+      }
+    };
+  }, [socket]);
+
+  // const connect = useCallback(() => {
+  //   if (user) {
+  //     stompClient.connect({}, onConnected, onError);
+  //   }
+  //   // eslint-disable-next-line
+  // }, [user]);
+
+  // const onConnected = useCallback(() => {
+  //   if (user) {
+  //     stompClient.subscribe(
+  //       `/user/${user.id}/queue/messages`,
+  //       onMessageReceived,
+  //     );
+  //   }
+  //   // eslint-disable-next-line
+  // }, [user]);
+
+  // const onMessageReceived = useCallback(
+  //   (msg: Message) => {
+  //     const parsedMessage = JSON.parse(msg.body);
+  //     console.log("received message: ", parsedMessage);
+  //     dispatch(setNewMessage(parsedMessage));
+  //     loadContacts();
+  //   },
+  //   // eslint-disable-next-line
+  //   [dispatch],
+  // );
+
+  // const onError = useCallback((err: any) => {
+  //   console.error("WebSocket connection error:", err);
+  // }, []);
+
+  // const loadContacts = useCallback(async () => {
+  //   if (!auth.token || !user) return;
+  //   try {
+  //     const users = await getUsers({ token: auth.token as string });
+  //     const contacts = await Promise.all(
+  //       users.map(async (contact: Contact) => {
+  //         const count = await countNewMessages({
+  //           recipientId: user.id,
+  //           senderId: contact.id,
+  //           token: auth.token as string,
+  //         });
+  //         return { ...contact, newMessages: count };
+  //       }),
+  //     );
+  //     const allUnreadMessages = contacts.reduce(
+  //       (accumulator, contact) => accumulator + (contact.newMessages || 0),
+  //       0,
+  //     );
+  //     dispatch(setTotalUnreadMessages(allUnreadMessages));
+  //     dispatch(setContacts(contacts));
+  //   } catch (error: any) {
+  //     console.error(error.response?.data || error.message || error);
+  //   }
+  // }, [auth.token, user, dispatch]);
+
+  // useEffect(() => {
+  //   if (user) {
+  //     connect();
+  //     loadContacts();
+  //   }
+  // }, [user, connect, loadContacts]);
 
   return <div className="hidden" />;
 };
