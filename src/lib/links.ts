@@ -184,6 +184,17 @@ export const mobileCustomerLinks: LinkRouteTypes[] = [
       {
         label: "Settings",
         url: "/customer/settings",
+        sublinks: [
+          {
+            label: "Change Password",
+            url: "/customer/password",
+          },
+          {
+            label: "Notification",
+            url: "/customer/notification",
+          }
+          
+        ],
       },
     ],
   },

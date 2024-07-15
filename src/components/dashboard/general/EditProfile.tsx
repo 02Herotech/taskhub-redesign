@@ -196,7 +196,7 @@ const EditProfile = () => {
         url =
           "https://smp.jacinthsolutions.com.au/api/v1/service_provider/update";
       } else {
-        submitData = {
+        submitData = Object.entries({
           firstName: data.firstName,
           lastName: data.lastName,
           dateOfBirth: formatDateAsYYYYMMDD(data.dateOfBirth as Date),
@@ -206,8 +206,14 @@ const EditProfile = () => {
           idImage: selectedDocument,
           idType: data.idType,
           idNumber: data.idNumber,
-        };
-        url = "https://smp.jacinthsolutions.com.au/api/v1/customer";
+        }).reduce((acc, [key, value]) => {
+          if (value !== null && value !== undefined && value !== "") {
+            // @ts-expect-error "type of key not know"
+            acc[key] = value;
+          }
+          return acc;
+        }, {});
+        url = "https://smp.jacinthsolutions.com.au/api/v1/customer/update";
       }
 
       console.log(submitData);
