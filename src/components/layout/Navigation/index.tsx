@@ -33,6 +33,7 @@ import {
   updateUserProfile,
 } from "@/store/Features/userProfile";
 import ChatSocket from "@/components/main/message/ChatSocket";
+import HomeMobileNavigation from "../HomeMobileNavigation";
 import { HamburgerIcon } from "@/lib/svgIcons";
 
 const initialAuthState = {
@@ -303,10 +304,18 @@ const Navigation = () => {
       </nav>
       <AnimatePresence initial={false}>
         {showMobileNav && (
-          <MobileNavigation
-            setShowMobileNav={setShowMobileNav}
-            showMobileNav={showMobileNav}
-          />
+          token ? (
+            <MobileNavigation
+              setShowMobileNav={setShowMobileNav}
+              showMobileNav={showMobileNav}
+            />
+          ) : (
+            <HomeMobileNavigation
+              setShowMobileNav={setShowMobileNav}
+              showMobileNav={showMobileNav}
+              links={homeLinks}
+            />
+          )
         )}
       </AnimatePresence>
     </>

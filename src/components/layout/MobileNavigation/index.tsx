@@ -29,6 +29,7 @@ interface NavLink {
 
 const MobileNavigation: React.FC<Props> = ({ showMobileNav, setShowMobileNav }) => {
   const [openDropdown, setOpenDropdown] = useState<boolean>(false);
+  const [openSubDropdown, setOpenSubDropdown] = useState<boolean>(false);
   const pathname = usePathname();
   const router = useRouter();
   const session = useSession();
@@ -74,7 +75,7 @@ const MobileNavigation: React.FC<Props> = ({ showMobileNav, setShowMobileNav }) 
         initial={{ x: '-100%' }}
         animate={{ x: showMobileNav ? 0 : '-100%', transition: { type: 'tween', duration: 0.3 } }}
         exit={{ x: '-100%', transition: { type: 'tween', duration: 0.3 } }}
-        className="fixed left-0 top-0 z-50 flex h-screen w-4/5 flex-col justify-between shadow rounded-tr-xl rounded-br-xl overflow-auto bg-white p-5 drop-shadow-md"
+        className="fixed left-0 top-0 z-50 flex h-screen w-4/5 flex-col justify-between shadow overflow-hidden rounded-tr-xl rounded-br-xl bg-white p-5 drop-shadow-md"
       >
         <div>
           <div className="flex w-full items-center justify-between border-b border-primary pb-3">
@@ -90,7 +91,7 @@ const MobileNavigation: React.FC<Props> = ({ showMobileNav, setShowMobileNav }) 
             )}
           </div>
 
-          <ul className="my-8 space-y-4">
+          <ul className="mt-8 space-y-4 overflow-y-scroll small-scrollbar h-[70vh]">
             {currentLinks.map((link) => {
               const isActive =
                 (link.url === '/' && pathname === '/') ||
@@ -133,19 +134,69 @@ const MobileNavigation: React.FC<Props> = ({ showMobileNav, setShowMobileNav }) 
                             className="ml-6 pl-6 mt-4 border-l-[1.5px] border-[#C1BADB] space-y-4"
                           >
                             {link.sublinks.map((sublink) => (
-                              <li key={sublink.label}>
-                                <Link
-                                  onClick={() => setShowMobileNav(false)}
-                                  href={sublink.url!}
-                                  className={cn('flex items-center text-lg font-bold text-primary', {
-                                    'text-tc-orange': pathname.includes(sublink.url!),
-                                  })}
-                                >
-                                  {sublink.icon && <span className="mr-3">{sublink.icon}</span>}
-                                  {sublink.label}
-                                </Link>
-                              </li>
-                            ))}
+                              sublink.sublinks ? (
+                                <li key={sublink.label} className="w-full">
+                                  <button
+                                    className={cn(
+                                      'flex items-center justify-between w-full py-3 px-5 text-lg font-bold rounded-md text-primary',
+                                    )}
+                                    onClick={() => setOpenSubDropdown(!openSubDropdown)}
+                                  >
+                                    <div className={cn(
+                                      'flex items-center text-lg font-bold rounded-md text-primary',
+                                    )}>
+                                      {sublink.icon && <span className="mr-5">{sublink.icon}</span>}
+                                      <h4 className="text-lg font-bold text-primary">
+                                        {sublink.label}
+                                      </h4>
+                                    </div>
+                                    <FaSortDown
+                                      className={cn('size-4 text-tc-orange transition-all', {
+                                        'rotate-180': openSubDropdown,
+                                      })}
+                                    />
+                                  </button>
+                                  <AnimatePresence>
+                                    {openSubDropdown && (
+                                      <motion.ul
+                                        initial="hidden"
+                                        animate="visible"
+                                        exit="exit"
+                                        variants={dropdownVariants}
+                                        className="ml-6 pl-6 mt-3 border-l-[1.5px] border-[#C1BADB] space-y-2"
+                                      >
+                                        {sublink.sublinks.map((subsublink) => (
+                                          <li key={subsublink.label}>
+                                            <Link
+                                              onClick={() => setShowMobileNav(false)}
+                                              href={subsublink.url!}
+                                              className={cn('flex items-center py-2 px-5 text-lg font-bold text-primary', {
+                                                'bg-[#EBE9F4] rounded-full': pathname.includes(subsublink.url!),
+                                              })}
+                                            >
+                                              {subsublink.icon && <span className="mr-5">{subsublink.icon}</span>}
+                                              {subsublink.label}
+                                            </Link>
+                                          </li>
+                                        ))}
+                                      </motion.ul>
+                                    )}
+                                  </AnimatePresence>
+                                </li>
+                              ) : (
+                                <li key={sublink.label} className="w-full">
+                                  <Link
+                                    onClick={() => setShowMobileNav(false)}
+                                    href={sublink.url!}
+                                    className={cn('flex items-center py-2 px-5 text-lg font-bold text-primary', {
+                                      'bg-[#EBE9F4] rounded-full': pathname.includes(sublink.url!),
+                                    })}
+                                  >
+                                    {sublink.icon && <span className="mr-5">{sublink.icon}</span>}
+                                    {sublink.label}
+                                  </Link>
+                                </li>
+                              )))}
                           </motion.ul>
                         )}
                       </AnimatePresence>
@@ -168,7 +219,7 @@ const MobileNavigation: React.FC<Props> = ({ showMobileNav, setShowMobileNav }) 
             })}
           </ul>
           <div className={cn(
-            'flex items-center text-lg font-bold rounded-md text-primary fixed bottom-2 py-3 px-5',
+            'flex items-center text-lg font-bold rounded-md text-primary fixed bottom-10 py-3 px-5',
           )} onClick={handleLogout}>
             <FiLogOut className='mr-5 text-primary size-6' />
             <h4 className="text-lg font-bold text-primary">
