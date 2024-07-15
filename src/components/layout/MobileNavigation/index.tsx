@@ -91,7 +91,7 @@ const MobileNavigation: React.FC<Props> = ({ showMobileNav, setShowMobileNav }) 
             )}
           </div>
 
-          <ul className="mt-8 space-y-4 overflow-y-scroll small-scrollbar h-[70vh]">
+          <ul className="mt-8 space-y-4 overflow-y-auto h-[70vh]">
             {currentLinks.map((link) => {
               const isActive =
                 (link.url === '/' && pathname === '/') ||
@@ -162,8 +162,8 @@ const MobileNavigation: React.FC<Props> = ({ showMobileNav, setShowMobileNav }) 
                                         initial="hidden"
                                         animate="visible"
                                         exit="exit"
-                                        variants={dropdownVariants}
-                                        className="ml-6 pl-6 mt-3 border-l-[1.5px] border-[#C1BADB] space-y-2"
+                                        variants={dropdownVariants} 
+                                        className="pl-3 pr-1 mt-3 space-y-2"
                                       >
                                         {sublink.sublinks.map((subsublink) => (
                                           <li key={subsublink.label}>
@@ -219,7 +219,7 @@ const MobileNavigation: React.FC<Props> = ({ showMobileNav, setShowMobileNav }) 
             })}
           </ul>
           <div className={cn(
-            'flex items-center text-lg font-bold rounded-md text-primary fixed bottom-10 py-3 px-5',
+            'flex items-center text-lg font-bold rounded-md text-primary fixed bottom-12 py-2 px-5',
           )} onClick={handleLogout}>
             <FiLogOut className='mr-5 text-primary size-6' />
             <h4 className="text-lg font-bold text-primary">

@@ -391,7 +391,7 @@ const EditProfile = () => {
               </span>
               <textarea
                 disabled={!isEditingEnabled}
-                className="min-h-32 w-full rounded-xl border border-slate-100 p-2 text-slate-700  shadow outline-none transition-shadow duration-300 hover:shadow-md "
+                className="min-h-32 w-full rounded-xl border border-slate-100 p-2 text-slate-700 shadow outline-none transition-shadow duration-300 hover:shadow-md"
                 {...register("bio")}
               />
             </label>

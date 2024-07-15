@@ -139,7 +139,8 @@ const Offers = () => {
 
   return (
     <>
-      <div className="w-full rounded-[20px] bg-[#EBE9F4] p-4 font-satoshi">
+      <div className="relative w-full rounded-[20px] bg-[#EBE9F4] p-4 font-satoshi">
+        
         {/* <h3 className="mb-5 font-satoshiBold text-base font-bold text-[#140B31]">
           {todayDate}
         </h3> */}
@@ -166,27 +167,28 @@ const Offers = () => {
               <LuCalendarDays
                 size={20}
               />
+              {isDatePickerOpen && (
+                <div className="absolute right-0 top-full z-50 mt-2">
+                  <DatePicker
+                    selected={selectedDate}
+                    onChange={(date: Date) => {
+                      setSelectedDate(date);
+                      setIsDatePickerOpen(false);
+                    }}
+                    onClickOutside={() => setIsDatePickerOpen(false)}
+                    maxDate={getYesterday()}
+                    inline
+                    renderDayContents={(day, date) => {
+                      return (
+                        <div title={date! > getYesterday() ? "Only past dates can be selected" : undefined}>
+                          {day}
+                        </div>
+                      );
+                    }}
+                  />
+                </div>
+              )}
             </div>
-            {isDatePickerOpen && (
-              <DatePicker
-                selected={selectedDate}
-                onChange={(date: Date) => {
-                  setSelectedDate(date);
-                  setIsDatePickerOpen(false);
-                }}
-                onClickOutside={() => setIsDatePickerOpen(false)}
-                maxDate={getYesterday()}
-                inline
-                className="absolute right-0 top-8 z-10"
-                renderDayContents={(day, date) => {
-                  return (
-                    <div title={date! > getYesterday() ? "Only past dates can be selected" : undefined}>
-                      {day}
-                    </div>
-                  );
-                }}
-              />
-            )}
           </div>
         </div>
         {groupedOffers.length === 0 ? (
