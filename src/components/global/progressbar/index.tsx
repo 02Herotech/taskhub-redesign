@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { FaArrowLeftLong } from 'react-icons/fa6';
 
@@ -18,6 +18,19 @@ const ProgressBar: React.FC<ProgressBarProps> = ({ currentPage, progress, setCur
             router.back();
         }
     };
+
+
+    useEffect(() => {
+        if (currentPage === 2) {
+            window.scrollTo(0, 0);
+        }
+    }, [currentPage]);
+
+    useEffect(() => {
+        if (currentPage === 3) {
+            window.scrollTo(0, 0);
+        }
+    }, [currentPage]);
 
     const getTitle = () => {
         switch (currentPage) {

@@ -1,24 +1,17 @@
 "use client";
 
-import Image from "next/image";
 import React, { useEffect, useState } from "react";
-import { BiCalendarWeek, BiCheck } from "react-icons/bi";
-import { HiLocationMarker } from "react-icons/hi";
-import { CiClock1 } from "react-icons/ci";
-import Link from "next/link";
 import AllServices from "@/components/dashboard/serviceProvider/services/AllServices";
 import { useSession } from "next-auth/react";
 import axios from "axios";
-import { formatDateFromNumberArrayToRelativeDate } from "@/utils";
-import { BeatLoader } from "react-spinners";
-import OngoingServiceModal from "@/components/dashboard/serviceProvider/services/OngoingServiceModal";
-import AcceptedServices from "@/components/dashboard/serviceProvider/services/AcceptedServices";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
 import PaidServices from "@/components/dashboard/serviceProvider/services/PaidServices";
 import OngoingServies from "@/components/dashboard/serviceProvider/services/OngoingServices";
 import CompletedServices from "@/components/dashboard/serviceProvider/services/CompletedServices";
 import InspectionServices from "@/components/dashboard/serviceProvider/services/Inspection";
+import OngoingServiceModal from "@/components/dashboard/serviceProvider/services/OngoingServiceModal";
+import AcceptedServices from "@/components/dashboard/serviceProvider/services/AcceptedServices";
 
 const ServicesPage = () => {
   const [currentCategory, setCurrentCategory] = useState("services");

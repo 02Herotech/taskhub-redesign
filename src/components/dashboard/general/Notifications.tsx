@@ -410,11 +410,15 @@ const NotificationComponent = () => {
                                 ? "Remote Service"
                                 : "Physical Service"}
                             </p>
-                            {selectedNotification.listing?.suburb && (
+                            {selectedNotification.listing?.suburb ? (
                               <p className="text-[ #716F78] flex items-center gap-2 text-lg ">
                                 <span>
                                   {selectedNotification.listing?.suburb}
                                 </span>
+                              </p>
+                            ) : (
+                              <p className="text-[ #111111] font-satoshiMediumfont-semibold">
+                                Remote Service
                               </p>
                             )}
                           </div>
