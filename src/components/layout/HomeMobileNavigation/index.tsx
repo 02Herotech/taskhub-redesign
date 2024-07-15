@@ -1,4 +1,4 @@
-import { homeMobileLinks } from "@/lib/links";
+import { homeMobileLinks, LinkRouteTypes } from "@/lib/links";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 import Link from "next/link";
@@ -8,10 +8,7 @@ import { IoCloseCircleOutline } from "react-icons/io5";
 type Props = {
   showMobileNav: boolean;
   setShowMobileNav: (value: boolean) => void;
-  links: {
-    label: string;
-    url: string;
-  }[];
+  links: LinkRouteTypes[];
 };
 
 const HomeMobileNavigation = ({ showMobileNav, setShowMobileNav }: Props) => {
