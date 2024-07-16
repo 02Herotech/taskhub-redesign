@@ -9,6 +9,7 @@ import { BeatLoader } from "react-spinners";
 import "../../styles/serviceProviderStyles.css";
 import { stompClient } from "@/lib/stompClient";
 import socket from "@/lib/socket";
+import axios from "axios";
 
 interface MessageButtonProps {
   recipientId: string;
@@ -30,23 +31,28 @@ const MessageButton = ({
 
   const handleSendMessage = async () => {
     setMessageLoading(true);
-    console.log("sending");
     if (user) {
-      const message = {
-        senderId: user.id,
-        recipientId,
-        senderName: `${user.firstName} ${user.lastName}`,
-        recipientName,
-        content: "Hello " + recipientName,
-        timestamp: new Date().toISOString(),
-      };
+      // const message = {
+      //   senderId: user.id,
+      //   recipientId,
+      //   senderName: `${user.firstName} ${user.lastName}`,
+      //   recipientName,
+      //   content: "Hello " + recipientName,
+      //   timestamp: new Date().toISOString(),
+      // };
       try {
-        socket.emit("chat", message, (message: any) => console.log(message));
-        // socket.on("chat", message);
-        console.log("message sent");
-        //  router.push("/message/" + recipientId);
-        // await stompClient.send("/app/chat", {}, JSON.stringify(message)),
-        //   router.push("/message/" + recipientId);
+        const url =
+          "https://smp.jacinthsolutions.com.au/api/v1/user/user-profile/" +
+          recipientId;
+        const { data } = await axios.get(url);
+        const newData: UserProfileTypes = data;
+        const tempUserChat = {
+          profileImage: newData.profileImage,
+          name: `${newData.firstName} ${newData.lastName}`,
+        };
+        localStorage.setItem("tempUserChat", JSON.stringify(tempUserChat));
+        // socket.emit("chat", message, (message: any) => console.log(message));
+        router.push("/message/" + recipientId);
       } catch (error: any) {
         console.log(error.response.data || error.message || error);
       } finally {

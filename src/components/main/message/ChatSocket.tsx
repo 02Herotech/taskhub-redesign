@@ -9,14 +9,8 @@ import {
 import { countNewMessages, getUsers } from "@/utils/message";
 import React, { useEffect, useState, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { stompClient } from "@/lib/stompClient";
 import { AnyAction, Dispatch } from "@reduxjs/toolkit";
-
-// @ts-ignore
-import io from "socket.io-client";
-// import socket from "@/lib/socket";
-
-// import useSocket from "@/hooks/useSocket";
+import socket from "@/lib/socket";
 
 interface Message {
   body: string;
@@ -32,19 +26,6 @@ const ChatSocket: React.FC = () => {
   const { profile: user, userProfileAuth: auth } = useSelector(
     (state: RootState) => state.userProfile,
   );
-
-  const socket = io("https://smp.jacinthsolutions.com.au");
-
-  // const onMessageReceived = (message: any) => {
-  //   console.log("Message from server:", message);
-  // };
-
-  // const onConnected = useCallback(() => {
-  //   if (user) {
-  //     socket.emit("join", user.id);
-  //     socket.on("message", onMessageReceived);
-  //   }
-  // }, [user]);
 
   useEffect(() => {
     if (!socket) return;
@@ -163,11 +144,7 @@ const ChatSocket: React.FC = () => {
     // eslint-disable-next-line
   }, [user]);
 
-  return (
-    <div className="hidden" onClick={handleSendMessage}>
-      <button>Send message</button>
-    </div>
-  );
+  return <div className="hidden" />;
 };
 
 export default ChatSocket;
