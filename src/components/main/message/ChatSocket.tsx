@@ -164,7 +164,7 @@ const ChatSocket: React.FC = () => {
   }, [user]);
 
   return (
-    <div className="" onClick={handleSendMessage}>
+    <div className="hidden" onClick={handleSendMessage}>
       <button>Send message</button>
     </div>
   );
