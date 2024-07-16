@@ -22,7 +22,7 @@ const CustomerProfilePage = () => {
       if (!token) return;
       try {
         const url =
-          "https://smp.jacinthsolutions.com.au/api/v1/service_provider/profile";
+          "https://smp.jacinthsolutions.com.au/api/v1/customer/profile";
         const { data } = await axios.get(url, {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -47,9 +47,9 @@ const CustomerProfilePage = () => {
           whileInView={{ opacity: 1, translateY: "0" }}
           transition={{ duration: 0.5 }}
         >
-          {fetchedUserData.firstName && (
+          {/* {fetchedUserData.firstName && ( */}
             <CustomerProfileCompletion fetchedUserData={fetchedUserData} />
-          )}
+          {/* )} */}
         </motion.div>
         <div className="col-span-6 space-y-5">
           <motion.div
