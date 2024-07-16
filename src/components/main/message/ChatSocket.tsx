@@ -14,6 +14,7 @@ import { AnyAction, Dispatch } from "@reduxjs/toolkit";
 
 // @ts-ignore
 import io from "socket.io-client";
+// import socket from "@/lib/socket";
 
 // import useSocket from "@/hooks/useSocket";
 
@@ -31,25 +32,26 @@ const ChatSocket: React.FC = () => {
   const { profile: user, userProfileAuth: auth } = useSelector(
     (state: RootState) => state.userProfile,
   );
+
   const socket = io("https://smp.jacinthsolutions.com.au");
 
-  const onMessageReceived = (message: any) => {
-    console.log("Message from server:", message);
-  };
+  // const onMessageReceived = (message: any) => {
+  //   console.log("Message from server:", message);
+  // };
 
-  const onConnected = useCallback(() => {
-    if (user) {
-      socket.emit("join", user.id);
-      socket.on("message", onMessageReceived);
-    }
-  }, [user, socket]);
+  // const onConnected = useCallback(() => {
+  //   if (user) {
+  //     socket.emit("join", user.id);
+  //     socket.on("message", onMessageReceived);
+  //   }
+  // }, [user]);
 
   useEffect(() => {
     if (!socket) return;
     if (!user) return;
 
     socket.on("connect", () => {
-      onConnected();
+      console.log("connected to socket");
     });
 
     socket.on("connected", (message: any) => {
@@ -59,6 +61,8 @@ const ChatSocket: React.FC = () => {
     socket.on("disconnect", () => {
       console.log("Disconnected from the server");
     });
+
+    console.log(socket);
 
     return () => {
       if (socket) {
@@ -71,6 +75,29 @@ const ChatSocket: React.FC = () => {
     };
     // eslint-disable-next-line
   }, [socket, user]);
+
+  const handleSendMessage = async () => {
+    console.log("sending");
+    if (user) {
+      const message = {
+        senderId: 11,
+        recipientId: 24,
+        senderName: `Anthony`,
+        recipientName: "Tony",
+        content: "Hello",
+        timestamp: new Date().toISOString(),
+      };
+      try {
+        socket.emit("chat", message, (message: any) => console.log(message));
+        console.log("message sent");
+        //  router.push("/message/" + recipientId);
+        // await stompClient.send("/app/chat", {}, JSON.stringify(message)),
+        //   router.push("/message/" + recipientId);
+      } catch (error: any) {
+        console.log(error.response.data || error.message || error);
+      }
+    }
+  };
 
   // const connect = useCallback(() => {
   //   if (user) {
@@ -104,39 +131,43 @@ const ChatSocket: React.FC = () => {
   //   console.error("WebSocket connection error:", err);
   // }, []);
 
-  // const loadContacts = useCallback(async () => {
-  //   if (!auth.token || !user) return;
-  //   try {
-  //     const users = await getUsers({ token: auth.token as string });
-  //     const contacts = await Promise.all(
-  //       users.map(async (contact: Contact) => {
-  //         const count = await countNewMessages({
-  //           recipientId: user.id,
-  //           senderId: contact.id,
-  //           token: auth.token as string,
-  //         });
-  //         return { ...contact, newMessages: count };
-  //       }),
-  //     );
-  //     const allUnreadMessages = contacts.reduce(
-  //       (accumulator, contact) => accumulator + (contact.newMessages || 0),
-  //       0,
-  //     );
-  //     dispatch(setTotalUnreadMessages(allUnreadMessages));
-  //     dispatch(setContacts(contacts));
-  //   } catch (error: any) {
-  //     console.error(error.response?.data || error.message || error);
-  //   }
-  // }, [auth.token, user, dispatch]);
+  const loadContacts = useCallback(async () => {
+    if (!auth.token || !user) return;
+    try {
+      const users = await getUsers({ token: auth.token as string });
+      const contacts = await Promise.all(
+        users.map(async (contact: Contact) => {
+          const count = await countNewMessages({
+            recipientId: user.id,
+            senderId: contact.id,
+            token: auth.token as string,
+          });
+          return { ...contact, newMessages: count };
+        }),
+      );
+      const allUnreadMessages = contacts.reduce(
+        (accumulator, contact) => accumulator + (contact.newMessages || 0),
+        0,
+      );
+      dispatch(setTotalUnreadMessages(allUnreadMessages));
+      dispatch(setContacts(contacts));
+    } catch (error: any) {
+      console.error(error.response?.data || error.message || error);
+    }
+  }, [auth.token, user, dispatch]);
 
-  // useEffect(() => {
-  //   if (user) {
-  //     connect();
-  //     loadContacts();
-  //   }
-  // }, [user, connect, loadContacts]);
+  useEffect(() => {
+    if (user) {
+      loadContacts();
+    }
+    // eslint-disable-next-line
+  }, [user]);
 
-  return <div className="hidden" />;
+  return (
+    <div className="" onClick={handleSendMessage}>
+      <button>Send message</button>
+    </div>
+  );
 };
 
 export default ChatSocket;
