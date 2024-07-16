@@ -163,14 +163,14 @@ const MobileNavigation: React.FC<Props> = ({ showMobileNav, setShowMobileNav }) 
                                         animate="visible"
                                         exit="exit"
                                         variants={dropdownVariants} 
-                                        className="pl-3 pr-1 mt-3 space-y-2"
+                                        className="pl-3 pr-2 mt-3 space-y-2"
                                       >
                                         {sublink.sublinks.map((subsublink) => (
                                           <li key={subsublink.label}>
                                             <Link
                                               onClick={() => setShowMobileNav(false)}
                                               href={subsublink.url!}
-                                              className={cn('flex items-center py-2 px-5 text-lg font-bold text-primary', {
+                                              className={cn('flex items-center py-2 pl-3 text-sm font-bold text-primary', {
                                                 'bg-[#EBE9F4] rounded-full': pathname.includes(subsublink.url!),
                                               })}
                                             >

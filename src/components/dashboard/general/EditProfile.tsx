@@ -563,7 +563,6 @@ const EditProfile = () => {
                   </span>
                 </span>
                 <input
-                  type="number"
                   id="suburb"
                   maxLength={12}
                   className="rounded-xl border border-slate-100 p-2 text-slate-700 shadow  outline-none transition-shadow duration-300 hover:shadow-md lg:max-w-sm "
