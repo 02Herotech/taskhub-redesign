@@ -5,19 +5,19 @@ import { HiLocationMarker } from "react-icons/hi";
 
 interface CompletedServices {
   jobs: JobsType[];
-  customerDetails: UserProfileTypes[] | null | undefined;
+  allBookings: BookingType[];
 }
 
-const CompletedServices = ({ jobs, customerDetails }: CompletedServices) => {
+const CompletedServices = ({ jobs, allBookings }: CompletedServices) => {
   return (
     <div className="flex flex-col gap-8  pb-4">
       {jobs
         .filter((job) => job.jobStatus === "COMPLETION")
         .map((item, index) => {
-          if (!customerDetails) return;
+          if (!allBookings) return;
 
-          const customer = customerDetails.find(
-            (customer) => customer.id === item.customerId,
+          const customer = allBookings.find(
+            (booking) => booking.id === item.bookingId,
           );
           return (
             <article

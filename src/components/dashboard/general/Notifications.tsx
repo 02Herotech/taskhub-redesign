@@ -288,7 +288,7 @@ const NotificationComponent = () => {
                             {/* </div> */}
                             <div className="space-y-">
                               <div className="flex items-start gap-2 ">
-                                <p className="cursor-pointer font-bold text-violet-normal">
+                                <p className="cursor-pointer font-bold text-[#140B31]">
                                   {item.message} from{" "}
                                   {isServiceProvider
                                     ? booking?.customer?.user?.fullName
@@ -302,7 +302,7 @@ const NotificationComponent = () => {
                           </div>
 
                           {/* left handside */}
-                          <p className="col-span-3 cursor-pointer text-center text-xs lg:text-sm lowercase text-slate-500 first-letter:uppercase">
+                          <p className="col-span-3 cursor-pointer text-center text-xs lowercase text-slate-500 first-letter:uppercase lg:text-sm">
                             {formatRelativeDate(item.notificationTime)}
                           </p>
                         </div>
