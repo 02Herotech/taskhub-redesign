@@ -42,7 +42,7 @@ const ChatSocket: React.FC = () => {
       socket.emit("join", user.id);
       socket.on("message", onMessageReceived);
     }
-  }, [user]);
+  }, [user, socket]);
 
   useEffect(() => {
     if (!socket) return;
@@ -50,7 +50,6 @@ const ChatSocket: React.FC = () => {
 
     socket.on("connect", () => {
       onConnected();
-      console.log("Connected to server");
     });
 
     socket.on("connected", (message: any) => {
@@ -60,7 +59,6 @@ const ChatSocket: React.FC = () => {
     socket.on("disconnect", () => {
       console.log("Disconnected from the server");
     });
-    console.log(socket);
 
     return () => {
       if (socket) {
@@ -68,9 +66,10 @@ const ChatSocket: React.FC = () => {
         socket.off("disconnect");
         socket.off("connect_error");
         socket.off("error");
-        // socket.off('message');
+        socket.off("message");
       }
     };
+    // eslint-disable-next-line
   }, [socket, user]);
 
   // const connect = useCallback(() => {
