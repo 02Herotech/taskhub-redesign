@@ -109,7 +109,7 @@ const EditProfile = () => {
           url =
             "https://smp.jacinthsolutions.com.au/api/v1/service_provider/profile";
         } else {
-          url = "https://smp.jacinthsolutions.com.au/api/v1/customer";
+          url = "https://smp.jacinthsolutions.com.au/api/v1/customer/profile";
         }
         const { data } = await axios.get(url, {
           headers: {
@@ -125,6 +125,8 @@ const EditProfile = () => {
 
     fetchUserData();
   }, [token, isServiceProvider]);
+
+  console.log("userDetails", userDetails);
 
   const watchField = watch();
 
@@ -367,7 +369,7 @@ const EditProfile = () => {
                     onChange={onChange}
                     onBlur={onBlur}
                     maxDate={age18YearsAgo}
-                    className="w-full rounded-xl border border-slate-100 p-2 text-slate-700 shadow outline-none transition-shadow duration-300 hover:shadow-md lg:max-w-sm"
+                    className="w-full rounded-xl border border-slate-100 p-2 text-slate-700 shadow outline-none z-50 transition-shadow duration-300 hover:shadow-md lg:max-w-sm"
                     dateFormat="dd/MM/yyyy"
                   />
                 )}
@@ -550,10 +552,10 @@ const EditProfile = () => {
                       {watchField.idType === ""
                         ? "Select Id Type"
                         : idTypeObject.find(
-                            (item) =>
-                              item.value === watchField.idType ||
-                              item.label === watchField.idType,
-                          )?.label + " Number"}
+                          (item) =>
+                            item.value === watchField.idType ||
+                            item.label === watchField.idType,
+                        )?.label + " Number"}
                     </span>
                     {!errors.idNumber &&
                       watchField.idNumber &&

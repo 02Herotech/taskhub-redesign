@@ -12,9 +12,7 @@ import axios from "axios";
 
 const CustomerProfilePage = () => {
   const [fetchedUserData, setFetchedUserData] = useState(defaultUserDetails);
-
   const session = useSession();
-  const user = session?.data?.user?.user;
   const token = session?.data?.user?.accessToken;
 
   useEffect(() => {
@@ -47,9 +45,9 @@ const CustomerProfilePage = () => {
           whileInView={{ opacity: 1, translateY: "0" }}
           transition={{ duration: 0.5 }}
         >
-          {/* {fetchedUserData.firstName && ( */}
+          {fetchedUserData.firstName && (
             <CustomerProfileCompletion fetchedUserData={fetchedUserData} />
-          {/* )} */}
+          )}
         </motion.div>
         <div className="col-span-6 space-y-5">
           <motion.div
