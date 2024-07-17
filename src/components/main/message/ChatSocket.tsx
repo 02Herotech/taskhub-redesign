@@ -5,14 +5,13 @@ import { RootState } from "@/store";
 import {
   setContacts,
   setNewMessage,
-  setSocket,
   setTotalUnreadMessages,
 } from "@/store/Features/chat";
 import { countNewMessages, getUsers } from "@/utils/message";
 import React, { useEffect, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AnyAction, Dispatch } from "@reduxjs/toolkit";
-import { connectSocket, getSocket, disconnectSocket } from "@/lib/socket";
+import { connectSocket, disconnectSocket } from "@/lib/socket";
 
 interface Contact {
   id: number;
@@ -63,40 +62,21 @@ const ChatSocket: React.FC = () => {
 
   useEffect(() => {
     if (!user) return;
-
+    loadContacts();
     const socket = connectSocket(user.id);
-
-    socket.on("connect", () => {
-      console.log("Connected to the server");
-      dispatch(setSocket(socket));
-    });
-
+    socket.on("connect", () => console.log("Connected"));
     socket.on("connected", (message: any) => {
       console.log("connected to socket", message);
       socket.on("queue/messages", onMessageReceived);
     });
 
-    socket.on("disconnect", () => {
-      console.log("Disconnected from the server");
-    });
-
     return () => {
       socket.off("connect");
-      socket.off("disconnect");
-      socket.off("connect_error");
-      socket.off("error");
       socket.off("queue/messages", onMessageReceived);
       disconnectSocket();
     };
     // eslint-disable-next-line
   }, [user, onMessageReceived]);
-
-  useEffect(() => {
-    if (user) {
-      loadContacts();
-    }
-    // eslint-disable-next-line
-  }, [user]);
 
   return <div className="hidden" />;
 };

@@ -1,6 +1,5 @@
 "use client";
 
-import Loading from "@/components/global/loading/page";
 import { RootState } from "@/store";
 import Image from "next/image";
 import Link from "next/link";
@@ -12,7 +11,6 @@ import { useSelector } from "react-redux";
 const ChatNavigation = () => {
   const [currentCategory, setCurrentCategory] = useState("All");
   const [searchData, setSearchData] = useState("");
-  const [loading, setLoading] = useState(false);
   const [filteredContact, setFilteredContact] = useState<{
     contact: ChatContactTypes[];
     loading: boolean;
@@ -32,7 +30,7 @@ const ChatNavigation = () => {
       setAllContacts((prev) => {
         const exists = prev.some((contact) => contact.id === user.id);
         if (!exists) {
-          const newContacts = [...prev, user];
+          const newContacts = [...prev, ...contacts, user];
           return newContacts;
         }
         return prev;
@@ -79,9 +77,10 @@ const ChatNavigation = () => {
   useEffect(() => {
     const newContacts = filteredContact.isFiltering
       ? filteredContact.contact
-      : contacts;
+      : allContacts;
 
     setDisplayContacts(newContacts);
+    // eslint-disable-next-line
   }, [filteredContact, contacts]);
 
   return (
@@ -116,11 +115,7 @@ const ChatNavigation = () => {
       </div>
 
       <article className="small-scrollbar flex max-h-[55vh] flex-col gap-4 overflow-y-auto">
-        {loading ? (
-          <div className="flex min-h-96 items-center justify-center">
-            <Loading />
-          </div>
-        ) : displayContacts.length > 0 ? (
+        {displayContacts.length > 0 ? (
           displayContacts.map((item, index) => (
             <Link
               href={{
