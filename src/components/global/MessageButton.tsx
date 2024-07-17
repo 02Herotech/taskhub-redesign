@@ -36,14 +36,15 @@ const MessageButton = ({
           recipientId;
         const { data } = await axios.get(url);
         const newData: UserProfileTypes = data;
-        const tempUserChat = {
+        const tempUserChat: ChatContactTypes = {
           id: newData.id,
           newMessages: null,
-          profileImage: newData.profileImage,
+          profilePicture: newData.profileImage,
           name: `${newData.firstName} ${newData.lastName}`,
         };
         localStorage.setItem("tempUserChat", JSON.stringify(tempUserChat));
-        router.push("/message/" + recipientId);
+        console.log(tempUserChat);
+        // router.push("/message/" + recipientId);
       } catch (error: any) {
         console.log(error.response.data || error.message || error);
       } finally {

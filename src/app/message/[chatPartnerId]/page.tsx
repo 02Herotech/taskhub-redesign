@@ -98,7 +98,6 @@ const ServiceProviderChat = () => {
   }, [contacts]);
 
   const onMessageReceived = async () => {
-    console.log("new messages received");
     if (newMessage && chatPartnerId === newMessage.senderId.toString()) {
       findChatMessage({
         id: newMessage.id,
@@ -143,9 +142,6 @@ const ServiceProviderChat = () => {
         timestamp: new Date().toISOString(),
       };
       try {
-        // socketService.socket.emit("send-message", message, (message: any) =>
-        //   console.log(message),
-        // );
         socket.emit("chat", message, (message: any) => console.log(message));
         const newMessages: ChatMessageDisplayedType[] = [
           ...(chatMessages || []),
@@ -211,19 +207,11 @@ const ServiceProviderChat = () => {
                 className="size-16 rounded-full object-cover max-sm:size-12"
               />
               <div className="w-full space-y-4">
-                <div className="flex w-full cursor-pointer items-center justify-between">
-                  {/* <p className="cursor-pointer font-medium text-violet-normal">
-                    Drain Blockage fix Service Request
-                  </p> */}
-                  {/* <p className="cursor-pointer text-sm text-slate-500 ">$480</p> */}
-                </div>
+                <div className="flex w-full cursor-pointer items-center justify-between"></div>
                 <div className="flex w-full cursor-pointer items-center justify-between">
                   <p className="cursor-pointer font-satoshiBold font-bold text-violet-dark ">
                     {contact?.name}
                   </p>
-                  {/* <p className="cursor-pointer rounded-md bg-violet-light p-1 text-xs">
-                    In Progress
-                  </p> */}
                 </div>
               </div>
             </div>
