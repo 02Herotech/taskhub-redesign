@@ -139,7 +139,7 @@ const ServiceProviderChat = () => {
         timestamp: new Date().toISOString(),
       };
       try {
-        socket.emit("chat", message);
+        socket.emit("chat", message, () => {});
         const newMessages: ChatMessageDisplayedType[] = [
           ...(chatMessages || []),
           {
@@ -149,7 +149,9 @@ const ServiceProviderChat = () => {
           },
         ];
         setChatMessages(newMessages);
-        loadContacts();
+        loadContacts().then(() => {
+          localStorage.removeItem("tempUserChat");
+        });
       } catch (error: any) {
         console.log(error.response.data || error.message || error);
       }

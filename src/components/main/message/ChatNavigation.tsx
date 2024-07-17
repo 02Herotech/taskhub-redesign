@@ -35,8 +35,12 @@ const ChatNavigation = () => {
         }
         return prev;
       });
+    } else {
+      setAllContacts(contacts);
     }
   }, [contacts]);
+
+  console.log(allContacts);
 
   // useEffect to log displayContacts whenever it updates
   useEffect(() => {

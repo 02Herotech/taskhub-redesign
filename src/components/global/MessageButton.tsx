@@ -43,7 +43,6 @@ const MessageButton = ({
           name: `${newData.firstName} ${newData.lastName}`,
         };
         localStorage.setItem("tempUserChat", JSON.stringify(tempUserChat));
-        console.log(tempUserChat);
         router.push("/message/" + recipientId);
       } catch (error: any) {
         console.log(error.response.data || error.message || error);
