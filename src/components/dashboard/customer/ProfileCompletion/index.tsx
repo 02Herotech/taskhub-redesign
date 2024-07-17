@@ -38,7 +38,7 @@ const ProfileCompletion = ({ fetchedUserData }: ProfileCompletionType) => {
     },
     {
       title: "Identification Document",
-      status: "",
+      status: fetchedUserData.idImage,
     },
     {
       title: "Date of Birth",
