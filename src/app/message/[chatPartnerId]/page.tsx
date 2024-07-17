@@ -14,14 +14,8 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  setContacts,
-  setSubscription,
-  setTotalUnreadMessages,
-} from "@/store/Features/chat";
-import { stompClient } from "@/lib/stompClient";
+import { setContacts, setTotalUnreadMessages } from "@/store/Features/chat";
 import ScrollToBottom from "react-scroll-to-bottom";
-import socketService from "@/lib/socketService";
 import { getSocket } from "@/lib/socket";
 
 const ServiceProviderChat = () => {
@@ -88,7 +82,11 @@ const ServiceProviderChat = () => {
 
   // finds current chat partner contact details
   useEffect(() => {
-    if (contacts) {
+    const tempUser = localStorage.getItem("tempUserChat");
+    if (tempUser) {
+      const user: ChatContactTypes = JSON.parse(tempUser);
+      setContact(user);
+    } else if (contacts) {
       const foundContact = contacts.find(
         (item) => Number(chatPartnerId) === item.id,
       );
@@ -131,7 +129,6 @@ const ServiceProviderChat = () => {
 
   const sendMessage = (msg: string) => {
     const socket = getSocket();
-    console.log(socket);
     if (msg.trim() !== "" && user && contact) {
       const message = {
         senderId: user.id,
@@ -142,7 +139,7 @@ const ServiceProviderChat = () => {
         timestamp: new Date().toISOString(),
       };
       try {
-        socket.emit("chat", message, (message: any) => console.log(message));
+        socket.emit("chat", message);
         const newMessages: ChatMessageDisplayedType[] = [
           ...(chatMessages || []),
           {
