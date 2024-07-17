@@ -21,6 +21,8 @@ import {
 } from "@/store/Features/chat";
 import { stompClient } from "@/lib/stompClient";
 import ScrollToBottom from "react-scroll-to-bottom";
+import socketService from "@/lib/socketService";
+import { getSocket } from "@/lib/socket";
 
 const ServiceProviderChat = () => {
   const [chatMessages, setChatMessages] = useState<
@@ -36,7 +38,7 @@ const ServiceProviderChat = () => {
   const { profile: user, userProfileAuth: auth } = useSelector(
     (state: RootState) => state.userProfile,
   );
-  const { contacts, newMessage, subscription } = useSelector(
+  const { contacts, newMessage, socket } = useSelector(
     (state: RootState) => state.chat,
   );
   const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -92,19 +94,18 @@ const ServiceProviderChat = () => {
       );
       setContact(foundContact);
     }
-    // eslint-disable-next-line 
+    // eslint-disable-next-line
   }, [contacts]);
 
-
   const onMessageReceived = async () => {
-    console.log("new messages received")
+    console.log("new messages received");
     if (newMessage && chatPartnerId === newMessage.senderId.toString()) {
       findChatMessage({
         id: newMessage.id,
         token: token as string,
       })
         .then((message) => {
-          console.log(message)
+          console.log(message);
           const displayMessage: ChatMessageDisplayedType = {
             content: message.content,
             senderId: message.senderId,
@@ -117,8 +118,9 @@ const ServiceProviderChat = () => {
           setChatMessages(newMessages);
         })
         .catch((error) => console.error(error));
-      console.log()
-      loadContacts()
+      loadContacts().then(() => {
+        localStorage.removeItem("tempUserChat");
+      });
     }
   };
 
@@ -129,6 +131,8 @@ const ServiceProviderChat = () => {
   }, [newMessage]);
 
   const sendMessage = (msg: string) => {
+    const socket = getSocket();
+    console.log(socket);
     if (msg.trim() !== "" && user && contact) {
       const message = {
         senderId: user.id,
@@ -139,7 +143,10 @@ const ServiceProviderChat = () => {
         timestamp: new Date().toISOString(),
       };
       try {
-        stompClient.send("/app/chat", {}, JSON.stringify(message));
+        // socketService.socket.emit("send-message", message, (message: any) =>
+        //   console.log(message),
+        // );
+        socket.emit("chat", message, (message: any) => console.log(message));
         const newMessages: ChatMessageDisplayedType[] = [
           ...(chatMessages || []),
           {
@@ -181,9 +188,6 @@ const ServiceProviderChat = () => {
       console.error(error.response.data || error.message || error);
     }
   };
-
-  // Reschedule the booking
-  const handleReschedule = () => {};
 
   return (
     <main className="h-[calc(100vh-5rem)] space-y-5 overflow-hidden   p-4 lg:p-8 ">
@@ -269,7 +273,7 @@ const ServiceProviderChat = () => {
               }
               width={50}
               height={50}
-              alt="user"  
+              alt="user"
               className="size-8 rounded-full"
             />
             <div className="relative w-full">

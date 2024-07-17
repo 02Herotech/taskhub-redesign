@@ -7,8 +7,6 @@ import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { BeatLoader } from "react-spinners";
 import "../../styles/serviceProviderStyles.css";
-import { stompClient } from "@/lib/stompClient";
-import socket from "@/lib/socket";
 import axios from "axios";
 
 interface MessageButtonProps {
@@ -32,14 +30,6 @@ const MessageButton = ({
   const handleSendMessage = async () => {
     setMessageLoading(true);
     if (user) {
-      // const message = {
-      //   senderId: user.id,
-      //   recipientId,
-      //   senderName: `${user.firstName} ${user.lastName}`,
-      //   recipientName,
-      //   content: "Hello " + recipientName,
-      //   timestamp: new Date().toISOString(),
-      // };
       try {
         const url =
           "https://smp.jacinthsolutions.com.au/api/v1/user/user-profile/" +
@@ -47,11 +37,12 @@ const MessageButton = ({
         const { data } = await axios.get(url);
         const newData: UserProfileTypes = data;
         const tempUserChat = {
+          id: newData.id,
+          newMessages: null,
           profileImage: newData.profileImage,
           name: `${newData.firstName} ${newData.lastName}`,
         };
         localStorage.setItem("tempUserChat", JSON.stringify(tempUserChat));
-        // socket.emit("chat", message, (message: any) => console.log(message));
         router.push("/message/" + recipientId);
       } catch (error: any) {
         console.log(error.response.data || error.message || error);

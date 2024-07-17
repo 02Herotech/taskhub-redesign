@@ -1,20 +1,18 @@
+// ChatSocket.tsx
 "use client";
 
 import { RootState } from "@/store";
 import {
   setContacts,
   setNewMessage,
+  setSocket,
   setTotalUnreadMessages,
 } from "@/store/Features/chat";
 import { countNewMessages, getUsers } from "@/utils/message";
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AnyAction, Dispatch } from "@reduxjs/toolkit";
-import socket from "@/lib/socket";
-
-interface Message {
-  body: string;
-}
+import { connectSocket, getSocket, disconnectSocket } from "@/lib/socket";
 
 interface Contact {
   id: number;
@@ -26,91 +24,6 @@ const ChatSocket: React.FC = () => {
   const { profile: user, userProfileAuth: auth } = useSelector(
     (state: RootState) => state.userProfile,
   );
-
-  useEffect(() => {
-    if (!socket) return;
-    if (!user) return;
-
-    socket.on("connect", () => {
-      console.log("connected to socket");
-    });
-
-    socket.on("connected", (message: any) => {
-      console.log("New message:", message);
-    });
-
-    socket.on("disconnect", () => {
-      console.log("Disconnected from the server");
-    });
-
-    console.log(socket);
-
-    return () => {
-      if (socket) {
-        socket.off("connect");
-        socket.off("disconnect");
-        socket.off("connect_error");
-        socket.off("error");
-        socket.off("message");
-      }
-    };
-    // eslint-disable-next-line
-  }, [socket, user]);
-
-  const handleSendMessage = async () => {
-    console.log("sending");
-    if (user) {
-      const message = {
-        senderId: 11,
-        recipientId: 24,
-        senderName: `Anthony`,
-        recipientName: "Tony",
-        content: "Hello",
-        timestamp: new Date().toISOString(),
-      };
-      try {
-        socket.emit("chat", message, (message: any) => console.log(message));
-        console.log("message sent");
-        //  router.push("/message/" + recipientId);
-        // await stompClient.send("/app/chat", {}, JSON.stringify(message)),
-        //   router.push("/message/" + recipientId);
-      } catch (error: any) {
-        console.log(error.response.data || error.message || error);
-      }
-    }
-  };
-
-  // const connect = useCallback(() => {
-  //   if (user) {
-  //     stompClient.connect({}, onConnected, onError);
-  //   }
-  //   // eslint-disable-next-line
-  // }, [user]);
-
-  // const onConnected = useCallback(() => {
-  //   if (user) {
-  //     stompClient.subscribe(
-  //       `/user/${user.id}/queue/messages`,
-  //       onMessageReceived,
-  //     );
-  //   }
-  //   // eslint-disable-next-line
-  // }, [user]);
-
-  // const onMessageReceived = useCallback(
-  //   (msg: Message) => {
-  //     const parsedMessage = JSON.parse(msg.body);
-  //     console.log("received message: ", parsedMessage);
-  //     dispatch(setNewMessage(parsedMessage));
-  //     loadContacts();
-  //   },
-  //   // eslint-disable-next-line
-  //   [dispatch],
-  // );
-
-  // const onError = useCallback((err: any) => {
-  //   console.error("WebSocket connection error:", err);
-  // }, []);
 
   const loadContacts = useCallback(async () => {
     if (!auth.token || !user) return;
@@ -136,6 +49,47 @@ const ChatSocket: React.FC = () => {
       console.error(error.response?.data || error.message || error);
     }
   }, [auth.token, user, dispatch]);
+
+  const onMessageReceived = useCallback(
+    (msg: any) => {
+      console.log("messageReceived");
+      const parsedMessage = JSON.parse(msg.body);
+      console.log("received message: ", parsedMessage);
+      dispatch(setNewMessage(parsedMessage));
+      loadContacts();
+    },
+    [dispatch, loadContacts],
+  );
+
+  useEffect(() => {
+    if (!user) return;
+
+    const socket = connectSocket(user.id);
+
+    socket.on("connect", () => {
+      console.log("Connected to the server");
+      dispatch(setSocket(socket));
+    });
+
+    socket.on("connected", (message: any) => {
+      console.log("connected to socket", message);
+      socket.on("queue/messages", onMessageReceived);
+    });
+
+    socket.on("disconnect", () => {
+      console.log("Disconnected from the server");
+    });
+
+    return () => {
+      socket.off("connect");
+      socket.off("disconnect");
+      socket.off("connect_error");
+      socket.off("error");
+      socket.off("queue/messages", onMessageReceived);
+      disconnectSocket();
+    };
+    // eslint-disable-next-line
+  }, [user, onMessageReceived]);
 
   useEffect(() => {
     if (user) {

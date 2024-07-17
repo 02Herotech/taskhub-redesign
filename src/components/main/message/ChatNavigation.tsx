@@ -2,15 +2,12 @@
 
 import Loading from "@/components/global/loading/page";
 import { RootState } from "@/store";
-import { setContacts, setTotalUnreadMessages } from "@/store/Features/chat";
-import { countNewMessages, getUsers } from "@/utils/message";
-
 import Image from "next/image";
 import Link from "next/link";
-import { useParams, useSearchParams } from "next/navigation";
+import { useParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { BiSearch } from "react-icons/bi";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 
 const ChatNavigation = () => {
   const [currentCategory, setCurrentCategory] = useState("All");
@@ -24,12 +21,29 @@ const ChatNavigation = () => {
   const [displayContacts, setDisplayContacts] = useState<ChatContactTypes[]>(
     [],
   );
+  const [allContacts, setAllContacts] = useState<ChatContactTypes[]>([]);
 
-  const { userProfileAuth: auth, profile: user } = useSelector(
-    (state: RootState) => state.userProfile,
-  );
   const { contacts } = useSelector((state: RootState) => state.chat);
-  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const tempUser = localStorage.getItem("tempUserChat");
+    if (tempUser) {
+      const user: ChatContactTypes = JSON.parse(tempUser);
+      setAllContacts((prev) => {
+        const exists = prev.some((contact) => contact.id === user.id);
+        if (!exists) {
+          const newContacts = [...prev, user];
+          return newContacts;
+        }
+        return prev;
+      });
+    }
+  }, [contacts]);
+
+  // useEffect to log displayContacts whenever it updates
+  useEffect(() => {
+    setDisplayContacts(allContacts);
+  }, [allContacts]);
 
   const { chatPartnerId } = useParams();
   const handleChangeCategory = (category: string) => {
@@ -61,38 +75,6 @@ const ChatNavigation = () => {
     );
     setFilteredContact((prev) => ({ ...prev, contact: filteredContact }));
   };
-
-  // const loadContacts = async () => {
-  //   if (!auth.token || !user) return;
-  //   try {
-  //     setLoading(true);
-  //     const users = await getUsers({ token: auth.token });
-  //     const contacts = await Promise.all(
-  //       users.map(async (contact: any) => {
-  //         const count = await countNewMessages({
-  //           recipientId: contact.id,
-  //           senderId: user.id,
-  //           token: auth.token as string,
-  //         });
-  //         return { ...contact, newMessages: count };
-  //       }),
-  //     );
-  //     const allUnreadMessages = contacts.reduce(
-  //       (accumulator, contact) => accumulator + contact.newMessages,
-  //       0,
-  //     );
-  //     dispatch(setTotalUnreadMessages(allUnreadMessages));
-  //     dispatch(setContacts(contacts));
-  //   } catch (error: any) {
-  //     console.error(error.response.data || error.message || error);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   loadContacts();
-  // }, [auth]);
 
   useEffect(() => {
     const newContacts = filteredContact.isFiltering
