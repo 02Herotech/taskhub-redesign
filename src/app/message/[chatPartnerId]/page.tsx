@@ -157,9 +157,6 @@ const ServiceProviderChat = () => {
           },
         ];
         setChatMessages(newMessages);
-        loadContacts().then(() => {
-          localStorage.removeItem("tempUserChat");
-        });
       } catch (error: any) {
         console.log(error.response.data || error.message || error);
       }
@@ -167,8 +164,6 @@ const ServiceProviderChat = () => {
   };
 
   useEffect(() => {
-    if (!user) return;
-
     const socket = getSocket();
 
     const handleConnect = () => {
@@ -188,8 +183,7 @@ const ServiceProviderChat = () => {
     return () => {
       socket.off("connect", handleConnect);
     };
-    // eslint-disable-next-line
-  }, [unsentMessage]);
+  }, []);
 
   // handle load contacts from the database
   const loadContacts = async () => {
