@@ -22,7 +22,7 @@ type DropDownItem = {
 };
 
 const NewTasksCard = ({ task }: TaskCardProps) => {
-    const dateArray = task.createdAt;
+    const dateArray = task.taskDate;
     const date = new Date(dateArray[0], dateArray[1] - 1, dateArray[2]);
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false)
@@ -109,7 +109,7 @@ const NewTasksCard = ({ task }: TaskCardProps) => {
                     <div className="flex justify-between items-end">
                         <div className="flex items-center space-x-2 font-medium text-[#716F78]">
                             <FiCalendar className="h-5 w-5 font-bold" />
-                            <h5 className="text-[15px] lg:text-lg">{task.taskDate || "Flexible"}</h5>
+                            <h5 className="text-[15px] lg:text-lg">{formattedDate || "Flexible"}</h5>
                         </div>
                         <h2 className="text-2xl font-bold capitalize text-tc-orange lg:text-[20px]">
                             {formatAmount(task.customerBudget, "USD", false)}

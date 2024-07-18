@@ -106,16 +106,16 @@ const Navigation = () => {
         );
       },
     },
-    {
-      label: "Settings",
-      onClick: () => {
-        router.push(
-          isServiceProvider
-            ? "/service-provider/settings"
-            : "/customer/settings",
-        );
-      },
-    },
+    // {
+    //   label: "Settings",
+    //   onClick: () => {
+    //     router.push(
+    //       isServiceProvider
+    //         ? "/service-provider/settings"
+    //         : "/customer/settings",
+    //     );
+    //   },
+    // },
     {
       label: "Logout",
       onClick: handleLogout,
