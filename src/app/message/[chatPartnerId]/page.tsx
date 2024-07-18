@@ -58,8 +58,7 @@ const ServiceProviderChat = () => {
   };
 
   const handleBlur = () => {
-    document.body.style.overflow = "hidden"; // Revert to non-scrollable
-    inputRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+    document.body.style.overflow = "hidden";
   };
 
   // finds current chat patner messages
@@ -221,7 +220,7 @@ const ServiceProviderChat = () => {
         </section>
 
         {/* Organize this */}
-        <section className="flex h-[calc(100cqh-8rem)] w-full flex-col justify-between space-y-4  lg:col-span-7  lg:h-[calc(100cqh-9rem)] lg:px-4">
+        <section className="flex h-[calc(100cqh-6rem)] w-full flex-col justify-between space-y-4  lg:col-span-7  lg:h-[calc(100cqh-9rem)] lg:px-4">
           <article className="flex-shrink-0 space-y-4 ">
             <div className="flex cursor-pointer gap-3 ">
               <Image
