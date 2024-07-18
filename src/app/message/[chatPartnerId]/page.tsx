@@ -165,8 +165,8 @@ const ServiceProviderChat = () => {
   };
 
   useEffect(() => {
-    const socket = getSocket();
-
+    if (!user) return;
+    const socket = connectSocket(user.id);
     const handleConnect = () => {
       console.log("reconnected");
       const storedMessage = localStorage.getItem("chatMessages");
@@ -184,7 +184,7 @@ const ServiceProviderChat = () => {
     return () => {
       socket.off("connect", handleConnect);
     };
-  }, []);
+  }, [user]);
 
   // handle load contacts from the database
   const loadContacts = async () => {
