@@ -3,7 +3,14 @@ import MessageButton from "@/components/global/MessageButton";
 import { typeData } from "@/data/marketplace/data";
 import { marketPlaceModalIcon } from "@/lib/svgIcons";
 import Loading from "@/shared/loading";
-import { formatDateFromNumberArray, formatRelativeDate } from "@/utils";
+import {
+  formatDateFromNumberArray,
+  formatRelativeDate,
+  isOlder,
+  isThisMonth,
+  isThisWeek,
+  isToday,
+} from "@/utils";
 import { truncateText } from "@/utils/marketplace";
 import axios from "axios";
 import { useSession } from "next-auth/react";
@@ -12,6 +19,7 @@ import React, { useEffect, useState } from "react";
 import { BiCalendarEvent } from "react-icons/bi";
 import { FaArrowLeftLong } from "react-icons/fa6";
 import { HiLocationMarker } from "react-icons/hi";
+import NotificationList from "./NotificationList";
 
 const NotificationComponent = () => {
   const [currentCategory, setCurrentCategory] = useState("All");
@@ -35,6 +43,9 @@ const NotificationComponent = () => {
     listing: null,
   });
   const [refreshPage, setRefreshPage] = useState(false);
+  const [categorizedNotification, setcategorizedNotification] = useState<
+    { notificaion: NotificationTypes; heading: string }[]
+  >([]);
 
   const oneWeekAgo = new Date();
   oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
@@ -187,6 +198,31 @@ const NotificationComponent = () => {
     setRefreshPage(!refreshPage);
   };
 
+  const categorizeNotifications = (notifications: NotificationTypes[]) => {
+    const today: NotificationTypes[] = [];
+    const thisWeek: NotificationTypes[] = [];
+    const thisMonth: NotificationTypes[] = [];
+    const older: NotificationTypes[] = [];
+
+    notifications.forEach((notification) => {
+      const date = notification.notificationTime;
+      if (isToday(date)) {
+        today.push(notification);
+      } else if (isThisWeek(date)) {
+        thisWeek.push(notification);
+      } else if (isThisMonth(date)) {
+        thisMonth.push(notification);
+      } else if (isOlder(date)) {
+        older.push(notification);
+      }
+    });
+    return { today, thisWeek, thisMonth, older };
+  };
+
+  useEffect(() => {
+    notifications && categorizeNotifications(notifications);
+  }, [notifications]);
+
   return (
     <main className="mt-24 py-4 lg:p-8">
       {loading ? (
@@ -244,71 +280,57 @@ const NotificationComponent = () => {
               </div>
             ) : (
               <>
-                {!selectedNotification.booking ? (
-                  <div className="flex flex-col gap-4 pb-4">
-                    {notifications.map((item, index) => {
-                      const booking = userBookings.find(
-                        (singleBooking) => singleBooking.id === item.bookingId,
-                      );
-                      const listing = userListings.find(
-                        (singleListing) =>
-                          singleListing.id === booking?.listing.id,
-                      );
-                      if (!booking || !listing) return;
-                      return (
-                        <div
-                          key={index}
-                          onClick={() =>
-                            showSelectedNotification({
-                              notification: item,
-                              booking,
-                              listing,
-                            })
-                          }
-                          className=" pointer-events-auto relative flex w-full cursor-pointer justify-between gap-2 rounded-md p-2  transition-shadow duration-300 hover:bg-violet-light lg:items-center"
-                        >
-                          <div
-                            className={`absolute left-0 top-0 size-2 rounded-full p-1.5 ${!item.read && "bg-orange-normal"} `}
-                          />
-                          <div className=" flex gap-2 lg:items-center">
-                            <Image
-                              src={
-                                (isServiceProvider
-                                  ? booking?.customer?.user?.profileImage
-                                  : listing?.serviceProvider.user
-                                      .profileImage) ??
-                                "/assets/images/serviceProvider/user.jpg"
-                              }
-                              alt="checkicon"
-                              width={80}
-                              height={80}
-                              quality={100}
-                              className="size-16 flex-shrink-0 rounded-full object-cover"
-                            />
-                            {/* </div> */}
-                            <div className="space-y-">
-                              <div className="flex items-start gap-2 ">
-                                <p className="cursor-pointer font-bold text-[#140B31]">
-                                  {item.message} from{" "}
-                                  {isServiceProvider
-                                    ? booking?.customer?.user?.fullName
-                                    : listing?.serviceProvider?.user?.fullName}
-                                </p>
-                              </div>
-                              <p className="text-#716F78 font-satoshiMedium">
-                                {booking?.bookingTitle}
-                              </p>
-                            </div>
-                          </div>
-
-                          {/* left handside */}
-                          <p className="col-span-3 cursor-pointer text-center text-xs lowercase text-slate-500 first-letter:uppercase lg:text-sm">
-                            {formatRelativeDate(item.notificationTime)}
-                          </p>
-                        </div>
-                      );
-                    })}
-                  </div>
+                {!selectedNotification.booking && notifications ? (
+                  <>
+                    {categorizeNotifications(notifications).today.length >
+                      0 && (
+                      <NotificationList
+                        heading="Today"
+                        notifications={
+                          categorizeNotifications(notifications).today
+                        }
+                        userBookings={userBookings}
+                        userListings={userListings}
+                        showSelectedNotification={showSelectedNotification}
+                      />
+                    )}
+                    {categorizeNotifications(notifications).thisWeek.length >
+                      0 && (
+                      <NotificationList
+                        heading="This Week"
+                        notifications={
+                          categorizeNotifications(notifications).thisWeek
+                        }
+                        userBookings={userBookings}
+                        userListings={userListings}
+                        showSelectedNotification={showSelectedNotification}
+                      />
+                    )}
+                    {categorizeNotifications(notifications).thisMonth.length >
+                      0 && (
+                      <NotificationList
+                        heading="This Month"
+                        notifications={
+                          categorizeNotifications(notifications).thisMonth
+                        }
+                        userBookings={userBookings}
+                        userListings={userListings}
+                        showSelectedNotification={showSelectedNotification}
+                      />
+                    )}
+                    {categorizeNotifications(notifications).older.length >
+                      0 && (
+                      <NotificationList
+                        heading="Older"
+                        notifications={
+                          categorizeNotifications(notifications).older
+                        }
+                        userBookings={userBookings}
+                        userListings={userListings}
+                        showSelectedNotification={showSelectedNotification}
+                      />
+                    )}
+                  </>
                 ) : selectedNotification.loading ? (
                   <div className="flex min-h-80 items-center justify-center">
                     <Loading />
