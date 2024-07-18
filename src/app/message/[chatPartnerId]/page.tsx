@@ -16,7 +16,8 @@ import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setContacts, setTotalUnreadMessages } from "@/store/Features/chat";
 import ScrollToBottom from "react-scroll-to-bottom";
-import { getSocket } from "@/lib/socket";
+import { connectSocket, getSocket } from "@/lib/socket";
+import { GiCheckMark } from "react-icons/gi";
 
 const ServiceProviderChat = () => {
   const [chatMessages, setChatMessages] = useState<
@@ -29,10 +30,12 @@ const ServiceProviderChat = () => {
   const dispatch = useDispatch();
   const { chatPartnerId } = useParams();
 
+  const [unsentMessage, setUnsentMessage] = useState<any>(null);
+
   const { profile: user, userProfileAuth: auth } = useSelector(
     (state: RootState) => state.userProfile,
   );
-  const { contacts, newMessage, socket } = useSelector(
+  const { contacts, newMessage } = useSelector(
     (state: RootState) => state.chat,
   );
   const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -129,6 +132,7 @@ const ServiceProviderChat = () => {
 
   const sendMessage = (msg: string) => {
     const socket = getSocket();
+    console.log(socket.connected);
     if (msg.trim() !== "" && user && contact) {
       const message = {
         senderId: user.id,
@@ -139,6 +143,10 @@ const ServiceProviderChat = () => {
         timestamp: new Date().toISOString(),
       };
       try {
+        if (!socket.connected) {
+          localStorage.setItem("chatMessages", JSON.stringify(message));
+          setUnsentMessage(message);
+        }
         socket.emit("chat", message, () => {});
         const newMessages: ChatMessageDisplayedType[] = [
           ...(chatMessages || []),
@@ -157,6 +165,31 @@ const ServiceProviderChat = () => {
       }
     }
   };
+
+  useEffect(() => {
+    if (!user) return;
+
+    const socket = getSocket();
+
+    const handleConnect = () => {
+      console.log("reconnected");
+      const storedMessage = localStorage.getItem("chatMessages");
+      if (storedMessage) {
+        const message = JSON.parse(storedMessage);
+        socket.emit("chat", message, () => {
+          localStorage.removeItem("chatMessages");
+          setUnsentMessage(null);
+        });
+      }
+    };
+
+    socket.on("connect", handleConnect);
+
+    return () => {
+      socket.off("connect", handleConnect);
+    };
+    // eslint-disable-next-line
+  }, [unsentMessage]);
 
   // handle load contacts from the database
   const loadContacts = async () => {
@@ -192,8 +225,8 @@ const ServiceProviderChat = () => {
         </section>
 
         {/* Organize this */}
-        <section className="flex h-[calc(100vh-7rem)] w-full flex-col justify-between space-y-4  lg:col-span-7  lg:h-[calc(100vh-8rem)] lg:px-4 ">
-          <article className="space-y-4">
+        <section className="flex h-[calc(100vh-7rem)] w-full flex-col justify-between space-y-4  lg:col-span-7  lg:h-[calc(100vh-9rem)] lg:px-4 ">
+          <article className="flex-shrink-0 space-y-4 ">
             <div className="flex cursor-pointer gap-3 ">
               <Image
                 src={
@@ -231,20 +264,32 @@ const ServiceProviderChat = () => {
 
           {/* -------chat */}
           {user && (
-            <ScrollToBottom className="no-scrollbar max-h-full min-h-[60%] overflow-y-scroll">
+            <ScrollToBottom className="no-scrollbar max-h-full flex-grow overflow-y-scroll">
               <div className=" flex w-full flex-col justify-end gap-4">
                 {chatMessages &&
                   chatMessages.map((item, index) => {
                     return (
                       <div
                         key={index}
-                        className={` flex w-full ${item.senderId === user.id ? "justify-end" : "justify-start"}`}
+                        className={` flex w-full ${item.senderId === user.id ? "flex-wrap justify-end " : "justify-start"}`}
                       >
                         <p
                           key={index}
-                          className={` flex w-fit max-w-xs rounded-md p-2 text-sm ${item.senderId === user.id ? " bg-violet-normal text-right text-white" : " bg-orange-light text-left text-violet-dark "}`}
+                          className={` flex w-fit max-w-xs flex-col gap-1 `}
                         >
-                          <span>{item.content}</span>
+                          <span
+                            className={` rounded-md p-2 text-sm ${item.senderId === user.id ? " bg-violet-normal text-white" : " bg-orange-light text-left text-violet-dark "}`}
+                          >
+                            {item.content}
+                          </span>
+                          {/* <div className="absolute bottom-0 right-0 rounded-full bg-violet-dark p-1 font-medium text-white">
+                            {item.time.substring(11, 16)}
+                          </div> */}
+                          {item.senderId === user.id && (
+                            <span className="block">
+                              <GiCheckMark className="text-green-500 " />
+                            </span>
+                          )}
                         </p>
                       </div>
                     );
@@ -253,7 +298,7 @@ const ServiceProviderChat = () => {
             </ScrollToBottom>
           )}
 
-          <div className="flex gap-2 ">
+          <div className="flex flex-shrink-0 gap-2 ">
             <Image
               src={
                 user?.profileImage ?? "/assets/images/serviceProvider/user.jpg"

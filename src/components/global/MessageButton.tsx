@@ -26,10 +26,19 @@ const MessageButton = ({
   const { profile: user } = useSelector(
     (state: RootState) => state.userProfile,
   );
+  const { contacts } = useSelector((state: RootState) => state.chat);
 
   const handleSendMessage = async () => {
     setMessageLoading(true);
     if (user) {
+      let foundContact: ChatContactTypes | undefined;
+      if (contacts) {
+        foundContact = contacts.find((item) => Number(recipientId) === item.id);
+      }
+      if (foundContact) {
+        router.push("/message/" + recipientId);
+        return;
+      }
       try {
         const url =
           "https://smp.jacinthsolutions.com.au/api/v1/user/user-profile/" +

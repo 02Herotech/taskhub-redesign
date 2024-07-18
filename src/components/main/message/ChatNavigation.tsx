@@ -30,7 +30,7 @@ const ChatNavigation = () => {
       setAllContacts((prev) => {
         const exists = prev.some((contact) => contact.id === user.id);
         if (!exists) {
-          const newContacts = [...prev, ...contacts, user];
+          const newContacts = [user, ...prev, ...contacts];
           return newContacts;
         }
         return prev;
@@ -40,9 +40,6 @@ const ChatNavigation = () => {
     }
   }, [contacts]);
 
-  console.log(allContacts);
-
-  // useEffect to log displayContacts whenever it updates
   useEffect(() => {
     setDisplayContacts(allContacts);
   }, [allContacts]);
@@ -77,6 +74,11 @@ const ChatNavigation = () => {
     );
     setFilteredContact((prev) => ({ ...prev, contact: filteredContact }));
   };
+
+  useEffect(() => {
+    handleFilterContactBySearch();
+    // eslint-disable-next-line
+  }, [searchData]);
 
   useEffect(() => {
     const newContacts = filteredContact.isFiltering
