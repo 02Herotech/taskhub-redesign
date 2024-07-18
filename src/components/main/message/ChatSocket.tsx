@@ -1,4 +1,3 @@
-// ChatSocket.tsx
 "use client";
 
 import { RootState } from "@/store";
@@ -64,11 +63,9 @@ const ChatSocket: React.FC = () => {
     if (!user) return;
     loadContacts();
     const socket = connectSocket(user.id);
-    socket.on("connect", () => console.log("Connected"));
-    socket.on("connected", (message: any) => {
-      console.log("connected to socket", message);
-      socket.on("queue/messages", onMessageReceived);
-    });
+    socket.on("connected", () =>
+      socket.on("queue/messages", onMessageReceived),
+    );
 
     return () => {
       socket.off("connect");
