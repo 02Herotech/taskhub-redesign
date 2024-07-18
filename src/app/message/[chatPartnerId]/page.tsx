@@ -18,6 +18,8 @@ import { setContacts, setTotalUnreadMessages } from "@/store/Features/chat";
 import ScrollToBottom from "react-scroll-to-bottom";
 import { connectSocket, getSocket } from "@/lib/socket";
 import { GiCheckMark } from "react-icons/gi";
+import { formatTime } from "@/utils";
+import { FaCheckDouble } from "react-icons/fa6";
 
 const ServiceProviderChat = () => {
   const [chatMessages, setChatMessages] = useState<
@@ -83,6 +85,8 @@ const ServiceProviderChat = () => {
     }
   }, [token, user, chatPartnerId]);
 
+  console.log(chatMessages?.[1]);
+
   // finds current chat partner contact details
   useEffect(() => {
     const tempUser = localStorage.getItem("tempUserChat");
@@ -132,7 +136,6 @@ const ServiceProviderChat = () => {
 
   const sendMessage = (msg: string) => {
     const socket = getSocket();
-    console.log(socket.connected);
     if (msg.trim() !== "" && user && contact) {
       const message = {
         senderId: user.id,
@@ -212,14 +215,14 @@ const ServiceProviderChat = () => {
   };
 
   return (
-    <main className="h-[calc(100vh-5rem)] space-y-5 overflow-hidden   p-4 lg:p-8 ">
+    <main className="h-[calc(100svh-5rem)] space-y-5 overflow-hidden   p-4 lg:p-8 ">
       <section className="grid gap-10 divide-slate-400 lg:grid-cols-12 lg:divide-x ">
         <section className="col-span-5 h-full max-md:hidden ">
           <ChatNavigation />
         </section>
 
         {/* Organize this */}
-        <section className="flex h-[calc(100vh-7rem)] w-full flex-col justify-between space-y-4  lg:col-span-7  lg:h-[calc(100vh-9rem)] lg:px-4 ">
+        <section className="flex h-[calc(100svh-7rem)] w-full flex-col justify-between space-y-4  lg:col-span-7  lg:h-[calc(100svh-9rem)] lg:px-4">
           <article className="flex-shrink-0 space-y-4 ">
             <div className="flex cursor-pointer gap-3 ">
               <Image
@@ -267,24 +270,20 @@ const ServiceProviderChat = () => {
                         key={index}
                         className={` flex w-full ${item.senderId === user.id ? "flex-wrap justify-end " : "justify-start"}`}
                       >
-                        <p
+                        <div
                           key={index}
-                          className={` flex w-fit max-w-xs flex-col gap-1 `}
+                          className={` flex w-fit max-w-xs flex-col gap-1 rounded-md p-2 text-sm ${item.senderId === user.id ? " bg-violet-normal text-white" : " bg-orange-light text-left text-violet-dark "} `}
                         >
-                          <span
-                            className={` rounded-md p-2 text-sm ${item.senderId === user.id ? " bg-violet-normal text-white" : " bg-orange-light text-left text-violet-dark "}`}
-                          >
-                            {item.content}
-                          </span>
-                          {/* <div className="absolute bottom-0 right-0 rounded-full bg-violet-dark p-1 font-medium text-white">
-                            {item.time.substring(11, 16)}
-                          </div> */}
-                          {item.senderId === user.id && (
-                            <span className="block">
-                              <GiCheckMark className="text-green-500 " />
-                            </span>
-                          )}
-                        </p>
+                          <p>{item.content}</p>
+                          <div className="flex items-center justify-end gap-2 text-[0.7rem] ">
+                            <span className="">{formatTime(item.time)}</span>
+                            {item.senderId === user.id && (
+                              <span className="block">
+                                <FaCheckDouble className="text-green-500 " />
+                              </span>
+                            )}
+                          </div>
+                        </div>
                       </div>
                     );
                   })}

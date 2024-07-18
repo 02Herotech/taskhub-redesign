@@ -147,7 +147,7 @@ const ChatNavigation = () => {
                     {item.name}
                   </p>
                   {(item.newMessages as number) > 0 && (
-                    <p className="cursor-pointer rounded-md bg-orange-normal  p-1 px-2  text-white">
+                    <p className="cursor-pointer rounded-md bg-orange-normal p-1  px-2 text-xs  text-white">
                       {item.newMessages}
                     </p>
                   )}
