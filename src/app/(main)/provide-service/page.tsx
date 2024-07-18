@@ -328,7 +328,7 @@ const ProvideService: React.FC = () => {
 
   const handlePrice = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
-    const numberValue = value === "" ? 0 : parseFloat(value);
+    const numberValue = value === "" ? "" : parseFloat(value);
     setTask({
       ...task,
       [name]: numberValue,
