@@ -16,6 +16,7 @@ interface InitialStateType {
   totalUnreadMessages: number;
   newMessage: null | NewMessagePropsTypes;
   subscription: any;
+  socket: any;
 }
 
 const initialState: InitialStateType = {
@@ -23,6 +24,7 @@ const initialState: InitialStateType = {
   totalUnreadMessages: 0,
   newMessage: null,
   subscription: null,
+  socket: null,
 };
 
 export const chatSlice = createSlice({
@@ -42,6 +44,9 @@ export const chatSlice = createSlice({
     setSubscription: (state, action) => {
       return { ...state, subscription: action.payload };
     },
+    setSocket: (state, action) => {
+      return { ...state, socket: action.payload };
+    },
   },
 });
 
@@ -50,6 +55,7 @@ export const {
   setTotalUnreadMessages,
   setNewMessage,
   setSubscription,
+  setSocket,
 } = chatSlice.actions;
 
 interface LoadContactsArgs {

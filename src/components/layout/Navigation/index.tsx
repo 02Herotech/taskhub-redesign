@@ -33,6 +33,8 @@ import {
   updateUserProfile,
 } from "@/store/Features/userProfile";
 import ChatSocket from "@/components/main/message/ChatSocket";
+import HomeMobileNavigation from "../HomeMobileNavigation";
+import { HamburgerIcon } from "@/lib/svgIcons";
 
 const initialAuthState = {
   token: null,
@@ -52,7 +54,9 @@ const Navigation = () => {
 
   const dispatch = useDispatch();
   const userProfile = useSelector((state: RootState) => state.userProfile);
-  const { totalUnreadMessages } = useSelector((state: RootState) => state.chat);
+  const { totalUnreadMessages, newMessage } = useSelector(
+    (state: RootState) => state.chat,
+  );
 
   const pathname = usePathname();
 
@@ -90,6 +94,7 @@ const Navigation = () => {
       dispatch(setUserProfileAuth(auth));
     }
     dispatch(setAuthLoading(false));
+    // eslint-disable-next-line
   }, []);
 
   const dropdownItems = [
@@ -101,16 +106,16 @@ const Navigation = () => {
         );
       },
     },
-    {
-      label: "Settings",
-      onClick: () => {
-        router.push(
-          isServiceProvider
-            ? "/service-provider/settings"
-            : "/customer/settings",
-        );
-      },
-    },
+    // {
+    //   label: "Settings",
+    //   onClick: () => {
+    //     router.push(
+    //       isServiceProvider
+    //         ? "/service-provider/settings"
+    //         : "/customer/settings",
+    //     );
+    //   },
+    // },
     {
       label: "Logout",
       onClick: handleLogout,
@@ -199,7 +204,7 @@ const Navigation = () => {
                 onClick={() => setShowMobileNav((state) => !state)}
                 className="lg:hidden"
               >
-                <RiMenu3Fill className="h-9 w-9 text-primary" />
+                {HamburgerIcon}
               </button>
             </div>
             <ul className="hidden items-center space-x-8 lg:flex">
@@ -242,7 +247,7 @@ const Navigation = () => {
                 <>
                   {/* UnreadMessages */}
                   <Link href="/message" className="relative cursor-pointer">
-                    <BsChat className="size-[22px] text-black" />
+                    <BsChat className="size-7 text-black" />
                     {totalUnreadMessages > 0 && (
                       <span className="absolute -right-1 -top-1 flex size-5 items-center justify-center rounded-full bg-tc-orange text-xs text-white">
                         {totalUnreadMessages}
@@ -253,7 +258,7 @@ const Navigation = () => {
                     className="relative cursor-pointer"
                     onClick={() => router.push(notificationRoute)}
                   >
-                    <IoMdNotificationsOutline className="size-[24px] text-black" />
+                    <IoMdNotificationsOutline className="size-8 text-black" />
                     {/* display notification length here */}
                     {notifications.length > 0 && (
                       <div className="absolute -right-1 -top-1 flex size-5 items-center justify-center rounded-full bg-tc-orange text-xs text-white">
@@ -298,12 +303,19 @@ const Navigation = () => {
         )}
       </nav>
       <AnimatePresence initial={false}>
-        {showMobileNav && (
-          <MobileNavigation
-            setShowMobileNav={setShowMobileNav}
-            showMobileNav={showMobileNav}
-          />
-        )}
+        {showMobileNav &&
+          (token ? (
+            <MobileNavigation
+              setShowMobileNav={setShowMobileNav}
+              showMobileNav={showMobileNav}
+            />
+          ) : (
+            <HomeMobileNavigation
+              setShowMobileNav={setShowMobileNav}
+              showMobileNav={showMobileNav}
+              links={homeLinks}
+            />
+          ))}
       </AnimatePresence>
     </>
   );

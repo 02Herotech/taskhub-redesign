@@ -1,541 +1,503 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
-import { useGetActiveTasksQuery, useSearchTaskByTextQuery } from "@/services/tasks";
-import { Task } from "@/types/services/tasks";
-import Dropdown from "@/components/global/Dropdown";
-import TaskCard from "../TaskCard";
-import Button from "@/components/global/Button";
+import React, { useState, useEffect, FormEvent } from "react";
 import ReactSlider from "react-slider";
 import axios from "axios";
 import Loading from "@/shared/loading";
 import { CiSearch } from "react-icons/ci";
-import { IoMdArrowDropdown } from "react-icons/io";
-import { locationData } from "@/data/marketplace/data";
+import { locationData, typeData } from "@/data/marketplace/data";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/store";
+import { fetchAllMarketplaseCategories } from "@/lib/marketplace";
+import { filterExploreTasks, resetFilter, setFilterLoadingState, setFilterParams, updateCategories } from "@/store/Features/explore";
+import { BsTriangleFill, BsX } from "react-icons/bs";
+import { truncateText } from "@/utils/marketplace";
+import { GiSettingsKnobs } from "react-icons/gi";
+import ExploreCategoryLising from "../ExploreCategoryListing";
+import ExploreMobileFilterModal from "../MobileFIlter";
 
-type Category = {
-    id: number;
-    categoryName: string;
-};
+const Tasks: React.FC = () => {
+    const dispatch = useDispatch();
+    const { categories, isFiltering, isFilteringLoading } = useSelector(
+        (state: RootState) => state.explore,
+    );
+    const [isMounted, setIsMounted] = useState(false);
+    const [searchInputData, setSearchInputData] = useState("");
+    const [isDropdownOpen, setIsDropdownOpen] = useState({
+        isOpened: false,
+        category: "",
+    });
 
-const Tasks = () => {
-    const [priceValues, setPriceValues] = useState<[number, number]>([5, 10000]);
-    const [selectedService, setSelectedService] = useState<"REMOTE_SERVICE" | "PHYSICAL_SERVICE">("PHYSICAL_SERVICE");
-    const [categoriesData, setCategoriesData] = useState<Category[]>([]);
-    const [currentPage, setCurrentPage] = useState(1);
-    const [searchResultsPage, setSearchResultsPage] = useState(1);
-    const itemsPerPage = 9;
-    const [filteredData, setFilteredData] = useState<Task[]>([]);
-    const [dataToRender, setDataToRender] = useState<Task[]>([]);
-    const [filtersApplied, setFiltersApplied] = useState(false);
-    const [searchText, setSearchText] = useState("");
-    const [paginationLength, setPaginationLength] = useState(9);
-    const [showPriceDropdown, setShowPriceDropdown] = useState(false);
-    const [showMobileFilters, setShowMobileFilters] = useState(false);
+    const [filterDataStructure, setfilterDataStructure] =
+        useState<FilterDataStructureTypes>({
+            category: "",
+            location: "",
+            typeOfService: "",
+            typeOfServiceDisplay: "",
+            minPrice: 5,
+            maxPrice: 1000,
+        });
 
-    const { data: tasksData, isLoading, refetch } = useGetActiveTasksQuery(currentPage);
-    const { data: searchResults } = useSearchTaskByTextQuery({ text: searchText, pageNumber: currentPage });
-
+    // done and working
     useEffect(() => {
-        const fetchCategoriesData = async () => {
-            try {
-                const response = await axios.get(
-                    `${process.env.NEXT_PUBLIC_API_URL}/util/all-categories`,
-                );
-                setCategoriesData(response.data);
-            } catch (error) {
-                console.log(error);
-            }
+        const fetchData = async () => {
+            const categoryData: CategoryType[] =
+                await fetchAllMarketplaseCategories();
+            dispatch(updateCategories(categoryData));
         };
-
-        fetchCategoriesData();
+        fetchData();
+        // eslint-disable-next-line
     }, []);
 
-    const handlePageChange = (pageNumber: number, isSearch: boolean = false) => {
-        if (isSearch) {
-            setSearchResultsPage(pageNumber);
-        } else {
-            setCurrentPage(pageNumber);
-        }
-    };
-
-    const totalPages = Math.ceil(tasksData?.totalElements! / itemsPerPage); // Calculate total pages
-    const searchTotalPages = Math.ceil(searchResults?.totalElements! / itemsPerPage); // Calculate total pages for search results
-    const filteredTotalPages = Math.ceil(filteredData.length / itemsPerPage); // Calculate total pages for filtered data
-    console.log("tasksData", tasksData);
-
-    const handleFilterByCategory = (categoryId: number) => {
-        if (!tasksData?.content) return;
-        const filtered = tasksData.content.filter((item) => item.category.id === categoryId);
-        setFilteredData(filtered);
-        setFiltersApplied(true);
-    }
-
-    const handleFilterByPriceRange = (minPrice: number, maxPrice: number) => {
-        if (!tasksData?.content) return;
-        const filtered = tasksData.content.filter((item) => item.customerBudget >= minPrice && item.customerBudget <= maxPrice);
-        setFilteredData(filtered);
-        setFiltersApplied(true);
-    };
-
-    const handleFilterByType = (type: "REMOTE_SERVICE" | "PHYSICAL_SERVICE") => {
-        if (!tasksData?.content) return;
-        setSelectedService(type);
-        const filtered = tasksData.content.filter((item) => item.taskType === type);
-        setFilteredData(filtered);
-        setFiltersApplied(true);
-    };
-
-    const handleFilterByDate = (order: "asc" | "desc") => {
-        if (!tasksData?.content) return;
-        const sortedData = [...tasksData.content].sort((a, b) => {
-            const dateA = new Date(a.taskTime).getTime();
-            const dateB = new Date(b.taskTime).getTime();
-            return order === "asc" ? dateA - dateB : dateB - dateA;
-        });
-        setFilteredData(sortedData);
-        setFiltersApplied(true);
-    };
-
-    const handleSortByPrice = (order: "asc" | "desc") => {
-        if (!tasksData?.content) return;
-        const sortedData = [...tasksData.content].sort((a, b) => {
-            return order === "asc" ? a.customerBudget - b.customerBudget : b.customerBudget - a.customerBudget;
-        });
-        setFilteredData(sortedData);
-        setFiltersApplied(true);
-    };
-
-    const handleFilterByLocation = (location: string) => {
-        if (!tasksData?.content) return;
-        const filtered = tasksData.content.filter((item) => item.state === location);
-        setFilteredData(filtered);
-        setFiltersApplied(true);
-    }
-
-    const resetFilters = () => {
-        setFilteredData([]);
-        setFiltersApplied(false);
-        refetch();
-    };
-
-    // Originally, render the tasksData.content but once a filter is applied, render the filteredData and if it's empty, show no filter result found
     useEffect(() => {
-        if (filteredData.length > 0) {
-            setDataToRender(filteredData);
-            setPaginationLength(filteredTotalPages);
-        } else if (filtersApplied && filteredData.length === 0) {
-            setDataToRender([]);
-            setPaginationLength(filteredTotalPages)
-        } else if (searchText !== "") {
-            setDataToRender(searchResults?.content || []);
-            setPaginationLength(searchTotalPages);
-        } else {
-            setDataToRender(tasksData?.content || []);
-            setPaginationLength(totalPages);
-        }
-    }, [filteredData, tasksData, filtersApplied, searchText, searchResults]);
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth",
+        });
+    }, [isFiltering]);
 
-    const renderContent = () => {
-        if (isLoading) {
-            return (
-                <div className="w-full flex items-center justify-center h-[300px]">
-                    <Loading />
-                </div>
-            );
-        } else if (dataToRender.length === 0) {
-            return <div className="text-center text-status-darkViolet text-2xl font-semibold my-20">Tasks not found</div>;
+    // done and working
+    const handleShowDropdown = (category: string) => {
+        if (isDropdownOpen.category === category && isDropdownOpen.isOpened) {
+            setIsDropdownOpen((prev) => ({ ...prev, isOpened: false, category }));
         } else {
-            return (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 my-10">
-                    {dataToRender.map((task, index) => (
-                        <TaskCard task={task} key={index} />
-                    ))}
-                </div>
-            );
+            setIsDropdownOpen((prev) => ({ ...prev, isOpened: true, category }));
         }
     };
 
-    const otherOptionsDropdown = [
-        {
-            label: "Price: High to low",
-            onClick: () => handleSortByPrice("desc"),
-        },
-        {
-            label: "Price: Low to high",
-            onClick: () => handleSortByPrice("asc"),
-        },
-        {
-            label: "Due date: Earliest",
-            onClick: () => handleFilterByDate("asc"),
-        },
-        {
-            label: "Due date: Latest",
-            onClick: () => handleFilterByDate("desc"),
-        },
-    ];
+    const handleSearchSubmit = async (event: FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        try {
+            dispatch(setFilterLoadingState(true));
+            const url =
+                "https://smp.jacinthsolutions.com.au/api/v1/task/text/0?text=" +
+                searchInputData;
+            const { data } = await axios.get(url);
+            dispatch(setFilterParams(`?text=${searchInputData}`));
+            dispatch(
+                filterExploreTasks({ data: data.content, totalPages: data.totalPages }),
+            );
+        } catch (error: any) {
+            console.log(error.response?.data || error);
+        } finally {
+            dispatch(setFilterLoadingState(false));
+        }
+    };
+
+    const handleFilter = async () => {
+        try {
+            dispatch(setFilterLoadingState(true));
+            const { category, location, typeOfService, minPrice, maxPrice } =
+                filterDataStructure;
+            let url =
+                "https://smp.jacinthsolutions.com.au/api/v1/task/filter-tasks/0?";
+            const params = [];
+
+            if (category) {
+                params.push(`category=${category}`);
+            }
+            if (location) {
+                params.push(`location=${location}`);
+            }
+            if (typeOfService) {
+                params.push(`typeOfService=${typeOfService}`);
+            }
+            if (minPrice > 5) {
+                params.push(`minPrice=${minPrice}`);
+            }
+            if (maxPrice < 1000) {
+                params.push(`maxPrice=${maxPrice}`);
+            }
+            if (params.length > 0) {
+                url += params.join("&");
+            }
+            const response = await axios.get(url);
+            dispatch(
+                filterExploreTasks({
+                    data: response.data.content,
+                    totalPages: response.data.totalPages,
+                }),
+            );
+            dispatch(setFilterParams(`?${params.join("&")}`));
+        } catch (error: any) {
+            console.log(error.response.data || error);
+        } finally {
+            dispatch(setFilterLoadingState(false));
+        }
+    };
+
+    const handleResetFilters = () => {
+        setfilterDataStructure({
+            category: "",
+            location: "",
+            typeOfService: "",
+            minPrice: 5,
+            maxPrice: 1000,
+            typeOfServiceDisplay: "",
+        });
+        dispatch(resetFilter());
+    };
+
+    useEffect(() => {
+        if (isMounted) {
+            if (
+                filterDataStructure.category ||
+                filterDataStructure.location ||
+                filterDataStructure.typeOfService ||
+                filterDataStructure.typeOfServiceDisplay ||
+                filterDataStructure.minPrice !== 5 ||
+                filterDataStructure.maxPrice !== 1000
+            ) {
+                handleFilter();
+            } else {
+                dispatch(resetFilter());
+            }
+        } else {
+            setIsMounted(true);
+        }
+        // eslint-disable-next-line
+    }, [filterDataStructure]);
+
+    const [isMobileFilterModalShown, setIsMobileFilterModalShown] = useState(false);
 
     return (
         <section className="py-10 container">
             {/* Search bar */}
-            <section className="pt-10">
-                {/* <div className="relative mt-7 h-[124px] lg:h-[473px] mb-10">
-                    <Image
-                        src="/assets/images/explore/google-map.png"
-                        alt="map"
-                        fill
-                        className="object-cover"
-                    />
-                </div> */}
+            <section className="py-10">
                 <div className="flex w-full items-center justify-between">
-                    <form className="flex items-center space-x-4 max-lg:my-4 max-lg:w-full max-lg:justify-between max-lg:px-1">
+                    <form className="flex items-center space-x-4 max-lg:my-4 max-lg:w-full max-lg:justify-between max-lg:px-1" onSubmit={handleSearchSubmit}>
                         <div className="flex h-[29px] items-center space-x-2 rounded-lg border border-status-violet bg-[#F1F1F2] px-4 max-sm:w-full lg:h-[55px] lg:w-[300px] lg:rounded-2xl">
                             <CiSearch className="h-6 w-6 text-status-violet" />
                             <input
                                 placeholder="Search"
-                                onChange={(e) => setSearchText(e.target.value)}
+                                value={searchInputData}
+                                onChange={(event) => setSearchInputData(event.target.value)}
                                 type="search"
                                 className="w-full bg-[#F1F1F2] text-base outline-none placeholder:text-base focus:outline-none active:outline-none lg:py-3"
                             />
                         </div>
-                        <button type="button" className="flex h-[29px] w-[29px] items-center justify-center rounded-lg bg-primary lg:h-[55px] lg:w-[55px] lg:rounded-2xl">
+                        <button type="submit" className="flex h-[29px] w-[29px] items-center justify-center rounded-lg bg-primary lg:h-[55px] lg:w-[55px] lg:rounded-2xl">
                             <CiSearch className="h-5 w-5 text-status-violet lg:h-7 lg:w-7" />
                         </button>
                     </form>
-                    {/* <Button
-                        theme="secondary"
-                        className="hidden h-[29px] items-center justify-center rounded-full bg-tc-orange px-14 font-bold text-white lg:flex lg:h-[49px]"
-                    >
-                        1 New Task
-                    </Button> */}
                 </div>
             </section>
-            <div className="hidden lg:flex lg:space-x-4 mt-10 items-center">
-                <Button className="rounded-full text-center w-[100px] text-sm" onClick={resetFilters}>
-                    All
-                </Button>
-
-                {/* Category */}
-                <div className="">
-                    <Dropdown
-                        trigger={() => (
-                            <div className="w-[130px] border-2 border-primary text-primary bg-[#F1F1F2] flex items-center justify-center space-x-2 font-semibold py-2 px-4 rounded-full">
-                                <h2 className="text-sm">Category</h2>
-                                <IoMdArrowDropdown />
-                            </div>
-                        )}
-                        className='left-0 right-0 top-14'
-                    >
-                        <form className='bg-white min-w-[240px] rounded-2xl p-2'>
-                            {categoriesData.map((category, index) => (
-                                <div
-                                    key={index}
-                                    onClick={() => handleFilterByCategory(category.id)}
-                                    className='flex w-full transition-all text-status-darkViolet text-base font-bold hover:text-tc-orange cursor-pointer items-center justify-between p-2'>
-                                    <div className="">
-                                        {category?.categoryName}
-                                    </div>
-                                </div>
-                            ))}
-                        </form>
-                    </Dropdown>
-                </div>
-
-                {/* Location */}
-                <div className="">
-                    <Dropdown
-                        trigger={() => (
-                            <div className="w-[130px] border-2 border-primary text-primary bg-[#F1F1F2] flex items-center justify-center space-x-2 font-semibold py-2 px-4 rounded-full">
-                                <h2 className="text-sm">Location</h2>
-                                <IoMdArrowDropdown />
-                            </div>
-                        )}
-                        className='-left-24 top-14'>
-                        <form className='bg-white min-w-[240px] rounded-2xl p-4'>
-                            {locationData.map((location, index) => (
-                                <div
-                                    key={index}
-                                    onClick={() => handleFilterByLocation(location)}
-                                    className='flex w-full transition-all text-status-darkViolet text-base font-bold hover:text-tc-orange cursor-pointer items-center justify-between p-2'>
-                                    <div className="">
-                                        {location}
-                                    </div>
-                                </div>
-                            ))}
-                        </form>
-                    </Dropdown>
-                </div>
-
-                {/* Type of service */}
-                <div className="">
-                    <Dropdown
-                        trigger={() => (
-                            <div id="typeOfService" className="w-[200px] border-2 border-primary bg-[#F1F1F2] flex items-center justify-center space-x-2 text-primary font-semibold py-2 px-4 rounded-full">
-                                <h2 className="text-sm">Type of service</h2>
-                                <IoMdArrowDropdown />
-                            </div>
-                        )}
-                        className='-left-24 top-14'>
-                        <div className='bg-white min-w-[240px] rounded-2xl p-4 space-y-8'>
-                            <h4 className="text-xl text-[#190E3F] font-medium">Type of service</h4>
-                            <div className="flex mb-6 w-full rounded-full bg-orange-100">
+            <section className="flex flex-col gap-5">
+                <div className={`max-md:hidden  ${isFiltering ? "order-2" : ""} `}>
+                    <div className="flex flex-wrap gap-4 space-x-2 text-xs lg:space-x-6 ">
+                        <button
+                            className="cursor-pointer rounded-3xl bg-violet-normal px-4 py-2 text-base  font-bold text-white"
+                            onClick={() => {
+                                handleResetFilters();
+                            }}
+                        >
+                            All
+                        </button>
+                        {/* -------------------------------- */}
+                        {/* Category */}
+                        <div className="relative">
+                            {filterDataStructure.category !== "" && (
                                 <button
-                                    className={`px-6 py-2 rounded-full text-status-darkViolet font-bold text-lg focus:outline-none ${selectedService === 'REMOTE_SERVICE' ? 'bg-orange-500 flex-1' : 'bg-transparent'
-                                        }`}
-                                    onClick={() => handleFilterByType('REMOTE_SERVICE')}
+                                    className="pointer-events-auto absolute -right-1 -top-1 flex size-6 items-center justify-center rounded-full bg-violet-normal text-white "
+                                    onClick={() => {
+                                        setfilterDataStructure((prev) => ({
+                                            ...prev,
+                                            category: "",
+                                        }));
+                                    }}
                                 >
-                                    Remote
+                                    <span></span>
+                                    <BsX />
                                 </button>
-                                <button
-                                    className={`px-6 py-2 rounded-full text-status-darkViolet font-bold text-lg focus:outline-none ${selectedService === 'PHYSICAL_SERVICE' ? 'bg-orange-500  flex-1' : 'bg-transparent'
-                                        }`}
-                                    onClick={() => handleFilterByType('PHYSICAL_SERVICE')}
-                                >
-                                    Physical
-                                </button>
+                            )}
+                            <button
+                                className="flex items-center gap-2 rounded-3xl border border-violet-normal bg-violet-light px-4 py-2 text-base font-bold text-violet-normal transition-colors duration-300 hover:bg-violet-200 "
+                                onClick={() => handleShowDropdown("category")}
+                            >
+                                <div
+                                    className={`fixed left-0 top-0 h-screen w-screen ${isDropdownOpen.isOpened && isDropdownOpen.category === "category" ? "block" : "hidden"} `}
+                                    onClick={() => handleShowDropdown("category")}
+                                ></div>
+                                {filterDataStructure.category === ""
+                                    ? "Category"
+                                    : truncateText(filterDataStructure.category, 12)}
+                                <span>
+                                    <BsTriangleFill
+                                        fill="rgb(56 31 140)"
+                                        className="size-2 rotate-[60deg] text-violet-normal"
+                                    />
+                                </span>
+                            </button>
+                            <div
+                                className={`small-scrollbar absolute top-[calc(100%+1rem)] flex max-h-0 min-w-full flex-col rounded-md bg-violet-50 transition-all duration-300 ${isDropdownOpen.category === "category" && isDropdownOpen.isOpened ? "max-h-64 overflow-y-auto border border-slate-200 " : "max-h-0  overflow-hidden "} `}
+                            >
+                                {categories.map((item) => (
+                                    <button
+                                        className=" relative whitespace-nowrap px-8 py-3 text-left text-base text-violet-normal transition-colors duration-300 hover:bg-violet-100 "
+                                        key={item.id}
+                                        onClick={() => {
+                                            handleShowDropdown("category");
+                                            setfilterDataStructure((prev) => ({
+                                                ...prev,
+                                                category: item.categoryName,
+                                            }));
+                                        }}
+                                    >
+                                        {item.categoryName}
+                                    </button>
+                                ))}
                             </div>
                         </div>
-                    </Dropdown>
-                </div>
-
-                {/* Price */}
-                <div className="">
-                    <Dropdown
-                        closeOnClick={false}
-                        trigger={() => (
-                            <div className="w-[130px] border-2 border-primary text-primary bg-[#F1F1F2] flex items-center justify-center space-x-2 font-semibold py-2 px-4 rounded-full" onClick={() => setShowPriceDropdown(true)}>
-                                <h2 className="text-sm">Pricing</h2>
-                                <IoMdArrowDropdown />
-                            </div>
-                        )}
-                        className='-left-24 top-14'>
-                        {showPriceDropdown && (
-                            <form className='bg-white min-w-[240px] rounded-2xl flex items-center p-4'>
-                                <div className="space-y-8 w-full p-3">
-                                    <h4 className="text-xl text-[#190E3F] font-medium">Price</h4>
-                                    <div className="text-2xl text-black font-bold text-center mb-6">
-                                        ${priceValues[0]} - ${priceValues[1]}
-                                    </div>
-                                    <ReactSlider
-                                        className="relative w-full h-2 bg-[#FE9B07] rounded-2xl"
-                                        thumbClassName="absolute h-6 w-6 bg-[#FE9B07] rounded-full cursor-grab transform -translate-y-1/2 top-1/2"
-                                        trackClassName="top-1/2 bg-[#FE9B07]"
-                                        value={priceValues}
-                                        min={5}
-                                        max={10000}
-                                        step={5}
-                                        onChange={(newValues) => setPriceValues(newValues as [number, number])}
-                                    />
-                                    <div className="flex items-center justify-between space-x-8 w-full">
-                                        <Button theme="outline" className="rounded-full" onClick={() => setPriceValues([5, 10000])}>
-                                            Cancel
-                                        </Button>
-                                        <Button className="rounded-full" onClick={() => {
-                                            handleFilterByPriceRange(priceValues[0], priceValues[1])
-                                            setShowPriceDropdown(false)
-                                        }}>
-                                            Apply
-                                        </Button>
-                                    </div>
-                                </div>
-                            </form>
-                        )}
-                    </Dropdown>
-                </div>
-
-                {/* Others */}
-                <div className="">
-                    <Dropdown
-                        trigger={() => (
-                            <div className="w-[130px] border-2 border-primary text-primary bg-[#F1F1F2] flex items-center justify-center space-x-2 font-semibold py-2 px-4 rounded-full">
-                                <h2 className="text-sm">Others</h2>
-                                <IoMdArrowDropdown />
-                            </div>
-                        )}
-                        className='left-0 right-0 top-14'>
-                        <form className='bg-white rounded-2xl p-4 min-w-[240px]'>
-                            {otherOptionsDropdown.map((option, index) => (
+                        {/* -------------------------------- */}
+                        {/* location */}
+                        <div className="relative">
+                            {filterDataStructure.location !== "" && (
+                                <button
+                                    className="absolute -right-1 -top-1 flex size-6 items-center justify-center rounded-full bg-violet-normal text-white"
+                                    onClick={() =>
+                                        setfilterDataStructure((prev) => ({
+                                            ...prev,
+                                            location: "",
+                                        }))
+                                    }
+                                >
+                                    <BsX />
+                                </button>
+                            )}
+                            <button
+                                className=" flex items-center gap-2 rounded-3xl border border-violet-normal  bg-violet-light px-4 py-2 text-base font-bold text-violet-normal transition-colors duration-300 hover:bg-violet-200 "
+                                onClick={() => handleShowDropdown("location")}
+                            >
                                 <div
-                                    key={index}
-                                    onClick={option.onClick}
-                                    className='flex w-full transition-all text-[#140B31] overflow-y-auto text-base font-bold hover:text-tc-orange cursor-pointer items-center justify-between p-2'>
-                                    <div className="">
-                                        {option.label}
-                                    </div>
-                                </div>
-                            ))}
-                        </form>
-                    </Dropdown>
-                </div>
-
-            </div>
-
-            {/* Mobile filters */}
-            <div className="flex items-center justify-center w-full">
-                <div className="lg:hidden mt-5">
-                    <Dropdown
-                        trigger={() => (
-                            <Button theme="outline" className="flex items-center space-x-4 rounded-full w-[270px]" onClick={() => setShowMobileFilters(true)}>
-                                <svg width="16" height="18" viewBox="0 0 16 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M5 2.00191C4.73478 2.00191 4.48043 2.10723 4.29289 2.29472C4.10536 2.4822 4 2.73649 4 3.00163C4 3.26678 4.10536 3.52106 4.29289 3.70855C4.48043 3.89603 4.73478 4.00136 5 4.00136C5.26522 4.00136 5.51957 3.89603 5.70711 3.70855C5.89464 3.52106 6 3.26678 6 3.00163C6 2.73649 5.89464 2.4822 5.70711 2.29472C5.51957 2.10723 5.26522 2.00191 5 2.00191ZM2.17 2.00191C2.3766 1.41653 2.75974 0.909636 3.2666 0.55109C3.77346 0.192543 4.37909 0 5 0C5.62091 0 6.22654 0.192543 6.7334 0.55109C7.24026 0.909636 7.6234 1.41653 7.83 2.00191H15C15.2652 2.00191 15.5196 2.10723 15.7071 2.29472C15.8946 2.4822 16 2.73649 16 3.00163C16 3.26678 15.8946 3.52106 15.7071 3.70855C15.5196 3.89603 15.2652 4.00136 15 4.00136H7.83C7.6234 4.58673 7.24026 5.09363 6.7334 5.45218C6.22654 5.81072 5.62091 6.00327 5 6.00327C4.37909 6.00327 3.77346 5.81072 3.2666 5.45218C2.75974 5.09363 2.3766 4.58673 2.17 4.00136H1C0.734784 4.00136 0.48043 3.89603 0.292893 3.70855C0.105357 3.52106 0 3.26678 0 3.00163C0 2.73649 0.105357 2.4822 0.292893 2.29472C0.48043 2.10723 0.734784 2.00191 1 2.00191H2.17ZM11 8.00027C10.7348 8.00027 10.4804 8.1056 10.2929 8.29309C10.1054 8.48057 10 8.73486 10 9C10 9.26514 10.1054 9.51943 10.2929 9.70691C10.4804 9.8944 10.7348 9.99973 11 9.99973C11.2652 9.99973 11.5196 9.8944 11.7071 9.70691C11.8946 9.51943 12 9.26514 12 9C12 8.73486 11.8946 8.48057 11.7071 8.29309C11.5196 8.1056 11.2652 8.00027 11 8.00027ZM8.17 8.00027C8.3766 7.4149 8.75974 6.908 9.2666 6.54946C9.77346 6.19091 10.3791 5.99837 11 5.99837C11.6209 5.99837 12.2265 6.19091 12.7334 6.54946C13.2403 6.908 13.6234 7.4149 13.83 8.00027H15C15.2652 8.00027 15.5196 8.1056 15.7071 8.29309C15.8946 8.48057 16 8.73486 16 9C16 9.26514 15.8946 9.51943 15.7071 9.70691C15.5196 9.8944 15.2652 9.99973 15 9.99973H13.83C13.6234 10.5851 13.2403 11.092 12.7334 11.4505C12.2265 11.8091 11.6209 12.0016 11 12.0016C10.3791 12.0016 9.77346 11.8091 9.2666 11.4505C8.75974 11.092 8.3766 10.5851 8.17 9.99973H1C0.734784 9.99973 0.48043 9.8944 0.292893 9.70691C0.105357 9.51943 0 9.26514 0 9C0 8.73486 0.105357 8.48057 0.292893 8.29309C0.48043 8.1056 0.734784 8.00027 1 8.00027H8.17ZM5 13.9986C4.73478 13.9986 4.48043 14.104 4.29289 14.2915C4.10536 14.4789 4 14.7332 4 14.9984C4 15.2635 4.10536 15.5178 4.29289 15.7053C4.48043 15.8928 4.73478 15.9981 5 15.9981C5.26522 15.9981 5.51957 15.8928 5.70711 15.7053C5.89464 15.5178 6 15.2635 6 14.9984C6 14.7332 5.89464 14.4789 5.70711 14.2915C5.51957 14.104 5.26522 13.9986 5 13.9986ZM2.17 13.9986C2.3766 13.4133 2.75974 12.9064 3.2666 12.5478C3.77346 12.1893 4.37909 11.9967 5 11.9967C5.62091 11.9967 6.22654 12.1893 6.7334 12.5478C7.24026 12.9064 7.6234 13.4133 7.83 13.9986H15C15.2652 13.9986 15.5196 14.104 15.7071 14.2915C15.8946 14.4789 16 14.7332 16 14.9984C16 15.2635 15.8946 15.5178 15.7071 15.7053C15.5196 15.8928 15.2652 15.9981 15 15.9981H7.83C7.6234 16.5835 7.24026 17.0904 6.7334 17.4489C6.22654 17.8075 5.62091 18 5 18C4.37909 18 3.77346 17.8075 3.2666 17.4489C2.75974 17.0904 2.3766 16.5835 2.17 15.9981H1C0.734784 15.9981 0.48043 15.8928 0.292893 15.7053C0.105357 15.5178 0 15.2635 0 14.9984C0 14.7332 0.105357 14.4789 0.292893 14.2915C0.48043 14.104 0.734784 13.9986 1 13.9986H2.17Z" fill="#381F8C" />
-                                </svg>
-                                <h3>Filter by</h3>
-                            </Button>
-                        )}
-                        closeOnClick={false}
-                        className='left-0 right-0 mx-auto top-14'>
-                        {showMobileFilters && (
-                            <div className='bg-white rounded-2xl px-8 py-10 space-y-8 font-satoshi h-[500px] small-scrollbar overflow-y-auto'>
-                                <h3 className="font-bold text-primary text-2xl">Filter by</h3>
-                                <form action="" className="space-y-6">
-                                    {locationData.map((location, index) => (
-                                        <div
-                                            key={index}
-                                            onClick={() => {
-                                                handleFilterByLocation(location)
-                                                setShowMobileFilters(false)
-                                            }}
-                                            className='flex w-full transition-all text-status-darkViolet text-base font-bold hover:text-tc-orange cursor-pointer items-center space-x-3'>
-                                            <div className="w-3 h-3 bg-tc-orange rounded-full" />
-                                            <div className="">
-                                                {location}
-                                            </div>
+                                    className={`fixed left-0 top-0 h-screen w-screen ${isDropdownOpen.isOpened && isDropdownOpen.category === "location" ? "block" : "hidden"} `}
+                                    onClick={() => handleShowDropdown("location")}
+                                ></div>
+                                {filterDataStructure.location === ""
+                                    ? "Location"
+                                    : truncateText(filterDataStructure.location, 12)}
+                                <span>
+                                    <BsTriangleFill
+                                        fill="rgb(56 31 140)"
+                                        className="size-2 rotate-[60deg] text-violet-normal"
+                                    />
+                                </span>
+                            </button>
+                            <div
+                                className={`small-scrollbar absolute top-[calc(100%+1rem)] flex max-h-0 min-w-full flex-col rounded-md bg-violet-50 transition-all duration-300 ${isDropdownOpen.category === "location" && isDropdownOpen.isOpened ? "max-h-64 overflow-y-auto border border-slate-200 " : "max-h-0  overflow-hidden "} `}
+                            >
+                                {locationData.map((item, index) => (
+                                    <button
+                                        className="whitespace-nowrap px-8 py-3 text-left text-base text-violet-normal transition-colors duration-300 hover:bg-violet-100 "
+                                        key={index}
+                                        onClick={() => {
+                                            handleShowDropdown("location");
+                                            setfilterDataStructure((prev) => ({
+                                                ...prev,
+                                                location: item,
+                                            }));
+                                        }}
+                                    >
+                                        {item}
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+                        {/* Type of service */}
+                        <div className="relative">
+                            {filterDataStructure.typeOfService !== "" && (
+                                <button
+                                    className="pointer-events-auto absolute -right-1 -top-1 flex size-6 items-center justify-center rounded-full bg-violet-normal text-white "
+                                    onClick={() => {
+                                        setfilterDataStructure((prev) => ({
+                                            ...prev,
+                                            typeOfService: "",
+                                            typeOfServiceDisplay: "",
+                                        }));
+                                    }}
+                                >
+                                    <BsX />
+                                </button>
+                            )}
+                            <button
+                                className=" flex items-center gap-2 rounded-3xl border border-violet-normal  bg-violet-light px-4 py-2 text-base font-bold text-violet-normal transition-colors duration-300 hover:bg-violet-200 "
+                                onClick={() => handleShowDropdown("type")}
+                            >
+                                <div
+                                    className={`fixed left-0 top-0 h-screen w-screen ${isDropdownOpen.isOpened && isDropdownOpen.category === "type" ? "block" : "hidden"} `}
+                                    onClick={() => handleShowDropdown("type")}
+                                ></div>
+                                {filterDataStructure.typeOfServiceDisplay === ""
+                                    ? "Type of service"
+                                    : truncateText(
+                                        filterDataStructure.typeOfServiceDisplay,
+                                        12,
+                                    )}
+                                <span>
+                                    <BsTriangleFill
+                                        fill="rgb(56 31 140)"
+                                        className="size-2 rotate-[60deg] text-violet-normal"
+                                    />
+                                </span>
+                            </button>
+                            <div
+                                className={`small-scrollbar absolute top-[calc(100%+1rem)] flex max-h-0 min-w-full flex-col rounded-md bg-violet-50 transition-all duration-300 ${isDropdownOpen.category === "type" && isDropdownOpen.isOpened ? "max-h-64 overflow-y-auto border border-slate-200 " : "max-h-0  overflow-hidden "} `}
+                            >
+                                {typeData.map((item, index) => (
+                                    <button
+                                        className="whitespace-nowrap px-8 py-3 text-left text-base text-violet-normal transition-colors duration-300 hover:bg-violet-100 "
+                                        key={index}
+                                        onClick={() => {
+                                            handleShowDropdown("type");
+                                            setfilterDataStructure((prev) => ({
+                                                ...prev,
+                                                typeOfService: item.value,
+                                                typeOfServiceDisplay: item.label,
+                                            }));
+                                        }}
+                                    >
+                                        {item.label}
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+                        {/* ----------------------------------------- */}
+                        {/* Pricing */}
+                        <div className="relative z-20">
+                            {(filterDataStructure.minPrice !== 5 ||
+                                filterDataStructure.maxPrice !== 1000) && (
+                                    <button
+                                        className="absolute -right-1 -top-1 flex size-6 items-center justify-center rounded-full bg-violet-normal text-white"
+                                        onClick={() =>
+                                            setfilterDataStructure((prev) => ({
+                                                ...prev,
+                                                minPrice: 5,
+                                                maxPrice: 1000,
+                                            }))
+                                        }
+                                    >
+                                        <BsX />
+                                    </button>
+                                )}
+                            <button
+                                className="flex items-center gap-2 rounded-3xl border border-violet-normal  bg-violet-light px-4 py-2 text-base font-bold text-violet-normal transition-colors duration-300 hover:bg-violet-200 "
+                                onClick={() => handleShowDropdown("pricing")}
+                            >
+                                <div
+                                    className={`fixed left-0 top-0 h-screen w-screen ${isDropdownOpen.isOpened && isDropdownOpen.category === "pricing" ? "block" : "hidden"} `}
+                                    onClick={() => handleShowDropdown("pricing")}
+                                ></div>
+                                Pricing
+                                <span>
+                                    <BsTriangleFill
+                                        fill="rgb(56 31 140)"
+                                        className="size-2 rotate-[60deg] text-violet-normal"
+                                    />
+                                </span>
+                            </button>
+                            <div
+                                className={`small-scrollbar absolute top-[calc(100%+1rem)] z-50 flex max-h-0 min-w-full flex-col rounded-md bg-violet-50 transition-all duration-300 ${isDropdownOpen.category === "pricing" && isDropdownOpen.isOpened ? "max-h-64 overflow-y-auto border border-slate-200 " : "max-h-0  overflow-hidden "} `}
+                            >
+                                <div className="space-y-4 p-4">
+                                    <div className="min-w-64 p-4">
+                                        <div className="mb-6 text-center text-2xl font-bold text-violet-normal">
+                                            ${filterDataStructure.minPrice} - $
+                                            {filterDataStructure.maxPrice}
                                         </div>
-                                    ))}
-                                </form>
-
-                                <form action="" className="space-y-8 mt-5">
-                                    <h3 className="font-bold text-status-darkViolet text-2xl">Services</h3>
-                                    {categoriesData.map((category, index) => (
-                                        <div className="flex items-center space-x-3 cursor-pointer hover:underline" key={index} onClick={() => {
-                                            handleFilterByCategory(category.id)
-                                            setShowMobileFilters(false)
-                                        }}>
-                                            <div className="w-3 h-3 bg-tc-orange rounded-full" />
-                                            <div className="font-medium text-lg text-primary">{category.categoryName}</div>
-                                        </div>
-                                    ))}
-                                </form>
-
-                                <form action="" className="space-y-8 mt-5">
-                                    <h3 className="font-bold text-status-darkViolet text-2xl">Type of Service</h3>
-                                    <div className="flex items-center space-x-3 cursor-pointer hover:underline" onClick={() => {
-                                        handleFilterByType('PHYSICAL_SERVICE')
-                                        setShowMobileFilters(false)
-                                    }}>
-                                        <div className="w-3 h-3 bg-tc-orange rounded-full" />
-                                        <div className="font-medium text-lg text-primary">Physical</div>
-                                    </div>
-                                    <div className="flex items-center space-x-3 cursor-pointer hover:underline" onClick={() => {
-                                        handleFilterByType('REMOTE_SERVICE')
-                                        setShowMobileFilters(false)
-                                    }}>
-                                        <div className="w-3 h-3 bg-tc-orange rounded-full" />
-                                        <div className="font-medium text-lg text-primary">Remote</div>
-                                    </div>
-                                </form>
-
-                                <form action="" className="space-y-8 mt-5">
-                                    <h3 className="font-bold text-status-darkViolet text-2xl">Pricing</h3>
-                                    <div className="w-full space-y-6">
-                                        <h4 className="text-md text-primary font-medium">Price range</h4>
                                         <ReactSlider
-                                            className="relative w-full h-2 bg-[#FE9B07] rounded-2xl"
+                                            className="relative h-2 w-full rounded-md bg-[#FE9B07]"
                                             thumbClassName="absolute h-6 w-6 bg-[#FE9B07] rounded-full cursor-grab transform -translate-y-1/2 top-1/2"
                                             trackClassName="top-1/2 bg-[#FE9B07]"
-                                            value={priceValues}
+                                            value={[
+                                                filterDataStructure.minPrice,
+                                                filterDataStructure.maxPrice,
+                                            ]}
                                             min={5}
-                                            max={10000}
+                                            max={1000}
                                             step={5}
-                                            onChange={(newValues) => setPriceValues(newValues as [number, number])}
+                                            onChange={(newValues: number[]) => {
+                                                setfilterDataStructure((prev) => ({
+                                                    ...prev,
+                                                    minPrice: newValues[0],
+                                                    maxPrice: newValues[1],
+                                                }));
+                                            }}
                                         />
-                                        <div className="text-sm text-primary text-center mt-4">
-                                            ${priceValues[0]} - ${priceValues[1]}
-                                        </div>
-                                        <div className="flex items-center justify-between space-x-8 w-full">
-                                            <Button theme="outline" className="rounded-full" onClick={() => setPriceValues([5, 10000])}>
-                                                Cancel
-                                            </Button>
-                                            <Button className="rounded-full" onClick={() => {
-                                                handleFilterByPriceRange(priceValues[0], priceValues[1])
-                                                setShowMobileFilters(false)
-                                            }}>
-                                                Apply
-                                            </Button>
-                                        </div>
                                     </div>
-                                    <div className="flex items-center space-x-3 cursor-pointer hover:underline" onClick={() => {
-                                        handleSortByPrice("desc")
-                                        setShowMobileFilters(false)
-                                    }}>
-                                        <div className="w-3 h-3 bg-tc-orange rounded-full" />
-                                        <div className="font-medium text-lg text-primary">Highest to Lowest</div>
+                                    <div className="flex items-center gap-4 ">
+                                        <button
+                                            onClick={() => handleShowDropdown("pricing")}
+                                            className=" rounded-full  bg-violet-normal px-4 py-2 text-left text-sm text-white transition-opacity duration-300 hover:opacity-90 "
+                                        >
+                                            Apply
+                                        </button>
                                     </div>
-                                    <div className="flex items-center space-x-3 cursor-pointer hover:underline" onClick={() => {
-                                        handleSortByPrice("asc")
-                                        setShowMobileFilters(false)
-                                    }}>
-                                        <div className="w-3 h-3 bg-tc-orange rounded-full" />
-                                        <div className="font-medium text-lg text-primary">Lowest to Highest</div>
-                                    </div>
-                                </form>
-
-                                <form action="" className="space-y-8 mt-5">
-                                    <h3 className="font-bold text-status-darkViolet text-2xl">Others</h3>
-                                    <div className="flex items-center space-x-3 cursor-pointer hover:underline" onClick={() => {
-                                        handleFilterByDate("asc")
-                                        setShowMobileFilters(false)
-                                    }}>
-                                        <div className="w-3 h-3 bg-tc-orange rounded-full" />
-                                        <div className="font-medium text-lg text-primary">Earliest</div>
-                                    </div>
-                                    <div className="flex items-center space-x-3 cursor-pointer hover:underline" onClick={() => {
-                                        handleFilterByDate("desc")
-                                        setShowMobileFilters(false)
-                                    }}>
-                                        <div className="w-3 h-3 bg-tc-orange rounded-full" />
-                                        <div className="font-medium text-lg text-primary">Latest</div>
-                                    </div>
-                                </form>
+                                </div>
                             </div>
-                        )}
-                    </Dropdown>
+                        </div>
+
+                        <button
+                            className="min-w-40 cursor-pointer rounded-3xl bg-orange-normal px-4 py-2 text-base  font-bold text-white"
+                            onClick={handleResetFilters}
+                        >
+                            Reset filters
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <div className="relative flex justify-center md:hidden ">
+                <ExploreMobileFilterModal
+                    isMobileFilterModalShown={isMobileFilterModalShown}
+                    setIsMobileFilterModalShown={setIsMobileFilterModalShown}
+                    setfilterDataStructure={setfilterDataStructure}
+                    filterDataStructure={filterDataStructure}
+                // handleResetFilters={handleResetFilters}
+                />
+                <div className="flex gap-4">
+                    <button
+                        className={`flex items-center justify-center gap-3 rounded-full border border-violet-normal bg-violet-light px-6 py-2 font-bold text-violet-normal ${isFiltering ? "w-auto" : "w-full min-w-72"}`}
+                        onClick={() => setIsMobileFilterModalShown(true)}
+                    >
+                        <span>
+                            <GiSettingsKnobs />
+                        </span>
+                        Filter By
+                    </button>
+                    {isFiltering && (
+                        <button
+                            className="min-w-40 flex-grow cursor-pointer rounded-3xl bg-orange-normal px-4 py-2 text-base font-bold text-white"
+                            onClick={handleResetFilters}
+                        >
+                            Reset filters
+                        </button>
+                    )}
                 </div>
             </div>
 
-            <div className="w-full">
-                {renderContent()}
-                {dataToRender.length > 0 && (
-                    <div className="flex justify-center items-center my-4">
-                        <button
-                            onClick={() => handlePageChange((searchText ? searchResultsPage : currentPage) - 1, searchText !== "")}
-                            disabled={searchText ? searchResultsPage === 1 : currentPage === 1}
-                            className={`bg-primary text-white mr-10 rounded max-lg:text-xs lg:rounded-[10px] h-[39px] w-[39px] flex items-center justify-center ${searchText ? searchResultsPage === 1 : currentPage === 1 ? 'bg-status-violet' : ''}`}
-                        >
-                            <FaChevronLeft />
-                        </button>
-                        {Array.from({ length: paginationLength }, (_, index) => (
-                            <button
-                                key={index}
-                                onClick={() => handlePageChange(index + 1, searchText !== "")}
-                                className={`border font-bold rounded max-lg:text-xs mx-2 lg:rounded-[10px] h-[39px] w-[39px] flex items-center justify-center ${searchText ? searchResultsPage === index + 1 : currentPage === index + 1 ? "bg-primary text-white" : ""}`}
-                            >
-                                {index + 1}
-                            </button>
-                        ))}
-                        <button
-                            onClick={() => handlePageChange((searchText ? searchResultsPage : currentPage) + 1, searchText !== "")}
-                            disabled={searchText ? searchResultsPage === searchTotalPages : currentPage === totalPages}
-                            className={`bg-primary text-white ml-10 rounded max-lg:text-xs lg:rounded-[10px] h-[39px] w-[39px] flex items-center justify-center ${searchText ? searchResultsPage === searchTotalPages : currentPage === totalPages ? 'bg-status-violet' : ''}`}
-                        >
-                            <FaChevronRight />
-                        </button>
+
+            <div>
+                {isFilteringLoading ? (
+                    <div className="min-h-80 items-center justify-center p-4">
+                        <Loading />
+                    </div>
+                ) : isFiltering ? (
+                    <div>
+                        <ExploreCategoryLising category="All" />
+                    </div>
+                ) : (
+                    <div>
+                        {categories.length < 1 ? (
+                            <Loading />
+                        ) : (
+                            <div>
+                                <ExploreCategoryLising category="All" />
+                            </div>
+                        )}
                     </div>
                 )}
             </div>
         </section>
-    );
+    )
 };
 
 export default Tasks;

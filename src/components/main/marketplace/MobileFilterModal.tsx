@@ -158,7 +158,7 @@ const MobileFilterModal = ({
                 }
               />
             </div>
-            <input
+            {/* <input
               type="number"
               className="my-1 w-full rounded-full border border-orange-normal p-3 text-center outline-none "
               max={99999}
@@ -170,7 +170,7 @@ const MobileFilterModal = ({
                   maxPrice: Number(event.target.value),
                 }))
               }
-            />
+            /> */}
           </div>
         </div>
 

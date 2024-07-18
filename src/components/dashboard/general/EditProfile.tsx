@@ -109,7 +109,7 @@ const EditProfile = () => {
           url =
             "https://smp.jacinthsolutions.com.au/api/v1/service_provider/profile";
         } else {
-          url = "https://smp.jacinthsolutions.com.au/api/v1/customer";
+          url = "https://smp.jacinthsolutions.com.au/api/v1/customer/profile";
         }
         const { data } = await axios.get(url, {
           headers: {
@@ -125,6 +125,8 @@ const EditProfile = () => {
 
     fetchUserData();
   }, [token, isServiceProvider]);
+
+  console.log("userDetails", userDetails);
 
   const watchField = watch();
 
@@ -196,7 +198,7 @@ const EditProfile = () => {
         url =
           "https://smp.jacinthsolutions.com.au/api/v1/service_provider/update";
       } else {
-        submitData = {
+        submitData = Object.entries({
           firstName: data.firstName,
           lastName: data.lastName,
           dateOfBirth: formatDateAsYYYYMMDD(data.dateOfBirth as Date),
@@ -206,8 +208,14 @@ const EditProfile = () => {
           idImage: selectedDocument,
           idType: data.idType,
           idNumber: data.idNumber,
-        };
-        url = "https://smp.jacinthsolutions.com.au/api/v1/customer";
+        }).reduce((acc, [key, value]) => {
+          if (value !== null && value !== undefined && value !== "") {
+            // @ts-expect-error "type of key not know"
+            acc[key] = value;
+          }
+          return acc;
+        }, {});
+        url = "https://smp.jacinthsolutions.com.au/api/v1/customer/update";
       }
 
       console.log(submitData);
@@ -276,11 +284,10 @@ const EditProfile = () => {
           </span>
           <Image
             src={
-              isEditingProfilePicture.image ??
               userProfile.profile?.profileImage ??
               "/assets/images/serviceProvider/user.jpg"
             }
-            alt="user"
+            alt=""
             width={100}
             height={100}
             className="size-32 h-full w-full rounded-full object-cover"
@@ -362,7 +369,7 @@ const EditProfile = () => {
                     onChange={onChange}
                     onBlur={onBlur}
                     maxDate={age18YearsAgo}
-                    className="w-full rounded-xl border border-slate-100 p-2 text-slate-700 shadow outline-none transition-shadow duration-300 hover:shadow-md lg:max-w-sm"
+                    className="w-full rounded-xl border border-slate-100 p-2 text-slate-700 shadow outline-none z-50 transition-shadow duration-300 hover:shadow-md lg:max-w-sm"
                     dateFormat="dd/MM/yyyy"
                   />
                 )}
@@ -386,7 +393,7 @@ const EditProfile = () => {
               </span>
               <textarea
                 disabled={!isEditingEnabled}
-                className="min-h-32 w-full rounded-xl border border-slate-100 p-2 text-slate-700  shadow outline-none transition-shadow duration-300 hover:shadow-md "
+                className="min-h-32 w-full rounded-xl border border-slate-100 p-2 text-slate-700 shadow outline-none transition-shadow duration-300 hover:shadow-md"
                 {...register("bio")}
               />
             </label>
@@ -545,10 +552,10 @@ const EditProfile = () => {
                       {watchField.idType === ""
                         ? "Select Id Type"
                         : idTypeObject.find(
-                            (item) =>
-                              item.value === watchField.idType ||
-                              item.label === watchField.idType,
-                          )?.label + " Number"}
+                          (item) =>
+                            item.value === watchField.idType ||
+                            item.label === watchField.idType,
+                        )?.label + " Number"}
                     </span>
                     {!errors.idNumber &&
                       watchField.idNumber &&
@@ -558,7 +565,6 @@ const EditProfile = () => {
                   </span>
                 </span>
                 <input
-                  type="number"
                   id="suburb"
                   maxLength={12}
                   className="rounded-xl border border-slate-100 p-2 text-slate-700 shadow  outline-none transition-shadow duration-300 hover:shadow-md lg:max-w-sm "
@@ -616,7 +622,7 @@ const EditProfile = () => {
 
         {/* ----------------- submit  button -------------------- */}
         <div className="flex lg:items-end lg:justify-end lg:px-24">
-          <button className="w-fit rounded-full border border-violet-normal bg-violet-light px-6 py-3 font-medium text-violet-normal transition-all duration-300 hover:bg-violet-200 hover:shadow-md">
+          <button className="w-fit rounded-full border border-violet-normal bg-violet-light px-6 py-3 font-satoshiBold font-bold  text-violet-normal transition-all duration-300 hover:bg-violet-200 hover:shadow-md">
             {isSubmitting ? (
               <BeatLoader color={"white"} loading={isSubmitting} size={14} />
             ) : (

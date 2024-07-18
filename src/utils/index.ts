@@ -131,9 +131,6 @@ export function formatDateFromNumberArrayToPastDate(
   // Calculate time difference in milliseconds
   const diffTime = now.getTime() - notificationDate.getTime();
 
-  console.log("Notification Date:", notificationDate);
-  console.log("Current Date:", now);
-
   // Calculate differences in units
   const diffSeconds = Math.floor(diffTime / 1000);
   const diffMinutes = Math.floor(diffSeconds / 60);
@@ -198,3 +195,43 @@ export function formatRelativeDate(timestampArray: number[]): string {
     return `${monthsAgo} month${monthsAgo === 1 ? "" : "s"} ago`;
   }
 }
+
+export const arrayToDate = (arr: number[]) => {
+  const [year, month, day, hour, minute, second] = arr;
+  return new Date(year, month - 1, day, hour, minute, second);
+};
+export const isToday = (arr: number[]) => {
+  const date = arrayToDate(arr);
+  const today = new Date();
+  return (
+    date.getFullYear() === today.getFullYear() &&
+    date.getMonth() === today.getMonth() &&
+    date.getDate() === today.getDate()
+  );
+};
+
+export const isThisWeek = (arr: number[]) => {
+  const date = arrayToDate(arr);
+  const today = new Date();
+  const startOfWeek = new Date(today.setDate(today.getDate() - today.getDay()));
+  const endOfWeek = new Date(today.setDate(startOfWeek.getDate() + 6));
+
+  return date >= startOfWeek && date <= endOfWeek;
+};
+
+export const isThisMonth = (arr: number[]) => {
+  const date = arrayToDate(arr);
+  const today = new Date();
+  return (
+    date.getFullYear() === today.getFullYear() &&
+    date.getMonth() === today.getMonth()
+  );
+};
+
+export const isOlder = (arr: number[]) => {
+  const date = arrayToDate(arr);
+  const today = new Date();
+  const oneMonthAgo = new Date(today.setMonth(today.getMonth() - 1));
+
+  return date < oneMonthAgo;
+};

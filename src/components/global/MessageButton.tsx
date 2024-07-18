@@ -7,7 +7,7 @@ import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { BeatLoader } from "react-spinners";
 import "../../styles/serviceProviderStyles.css";
-import { stompClient } from "@/lib/stompClient";
+import axios from "axios";
 
 interface MessageButtonProps {
   recipientId: string;
@@ -26,23 +26,33 @@ const MessageButton = ({
   const { profile: user } = useSelector(
     (state: RootState) => state.userProfile,
   );
-  // const { stompClient } = useSelector((state: RootState) => state.chat);
+  const { contacts } = useSelector((state: RootState) => state.chat);
 
   const handleSendMessage = async () => {
     setMessageLoading(true);
-    console.log("sending");
     if (user) {
-      const message = {
-        senderId: user.id,
-        recipientId,
-        senderName: `${user.firstName} ${user.lastName}`,
-        recipientName,
-        content: "Hello " + recipientName,
-        timestamp: new Date().toISOString(),
-      };
+      let foundContact: ChatContactTypes | undefined;
+      if (contacts) {
+        foundContact = contacts.find((item) => Number(recipientId) === item.id);
+      }
+      if (foundContact) {
+        router.push("/message/" + recipientId);
+        return;
+      }
       try {
-        await stompClient.send("/app/chat", {}, JSON.stringify(message)),
-          router.push("/message/" + recipientId);
+        const url =
+          "https://smp.jacinthsolutions.com.au/api/v1/user/user-profile/" +
+          recipientId;
+        const { data } = await axios.get(url);
+        const newData: UserProfileTypes = data;
+        const tempUserChat: ChatContactTypes = {
+          id: newData.id,
+          newMessages: null,
+          profilePicture: newData.profileImage,
+          name: `${newData.firstName} ${newData.lastName}`,
+        };
+        localStorage.setItem("tempUserChat", JSON.stringify(tempUserChat));
+        router.push("/message/" + recipientId);
       } catch (error: any) {
         console.log(error.response.data || error.message || error);
       } finally {

@@ -2,27 +2,22 @@ import Button from '@/components/global/Button';
 import Dropdown from '@/components/global/Dropdown';
 import axios from 'axios';
 import { useSession } from 'next-auth/react';
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { FaSortDown } from 'react-icons/fa6';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { CustomerTasks } from '@/types/services/tasks';
-import { PiFileArrowDownDuotone } from 'react-icons/pi';
+import { PiSealCheckFill } from 'react-icons/pi';
 import Image from 'next/image';
+import { z } from "zod";
+import { useForm, SubmitHandler } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { typeData } from "@/data/marketplace/data";
+import { useRouter } from 'next/navigation';
 
 interface TaskCardProps {
     task: CustomerTasks;
-    // closeModal: () => void;
-}
-
-interface PostalCodeData {
-    name: string;
-    postcode: string;
-    state: {
-        name: string;
-        abbreviation: string;
-    };
-    locality: string;
+    setShowEditModal: (value: boolean) => void;
 }
 
 interface CustomInputProps {
@@ -30,53 +25,111 @@ interface CustomInputProps {
     onClick?: () => void;
 }
 
-const EditTaskForm = ({ task }: TaskCardProps) => {
+const EditTaskForm = ({ task, setShowEditModal }: TaskCardProps) => {
     const [activeEditModalLink, setActiveEditModalLink] = useState<string>("Task Details");
-    const [error, setError] = useState("");
     const [categories, setCategories] = useState<{ id: number; categoryName: string }[]>([]);
-    const [postalCodes, setPostalCodes] = useState<PostalCodeData[]>([]);
-    const [updatedTaskType, setUpdatedTaskType] = useState<string>(task.taskType);
     const [updatedPostCode, setUpdatedPostCode] = useState<any>(task.postCode);
-    const [updatedSuburb, setUpdatedSuburb] = useState<string>(task.suburb!);
-    const [updatedState, setUpdatedState] = useState<string>(task.state!);
     const [updatedCustomerBudget, setUpdatedCustomerBudget] = useState<string>(task.customerBudget.toString());
-    const [updatedImage, setUpdatedImage] = useState(null)
     const [updatedDate, setUpdatedDate] = useState<Date | null>(null);
     const [updatedTime, setUpdatedTime] = useState<Date | null>(null);
-    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState("");
+    const [taskImage, setTaskImage] = useState<File | null>(null);
+    const taskImageRef = useRef<HTMLInputElement>(null);
+    const [suburbList, setSuburbList] = useState([]);
+    const [selectedCategory, setSelectedCategory] = useState<string>(task.category.categoryName);
+    const [showSuccessModal, setShowSuccessModal] = useState(false);
+    const [isFlexible, setIsFlexible] = useState(false);
 
     const { data: session } = useSession();
     const token = session?.user.accessToken;
+    const router = useRouter();
 
-    const [taskData, setTaskData] = useState({
-        taskBriefDescription: task.taskBriefDescription,
-        taskImage: updatedImage ? updatedImage : task.taskImage,
-        taskTime: task.taskTime,
-        taskDate: task.taskDate,
-        taskType: updatedTaskType ? updatedTaskType : task.taskType,
-        suburb: updatedSuburb ? updatedSuburb : task.suburb,
-        state: updatedState ? updatedState : task.state,
-        postCode: updatedPostCode ? updatedPostCode : task.postCode,
-        customerBudget: task.customerBudget,
-        categoryId: task.category.id,
-        taskDescription: task.taskDescription,
+    const taskSchema = z.object({
+        taskBriefDescription: z
+            .string(),
+            // .min(3, "Minimum of 3 characters")
+            // .refine((str) => str.split(" ").filter(Boolean).length > 0, {
+            //     message: `Title must have ${1} word or more`,
+            // }),
+        taskDescription: z
+            .string(),
+            // .min(10, "Minimum of 10 characters")
+            // .refine((str) => str.split(" ").filter(Boolean).length >= 5, {
+            //     message: `Description must have ${5} words or more`,
+            // }),
+        category: z.string(),
+        taskType: z.string(),
+        postCode: z.string().nullable().optional(),
+        suburb: z.string().nullable().optional(),
+        state: z.string().nullable().optional(),
+        taskImage: z.string().optional(),
+        taskDate: z.number().array().nullable().optional(),
+        taskTime: z.string().nullable().optional(),
+        customerBudget: z.number()
     });
+
+    type taskZodType = z.infer<typeof taskSchema>;
+
+    const {
+        register,
+        handleSubmit,
+        formState: { errors, isSubmitting },
+        reset,
+        watch,
+        setValue,
+    } = useForm<taskZodType>({
+        resolver: zodResolver(taskSchema),
+    });
+
+    console.log("errors", errors);
+
+    useEffect(() => {
+        if (task) {
+            reset({
+                taskBriefDescription: task.taskBriefDescription,
+                taskDescription: task.taskDescription,
+                category: selectedCategory,
+                taskType: task.taskType,
+                postCode: updatedPostCode,
+                suburb: task.suburb,
+                state: task.state,
+                taskImage: task.taskImage,
+                taskDate: task.taskDate,
+                taskTime: task.taskTime,
+                customerBudget: task.customerBudget
+            });
+        }
+        // eslint-disable-next-line
+    }, [task]);
+
+    const watchField = watch();
+
+    useEffect(() => {
+        if (watchField.taskType === typeData[0].value) {
+            setValue("postCode", "");
+            setValue("state", "");
+            setValue("suburb", "");
+        }
+        // eslint-disable-next-line
+    }, [watchField.taskType]);
 
     useEffect(() => {
         const fetchPostalCodeData = async () => {
             try {
-                const response = await axios.get(
-                    `https://smp.jacinthsolutions.com.au/api/v1/util/locations/search?postcode=${updatedPostCode}`,
+                const { data } = await axios.get(
+                    `https://smp.jacinthsolutions.com.au/api/v1/util/locations/search?postcode=${watchField.postCode}`,
                 );
-                setPostalCodes(response.data as PostalCodeData[]);
+                const suburb = data.map((item: any) => item.name);
+                setSuburbList(suburb);
+                setValue("state", data[0].state.name);
+                setValue("suburb", suburb[0]);
             } catch (error) {
                 console.error("Error fetching postal code data:", error);
-                setPostalCodes([]);
             }
         };
 
         fetchPostalCodeData();
-    }, [taskData.postCode, updatedPostCode]);
+    }, [watchField.postCode, updatedPostCode]);
 
     useEffect(() => {
         const fetchAllCategories = async () => {
@@ -93,10 +146,99 @@ const EditTaskForm = ({ task }: TaskCardProps) => {
         fetchAllCategories();
     }, []);
 
-    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        const { name, value } = e.target;
-        setTaskData(prev => ({ ...prev, [name]: value }));
+    const watchImage = watch("taskImage");
+
+    const handleOnImageInputChange = ({
+        event,
+        index,
+    }: {
+        event: React.ChangeEvent<HTMLInputElement>;
+        index: number;
+    }) => {
+        const imageFieldNames = ["taskImage",];
+        const setImageFuncs = [setTaskImage,];
+        const uploadFile = event.target.files?.[0];
+        if (uploadFile) {
+            const setImage = setImageFuncs[index - 1];
+            setImage(uploadFile);
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                const img = reader.result as string;
+                // @ts-expect-error "image type fix"
+                setValue(imageFieldNames[index - 1], img);
+            };
+            reader.readAsDataURL(uploadFile);
+        }
     };
+
+    const imageRefs = [taskImageRef,];
+
+    const handleClickImageButton = ({ index }: { index: number }) => {
+        const imageRef = imageRefs[index - 1];
+        imageRef?.current?.click();
+    };
+
+    const handleUpdateTask: SubmitHandler<taskZodType> = async (data) => {
+        console.log("data sent ", data)
+        const body = Object.entries({
+            taskBriefDescription: data.taskBriefDescription,
+            taskDescription: data.taskDescription,
+            categoryId: categories.find(category => category.categoryName === data.category)?.id,
+            taskType: data.taskType,
+            postCode: data.postCode,
+            suburb: data.suburb,
+            state: data.state,
+            taskImage,
+            taskDate: isFlexible ? null : dateString,
+            taskTime: isFlexible ? "Flexible" : timeString,
+            customerBudget: updatedCustomerBudget,
+        }).reduce((acc, [key, value]) => {
+            if (
+                value !== null &&
+                value !== undefined &&
+                value !== "" &&
+                value !== 0
+            ) {
+                // @ts-expect-error "type of key not known"
+                acc[key] = value;
+            }
+            return acc;
+        }, {});
+        try {
+            const url = `${process.env.NEXT_PUBLIC_API_URL}/task/update-task/${task.id}`;
+            await axios.patch(url, body, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    "Content-Type": "multipart/form-data",
+                },
+            });
+            // setShowEditModal(false);
+            setShowSuccessModal(true);
+        } catch (error: any) {
+            console.log(error.response.data);
+            setError(error.response.data.message);
+        }
+    };
+
+    // useEffect(() => {
+    //     const words = watchField?.taskBriefDescription?.trim().split(/\s+/);
+    //     const count = words?.filter((word) => word).length; // Filter out empty strings
+
+    //     if (count > 10) {
+    //         const trimmedValue = words.slice(0, 10).join(" ");
+    //         setValue("taskBriefDescription", trimmedValue);
+    //     }
+
+    //     const description = watchField?.taskDescription?.trim().split(/\s+/);
+    //     const descCount = description?.filter((word) => word).length; // Filter out empty strings
+
+    //     if (descCount > 50) {
+    //         const trimmedValue = description.slice(0, 50).join(" ");
+    //         setValue("taskDescription", trimmedValue);
+    //     }
+
+    //     // eslint-disable-next-line
+    // }, [watchField]);
 
     const handleDateChange = (date: Date | null) => {
         setUpdatedDate(date);
@@ -106,13 +248,12 @@ const EditTaskForm = ({ task }: TaskCardProps) => {
         setUpdatedTime(time);
     };
 
-    const formatDateToString = (date: Date | null) => {
+    const formatDateToLocalDateString = (date: Date | null ) => {
         if (date) {
-            // Formatting the date as "dd-MM-yyyy"
-            const day = String(date.getDate()).padStart(2, "0");
-            const month = String(date.getMonth() + 1).padStart(2, "0");
             const year = date.getFullYear();
-            return `${day}-${month}-${year}`;
+            const month = String(date.getMonth() + 1).padStart(2, "0");
+            const day = String(date.getDate()).padStart(2, "0");
+            return `${year}-${month}-${day}`;
         }
         return "";
     };
@@ -127,73 +268,8 @@ const EditTaskForm = ({ task }: TaskCardProps) => {
         return "";
     };
 
-    const dateString = formatDateToString(updatedDate);
+    const dateString = formatDateToLocalDateString(updatedDate);
     const timeString = formatTimeToString(updatedTime);
-
-    const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const file = event.target.files?.[0];
-        if (file) {
-            if (file.size > 5 * 1024 * 1024) {
-                setError("File size exceeds 5MB.");
-            } else {
-                setTaskData(prev => ({ ...prev, taskImage: file }));
-                const reader = new FileReader();
-                reader.readAsDataURL(file);
-                setError("");
-            }
-        }
-    };
-
-    // const handletaskImageUpload = (
-    //     event: React.ChangeEvent<HTMLInputElement>,
-    // ) => {
-    //     const uploadedFile = event.target.files?.[0];
-    //     if (uploadedFile) {
-    //         if (uploadedFile.size > maxSize) {
-    //             setErrs("File size exceeds 5MB.");
-    //         } else {
-    //             setTask({ ...task, taskImage: uploadedFile });
-
-    //             setErrs("");
-    //         }
-    //     }
-    // };
-
-    const convertUrlToBlob = async (url: string): Promise<Blob> => {
-        const response = await fetch(url);
-        const blob = await response.blob();
-        return blob;
-    };
-
-    const getImageURL = () => {
-        if (task.taskImage instanceof File) {
-            return URL.createObjectURL(task.taskImage);
-        }
-        return "";
-    };
-    const imageURL = getImageURL();
-
-    const handleSubmit = async () => {
-        try {
-            setLoading(true);
-            const formData = new FormData();
-            Object.entries(taskData).forEach(([key, value]) => formData.append(key, String(value)));
-
-            const url = `${process.env.NEXT_PUBLIC_API_URL}/task/update-task/${task.id}`;
-            await axios.patch(url, formData, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                    "Content-Type": "multipart/form-data",
-                },
-            });
-            setLoading(false);
-            // closeModal();
-        } catch (error: any) {
-            setLoading(false);
-            console.error(error.response?.data);
-            setError(error.response?.data?.message || "An error occurred");
-        }
-    };
 
     const CustomInput: React.FC<CustomInputProps> = ({ value, onClick }) => (
         <button
@@ -215,18 +291,56 @@ const EditTaskForm = ({ task }: TaskCardProps) => {
         </button>
     );
 
-    console.log("Task Data", taskData)
 
     return (
         <div className='pt-14 lg:px-5'>
+            {showSuccessModal && (
+                <section className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-70">
+                    <div
+                        onClick={() => {
+                            setShowSuccessModal(false)
+                            setShowEditModal(false)
+                        }}
+                        className="absolute h-screen w-screen"
+                    />
+                    <div className=" relative z-10 flex w-[90vw] max-w-md  flex-col items-center justify-center gap-4 rounded-lg bg-white p-5 ">
+                        <div className=" flex w-full max-w-lg flex-col items-center justify-center gap-4">
+                            <div className="flex size-20 items-center justify-center rounded-full bg-[#C1F6C3] bg-opacity-60">
+                                <div className=" flex size-14 items-center justify-center rounded-full bg-[#A6F8AA] p-2">
+                                    <PiSealCheckFill className="size-10 text-green-500" />
+                                </div>
+                            </div>
+                            <p className="text-center font-satoshiBold text-2xl font-extrabold text-violet-normal">
+                                Task edited successfully
+                            </p>
+                            {/* <p className="text-center font-semibold text-violet-darker">
+                                Great! You can now view the task on your dashboard.
+                            </p> */}
+                            <div className="flex items-center gap-6">
+                                <button
+                                    onClick={() => {
+                                        setShowSuccessModal(false)
+                                        setShowEditModal(false)
+                                        router.refresh()
+                                    }}
+                                    className="rounded-full bg-violet-active px-4 py-2 font-bold text-violet-dark max-sm:text-sm"
+                                >
+                                    Close
+                                </button>
+                                
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            )}
             <div className="border-b-2 border-[#140B31] w-full" />
             <div className="rounded-2xl min-h-[200px] min-w-[80%] lg:w-[850px] font-satoshi overflow-y-auto">
                 <div className="lg:flex h-full lg:space-x-3 p-2">
-                    <div className="hidden lg:block border-r-2 border-[#140B31] pr-8 space-y-5 pt-5">
+                    <div className="hidden lg:block border-r-2 border-[#140B31] pr-8 pb-10 space-y-5 pt-5">
                         <div className={`cursor-pointer text-lg font-bold ${activeEditModalLink === "Task Details" ? "bg-tc-orange rounded-lg pl-2 pr-5 py-2 text-white" : "text-primary"}`} onClick={() => setActiveEditModalLink("Task Details")}>Task Details</div>
                         <div className={`cursor-pointer text-lg font-bold ${activeEditModalLink === "Location" || activeEditModalLink === "Budget" ? "bg-tc-orange rounded-lg pl-2 pr-5 py-2 text-white" : "text-primary"}`} onClick={() => setActiveEditModalLink("Location")}>Location and Budget</div>
                     </div>
-                    <div className="flex-1 w-full p-4 lg:px-5">
+                    <form className="flex-1 w-full p-4 lg:px-5" onSubmit={handleSubmit(handleUpdateTask)}>
                         {activeEditModalLink === "Task Details" && (
                             <div className="space-y-8 w-full">
                                 <div className="grid space-y-3">
@@ -236,9 +350,7 @@ const EditTaskForm = ({ task }: TaskCardProps) => {
                                     <textarea
                                         className="h-full w-full rounded-2xl bg-[#EBE9F4] p-3 placeholder:text-[#C1BADB] border-none outline-none"
                                         placeholder="e.g, I need a junior league coach."
-                                        name="taskBriefDescription"
-                                        value={taskData.taskBriefDescription}
-                                        onChange={handleInputChange}
+                                        {...register("taskBriefDescription")}
                                         style={{ resize: "none", overflow: "hidden" }}
                                     ></textarea>
                                 </div>
@@ -250,7 +362,7 @@ const EditTaskForm = ({ task }: TaskCardProps) => {
                                     <Dropdown
                                         trigger={() => (
                                             <div className="flex h-full w-full cursor-pointer appearance-none justify-between rounded-2xl bg-[#EBE9F4] p-3 text-[13px] text-status-darkpurple border-none outline-none">
-                                                <h2>{categories.find(category => category.id === taskData.categoryId)?.categoryName || "Select Category"}</h2>
+                                                <h2>{selectedCategory}</h2>
                                                 <FaSortDown className="text-status-darkpurple" />
                                             </div>
                                         )}
@@ -260,8 +372,11 @@ const EditTaskForm = ({ task }: TaskCardProps) => {
                                             <button
                                                 type="button"
                                                 key={category.id}
-                                                className="block p-2 font-satoshiBold text-[12px] font-bold text-[#381F8C]"
-                                                onClick={() => setTaskData(prev => ({ ...prev, categoryId: category.id }))}
+                                                className="block p-2 font-satoshiBold text-[13px] text-primary hover:text-tc-orange"
+                                                onClick={() => {
+                                                    setValue("category", category.categoryName)
+                                                    setSelectedCategory(category.categoryName)
+                                                }}
                                             >
                                                 {category.categoryName}
                                             </button>
@@ -276,9 +391,7 @@ const EditTaskForm = ({ task }: TaskCardProps) => {
                                     <textarea
                                         className="h-[150px] rounded-2xl bg-[#EBE9F4] p-3 placeholder:text-[#C1BADB] resize-none border-none outline-none small-scrollbar"
                                         placeholder="Describe your task"
-                                        name="taskDescription"
-                                        value={taskData.taskDescription}
-                                        onChange={handleInputChange}
+                                        {...register("taskDescription")}
                                     ></textarea>
                                 </div>
 
@@ -309,52 +422,38 @@ const EditTaskForm = ({ task }: TaskCardProps) => {
                                     <label className="text-[13px] font-semibold text-status-darkpurple lg:text-[16px]">
                                         Upload an Image (Optional)
                                     </label>
-                                    {taskData.taskImage ? (
-                                        <div className="flex items-end ">
-                                            <div className="relative flex h-48 w-1/2 items-center justify-center rounded-lg border-2 border-dashed border-[#EBE9F4] p-4">
-                                                <img
-                                                    src={imageURL}
-                                                    alt="Uploaded Task"
-                                                    className="h-full w-full object-contain"
-                                                    width="100%"
-                                                    height="100%"
-                                                />
-                                                <input
-                                                    id="file-upload"
-                                                    type="file"
-                                                    name="image"
-                                                    className="hidden"
-                                                    onChange={handleImageUpload}
-                                                />
-                                            </div>
-                                            <button
-                                                className="rounded-lg bg-tc-gray px-3 py-1 text-white"
-                                                onClick={() => {
-                                                    setUpdatedImage(null)
-                                                }}
-                                            >
-                                                Remove
-                                            </button>
-                                        </div>
-                                    ) : (
-                                        <label
-                                            htmlFor="file-upload"
-                                            className="flex h-48 w-1/2 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-[#a3a1ac] p-4 "
-                                        >
-                                            <PiFileArrowDownDuotone className="text-xl text-[#a3a1ac]" />
-                                            <span className="text-center font-bold text-[#a3a1ac]">
-                                                File Upload supports: JPG, PDF, PNG.
-                                            </span>
+                                    <div className="flex w-full flex-col gap-3 text-lg  text-violet-normal lg:max-w-64 ">
+                                        <div>
                                             <input
-                                                id="file-upload"
                                                 type="file"
                                                 accept=".png, .jpg, .jpeg, .gif"
                                                 className="hidden"
-                                                onChange={handleImageUpload}
+                                                onChange={(event) =>
+                                                    handleOnImageInputChange({ event, index: 1 })
+                                                }
+                                                ref={imageRefs[0]}
                                             />
-                                        </label>
-                                    )}
-                                    
+                                            <button
+                                                type="button"
+                                                className="my-2 flex items-end justify-center space-x-2 rounded-xl border border-dashed border-violet-normal"
+                                                onClick={() => handleClickImageButton({ index: 1 })}
+                                            >
+                                                {/* Display a disabled input with message */}
+                                                <Image
+                                                    src={
+                                                        watchField.taskImage ??
+                                                        task?.taskImage?.[0] ??
+                                                        ""
+                                                    }
+                                                    alt="Captured or Selected"
+                                                    width={300}
+                                                    height={300}
+                                                    className="size-40 rounded-xl object-cover"
+                                                />
+                                            </button>
+                                        </div>
+                                    </div>
+
                                 </div>
 
                                 <div className="space-y-5">
@@ -365,8 +464,8 @@ const EditTaskForm = ({ task }: TaskCardProps) => {
                                         <div className="flex items-center space-x-3">
                                             <div className="relative">
                                                 <DatePicker
-                                                    selected={updatedDate}
-                                                    onChange={handleDateChange}
+                                                    selected={updatedTime}
+                                                    onChange={handleTimeChange}
                                                     showTimeSelect
                                                     showTimeSelectOnly
                                                     timeFormat="HH:mm"
@@ -382,8 +481,8 @@ const EditTaskForm = ({ task }: TaskCardProps) => {
                                             </div>
                                             <div className="relative">
                                                 <DatePicker
-                                                    selected={updatedTime}
-                                                    onChange={handleTimeChange}
+                                                    selected={updatedDate}
+                                                    onChange={handleDateChange}
                                                     dateFormat="dd-MM-yyyy"
                                                     minDate={new Date()}
                                                     placeholderText="Choose Date"
@@ -399,9 +498,9 @@ const EditTaskForm = ({ task }: TaskCardProps) => {
                                                     <input
                                                         type="checkbox"
                                                         name="check"
-                                                        // checked={termAccepted}
+                                                        checked={isFlexible}
                                                         // disabled={accepted}
-                                                        // onChange={handleCheckboxChange}
+                                                        onChange={() => setIsFlexible(!isFlexible)}
                                                         className="mr-2"
                                                     />
                                                     <span className="text-[12px] text-status-darkpurple">
@@ -439,132 +538,103 @@ const EditTaskForm = ({ task }: TaskCardProps) => {
                                     <h2 className="text-[13px] font-semibold text-status-darkpurple lg:text-[16px]">
                                         Type of Service{" "}
                                     </h2>
-                                    <div className="flex space-x-4 text-[13px] text-[#221354]">
-                                        <button
-                                            className={`rounded-2xl p-2 ${updatedTaskType === "PHYSICAL_SERVICE"
-                                                ? "bg-status-purpleBase text-white"
-                                                : "bg-[#EBE9F4] hover:bg-status-purpleBase hover:text-white"
-                                                } outline-none`}
-                                            name="physical"
-                                            onClick={() => {
-                                                setUpdatedTaskType("PHYSICAL_SERVICE")
-                                            }}
-                                        >
-                                            Physical Service
-                                        </button>
-                                        <button
-                                            className={`rounded-2xl p-2 ${updatedTaskType === "REMOTE_SERVICE"
-                                                ? "bg-status-purpleBase text-white"
-                                                : "bg-[#EBE9F4] hover:bg-status-purpleBase hover:text-white"
-                                                } outline-none`}
-                                            name="remote"
-                                            onClick={() => {
-                                                setUpdatedTaskType("REMOTE_SERVICE")
-                                            }}
-                                        >
-                                            Remote Service
-                                        </button>
+                                    <div className="space-x-2">
+                                        {typeData.map((item, index) => (
+                                            <button
+                                                key={index}
+                                                type="button"
+                                                className={`rounded-full border border-violet-normal px-4 py-2 font-satoshi text-sm font-normal  transition-opacity duration-300 hover:opacity-90 ${item.value === watchField.taskType ? "bg-violet-normal text-white" : "bg-violet-light text-violet-normal"} `}
+                                                onClick={() => setValue("taskType", item.value)}
+                                            >
+                                                {item.label} Service
+                                            </button>
+                                        ))}
                                     </div>
                                 </div>
                                 <div className="space-y-5">
-                                    {updatedTaskType === "REMOTE_SERVICE" && (
-                                        <input
-                                            type="text"
-                                            name="remote"
-                                            value="Remote"
-                                            readOnly
-                                            className=" rounded-2xl bg-[#EBE9F4] p-3 "
-                                        />
-                                    )}
-                                    {updatedTaskType === "PHYSICAL_SERVICE" && (
+                                    {watchField.taskType === typeData[1].value ? (
                                         <>
-                                            <div className="space-y-10 font-bold text-status-darkpurple ">
-                                                <div className="flex space-x-4">
-                                                    <div className="grid space-y-4">
-                                                        <div className="flex items-center justify-between">
-                                                            <label className='text-[13px] font-semibold text-status-darkpurple lg:text-[16px]'>
-                                                                Postal code{" "}
-                                                            </label>
-                                                        </div>
-                                                        <input
-                                                            value={updatedPostCode}
-                                                            onChange={(e) => setUpdatedPostCode(e.target.value)}
-                                                            name="postCode"
-                                                            className={`w-[155px] cursor-pointer  rounded-2xl bg-[#EBE9F4] p-3 text-[13px] placeholder:font-bold border-none outline-none"}`}
-                                                        />
-                                                    </div>
-
-                                                    <div className="grid space-y-4">
-                                                        <div className="flex items-center justify-between">
-                                                            <label className='text-[13px] font-semibold text-status-darkpurple lg:text-[16px]'>
-                                                                Suburb{" "}
-                                                            </label>
-                                                        </div>
-                                                        <Dropdown
-                                                            trigger={() => (
-                                                                <div
-                                                                    className={`flex h-full w-[150px] cursor-pointer appearance-none justify-between rounded-2xl bg-[#EBE9F4] p-3 font-satoshi text-[13px] font-light border-none outline-none"}`}
-                                                                >
-                                                                    <h2>{updatedState}</h2>
-                                                                    <FaSortDown />
-                                                                </div>
-                                                            )}
-                                                            className="small-scrollbar left-0 right-0 top-14 mx-auto max-h-64 overflow-y-auto bg-white transition-all duration-300"
-                                                        >
-                                                            {postalCodes.map((data, index) => (
-                                                                <button
-                                                                    type="button"
-                                                                    className="block p-2 text-[12px] text-[#221354]"
-                                                                    key={index}
-                                                                    value={data.name}
-                                                                    onClick={() => setUpdatedState(data.name)}
-                                                                >
-                                                                    {data.name}
-                                                                </button>
-                                                            ))}
-                                                        </Dropdown>
-                                                    </div>
-                                                </div>
-                                                <div className="grid space-y-4 ">
-                                                    <label className='text-[13px] font-semibold text-status-darkpurple lg:text-[16px]'>State/Territory</label>
+                                            <div className="flex items-center space-x-4 justify-between">
+                                                {/* postcode */}
+                                                <div className="space-y-4 w-full">
+                                                    <label className="text-[13px] font-semibold text-status-darkpurple lg:text-[16px]">Post Code</label>
                                                     <input
-                                                        value={
-                                                            postalCodes.length > 0
-                                                                ? postalCodes[0].state.name
-                                                                : ""
-                                                        }
-                                                        onChange={handleInputChange}
-                                                        name="state"
-                                                        id="state"
-                                                        disabled
-                                                        className="w-full cursor-pointer rounded-2xl bg-[#EBE9F4] p-3 text-sm outline-none"
-                                                    />
+                                                        type="number"
+                                                        className="rounded-2xl bg-violet-light p-3 text-[13px] outline-none w-full"
+                                                        {...register("postCode")}
+                                                        />
+                                                </div>
+
+                                                {/* suburb */}
+                                                <div className="space-y-4 w-full">
+                                                    <div className="flex items-center justify-between">
+                                                        <label className='text-[13px] font-semibold text-status-darkpurple lg:text-[16px]'>
+                                                            Suburb{" "}
+                                                        </label>
+                                                    </div>
+                                                    <Dropdown
+                                                        trigger={() => (
+                                                            <div
+                                                                className={`flex h-full w-full cursor-pointer appearance-none justify-between rounded-2xl bg-[#EBE9F4] p-3 font-satoshi text-[13px] font-light border-none outline-none"}`}
+                                                            >
+                                                                <h2>{watchField.suburb}</h2>
+                                                                <FaSortDown />
+                                                            </div>
+                                                        )}
+                                                        className="small-scrollbar left-0 right-0 top-14 mx-auto max-h-64 overflow-y-auto bg-white transition-all duration-300"
+                                                    >
+                                                        {suburbList.map((data, index) => (
+                                                            <button
+                                                                type="button"
+                                                                className="block p-2 text-[12px] font-semibold text-primary hover:text-tc-orange"
+                                                                key={index}
+                                                                value={data}
+                                                                onClick={() => setValue("suburb", data)}
+                                                            >
+                                                                {data}
+                                                            </button>
+                                                        ))}
+                                                    </Dropdown>
                                                 </div>
                                             </div>
-                                            <div className="flex items-center justify-between">
-                                                <label className="text-[13px] font-semibold text-status-darkpurple lg:text-[16px]">
-                                                    Budget{" "}
-                                                </label>
-                                                {/* {task.customerBudget && (
+                                            {/* State */}
+                                            <div className="space-y-4 w-full">
+                                                <label className="text-[13px] font-semibold text-status-darkpurple lg:text-[16px]">State/ Territory</label>
+                                                <input
+                                                    type="text"
+                                                    readOnly
+                                                    className="cursor-default rounded-2xl bg-violet-light text-[13px] p-3 pl-4 outline-none w-full"
+                                                    {...register("state")}
+                                                />
+                                            </div>
+                                        </>
+
+                                    ) : (
+                                        <div></div>
+                                    )}
+                                    <div className='space-y-2'>
+                                        <div className="flex items-center justify-between">
+                                            <label className="text-[13px] font-semibold text-status-darkpurple lg:text-[16px]">
+                                                Budget{" "}
+                                            </label>
+                                            {/* {task.customerBudget && (
                                                 <div className="h-[16px] w-[16px] rounded-3xl bg-[#4CAF50] text-[16px] font-extrabold text-white">
                                                     <GrFormCheckmark />
                                                 </div>
                                             )} */}
-                                            </div>
-                                            <div className="flex items-center space-x-2 rounded-2xl bg-[#EBE9F4] p-3 text-[13px] ">
-                                                <span>$</span>
-                                                <input
-                                                    type="number"
-                                                    name="customerBudget"
-                                                    onChange={(e) => setUpdatedCustomerBudget(e.target.value)}
-                                                    value={updatedCustomerBudget ? updatedCustomerBudget : task.customerBudget}
-                                                    placeholder="500"
-                                                    className={`appearance-none w-full no-input-default-style placeholder:font-bold border-none"}`}
-                                                />
-                                            </div>
-                                        </>
-                                    )}
-                                    {error && <div className="font-bold text-red-500">{error}</div>}
+                                        </div>
+                                        <div className="flex items-center space-x-2 rounded-2xl bg-[#EBE9F4] p-3 text-[13px] ">
+                                            <span>$</span>
+                                            <input
+                                                type="number"
+                                                value={watchField.customerBudget}
+                                                {...register("customerBudget")}
+                                                className={`appearance-none w-full no-input-default-style placeholder:font-bold border-none"}`}
+                                            />
+                                        </div>
+                                    </div>
+
+                                    {/* {errors && <div className="font-bold text-red-500">{errors.}</div>} */}
                                     <div className="flex items-center justify-end space-x-3">
                                         <Button
                                             theme="outline"
@@ -576,8 +646,8 @@ const EditTaskForm = ({ task }: TaskCardProps) => {
                                         </Button>
                                         <Button
                                             theme="primary"
-                                            loading={loading}
-                                            onClick={handleSubmit}
+                                            loading={isSubmitting}
+                                            type='submit'
                                             className="rounded-full px-10"
                                         >
                                             Save changes
@@ -586,10 +656,10 @@ const EditTaskForm = ({ task }: TaskCardProps) => {
                                 </div>
                             </div>
                         )}
-                    </div>
+                    </form>
                 </div>
-            </div>
-        </div>
+            </div >
+        </div >
     );
 
 };

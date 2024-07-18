@@ -14,13 +14,10 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  setContacts,
-  setSubscription,
-  setTotalUnreadMessages,
-} from "@/store/Features/chat";
-import { stompClient } from "@/lib/stompClient";
+import { setContacts, setTotalUnreadMessages } from "@/store/Features/chat";
 import ScrollToBottom from "react-scroll-to-bottom";
+import { connectSocket, getSocket } from "@/lib/socket";
+import { GiCheckMark } from "react-icons/gi";
 
 const ServiceProviderChat = () => {
   const [chatMessages, setChatMessages] = useState<
@@ -33,10 +30,12 @@ const ServiceProviderChat = () => {
   const dispatch = useDispatch();
   const { chatPartnerId } = useParams();
 
+  const [unsentMessage, setUnsentMessage] = useState<any>(null);
+
   const { profile: user, userProfileAuth: auth } = useSelector(
     (state: RootState) => state.userProfile,
   );
-  const { contacts, newMessage, subscription } = useSelector(
+  const { contacts, newMessage } = useSelector(
     (state: RootState) => state.chat,
   );
   const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -46,6 +45,7 @@ const ServiceProviderChat = () => {
 
   useEffect(() => {
     loadContacts();
+    // eslint-disable-next-line
   }, []);
 
   const handleFocus = () => {
@@ -85,35 +85,27 @@ const ServiceProviderChat = () => {
 
   // finds current chat partner contact details
   useEffect(() => {
-    if (contacts) {
+    const tempUser = localStorage.getItem("tempUserChat");
+    if (tempUser) {
+      const user: ChatContactTypes = JSON.parse(tempUser);
+      setContact(user);
+    } else if (contacts) {
       const foundContact = contacts.find(
         (item) => Number(chatPartnerId) === item.id,
       );
       setContact(foundContact);
     }
+    // eslint-disable-next-line
   }, [contacts]);
 
-  // const refreshClient = () => {
-  //   if (subscription) {
-  //     subscription.unsubscribe();
-  //   }
-  //   if (stompClient.connected) {
-  //     const newSubscription = stompClient.subscribe(
-  //       `/user/${user?.id}/queue/messages`,
-  //       onMessageReceived,
-  //     );
-  //     dispatch(setSubscription(newSubscription));
-  //   }
-  // };
-
   const onMessageReceived = async () => {
-    // refreshClient();
     if (newMessage && chatPartnerId === newMessage.senderId.toString()) {
       findChatMessage({
         id: newMessage.id,
         token: token as string,
       })
         .then((message) => {
+          console.log(message);
           const displayMessage: ChatMessageDisplayedType = {
             content: message.content,
             senderId: message.senderId,
@@ -126,15 +118,21 @@ const ServiceProviderChat = () => {
           setChatMessages(newMessages);
         })
         .catch((error) => console.error(error));
+      loadContacts().then(() => {
+        localStorage.removeItem("tempUserChat");
+      });
     }
   };
 
   // update as new messages are received
   useEffect(() => {
     onMessageReceived();
+    // eslint-disable-next-line
   }, [newMessage]);
 
   const sendMessage = (msg: string) => {
+    const socket = getSocket();
+    console.log(socket.connected);
     if (msg.trim() !== "" && user && contact) {
       const message = {
         senderId: user.id,
@@ -145,7 +143,11 @@ const ServiceProviderChat = () => {
         timestamp: new Date().toISOString(),
       };
       try {
-        stompClient.send("/app/chat", {}, JSON.stringify(message));
+        if (!socket.connected) {
+          localStorage.setItem("chatMessages", JSON.stringify(message));
+          setUnsentMessage(message);
+        }
+        socket.emit("chat", message, () => {});
         const newMessages: ChatMessageDisplayedType[] = [
           ...(chatMessages || []),
           {
@@ -155,12 +157,33 @@ const ServiceProviderChat = () => {
           },
         ];
         setChatMessages(newMessages);
-        loadContacts();
       } catch (error: any) {
         console.log(error.response.data || error.message || error);
       }
     }
   };
+
+  useEffect(() => {
+    const socket = getSocket();
+
+    const handleConnect = () => {
+      console.log("reconnected");
+      const storedMessage = localStorage.getItem("chatMessages");
+      if (storedMessage) {
+        const message = JSON.parse(storedMessage);
+        socket.emit("chat", message, () => {
+          localStorage.removeItem("chatMessages");
+          setUnsentMessage(null);
+        });
+      }
+    };
+
+    socket.on("connect", handleConnect);
+
+    return () => {
+      socket.off("connect", handleConnect);
+    };
+  }, []);
 
   // handle load contacts from the database
   const loadContacts = async () => {
@@ -188,9 +211,6 @@ const ServiceProviderChat = () => {
     }
   };
 
-  // Reschedule the booking
-  const handleReschedule = () => {};
-
   return (
     <main className="h-[calc(100vh-5rem)] space-y-5 overflow-hidden   p-4 lg:p-8 ">
       <section className="grid gap-10 divide-slate-400 lg:grid-cols-12 lg:divide-x ">
@@ -199,8 +219,8 @@ const ServiceProviderChat = () => {
         </section>
 
         {/* Organize this */}
-        <section className="flex h-[calc(100vh-7rem)] w-full flex-col justify-between space-y-4  lg:col-span-7  lg:h-[calc(100vh-8rem)] lg:px-4 ">
-          <article className="space-y-4">
+        <section className="flex h-[calc(100vh-7rem)] w-full flex-col justify-between space-y-4  lg:col-span-7  lg:h-[calc(100vh-9rem)] lg:px-4 ">
+          <article className="flex-shrink-0 space-y-4 ">
             <div className="flex cursor-pointer gap-3 ">
               <Image
                 src={
@@ -213,19 +233,11 @@ const ServiceProviderChat = () => {
                 className="size-16 rounded-full object-cover max-sm:size-12"
               />
               <div className="w-full space-y-4">
-                <div className="flex w-full cursor-pointer items-center justify-between">
-                  {/* <p className="cursor-pointer font-medium text-violet-normal">
-                    Drain Blockage fix Service Request
-                  </p> */}
-                  {/* <p className="cursor-pointer text-sm text-slate-500 ">$480</p> */}
-                </div>
+                <div className="flex w-full cursor-pointer items-center justify-between"></div>
                 <div className="flex w-full cursor-pointer items-center justify-between">
                   <p className="cursor-pointer font-satoshiBold font-bold text-violet-dark ">
                     {contact?.name}
                   </p>
-                  {/* <p className="cursor-pointer rounded-md bg-violet-light p-1 text-xs">
-                    In Progress
-                  </p> */}
                 </div>
               </div>
             </div>
@@ -246,20 +258,32 @@ const ServiceProviderChat = () => {
 
           {/* -------chat */}
           {user && (
-            <ScrollToBottom className="no-scrollbar max-h-full min-h-[60%] overflow-y-scroll">
+            <ScrollToBottom className="no-scrollbar max-h-full flex-grow overflow-y-scroll">
               <div className=" flex w-full flex-col justify-end gap-4">
                 {chatMessages &&
                   chatMessages.map((item, index) => {
                     return (
                       <div
                         key={index}
-                        className={` flex w-full ${item.senderId === user.id ? "justify-end" : "justify-start"}`}
+                        className={` flex w-full ${item.senderId === user.id ? "flex-wrap justify-end " : "justify-start"}`}
                       >
                         <p
                           key={index}
-                          className={` flex w-fit max-w-xs rounded-md p-2 text-sm ${item.senderId === user.id ? " bg-violet-normal text-right text-white" : " bg-orange-light text-left text-violet-dark "}`}
+                          className={` flex w-fit max-w-xs flex-col gap-1 `}
                         >
-                          <span>{item.content}</span>
+                          <span
+                            className={` rounded-md p-2 text-sm ${item.senderId === user.id ? " bg-violet-normal text-white" : " bg-orange-light text-left text-violet-dark "}`}
+                          >
+                            {item.content}
+                          </span>
+                          {/* <div className="absolute bottom-0 right-0 rounded-full bg-violet-dark p-1 font-medium text-white">
+                            {item.time.substring(11, 16)}
+                          </div> */}
+                          {item.senderId === user.id && (
+                            <span className="block">
+                              <GiCheckMark className="text-green-500 " />
+                            </span>
+                          )}
                         </p>
                       </div>
                     );
@@ -268,14 +292,14 @@ const ServiceProviderChat = () => {
             </ScrollToBottom>
           )}
 
-          <div className="flex gap-2 ">
+          <div className="flex flex-shrink-0 gap-2 ">
             <Image
               src={
                 user?.profileImage ?? "/assets/images/serviceProvider/user.jpg"
               }
               width={50}
               height={50}
-              alt="user"  
+              alt="user"
               className="size-8 rounded-full"
             />
             <div className="relative w-full">

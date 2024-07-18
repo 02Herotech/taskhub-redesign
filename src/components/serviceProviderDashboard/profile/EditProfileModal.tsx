@@ -1,6 +1,9 @@
 "use client";
 
-import { refreshUserProfile } from "@/store/Features/userProfile";
+import {
+  refreshUserProfile,
+  updateUserProfile,
+} from "@/store/Features/userProfile";
 import { dataURLtoFile } from "@/utils/service-provider";
 import axios from "axios";
 import { useSession } from "next-auth/react";
@@ -143,6 +146,11 @@ const EditProfileModal = ({
               },
             },
           );
+          const profileUrl =
+            "https://smp.jacinthsolutions.com.au/api/v1/user/user-profile/" +
+            user?.id;
+          const { data } = await axios.get(profileUrl);
+          dispatch(updateUserProfile(data));
           dispatch(refreshUserProfile());
         } catch (error: any) {
           console.error(error.response.data);

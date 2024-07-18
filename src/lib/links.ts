@@ -1,6 +1,11 @@
+import { FiLogOut } from 'react-icons/fi';
+import { AboutUsSvg, BlogSvg, ContactUsSvg, DashboardSvg, HomeSvg, LoginSvg, MarketPlaceSvg, MessagesSvg } from './svgIcons';
+import React from "react";
+
 export type LinkRouteTypes = {
   label: string;
   url?: string;
+  icon?: React.ReactNode;
   sublinks?: {
     label: string;
     url: string;
@@ -10,6 +15,39 @@ export type LinkRouteTypes = {
     }[];
   }[];
 };
+
+export const homeMobileLinks: LinkRouteTypes[] = [
+  {
+    label: "Home",
+    url: "/home",
+    icon: HomeSvg
+  },
+  {
+    label: "Marketplace",
+    url: "/marketplace",
+    icon: MarketPlaceSvg  
+  },
+  {
+    label: "Log in",
+    url: "/auth/login",
+    icon: LoginSvg
+  },
+  {
+    label: "Blog",
+    url: "/blog",
+    icon: BlogSvg
+  },
+  {
+    label: "About us",
+    url: "/about",
+    icon: AboutUsSvg
+  },
+  {
+    label: "Contact Us",
+    url: "/contact",
+    icon: ContactUsSvg
+  },
+];
 
 export const customerLinks: LinkRouteTypes[] = [
   {
@@ -70,26 +108,11 @@ export const homeLinks: LinkRouteTypes[] = [
 
 export const mobileServiceProviderLinks: LinkRouteTypes[] = [
   {
-    label: "Provide a service",
-    url: "/provide-service",
-  },
-  {
-    label: "Explore Tasks",
-    url: "/explore",
-  },
-  {
-    label: "Marketplace",
-    url: "/marketplace",
-  },
-  {
-    label: "Blog",
-    url: "/blog",
-  },
-  {
-    label: "Profile",
+    label: "My Dashboard",
+    icon: DashboardSvg,
     sublinks: [
       {
-        label: "My Profile",
+        label: "Profile",
         url: "/service-provider/profile",
       },
       {
@@ -105,59 +128,45 @@ export const mobileServiceProviderLinks: LinkRouteTypes[] = [
         url: "/service-provider/notification",
       },
       {
-        label: "Payments and wallet",
+        label: "Payment and wallet",
         url: "/service-provider/payment",
       },
       {
-        label: "Password Settings",
+        label: "Settings",
         url: "/service-provider/settings/password",
-        // sublinks: [
-        //   {
-        //     label: "Password",
-        //     url: "/service-provider/dashboard/settings/security",
-        //   },
-        //   {
-        //     label: "Notification",
-        //     url: "/service-provider/dashboard/settings/privacy",
-        //   },
-        // ],
       },
-      {
-        label: "Notification Settings",
-        url: "/service-provider/settings/notification",
-        // sublinks: [
-        //   {
-        //     label: "Password",
-        //     url: "/service-provider/dashboard/settings/security",
-        //   },
-        //   {
-        //     label: "Notification",
-        //     url: "/service-provider/dashboard/settings/privacy",
-        //   },
-        // ],
-      },
+
     ],
   },
-];
-
-export const mobileCustomerLinks: LinkRouteTypes[] = [
   {
-    label: "Add a task",
-    url: "/customer/add-task",
+    label: "Explore Tasks",
+    url: "/explore",
+    icon: MarketPlaceSvg
   },
   {
     label: "Marketplace",
     url: "/marketplace",
+    icon: MarketPlaceSvg
   },
   {
-    label: "Blog",
-    url: "/blog",
+    label: "Messages",
+    url: "/message",
+    icon: MessagesSvg
   },
   {
-    label: "Profile",
+    label: "Contact us",
+    url: "/contact",
+    icon: ContactUsSvg
+  }
+];
+
+export const mobileCustomerLinks: LinkRouteTypes[] = [
+  {
+    label: "My Dashboard",
+    icon: DashboardSvg,
     sublinks: [
       {
-        label: "My Profile",
+        label: "Profile",
         url: "/customer/profile",
       },
       {
@@ -169,13 +178,38 @@ export const mobileCustomerLinks: LinkRouteTypes[] = [
         url: "/customer/notifications",
       },
       {
-        label: "Payments",
+        label: "Payment",
         url: "/customer/payment/payment-history",
       },
       {
         label: "Settings",
         url: "/customer/settings",
+        sublinks: [
+          {
+            label: "Change Password",
+            url: "/customer/password",
+          },
+          {
+            label: "Notification settings",
+            url: "/customer/notification",
+          }
+        ],
       },
     ],
   },
+  {
+    label: "Marketplace",
+    url: "/marketplace",
+    icon: MarketPlaceSvg
+  },
+  {
+    label: "Messages",
+    url: "/message",
+    icon: MessagesSvg
+  },
+  {
+    label: "Contact us",
+    url: "/contact",
+    icon: ContactUsSvg
+  }
 ];

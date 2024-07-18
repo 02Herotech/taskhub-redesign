@@ -365,11 +365,11 @@ const AddTaskForm: React.FC = () => {
 
   const formatDateToString = (date: Date | null) => {
     if (date) {
-      // Formatting the date as "dd-MM-yyyy"
+      // Formatting the date as "yyyy-MM-dd"
       const day = String(date.getDate()).padStart(2, "0");
       const month = String(date.getMonth() + 1).padStart(2, "0");
       const year = date.getFullYear();
-      return `${day}-${month}-${year}`;
+      return `${year}-${month}-${day}`;
     }
     return "";
   };
@@ -419,6 +419,8 @@ const AddTaskForm: React.FC = () => {
     });
   };
 
+  console.log("date and time", dateString, timeString)
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setLoading(true);
@@ -456,7 +458,6 @@ const AddTaskForm: React.FC = () => {
           finalTask = { ...finalTask, taskImage: defaultImageBlob };
         }
 
-        console.log(finalTask);
         await Promise.race([
           axios.post(
             "https://smp.jacinthsolutions.com.au/api/v1/task/post",
@@ -863,7 +864,7 @@ const AddTaskForm: React.FC = () => {
                   placeholder="500"
                   className={`appearance-none rounded-2xl bg-[#EBE9F4] p-3 pl-6 text-[13px] placeholder:font-bold ${error.customerBudget ? "border border-[#ff0000] outline-[#FF0000]" : "border-none outline-none"}`}
                 />
-                <p className="absolute left-3 top-8">$</p>
+                <p className="absolute left-3 top-10">$</p>
               </div>
               <div className="text-[#FF0000]">
                 {errors.city ||

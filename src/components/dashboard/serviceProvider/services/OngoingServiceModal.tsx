@@ -15,9 +15,14 @@ import { BeatLoader } from "react-spinners";
 interface ModalType {
   modalData: ModalDataType;
   setModalData: Dispatch<SetStateAction<ModalDataType>>;
+  setRefresh: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const OngoingServiceModal = ({ modalData, setModalData }: ModalType) => {
+const OngoingServiceModal = ({
+  modalData,
+  setModalData,
+  setRefresh,
+}: ModalType) => {
   const session = useSession();
   const token = session?.data?.user?.accessToken;
 
@@ -44,6 +49,7 @@ const OngoingServiceModal = ({ modalData, setModalData }: ModalType) => {
       isCompleteService: false,
       isReportService: false,
     });
+    setRefresh((prev) => !prev);
     setFormState({
       category: "Select a category",
       message: "",

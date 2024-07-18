@@ -14,7 +14,6 @@ import { BiDotsVertical, BiX } from "react-icons/bi";
 import DeleteListingModal from "./DeleteListingModal";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
-import { truncateText } from "@/utils/marketplace";
 
 const AllServices = () => {
   const [loading, setLoading] = useState(false);
@@ -43,11 +42,9 @@ const AllServices = () => {
           Authorization: "Bearer " + token,
         },
       });
-      const data = response.data;
-      if (!data.content) {
-        throw new Error("Response content is missing");
-      }
-      setservicesData(data.content);
+      let data = response.data.content;
+      data = data.reverse();
+      setservicesData(data);
     } catch (error) {
       console.error("An error occurred while fetching services:", error);
     } finally {
@@ -144,8 +141,8 @@ const AllServices = () => {
                       </div>
                     </div>
                   </div>
-                  <p className="px-2 text-3xl font-bold text-[#190E3F] ">
-                    {truncateText(item.listingTitle, 10)}
+                  <p className="line-clamp-1 px-2 text-3xl font-bold text-[#190E3F] ">
+                    {item.listingTitle}
                   </p>
 
                   <div

@@ -1,7 +1,6 @@
 import {
   GetCustomerTasksResponse,
-  GetFilterTaskByPriceRequest,
-  GetFilterTaskByTypeRequest,
+  GetFilterTasksRequest,
   GetSingleTasksResponse,
   GetTaskByTextRequest,
   GetTasksRequest,
@@ -79,26 +78,6 @@ export const task = createApi({
       query: (id) => getRequest(`/get-task/${id}`),
       providesTags: ["Task"],
     }),
-    filterTaskByPrice: builder.query<
-      GetTasksResponse,
-      GetFilterTaskByPriceRequest
-    >({
-      query: (credentials) =>
-        getRequest(
-          `/filter-by-price/${credentials.page}?minPrice=${credentials.minPrice}&maxPrice=${credentials.maxPrice}`,
-        ),
-      providesTags: ["Task"],
-    }),
-    filterTaskByType: builder.query<
-      GetTasksResponse,
-      GetFilterTaskByTypeRequest
-    >({
-      query: (credentials) =>
-        getRequest(
-          `/search-by-type/${credentials.page}?type=${credentials.type}`,
-        ),
-      providesTags: ["Task"],
-    }),
     filterTaskByEarliestDate: builder.query<GetTasksResponse, number>({
       query: (pageNumber) => getRequest(`/task-date-earliest/${pageNumber}`),
       providesTags: ["Task"],
@@ -139,14 +118,16 @@ export const task = createApi({
       query: (credentials) => patchRequest(`/update-task/${credentials.id}`, credentials.details),
       invalidatesTags: ["Task"],
     }),
+    filterTasks: builder.query<GetTasksResponse, GetFilterTasksRequest>({
+      query: (credentials) => getRequest(`/filter-tasks/${credentials.pageNumber}?category=${credentials.category}?typeOfService=${credentials.typeOfService}?location=${credentials.location}?minPrice=${credentials.minPrice}?maxPrice=${credentials.maxPrice}`),
+      providesTags: ["Task"],
+    }),
   }),
 });
 
 export const {
   useGetActiveTasksQuery,
   useGetTaskByIdQuery,
-  useFilterTaskByPriceQuery,
-  useFilterTaskByTypeQuery,
   useFilterTaskByEarliestDateQuery,
   useFilterTaskByLatestDateQuery,
   useFilterTaskByPriceAscQuery,
@@ -156,4 +137,5 @@ export const {
   useGetCustomerCompletedTasksQuery,
   useDeleteTaskMutation,
   useSearchTaskByTextQuery,
+  useFilterTasksQuery,
 } = task;

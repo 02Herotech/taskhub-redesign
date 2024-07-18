@@ -184,7 +184,7 @@ const MarketPlaceFilter = () => {
             setIsMobileFilterModalShown={setIsMobileFilterModalShown}
             setfilterDataStructure={setfilterDataStructure}
             filterDataStructure={filterDataStructure}
-            // handleResetFilters={handleResetFilters}
+          // handleResetFilters={handleResetFilters}
           />
           <div className="flex gap-4">
             <button
@@ -208,7 +208,7 @@ const MarketPlaceFilter = () => {
         </div>
 
         <section className="flex flex-col gap-5">
-          <div className={` max-md:hidden  ${isFiltering ? "order-2" : ""} `}>
+          <div className={`max-md:hidden  ${isFiltering ? "order-2" : ""} `}>
             <div className="flex flex-wrap gap-4 space-x-2 text-xs lg:space-x-6 ">
               <button
                 className="cursor-pointer rounded-3xl bg-violet-normal px-4 py-2 text-base  font-bold text-white"
@@ -354,9 +354,9 @@ const MarketPlaceFilter = () => {
                   {filterDataStructure.typeOfServiceDisplay === ""
                     ? "Type of service"
                     : truncateText(
-                        filterDataStructure.typeOfServiceDisplay,
-                        12,
-                      )}
+                      filterDataStructure.typeOfServiceDisplay,
+                      12,
+                    )}
                   <span>
                     <BsTriangleFill
                       fill="rgb(56 31 140)"
@@ -390,19 +390,19 @@ const MarketPlaceFilter = () => {
               <div className="relative z-20">
                 {(filterDataStructure.minPrice !== 5 ||
                   filterDataStructure.maxPrice !== 1000) && (
-                  <button
-                    className="absolute -right-1 -top-1 flex size-6 items-center justify-center rounded-full bg-violet-normal text-white"
-                    onClick={() =>
-                      setfilterDataStructure((prev) => ({
-                        ...prev,
-                        minPrice: 5,
-                        maxPrice: 1000,
-                      }))
-                    }
-                  >
-                    <BsX />
-                  </button>
-                )}
+                    <button
+                      className="absolute -right-1 -top-1 flex size-6 items-center justify-center rounded-full bg-violet-normal text-white"
+                      onClick={() =>
+                        setfilterDataStructure((prev) => ({
+                          ...prev,
+                          minPrice: 5,
+                          maxPrice: 1000,
+                        }))
+                      }
+                    >
+                      <BsX />
+                    </button>
+                  )}
                 <button
                   className="flex items-center gap-2 rounded-3xl border border-violet-normal  bg-violet-light px-4 py-2 text-base font-bold text-violet-normal transition-colors duration-300 hover:bg-violet-200 "
                   onClick={() => handleShowDropdown("pricing")}
@@ -503,8 +503,8 @@ const MarketPlaceFilter = () => {
                 <input
                   type="text"
                   value={searchInputData}
-                  className="w-full rounded-xl border border-violet-normal px-4 py-3   text-lg text-slate-500 shadow  placeholder-shown:border-slate-300 placeholder-shown:outline-none focus:outline-none "
                   onChange={(event) => setSearchInputData(event.target.value)}
+                  className="w-full rounded-xl border border-violet-normal px-4 py-3   text-lg text-slate-500 shadow  placeholder-shown:border-slate-300 placeholder-shown:outline-none focus:outline-none "
                   placeholder="Search"
                 />
               </div>

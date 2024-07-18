@@ -62,6 +62,8 @@ const MareketPlace = () => {
     }
   }, [isAuth, isComplete]);
 
+  console.log(session)
+
   return (
     <main className="mx-auto max-w-screen-2xl">
       {showPopup && (

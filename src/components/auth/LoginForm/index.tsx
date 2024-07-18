@@ -3,7 +3,7 @@
 import Button from "@/components/global/Button";
 import Input from "@/components/global/Input";
 import { useRouter, useSearchParams } from "next/navigation";
-import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
+import { FormProvider, set, SubmitHandler, useForm } from "react-hook-form";
 import { signIn } from "next-auth/react";
 import Link from "next/link";
 import { useState } from "react";
@@ -39,6 +39,7 @@ const LoginForm = () => {
   const onSubmit: SubmitHandler<SignInRequest> = async (payload) => {
     try {
       setIsLoading(true);
+      setError(null);
 
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_API_URL}/auth/login`,

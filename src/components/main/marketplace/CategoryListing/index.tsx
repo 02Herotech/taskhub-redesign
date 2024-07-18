@@ -32,7 +32,7 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
   const dispatch = useDispatch();
 
   const handleFetchCategory = async (currentPage: number) => {
-    const categoryId = categories.find(
+    const categoryId = categories.find( 
       (item) => item.categoryName === category,
     );
     setIsLoading(true);
