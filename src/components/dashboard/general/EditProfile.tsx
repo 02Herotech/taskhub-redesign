@@ -9,7 +9,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useSession } from "next-auth/react";
 import { PiFileArrowDownDuotone } from "react-icons/pi";
 import { BiCamera, BiCheck } from "react-icons/bi";
-import DatePicker from "react-datepicker";
+import DatePicker, { ReactDatePickerProps } from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import axios from "axios";
 import { defaultUserDetails } from "@/data/data";
@@ -352,7 +352,7 @@ const EditProfile = () => {
               />
             </label>
             {/* Date of birth */}
-            <label className="flex w-full flex-col gap-3 text-violet-normal ">
+            <label className="flex w-full flex-col gap-3 text-violet-normal z-50">
               <span className="flex items-center justify-between">
                 <span> Date of Birth</span>
                 {!errors.dateOfBirth && watchField.dateOfBirth !== null && (
@@ -371,6 +371,7 @@ const EditProfile = () => {
                     maxDate={age18YearsAgo}
                     className="w-full rounded-xl border border-slate-100 p-2 text-slate-700 shadow outline-none z-50 transition-shadow duration-300 hover:shadow-md lg:max-w-sm"
                     dateFormat="dd/MM/yyyy"
+                    popperPlacement="bottom"
                   />
                 )}
               />

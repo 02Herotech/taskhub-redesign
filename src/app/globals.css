@@ -71,6 +71,10 @@ html {
   color: inherit;
 }
 
+.custom-datepicker {
+  transform: translate3d(0, 40px, 0) !important;
+}
+
 @layer base {
   @font-face {
     font-family: Clash;
