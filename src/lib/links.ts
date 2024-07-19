@@ -1,5 +1,14 @@
-import { FiLogOut } from 'react-icons/fi';
-import { AboutUsSvg, BlogSvg, ContactUsSvg, DashboardSvg, HomeSvg, LoginSvg, MarketPlaceSvg, MessagesSvg } from './svgIcons';
+import { FiLogOut } from "react-icons/fi";
+import {
+  AboutUsSvg,
+  BlogSvg,
+  ContactUsSvg,
+  DashboardSvg,
+  HomeSvg,
+  LoginSvg,
+  MarketPlaceSvg,
+  MessagesSvg,
+} from "./svgIcons";
 import React from "react";
 
 export type LinkRouteTypes = {
@@ -20,32 +29,32 @@ export const homeMobileLinks: LinkRouteTypes[] = [
   {
     label: "Home",
     url: "/home",
-    icon: HomeSvg
+    icon: HomeSvg,
   },
   {
     label: "Marketplace",
     url: "/marketplace",
-    icon: MarketPlaceSvg  
+    icon: MarketPlaceSvg,
   },
   {
     label: "Log in",
     url: "/auth/login",
-    icon: LoginSvg
+    icon: LoginSvg,
   },
   {
     label: "Blog",
     url: "/blog",
-    icon: BlogSvg
+    icon: BlogSvg,
   },
   {
     label: "About us",
     url: "/about",
-    icon: AboutUsSvg
+    icon: AboutUsSvg,
   },
   {
     label: "Contact Us",
     url: "/contact",
-    icon: ContactUsSvg
+    icon: ContactUsSvg,
   },
 ];
 
@@ -135,29 +144,28 @@ export const mobileServiceProviderLinks: LinkRouteTypes[] = [
         label: "Settings",
         url: "/service-provider/settings/password",
       },
-
     ],
   },
   {
     label: "Explore Tasks",
     url: "/explore",
-    icon: MarketPlaceSvg
+    icon: MarketPlaceSvg,
   },
   {
     label: "Marketplace",
     url: "/marketplace",
-    icon: MarketPlaceSvg
+    icon: MarketPlaceSvg,
   },
   {
     label: "Messages",
     url: "/message",
-    icon: MessagesSvg
+    icon: MessagesSvg,
   },
-  {
-    label: "Contact us",
-    url: "/contact",
-    icon: ContactUsSvg
-  }
+  // {
+  //   label: "Contact us",
+  //   url: "/contact",
+  //   icon: ContactUsSvg
+  // }
 ];
 
 export const mobileCustomerLinks: LinkRouteTypes[] = [
@@ -192,7 +200,7 @@ export const mobileCustomerLinks: LinkRouteTypes[] = [
           {
             label: "Notification settings",
             url: "/customer/notification",
-          }
+          },
         ],
       },
     ],
@@ -200,16 +208,16 @@ export const mobileCustomerLinks: LinkRouteTypes[] = [
   {
     label: "Marketplace",
     url: "/marketplace",
-    icon: MarketPlaceSvg
+    icon: MarketPlaceSvg,
   },
   {
     label: "Messages",
     url: "/message",
-    icon: MessagesSvg
+    icon: MessagesSvg,
   },
-  {
-    label: "Contact us",
-    url: "/contact",
-    icon: ContactUsSvg
-  }
+  // {
+  //   label: "Contact us",
+  //   url: "/contact",
+  //   icon: ContactUsSvg
+  // }
 ];
