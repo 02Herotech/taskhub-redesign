@@ -11,6 +11,7 @@ import { IoMdEye, IoMdEyeOff } from "react-icons/io";
 import { motion, AnimatePresence } from "framer-motion";
 import { FiAlertTriangle } from "react-icons/fi";
 import { PiSealCheckFill } from "react-icons/pi";
+import { BsExclamationTriangle } from "react-icons/bs";
 
 type ChangePasswordRequest = {
   password: string;
@@ -50,7 +51,7 @@ const DashboardPasswordChange = () => {
       setIsPasswordVerified(true);
     } catch (error: any) {
       setIsLoading(false);
-      console.log("Error:", error);
+      console.log("Error:", error?.response?.data?.message || error);
       if (
         error?.response?.data?.message === "Unauthorized! Incorrect password"
       ) {
@@ -58,6 +59,14 @@ const DashboardPasswordChange = () => {
         setTimeout(() => {
           setError(null);
         }, 2000);
+      }
+      if (
+        error?.response?.data?.message ===
+        "You can only change your password once every 30 days. Please try again in 30 days."
+      ) {
+        setError(
+          "You can only change your password once every 30 days. Please try again in 30 days.",
+        );
       }
     }
   };
@@ -111,9 +120,13 @@ const DashboardPasswordChange = () => {
   };
 
   return (
-    <div className="relative p-4 mt-24 lg:px-20">
+    <div className="relative mt-24 p-4 lg:px-20">
       {success && (
         <section className="fixed inset-0 z-50 flex h-screen w-screen items-center justify-center bg-black bg-opacity-70">
+          <div
+            className="absolute inset-0 h-screen w-screen"
+            onClick={() => setSuccess(null)}
+          />
           <div className="relative z-10 flex w-[90vw] max-w-xl flex-col items-center justify-center gap-3 rounded-xl bg-white p-3 px-4 lg:space-y-4 lg:p-10">
             <div className=" flex flex-col items-center justify-center gap-4">
               <div className="flex size-20 items-center justify-center rounded-full bg-[#C1F6C3] bg-opacity-60">
@@ -143,20 +156,67 @@ const DashboardPasswordChange = () => {
           </div>
         </section>
       )}
+      {error ===
+        "You can only change your password once every 30 days. Please try again in 30 days." && (
+        <section className="fixed inset-0 z-50 flex h-screen w-screen items-center justify-center bg-black bg-opacity-70">
+          <div
+            className="absolute inset-0 h-screen w-screen"
+            onClick={() => setError("")}
+          />
+          <div className="relative z-10 flex w-[90vw] max-w-xl flex-col items-center justify-center gap-3 rounded-xl bg-white p-3 px-4 lg:space-y-4 lg:p-10">
+            <div className=" flex flex-col items-center justify-center gap-4">
+              <div className="flex size-20 items-center justify-center rounded-full bg-red-100 bg-opacity-60">
+                <div className=" flex size-14 items-center justify-center rounded-full bg-red-300 p-4">
+                  <BsExclamationTriangle className="size-10 text-red-500" />
+                </div>
+              </div>
+              <p className="text-center font-satoshiBold text-2xl font-extrabold text-red-500">
+                Failure
+              </p>
+              <p className="text-center font-semibold text-violet-darker">
+                {error}
+              </p>
+              <div className="flex items-center gap-6">
+                <Link
+                  href={
+                    isServiceProvider
+                      ? "/service-provider/profile"
+                      : "/customer/profile"
+                  }
+                  className="rounded-full bg-violet-normal px-4 py-2 font-bold text-white max-sm:text-sm"
+                >
+                  Proceed to profile
+                </Link>
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
 
+      {/* Page shows when updated  */}
       <main className="space-y-8">
         <p className="flex items-start gap-x-2 rounded-xl bg-[#FFF0DA] p-5 font-normal text-tc-orange lg:items-center">
           <FiAlertTriangle className="size-14 lg:size-7" />
           <span>
             When you change your password, please know that you will have to
-            wait for about 3months before you can change it again.
+            wait for about 30 days before you can change it again.
           </span>
         </p>
 
         <div className="mx-auto max-w-[700px] rounded-xl bg-violet-light p-3 lg:px-10 lg:py-6">
-          <form onSubmit={isPasswordVerified ? methods.handleSubmit(onSubmit) : handlePasswordVerification} className="flex flex-col gap-8">
+          <form
+            onSubmit={
+              isPasswordVerified
+                ? methods.handleSubmit(onSubmit)
+                : handlePasswordVerification
+            }
+            className="flex flex-col gap-8"
+          >
             <div className="space-y-2">
-              <label htmlFor="checkPassword" className="text-xl font-bold text-violet-dark">
+              <label
+                htmlFor="checkPassword"
+                className="text-xl font-bold text-violet-dark"
+              >
                 Current Password
               </label>
               <div className="relative">
@@ -168,7 +228,7 @@ const DashboardPasswordChange = () => {
                 </div>
                 <input
                   type={showCurrentPassword ? "text" : "password"}
-                  className="w-full rounded-xl p-3 outline-none disabled:border-2 disabled:bg-white disabled:cursor-not-allowed"
+                  className="w-full rounded-xl p-3 outline-none disabled:cursor-not-allowed disabled:border-2 disabled:bg-white"
                   onChange={(e) => setCurrentPassword(e.target.value)}
                   disabled={isPasswordVerified}
                 />
@@ -204,7 +264,7 @@ const DashboardPasswordChange = () => {
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: 0.4 }}
-                      className="space-y-2 mt-4"
+                      className="mt-4 space-y-2"
                     >
                       <label className="text-xl font-bold text-violet-dark">
                         Confirm Password
