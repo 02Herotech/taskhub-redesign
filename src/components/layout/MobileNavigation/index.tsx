@@ -219,7 +219,7 @@ const MobileNavigation: React.FC<Props> = ({ showMobileNav, setShowMobileNav }) 
             })}
           </ul>
           <div className={cn(
-            'flex items-center text-lg font-bold rounded-md text-primary fixed bottom-12 py-2 px-5',
+            'flex items-center text-lg font-bold rounded-md text-primary fixed bottom-24 py-1 px-5',
           )} onClick={handleLogout}>
             <FiLogOut className='mr-5 text-primary size-6' />
             <h4 className="text-lg font-bold text-primary">
