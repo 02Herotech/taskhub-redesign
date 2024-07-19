@@ -11,11 +11,12 @@ interface ProfilePieChartPropType {
 }
 
 const ProfilePieChart = ({ chartData }: ProfilePieChartPropType) => {
+  const isComplete = chartData.completed === chartData.total;
   const data = {
     datasets: [
       {
         data: [chartData.completed, chartData.total - chartData.completed],
-        backgroundColor: ["#381F8C", "#fff"],
+        backgroundColor: isComplete ? ["#381F8C", "#381F8C"] : ["#381F8C", "#fff"],
       },
     ],
   };
