@@ -120,7 +120,7 @@ const ChatNavigation = () => {
         </button>
       </div>
 
-      <article className="small-scrollbar flex max-h-[55vh] flex-col gap-4 overflow-y-auto">
+      <article className="no-scrollbar flex max-h-[55vh] flex-col gap-4 overflow-y-auto">
         {displayContacts.length > 0 ? (
           displayContacts.map((item, index) => (
             <Link
@@ -130,20 +130,22 @@ const ChatNavigation = () => {
               key={index}
               className={`flex cursor-pointer items-center gap-3 rounded-lg border border-slate-100 p-3 transition-all  duration-300 ${Number(chatPartnerId) === item.id ? "bg-violet-100 hover:bg-opacity-90" : "hover:bg-violet-50"}`}
             >
-              <Image
-                src={
-                  item.profilePicture ??
-                  "/assets/images/serviceProvider/user.jpg"
-                }
-                alt={item.name}
-                width={60}
-                height={60}
-                quality={100}
-                className="size-16 rounded-full object-cover"
-              />
+              <div className="size-16 overflow-hidden rounded-full max-sm:size-12">
+                <Image
+                  src={
+                    item.profilePicture ??
+                    "/assets/images/serviceProvider/user.jpg"
+                  }
+                  alt={item.name}
+                  width={60}
+                  height={60}
+                  quality={100}
+                  className="h-full w-full object-cover"
+                />
+              </div>
               <div className="w-full space-y-4">
                 <div className="flex w-full cursor-pointer items-center justify-between">
-                  <p className="cursor-pointer font-satoshiMedium text-lg  font-semibold text-violet-normal">
+                  <p className="cursor-pointer font-satoshiMedium font-semibold  text-violet-normal lg:text-lg">
                     {item.name}
                   </p>
                   {(item.newMessages as number) > 0 && (
