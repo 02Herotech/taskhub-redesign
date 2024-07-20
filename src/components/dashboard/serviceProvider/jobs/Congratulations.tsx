@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import React, { Dispatch, SetStateAction } from "react";
 import { PiSealCheckFill } from "react-icons/pi";
 
@@ -37,8 +36,8 @@ const Congratulations = ({
           Task Accepted
         </h2>
         <p className="text-center">
-          Great! You have accepted this customer’s task. please click on
-          generate invoice to send the invoice to the customer
+          Great! You have accepted this customer’s task. Make an offer which
+          would be sent to the customer.
         </p>
         <div className="flex  items-center justify-center gap-10">
           <button
