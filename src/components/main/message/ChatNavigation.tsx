@@ -2,7 +2,6 @@
 
 import { RootState } from "@/store";
 import { formatTimestamp } from "@/utils";
-import moment from "moment";
 import Image from "next/image";
 import Link from "next/link";
 import { useParams } from "next/navigation";
@@ -22,7 +21,6 @@ const ChatNavigation = () => {
     [],
   );
   const [allContacts, setAllContacts] = useState<ChatContactTypes[]>([]);
-
   const { contacts } = useSelector((state: RootState) => state.chat);
 
   useEffect(() => {

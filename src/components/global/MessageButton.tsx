@@ -50,6 +50,8 @@ const MessageButton = ({
           newMessages: null,
           profilePicture: newData.profileImage,
           name: `${newData.firstName} ${newData.lastName}`,
+          lastMessage: null,
+          lastChatTimestamp: null,
         };
         localStorage.setItem("tempUserChat", JSON.stringify(tempUserChat));
         router.push("/message/" + recipientId);
