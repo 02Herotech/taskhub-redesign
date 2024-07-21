@@ -44,15 +44,15 @@ const NotificationList = ({
         const listing = userListings.find(
           (singleListing) => singleListing.id === booking?.listing.id,
         );
-        if (!booking || !listing) return;
+        // if (!booking || !listing) return;
         return (
           <div
             key={index}
             onClick={() =>
               showSelectedNotification({
                 notification: item,
-                booking,
-                listing,
+                booking: booking as BookingType,
+                listing: listing as ListingDataType,
               })
             }
             className=" pointer-events-auto relative flex w-full cursor-pointer justify-between gap-2 rounded-md border-b border-b-violet-light p-2 py-4  transition-shadow duration-300 hover:bg-violet-light lg:items-center"

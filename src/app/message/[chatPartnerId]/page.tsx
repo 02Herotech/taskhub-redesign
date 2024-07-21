@@ -101,8 +101,6 @@ const ServiceProviderChat = () => {
     }
   }, [token, user, chatPartnerId]);
 
-  console.log(groupedChatMessages);
-
   // finds current chat partner contact details
   useEffect(() => {
     const tempUser = localStorage.getItem("tempUserChat");

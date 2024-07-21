@@ -50,7 +50,7 @@ const JobCard = ({
         />
       </div>
       <div className="col-span-10 w-full space-y-4">
-        <div className="flex flex-wrap justify-between gap-2 ">
+        <div className="flex justify-between gap-4 ">
           <div>
             <div className="size-20 overflow-hidden rounded-full border border-violet-normal md:hidden lg:size-24 ">
               <Image
@@ -79,7 +79,7 @@ const JobCard = ({
             {reportJob && (
               <div className="flex justify-end">
                 <button
-                  className=" rounded-full bg-red-100  px-4 py-2 text-xl font-bold text-red-500 transition-colors duration-300   md:hidden "
+                  className=" rounded-full bg-red-100  px-3 py-1 text-sm font-bold text-red-500 transition-colors duration-300 md:hidden "
                   onClick={reportJob}
                 >
                   Report

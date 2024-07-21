@@ -38,7 +38,7 @@ const ProfileCompletion = ({ fetchedUserData }: ProfileCompletionType) => {
     },
     {
       title: "Identification Document",
-      status: "",
+      status: fetchedUserData?.idImage,
     },
     {
       title: "Date of Birth",
@@ -70,27 +70,26 @@ const ProfileCompletion = ({ fetchedUserData }: ProfileCompletionType) => {
           Profile Completion
         </h2>
         <div className="flex flex-wrap gap-4 max-md:items-center max-md:justify-center ">
-          {profileProgressData
-            .map((item, index) => (
-              <Link
-                href={
-                  item.status ? "#" : "/service-provider/profile/edit-profile" 
-                }
-                key={index}
-                className={`flex items-center gap-2 max-md:py-1 rounded-full px-4 py-2 max-md:px-2 text-xs max-md:text-[9px] md:font-medium  ${item.status ? "bg-violet-normal text-white" : " bg-slate-300 text-slate-700"} `}
+          {profileProgressData.map((item, index) => (
+            <Link
+              href={
+                item.status ? "#" : "/service-provider/profile/edit-profile"
+              }
+              key={index}
+              className={`flex items-center gap-2 rounded-full px-4 py-2 text-xs max-md:px-2 max-md:py-1 max-md:text-[9px] md:font-medium  ${item.status ? "bg-violet-normal text-white" : " bg-slate-300 text-slate-700"} `}
+            >
+              <span
+                className={`rounded-full ${item.status ? "bg-white" : "bg-slate-600"} p-0.5 md:p-1`}
               >
-                <span
-                  className={`rounded-full ${item.status ? "bg-white" : "bg-slate-600"} p-0.5 md:p-1`}
-                >
-                  {item.status ? (
-                    <BiCheck className=" size-2 md:size-3 text-violet-normal" />
-                  ) : (
-                    <BiPlus className="size-2 md:size-3 text-slate-300" />
-                  )}
-                </span>
-                <span> {item.title} </span>
-              </Link>
-            ))}
+                {item.status ? (
+                  <BiCheck className=" size-2 text-violet-normal md:size-3" />
+                ) : (
+                  <BiPlus className="size-2 text-slate-300 md:size-3" />
+                )}
+              </span>
+              <span> {item.title} </span>
+            </Link>
+          ))}
         </div>
       </div>
     </section>

@@ -1,5 +1,7 @@
 //  format date into backend date
 
+import moment from "moment";
+
 export const formatDate = (date: Date): string => {
   const day = String(date.getDate()).padStart(2, "0");
   const month = String(date.getMonth() + 1).padStart(2, "0"); // Months are zero-based
@@ -236,25 +238,52 @@ export const isOlder = (arr: number[]) => {
   return date < oneMonthAgo;
 };
 
+// Format time using moment.js
 export function formatTime(timestamp: string) {
-  const date = new Date(timestamp);
-
-  // Get hours and minutes
-  let hours = date.getHours();
-  const minutes = date.getMinutes();
-
-  // Determine AM/PM suffix
-  const ampm = hours >= 12 ? "PM" : "AM";
-
-  // Convert to 12-hour format
-  hours = hours % 12;
-  hours = hours ? hours : 12; // The hour '0' should be '12'
-
-  // Format minutes to always have two digits
-  const formattedMinutes = minutes < 10 ? "0" + minutes : minutes;
-
-  // Construct the formatted time string
-  const formattedTime = `${hours}:${formattedMinutes} ${ampm}`;
-
+  const formattedTime = moment(timestamp).format("hh:mm A");
   return formattedTime;
+}
+
+export function formatTimestamp(timestamp: number[]): string {
+  const [year, month, day, hour, minute, second, nanosecond] = timestamp;
+
+  // Create a JavaScript Date object from the timestamp array
+  const dateObject = new Date(
+    year,
+    month - 1,
+    day,
+    hour + 1,
+    minute,
+    second,
+    Math.floor(nanosecond / 1e6),
+  ); // convert nanoseconds to milliseconds
+
+  // Create a Moment object from the date
+  const timestampMoment = moment(dateObject);
+
+  // Get the current time as a Moment object
+  const now = moment();
+
+  // Calculate the difference between now and the timestamp
+  const differenceInDays = now.diff(timestampMoment, "days");
+
+  if (differenceInDays === 0) {
+    // Today
+    return timestampMoment.format("hh:mm A");
+  } else if (differenceInDays === 1) {
+    // Yesterday
+    return `Yesterday at ${timestampMoment.format("hh:mm A")}`;
+  } else if (differenceInDays < 7) {
+    // This week
+    return timestampMoment.from(now);
+  } else if (differenceInDays < 30) {
+    // This month
+    return timestampMoment.format("MMM D [at] hh:mm A");
+  } else if (differenceInDays < 365) {
+    // This year
+    return timestampMoment.format("MMM D [at] hh:mm A");
+  } else {
+    // Earlier years
+    return timestampMoment.format("YYYY-MM-DD [at] hh:mm A");
+  }
 }

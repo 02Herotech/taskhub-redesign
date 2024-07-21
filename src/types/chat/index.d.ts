@@ -3,6 +3,8 @@ declare interface ChatContactTypes {
   name: string;
   profilePicture: string | null;
   newMessages: number | null;
+  lastChatTimestamp: number[];
+  lastMessage: string;
 }
 
 declare interface ChatMessageRecievedType {

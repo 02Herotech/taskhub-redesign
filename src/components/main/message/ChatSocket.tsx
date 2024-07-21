@@ -11,6 +11,7 @@ import React, { useEffect, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AnyAction, Dispatch } from "@reduxjs/toolkit";
 import { connectSocket, disconnectSocket } from "@/lib/socket";
+import { usePathname } from "next/navigation";
 
 interface Contact {
   id: number;
@@ -22,6 +23,7 @@ const ChatSocket: React.FC = () => {
   const { profile: user, userProfileAuth: auth } = useSelector(
     (state: RootState) => state.userProfile,
   );
+  const pathname = usePathname();
 
   const loadContacts = useCallback(async () => {
     if (!auth.token || !user) return;
@@ -74,6 +76,10 @@ const ChatSocket: React.FC = () => {
     };
     // eslint-disable-next-line
   }, [user, onMessageReceived]);
+
+  useEffect(() => {
+    if (!pathname.includes("/message")) localStorage.removeItem("tempUserChat");
+  }, [pathname]);
 
   return <div className="hidden" />;
 };
