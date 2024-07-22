@@ -65,7 +65,7 @@ const EditTaskForm = ({ task, setShowEditModal }: TaskCardProps) => {
         taskImage: z.string().optional(),
         taskDate: z.number().array().nullable().optional(),
         taskTime: z.string().nullable().optional(),
-        customerBudget: z.number()
+        customerBudget: z.string().transform((val) => Number(val))
     });
 
     type taskZodType = z.infer<typeof taskSchema>;
@@ -189,9 +189,9 @@ const EditTaskForm = ({ task, setShowEditModal }: TaskCardProps) => {
             suburb: data.suburb,
             state: data.state,
             taskImage,
-            taskDate: isFlexible ? null : dateString,
-            taskTime: isFlexible ? "Flexible" : timeString,
-            customerBudget: updatedCustomerBudget,
+            taskDate: dateString,
+            taskTime: timeString,
+            customerBudget: data.customerBudget,
         }).reduce((acc, [key, value]) => {
             if (
                 value !== null &&
