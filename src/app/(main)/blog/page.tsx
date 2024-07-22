@@ -1,8 +1,9 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import "../../../styles/serviceProviderStyles.css";
 import Image from "next/image";
 import Link from "next/link";
+import { CiSearch } from "react-icons/ci";
 
 const blogsData: BlogTypes[] = [
   {
@@ -748,47 +749,111 @@ const BlogsAllPage = () => {
   useEffect(() => {
     localStorage.setItem("blogs", JSON.stringify(blogsData));
   }, []);
+  const [selectedCategory, setSelectedCategory] = useState("")
+
+  const categories = ["Afrik immigrant", "Business & Finance", "Housing & Accommodation", "Medical & Education", "Career & Transports"]
 
   return (
-    <main className="container mt-20 min-h-96 max-w-screen-2xl  space-y-8 px-4  py-10 md:px-8 lg:px-16 ">
-      <h2 className="text-center font-clashBold text-4xl font-extrabold text-violet-normal">
-        BLOG
-      </h2>
+    <main className="container mt-20 min-h-96 max-w-screen-xl space-y-14 px-4 py-10">
+      <div className="relative w-full mb-14">
+        <div className="flex items-center justify-center">
+          <Image
+            src="/assets/images/blog/blog_banner.png"
+            alt="Blog banner"
+            width={1200}
+            quality={100}
+            height={202}
+            className="rounded-3xl"
+          />
+        </div>
+        <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-1/2 w-1/2 max-w-md text-[#C1BADB]">
+          <div className="relative w-full flex">
+            <span className="absolute left-4 top-1/2 transform -translate-y-1/2 z-50">
+              <CiSearch className="size-5" />
+            </span>
+            <input
+              type="text"
+              placeholder="Search"
+              className="w-full pl-12 pr-4 py-3 rounded-2xl drop-shadow-lg bg-[#EEEEEF] appearance-none outline-none border-none placeholder:text-[#C1BADB]"
+            />
+          </div>
+        </div>
+      </div>
 
-      <div className=" space-y-16 lg:space-y-32">
+      {/* Categories */}
+      <div className="flex items-center flex-wrap max-lg:gap-4 lg:justify-center lg:space-x-4 mb-14">
+        {categories.map((category) => (
+          <div key={category}
+            className="border border-primary rounded-full font-satoshiBold text-xs lg:text-sm text-primary font-semibold cursor-pointer hover:scale-105 transition-all py-2 px-6 bg-[#F1F1F2]"
+            onClick={() => setSelectedCategory(category)}
+          >
+            {category}
+          </div>
+        ))}
+      </div>
+
+      <hr className="border-[1.5px] border-[#CACACC]" />
+
+      {/* Featured Post */}
+      <div className="lg:flex lg:space-x-4 max-sm:space-y-4 w-full mb-14">
+        <div className="flex-shrink-0">
+          <Image
+            src="/assets/images/blog/blogImage1.png"
+            alt="blog.title"
+            quality={100}
+            width={590}
+            height={790}
+            className="h-full object-cover rounded-2xl"
+          />
+        </div>
+        <div className="lg:px-5 lg:py-2 space-y-4">
+          <h3 className="text-tc-orange text-base lg:text-xl font-satoshiBold font-bold">Career & Transportations</h3>
+          <h1 className="text-primary text-xl lg:text-3xl font-clashSemiBold font-semibold">How to Start Import Business in Australia in 9 Key Steps</h1>
+          <h3 className="text-tc-orange font-satoshi text-sm lg:text-lg">Read Time: 10 Mins</h3>
+          <p className="text-[#140B31] font-satoshi text-sm lg:text-lg line-clamp-2">Are you interested in learning how to start import business in Australia? If so, we will provide you with thorough information to answer your questionnnsss</p>
+          <div className="flex items-center space-x-3">
+            <Image
+              src="/assets/images/blog/blogImage1.png"
+              alt="blog.title"
+              width={66}
+              height={66}
+              className="rounded-full object-cover size-14"
+            />
+            <div className="">
+              <h5 className="text-sm lg:text-base text-[#381F8C] font-satoshiBold font-bold">Posted by admin</h5>
+              <h5 className="text-sm lg:text-base text-[#262528]">20 of April,2024</h5>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Blog posts */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
         {blogsData.map((blog, index) => (
           <article
             key={index}
-            className="grid grid-cols-12 gap-8 px-4 lg:px-12"
+            className="space-y-4 max-sm:flex max-sm:space-x-4"
           >
-            <section className="col-span-2 flex flex-col items-end ">
-              <p className="font-clash text-4xl text-violet-normal ">
-                {blog.date.substring(0, 2)}
-              </p>
-              <p className="max-sm:text-md font-clashSemiBold text-lg  font-semibold text-violet-normal ">
-                {blog.date.substring(4)}
-              </p>
-            </section>
-            <section className="col-span-10 space-y-3 lg:space-y-6">
-              <div>
-                <Image
-                  src={blog.bannerImage}
-                  alt={blog.title}
-                  quality={100}
-                  width={1600}
-                  height={1600}
-                />
-              </div>
-              <h2 className=" font-clashBold text-3xl font-bold text-violet-normal max-md:text-xl ">
+            <Image
+              src={blog.bannerImage}
+              alt={blog.title}
+              quality={100}
+              width={370}
+              height={301}
+              className="rounded-2xl h-[300px] max-sm:w-[115px]"
+            />
+            <div className="space-y-4">
+              <h3 className="text-tc-orange text-sm lg:text-base font-satoshiBold font-bold">Career & Transportations</h3>
+              <h2 className="text-primary text-base lg:text-xl font-clashSemiBold font-semibold">
                 {blog.title}
               </h2>
-              <p className="text-lg  text-orange-normal">
+              <p className="text-orange-normal text-sm lg:text-base">
                 Read Time : {blog.readTime}
               </p>
-              <h2 className="line-clamp-2   font-semibold text-violet-dark">
+              <h2 className="line-clamp-4 font-semibold text-violet-dark">
                 {blog.description}
               </h2>
-              <div>
+              <div className="!mt-8">
                 <Link
                   href={"/blog/" + blog.id}
                   className="rounded-full bg-orange-normal px-6 py-3 text-white transition-opacity duration-300 hover:opacity-90"
@@ -796,7 +861,7 @@ const BlogsAllPage = () => {
                   Read More
                 </Link>
               </div>
-            </section>
+            </div>
           </article>
         ))}
       </div>
