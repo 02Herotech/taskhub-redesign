@@ -91,7 +91,7 @@ const AddTaskForm: React.FC = () => {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [selectedTime, setSelectedTime] = useState<Date | null>(null);
   const [selectedCode, setSelectedCode] = useState("");
-  const [selectedCity, setSelectedCity] = useState("Flagstone");
+  const [selectedCity, setSelectedCity] = useState("Suburb");
   const [termAccepted, settermAccepted] = useState(false);
   const [accepted, setAccepted] = useState(false);
   const [isRemote, setIsRemote] = useState("");
