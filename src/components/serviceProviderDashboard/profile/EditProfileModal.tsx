@@ -176,7 +176,7 @@ const EditProfileModal = ({
         className="absolute left-0 top-0 h-full w-full"
         onClick={handleCloseModal}
       />
-      <div className="relative w-[90%] max-w-xl rounded-3xl bg-white p-4 py-12 lg:p-10 ">
+      <div className="relative w-[90%] max-w-xl rounded-3xl bg-white p-4 py-12 lg:p-10 z-50">
         {/* close modal button */}
         <button
           className="absolute right-4 top-2 rounded-full bg-violet-light p-2"
@@ -214,7 +214,7 @@ const EditProfileModal = ({
             </div>
           </div>
         ) : isEditingProfilePicture.isEditing || isUploadInitiated ? (
-          <div className=" flex flex-col items-center justify-center gap-5 space-y-3">
+          <div className=" flex flex-col items-center justify-center gap-5 space-y-3 bg-white z-50">
             <div className="space-y-4">
               <div className="flex items-center gap-4">
                 <button
