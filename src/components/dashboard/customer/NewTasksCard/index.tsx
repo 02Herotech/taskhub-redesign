@@ -23,13 +23,26 @@ type DropDownItem = {
 
 const NewTasksCard = ({ task }: TaskCardProps) => {
     const dateArray = task.taskDate;
-    const date = new Date(dateArray[0], dateArray[1] - 1, dateArray[2]);
-    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-    const [isDropdownOpen, setIsDropdownOpen] = useState(false)
+    let date: Date;
+    let formattedDate: string;
 
-    const day = date.getDate();
-    const daySuffix = (day === 11 || day === 12 || day === 13) ? "th" : suffixes[day % 10] || suffixes[0];
-    const formattedDate = `On ${dayOfWeekNames[date.getDay()]}, ${monthNames[date.getMonth()]} ${day}${daySuffix}`;
+    if (dateArray && Array.isArray(dateArray) && dateArray.length >= 3) {
+        date = new Date(dateArray[0], dateArray[1] - 1, dateArray[2]);
+        const day = date.getDate();
+        const daySuffix = (day === 11 || day === 12 || day === 13) ? "th" : suffixes[day % 10] || suffixes[0];
+        formattedDate = `On ${dayOfWeekNames[date.getDay()]}, ${monthNames[date.getMonth()]} ${day}${daySuffix}`;
+    } else {
+        formattedDate = "Flexible";
+    }
+
+    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
+    // console.log("current task:", task)
+
+    // const day = date.getDate();
+    // const daySuffix = (day === 11 || day === 12 || day === 13) ? "th" : suffixes[day % 10] || suffixes[0];
+    // const formattedDate = `On ${dayOfWeekNames[date.getDay()]}, ${monthNames[date.getMonth()]} ${day}${daySuffix}`;
 
     const dropDownItems: DropDownItem[] = [
         {
