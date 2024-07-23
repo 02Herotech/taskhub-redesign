@@ -19,7 +19,6 @@ import { useUpdateTaskMutation } from '@/services/tasks';
 interface TaskCardProps {
     task: CustomerTasks;
     setShowEditModal: (value: boolean) => void;
-    onTaskUpdated: () => void;
 }
 
 interface CustomInputProps {
@@ -27,7 +26,7 @@ interface CustomInputProps {
     onClick?: () => void;
 }
 
-const EditTaskForm = ({ task, setShowEditModal, onTaskUpdated }: TaskCardProps) => {
+const EditTaskForm = ({ task, setShowEditModal }: TaskCardProps) => {
     const [activeEditModalLink, setActiveEditModalLink] = useState<string>("Task Details");
     const [categories, setCategories] = useState<{ id: number; categoryName: string }[]>([]);
     const [updatedPostCode, setUpdatedPostCode] = useState<any>(task.postCode);
