@@ -51,7 +51,7 @@ const NewTasksCard = ({ task }: TaskCardProps) => {
                 setIsEditModalOpen(true);
                 setIsDropdownOpen(false);
             },
-            icon: <FaRegEdit className="text-white size-4" />,
+            icon: <FaRegEdit className="text-white size-4 cursor-pointer" />,
         },
     ];
 
@@ -89,7 +89,7 @@ const NewTasksCard = ({ task }: TaskCardProps) => {
                             <BsThreeDotsVertical className="size-4" />
                         </button>
                         <div
-                            className={`small-scrollbar right-0 absolute top-[calc(100%+0.2rem)] flex max-h-0 w-[190px] flex-col rounded-md bg-[#EBE9F4] transition-all duration-300 ${isDropdownOpen ? "max-h-64 overflow-y-auto border border-primary" : "max-h-0 overflow-hidden"
+                            className={`small-scrollbar right-0 absolute top-[calc(100%+0.2rem)] flex max-h-0 w-[130px] flex-col rounded-md bg-[#EBE9F4] transition-all duration-300 ${isDropdownOpen ? "max-h-64 overflow-y-auto border border-primary" : "max-h-0 overflow-hidden"
                                 }`}
                         >
                             <div className="px-2 py-1">

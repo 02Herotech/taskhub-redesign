@@ -14,10 +14,12 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { typeData } from "@/data/marketplace/data";
 import { useRouter } from 'next/navigation';
+import { useUpdateTaskMutation } from '@/services/tasks';
 
 interface TaskCardProps {
     task: CustomerTasks;
     setShowEditModal: (value: boolean) => void;
+    onTaskUpdated: () => void;
 }
 
 interface CustomInputProps {
@@ -25,7 +27,7 @@ interface CustomInputProps {
     onClick?: () => void;
 }
 
-const EditTaskForm = ({ task, setShowEditModal }: TaskCardProps) => {
+const EditTaskForm = ({ task, setShowEditModal, onTaskUpdated }: TaskCardProps) => {
     const [activeEditModalLink, setActiveEditModalLink] = useState<string>("Task Details");
     const [categories, setCategories] = useState<{ id: number; categoryName: string }[]>([]);
     const [updatedPostCode, setUpdatedPostCode] = useState<any>(task.postCode);
@@ -178,9 +180,47 @@ const EditTaskForm = ({ task, setShowEditModal }: TaskCardProps) => {
         imageRef?.current?.click();
     };
 
+    const [updateTask] = useUpdateTaskMutation();
+
+    // const handleUpdateTask: SubmitHandler<taskZodType> = async (data) => {
+    //     console.log("data sent ", data)
+    //     const body = Object.entries({
+    //         taskBriefDescription: data.taskBriefDescription,
+    //         taskDescription: data.taskDescription,
+    //         categoryId: categories.find(category => category.categoryName === data.category)?.id,
+    //         taskType: data.taskType,
+    //         postCode: data.postCode,
+    //         suburb: data.suburb,
+    //         state: data.state,
+    //         taskImage,
+    //         taskDate: dateString,
+    //         taskTime: timeString,
+    //         customerBudget: data.customerBudget,
+    //     }).reduce((acc, [key, value]) => {
+    //         if (
+    //             value !== null &&
+    //             value !== undefined &&
+    //             value !== "" &&
+    //             value !== 0
+    //         ) {
+    //             // @ts-expect-error "type of key not known"
+    //             acc[key] = value;
+    //         }
+    //         return acc;
+    //     }, {});
+    //     try {
+    //         await updateTask({ id: task.id, details: body }).unwrap();
+    //     } catch (error: any) {
+    //         console.log(error);
+    //         // setError(error.response.data.message);
+    //     }
+    // };
+
     const handleUpdateTask: SubmitHandler<taskZodType> = async (data) => {
-        console.log("data sent ", data)
-        const body = Object.entries({
+        console.log("data sent ", data);
+        const formData = new FormData();
+
+        const fields = {
             taskBriefDescription: data.taskBriefDescription,
             taskDescription: data.taskDescription,
             categoryId: categories.find(category => category.categoryName === data.category)?.id,
@@ -188,35 +228,28 @@ const EditTaskForm = ({ task, setShowEditModal }: TaskCardProps) => {
             postCode: data.postCode,
             suburb: data.suburb,
             state: data.state,
-            taskImage,
             taskDate: dateString,
             taskTime: timeString,
             customerBudget: data.customerBudget,
-        }).reduce((acc, [key, value]) => {
-            if (
-                value !== null &&
-                value !== undefined &&
-                value !== "" &&
-                value !== 0
-            ) {
-                // @ts-expect-error "type of key not known"
-                acc[key] = value;
+        };
+
+        Object.entries(fields).forEach(([key, value]) => {
+            if (value !== null && value !== undefined && value !== "" && value !== 0) {
+                formData.append(key, value.toString());
             }
-            return acc;
-        }, {});
+        });
+
+        // Handle taskImage separately
+        if (taskImage) {
+            formData.append('taskImage', taskImage);
+        }
+
         try {
-            const url = `${process.env.NEXT_PUBLIC_API_URL}/task/update-task/${task.id}`;
-            await axios.patch(url, body, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                    "Content-Type": "multipart/form-data",
-                },
-            });
-            // setShowEditModal(false);
-            setShowSuccessModal(true);
+            await updateTask({ id: task.id, details: formData }).unwrap();
+            setShowSuccessModal(true)
         } catch (error: any) {
-            console.log(error.response.data);
-            setError(error.response.data.message);
+            console.log(error);
+            // setError(error.response.data.message);
         }
     };
 
@@ -300,6 +333,7 @@ const EditTaskForm = ({ task, setShowEditModal }: TaskCardProps) => {
                         onClick={() => {
                             setShowSuccessModal(false)
                             setShowEditModal(false)
+                            router.refresh()
                         }}
                         className="absolute h-screen w-screen"
                     />
@@ -334,7 +368,7 @@ const EditTaskForm = ({ task, setShowEditModal }: TaskCardProps) => {
                 </section>
             )}
             <div className="border-b-2 border-[#140B31] w-full" />
-            <div className="rounded-2xl min-h-[200px] min-w-[80%] lg:w-[850px] font-satoshi overflow-y-auto">
+            <div className="rounded-2xl max-h-[600px] min-w-[80%] lg:w-[650px] font-satoshi overflow-y-auto">
                 <div className="lg:flex h-full lg:space-x-3 p-2">
                     <div className="hidden lg:block border-r-2 border-[#140B31] pr-8 pb-10 space-y-5 pt-5">
                         <div className={`cursor-pointer text-lg font-bold ${activeEditModalLink === "Task Details" ? "bg-tc-orange rounded-lg pl-2 pr-5 py-2 text-white" : "text-primary"}`} onClick={() => setActiveEditModalLink("Task Details")}>Task Details</div>
@@ -464,6 +498,7 @@ const EditTaskForm = ({ task, setShowEditModal }: TaskCardProps) => {
                                         <div className="flex items-center space-x-3">
                                             <div className="relative">
                                                 <DatePicker
+                                                    value={updatedTime as unknown as string}
                                                     selected={updatedTime}
                                                     onChange={handleTimeChange}
                                                     showTimeSelect
@@ -472,6 +507,7 @@ const EditTaskForm = ({ task, setShowEditModal }: TaskCardProps) => {
                                                     timeIntervals={15}
                                                     dateFormat="h:mm aa"
                                                     placeholderText="Choose Time"
+                                                    disabled={isFlexible}
                                                     id="taskTime"
                                                     name="taskTime"
                                                     // disabled={termAccepted}
@@ -481,6 +517,7 @@ const EditTaskForm = ({ task, setShowEditModal }: TaskCardProps) => {
                                             </div>
                                             <div className="relative">
                                                 <DatePicker
+                                                    value={updatedDate as unknown as string}
                                                     selected={updatedDate}
                                                     onChange={handleDateChange}
                                                     dateFormat="dd-MM-yyyy"
@@ -488,6 +525,7 @@ const EditTaskForm = ({ task, setShowEditModal }: TaskCardProps) => {
                                                     placeholderText="Choose Date"
                                                     id="taskDate"
                                                     name="taskDate"
+                                                    disabled={isFlexible}
                                                     // disabled={termAccepted}
                                                     customInput={<CustomInput />}
                                                     className="w-full cursor-pointer rounded-2xl bg-[#EBE9F4] px-2 py-1 outline-none placeholder:text-[14px] placeholder:font-bold"
@@ -499,8 +537,12 @@ const EditTaskForm = ({ task, setShowEditModal }: TaskCardProps) => {
                                                         type="checkbox"
                                                         name="check"
                                                         checked={isFlexible}
-                                                        // disabled={accepted}
-                                                        onChange={() => setIsFlexible(!isFlexible)}
+                                                        // disabled={!!dateString || !!timeString}
+                                                        onChange={() => {
+                                                            setIsFlexible(!isFlexible)
+                                                            setUpdatedDate(null)
+                                                            setUpdatedTime(null)
+                                                        }}
                                                         className="mr-2"
                                                     />
                                                     <span className="text-[12px] text-status-darkpurple">

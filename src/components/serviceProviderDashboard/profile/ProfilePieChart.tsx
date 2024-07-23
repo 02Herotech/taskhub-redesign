@@ -11,39 +11,36 @@ interface ProfilePieChartPropType {
 }
 
 const ProfilePieChart = ({ chartData }: ProfilePieChartPropType) => {
-  const isComplete = chartData.completed === chartData.total;
+  const completionPercentage = Math.floor((chartData.completed / chartData.total) * 100);
+  const isComplete = completionPercentage === 100;
+
   const data = {
     datasets: [
       {
-        data: [chartData.completed, chartData.total - chartData.completed],
-        backgroundColor: isComplete ? ["#381F8C", "#381F8C"] : ["#381F8C", "#fff"],
+        data: [chartData.completed, Math.max(chartData.total - chartData.completed, 0)],
+        backgroundColor: isComplete ? ['#381F8C', '#381F8C'] : ['#381F8C', '#E0E0E0'],
+        borderWidth: 0,
       },
     ],
   };
 
   const options = {
     plugins: {
-      legend: {
-        display: false, // Disable the legend
-      },
-      tooltip: {
-        enabled: false, // Disable the tooltip
-      },
+      legend: { display: false },
+      tooltip: { enabled: false },
     },
-    interaction: {
-      mode: undefined, // Disable all interactions
-    },
-    hover: {
-      mode: undefined, // Disable hover effects
-    },
+    responsive: true,
+    maintainAspectRatio: true,
   };
 
   return (
-    <div className="relative">
-      <p className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-[calc(50%+0.5rem)] text-xl font-bold text-orange-normal">
-        {Math.floor((chartData.completed / chartData.total) * 100)}%
-      </p>
+    <div className="relative size-40">
       <Pie data={data} options={options} />
+      <div className="absolute inset-0 flex items-center justify-center">
+        <p className="text-2xl font-bold text-orange-normal">
+          {completionPercentage}%
+        </p>
+      </div>
     </div>
   );
 };
