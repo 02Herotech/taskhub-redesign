@@ -159,7 +159,7 @@ const ChatNavigation = () => {
                         formatTimestamp(item.lastChatTimestamp)}
                     </p>
                     {(item.newMessages as number) > 0 && (
-                      <p className="w-fit cursor-pointer rounded-md bg-violet-light p-1 px-2  text-xs text-violet-normal  ">
+                      <p className="w-fit cursor-pointer rounded-md bg-orange-normal p-1 px-2  text-xs text-white  ">
                         {item.newMessages}
                       </p>
                     )}
