@@ -18,7 +18,7 @@ import { setContacts, setTotalUnreadMessages } from "@/store/Features/chat";
 import ScrollToBottom from "react-scroll-to-bottom";
 import { connectSocket, getSocket } from "@/lib/socket";
 import { GiCheckMark } from "react-icons/gi";
-import { formatTime } from "@/utils";
+import { formatTime, formatTimestamp } from "@/utils";
 import { FaCheckDouble } from "react-icons/fa6";
 
 type ChatMessagesGroupedType = {
@@ -67,7 +67,8 @@ const ServiceProviderChat = () => {
     messages: ChatMessageDisplayedType[],
   ): ChatMessagesGroupedType => {
     return messages.reduce((acc: ChatMessagesGroupedType, message) => {
-      const date = new Date(message.time).toLocaleDateString();
+      const [year, month, day] = message.time as number[];
+      const date = new Date(year, month - 1, day).toLocaleDateString();
       if (!acc[date]) {
         acc[date] = [];
       }
@@ -76,7 +77,7 @@ const ServiceProviderChat = () => {
     }, {});
   };
 
-  // finds current chat patner messages
+  // finds current messages
   useEffect(() => {
     if (token && user) {
       findChatMessages({
@@ -89,7 +90,7 @@ const ServiceProviderChat = () => {
             (msg: ChatMessageRecievedType) => ({
               content: msg.content,
               senderId: msg.senderId,
-              time: msg.timestamp,
+              time: msg.timestamp as number[],
             }),
           );
           const groupedMessages = groupMessagesByDate(displayMessages);
@@ -151,7 +152,8 @@ const ServiceProviderChat = () => {
     message: ChatMessageDisplayedType,
     groupedMessages: ChatMessagesGroupedType,
   ): ChatMessagesGroupedType => {
-    const date = new Date(message.time).toLocaleDateString();
+    const [year, month, day] = message.time as number[];
+    const date = new Date(year, month - 1, day).toLocaleDateString();
     return {
       ...groupedMessages,
       [date]: groupedMessages[date]
@@ -169,7 +171,6 @@ const ServiceProviderChat = () => {
         senderName: `${user.firstName} ${user.lastName}`,
         recipientName: contact.name,
         content: msg,
-        timestamp: new Date().toISOString(),
       };
       try {
         if (!socket.connected) {
@@ -179,7 +180,7 @@ const ServiceProviderChat = () => {
         const newMessage: ChatMessageDisplayedType = {
           content: msg,
           senderId: user.id,
-          time: message.timestamp,
+          time: new Date().toISOString(),
         };
         const newGroupedMessages = addMessageToGroupedState(
           newMessage,
@@ -338,7 +339,9 @@ const ServiceProviderChat = () => {
                               <p>{item.content}</p>
                               <div className="flex items-center justify-end gap-2 text-[0.7rem]">
                                 <span className="">
-                                  {formatTime(item.time)}
+                                  {typeof item.time === "string"
+                                    ? formatTime(item.time)
+                                    : formatTimestamp(item.time as number[])}
                                 </span>
                                 {item.senderId === user.id && (
                                   <span className="block">

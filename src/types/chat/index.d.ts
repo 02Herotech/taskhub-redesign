@@ -15,12 +15,12 @@ declare interface ChatMessageRecievedType {
   senderName: string;
   recipientName: string;
   content: string;
-  timestamp: number;
+  timestamp: number[];
   status: string;
 }
 
 declare interface ChatMessageDisplayedType {
   content: string;
-  time: string;
+  time: string | number[];
   senderId: number;
 }
