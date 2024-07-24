@@ -22,12 +22,14 @@ const NotificationsSettings = () => {
   const [notificationPreferences, setNotificationPreferences] = useState<
     string[]
   >([]);
+  const [fetchedNotificationPreferences, setFetchedNotificationPreferences] =
+    useState<string[]>([]);
 
   const isServiceProvider = auth?.role?.[0] === "SERVICE_PROVIDER";
 
   const NotificationOptions = [
     {
-      label: `When someone books my ${isServiceProvider ? "service" : "task"}`,
+      label: `When someone books my ${isServiceProvider ? "Service" : "Task"}`,
       value: "BOOKING",
     },
     {
@@ -115,7 +117,7 @@ const NotificationsSettings = () => {
                     Success
                   </p>
                   <p className="text-center font-semibold text-violet-darker">
-                    Your Notification preference has been updated succesfully
+                    Your Notification preference has succesfully
                   </p>
                   <div className="flex items-center gap-6">
                     <Link

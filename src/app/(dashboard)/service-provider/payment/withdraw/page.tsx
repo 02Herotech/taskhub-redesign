@@ -13,7 +13,7 @@ import { BeatLoader } from "react-spinners";
 import z from "zod";
 
 const WithdrawalPage = () => {
-  const { userProfileAuth: auth } = useSelector(
+  const { userProfileAuth: auth, profile: user } = useSelector(
     (state: RootState) => state.userProfile,
   );
   const [success, setSuccess] = useState(false);
@@ -59,7 +59,7 @@ const WithdrawalPage = () => {
       setSuccess(true);
       reset();
     } catch (error: any) {
-      setError(error?.response?.data?.message || "Insufficient balance");
+      setError(error?.response?.data || "Insufficient balance");
       console.log(error?.response?.data || error);
     }
   };
@@ -158,7 +158,9 @@ const WithdrawalPage = () => {
             </span>
             <input
               type="text"
+              value={user ? `${user.lastName} ${user.firstName}` : ""}
               className="w-full rounded-md bg-white p-3 outline-none"
+              disabled={true}
               {...register("accountName")}
             />
             {errors.accountName && (
