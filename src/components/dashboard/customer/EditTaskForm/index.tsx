@@ -40,9 +40,6 @@ const EditTaskForm = ({ task, setShowEditModal }: TaskCardProps) => {
     const [selectedCategory, setSelectedCategory] = useState<string>(task.category.categoryName);
     const [showSuccessModal, setShowSuccessModal] = useState(false);
     const [isFlexible, setIsFlexible] = useState(false);
-
-    const { data: session } = useSession();
-    const token = session?.user.accessToken;
     const router = useRouter();
 
     const taskSchema = z.object({
@@ -367,7 +364,7 @@ const EditTaskForm = ({ task, setShowEditModal }: TaskCardProps) => {
                 </section>
             )}
             <div className="border-b-2 border-[#140B31] w-full" />
-            <div className="rounded-2xl max-h-[600px] min-w-[80%] lg:w-[650px] font-satoshi overflow-y-auto">
+            <div className="rounded-2xl max-h-[80vh] min-w-[80%] lg:w-[700px] font-satoshi overflow-y-auto small-scrollbar">
                 <div className="lg:flex h-full lg:space-x-3 p-2">
                     <div className="hidden lg:block border-r-2 border-[#140B31] pr-8 pb-10 space-y-5 pt-5">
                         <div className={`cursor-pointer text-lg font-bold ${activeEditModalLink === "Task Details" ? "bg-tc-orange rounded-lg pl-2 pr-5 py-2 text-white" : "text-primary"}`} onClick={() => setActiveEditModalLink("Task Details")}>Task Details</div>
