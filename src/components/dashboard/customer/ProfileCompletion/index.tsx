@@ -29,7 +29,7 @@ const ProfileCompletion = ({ fetchedUserData }: ProfileCompletionType) => {
       status: user?.emailAddress,
     },
     {
-      title: "Home Address",
+      title: "Address Information",
       status: user?.address?.state,
     },
     {
