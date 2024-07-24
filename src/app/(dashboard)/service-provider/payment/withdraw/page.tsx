@@ -6,6 +6,7 @@ import axios from "axios";
 import Link from "next/link";
 import React, { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
+import { BsExclamationTriangle } from "react-icons/bs";
 import { PiSealCheckFill, PiWarningDiamond } from "react-icons/pi";
 import { useSelector } from "react-redux";
 import { BeatLoader } from "react-spinners";
@@ -16,6 +17,7 @@ const WithdrawalPage = () => {
     (state: RootState) => state.userProfile,
   );
   const [success, setSuccess] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const isServiceProvider = auth?.role?.[0] === "SERVICE_PROVIDER";
 
@@ -57,6 +59,7 @@ const WithdrawalPage = () => {
       setSuccess(true);
       reset();
     } catch (error: any) {
+      setError(error?.response?.data?.message || "Insufficient balance");
       console.log(error?.response?.data || error);
     }
   };
@@ -81,6 +84,41 @@ const WithdrawalPage = () => {
               </p>
               <p className="text-center font-semibold text-violet-darker">
                 Your withdrawal is successfully
+              </p>
+              <div className="flex items-center gap-6">
+                <Link
+                  href={
+                    isServiceProvider
+                      ? "/service-provider/profile"
+                      : "/customer/profile"
+                  }
+                  className="rounded-full bg-violet-normal px-4 py-2 font-bold text-white max-sm:text-sm"
+                >
+                  Proceed to profile
+                </Link>
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
+      {error && (
+        <section className="fixed inset-0 z-50 flex h-screen w-screen items-center justify-center bg-black bg-opacity-70">
+          <div
+            className="absolute inset-0 h-screen w-screen"
+            onClick={() => setError(null)}
+          />
+          <div className="relative z-10 flex w-[90vw] max-w-xl flex-col items-center justify-center gap-3 rounded-xl bg-white p-3 px-4 lg:space-y-4 lg:p-10">
+            <div className=" flex flex-col items-center justify-center gap-4">
+              <div className="flex size-20 items-center justify-center rounded-full bg-red-100 bg-opacity-60">
+                <div className=" flex size-14 items-center justify-center rounded-full bg-red-300 p-4">
+                  <BsExclamationTriangle className="size-10 text-red-500" />
+                </div>
+              </div>
+              <p className="text-center font-satoshiBold text-2xl font-extrabold text-red-500">
+                Failure
+              </p>
+              <p className="text-center font-semibold text-violet-darker">
+                {error}
               </p>
               <div className="flex items-center gap-6">
                 <Link
