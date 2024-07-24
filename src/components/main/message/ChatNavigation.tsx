@@ -154,7 +154,7 @@ const ChatNavigation = () => {
                     </p>
                   </div>
                   <div className="flex flex-col items-end gap-1 ">
-                    <p className="text-sm lg:whitespace-nowrap">
+                    <p className="line-clamp-1 whitespace-nowrap text-sm">
                       {item.lastChatTimestamp &&
                         formatTimestamp(item.lastChatTimestamp)}
                     </p>
