@@ -350,7 +350,7 @@ const EditProfile = () => {
               />
             </label>
             {/* Date of birth */}
-            <label className="z-50 flex w-full flex-col gap-3 text-violet-normal">
+            <label className="flex w-full flex-col gap-3 text-violet-normal">
               <span className="flex items-center justify-between">
                 <span> Date of Birth</span>
                 {!errors.dateOfBirth && watchField.dateOfBirth !== null && (
@@ -367,7 +367,7 @@ const EditProfile = () => {
                     onChange={onChange}
                     onBlur={onBlur}
                     maxDate={age18YearsAgo}
-                    className="z-50 w-full rounded-xl border border-slate-100 p-2 text-slate-700 shadow outline-none transition-shadow duration-300 hover:shadow-md lg:max-w-sm"
+                    className="w-full rounded-xl border border-slate-100 p-2 text-slate-700 shadow outline-none transition-shadow duration-300 hover:shadow-md lg:max-w-sm"
                     dateFormat="dd/MM/yyyy"
                     popperPlacement="bottom"
                   />
