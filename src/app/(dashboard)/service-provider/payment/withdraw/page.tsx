@@ -21,13 +21,10 @@ const WithdrawalPage = () => {
 
   const withdrawalSchema = z.object({
     accountName: z.string().min(3).max(50),
-    accountNumber: z
-      .string()
-      .refine((val) => !isNaN(Number(val)), {
-        message: "Account Number must be a number",
-      })
-      .transform(Number),
-    bsb: z.string().min(3).max(6),
+    accountNumber: z.string().refine((val) => !isNaN(Number(val)), {
+      message: "Account Number must be a number",
+    }),
+    routingNumber: z.string().min(3).max(6),
     amount: z
       .string()
       .refine((val) => !isNaN(Number(val)), {
@@ -47,8 +44,8 @@ const WithdrawalPage = () => {
 
   const submitWithdraw: SubmitHandler<WithdrawalType> = async (data) => {
     if (!auth.token) return;
-    console.log(data);
 
+    console.log(data);
     try {
       const url = "https://smp.jacinthsolutions.com.au/api/v1/stripe/payout";
       const response = await axios.post(url, data, {
@@ -58,8 +55,8 @@ const WithdrawalPage = () => {
       });
       console.log(response.data);
       setSuccess(true);
+      reset();
     } catch (error: any) {
-      setSuccess(true);
       console.log(error?.response?.data || error);
     }
   };
@@ -148,9 +145,11 @@ const WithdrawalPage = () => {
             <input
               type="text"
               className="w-full rounded-md bg-white p-3"
-              {...register("bsb")}
+              {...register("routingNumber")}
             />
-            {errors.bsb && <p className="text-red-600">{errors.bsb.message}</p>}
+            {errors.routingNumber && (
+              <p className="text-red-600">{errors.routingNumber.message}</p>
+            )}
           </label>
           <label className="flex flex-col gap-2">
             <span className="text-lg font-bold text-violet-normal">Amount</span>

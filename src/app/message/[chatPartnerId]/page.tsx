@@ -152,8 +152,14 @@ const ServiceProviderChat = () => {
     message: ChatMessageDisplayedType,
     groupedMessages: ChatMessagesGroupedType,
   ): ChatMessagesGroupedType => {
-    const [year, month, day] = message.time as number[];
-    const date = new Date(year, month - 1, day).toLocaleDateString();
+    let date;
+    if (typeof message.time === "string") {
+      date = message.time;
+      date = new Date(date).toLocaleDateString();
+    } else {
+      const [year, month, day] = message.time as number[];
+      date = new Date(year, month - 1, day).toLocaleDateString();
+    }
     return {
       ...groupedMessages,
       [date]: groupedMessages[date]
