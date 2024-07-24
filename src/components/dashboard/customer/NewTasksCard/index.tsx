@@ -51,7 +51,7 @@ const NewTasksCard = ({ task }: TaskCardProps) => {
                 setIsEditModalOpen(true);
                 setIsDropdownOpen(false);
             },
-            icon: <FaRegEdit className="text-white size-4" />,
+            icon: <FaRegEdit className="text-white size-4 cursor-pointer" />,
         },
     ];
 
@@ -89,17 +89,17 @@ const NewTasksCard = ({ task }: TaskCardProps) => {
                             <BsThreeDotsVertical className="size-4" />
                         </button>
                         <div
-                            className={`small-scrollbar right-0 absolute top-[calc(100%+0.2rem)] flex max-h-0 w-[190px] flex-col rounded-md bg-[#EBE9F4] transition-all duration-300 ${isDropdownOpen ? "max-h-64 overflow-y-auto border border-primary" : "max-h-0 overflow-hidden"
+                            className={`small-scrollbar right-0 absolute top-[calc(100%+0.2rem)] flex max-h-0 w-[130px] flex-col rounded-md bg-[#EBE9F4] transition-all duration-300 ${isDropdownOpen ? "max-h-64 overflow-y-auto border border-primary" : "max-h-0 overflow-hidden"
                                 }`}
                         >
                             <div className="px-2 py-1">
                                 {dropDownItems.map((item, index) => (
-                                    <button key={index} onClick={item.onClick} className="flex items-center space-x-3 cursor-pointer">
-                                        <span className="bg-[#140B31] p-1 rounded-full flex items-center justify-center">
+                                    <div key={index} onClick={item.onClick} className="flex items-center space-x-3 cursor-pointer">
+                                        <span className="bg-[#140B31] p-1 rounded-full">
                                             {item.icon}
                                         </span>
                                         <span className='text-sm text-[#140B31] font-satoshiMedium'>{item.title}</span>
-                                    </button>
+                                    </div>
                                 ))}
                             </div>
                         </div>

@@ -44,6 +44,7 @@ const patchRequest = (url: string, details: unknown) => ({
   url,
   method: "PATCH",
   body: details,
+  formData: true, // Add this line
 });
 
 const postRequest = (url: string, details: unknown) => ({
@@ -57,14 +58,21 @@ export const task = createApi({
   tagTypes: ["Task"],
   baseQuery: fetchBaseQuery({
     baseUrl: process.env.NEXT_PUBLIC_API_URL + "/task",
-    prepareHeaders: async (headers) => {
+    prepareHeaders: async (headers, { getState, endpoint }) => {
       const session = await getSession();
       //@ts-ignore
       const token = session?.user?.accessToken;
 
       if (token) {
         headers.set("Authorization", `Bearer ${token}`);
-        headers.set("Content-Type", "application/json-patch+json");
+
+        // Set Content-Type based on the request method
+        if (endpoint.includes('updateTask')) {
+          // Don't set Content-Type for multipart/form-data
+          // The browser will set it automatically with the correct boundary
+        } else {
+          headers.set("Content-Type", "application/json-patch+json");
+        }
       }
       return headers;
     },
@@ -114,7 +122,7 @@ export const task = createApi({
       query: (credentials) => getRequest(`/text/${credentials.pageNumber}?text=${credentials.text}`),
       providesTags: ["Task"],
     }),
-    updateTask: builder.mutation<void, { id: number; details: unknown }>({
+    updateTask: builder.mutation<void, { id: number; details: FormData }>({
       query: (credentials) => patchRequest(`/update-task/${credentials.id}`, credentials.details),
       invalidatesTags: ["Task"],
     }),
@@ -138,4 +146,5 @@ export const {
   useDeleteTaskMutation,
   useSearchTaskByTextQuery,
   useFilterTasksQuery,
+  useUpdateTaskMutation
 } = task;
