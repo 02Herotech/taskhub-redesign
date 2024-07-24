@@ -1,10 +1,107 @@
-import React from "react";
-import { PiWarningDiamond } from "react-icons/pi";
+"use client";
 
-const page = () => {
+import { RootState } from "@/store";
+import { zodResolver } from "@hookform/resolvers/zod";
+import axios from "axios";
+import Link from "next/link";
+import React, { useState } from "react";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { PiSealCheckFill, PiWarningDiamond } from "react-icons/pi";
+import { useSelector } from "react-redux";
+import { BeatLoader } from "react-spinners";
+import z from "zod";
+
+const WithdrawalPage = () => {
+  const { userProfileAuth: auth } = useSelector(
+    (state: RootState) => state.userProfile,
+  );
+  const [success, setSuccess] = useState(false);
+
+  const isServiceProvider = auth?.role?.[0] === "SERVICE_PROVIDER";
+
+  const withdrawalSchema = z.object({
+    accountName: z.string().min(3).max(50),
+    accountNumber: z
+      .string()
+      .refine((val) => !isNaN(Number(val)), {
+        message: "Account Number must be a number",
+      })
+      .transform(Number),
+    bsb: z.string().min(3).max(6),
+    amount: z
+      .string()
+      .refine((val) => !isNaN(Number(val)), {
+        message: "Amount must be a number",
+      })
+      .transform(Number),
+  });
+
+  type WithdrawalType = z.infer<typeof withdrawalSchema>;
+
+  const {
+    handleSubmit,
+    register,
+    reset,
+    formState: { errors, isSubmitting },
+  } = useForm<WithdrawalType>({ resolver: zodResolver(withdrawalSchema) });
+
+  const submitWithdraw: SubmitHandler<WithdrawalType> = async (data) => {
+    if (!auth.token) return;
+    console.log(data);
+
+    try {
+      const url = "https://smp.jacinthsolutions.com.au/api/v1/stripe/payout";
+      const response = await axios.post(url, data, {
+        headers: {
+          Authorization: `Bearer ${auth.token}`,
+        },
+      });
+      console.log(response.data);
+      setSuccess(true);
+    } catch (error: any) {
+      setSuccess(true);
+      console.log(error?.response?.data || error);
+    }
+  };
+
   return (
     <main className="space-y-8 p-4 lg:p-8">
-      <p className=" flex items-center gap-2 rounded-xl bg-orange-normal p-5 font-normal text-white">
+      {success && (
+        <section className="fixed inset-0 z-50 flex h-screen w-screen items-center justify-center bg-black bg-opacity-70">
+          <div
+            className="absolute inset-0 h-screen w-screen"
+            onClick={() => setSuccess(false)}
+          />
+          <div className="relative z-10 flex w-[90vw] max-w-xl flex-col items-center justify-center gap-3 rounded-xl bg-white p-3 px-4 lg:space-y-4 lg:p-10">
+            <div className=" flex flex-col items-center justify-center gap-4">
+              <div className="flex size-20 items-center justify-center rounded-full bg-[#C1F6C3] bg-opacity-60">
+                <div className=" flex size-14 items-center justify-center rounded-full bg-[#A6F8AA] p-2">
+                  <PiSealCheckFill className="size-10 text-green-500" />
+                </div>
+              </div>
+              <p className="text-center font-satoshiBold text-2xl font-extrabold text-violet-normal">
+                Success
+              </p>
+              <p className="text-center font-semibold text-violet-darker">
+                Your withdrawal is successfully
+              </p>
+              <div className="flex items-center gap-6">
+                <Link
+                  href={
+                    isServiceProvider
+                      ? "/service-provider/profile"
+                      : "/customer/profile"
+                  }
+                  className="rounded-full bg-violet-normal px-4 py-2 font-bold text-white max-sm:text-sm"
+                >
+                  Proceed to profile
+                </Link>
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
+      <p className="flex items-center gap-2 rounded-xl bg-orange-normal p-5 font-normal text-white">
         <span>
           <PiWarningDiamond className="size-5" />
         </span>
@@ -12,33 +109,79 @@ const page = () => {
           Available funds to withdrawal: $0, minimum withdrawal request is $50
         </span>
       </p>
-      <form className="bg-violet-active rounded-xl p-3 lg:p-6">
-        <div className="space-y-3 outline-none">
-          <label
-            htmlFor="method"
-            className="text-3xl font-medium text-violet-normal"
-          >
-            Withdrawal Method
+      <form
+        onSubmit={handleSubmit(submitWithdraw)}
+        className="space-y-3 rounded-xl bg-violet-active p-3 lg:p-6"
+      >
+        <h2 className="text-3xl font-medium text-violet-normal">
+          Withdrawal Method
+        </h2>
+        <div className="grid grid-cols-2 gap-3 outline-none lg:gap-6">
+          <label className="flex flex-col gap-2">
+            <span className="text-lg font-bold text-violet-normal">
+              Account name
+            </span>
+            <input
+              type="text"
+              className="w-full rounded-md bg-white p-3 outline-none"
+              {...register("accountName")}
+            />
+            {errors.accountName && (
+              <p className="text-red-600">{errors.accountName.message}</p>
+            )}
           </label>
-          <select
-            name="method"
-            id="method"
-            className="w-full rounded-md p-3 text-slate-700 outline-none"
-          >
-            <option>Select a method</option>
-          </select>
+          <label className="flex flex-col gap-2">
+            <span className="text-lg font-bold text-violet-normal">
+              Account number
+            </span>
+            <input
+              type="text"
+              className="w-full rounded-md bg-white p-3"
+              {...register("accountNumber")}
+            />
+            {errors.accountNumber && (
+              <p className="text-red-600">{errors.accountNumber.message}</p>
+            )}
+          </label>
+          <label className="flex flex-col gap-2">
+            <span className="text-lg font-bold text-violet-normal">BSB</span>
+            <input
+              type="text"
+              className="w-full rounded-md bg-white p-3"
+              {...register("bsb")}
+            />
+            {errors.bsb && <p className="text-red-600">{errors.bsb.message}</p>}
+          </label>
+          <label className="flex flex-col gap-2">
+            <span className="text-lg font-bold text-violet-normal">Amount</span>
+            <input
+              type="number"
+              min={50}
+              className="w-full rounded-md bg-white p-3"
+              {...register("amount")}
+            />
+            {errors.amount && (
+              <p className="text-red-600">{errors.amount.message}</p>
+            )}
+          </label>
         </div>
 
-        {/* Various Payment Methods */}
-        {/* <div className="flex flex-wrap gap-6">
-          <div className="w-full min-w-96 flex-1">
-            <label htmlFor=""></label>
-          </div>
-          <div className="w-full min-w-96 flex-1"></div>
-        </div> */}
+        <div className="flex justify-end">
+          <button
+            type="submit"
+            className="w-fit rounded-full bg-violet-normal px-6 py-3 font-medium text-white"
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? (
+              <BeatLoader color="white" loading={isSubmitting} />
+            ) : (
+              " Request Withdrawal"
+            )}
+          </button>
+        </div>
       </form>
     </main>
   );
 };
 
-export default page;
+export default WithdrawalPage;
