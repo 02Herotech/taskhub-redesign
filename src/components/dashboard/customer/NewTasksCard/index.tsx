@@ -74,11 +74,11 @@ const NewTasksCard = ({ task }: TaskCardProps) => {
                 </Popup>
             )}
             <motion.div
-                className="lg:rounded-4xl font-satoshi rounded-xl bg-[#EBE9F4] p-4 mb-4 flex flex-col justify-between h-full"
+                className="lg:rounded-4xl font-satoshi rounded-xl bg-[#EBE9F4] p-5 mb-4 flex flex-col justify-between h-full"
                 whileHover={{ scale: 1.02, transition: { duration: 0.2 } }}
             >
-                <div className="flex w-full justify-between items-center space-x-2">
-                    <h2 className="overflow-hidden truncate text-ellipsis whitespace-nowrap py-4 text-xl font-satoshiBold font-bold text-primary lg:text-[30px]">
+                <div className="flex w-full justify-between items-start space-x-2">
+                    <h2 className="pb-4 text-xl font-satoshiBold font-bold text-primary lg:text-[30px]">
                         {task.taskBriefDescription}
                     </h2>
                     <div className="relative">
@@ -105,7 +105,7 @@ const NewTasksCard = ({ task }: TaskCardProps) => {
                         </div>
                     </div>
                 </div>
-                <p className="text-[#2A1769] text-sm font-satoshiMedium line-clamp-3">{task.taskDescription}</p>
+                <p className="text-[#2A1769] text-sm font-satoshiMedium line-clamp-2">{task.taskDescription}</p>
                 <div className="mt-auto">
                     <div className="flex justify-between items-center my-2">
                         <div className="flex items-center space-x-2 font-medium text-[#716F78] w-2/3">
