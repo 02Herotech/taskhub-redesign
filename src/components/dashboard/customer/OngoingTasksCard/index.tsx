@@ -5,10 +5,10 @@ import Image from "next/image";
 import { useSession } from "next-auth/react";
 import Button from "@/components/global/Button";
 import Link from "next/link";
-import { CustomerTasks } from "@/types/services/tasks";
+import { CustomerTasks, OngoingTask } from "@/types/services/tasks";
 
 interface TaskCardProps {
-    task: CustomerTasks;
+    task: OngoingTask;
 }
 
 const OngoingTasksCard = ({ task }: TaskCardProps) => {
@@ -40,14 +40,14 @@ const OngoingTasksCard = ({ task }: TaskCardProps) => {
                 <Image
                     src={profileImage || "/assets/images/placeholder.jpeg"}
                     alt="Profile"
-                    className="object-cover rounded-full size-24"
+                    className="object-cover rounded-full size-24 border"
                     width={90}
                     height={90}
                 />
                 <div className="space-y-1 w-full">
                     <h2 className="font-satoshiMedium text-primary text-xl">{fullName}</h2>
                     <h2 className="pb-4 text-base font-satoshi text-primary">
-                        {task.taskBriefDescription}
+                        {task.jobDescription}
                     </h2>
                     <Link href={`/customer/tasks/ongoing-task-details/${task.id}`}>
                         <Button theme="outline" className="rounded-full">
@@ -59,7 +59,7 @@ const OngoingTasksCard = ({ task }: TaskCardProps) => {
             <div className="flex flex-col space-y-2 lg:text-right text-center items-start lg:items-end">
                 <h5 className="text-base text-tc-orange">{formattedDate}</h5>
                 <h2 className="font-bold capitalize text-[#28272A] text-base">
-                    Total Cost: {formatAmount(task.customerBudget, "USD", false)}
+                    Total Cost: {formatAmount(task.total, "USD", false)}
                 </h2>
             </div>
         </div>

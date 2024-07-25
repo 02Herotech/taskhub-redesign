@@ -6,10 +6,13 @@ import Loading from "@/shared/loading";
 import Link from "next/link";
 import Button from "@/components/global/Button";
 import OngoingTasksCard from "../OngoingTasksCard";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store";
 
 const TaskList = () => {
     const { data: sessionData, status: sessionStatus } = useSession();
-    const userId = sessionData?.user?.user.id;
+    const userProfile = useSelector((state: RootState) => state.userProfile);
+    const userId = userProfile.profile?.customerId
 
     // Make the query only when the userId is available
     const { data: tasksData, isLoading, error } = useGetCustomerOngoingTasksQuery(userId!, {
@@ -20,6 +23,8 @@ const TaskList = () => {
     if (sessionStatus === "loading" || !userId || isLoading) {
         return <Loading />;
     }
+
+    console.log(tasksData)
 
     return (
         <>

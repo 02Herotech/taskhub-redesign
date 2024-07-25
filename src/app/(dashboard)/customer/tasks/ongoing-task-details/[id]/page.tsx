@@ -4,6 +4,7 @@ import Button from '@/components/global/Button';
 import Popup from '@/components/global/Popup';
 import { CautionSvg, RevisionSvg } from '@/lib/svgIcons';
 import { formatAmount } from '@/lib/utils';
+import { useGetJobByIdQuery } from '@/services/bookings';
 import { useGetTaskByIdQuery } from '@/services/tasks';
 import Loading from '@/shared/loading';
 import { useRouter } from 'next/navigation';
@@ -26,13 +27,12 @@ const OnogoingTaskDetailsPage = ({ params }: { params: { id: string } }) => {
         "I need time to inspect task",
         "I’m dissatisfied with the service",
         "I didn’t receive any service",
-
         "Others"
     ];
 
     const inspectionTimes = ['1 hour', '3 hours', '5 hours', '24 hours', '3 days', '5 days', '7 days'];
 
-    const { data: task, isLoading } = useGetTaskByIdQuery(id as unknown as number);
+    const { data: task, isLoading } = useGetJobByIdQuery(id as unknown as number);
 
     if (!task || isLoading) {
         return (
@@ -151,11 +151,7 @@ const OnogoingTaskDetailsPage = ({ params }: { params: { id: string } }) => {
                 </Popup>
             )}
 
-            <div className='p-4 lg:px-14 mt-[4rem]'>
-                <div className="mt-14 mb-4 space-y-8">
-                    <h4 className='text-[#140B31] font-satoshiBold font-bold text-2xl lg:text-4xl'>My Tasks</h4>
-                    <div className='border-2 border-primary' />
-                </div>
+            <div className='p-4 lg:px-14 mt-[5rem]'>
                 <div className="flex items-center space-x-2 mb-5">
                     <Button className='px-2' onClick={router.back}>
                         <IoArrowBackSharp className='size-7' />
@@ -172,8 +168,8 @@ const OnogoingTaskDetailsPage = ({ params }: { params: { id: string } }) => {
                 </div>
                 <div className="mt-8 lg:flex lg:space-x-8 justify-between border-b border-[#C1BADB] pb-8">
                     <div className="space-y-5 flex-1">
-                        <h1 className='text-primary font-bold text-2xl'>{task.taskBriefDescription}</h1>
-                        <h5 className='text-black font-satoshiMedium'>{task.taskDescription}</h5>
+                        <h1 className='text-primary font-bold text-2xl'>{task.jobTitle}</h1>
+                        <h5 className='text-black font-satoshiMedium'>{task.jobDescription}</h5>
                         <div className="relative">
                             <button
                                 className="w-[190px] flex items-center justify-center gap-x-4 rounded-3xl bg-[#F1F1F2] px-4 py-2 text-base font-bold text-[#140B31] transition-colors duration-300"
@@ -215,7 +211,7 @@ const OnogoingTaskDetailsPage = ({ params }: { params: { id: string } }) => {
                     <div className="flex flex-col justify-between items-end">
                         <h4 className='text-lg text-[#716F78]'>{task.taskTime}</h4>
                         <h2 className="text-xl font-bold capitalize text-primary">
-                            {formatAmount(task.customerBudget, "USD", false)}
+                            {formatAmount(task.total, "USD", false)}
                         </h2>
                         <div className="flex items-center justify-end space-x-10 lg:text-lg">
                             <button className='text-tc-orange' onClick={() => setRequestRevisionPopup(true)}>Request Revision</button>
