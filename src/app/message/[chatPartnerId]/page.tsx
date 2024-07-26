@@ -18,21 +18,23 @@ import { setContacts, setTotalUnreadMessages } from "@/store/Features/chat";
 import ScrollToBottom from "react-scroll-to-bottom";
 import { connectSocket, getSocket } from "@/lib/socket";
 import { GiCheckMark } from "react-icons/gi";
-import { formatTime } from "@/utils";
+import { formatTime, formatTimestamp } from "@/utils";
 import { FaCheckDouble } from "react-icons/fa6";
 
+type ChatMessagesGroupedType = {
+  [date: string]: ChatMessageDisplayedType[];
+};
+
 const ServiceProviderChat = () => {
-  const [chatMessages, setChatMessages] = useState<
-    ChatMessageDisplayedType[] | null
-  >([]);
   const [message, setMessage] = useState("");
   const [contact, setContact] = useState<ChatContactTypes | null>();
+
+  const [groupedChatMessages, setGroupedChatMessages] =
+    useState<ChatMessagesGroupedType | null>(null);
 
   const session = useSession();
   const dispatch = useDispatch();
   const { chatPartnerId } = useParams();
-
-  const [unsentMessage, setUnsentMessage] = useState<any>(null);
 
   const { profile: user, userProfileAuth: auth } = useSelector(
     (state: RootState) => state.userProfile,
@@ -61,7 +63,21 @@ const ServiceProviderChat = () => {
     document.body.style.overflow = "hidden";
   };
 
-  // finds current chat patner messages
+  const groupMessagesByDate = (
+    messages: ChatMessageDisplayedType[],
+  ): ChatMessagesGroupedType => {
+    return messages.reduce((acc: ChatMessagesGroupedType, message) => {
+      const [year, month, day] = message.time as number[];
+      const date = new Date(year, month - 1, day).toLocaleDateString();
+      if (!acc[date]) {
+        acc[date] = [];
+      }
+      acc[date].push(message);
+      return acc;
+    }, {});
+  };
+
+  // finds current messages
   useEffect(() => {
     if (token && user) {
       findChatMessages({
@@ -74,10 +90,11 @@ const ServiceProviderChat = () => {
             (msg: ChatMessageRecievedType) => ({
               content: msg.content,
               senderId: msg.senderId,
-              time: msg.timestamp,
+              time: msg.timestamp as number[],
             }),
           );
-          setChatMessages(displayMessages);
+          const groupedMessages = groupMessagesByDate(displayMessages);
+          setGroupedChatMessages(groupedMessages);
         })
         .catch((error: any) => {
           console.log(error.response.data || error.message || error);
@@ -107,17 +124,16 @@ const ServiceProviderChat = () => {
         token: token as string,
       })
         .then((message) => {
-          console.log(message);
-          const displayMessage: ChatMessageDisplayedType = {
+          const newMessage: ChatMessageDisplayedType = {
             content: message.content,
             senderId: message.senderId,
             time: message.timestamp,
           };
-          const newMessages: ChatMessageDisplayedType[] = [
-            ...(chatMessages || []),
-            displayMessage,
-          ];
-          setChatMessages(newMessages);
+          const newGroupedMessages = addMessageToGroupedState(
+            newMessage,
+            groupedChatMessages as ChatMessagesGroupedType,
+          );
+          setGroupedChatMessages(newGroupedMessages);
         })
         .catch((error) => console.error(error));
       loadContacts().then(() => {
@@ -132,6 +148,26 @@ const ServiceProviderChat = () => {
     // eslint-disable-next-line
   }, [newMessage]);
 
+  const addMessageToGroupedState = (
+    message: ChatMessageDisplayedType,
+    groupedMessages: ChatMessagesGroupedType,
+  ): ChatMessagesGroupedType => {
+    let date;
+    if (typeof message.time === "string") {
+      date = message.time;
+      date = new Date(date).toLocaleDateString();
+    } else {
+      const [year, month, day] = message.time as number[];
+      date = new Date(year, month - 1, day).toLocaleDateString();
+    }
+    return {
+      ...groupedMessages,
+      [date]: groupedMessages[date]
+        ? [...groupedMessages[date], message]
+        : [message],
+    };
+  };
+
   const sendMessage = (msg: string) => {
     const socket = getSocket();
     if (msg.trim() !== "" && user && contact) {
@@ -141,23 +177,22 @@ const ServiceProviderChat = () => {
         senderName: `${user.firstName} ${user.lastName}`,
         recipientName: contact.name,
         content: msg,
-        timestamp: new Date().toISOString(),
       };
       try {
         if (!socket.connected) {
           localStorage.setItem("chatMessages", JSON.stringify(message));
-          setUnsentMessage(message);
         }
         socket.emit("chat", message, () => {});
-        const newMessages: ChatMessageDisplayedType[] = [
-          ...(chatMessages || []),
-          {
-            content: msg,
-            senderId: user.id,
-            time: new Date().toISOString(),
-          },
-        ];
-        setChatMessages(newMessages);
+        const newMessage: ChatMessageDisplayedType = {
+          content: msg,
+          senderId: user.id,
+          time: new Date().toISOString(),
+        };
+        const newGroupedMessages = addMessageToGroupedState(
+          newMessage,
+          groupedChatMessages as ChatMessagesGroupedType,
+        );
+        setGroupedChatMessages(newGroupedMessages);
       } catch (error: any) {
         console.log(error.response.data || error.message || error);
       }
@@ -174,7 +209,6 @@ const ServiceProviderChat = () => {
         const message = JSON.parse(storedMessage);
         socket.emit("chat", message, () => {
           localStorage.removeItem("chatMessages");
-          setUnsentMessage(null);
         });
       }
     };
@@ -210,6 +244,30 @@ const ServiceProviderChat = () => {
     } catch (error: any) {
       console.error(error.response.data || error.message || error);
     }
+  };
+
+  const formatDateIntoReadableFormat = (dateString: string): string => {
+    const date = new Date(dateString);
+    const day = date.getDate();
+    const month = date.toLocaleString("default", { month: "long" });
+    const year = date.getFullYear();
+
+    // Determine the ordinal suffix
+    const ordinalSuffix = (day: number) => {
+      if (day > 3 && day < 21) return "th";
+      switch (day % 10) {
+        case 1:
+          return "st";
+        case 2:
+          return "nd";
+        case 3:
+          return "rd";
+        default:
+          return "th";
+      }
+    };
+
+    return `${day}${ordinalSuffix(day)} ${month} ${year}`;
   };
 
   return (
@@ -260,31 +318,49 @@ const ServiceProviderChat = () => {
           {/* -------chat */}
           {user && (
             <ScrollToBottom className="no-scrollbar max-h-full flex-grow overflow-y-scroll">
-              <div className=" flex w-full flex-col justify-end gap-4">
-                {chatMessages &&
-                  chatMessages.map((item, index) => {
-                    return (
-                      <div
-                        key={index}
-                        className={` flex w-full ${item.senderId === user.id ? "flex-wrap justify-end " : "justify-start"}`}
-                      >
-                        <div
-                          key={index}
-                          className={` flex w-fit max-w-xs flex-col gap-1 rounded-md p-2 text-sm ${item.senderId === user.id ? " bg-violet-normal text-white" : " bg-orange-light text-left text-violet-dark "} `}
-                        >
-                          <p>{item.content}</p>
-                          <div className="flex items-center justify-end gap-2 text-[0.7rem] ">
-                            <span className="">{formatTime(item.time)}</span>
-                            {item.senderId === user.id && (
-                              <span className="block">
-                                <FaCheckDouble className="text-green-500 " />
-                              </span>
-                            )}
-                          </div>
+              <div className="flex w-full flex-col justify-end gap-4">
+                {groupedChatMessages &&
+                  Object.entries(groupedChatMessages).map(
+                    ([date, messages]) => (
+                      <div key={date}>
+                        <div className="text-center font-satoshiBold font-bold text-violet-normal">
+                          {formatDateIntoReadableFormat(date)}
                         </div>
+                        {messages.map((item, index) => (
+                          <div
+                            key={index}
+                            className={`my-2 flex w-full ${
+                              item.senderId === user.id
+                                ? "flex-wrap justify-end"
+                                : "justify-start"
+                            }`}
+                          >
+                            <div
+                              className={`flex w-fit max-w-xs flex-col gap-1 rounded-md p-2 text-sm ${
+                                item.senderId === user.id
+                                  ? "bg-violet-normal text-white"
+                                  : "bg-orange-light text-left text-violet-dark"
+                              }`}
+                            >
+                              <p>{item.content}</p>
+                              <div className="flex items-center justify-end gap-2 text-[0.7rem]">
+                                <span className="">
+                                  {typeof item.time === "string"
+                                    ? formatTime(item.time)
+                                    : formatTimestamp(item.time as number[])}
+                                </span>
+                                {item.senderId === user.id && (
+                                  <span className="block">
+                                    <FaCheckDouble className="text-green-500" />
+                                  </span>
+                                )}
+                              </div>
+                            </div>
+                          </div>
+                        ))}
                       </div>
-                    );
-                  })}
+                    ),
+                  )}
               </div>
             </ScrollToBottom>
           )}

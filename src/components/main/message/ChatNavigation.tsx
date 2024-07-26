@@ -1,6 +1,7 @@
 "use client";
 
 import { RootState } from "@/store";
+import { formatTimestamp } from "@/utils";
 import Image from "next/image";
 import Link from "next/link";
 import { useParams } from "next/navigation";
@@ -20,7 +21,6 @@ const ChatNavigation = () => {
     [],
   );
   const [allContacts, setAllContacts] = useState<ChatContactTypes[]>([]);
-
   const { contacts } = useSelector((state: RootState) => state.chat);
 
   useEffect(() => {
@@ -120,7 +120,7 @@ const ChatNavigation = () => {
         </button>
       </div>
 
-      <article className="small-scrollbar flex max-h-[55vh] flex-col gap-4 overflow-y-auto">
+      <article className="no-scrollbar flex max-h-[55vh] flex-col gap-4 overflow-y-auto">
         {displayContacts.length > 0 ? (
           displayContacts.map((item, index) => (
             <Link
@@ -130,27 +130,40 @@ const ChatNavigation = () => {
               key={index}
               className={`flex cursor-pointer items-center gap-3 rounded-lg border border-slate-100 p-3 transition-all  duration-300 ${Number(chatPartnerId) === item.id ? "bg-violet-100 hover:bg-opacity-90" : "hover:bg-violet-50"}`}
             >
-              <Image
-                src={
-                  item.profilePicture ??
-                  "/assets/images/serviceProvider/user.jpg"
-                }
-                alt={item.name}
-                width={60}
-                height={60}
-                quality={100}
-                className="size-16 rounded-full object-cover"
-              />
-              <div className="w-full space-y-4">
-                <div className="flex w-full cursor-pointer items-center justify-between">
-                  <p className="cursor-pointer font-satoshiMedium text-lg  font-semibold text-violet-normal">
-                    {item.name}
-                  </p>
-                  {(item.newMessages as number) > 0 && (
-                    <p className="cursor-pointer rounded-md bg-orange-normal p-1  px-2 text-xs  text-white">
-                      {item.newMessages}
+              <div className="size-16 overflow-hidden rounded-full max-sm:size-12">
+                <Image
+                  src={
+                    item.profilePicture ??
+                    "/assets/images/serviceProvider/user.jpg"
+                  }
+                  alt={item.name}
+                  width={60}
+                  height={60}
+                  quality={100}
+                  className="h-full w-full object-cover"
+                />
+              </div>
+              <div className=" flex-grow space-y-4">
+                <div className="flex w-full cursor-pointer justify-between gap-6 lg:gap-8">
+                  <div className="flex flex-col gap-1">
+                    <p className="cursor-pointer font-satoshiMedium font-semibold  text-violet-normal lg:text-lg">
+                      {item.name}
                     </p>
-                  )}
+                    <p className="line-clamp-1">
+                      {item.lastMessage && item.lastMessage}
+                    </p>
+                  </div>
+                  <div className="flex flex-col items-end gap-1 ">
+                    <p className="line-clamp-1 whitespace-nowrap text-sm">
+                      {item.lastChatTimestamp &&
+                        formatTimestamp(item.lastChatTimestamp)}
+                    </p>
+                    {(item.newMessages as number) > 0 && (
+                      <p className="w-fit cursor-pointer rounded-md bg-orange-normal p-1 px-2  text-xs text-white  ">
+                        {item.newMessages}
+                      </p>
+                    )}
+                  </div>
                 </div>
               </div>
             </Link>

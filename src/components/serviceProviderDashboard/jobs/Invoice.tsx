@@ -226,8 +226,8 @@ const Invoice = ({
           </p>
           <p className="text-center font-semibold text-violet-darker">
             {invoiceState.successData.includes("draft")
-              ? "Invoice successfully saved to draft"
-              : "Invoice successfully Generated and sent to customer"}
+              ? "Offer successfully saved to draft"
+              : "Offer successfully Generated and sent to customer"}
           </p>
           <div className="flex  items-center justify-center gap-10">
             <button

@@ -64,14 +64,13 @@ const DashboardSidebar = () => {
           {/* Settings Dropdown section */}
           <button
             onClick={() => setShowSettings((prev) => !prev)}
-            className={`flex items-center gap-7 rounded-md px-4 py-3 text-sm font-medium  text-white transition-all duration-300 max-md:text-sm ${
+            className={`flex items-center gap-4 rounded-md px-4 py-3 text-sm font-medium  text-white transition-all duration-300 max-md:text-sm ${
               pathname.includes("/service-provider/dashboard/settings")
                 ? "bg-yellow-500 hover:bg-opacity-90"
                 : "bg-violet-normal hover:bg-violet-950"
             } `}
           >
-            {SettingsIcon}
-            Settings
+            <span>{SettingsIcon}</span> <span>Settings</span>
           </button>
 
           <div

@@ -28,10 +28,10 @@ interface FormData {
   planOneDescription: string;
   planTwoDescription: string;
   planThreeDescription: string;
-  image1: File | null;
-  image2?: File | null;
-  image3?: File | null;
-  image4?: File | null;
+  image1: File | null | Blob;
+  image2?: File | null | Blob;
+  image3?: File | null | Blob;
+  image4?: File | null | Blob;
   taskType: string;
   planOnePrice: number | null;
   planTwoPrice: number | null;
@@ -70,6 +70,8 @@ const ProvideService: React.FC = () => {
   const route = useRouter();
   const id = session?.data?.user.user.id;
   const isAuthenticated = session?.data?.user.user.enabled === false;
+  const defaultImageSrc =
+    "https://static.wixstatic.com/media/7d1889_ab302adc66e943f9b6be9de260cbc40f~mv2.png";
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(false)
   const [task, setTask] = useState<FormData>({
@@ -418,6 +420,12 @@ const ProvideService: React.FC = () => {
   const imageURL2 = getImageURL(2);
   const imageURL3 = getImageURL(3);
 
+  const convertUrlToBlob = async (url: string): Promise<Blob> => {
+    const response = await fetch(url);
+    const blob = await response.blob();
+    return blob;
+  };
+
   const calculateProgress = () => {
     const requiredFields = [
       task.listingDescription,
@@ -476,12 +484,26 @@ const ProvideService: React.FC = () => {
           finalTask = { ...finalTask, availableDays: selectedDays };
         }
 
-        if (!task.image2 || !task.image3 || !task.image4) {
+        if (!task.image2) {
+          const defaultImageBlob = await convertUrlToBlob(defaultImageSrc);
           finalTask = {
             ...finalTask,
-            image2: task.image1,
-            image3: task.image1,
-            image4: task.image1,
+            image2: defaultImageBlob,
+          };
+        }
+        if ( !task.image3) {
+          const defaultImageBlob = await convertUrlToBlob(defaultImageSrc);
+          finalTask = {
+            ...finalTask,
+            image3: defaultImageBlob,
+            
+          };
+        }
+        if (!task.image4) {
+          const defaultImageBlob = await convertUrlToBlob(defaultImageSrc);
+          finalTask = {
+            ...finalTask,
+            image4: defaultImageBlob,
           };
         }
         console.log(finalTask);
@@ -1107,7 +1129,7 @@ const ProvideService: React.FC = () => {
               </div>
 
               <div className="space-y-4">
-                <p className="text-[13px] lg:text-[16px]">Add a portfolio (Images /videos)</p>
+                <p className="text-[13px] lg:text-[16px]">Add a portfolio (Images)</p>
                 <div className="flex flex-col space-y-3 lg:flex-row lg:space-x-3 lg:space-y-0">
                   <div className=" space-y-3">
                     {task.image2 ? (
