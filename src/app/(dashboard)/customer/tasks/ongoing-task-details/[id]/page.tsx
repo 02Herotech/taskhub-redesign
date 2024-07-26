@@ -1,14 +1,16 @@
 "use client"
 
+import CountdownTimer from '@/components/dashboard/customer/CountdownTimer';
+import ConfirmationModal from '@/components/dashboard/customer/InspectionConfirmationModal';
 import Button from '@/components/global/Button';
 import Popup from '@/components/global/Popup';
 import { CautionSvg, RevisionSvg } from '@/lib/svgIcons';
-import { formatAmount } from '@/lib/utils';
-import { useGetJobByIdQuery } from '@/services/bookings';
+import { clearLocalStorage, formatAmount, getFromLocalStorage, inspectionTimes, revisions, saveToLocalStorage } from '@/lib/utils';
+import { useAcceptServiceMutation, useGetJobByIdQuery, useInspectTaskMutation } from '@/services/bookings';
 import { useGetTaskByIdQuery } from '@/services/tasks';
 import Loading from '@/shared/loading';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { BsTriangleFill } from 'react-icons/bs';
 import { IoArrowBackSharp } from "react-icons/io5";
 
@@ -21,18 +23,23 @@ const OnogoingTaskDetailsPage = ({ params }: { params: { id: string } }) => {
     const [revisionSent, setRevisionSent] = useState(false);
     const [selectedRevision, setSelectedRevision] = useState('');
     const [approvePaymentPopup, setApprovePaymentPopup] = useState(false);
-
-    const revisions = [
-        "I need the service redone",
-        "I need time to inspect task",
-        "I’m dissatisfied with the service",
-        "I didn’t receive any service",
-        "Others"
-    ];
-
-    const inspectionTimes = ['1 hour', '3 hours', '5 hours', '24 hours', '3 days', '5 days', '7 days'];
+    const [showConfirmModal, setShowConfirmModal] = useState(false);
+    const [inspectionStarted, setInspectionStarted] = useState(false);
+    const [inspectionEndTime, setInspectionEndTime] = useState<Date | null>(null);
+    const [inspectionError, setInspectionError] = useState('');
 
     const { data: task, isLoading } = useGetJobByIdQuery(id as unknown as number);
+    const [approvePayment] = useAcceptServiceMutation();
+    const [inspectTask] = useInspectTaskMutation();
+
+    useEffect(() => {
+        const storedData = getFromLocalStorage();
+        if (storedData && storedData.taskId === id) {
+            setSelectedTime(storedData.selectedTime);
+            setInspectionStarted(storedData.inspectionStarted);
+            setInspectionEndTime(storedData.inspectionEndTime ? new Date(storedData.inspectionEndTime) : null);
+        }
+    }, [id]);
 
     if (!task || isLoading) {
         return (
@@ -46,8 +53,83 @@ const OnogoingTaskDetailsPage = ({ params }: { params: { id: string } }) => {
         setRevisionSent(true);
     }
 
+    const taskTime: number[] = task.taskTime;
+    const date = new Date();
+    date.setHours(taskTime[0], taskTime[1]);
+
+    const humanReadableTime = date.toLocaleTimeString('en-US', {
+        hour: 'numeric',
+        minute: 'numeric',
+        hour12: true
+    });
+
+    const handleTimeSelection = (time: string) => {
+        setSelectedTime(time);
+        setShowConfirmModal(true);
+        setIsDropdownOpen(false);
+    };
+
+    const startInspection = async () => {
+        setInspectionError('');
+        const response = await inspectTask({ jobId: task.id });
+        if (response.error) {
+            console.log(response.error);
+            setInspectionError('Job has not been completed by Service Provider');
+            return;
+        } else {
+            setInspectionStarted(true);
+            const duration = parseDuration(selectedTime);
+            const endTime = new Date(Date.now() + duration);
+            setInspectionEndTime(endTime);
+            setShowConfirmModal(false);
+            saveToLocalStorage({
+                taskId: id,
+                selectedTime,
+                inspectionStarted: true,
+                inspectionEndTime: endTime
+            });
+        }
+
+    };
+
+    const parseDuration = (durationString: string): number => {
+        const [amount, unit] = durationString.split(' ');
+        const value = parseInt(amount);
+        switch (unit) {
+            case 'hour':
+            case 'hours':
+                return value * 60 * 60 * 1000;
+            case 'days':
+                return value * 24 * 60 * 60 * 1000;
+            default:
+                return 0;
+        }
+    };
+
+    const endInspection = () => {
+        setInspectionStarted(false);
+        setInspectionEndTime(null);
+        setSelectedTime('');
+        clearLocalStorage();
+    };
+
+    const handleApprovePayment = async () => {
+        try {
+            await approvePayment({ jobId: task.id });
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     return (
         <>
+            <ConfirmationModal
+                isOpen={showConfirmModal}
+                onClose={() => setShowConfirmModal(false)}
+                onConfirm={startInspection}
+                selectedTime={selectedTime}
+                error={inspectionError}
+            />
             {requestRevisionPopup && (
                 <Popup isOpen={requestRevisionPopup} onClose={() => setRequestRevisionPopup(false)}>
                     <div className="relative bg-[#EBE9F4] rounded-2xl min-h-[200px] lg:w-[577px] font-satoshi overflow-y-auto">
@@ -141,7 +223,7 @@ const OnogoingTaskDetailsPage = ({ params }: { params: { id: string } }) => {
                                     >
                                         Cancel
                                     </Button>
-                                    <Button className="w-[151px] max-lg:text-sm rounded-full py-6">
+                                    <Button className="w-[151px] max-lg:text-sm rounded-full py-6" onClick={handleApprovePayment}>
                                         Approve
                                     </Button>
                                 </div>
@@ -161,13 +243,13 @@ const OnogoingTaskDetailsPage = ({ params }: { params: { id: string } }) => {
                     </Button>
                 </div>
                 <div className="font-satoshi">
-                    <div className="flex items-center space-x-4 text-tc-orange w-full rounded-3xl bg-[#FFF0DA] py-4 px-8">
+                    <div className="flex items-center space-x-4 text-tc-orange w-full rounded-3xl bg-[#FFF0DA] py-4 px-4 lg:px-8">
                         {CautionSvg}
                         <p className='text-base'>Please Note: Once a task is finished, you have 24 hrs to approve or request a revision, If no action is taken, the system would automatically approve payment and mark as completed.</p>
                     </div>
                 </div>
                 <div className="mt-8 lg:flex lg:space-x-8 justify-between border-b border-[#C1BADB] pb-8">
-                    <div className="space-y-5 flex-1">
+                    <div className="space-y-5 lg:flex-1">
                         <h1 className='text-primary font-bold text-2xl'>{task.jobTitle}</h1>
                         <h5 className='text-black font-satoshiMedium'>{task.jobDescription}</h5>
                         <div className="relative">
@@ -179,7 +261,11 @@ const OnogoingTaskDetailsPage = ({ params }: { params: { id: string } }) => {
                                     className={`fixed left-0 top-0 h-screen w-screen ${isDropdownOpen ? "block" : "hidden"} `}
                                     onClick={() => setIsDropdownOpen(!isDropdownOpen)}
                                 ></div>
-                                Inspect task
+                                {selectedTime ? (
+                                    <span>{selectedTime}</span>
+                                ) : (
+                                    <span>Inspect Task</span>
+                                )}
                                 <span>
                                     <BsTriangleFill
                                         fill="#140B31"
@@ -198,7 +284,7 @@ const OnogoingTaskDetailsPage = ({ params }: { params: { id: string } }) => {
                                                 name="inspectionTime"
                                                 value={time}
                                                 checked={selectedTime === time}
-                                                onChange={() => setSelectedTime(time)}
+                                                onChange={() => handleTimeSelection(time)}
                                                 className="form-radio"
                                             />
                                             <span className='lg:text-xl text-primary font-satoshiMedium'>{time}</span>
@@ -208,16 +294,35 @@ const OnogoingTaskDetailsPage = ({ params }: { params: { id: string } }) => {
                             </div>
                         </div>
                     </div>
-                    <div className="flex flex-col justify-between items-end">
-                        <h4 className='text-lg text-[#716F78]'>{task.taskTime}</h4>
+                    <div className="lg:flex flex-col justify-between items-end max-sm:mt-5 max-sm:space-y-4">
+                        <h4 className='text-lg text-[#716F78]'>{humanReadableTime}</h4>
                         <h2 className="text-xl font-bold capitalize text-primary">
                             {formatAmount(task.total, "USD", false)}
                         </h2>
-                        <div className="flex items-center justify-end space-x-10 lg:text-lg">
+                        <div className="flex items-center lg:justify-end space-x-10 lg:text-lg">
                             <button className='text-tc-orange' onClick={() => setRequestRevisionPopup(true)}>Request Revision</button>
                             <button className='text-[#34A853]' onClick={() => setApprovePaymentPopup(true)}>Approve payment</button>
                         </div>
                     </div>
+                </div>
+                <div className="py-7">
+                    {inspectionStarted ? (
+                        <div className='lg:flex items-center justify-between max-sm:space-y-5'>
+                            <h2 className="text-lg font-semibold mb-4 text-primary">
+                                Inspection requested for {selectedTime}
+                            </h2>
+                            <div className="flex space-x-4 items-center justify-between">
+                                <div className="lg:flex items-center justify-end space-x-4">
+                                    {inspectionEndTime && <CountdownTimer endTime={inspectionEndTime} />}
+                                </div>
+                                <Button className=' bg-red-300 text-red-800 border-red-800 text-xs' size='sm' onClick={endInspection}>End Inspection</Button>
+                            </div>
+                        </div>
+                    ) : (
+                        <h2 className="text-lg text-primary">
+                            {selectedTime ? `Inspection time selected: ${selectedTime}` : 'No inspection time selected'}
+                        </h2>
+                    )}
                 </div>
             </div>
         </>

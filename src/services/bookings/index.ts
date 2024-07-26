@@ -75,12 +75,22 @@ export const booking = createApi({
         getJobById: builder.query<OngoingTask, number>({
             query: (jobId) => getRequest(`/job/${jobId}`),
             providesTags: ["Booking"],
-        })
+        }),
+        acceptService: builder.mutation<void, { jobId: number; }>({
+            query: ({ jobId }) => postRequest(`/accept-service?jobId=${jobId}`, {}),
+            invalidatesTags: ["Booking"],
+        }),
+        inspectTask: builder.mutation<void, { jobId: number; }>({
+            query: ({ jobId }) => postRequest(`/inspect-task?jobId=${jobId}`, {}),
+            invalidatesTags: ["Booking"],
+        }),
     }),
 });
 
 export const {
     useGetInvoiceByCustomerIdQuery,
     useGetReceiptsByCustomerIdQuery,
-    useGetJobByIdQuery
+    useGetJobByIdQuery,
+    useAcceptServiceMutation,
+    useInspectTaskMutation,
 } = booking;
