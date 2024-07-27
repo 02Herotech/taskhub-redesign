@@ -4,7 +4,7 @@ import { RootState } from "@/store";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { BsExclamationTriangle } from "react-icons/bs";
 import { PiSealCheckFill, PiWarningDiamond } from "react-icons/pi";
@@ -41,13 +41,12 @@ const WithdrawalPage = () => {
     handleSubmit,
     register,
     reset,
+    setValue,
     formState: { errors, isSubmitting },
   } = useForm<WithdrawalType>({ resolver: zodResolver(withdrawalSchema) });
 
   const submitWithdraw: SubmitHandler<WithdrawalType> = async (data) => {
     if (!auth.token) return;
-
-    console.log(data);
     try {
       const url = "https://smp.jacinthsolutions.com.au/api/v1/stripe/payout";
       const response = await axios.post(url, data, {
@@ -63,6 +62,11 @@ const WithdrawalPage = () => {
       console.log(error?.response?.data || error);
     }
   };
+
+  useEffect(() => {
+    user && setValue("accountName", `${user.lastName} ${user.firstName}`);
+    // eslint-disable-next-line
+  }, [user]);
 
   return (
     <main className="space-y-8 p-4 lg:p-8">
@@ -144,81 +148,85 @@ const WithdrawalPage = () => {
           Available funds to withdrawal: $0, minimum withdrawal request is $50
         </span>
       </p>
-      <form
-        onSubmit={handleSubmit(submitWithdraw)}
-        className="space-y-3 rounded-xl bg-violet-active p-3 lg:p-6"
-      >
-        <h2 className="text-3xl font-medium text-violet-normal">
-          Withdrawal Method
-        </h2>
-        <div className="grid grid-cols-2 gap-3 outline-none lg:gap-6">
-          <label className="flex flex-col gap-2">
-            <span className="text-lg font-bold text-violet-normal">
-              Account name
-            </span>
-            <input
-              type="text"
-              value={user ? `${user.lastName} ${user.firstName}` : ""}
-              className="w-full rounded-md bg-white p-3 outline-none"
-              disabled={true}
-              {...register("accountName")}
-            />
-            {errors.accountName && (
-              <p className="text-red-600">{errors.accountName.message}</p>
-            )}
-          </label>
-          <label className="flex flex-col gap-2">
-            <span className="text-lg font-bold text-violet-normal">
-              Account number
-            </span>
-            <input
-              type="text"
-              className="w-full rounded-md bg-white p-3"
-              {...register("accountNumber")}
-            />
-            {errors.accountNumber && (
-              <p className="text-red-600">{errors.accountNumber.message}</p>
-            )}
-          </label>
-          <label className="flex flex-col gap-2">
-            <span className="text-lg font-bold text-violet-normal">BSB</span>
-            <input
-              type="text"
-              className="w-full rounded-md bg-white p-3"
-              {...register("routingNumber")}
-            />
-            {errors.routingNumber && (
-              <p className="text-red-600">{errors.routingNumber.message}</p>
-            )}
-          </label>
-          <label className="flex flex-col gap-2">
-            <span className="text-lg font-bold text-violet-normal">Amount</span>
-            <input
-              type="number"
-              min={50}
-              className="w-full rounded-md bg-white p-3"
-              {...register("amount")}
-            />
-            {errors.amount && (
-              <p className="text-red-600">{errors.amount.message}</p>
-            )}
-          </label>
-        </div>
+      {user && (
+        <form
+          onSubmit={handleSubmit(submitWithdraw)}
+          className="space-y-3 rounded-xl bg-violet-active p-3 lg:p-6"
+        >
+          <h2 className="text-3xl font-medium text-violet-normal">
+            Withdrawal Method
+          </h2>
+          <div className="grid grid-cols-2 gap-3 outline-none lg:gap-6">
+            <label className="flex flex-col gap-2">
+              <span className="text-lg font-bold text-violet-normal">
+                Account name
+              </span>
+              <input
+                type="text"
+                value={`${user.lastName} ${user.firstName}`}
+                className="w-full rounded-md bg-white p-3 outline-none"
+                disabled={true}
+                {...register("accountName")}
+              />
+              {errors.accountName && (
+                <p className="text-red-600">{errors.accountName.message}</p>
+              )}
+            </label>
+            <label className="flex flex-col gap-2">
+              <span className="text-lg font-bold text-violet-normal">
+                Account number
+              </span>
+              <input
+                type="text"
+                className="w-full rounded-md bg-white p-3"
+                {...register("accountNumber")}
+              />
+              {errors.accountNumber && (
+                <p className="text-red-600">{errors.accountNumber.message}</p>
+              )}
+            </label>
+            <label className="flex flex-col gap-2">
+              <span className="text-lg font-bold text-violet-normal">BSB</span>
+              <input
+                type="text"
+                className="w-full rounded-md bg-white p-3"
+                {...register("routingNumber")}
+              />
+              {errors.routingNumber && (
+                <p className="text-red-600">{errors.routingNumber.message}</p>
+              )}
+            </label>
+            <label className="flex flex-col gap-2">
+              <span className="text-lg font-bold text-violet-normal">
+                Amount
+              </span>
+              <input
+                type="number"
+                min={50}
+                className="w-full rounded-md bg-white p-3"
+                {...register("amount")}
+              />
+              {errors.amount && (
+                <p className="text-red-600">{errors.amount.message}</p>
+              )}
+            </label>
+          </div>
 
-        <div className="flex justify-end">
-          <button
-            type="submit"
-            className="w-fit rounded-full bg-violet-normal px-6 py-3 font-medium text-white"
-            disabled={isSubmitting}
-          >
-            {isSubmitting ? (
-              <BeatLoader color="white" loading={isSubmitting} />
-            ) : (
-              " Request Withdrawal"
-            )}
-          </button>
-        </div>
-      </form>
+          <div className="flex justify-end">
+            <button
+              type="submit"
+              className="w-fit rounded-full bg-violet-normal px-6 py-3 font-medium text-white"
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? (
+                <BeatLoader color="white" loading={isSubmitting} />
+              ) : (
+                " Request Withdrawal"
+              )}
+            </button>
+          </div>
+        </form>
+      )}
     </main>
   );
 };

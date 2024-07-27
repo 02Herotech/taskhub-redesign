@@ -142,7 +142,11 @@ const EditProfile = () => {
   };
 
   const today = new Date();
-  const age18YearsAgo = new Date(today.setFullYear(today.getFullYear() - 18));
+  const age18YearsAgo = new Date(
+    today.getFullYear() - 18,
+    today.getMonth(),
+    today.getDate(),
+  );
 
   useEffect(() => {
     if (user) {
@@ -513,23 +517,21 @@ const EditProfile = () => {
           <h3 className="text-lg font-bold text-primary">
             Identification Document
           </h3>
-          <div className="flex flex-col lg:col-span-8 lg:gap-8">
-            <div className="flex flex-wrap lg:grid lg:grid-cols-2 lg:gap-8 ">
+          <div className="flex flex-col gap-6 lg:col-span-8  lg:gap-8 ">
+            <div className="flex flex-wrap gap-6 lg:grid lg:grid-cols-2 lg:gap-8 ">
               {/* select Id type */}
-              <label className="space-y-4">
-                <span className="flex items-center justify-between">
-                  <span className="flex items-center justify-between gap-9">
-                    <span>Choose a valid means of ID</span>
-                    {!errors.idType &&
-                      watchField.idType &&
-                      watchField.idType.length > 0 && (
-                        <BiCheck className="size-5 rounded-full bg-green-500 p-1 text-white" />
-                      )}
-                  </span>
+              <label className="flex w-full flex-col gap-2.5">
+                <span className="flex w-full items-center justify-between">
+                  <span>Choose a valid means of ID</span>
+                  {!errors.idType &&
+                    watchField.idType &&
+                    watchField.idType.length > 0 && (
+                      <BiCheck className="size-5 rounded-full bg-green-500 p-1 text-white" />
+                    )}
                 </span>
                 <select
                   className="w-full rounded-xl border border-slate-100
-                p-3 text-slate-700 shadow outline-none
+                px-2 py-2.5 text-slate-700 shadow outline-none
                 transition-shadow duration-300 hover:shadow-md lg:max-w-sm"
                   {...register("idType")}
                   disabled={!isEditingEnabled}
@@ -541,30 +543,25 @@ const EditProfile = () => {
                   ))}
                 </select>
               </label>
-
               {/* Id Type Number */}
-
               <label className="flex w-full flex-col gap-3 text-violet-normal">
-                <span className="flex items-center justify-between">
-                  <span className="flex items-center justify-between gap-9">
-                    <span>
-                      {watchField.idType === ""
-                        ? "Select Id Type"
-                        : idTypeObject.find(
-                            (item) =>
-                              item.value === watchField.idType ||
-                              item.label === watchField.idType,
-                          )?.label + " Number"}
-                    </span>
-                    {!errors.idNumber &&
-                      watchField.idNumber &&
-                      watchField.idNumber.length >= 7 && (
-                        <BiCheck className="size-5 rounded-full bg-green-500 p-1 text-white" />
-                      )}
+                <span className="flex items-center justify-between gap-9">
+                  <span>
+                    {watchField.idType === ""
+                      ? "Select Id Type"
+                      : idTypeObject.find(
+                          (item) =>
+                            item.value === watchField.idType ||
+                            item.label === watchField.idType,
+                        )?.label + " Number"}
                   </span>
+                  {!errors.idNumber &&
+                    watchField.idNumber &&
+                    watchField.idNumber.length >= 7 && (
+                      <BiCheck className="size-5 rounded-full bg-green-500 p-1 text-white" />
+                    )}
                 </span>
                 <input
-                  id="suburb"
                   maxLength={12}
                   className="rounded-xl border border-slate-100 p-2 text-slate-700 shadow  outline-none transition-shadow duration-300 hover:shadow-md lg:max-w-sm "
                   {...register("idNumber")}
@@ -576,7 +573,7 @@ const EditProfile = () => {
             {/* Upload Identification Document */}
             <label className="flex w-full flex-col gap-3 text-violet-normal lg:max-w-64 ">
               <span className="flex items-center justify-between">
-                <span className="flex items-center justify-between gap-9">
+                <span className="flex w-full items-center justify-between gap-9">
                   <span>Means of ID</span>
                   {(documentImage || watchField.idImage) && (
                     <BiCheck className="size-5 rounded-full bg-green-500 p-1 text-white" />

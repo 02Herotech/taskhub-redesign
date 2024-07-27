@@ -173,6 +173,50 @@ export function formatDateFromNumberArrayToPastDate(
   }
 }
 
+export function dateFromNumberArray(dateArray: number[]) {
+  const [year, month, day, hour, minute, second, nanosecond] = dateArray;
+
+  // Create a JavaScript Date object from the timestamp array
+  const dateObject = new Date(
+    year,
+    month - 1,
+    day,
+    hour + 1,
+    minute,
+    second,
+    Math.floor(nanosecond / 1e6),
+  ); // convert nanoseconds to milliseconds
+
+  // Create a Moment object from the date
+  const timestampMoment = moment(dateObject);
+
+  // Get the current time as a Moment object
+  const now = moment();
+
+  // Calculate the difference between now and the timestamp
+  const differenceInDays = now.diff(timestampMoment, "days");
+
+  if (differenceInDays === 0) {
+    // Today
+    return timestampMoment.format("[Today at] hh:mm A");
+  } else if (differenceInDays === 1) {
+    // Yesterday
+    return `Yesterday`;
+  } else if (differenceInDays < 7) {
+    // This week
+    return timestampMoment.from(now);
+  } else if (differenceInDays < 30) {
+    // This month
+    return timestampMoment.format("MMM D");
+  } else if (differenceInDays < 365) {
+    // This year
+    return timestampMoment.format("MMM D");
+  } else {
+    // Earlier years
+    return timestampMoment.format("YYYY-MM-DD");
+  }
+}
+
 export function formatRelativeDate(timestampArray: number[]): string {
   const [year, month, day, hour = 0, minute = 0, second = 0] = timestampArray;
   const now = new Date();

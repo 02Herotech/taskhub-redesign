@@ -141,8 +141,12 @@ export const mobileServiceProviderLinks: LinkRouteTypes[] = [
         url: "/service-provider/payment",
       },
       {
-        label: "Settings",
+        label: "Password Settings",
         url: "/service-provider/settings/password",
+      },
+      {
+        label: "Notification Settings",
+        url: "/service-provider/settings/notification",
       },
     ],
   },

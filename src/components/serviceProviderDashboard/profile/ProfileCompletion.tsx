@@ -17,6 +17,8 @@ const ProfileCompletion = ({ fetchedUserData }: ProfileCompletionType) => {
     (state: RootState) => state.userProfile,
   );
 
+  console.log(user?.profileImage);
+
   const [chartData, setChartData] = useState({ total: 0, completed: 0 });
 
   const profileProgressData = [
@@ -51,7 +53,10 @@ const ProfileCompletion = ({ fetchedUserData }: ProfileCompletionType) => {
       ...prev,
       total: profileProgressData.length,
       completed: profileProgressData.filter(
-        (item) => item.status !== "" && item.status !== null,
+        (item) =>
+          item.status !== "" &&
+          item.status !== null &&
+          item.status !== undefined,
       ).length,
     }));
     // eslint-disable-next-line

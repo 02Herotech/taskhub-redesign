@@ -107,7 +107,7 @@ const MobileNavigation: React.FC<Props> = ({
             )}
           </div>
 
-          <ul className="mt-8 h-[70vh] space-y-4 overflow-y-auto">
+          <ul className="mt-8 h-[65vh] space-y-4 overflow-y-auto">
             {currentLinks.map((link) => {
               const isActive =
                 (link.url === "/" && pathname === "/") ||
@@ -279,14 +279,14 @@ const MobileNavigation: React.FC<Props> = ({
               );
             })}
           </ul>
-          <div className={cn(
-            'flex items-center text-lg font-bold rounded-md text-primary fixed bottom-24 py-1 px-5',
-          )} onClick={handleLogout}>
-            <FiLogOut className='mr-5 text-primary size-6' />
-            <h4 className="text-lg font-bold text-primary">
-              Logout
-            </h4>
-
+          <div
+            className={cn(
+              "fixed bottom-20 flex items-center rounded-md px-5 py-1 text-lg font-bold text-primary",
+            )}
+            onClick={handleLogout}
+          >
+            <FiLogOut className="mr-5 size-6 text-primary" />
+            <h4 className="text-lg font-bold text-primary">Logout</h4>
           </div>
         </div>
       </motion.nav>

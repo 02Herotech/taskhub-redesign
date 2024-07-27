@@ -43,7 +43,6 @@ const AllServices = () => {
         },
       });
       let data = response.data.content;
-      data = data.reverse();
       setservicesData(data);
     } catch (error) {
       console.error("An error occurred while fetching services:", error);
@@ -149,12 +148,9 @@ const AllServices = () => {
                     className="px-2"
                     onClick={() => handleShowDropdown(item.id)}
                   >
-                    <p className="text-xs"> 4.5 </p>
+                    {/* <p className="text-xs"> 4.5 </p> */}
                     <div className="flex items-center gap-1">
-                      {/* <FaStar size={10} color="gold" />
-                      <FaStar size={10} color="gold" />
-                      <FaStar size={10} color="gold" />
-                      <FaStar size={10} color="gold" /> */}
+                      {/* <FaStar size={10} color="gold" />*/}
                       <FaStar size={10} color="grey" />
                       <FaStar size={10} color="grey" />
                       <FaStar size={10} color="grey" />
