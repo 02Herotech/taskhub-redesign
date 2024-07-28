@@ -1,12 +1,13 @@
 import Button from "@/components/global/Button";
 import Popup from "@/components/global/Popup";
 
-const ConfirmationModal = ({ isOpen, onClose, onConfirm, selectedTime, error }: {
+const ConfirmationModal = ({ isOpen, onClose, onConfirm, selectedTime, error, loading }: {
     isOpen: boolean;
     onClose: () => void;
     onConfirm: () => void;
     selectedTime: string;
     error?: string;
+    loading: boolean;
 }) => {
     if (!isOpen) return null;
 
@@ -17,7 +18,7 @@ const ConfirmationModal = ({ isOpen, onClose, onConfirm, selectedTime, error }: 
                 <p className="mb-6">Are you sure you want to start the inspection for {selectedTime}?</p>
                 <div className="flex justify-end space-x-4">
                     <Button theme="outline" onClick={onClose}>Cancel</Button>
-                    <Button onClick={onConfirm}>Confirm</Button>
+                    <Button onClick={onConfirm} loading={loading}>Confirm</Button>
                 </div>
                 {error && <p className="text-red-500 text-sm text-center mt-4">{error}</p>}
             </div>

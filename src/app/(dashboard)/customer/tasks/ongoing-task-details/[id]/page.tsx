@@ -30,7 +30,7 @@ const OnogoingTaskDetailsPage = ({ params }: { params: { id: string } }) => {
 
     const { data: task, isLoading } = useGetJobByIdQuery(id as unknown as number);
     const [approvePayment] = useAcceptServiceMutation();
-    const [inspectTask] = useInspectTaskMutation();
+    const [inspectTask, { isLoading: inspectTaskLoading }] = useInspectTaskMutation();
 
     useEffect(() => {
         const storedData = getFromLocalStorage();
@@ -129,6 +129,7 @@ const OnogoingTaskDetailsPage = ({ params }: { params: { id: string } }) => {
                 onConfirm={startInspection}
                 selectedTime={selectedTime}
                 error={inspectionError}
+                loading={inspectTaskLoading}
             />
             {requestRevisionPopup && (
                 <Popup isOpen={requestRevisionPopup} onClose={() => setRequestRevisionPopup(false)}>

@@ -140,3 +140,14 @@ export const revisions = [
 ];
 
 export const inspectionTimes = ['1 hour', '3 hours', '5 hours', '24 hours', '3 days', '5 days', '7 days'];
+
+export function debounce<F extends (...args: any[]) => any>(func: F, waitFor: number) {
+	let timeout: ReturnType<typeof setTimeout> | null = null;
+
+	return (...args: Parameters<F>): void => {
+		if (timeout !== null) {
+			clearTimeout(timeout);
+		}
+		timeout = setTimeout(() => func(...args), waitFor);
+	};
+}
