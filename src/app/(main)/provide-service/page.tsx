@@ -506,6 +506,9 @@ const ProvideService: React.FC = () => {
             image4: defaultImageBlob,
           };
         }
+
+        finalTask = { ...finalTask, negotiable: negotiable };
+        
         console.log(finalTask);
         await Promise.race([
           axios.post(
