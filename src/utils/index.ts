@@ -174,7 +174,8 @@ export function formatDateFromNumberArrayToPastDate(
 }
 
 export function dateFromNumberArray(dateArray: number[]) {
-  const [year, month, day, hour, minute, second, nanosecond] = dateArray;
+  const [year, month, day, hour = 0, minute = 0, second = 0, nanosecond = 0] =
+    dateArray;
 
   // Create a JavaScript Date object from the timestamp array
   const dateObject = new Date(

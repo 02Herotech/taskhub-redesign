@@ -140,7 +140,7 @@ const NotificationsSettings = () => {
               <h3 className="font-satoshiBold text-xl font-bold text-[#140B31] lg:text-2xl">
                 Control how we notify you
               </h3>
-              <h5 className="font-satoshiMedium text-black lg:text-lg">
+              <h5 className="font-satoshiMedium text-lg text-black">
                 Notify me
               </h5>
             </div>
@@ -158,7 +158,7 @@ const NotificationsSettings = () => {
                   key={index}
                   className="mb-5 flex items-center justify-between space-x-5 lg:space-x-8"
                 >
-                  <h5 className="font-satoshiMedium text-sm text-black lg:text-lg">
+                  <h5 className="font-satoshiMedium text-lg text-black">
                     {option.label}
                   </h5>
                   <input

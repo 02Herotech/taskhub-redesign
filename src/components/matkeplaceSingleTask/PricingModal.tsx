@@ -376,7 +376,7 @@ const PricingModal = ({
                 $
               </span>
               <input
-                placeholder="Select/Type you budget"
+                placeholder="what’s your budget?"
                 type="number"
                 disabled={!modalData.negotiable}
                 className="w-full  rounded-lg p-3 px-7 outline-none disabled:bg-white "

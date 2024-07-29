@@ -14,6 +14,7 @@ import { BiDotsVertical, BiX } from "react-icons/bi";
 import DeleteListingModal from "./DeleteListingModal";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
+import { truncateText } from "@/utils/marketplace";
 
 const AllServices = () => {
   const [loading, setLoading] = useState(false);
@@ -141,7 +142,7 @@ const AllServices = () => {
                     </div>
                   </div>
                   <p className="line-clamp-1 px-2 text-3xl font-bold text-[#190E3F] ">
-                    {item.listingTitle}
+                    {truncateText(item.listingTitle, 15)}
                   </p>
 
                   <div

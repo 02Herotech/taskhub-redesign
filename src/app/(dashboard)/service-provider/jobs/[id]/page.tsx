@@ -5,6 +5,7 @@ import Invoice from "@/components/serviceProviderDashboard/jobs/Invoice";
 import Loading from "@/shared/loading";
 import { RootState } from "@/store";
 import {
+  dateFromNumberArray,
   formatDateFromNumberArray,
   formatDateFromNumberArrayToRelativeDate,
 } from "@/utils";
@@ -195,10 +196,8 @@ const ViewJobs = () => {
                 <div className="flex justify-between gap-4 md:flex-col">
                   <div>
                     <p className="font-bold uppercase">To be Started:</p>
-                    <p className="font-bold">
-                      {formatDateFromNumberArrayToRelativeDate(
-                        currentBooking.startDate,
-                      )}
+                    <p className="font-bold capitalize">
+                      {dateFromNumberArray(currentBooking.startDate)}
                     </p>
                   </div>
                   <p className="flex items-center gap-2 text-sm font-bold text-violet-dark ">
