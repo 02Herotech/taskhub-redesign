@@ -779,6 +779,8 @@ const AllBlogsPage = () => {
     fetchPosts();
   }, []);
 
+  console.log("posts", posts)
+
   const handleSearch = (searchTerm: string) => {
     router.push(`/blog/results?query=${encodeURIComponent(searchTerm)}`)
   }

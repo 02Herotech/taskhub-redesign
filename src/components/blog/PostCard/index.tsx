@@ -12,7 +12,7 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
                 key={post._id.toString()}
                 className="space-y-4 max-sm:flex max-sm:space-x-4"
             >
-                {post.hero.media && (
+                {/* {post.hero.media && (
                     <Image
                         src={post.hero.media.url} // Assuming media has a url property
                         alt={post.title}
@@ -30,7 +30,7 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
                         {post.title}
                     </h2>
                     <p className="text-orange-normal text-sm lg:text-base">
-                        Read Time: {/* Add read time if available in your Post type */}
+                        Read Time: 
                     </p>
                     <h2 className="line-clamp-4 font-semibold text-violet-dark overflow-hidden">
                         {post.meta.description}
@@ -43,7 +43,7 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
                             Read More
                         </Link>
                     </div>
-                </div>
+                </div> */}
             </article>
     )
 }
