@@ -6,7 +6,7 @@ import Button from '@/components/global/Button';
 import Popup from '@/components/global/Popup';
 import { CautionSvg, RevisionSvg } from '@/lib/svgIcons';
 import { clearLocalStorage, formatAmount, getFromLocalStorage, inspectionTimes, revisions, saveToLocalStorage } from '@/lib/utils';
-import { useAcceptServiceMutation, useGetJobByIdQuery, useInspectTaskMutation } from '@/services/bookings';
+import { useAcceptServiceMutation, useGetJobByIdQuery, useInspectTaskMutation, useRequestRevisionMutation } from '@/services/bookings';
 import { useGetTaskByIdQuery } from '@/services/tasks';
 import Loading from '@/shared/loading';
 import { useRouter } from 'next/navigation';
@@ -27,10 +27,12 @@ const OnogoingTaskDetailsPage = ({ params }: { params: { id: string } }) => {
     const [inspectionStarted, setInspectionStarted] = useState(false);
     const [inspectionEndTime, setInspectionEndTime] = useState<Date | null>(null);
     const [inspectionError, setInspectionError] = useState('');
+    const [revisionError, setRevisionError] = useState('');
 
     const { data: task, isLoading } = useGetJobByIdQuery(id as unknown as number);
     const [approvePayment] = useAcceptServiceMutation();
     const [inspectTask, { isLoading: inspectTaskLoading }] = useInspectTaskMutation();
+    const [requestRevision] = useRequestRevisionMutation();
 
     useEffect(() => {
         const storedData = getFromLocalStorage();
@@ -49,8 +51,17 @@ const OnogoingTaskDetailsPage = ({ params }: { params: { id: string } }) => {
         )
     }
 
-    const handleRevisionSubmission = () => {
-        setRevisionSent(true);
+    const handleRevisionSubmission = async (e: any) => {
+        e.preventDefault();
+        setRevisionError("")
+        const response = await requestRevision({ jobId: task.id, rejectionReason: selectedRevision });
+        if (response.error) {
+            console.log(response.error);
+            setRevisionError('Job has not been completed by Service Provider');
+            return;
+        } else {
+            setRevisionSent(true);
+        }
     }
 
     const taskTime: number[] = task.taskTime;
@@ -193,10 +204,12 @@ const OnogoingTaskDetailsPage = ({ params }: { params: { id: string } }) => {
                                         <Button
                                             className="w-[151px] max-lg:text-sm rounded-full py-6"
                                             type="submit"
+                                            disabled={revisionError != ""}
                                         >
                                             Submit
                                         </Button>
                                     </div>
+                                    {revisionError && <p className="text-red-600 text-sm mt-4 text-center">{revisionError}</p>}
                                 </form>
                             </>
                         )}

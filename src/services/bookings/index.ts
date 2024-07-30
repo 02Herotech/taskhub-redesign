@@ -84,6 +84,10 @@ export const booking = createApi({
             query: ({ jobId }) => postRequest(`/inspect-task?jobId=${jobId}`, {}),
             invalidatesTags: ["Booking"],
         }),
+        requestRevision: builder.mutation<void, { jobId: number; rejectionReason: string }>({
+            query: ({ jobId, rejectionReason }) => postRequest(`/revision-service`, { rejectionReason, jobId }),
+            invalidatesTags: ["Booking"],
+        }),
     }),
 });
 
@@ -93,4 +97,5 @@ export const {
     useGetJobByIdQuery,
     useAcceptServiceMutation,
     useInspectTaskMutation,
+    useRequestRevisionMutation,
 } = booking;
