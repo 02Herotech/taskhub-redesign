@@ -115,3 +115,39 @@ export const getYesterday = () => {
 	yesterday.setDate(yesterday.getDate() - 1);
 	return yesterday;
 }
+
+export const STORAGE_KEY = 'inspectionData';
+
+export const saveToLocalStorage = (data: any) => {
+	localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+};
+
+export const getFromLocalStorage = () => {
+	const data = localStorage.getItem(STORAGE_KEY);
+	return data ? JSON.parse(data) : null;
+};
+
+export const clearLocalStorage = () => {
+	localStorage.removeItem(STORAGE_KEY);
+};
+
+export const revisions = [
+	"I need the service redone",
+	"I need time to inspect task",
+	"I’m dissatisfied with the service",
+	"I didn’t receive any service",
+	"Others"
+];
+
+export const inspectionTimes = ['1 hour', '3 hours', '5 hours', '24 hours', '3 days', '5 days', '7 days'];
+
+export function debounce<F extends (...args: any[]) => any>(func: F, waitFor: number) {
+	let timeout: ReturnType<typeof setTimeout> | null = null;
+
+	return (...args: Parameters<F>): void => {
+		if (timeout !== null) {
+			clearTimeout(timeout);
+		}
+		timeout = setTimeout(() => func(...args), waitFor);
+	};
+}

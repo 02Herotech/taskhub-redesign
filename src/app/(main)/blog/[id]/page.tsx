@@ -8,7 +8,7 @@ import { IoIosShareAlt } from "react-icons/io";
 import { AiFillLike } from "react-icons/ai";
 import Dropdown from "@/components/global/Dropdown";
 
-const BlogsinglePage = () => {
+const SingleBlogPost = () => {
   const [blog, setBlog] = useState<BlogTypes | null>(null);
   const [allBlogs, setallBlogs] = useState<BlogTypes[] | null>(null);
   const { id } = useParams();
@@ -24,6 +24,7 @@ const BlogsinglePage = () => {
       }
     }
   }, []);
+
   return (
     <main className="container mt-20 min-h-96 max-w-screen-2xl space-y-8 py-10">
       <article className="flex flex-col gap-6 lg:grid lg:grid-cols-12">
@@ -196,4 +197,4 @@ const BlogsinglePage = () => {
   );
 };
 
-export default BlogsinglePage;
+export default SingleBlogPost;

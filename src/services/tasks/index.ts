@@ -1,5 +1,6 @@
 import {
   GetCustomerTasksResponse,
+  GetCustomerOngoingTasksResponse,
   GetFilterTasksRequest,
   GetSingleTasksResponse,
   GetTaskByTextRequest,
@@ -106,7 +107,7 @@ export const task = createApi({
       query: (customerId) => getRequest(`/tasks-by-customerId/${customerId}`),
       providesTags: ["Task"],
     }),
-    getCustomerOngoingTasks: builder.query<GetCustomerTasksResponse, number>({
+    getCustomerOngoingTasks: builder.query<GetCustomerOngoingTasksResponse, number>({
       query: (customerId) => getRequest(`/customer-ongoing-tasks/${customerId}`),
       providesTags: ["Task"],
     }),

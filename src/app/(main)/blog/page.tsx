@@ -1,9 +1,13 @@
 "use client";
-import React, { useEffect, useState } from "react";
+
 import "../../../styles/serviceProviderStyles.css";
 import Image from "next/image";
 import Link from "next/link";
 import { CiSearch } from "react-icons/ci";
+import { useState, useEffect } from 'react';
+import { BlogPost } from "@/types/blog/post";
+import PostCard from "@/components/blog/PostCard";
+import { useRouter } from "next/navigation";
 
 const blogsData: BlogTypes[] = [
   {
@@ -745,11 +749,44 @@ Having a single company identification number has streamlined many commercial tr
   },
 ];
 
-const BlogsAllPage = () => {
+const AllBlogsPage = () => {
   useEffect(() => {
     localStorage.setItem("blogs", JSON.stringify(blogsData));
   }, []);
   const [selectedCategory, setSelectedCategory] = useState("")
+  const [posts, setPosts] = useState<BlogPost[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [searchTerm, setSearchTerm] = useState("")
+  const router = useRouter()
+
+  useEffect(() => {
+    async function fetchPosts() {
+      try {
+        const response = await fetch('/api/posts');
+        if (!response.ok) {
+          throw new Error('Failed to fetch posts');
+        }
+        const data = await response.json();
+        setPosts(data);
+        setLoading(false);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'An error occurred');
+        setLoading(false);
+      }
+    }
+
+    fetchPosts();
+  }, []);
+
+  console.log("posts", posts)
+
+  const handleSearch = (searchTerm: string) => {
+    router.push(`/blog/results?query=${encodeURIComponent(searchTerm)}`)
+  }
+
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error}</div>;
 
   const categories = ["Afrik immigrant", "Business & Finance", "Housing & Accommodation", "Medical & Education", "Career & Transports"]
 
@@ -767,28 +804,41 @@ const BlogsAllPage = () => {
           />
         </div>
         <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-1/2 w-1/2 max-w-md text-[#C1BADB]">
-          <div className="relative w-full flex">
+          <form className="relative w-full flex" onSubmit={(e) => {
+            e.preventDefault();
+            handleSearch(searchTerm);
+          }}>
             <span className="absolute left-4 top-1/2 transform -translate-y-1/2 z-50">
               <CiSearch className="size-5" />
             </span>
             <input
               type="text"
               placeholder="Search"
-              className="w-full pl-12 pr-4 py-3 rounded-2xl drop-shadow-lg bg-[#EEEEEF] appearance-none outline-none border-none placeholder:text-[#C1BADB]"
+              className="w-full pl-12 pr-4 py-3 rounded-l-2xl drop-shadow-lg bg-[#EEEEEF] appearance-none outline-none border-none placeholder:text-[#C1BADB]"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
             />
-          </div>
+            <button
+              type="submit"
+              className="bg-primary text-white px-4 rounded-r-2xl"
+            >
+              Search
+            </button>
+          </form>
         </div>
       </div>
 
       {/* Categories */}
       <div className="flex items-center flex-wrap max-lg:gap-4 lg:justify-center lg:space-x-4 mb-14">
         {categories.map((category) => (
-          <div key={category}
+          <Link
+            key={category}
+            href={`/blog/category/${category}`}
             className="border border-primary rounded-full font-satoshiBold text-xs lg:text-sm text-primary font-semibold cursor-pointer hover:scale-105 transition-all py-2 px-6 bg-[#F1F1F2]"
             onClick={() => setSelectedCategory(category)}
           >
             {category}
-          </div>
+          </Link>
         ))}
       </div>
 
@@ -829,44 +879,15 @@ const BlogsAllPage = () => {
 
       {/* Blog posts */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-        {blogsData.map((blog, index) => (
-          <article
-            key={index}
-            className="space-y-4 max-sm:flex max-sm:space-x-4"
-          >
-            <Image
-              src={blog.bannerImage}
-              alt={blog.title}
-              quality={100}
-              width={370}
-              height={301}
-              className="rounded-2xl h-[300px] max-sm:w-[115px]"
-            />
-            <div className="space-y-4">
-              <h3 className="text-tc-orange text-sm lg:text-base font-satoshiBold font-bold">Career & Transportations</h3>
-              <h2 className="text-primary text-base lg:text-xl font-clashSemiBold font-semibold">
-                {blog.title}
-              </h2>
-              <p className="text-orange-normal text-sm lg:text-base">
-                Read Time : {blog.readTime}
-              </p>
-              <h2 className="line-clamp-4 font-semibold text-violet-dark">
-                {blog.description}
-              </h2>
-              <div className="!mt-8">
-                <Link
-                  href={"/blog/" + blog.id}
-                  className="rounded-full bg-orange-normal px-6 py-3 text-white transition-opacity duration-300 hover:opacity-90"
-                >
-                  Read More
-                </Link>
-              </div>
-            </div>
-          </article>
+        {posts.map((post) => (
+          <PostCard key={post.title} post={post} />
         ))}
       </div>
     </main>
   );
 };
 
-export default BlogsAllPage;
+export default AllBlogsPage;
+
+
+

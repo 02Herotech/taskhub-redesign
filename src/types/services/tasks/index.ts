@@ -45,6 +45,20 @@ export type CustomerTasks = {
     active: boolean;
 }
 
+export type OngoingTask = {
+    invoiceId: number;
+    bookingId: number;
+    total: number;
+    createdAt: [number, number, number, number, number, number, number];
+    customerId: number;
+    taskTime: [number, number];
+    jobTitle: string;
+    jobDescription: string;
+    id: number
+};
+
+export type GetCustomerOngoingTasksResponse = OngoingTask[];
+
 export type GetCustomerTasksResponse = CustomerTasks[];
 
 export type GetTasksRequest = number;
