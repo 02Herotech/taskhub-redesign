@@ -8,7 +8,7 @@ const Benefits = () => {
         Discover the <span className="text-violet-normal">benefits</span> that
         awaits you upon joining us
       </h2>
-      <article className="flex flex-wrap justify-center  gap-6 lg:justify-between">
+      <article className="flex justify-center gap-6  max-md:flex-wrap lg:justify-between">
         {/* ------- */}
         <div className="flex max-w-sm flex-col gap-4 rounded-md bg-violet-light p-4">
           <span className="w-fit rounded-full bg-violet-normal p-2">
