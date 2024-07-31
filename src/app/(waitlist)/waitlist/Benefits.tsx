@@ -1,14 +1,14 @@
 import Image from "next/image";
-import React from "react";
+import Link from "next/link";
 
 const Benefits = () => {
   return (
     <section className="space-y-8 py-4 ">
-      <h2 className="mx-auto max-w-screen-md text-center font-clashSemiBold text-4xl font-semibold">
+      <h2 className="mx-auto max-w-screen-md text-center font-clashSemiBold text-3xl font-semibold md:text-4xl">
         Discover the <span className="text-violet-normal">benefits</span> that
         awaits you upon joining us
       </h2>
-      <article className="flex flex-wrap  justify-between gap-6">
+      <article className="flex flex-wrap justify-center  gap-6 lg:justify-between">
         {/* ------- */}
         <div className="flex max-w-sm flex-col gap-4 rounded-md bg-violet-light p-4">
           <span className="w-fit rounded-full bg-violet-normal p-2">
@@ -70,9 +70,12 @@ const Benefits = () => {
         </div>
       </article>
       <div className="mx-auto flex w-fit gap-6">
-        <button className="rounded-full border border-violet-normal bg-violet-normal px-6 py-3 font-satoshiMedium text-sm font-bold text-white transition-opacity duration-300 hover:opacity-90 ">
+        <Link
+          href={"/waitlist-join"}
+          className="rounded-full border border-violet-normal bg-violet-normal px-6 py-3 font-satoshiMedium text-sm font-bold text-white transition-opacity duration-300 hover:opacity-90 "
+        >
           Join Waitlist
-        </button>
+        </Link>
         <button className="rounded-full border border-violet-normal bg-violet-light px-6 py-3 font-satoshiMedium text-sm font-bold text-violet-normal  transition-colors duration-300 hover:bg-violet-100">
           Learn More
         </button>

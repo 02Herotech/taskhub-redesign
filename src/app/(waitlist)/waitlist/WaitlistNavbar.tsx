@@ -11,9 +11,12 @@ const WaitlistNavbar = () => {
         <Link href="#">BusinessHub</Link>
         <Link href="#">Services</Link>
       </nav>
-      <button className="rounded-full border border-orange-normal  bg-white px-4 py-2 font-satoshiMedium text-sm font-semibold text-orange-normal">
+      <Link
+        href={"/waitlist-join"}
+        className="rounded-full border border-orange-normal  bg-white px-4 py-2 font-satoshiMedium text-sm font-semibold text-orange-normal"
+      >
         Join Waitlist
-      </button>
+      </Link>
     </header>
   );
 };

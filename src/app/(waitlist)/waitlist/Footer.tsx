@@ -1,10 +1,10 @@
 import Image from "next/image";
-import React from "react";
+import ScrollToTop from "./ScrollToTop";
 
 const Footer = () => {
   return (
-    <footer className="space-y-10 rounded-tl-[5rem] rounded-tr-[5rem] bg-violet-normal px-4 pt-10 text-white md:px-12 lg:px-20 lg:py-20 ">
-      <section className="grid gap-10 lg:grid-cols-2 lg:gap-28">
+    <footer className="space-y-10 rounded-tl-3xl rounded-tr-3xl bg-violet-normal md:rounded-tl-[5rem] md:rounded-tr-[5rem]  ">
+      <section className="grid gap-10 px-4 py-8 text-white md:px-12 lg:grid-cols-2 lg:gap-28 lg:px-20 lg:py-20">
         <div className="space-y-4">
           <h2 className="font-clashSemiBold text-4xl font-semibold">
             Be a part of our online community
@@ -49,13 +49,11 @@ const Footer = () => {
         </div>
       </section>
       <div className="flex items-center justify-center">
-        <button className="rounded-full bg-violet-light bg-opacity-30 px-6 py-3 text-white">
-          Back to top
-        </button>
+        <ScrollToTop />
       </div>
       <Image
         src={"/assets/images/waitlist/Olojà.png"}
-        alt=""
+        alt="oloja"
         width={1500}
         height={1500}
         quality={100}

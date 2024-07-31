@@ -10,7 +10,7 @@ import Footer from "./Footer";
 const WaitlistHome = () => {
   return (
     <main>
-      <header className=" min-h-[800px] bg-gradient-to-b from-[#0C012F] to-[#EBE9F4] px-4 md:px-12 lg:px-20 ">
+      <header className=" bg-gradient-to-b from-[#0C012F] to-[#EBE9F4] px-4 md:px-12 lg:px-20 ">
         <WaitlistNavbar />
         <WaitlistHeader />
       </header>
