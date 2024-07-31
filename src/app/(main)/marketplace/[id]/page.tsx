@@ -231,20 +231,22 @@ const Page = () => {
               className="mx-auto h-96 w-full rounded-xl  object-cover lg:col-span-6 "
             />
             <div className="flex flex-col gap-5 md:grid md:grid-cols-2 lg:col-span-6">
-              {displayData?.businessPictures.map((item) => (
-                <Image
-                  key={item}
-                  src={item}
-                  alt={item}
-                  width={1600}
-                  height={1600}
-                  quality={100}
-                  onClick={() =>
-                    setShowImageModal({ state: true, image: item })
-                  }
-                  className="mx-auto h-44 w-full rounded-xl object-cover "
-                />
-              ))}
+              {displayData?.businessPictures
+                .slice(1, 4)
+                .map((item, index) => (
+                  <Image
+                    key={item}
+                    src={item}
+                    alt={item}
+                    width={1600}
+                    height={1600}
+                    quality={100}
+                    onClick={() =>
+                      setShowImageModal({ state: true, image: item })
+                    }
+                    className={`mx-auto h-44 w-full rounded-xl object-cover ${index === 0 && "md:col-span-2"} `}
+                  />
+                ))}
             </div>
           </div>
         </section>
