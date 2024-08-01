@@ -50,6 +50,7 @@ export interface RelatedPost {
     createdAt: string;
     updatedAt: string;
     populatedAuthors: any[];
+    readTime: string;
 }
 
 interface Meta {
@@ -71,6 +72,7 @@ export interface BlogPost {
     _status: string;
     createdAt: string;
     updatedAt: string;
+    readTime: string;
     populatedAuthors: any[];
 }
 
