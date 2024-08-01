@@ -76,9 +76,13 @@ const Benefits = () => {
         >
           Join Waitlist
         </Link>
-        <button className="rounded-full border border-violet-normal bg-violet-light px-6 py-3 font-satoshiMedium text-sm font-bold text-violet-normal  transition-colors duration-300 hover:bg-violet-100">
+        <Link
+          href={"https://www.instagram.com/oloja_au?igsh=NTFoZ2s5YTY0aXdt"}
+          target="_blank"
+          className="rounded-full border border-violet-normal bg-violet-light px-6 py-3 font-satoshiMedium text-sm font-bold text-violet-normal  transition-colors duration-300 hover:bg-violet-100"
+        >
           Learn More
-        </button>
+        </Link>
       </div>
     </section>
   );
