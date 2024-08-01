@@ -65,7 +65,7 @@ const BlogCategoryPage = () => {
                     {categoryName}
                 </div>
                 <div className="border border-primary p-2 rounded-full cursor-pointer" onClick={() => router.push("/blog")}>
-                    <IoCloseCircleOutline className="size-6" />
+                    <IoCloseCircleOutline className="size-6 text-primary" />
                 </div>
             </div>
 

@@ -106,8 +106,8 @@ const SingleBlogPost = () => {
                   <h5 className="text-sm lg:text-base text-[#262528]">{formattedDate}</h5>
                 </div>
               </div>
-              <p className="flex gap-2 text-lg font-semibold  text-violet-normal max-md:text-sm ">
-                <span>Read time</span>
+              <p className="flex gap-2 text-lg font-semibold text-violet-normal max-md:text-sm">
+                <span>Read time:</span>
                 <span className="text-orange-normal">{blog?.readTime || "N/A"} </span>
               </p>
               <div className="hidden lg:flex space-x-6">
@@ -179,8 +179,8 @@ const SingleBlogPost = () => {
           </section>
         )}
 
-        <div className="space-y-4 py-6 lg:col-span-4 lg:py-12">
-          <RelatedPosts relatedPosts={blog?.relatedPosts!} />
+        <div className="space-y-10 py-6 lg:col-span-4 lg:py-12">
+          <RelatedPosts relatedPosts={blog?.relatedPosts!} isLoading={isAuthorLoading} />
           <Newsletter />
         </div>
       </article>

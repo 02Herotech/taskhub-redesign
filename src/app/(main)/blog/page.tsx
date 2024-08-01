@@ -1,11 +1,9 @@
 "use client";
 
-import "../../../styles/serviceProviderStyles.css";
 import Image from "next/image";
 import Link from "next/link";
 import { CiSearch } from "react-icons/ci";
-import { useState, useEffect } from 'react';
-import { BlogPost } from "@/types/blog/post";
+import { useState } from 'react';
 import PostCard from "@/components/blog/PostCard";
 import { useRouter } from "next/navigation";
 import FeaturedPost from "@/components/blog/FeaturedPost";
@@ -17,15 +15,12 @@ const AllBlogsPage = () => {
   const router = useRouter()
 
   const { data: blogPosts, isLoading, error } = useGetAllPostsQuery();
-  console.log("blogPosts", blogPosts?.docs);
 
   const handleSearch = (searchTerm: string) => {
     router.push(`/blog/results?query=${encodeURIComponent(searchTerm)}`)
   }
 
   if (isLoading) return <div>Loading...</div>;
-  // if (error) return <div>Error: {error}</div>;
-
   const categories = ["Immigrants", "Business & Finance", "Housing & Accommodation", "Medical & Education", "Career & Transports"]
 
   return (

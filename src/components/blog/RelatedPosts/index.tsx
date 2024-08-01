@@ -5,14 +5,15 @@ import React from 'react'
 
 interface RelatedPostsProps {
     relatedPosts: BlogPost[]
+    isLoading: boolean
 }
 
-const RelatedPosts: React.FC<RelatedPostsProps> = ({ relatedPosts }) => {
+const RelatedPosts: React.FC<RelatedPostsProps> = ({ relatedPosts, isLoading }) => {
     return (
         <aside>
             {relatedPosts && relatedPosts.length > 0 ? (
                 <>
-                    <h2 className="font-clashBold text-2xl font-extrabold text-violet-normal">
+                    <h2 className="font-clashBold text-2xl !mb-7 font-extrabold text-violet-normal">
                         Related Articles
                     </h2>
                     <div className="flex flex-col gap-5">
@@ -22,7 +23,7 @@ const RelatedPosts: React.FC<RelatedPostsProps> = ({ relatedPosts }) => {
                                 <Link
                                     href={"/blog/" + item.id}
                                     key={item.id}
-                                    className="grid grid-cols-12 gap-4 rounded-md hover:cursor-pointer hover:bg-violet-50"
+                                    className="grid grid-cols-12 gap-4 hover:cursor-pointer"
                                 >
                                     <div className="col-span-4 min-h-40">
                                         <Image
@@ -31,7 +32,7 @@ const RelatedPosts: React.FC<RelatedPostsProps> = ({ relatedPosts }) => {
                                             quality={100}
                                             width={1600}
                                             height={1600}
-                                            className="h-full w-full rounded-md object-cover"
+                                            className="h-full w-full object-cover"
                                         />
                                     </div>
                                     <div className="col-span-8 space-y-4">
