@@ -8,6 +8,8 @@ import { debounce } from '@/lib/utils'
 import Link from 'next/link'
 import Image from 'next/image'
 import BigPostCard from '@/components/blog/BigPostCard'
+import Newsletter from '@/components/newsletter/Newsletter'
+import { CiSearch } from 'react-icons/ci'
 
 const SearchResultsContent = () => {
     const [searchResults, setSearchResults] = useState<BlogPost[]>([])
@@ -94,7 +96,7 @@ const SearchResultsContent = () => {
             </div>
 
             {/* Categories */}
-            <div className="flex items-center flex-wrap w-full   max-lg:gap-4 lg:justify-start lg:space-x-4 mb-14">
+            <div className="flex items-center flex-wrap w-full max-lg:gap-4 lg:justify-start lg:space-x-4 mb-14">
                 {categories.map((category) => (
                     <Link
                         key={category}
@@ -174,20 +176,14 @@ const SearchResultsContent = () => {
                                         ))}
                                 </div>
                             </div>
-                            <div className="space-y-3">
-                                <h2 className="font-clashBold text-3xl font-extrabold text-violet-normal">
-                                    Newsletter
-                                </h2>
-                                <p className="font-satoshiMedium text-sm">Join our newsletter for an exclusive pass to the latest– breaking news, in-depth analyses, and insider perspectives delivered straight to your inbox.</p>
-                                <form className="w-full px-2 py-4">
-                                    <input type="email" placeholder="Enter your email" className="w-full px-2 py-4 rounded-full border border-[#C6C6C6] bg-[#EEEEEF] appearance-none outline-none placeholder:text-[#C1BADB] placeholder:font-bold" name="" id="" />
-                                    <button></button>
-                                </form>
-                            </div>
+                            <Newsletter />
                         </div>
                     </div>
                 ) : (
-                    <p>No results found.</p>
+                    <div className="min-h-[50vh] flex items-center justify-center flex-col">
+                        <CiSearch className='size-8 text-[#C1BADB]' />
+                        <h3 className='text-[#C1BADB] lg:text-2xl font-clashSemiBold font-semibold'>No Result for <span className='text-primary'>{query}</span></h3>
+                    </div>
                 )
             )}
         </div>

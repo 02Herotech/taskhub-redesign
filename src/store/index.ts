@@ -2,6 +2,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import { auth } from "../services/auth";
 import { task } from "@/services/tasks";
 import { booking } from "@/services/bookings";
+import { blog } from "@/services/blog";
 import marketReducer from "./Features/marketplace";
 import userProfileReducer from "./Features/userProfile";
 import chatReducer from "./Features/chat";
@@ -12,6 +13,7 @@ export const store = configureStore({
     [auth.reducerPath]: auth.reducer,
     [task.reducerPath]: task.reducer,
     [booking.reducerPath]: booking.reducer,
+    [blog.reducerPath]: blog.reducer,
     market: marketReducer,
     userProfile: userProfileReducer,
     chat: chatReducer,
@@ -22,6 +24,7 @@ export const store = configureStore({
       auth.middleware,
       task.middleware,
       booking.middleware,
+      blog.middleware
     ),
 });
 

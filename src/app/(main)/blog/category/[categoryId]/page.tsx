@@ -1,6 +1,7 @@
 "use client";
 
 import BigPostCard from "@/components/blog/BigPostCard";
+import Newsletter from "@/components/newsletter/Newsletter";
 import Image from "next/image";
 import Link from "next/link";
 import { useParams, usePathname, useRouter } from "next/navigation";
@@ -64,7 +65,7 @@ const BlogCategoryPage = () => {
                     {categoryName}
                 </div>
                 <div className="border border-primary p-2 rounded-full cursor-pointer" onClick={() => router.push("/blog")}>
-                    <IoCloseCircleOutline className="size-6" />
+                    <IoCloseCircleOutline className="size-6 text-primary" />
                 </div>
             </div>
 
@@ -132,16 +133,7 @@ const BlogCategoryPage = () => {
                                 ))}
                         </div>
                     </div>
-                    <div className="space-y-3">
-                        <h2 className="font-clashBold text-3xl font-extrabold text-violet-normal">
-                            Newsletter
-                        </h2>
-                        <p className="font-satoshiMedium text-sm">Join our newsletter for an exclusive pass to the latest– breaking news, in-depth analyses, and insider perspectives delivered straight to your inbox.</p>
-                        <form className="w-full px-2 py-4">
-                            <input type="email" placeholder="Enter your email" className="w-full px-2 py-4 rounded-full border border-[#C6C6C6] bg-[#EEEEEF] appearance-none outline-none placeholder:text-[#C1BADB] placeholder:font-bold" name="" id="" />
-                            <button></button>
-                        </form>
-                    </div>
+                    <Newsletter />
                 </div>
             </div>
         </main>
