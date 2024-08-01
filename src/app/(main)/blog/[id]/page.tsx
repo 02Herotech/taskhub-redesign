@@ -11,6 +11,7 @@ import { useGetPostByIdQuery, useGetUserByIdQuery } from "@/services/blog";
 import Newsletter from "@/components/blog/Newsletter";
 import RelatedPosts from "@/components/blog/RelatedPosts";
 import BlogPostSkeleton from "@/components/blog/BlogPostSkeleton";
+import RichTextRenderer from "@/components/blog/RichText";
 
 const SingleBlogPost = () => {
   const [shareDropdownOpen, setShareDropdownOpen] = useState(false);
@@ -20,6 +21,8 @@ const SingleBlogPost = () => {
   const { data: author, isLoading: isAuthorLoading, error: authorError } = useGetUserByIdQuery(authorId!, {
     skip: !authorId
   });
+
+  console.log("blog", blog)
 
   function formatDate(dateString: string) {
     const date = new Date(dateString);
@@ -135,47 +138,7 @@ const SingleBlogPost = () => {
                 <span>23</span>
               </div>
             </div>
-            {/* <p
-            className="whitespace-pre-wrap font-satoshiMedium text-violet-darkHover"
-            dangerouslySetInnerHTML={{ __html: blog?.description || "" }}
-          /> */}
-
-            {/* <div className="space-y-5">
-            <h2 className="text-2xl font-semibold text-violet-darker">
-              {blog?.subheader}
-            </h2>
-            <div className="space-y-5">
-              {blog?.subheaderList.map((item, index) => (
-                <div key={item.title} className="space-y-2">
-                  <p className="flex gap-2 text-lg font-semibold text-violet-normal">
-                    {blog.isSubheaderListNumbered && <span> {index + 1} </span>}
-                    <span>{item.title}</span>
-                  </p>
-                  <p className="whitespace-pre-wrap  font-satoshiMedium text-violet-darker">
-                    {item.content.subtitle}
-                  </p>
-                  <div className="ml-4 space-y-3 py-2 lg:ml-8">
-                    {item.content.list?.map((text) => (
-                      <p
-                        key={text}
-                        className=" flex items-center gap-3 font-satoshiMedium text-violet-normal   "
-                      >
-                        <span className="size-1 rounded-full bg-violet-normal p-1" />
-                        <span>{text}</span>
-                      </p>
-                    ))}
-                  </div>
-                </div>
-              ))}
-            </div>
-            <h2 className="text-2xl font-semibold text-violet-darker">
-              Conclusion
-            </h2>
-            <p
-              className="whitespace-pre-wrap  font-satoshiMedium  text-violet-darkHover"
-              dangerouslySetInnerHTML={{ __html: blog?.conclusion || "" }}
-            />
-          </div> */}
+            {blog?.postContent && <RichTextRenderer content={blog.postContent} />}
           </section>
         )}
 

@@ -36,16 +36,15 @@ const RelatedPosts: React.FC<RelatedPostsProps> = ({ relatedPosts, isLoading }) 
                                         />
                                     </div>
                                     <div className="col-span-8 space-y-4">
-                                        <p className="font-satoshiMedium text-[#381F8C]">
+                                        <p className="font-satoshiMedium text-[#381F8C] capitalize">
                                             {item.categories}
                                         </p>
                                         <h2 className="font-clashMedium text-lg text-violet-darker">
                                             {item.title}
                                         </h2>
-                                        {/* Uncomment the following if description is needed */}
-                                        {/* <p className="line-clamp-2 font-satoshiMedium text-sm">
-                                            {item.description}
-                                        </p> */}
+                                        <p className="line-clamp-2 font-satoshiMedium text-sm">
+                                            {item.postSummary}
+                                        </p>
                                     </div>
                                 </Link>
                             ))}

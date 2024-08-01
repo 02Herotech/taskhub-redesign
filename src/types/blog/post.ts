@@ -23,16 +23,21 @@ interface Image {
     url: string;
 }
 
-interface ChildText {
+export interface ChildText {
     text: string;
     bold?: boolean;
+    italic?: boolean;
+    underline?: boolean;
+    strikethrough?: boolean;
+    code?: boolean;
 }
 
 export interface PostContent {
     children: ChildText[];
     relationTo?: string;
-    type?: string;
+    type?: 'paragraph' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'ul' | 'ol' | 'li' | 'link' | 'upload' | 'blockquote' | 'indent' | 'code';
     value?: Image;
+    url?: string; // For links
 }
 
 export interface RelatedPost {
