@@ -59,19 +59,16 @@ const ShareComponent: React.FC<ShareProps> = ({ pathname }) => {
                 <h3 className='text-sm font-bold'>Link here...</h3>
                 <FiCopy className="size-6" />
             </button>
-            <div className="flex items-center justify-center">
-
-                <div className="grid grid-cols-3 gap-2">
-                    {shareLinks.map((link) => (
-                        <button
-                            key={link.name}
-                            onClick={() => handleShare(link.url)}
-                            className="p-2 rounded-full transition-colors cursor-pointer"
-                            title={`Share on ${link.name}`}>
-                            <link.icon className={`w-5 h-5 ${getIconColor(link.name)}`} />
-                        </button>
-                    ))}
-                </div>
+            <div className="grid grid-cols-3 gap-2 w-full">
+                {shareLinks.map((link) => (
+                    <button
+                        key={link.name}
+                        onClick={() => handleShare(link.url)}
+                        className="p-2 rounded-full transition-colors cursor-pointer"
+                        title={`Share on ${link.name}`}>
+                        <link.icon className={`size-8 ${getIconColor(link.name)}`} />
+                    </button>
+                ))}
             </div>
             {copied && <p className="text-green-600">Link copied to clipboard!</p>}
         </div>

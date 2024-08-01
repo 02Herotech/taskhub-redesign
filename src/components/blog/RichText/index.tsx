@@ -73,7 +73,9 @@ const RichTextRenderer: React.FC<RichTextRendererProps> = ({ content }) => {
                             alt={block.value.alt || ""}
                             width={block.value.width}
                             height={block.value.height}
-                            className="my-4 rounded-lg"
+                            quality={100}
+                            loading='lazy'
+                            className="my-4 rounded-lg w-full"
                         />
                     );
                 }

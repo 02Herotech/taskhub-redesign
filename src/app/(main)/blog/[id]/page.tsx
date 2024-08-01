@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import "../../../../styles/serviceProviderStyles.css";
-import { useParams, } from "next/navigation";
+import { useParams, usePathname, } from "next/navigation";
 import React, { useState } from "react";
 import { IoIosCloseCircleOutline, IoIosShareAlt } from "react-icons/io";
 import { AiFillLike } from "react-icons/ai";
@@ -21,8 +21,7 @@ const SingleBlogPost = () => {
   const { data: author, isLoading: isAuthorLoading, error: authorError } = useGetUserByIdQuery(authorId!, {
     skip: !authorId
   });
-
-  console.log("blog", blog)
+  const pathname = usePathname()
 
   function formatDate(dateString: string) {
     const date = new Date(dateString);
@@ -89,7 +88,7 @@ const SingleBlogPost = () => {
                     <h2 className="font-clashBold text-primary text-start font-bold">Share this post</h2>
                     <IoIosCloseCircleOutline className="size-6 text-primary cursor-pointer" onClick={() => setShareDropdownOpen(false)} />
                   </div>
-                  <ShareComponent pathname="" />
+                  <ShareComponent pathname={pathname} />
                 </div>
               </div>
             </div>
