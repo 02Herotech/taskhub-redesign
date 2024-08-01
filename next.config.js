@@ -32,6 +32,10 @@ const nextConfig = {
                 protocol: 'http',
                 hostname: 'res.cloudinary.com',
             },
+            {
+                protocol: 'https',
+                hostname: 'cms.jacinthsolutions.com.au',
+            }
         ],
     },
     webpack(config) {

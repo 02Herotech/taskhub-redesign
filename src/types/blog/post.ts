@@ -1,79 +1,102 @@
-import { ObjectId } from 'mongodb';
-
-// Enum for hero types
-export enum HeroType {
-    LowImpact = 'lowImpact',
-    // Add other hero types if needed
+interface Author {
+    id: string;
+    name: string;
+    roles: string[];
+    email: string;
+    createdAt: string;
+    updatedAt: string;
+    loginAttempts: number;
 }
 
-// Type for rich text children
-export type RichTextChild = {
+interface Image {
+    id: string;
+    alt: string;
+    filename: string;
+    mimeType: string;
+    filesize: number;
+    width: number;
+    height: number;
+    focalX: number;
+    focalY: number;
+    createdAt: string;
+    updatedAt: string;
+    url: string;
+}
+
+interface ChildText {
     text: string;
     bold?: boolean;
-};
+}
 
-// Type for rich text
-export type RichText = {
-    children: RichTextChild[];
+export interface PostContent {
+    children: ChildText[];
+    relationTo?: string;
     type?: string;
-};
+    value?: Image;
+}
 
-// Type for links
-export type Link = {
-    type: string;
-    reference: string | null;
-    url: string;
-    label: string;
-    appearance: string;
-};
-
-// Type for hero
-export type Hero = {
-    type: HeroType;
-    richText: RichText[];
-    links: any[]; // You might want to define a more specific type for links
-    media: any | null; // Define a specific type for media if possible
-};
-
-// Type for layout column
-export type LayoutColumn = {
-    size: string;
-    richText: RichText[];
-    link: Link;
+export interface RelatedPost {
     id: string;
-};
+    title: string;
+    publishedAt: string;
+    hero: {
+        type: string;
+        richText: {
+            children: ChildText[];
+        }[];
+        links: any[];
+    };
+    layout: {
+        richText: {
+            children: ChildText[];
+        }[];
+        links: any[];
+        id: string;
+        blockType: string;
+    }[];
+    premiumContent: any[];
+    slug: string;
+    meta: {
+        title: string;
+        description: string;
+    };
+    _status: string;
+    createdAt: string;
+    updatedAt: string;
+    populatedAuthors: any[];
+}
 
-// Type for layout
-export type Layout = {
-    columns: LayoutColumn[];
+interface Meta {
+    title?: string;
+    description?: string;
+}
+
+export interface BlogPost {
     id: string;
-    blockType: string;
-};
-
-// Type for meta
-export type Meta = {
     title: string;
-    description: string;
-    image?: string | ObjectId;
-};
-
-// Main Post type
-export type BlogPost = {
-    _id: string | ObjectId;
-    title: string;
-    categories: string[] | string; // It can be an array of strings or a single string
-    publishedAt: string | Date;
-    authors: string[] | ObjectId[];
-    hero: Hero;
-    layout: Layout[];
-    enablePremiumContent: boolean;
-    premiumContent: Layout[];
-    relatedPosts: string[] | ObjectId[];
+    postContent?: PostContent[];
+    image: Image;
+    categories: string;
+    publishedAt: string;
+    authors: Author[];
+    relatedPosts?: RelatedPost[];
     slug: string;
     meta: Meta;
     _status: string;
-    createdAt: string | Date;
-    updatedAt: string | Date;
-    __v: number;
-    populatedAuthors?: any[]; // Define a more specific type if you have information about the structure
-};
+    createdAt: string;
+    updatedAt: string;
+    populatedAuthors: any[];
+}
+
+export interface BlogPostsResponse {
+    docs: BlogPost[];
+    totalDocs: number;
+    limit: number;
+    totalPages: number;
+    page: number;
+    pagingCounter: number;
+    hasPrevPage: boolean;
+    hasNextPage: boolean;
+    prevPage: number | null;
+    nextPage: number | null;
+}

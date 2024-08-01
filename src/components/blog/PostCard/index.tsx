@@ -9,12 +9,12 @@ interface PostCardProps {
 const PostCard: React.FC<PostCardProps> = ({ post }) => {
     return (
             <article
-                key={post._id.toString()}
+                key={post.id.toString()}
                 className="space-y-4 max-sm:flex max-sm:space-x-4"
             >
-                {/* {post.hero.media && (
+                {post.image && (
                     <Image
-                        src={post.hero.media.url} // Assuming media has a url property
+                        src={post.image.url} 
                         alt={post.title}
                         quality={100}
                         width={370}
@@ -37,13 +37,13 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
                     </h2>
                     <div className="!mt-8">
                         <Link
-                            href={`/blog/${post._id}`}
+                            href={`/blog/${post.id}`}
                             className="rounded-full bg-orange-normal px-6 py-3 text-white transition-opacity duration-300 hover:opacity-90"
                         >
                             Read More
                         </Link>
                     </div>
-                </div> */}
+                </div>
             </article>
     )
 }
