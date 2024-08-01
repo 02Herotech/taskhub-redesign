@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { BlogPostsResponse } from "@/types/blog/post";
+import { Author, BlogPost, BlogPostsResponse } from "@/types/blog/post";
 
 export const blog = createApi({
     reducerPath: "blog",
@@ -18,7 +18,19 @@ export const blog = createApi({
             query: () => "/api/posts",
             providesTags: ["Blog"],
         }),
+        getPostById: builder.query<BlogPost, string>({
+            query: (id) => `/api/posts/${id}`,
+            providesTags: ["Blog"],
+        }),
+        getUserById: builder.query<Author, string>({
+            query: (id) => `/api/users/${id}`,
+            providesTags: ["Blog"],
+        }),
     }),
 });
 
-export const { useGetAllPostsQuery } = blog;
+export const {
+    useGetAllPostsQuery,
+    useGetPostByIdQuery,
+    useGetUserByIdQuery,
+} = blog;

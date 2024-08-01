@@ -1,4 +1,4 @@
-interface Author {
+export interface Author {
     id: string;
     name: string;
     roles: string[];
@@ -38,28 +38,14 @@ export interface PostContent {
 export interface RelatedPost {
     id: string;
     title: string;
+    postContent?: PostContent[];
+    image: Image;
+    categories: string;
     publishedAt: string;
-    hero: {
-        type: string;
-        richText: {
-            children: ChildText[];
-        }[];
-        links: any[];
-    };
-    layout: {
-        richText: {
-            children: ChildText[];
-        }[];
-        links: any[];
-        id: string;
-        blockType: string;
-    }[];
-    premiumContent: any[];
+    authors: Author[];
+    relatedPosts?: RelatedPost[];
     slug: string;
-    meta: {
-        title: string;
-        description: string;
-    };
+    meta: Meta;
     _status: string;
     createdAt: string;
     updatedAt: string;

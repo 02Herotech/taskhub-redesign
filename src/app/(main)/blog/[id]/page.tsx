@@ -2,32 +2,23 @@
 import Image from "next/image";
 import "../../../../styles/serviceProviderStyles.css";
 import { useParams, usePathname } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import { IoIosCloseCircleOutline, IoIosShareAlt } from "react-icons/io";
 import { AiFillLike } from "react-icons/ai";
-import Dropdown from "@/components/global/Dropdown";
 import ShareComponent from "@/components/blog/SharePost";
+import { useGetPostByIdQuery, useGetUserByIdQuery } from "@/services/blog";
+import Newsletter from "@/components/blog/Newsletter";
+import RelatedPosts from "@/components/blog/RelatedPosts";
 
 const SingleBlogPost = () => {
-  const [blog, setBlog] = useState<BlogTypes | null>(null);
-  const [allBlogs, setallBlogs] = useState<BlogTypes[] | null>(null);
   const [shareDropdownOpen, setShareDropdownOpen] = useState(false);
   const { id } = useParams();
-  const pathname = usePathname();
-
-
-  useEffect(() => {
-    const tempBlog = localStorage.getItem("blogs");
-    if (tempBlog) {
-      const blogs: BlogTypes[] = JSON.parse(tempBlog);
-      setallBlogs(blogs);
-      const newBlog = blogs.find((blog) => blog.id === Number(id));
-      if (newBlog) {
-        setBlog(newBlog);
-      }
-    }
-  }, []);
+  const { data: blog, isLoading: isBlogLoading, error: blogError } = useGetPostByIdQuery(id as string);
+  const authorId = blog?.authors[0]?.id;
+  const { data: author, isLoading: isAuthorLoading, error: authorError } = useGetUserByIdQuery(authorId!, {
+    skip: !authorId
+  });
 
   return (
     <main className="container mt-20 min-h-96 max-w-screen-2xl space-y-8 py-10">
@@ -38,7 +29,7 @@ const SingleBlogPost = () => {
           </h2>
           <div>
             <Image
-              src={blog?.bannerImage ?? ""}
+              src={blog?.image.url ?? ""}
               alt={blog?.title ?? ""}
               quality={100}
               width={1600}
@@ -46,21 +37,7 @@ const SingleBlogPost = () => {
             />
           </div>
           <div className="flex items-center justify-between">
-            <h3 className="text-primary text-base lg:text-lg font-satoshiBold font-bold">Career & Transportations</h3>
-            {/* <div className="">
-              <Dropdown
-                trigger={() => (
-                  <div className="flex space-x-2 items-center text-tc-orange cursor-pointer">
-                    <IoIosShareAlt className="max-sm:size-8" />
-                    <p className="font-satoshiBold font-bold cursor-pointer hidden lg:block">Share post</p>
-                  </div>
-                )}
-                closeOnClick={false}
-                className="top-14 max-h-64 bg-white transition-all duration-300 px-20"
-              >
-                <ShareComponent pathname=""/> 
-              </Dropdown>
-            </div> */}
+            <h3 className="text-primary text-base lg:text-lg font-satoshiBold font-bold capitalize">{blog?.categories}</h3>
             <div className="relative">
               <button
                 onClick={() => setShareDropdownOpen(!shareDropdownOpen)}
@@ -85,8 +62,7 @@ const SingleBlogPost = () => {
               )}
 
               <div
-                className={`absolute left-0 top-full mt-2 w-full lg:min-w-60 rounded-md bg-white transition-all duration-300 overflow-hidden z-30 ${
-                  shareDropdownOpen ? "max-h-64 p-5 drop-shadow" : "max-h-0"
+                className={`absolute left-0 top-full mt-2 w-full lg:min-w-60 rounded-md bg-white transition-all duration-300 overflow-hidden z-30 ${shareDropdownOpen ? "max-h-64 p-5 drop-shadow" : "max-h-0"
                   }`}
               >
                 <div className="flex items-center justify-between mb-3">
@@ -107,13 +83,15 @@ const SingleBlogPost = () => {
                 className="rounded-full object-cover size-14"
               />
               <div className="">
-                <h5 className="text-sm lg:text-base text-[#381F8C] font-satoshiBold font-bold">Posted by <span className="text-tc-orange">admin</span></h5>
-                <h5 className="text-sm lg:text-base text-[#262528]">{blog?.date}</h5>
+                <h5 className="text-sm lg:text-base text-[#381F8C] font-satoshiBold font-bold">
+                  Posted by <span className="text-tc-orange">{author?.name}</span>
+                </h5>
+                <h5 className="text-sm lg:text-base text-[#262528]">{blog?.createdAt}</h5>
               </div>
             </div>
             <p className="flex gap-2 text-lg font-semibold  text-violet-normal max-md:text-sm ">
               <span>Read time</span>
-              <span className="text-orange-normal"> {blog?.readTime} </span>
+              <span className="text-orange-normal"> {"blog?.readTime"} </span>
             </p>
             <div className="hidden lg:flex space-x-6">
               <div className="flex space-x-2 text-primary">
@@ -140,12 +118,12 @@ const SingleBlogPost = () => {
               <span>23</span>
             </div>
           </div>
-          <p
+          {/* <p
             className="whitespace-pre-wrap font-satoshiMedium text-violet-darkHover"
             dangerouslySetInnerHTML={{ __html: blog?.description || "" }}
-          />
+          /> */}
 
-          <div className="space-y-5">
+          {/* <div className="space-y-5">
             <h2 className="text-2xl font-semibold text-violet-darker">
               {blog?.subheader}
             </h2>
@@ -180,58 +158,10 @@ const SingleBlogPost = () => {
               className="whitespace-pre-wrap  font-satoshiMedium  text-violet-darkHover"
               dangerouslySetInnerHTML={{ __html: blog?.conclusion || "" }}
             />
-          </div>
+          </div> */}
         </section>
 
-        <section className="space-y-4 py-6 lg:col-span-4 lg:py-12">
-          <h2 className="font-clashBold text-2xl font-extrabold text-violet-normal">
-            Related Articles
-          </h2>
-          <div className="flex flex-col gap-5">
-            {allBlogs
-              ?.filter((item) => item.id !== blog?.id)
-              .slice(0, 3)
-              .map((item) => (
-                <Link
-                  href={"/blog/" + item.id}
-                  key={item.id}
-                  className="grid grid-cols-12 gap-4 rounded-md  hover:cursor-pointer hover:bg-violet-50 "
-                >
-                  <div className="col-span-4 min-h-40">
-                    <Image
-                      src={item?.bannerImage ?? ""}
-                      alt={item?.title ?? ""}
-                      quality={100}
-                      width={1600}
-                      height={1600}
-                      className="h-full w-full rounded-md object-cover"
-                    />
-                  </div>
-                  <div className="col-span-8 space-y-4 ">
-                    <p className="font-satoshiMedium text-[#381F8C]">
-                      {item.blogType || "Finance"}
-                    </p>
-                    <h2 className="font-clashMedium text-lg text-violet-darker">
-                      {item.title}
-                    </h2>
-                    <p className="line-clamp-2 font-satoshiMedium text-sm">
-                      {item.description}
-                    </p>
-                  </div>
-                </Link>
-              ))}
-          </div>
-          <div className="!mt-10 space-y-3">
-            <h2 className="font-clashBold text-3xl font-extrabold text-violet-normal">
-              Newsletter
-            </h2>
-            <p className="font-satoshiMedium text-sm">Join our newsletter for an exclusive pass to the latest– breaking news, in-depth analyses, and insider perspectives delivered straight to your inbox.</p>
-            <form className="w-full px-2 py-4">
-              <input type="email" placeholder="Enter your email" className="w-full px-2 py-4 rounded-full border border-[#C6C6C6] bg-[#EEEEEF] appearance-none outline-none placeholder:text-[#C1BADB] placeholder:font-bold" name="" id="" />
-              <button></button>
-            </form>
-          </div>
-        </section>
+        <RelatedPosts relatedPosts={blog?.relatedPosts!} />
       </article>
     </main>
   );
