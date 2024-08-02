@@ -1,5 +1,6 @@
 import Image from "next/image";
 import ScrollToTop from "./ScrollToTop";
+import Link from "next/link";
 
 const Footer = () => {
   return (
@@ -16,7 +17,11 @@ const Footer = () => {
           </p>
         </div>
         <div className="space-y-4">
-          <div className="flex flex-col gap-4">
+          <Link
+            href={"https://www.instagram.com/oloja_au?igsh=NTFoZ2s5YTY0aXdt"}
+            target="_blank"
+            className="flex flex-col gap-4"
+          >
             <Image
               src="/assets/images/waitlist/instagram.png"
               alt="instagram"
@@ -24,8 +29,8 @@ const Footer = () => {
               height={20}
               quality={100}
             />
-            <p>Connect with us on instagram</p>
-          </div>
+            <span>Connect with us on instagram</span>
+          </Link>
           <div className="flex flex-col gap-4">
             <Image
               src="/assets/images/waitlist/twitter.png"
