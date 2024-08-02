@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { Author, BlogPost, BlogPostsResponse } from "@/types/blog/post";
+import { Author, BlogPost, BlogPostsResponse, CategoriesResponse } from "@/types/blog/post";
 
 export const blog = createApi({
     reducerPath: "blog",
@@ -26,6 +26,9 @@ export const blog = createApi({
             query: (id) => `/api/users/${id}`,
             providesTags: ["Blog"],
         }),
+        getPostCategories: builder.query<CategoriesResponse, void>({
+            query: () => "/api/postCategory",
+        }),
     }),
 });
 
@@ -33,4 +36,5 @@ export const {
     useGetAllPostsQuery,
     useGetPostByIdQuery,
     useGetUserByIdQuery,
+    useGetPostCategoriesQuery,
 } = blog;

@@ -1,8 +1,7 @@
 "use client"
 
-import { useEffect, useState, useCallback, Suspense } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
-import PostCard from '@/components/blog/PostCard'
 import { BlogPost } from '@/types/blog/post'
 import { debounce } from '@/lib/utils'
 import Link from 'next/link'
@@ -10,51 +9,34 @@ import Image from 'next/image'
 import BigPostCard from '@/components/blog/BigPostCard'
 import Newsletter from '@/components/newsletter/Newsletter'
 import { CiSearch } from 'react-icons/ci'
+import { useGetAllPostsQuery, useGetPostCategoriesQuery } from '@/services/blog'
+import Skeleton from 'react-loading-skeleton'
+import 'react-loading-skeleton/dist/skeleton.css'
+
+const filterPosts = (posts: BlogPost[], query: string): BlogPost[] => {
+    if (!query) return posts;
+    return posts.filter(post =>
+        post.title.toLowerCase().includes(query.toLowerCase())
+    );
+};
 
 const SearchResultsContent = () => {
-    const [searchResults, setSearchResults] = useState<BlogPost[]>([])
-    const [isLoading, setIsLoading] = useState(false)
-    const [error, setError] = useState<string | null>(null)
+    const { data: blogPosts, isLoading, error } = useGetAllPostsQuery();
+    const { data: categories, isLoading: categoriesLoading } = useGetPostCategoriesQuery();
+
     const searchParams = useSearchParams()
     const query = searchParams.get('query') || ''
     const [searchTerm, setSearchTerm] = useState(query)
     const router = useRouter()
 
-    const [blog, setBlog] = useState<BlogTypes | null>(null);
-    const [allBlogs, setallBlogs] = useState<BlogTypes[] | null>(null);
+    const [searchResults, setSearchResults] = useState<BlogPost[]>([])
 
     useEffect(() => {
-        const tempBlog = localStorage.getItem("blogs");
-        if (tempBlog) {
-            const blogs: BlogTypes[] = JSON.parse(tempBlog);
-            setallBlogs(blogs);
+        if (blogPosts?.docs) {
+            const filteredPosts = filterPosts(blogPosts.docs, query);
+            setSearchResults(filteredPosts);
         }
-    }, []);
-
-    const categories = ["Afrik immigrant", "Business & Finance", "Housing & Accommodation", "Medical & Education", "Career & Transports"]
-
-    const fetchSearchResults = useCallback(async (searchTerm: string) => {
-        if (!searchTerm.trim()) return
-        setIsLoading(true)
-        setError(null)
-        try {
-            const response = await fetch(`/api/search?query=${encodeURIComponent(searchTerm)}`)
-            if (!response.ok) throw new Error('Failed to fetch search results')
-            const data = await response.json()
-            setSearchResults(data)
-        } catch (error) {
-            console.error('Error fetching search results:', error)
-            setError('An error occurred while fetching results. Please try again.')
-        } finally {
-            setIsLoading(false)
-        }
-    }, [])
-
-    useEffect(() => {
-        if (query) {
-            fetchSearchResults(query)
-        }
-    }, [query, fetchSearchResults])
+    }, [blogPosts, query]);
 
     const debouncedSearch = useCallback(
         debounce((term: string) => {
@@ -72,6 +54,30 @@ const SearchResultsContent = () => {
         setSearchTerm(e.target.value)
         debouncedSearch(e.target.value)
     }
+
+    const CategorySkeleton = () => (
+        <Skeleton width={100} height={36} className="rounded-full" />
+    )
+
+    const PostCardSkeleton = () => (
+        <div className="space-y-4">
+            <Skeleton height={200} />
+            <Skeleton width={100} />
+            <Skeleton height={24} />
+            <Skeleton count={3} />
+        </div>
+    )
+
+    const RelatedArticleSkeleton = () => (
+        <div className="grid grid-cols-12 gap-4">
+            <Skeleton className="col-span-4" height={100} />
+            <div className="col-span-8 space-y-2">
+                <Skeleton width={100} />
+                <Skeleton height={24} />
+                <Skeleton count={2} />
+            </div>
+        </div>
+    )
 
     return (
         <div className="container mt-14 lg:mt-24 min-h-screen max-w-screen-xl space-y-14 px-4 py-20">
@@ -97,94 +103,119 @@ const SearchResultsContent = () => {
 
             {/* Categories */}
             <div className="flex items-center flex-wrap w-full max-lg:gap-4 lg:justify-start lg:space-x-4 mb-14">
-                {categories.map((category) => (
-                    <Link
-                        key={category}
-                        href={`/blog/category/${category}`}
-                        className="border border-primary rounded-full font-satoshiBold text-xs lg:text-sm text-primary font-semibold cursor-pointer hover:scale-105 transition-all py-2 px-6 bg-[#F1F1F2]"
-                    >
-                        {category}
-                    </Link>
-                ))}
+                {categoriesLoading
+                    ? Array(5).fill(0).map((_, index) => <CategorySkeleton key={index} />)
+                    : categories?.docs.slice().reverse().map((category) => (
+                        <Link
+                            key={category.id}
+                            href={`/blog/category/${category.id}`}
+                            className="border border-primary rounded-full font-satoshiBold text-xs lg:text-sm text-primary font-semibold cursor-pointer hover:scale-105 transition-all py-2 px-6 bg-[#F1F1F2]"
+                        >
+                            {category.title}
+                        </Link>
+                    ))
+                }
             </div>
 
             <hr className="border-[1.5px] border-[#CACACC]" />
 
-            {isLoading && <p>Loading...</p>}
-            {error && <p className="text-red-500">{error}</p>}
-            {!isLoading && !error && (
-                searchResults.length > 0 ? (
-                    <div className="lg:grid lg:grid-cols-12 max-sm:space-y-5 gap-7">
-                        <div className="col-span-8">
-                            {allBlogs?.map((item) => (
-                                <BigPostCard key={item.id} post={item} />
+            {isLoading ? (
+                <div className="lg:grid lg:grid-cols-12 max-sm:space-y-5 gap-7">
+                    <div className="col-span-8 space-y-8">
+                        {Array(3).fill(0).map((_, index) => (
+                            <PostCardSkeleton key={index} />
+                        ))}
+                    </div>
+                    <div className="col-span-4 space-y-20 max-sm:hidden">
+                        <div className="space-y-4">
+                            <Skeleton width={200} height={24} />
+                            <div className="flex flex-wrap gap-2">
+                                {Array(6).fill(0).map((_, index) => (
+                                    <CategorySkeleton key={index} />
+                                ))}
+                            </div>
+                        </div>
+                        <div className="space-y-4">
+                            <Skeleton width={200} height={24} />
+                            {Array(3).fill(0).map((_, index) => (
+                                <RelatedArticleSkeleton key={index} />
                             ))}
                         </div>
-                        <div className="col-span-4 space-y-20 max-sm:hidden">
-                            <div className="">
-                                <h2 className="font-clashBold text-2xl font-extrabold text-violet-normal">
-                                    Trending Categories
-                                </h2>
-                                <div className="flex items-center justify-start flex-wrap gap-3 lg:space-4 mt-5 mb-14">
-                                    {categories.map((category) => (
+                        <Newsletter />
+                    </div>
+                </div>
+            ) : error ? (
+                <p>Error loading posts. Please try again later.</p>
+            ) : searchResults.length > 0 ? (
+                <div className="lg:grid lg:grid-cols-12 max-sm:space-y-5 gap-7">
+                    <div className="col-span-8">
+                        {searchResults.map((item) => (
+                            <BigPostCard key={item.id} post={item} />
+                        ))}
+                    </div>
+                    <div className="col-span-4 space-y-20 max-sm:hidden">
+                        <div className="">
+                            <h2 className="font-clashBold text-2xl font-extrabold text-violet-normal">
+                                Trending Categories
+                            </h2>
+                            <div className="flex items-center justify-start flex-wrap gap-3 lg:space-4 mt-5 mb-14">
+                                {categories?.docs.slice().reverse().map((category) => (
+                                    <Link
+                                        key={category.id}
+                                        href={`/blog/category/${category.id}`}
+                                        className="border border-primary rounded-full font-satoshiBold text-xs lg:text-sm text-primary font-semibold cursor-pointer hover:scale-105 transition-all py-2 px-6 bg-[#F1F1F2]"
+                                    >
+                                        {category.title}
+                                    </Link>
+                                ))}
+                            </div>
+                        </div>
+                        <div className="">
+                            <h2 className="font-clashBold text-2xl font-extrabold text-violet-normal">
+                                Related Articles
+                            </h2>
+                            <div className="flex flex-col gap-5 mt-5">
+                                {searchResults
+                                    .slice(0, 3)
+                                    .map((item) => (
                                         <Link
-                                            key={category}
-                                            href={`/blog/category/${category}`}
-                                            className="border border-primary rounded-full font-satoshiBold text-xs lg:text-sm text-primary font-semibold cursor-pointer hover:scale-105 transition-all py-2 px-6 bg-[#F1F1F2]"
+                                            href={"/blog/" + item.id}
+                                            key={item.id}
+                                            className="grid grid-cols-12 gap-4 rounded-md hover:cursor-pointer hover:bg-violet-50 "
                                         >
-                                            {category}
+                                            <div className="col-span-4 min-h-40">
+                                                <Image
+                                                    src={item?.image?.url ?? ""}
+                                                    alt={item?.title ?? ""}
+                                                    quality={100}
+                                                    width={1600}
+                                                    height={1600}
+                                                    className="h-full w-full rounded-md object-cover"
+                                                />
+                                            </div>
+                                            <div className="col-span-8 space-y-4 ">
+                                                <p className="font-satoshiMedium text-[#381F8C]">
+                                                    {item.category?.title || "Finance"}
+                                                </p>
+                                                <h2 className="font-clashMedium text-lg text-violet-darker">
+                                                    {item.title}
+                                                </h2>
+                                                <p className="line-clamp-2 font-satoshiMedium text-sm">
+                                                    {item.postSummary}
+                                                </p>
+                                            </div>
                                         </Link>
                                     ))}
-                                </div>
                             </div>
-                            <div className="">
-                                <h2 className="font-clashBold text-2xl font-extrabold text-violet-normal">
-                                    Related Articles
-                                </h2>
-                                <div className="flex flex-col gap-5 mt-5">
-                                    {allBlogs
-                                        ?.filter((item) => item.id !== blog?.id)
-                                        .slice(0, 3)
-                                        .map((item) => (
-                                            <Link
-                                                href={"/blog/" + item.id}
-                                                key={item.id}
-                                                className="grid grid-cols-12 gap-4 rounded-md hover:cursor-pointer hover:bg-violet-50 "
-                                            >
-                                                <div className="col-span-4 min-h-40">
-                                                    <Image
-                                                        src={item?.bannerImage ?? ""}
-                                                        alt={item?.title ?? ""}
-                                                        quality={100}
-                                                        width={1600}
-                                                        height={1600}
-                                                        className="h-full w-full rounded-md object-cover"
-                                                    />
-                                                </div>
-                                                <div className="col-span-8 space-y-4 ">
-                                                    <p className="font-satoshiMedium text-[#381F8C]">
-                                                        {item.blogType || "Finance"}
-                                                    </p>
-                                                    <h2 className="font-clashMedium text-lg text-violet-darker">
-                                                        {item.title}
-                                                    </h2>
-                                                    <p className="line-clamp-2 font-satoshiMedium text-sm">
-                                                        {item.description}
-                                                    </p>
-                                                </div>
-                                            </Link>
-                                        ))}
-                                </div>
-                            </div>
-                            <Newsletter />
                         </div>
+                        <Newsletter />
                     </div>
-                ) : (
-                    <div className="min-h-[50vh] flex items-center justify-center flex-col">
-                        <CiSearch className='size-8 text-[#C1BADB]' />
-                        <h3 className='text-[#C1BADB] lg:text-2xl font-clashSemiBold font-semibold'>No Result for <span className='text-primary'>{query}</span></h3>
-                    </div>
-                )
+                </div>
+            ) : (
+                <div className="min-h-[50vh] flex items-center justify-center flex-col">
+                    <CiSearch className='size-8 text-[#C1BADB]' />
+                    <h3 className='text-[#C1BADB] lg:text-2xl font-clashSemiBold font-semibold'>No Result for <span className='text-primary'>{query}</span></h3>
+                </div>
             )}
         </div>
     )

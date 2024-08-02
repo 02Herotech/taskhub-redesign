@@ -19,12 +19,12 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
                     quality={100}
                     width={370}
                     height={301}
-                    className="rounded-2xl h-[300px] max-sm:w-[115px] object-cover"
+                    className="rounded-2xl h-[240px] lg:h-[300px] max-sm:w-[115px] object-cover"
                 />
             )}
             <div className="space-y-3">
                 <h3 className="text-tc-orange text-sm lg:text-base font-satoshiBold font-bold capitalize">
-                    {post.categories}
+                    {post.category.title}
                 </h3>
                 <div className="min-h-14">
                     <h2 className="text-primary text-base lg:text-xl font-clashSemiBold font-semibold">
@@ -37,7 +37,7 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
                 <h2 className="line-clamp-4 font-semibold text-violet-dark overflow-hidden">
                     {post.postSummary}
                 </h2>
-                <div className="!mt-8">
+                <div className="!mt-6">
                     <Link
                         href={`/blog/${post.id}`}
                         className="rounded-full bg-orange-normal px-6 py-3 text-white transition-opacity duration-300 hover:opacity-90"

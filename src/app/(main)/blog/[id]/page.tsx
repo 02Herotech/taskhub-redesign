@@ -56,7 +56,7 @@ const SingleBlogPost = () => {
               />
             </div>
             <div className="flex items-center justify-between">
-              <h3 className="text-primary text-base lg:text-lg font-satoshiBold font-bold capitalize">{blog?.categories}</h3>
+              <h3 className="text-primary text-base lg:text-lg font-satoshiBold font-bold capitalize">{blog?.category.title}</h3>
               <div className="relative">
                 <button
                   onClick={() => setShareDropdownOpen(!shareDropdownOpen)}

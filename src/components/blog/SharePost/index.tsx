@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { FaFacebook, FaWhatsapp, FaTwitter, FaTelegram, FaSnapchatGhost, FaPinterest } from 'react-icons/fa';
-import { FiCopy } from 'react-icons/fi';
+import { FaFacebook, FaWhatsapp, FaTelegram, FaSnapchatGhost, FaPinterest } from 'react-icons/fa';
+import { FaXTwitter } from 'react-icons/fa6';
+import { IoCopy } from 'react-icons/io5';
 
 interface ShareProps {
     pathname: string;
@@ -13,7 +14,7 @@ const ShareComponent: React.FC<ShareProps> = ({ pathname }) => {
     const shareLinks = [
         { name: 'Facebook', icon: FaFacebook, url: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(fullUrl)}` },
         { name: 'WhatsApp', icon: FaWhatsapp, url: `https://api.whatsapp.com/send?text=${encodeURIComponent(fullUrl)}` },
-        { name: 'Twitter', icon: FaTwitter, url: `https://twitter.com/intent/tweet?url=${encodeURIComponent(fullUrl)}` },
+        { name: 'X', icon: FaXTwitter, url: `https://twitter.com/intent/tweet?url=${encodeURIComponent(fullUrl)}` },
         { name: 'Telegram', icon: FaTelegram, url: `https://t.me/share/url?url=${encodeURIComponent(fullUrl)}` },
         { name: 'Snapchat', icon: FaSnapchatGhost, url: `https://www.snapchat.com/scan?attachmentUrl=${encodeURIComponent(fullUrl)}` },
         { name: 'Pinterest', icon: FaPinterest, url: `https://pinterest.com/pin/create/button/?url=${encodeURIComponent(fullUrl)}` },
@@ -28,9 +29,9 @@ const ShareComponent: React.FC<ShareProps> = ({ pathname }) => {
             case 'twitter':
                 return 'text-blue-400';
             case 'telegram':
-                return 'text-blue-500';
+                return 'text-[#2AABEE]';
             case 'snapchat':
-                return 'text-yellow-400';
+                return 'text-white bg-[#F7F251] p-1 rounded-full';
             case 'pinterest':
                 return 'text-red-600';
             default:
@@ -57,7 +58,7 @@ const ShareComponent: React.FC<ShareProps> = ({ pathname }) => {
                 title="Copy link"
             >
                 <h3 className='text-sm font-bold'>Link here...</h3>
-                <FiCopy className="size-6" />
+                <IoCopy className="size-4 items-end" />
             </button>
             <div className="grid grid-cols-3 gap-2 w-full">
                 {shareLinks.map((link) => (
