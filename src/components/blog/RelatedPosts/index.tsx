@@ -5,7 +5,7 @@ import React from 'react'
 
 interface RelatedPostsProps {
     relatedPosts: BlogPost[]
-    isLoading: boolean
+    isLoading?: boolean
 }
 
 const RelatedPosts: React.FC<RelatedPostsProps> = ({ relatedPosts, isLoading }) => {
@@ -35,9 +35,9 @@ const RelatedPosts: React.FC<RelatedPostsProps> = ({ relatedPosts, isLoading }) 
                                             className="h-full w-full object-cover"
                                         />
                                     </div>
-                                    <div className="col-span-8 space-y-4">
+                                    <div className="col-span-8 flex flex-col space-y-4 h-full">
                                         <p className="font-satoshiMedium text-[#381F8C] capitalize">
-                                            {item.categories}
+                                            {item.category.title}
                                         </p>
                                         <h2 className="font-clashMedium text-lg text-violet-darker">
                                             {item.title}
