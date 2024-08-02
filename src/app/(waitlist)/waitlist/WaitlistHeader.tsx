@@ -1,12 +1,17 @@
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
+import { ReactTyped } from "react-typed";
+import TypedAnimation from "./TypedAnimation";
 
 const WaitlistHeader = () => {
   return (
     <header className="space-y-10 pt-10">
       <h2 className=" text-center font-clashSemiBold text-4xl text-orange-normal md:text-5xl">
-        Every Immigrant needs a <span className="text-white">Product</span>
+        Every Immigrant needs a{" "}
+        <span className="text-white">
+          <TypedAnimation />
+        </span>
       </h2>
       <p className="mx-auto max-w-2xl text-center text-xl text-white md:text-2xl">
         We provide a dynamic AI enabled platform that bridges the gap between
