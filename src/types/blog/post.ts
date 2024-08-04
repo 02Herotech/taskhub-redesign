@@ -23,6 +23,13 @@ interface Image {
     url: string;
 }
 
+export interface Category {
+    id: string;
+    title: string;
+    createdAt: string;
+    updatedAt: string;
+}
+
 export interface ChildText {
     text: string;
     bold?: boolean;
@@ -45,7 +52,7 @@ export interface RelatedPost {
     title: string;
     postContent?: PostContent[];
     image: Image;
-    categories: string;
+    category: Category;
     publishedAt: string;
     authors: Author[];
     relatedPosts?: RelatedPost[];
@@ -69,7 +76,7 @@ export interface BlogPost {
     title: string;
     postContent?: PostContent[];
     image: Image;
-    categories: string;
+    category: Category;
     publishedAt: string;
     authors: Author[];
     relatedPosts?: RelatedPost[];
@@ -85,6 +92,19 @@ export interface BlogPost {
 
 export interface BlogPostsResponse {
     docs: BlogPost[];
+    totalDocs: number;
+    limit: number;
+    totalPages: number;
+    page: number;
+    pagingCounter: number;
+    hasPrevPage: boolean;
+    hasNextPage: boolean;
+    prevPage: number | null;
+    nextPage: number | null;
+}
+
+export interface CategoriesResponse {
+    docs: Category[];
     totalDocs: number;
     limit: number;
     totalPages: number;
