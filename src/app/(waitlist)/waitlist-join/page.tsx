@@ -11,7 +11,7 @@ import { BeatLoader } from "react-spinners";
 
 const WaitlistJoin = () => {
   const [waitlistData, setWaitlistData] = useState({
-    fullname: "",
+    fullName: "",
     email: "",
     loading: false,
     error: "",
@@ -23,7 +23,7 @@ const WaitlistJoin = () => {
 
     try {
       const payload = {
-        fullname: waitlistData.fullname,
+        fullName: waitlistData.fullName,
         email: waitlistData.email,
       };
       const url = "https://smp.jacinthsolutions.com.au/api/v1/util/waitlist";
@@ -31,7 +31,7 @@ const WaitlistJoin = () => {
       const response = await axios.post(url, payload);
       setWaitlistData((prev) => ({
         ...prev,
-        fullname: "",
+        fullName: "",
         email: "",
         success: response.data,
       }));
@@ -158,11 +158,11 @@ const WaitlistJoin = () => {
             <input
               type="text"
               required
-              value={waitlistData.fullname}
+              value={waitlistData.fullName}
               onChange={(event) =>
                 setWaitlistData((prev) => ({
                   ...prev,
-                  fullname: event.target.value,
+                  fullName: event.target.value,
                 }))
               }
               className="rounded-xl border border-violet-light p-3 outline-none"

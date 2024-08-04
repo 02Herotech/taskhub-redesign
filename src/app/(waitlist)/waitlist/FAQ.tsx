@@ -1,8 +1,8 @@
+"use client";
+
 import Image from "next/image";
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { BiChevronDown } from "react-icons/bi";
-import { BsChevronCompactUp } from "react-icons/bs";
-import { PiTagChevronFill } from "react-icons/pi";
 
 const faqlists: { question: string; answer: string }[] = [
   {
@@ -12,23 +12,48 @@ const faqlists: { question: string; answer: string }[] = [
   },
   {
     question: "Are there fees for using Olojà?",
-    answer: "",
+    answer: "Oloja Hub charges fees for renting a shop and service listings.",
   },
   {
     question: "Are my transactions safe?",
-    answer: "",
+    answer:
+      "Yes, your transactions are safe. We use industry-standard encryption and secure payment processing to protect your data. Our payment system is PCI compliant, and we regularly monitor and update our security measures to ensure your information remains secure.",
   },
   {
     question: "Can i list all my products on Olojà?",
-    answer: "",
+    answer:
+      "Yes you can showcase your entire range of legally permitted products on Oloja Hub via your personalized virtual store.",
   },
   {
     question: "Are there ways to verify service providers on your platform?",
-    answer: "",
+    answer: "Pending",
   },
 ];
 
 const FAQ = () => {
+  const [openIndex, setOpenIndex] = useState<number | null>(null);
+  const [height, setHeight] = useState<Record<number, number>>({});
+  const contentRefs = useRef<(HTMLDivElement | null)[]>([]);
+
+  useEffect(() => {
+    faqlists.forEach((faq, index) => {
+      if (contentRefs.current[index]) {
+        setHeight((prev) => ({
+          ...prev,
+          [index]: contentRefs.current[index]!.scrollHeight,
+        }));
+      }
+    });
+  }, []);
+
+  const setRef = (index: number) => (el: HTMLDivElement | null) => {
+    contentRefs.current[index] = el;
+  };
+
+  const handleShowFaq = (index: number) => {
+    setOpenIndex(openIndex === index ? null : index);
+  };
+
   return (
     <section className="space-y-4 py-10">
       <h4 className="font-satoshiMedium text-lg ">
@@ -48,10 +73,11 @@ const FAQ = () => {
           />
         </section>
         <section className="flex flex-col gap-2">
-          {faqlists.map((faq) => (
+          {faqlists.map((faq, index) => (
             <button
               key={faq.question}
               className="flex flex-col gap-2 rounded-lg border border-orange-normal bg-[#FBEEDA] p-3"
+              onClick={() => handleShowFaq(index)}
             >
               <span className="flex w-full items-center justify-between gap-5">
                 <span className="text-left font-satoshiBold text-2xl font-bold">
@@ -61,9 +87,16 @@ const FAQ = () => {
                   <BiChevronDown fill="black" />
                 </span>
               </span>
-              <span className="text-left font-satoshiMedium text-lg">
+              <div
+                className="overflow-hidden text-left font-satoshiMedium text-lg transition-all duration-300 ease-out"
+                style={{
+                  maxHeight: openIndex === index ? `${height[index]}px` : "0px",
+                  opacity: openIndex === index ? 1 : 0,
+                }}
+                ref={setRef(index)}
+              >
                 {faq.answer}
-              </span>
+              </div>
             </button>
           ))}
         </section>
