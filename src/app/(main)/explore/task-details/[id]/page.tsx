@@ -7,12 +7,28 @@ import { FiCalendar, FiClock } from "react-icons/fi";
 import { useGetTaskByIdQuery } from '@/services/tasks';
 import { dayOfWeekNames, formatAmount, monthNames, suffixes } from '@/lib/utils';
 import Loading from '@/shared/loading';
+import TaskOffers from '@/components/main/explore/TaskOffers';
+import { useEffect, useRef, useState } from 'react';
+import OfferForm from '@/components/main/explore/OfferForm';
 
 const TaskDetailsPage = ({ params }: { params: { id: string } }) => {
+    const [showOfferForm, setShowOfferForm] = useState(false);
+    const offerButtonRef = useRef<HTMLDivElement>(null);
     const id = params.id;
     const { data: task, isLoading } = useGetTaskByIdQuery(id as unknown as number);
 
-    console.log(task)
+    useEffect(() => {
+        function handleClickOutside(event: MouseEvent) {
+            if (offerButtonRef.current && !offerButtonRef.current.contains(event.target as Node)) {
+                setShowOfferForm(false);
+            }
+        }
+
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, []);
 
     if (!task) {
         return (
@@ -22,28 +38,35 @@ const TaskDetailsPage = ({ params }: { params: { id: string } }) => {
         )
     }
 
-    const availability = task.active ? "Available" : "Unavailable";
+    const handleMakeOffer = () => {
+        setShowOfferForm(true);
+    };
+
+    const handleCloseOfferForm = () => {
+        setShowOfferForm(false);
+    };
+
+    const handleSubmitOffer = (offerAmount: number) => {
+        console.log(`Offer submitted: $${offerAmount}`);
+        // Handle offer submission logic here
+    };
+
     const date = task?.taskDate ? new Date(task.taskDate[0], task.taskDate[1] - 1, task.taskDate[2]) : new Date();
     const day = date.getDate();
     const month = date.getMonth();
     const monthName = monthNames[month];
     const dayOfWeek = date.getDay();
     const dayOfWeekName = dayOfWeekNames[dayOfWeek];
-    // Determine the correct suffix for the day
     let daySuffix;
     if (day === 11 || day === 12 || day === 13) {
         daySuffix = "th";
     } else {
         daySuffix = suffixes[day % 10] || suffixes[0]; // Default to "th" if suffix is undefined
     }
-    // const daySuffix = suffixes[day % 10] || suffixes[0]; // Default to "th" if suffix is undefined
     const formattedDate = `${dayOfWeekName}, ${monthName} ${day}${daySuffix}`;
-
-    // Get hours and minutes
     const hours = date.getHours();
     const minutes = date.getMinutes();
 
-    // Construct the formatted time string
     let formattedTime;
     if (hours >= 12) {
         formattedTime = `${hours === 12 ? 12 : hours - 12}:${(minutes < 10 ? '0' : '') + minutes} PM`;
@@ -51,45 +74,63 @@ const TaskDetailsPage = ({ params }: { params: { id: string } }) => {
         formattedTime = `${hours === 0 ? 12 : hours}:${(minutes < 10 ? '0' : '') + minutes} AM`;
     }
 
-    // function transformHubTime(hubTime: string): string {
-    //     if (typeof hubTime !== 'string') {
-    //         return 'No time specified';
-    //     }
-
-    //     return hubTime
-    //         .toLowerCase()
-    //         .split('_')
-    //         .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-    //         .join(' ');
-    // }
+    const offers = [
+        {
+            id: '1',
+            user: {
+                name: 'Daniel Oluchi',
+                avatar: '/path/to/avatar1.jpg',
+            },
+            message: 'I can do it for $2000',
+            timestamp: '10 mins ago',
+        },
+        {
+            id: '2',
+            user: {
+                name: 'Jane Doe',
+                avatar: '/path/to/avatar2.jpg',
+            },
+            message: 'Can I get more information on the kind of pipes you use?',
+            timestamp: '8 mins ago',
+        },
+        {
+            id: '3',
+            user: {
+                name: 'John West',
+                avatar: '/path/to/avatar1.jpg',
+            },
+            message: 'I can do it for $2000',
+            timestamp: '10 mins ago',
+        },
+        {
+            id: '4',
+            user: {
+                name: 'John West',
+                avatar: '/path/to/avatar1.jpg',
+            },
+            message: 'I can do it for $200',
+            timestamp: '10 mins ago',
+        },
+        {
+            id: '5',
+            user: {
+                name: 'John West',
+                avatar: '/path/to/avatar1.jpg',
+            },
+            message: 'I can do it for $4500',
+            timestamp: '10 mins ago',
+        },
+        // ... more offers
+    ]
 
     return (
         <section className="py-20 container font-satoshi">
-            {/* <Link href="/explore" className="flex items-center space-x-5 lg:space-x-10 text-primary mb-2">
-                <FaChevronLeft />
-                <h2 className='font-bold text-lg lg:text-2xl font-clashDisplay'>Job Details</h2>
-            </Link>
-            <hr /> */}
             {isLoading ? (
                 <div className="w-full flex items-center justify-center h-[full]">
                     <Image src="/assets/images/marketplace/taskhub-newloader.gif" alt="loader" height={300} width={300} />
                 </div>
             ) : (
                 <>
-                    {/* <div className="flex items-center space-x-3 font-satoshi">
-                        {availability === "Available" ? (
-                            <div className="w-6 h-6 rounded-full border mr-3 border-[#34A853] flex items-center justify-center">
-                                <div className="w-4 h-4 rounded-full bg-[#34A853] p-1" />
-                            </div>
-                        ) : (
-                            <div className="w-6 h-6 rounded-full border mr-3 border-status-error-100 flex items-center justify-center">
-                                <div className="w-4 h-4 rounded-full bg-status-error-100 p-1" />
-                            </div>
-                        )}
-                        <p className='text-sm lg:text-[18px] font-bold'>
-                            {availability}
-                        </p>
-                    </div> */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-10 lg:space-x-5 w-full mt-10">
                         <div className="space-y-7 lg:space-y-10 font-satoshi">
                             <h2 className="text-lg lg:text-4xl font-black text-primary">{task?.taskBriefDescription}</h2>
@@ -101,7 +142,7 @@ const TaskDetailsPage = ({ params }: { params: { id: string } }) => {
                                 <h4 className='text-primary lg:text-2xl font-satoshiMedium font-bold'>Location</h4>
                                 <div className="flex items-center space-x-2 w-full text-[#716F78]">
                                     <HiOutlineLocationMarker className="h-6 w-6 font-bold" />
-                                        <h5 className="text-[15px] lg:text-xl font-satoshiMedium font-medium">{task.state ? `${task.postCode}, ${task.suburb}, ${task.state}` : "Remote"}</h5>
+                                    <h5 className="text-[15px] lg:text-xl font-satoshiMedium font-medium">{task.state ? `${task.postCode}, ${task.suburb}, ${task.state}` : "Remote"}</h5>
                                 </div>
                             </div>
 
@@ -126,18 +167,37 @@ const TaskDetailsPage = ({ params }: { params: { id: string } }) => {
                                     <h2 className='text-lg lg:text-3xl font-satoshi text-primary font-bold'>
                                         AUD {formatAmount(task?.customerBudget!, "USD", false)}
                                     </h2>
-                                    <Button className='rounded-full text-sm lg:text-lg'>
-                                        Make an offer
-                                    </Button>
+                                    <div className="relative" ref={offerButtonRef}>
+                                        <Button
+                                            onClick={handleMakeOffer}
+                                            onKeyDown={(e) => {
+                                                if (e.key === 'Enter' || e.key === ' ') {
+                                                    handleMakeOffer();
+                                                }
+                                            }}
+                                            aria-expanded={showOfferForm}
+                                            aria-haspopup="true"
+                                            className='rounded-full'
+                                        >
+                                            Make an offer
+                                        </Button>
+
+                                        {showOfferForm && (
+                                            <OfferForm
+                                                onClose={handleCloseOfferForm}
+                                                onSubmit={handleSubmitOffer}
+                                            />
+                                        )}
+                                    </div>
                                 </div>
                             </div>
                             <h2 className='text-primary font-bold text-lg lg:text-xl'>Reference Images</h2>
-                            {task.taskImage ? <Image src={task.taskImage} width={200} height={100} alt="Explore task" className='object-cover' /> : <p>No image available</p>}
+                            {task.taskImage ? <Image src={task.taskImage} width={200} height={100} alt="Explore task" className='object-cover h-52' /> : <p>No image available</p>}
                         </div>
                     </div>
                 </>
             )}
-
+            <TaskOffers offers={offers} />
         </section>
     )
 }
