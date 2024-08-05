@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { FaFacebook, FaWhatsapp, FaTelegram, FaSnapchatGhost, FaPinterest } from 'react-icons/fa';
+import { FaFacebook, FaWhatsapp, FaTelegram, FaSnapchatGhost, FaInstagram } from 'react-icons/fa';
 import { FaXTwitter } from 'react-icons/fa6';
 import { IoCopy } from 'react-icons/io5';
 
@@ -17,7 +17,7 @@ const ShareComponent: React.FC<ShareProps> = ({ pathname }) => {
         { name: 'X', icon: FaXTwitter, url: `https://twitter.com/intent/tweet?url=${encodeURIComponent(fullUrl)}` },
         { name: 'Telegram', icon: FaTelegram, url: `https://t.me/share/url?url=${encodeURIComponent(fullUrl)}` },
         { name: 'Snapchat', icon: FaSnapchatGhost, url: `https://www.snapchat.com/scan?attachmentUrl=${encodeURIComponent(fullUrl)}` },
-        { name: 'Pinterest', icon: FaPinterest, url: `https://pinterest.com/pin/create/button/?url=${encodeURIComponent(fullUrl)}` },
+        { name: 'Instagram', icon: FaInstagram, url: `https://www.instagram.com/` }, // Note: Instagram doesn't support direct sharing via URL
     ];
 
     const getIconColor = (name: string): string => {
@@ -26,14 +26,14 @@ const ShareComponent: React.FC<ShareProps> = ({ pathname }) => {
                 return 'text-blue-600';
             case 'whatsapp':
                 return 'text-green-500';
-            case 'twitter':
-                return 'text-blue-400';
+            case 'x':
+                return 'text-black';
             case 'telegram':
                 return 'text-[#2AABEE]';
             case 'snapchat':
                 return 'text-white bg-[#F7F251] p-1 rounded-full';
-            case 'pinterest':
-                return 'text-red-600';
+            case 'instagram':
+                return 'text-[#E4405F]';
             default:
                 return 'text-gray-600';
         }
@@ -51,7 +51,7 @@ const ShareComponent: React.FC<ShareProps> = ({ pathname }) => {
     };
 
     return (
-        <div className="space-y-4 bg-white">
+        <div className="space-y-4 bg-white w-full">
             <button
                 onClick={copyToClipboard}
                 className="p-2 bg-[#EBE9F4] rounded-xl hover:bg-gray-300 text-primary w-full outline-none flex items-center justify-center space-x-2 cursor-pointer transition-colors"
@@ -60,18 +60,20 @@ const ShareComponent: React.FC<ShareProps> = ({ pathname }) => {
                 <h3 className='text-sm font-bold'>Link here...</h3>
                 <IoCopy className="size-4 items-end" />
             </button>
-            <div className="grid grid-cols-3 gap-2 w-full">
+            <div className="grid grid-cols-3 max-sm:grid-cols-6 gap-4 w-full">
                 {shareLinks.map((link) => (
-                    <button
-                        key={link.name}
-                        onClick={() => handleShare(link.url)}
-                        className="p-2 rounded-full transition-colors cursor-pointer"
-                        title={`Share on ${link.name}`}>
-                        <link.icon className={`size-8 ${getIconColor(link.name)}`} />
-                    </button>
+                    <div key={link.name} className="flex justify-center items-center">
+                        <button
+                            onClick={() => handleShare(link.url)}
+                            className="p-2 rounded-full transition-colors cursor-pointer hover:bg-gray-100 flex items-center justify-center"
+                            title={`Share on ${link.name}`}
+                        >
+                            <link.icon className={`size-8 ${getIconColor(link.name)}`} />
+                        </button>
+                    </div>
                 ))}
             </div>
-            {copied && <p className="text-green-600">Link copied to clipboard!</p>}
+            {copied && <p className="text-green-600 text-center">Link copied to clipboard!</p>}
         </div>
     );
 };

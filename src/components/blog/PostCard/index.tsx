@@ -34,7 +34,7 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
                 <p className="text-orange-normal text-sm lg:text-base">
                     Read Time: {post.readTime}
                 </p>
-                <h2 className="line-clamp-4 min-h-28 font-semibold text-violet-dark overflow-hidden">
+                <h2 className="line-clamp-4 min-h-32 font-semibold text-violet-dark overflow-hidden">
                     {post.postSummary}
                 </h2>
                 <div className="!mt-6">
