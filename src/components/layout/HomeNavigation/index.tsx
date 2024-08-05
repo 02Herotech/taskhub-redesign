@@ -29,6 +29,10 @@ const HomeNavigation = () => {
       url: "/marketplace",
     },
     {
+      label: "Blog",
+      url: "/blog",
+    },
+    {
       label: "Contact Us",
       url: "/contact",
     },

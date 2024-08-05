@@ -71,10 +71,10 @@ export const customerLinks: LinkRouteTypes[] = [
     label: "Profile",
     url: "/customer/profile",
   },
-  {
-    label: "Blog",
-    url: "/blog",
-  },
+  // {
+  //   label: "Blog",
+  //   url: "/blog",
+  // },
 ];
 
 export const serviceProviderLinks: LinkRouteTypes[] = [
@@ -90,10 +90,10 @@ export const serviceProviderLinks: LinkRouteTypes[] = [
     label: "Marketplace",
     url: "/marketplace",
   },
-  {
-    label: "Blog",
-    url: "/blog",
-  },
+  // {
+  //   label: "Blog",
+  //   url: "/blog",
+  // },
 ];
 
 export const homeLinks: LinkRouteTypes[] = [
@@ -108,6 +108,10 @@ export const homeLinks: LinkRouteTypes[] = [
   {
     label: "Marketplace",
     url: "/marketplace",
+  },
+  {
+    label: "Blog",
+    url: "/blog",
   },
   {
     label: "Contact Us",
