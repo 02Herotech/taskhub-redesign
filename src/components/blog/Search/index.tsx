@@ -2,6 +2,7 @@ import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import React, { useState } from 'react'
 import { CiSearch } from 'react-icons/ci'
+import { IoSearch } from 'react-icons/io5'
 
 const BlogSearch = () => {
     const router = useRouter()
@@ -32,16 +33,21 @@ const BlogSearch = () => {
                     </span>
                     <input
                         type="text"
-                        placeholder="Search"
                         className="w-full pl-12 pr-4 py-3 rounded-l-2xl drop-shadow-lg bg-[#EEEEEF] appearance-none outline-none text-black border-none placeholder:text-[#C1BADB]"
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
                     />
                     <button
                         type="submit"
-                        className="bg-primary text-white px-4 rounded-r-2xl"
+                        className="bg-primary/90 max-sm:hidden hover:bg-primary text-white px-4 rounded-r-2xl"
                     >
                         Search
+                    </button>
+                    <button
+                        type="submit"
+                        className="bg-primary/90 lg:hidden hover:bg-primary text-white px-4 rounded-r-2xl"
+                    >
+                        <IoSearch />
                     </button>
                 </form>
             </div>
