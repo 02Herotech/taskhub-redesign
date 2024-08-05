@@ -34,9 +34,16 @@ const WaitlistHeader = () => {
         </Link>
       </div>
 
-      <section className="mx-auto max-w-screen-lg rounded-3xl bg-gradient-to-b from-violet-light to-transparent p-10">
+      <section className="relative mx-auto max-w-screen-lg rounded-3xl bg-gradient-to-b from-violet-light to-transparent p-10">
         <Image
-          src="/assets/images/waitlist/Waitlist.png"
+          src={"/assets/images/waitlist/PF - Oloja 240731 - Logo Watermark.png"}
+          alt="olojà"
+          width={160}
+          height={160}
+          className=" absolute left-20 top-20 max-w-20 rounded-sm max-sm:left-16 max-sm:top-14 max-sm:w-8"
+        />
+        <Image
+          src="/assets/images/waitlist/Waitlist11.png"
           alt=""
           width={1200}
           height={1200}

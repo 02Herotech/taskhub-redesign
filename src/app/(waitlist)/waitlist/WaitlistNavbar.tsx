@@ -11,7 +11,7 @@ const WaitlistNavbar = () => {
           alt="olojà"
           width={160}
           height={160}
-          className="max-w-20"
+          className="max-w-20 rounded-sm bg-white p-1"
         />
       </div>
       <nav className="flex gap-8 font-clashMedium text-white max-md:hidden">
