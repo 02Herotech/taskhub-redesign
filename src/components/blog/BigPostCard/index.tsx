@@ -14,30 +14,53 @@ const BigPostCard: React.FC<PostCardProps> = ({ post }) => {
         const month = date.toLocaleString('default', { month: 'long' });
         const year = date.getUTCFullYear();
 
-        return `${day} of ${month}, ${year}`;
-    }
+        // Function to get the ordinal suffix
+        function getOrdinalSuffix(day: number) {
+            if (day > 3 && day < 21) return 'th';
+            switch (day % 10) {
+                case 1: return "st";
+                case 2: return "nd";
+                case 3: return "rd";
+                default: return "th";
+            }
+        }
 
-    const formattedDate = formatDate(post.publishedAt);
+        const ordinalSuffix = getOrdinalSuffix(day);
+
+        return { day: `${day}${ordinalSuffix}`, rest: `${month}, ${year}` };
+    }
+    const { day, rest } = formatDate(post.publishedAt);
+
     return (
         <article
             key={post.id}
-            className="flex space-x-4 mb-10 border-b border-[#CACACC] pb-5"
+            className="flex flex-col lg:flex-row mb-10 border-b border-[#CACACC] pb-5"
         >
-            <div className="hidden lg:block">
-                <h3 className='text-primary font-bold text-3xl'>{formattedDate}</h3>
-            </div>
-            <div className="relative w-full">
-                <Image
-                    src={post.image?.url || "/assets/images/blog/blogImage1.png"}
-                    alt={post.title}
-                    quality={100}
-                    width={640}
-                    height={301}
-                    className="rounded-2xl h-[300px] w-full object-cover"
-                />
-                <div className="absolute top-0 right-0 bg-black/40 w-24 rounded-lg p-3 lg:hidden">
-                    <h3 className='text-white text-center font-bold text-sm'>{formattedDate}</h3>
+            <div className="max-lg:hidden w-24 flex-shrink-0 mr-4 text-primary">
+                <div className='text-primary font-bold flex flex-col items-start'>
+                    <span className="text-4xl block">{day}</span>
+                    <span className='text-sm'>{rest}</span>
                 </div>
+            </div>
+            <div className="flex-grow">
+                {post.image && (
+                    <div className="relative w-full">
+                        <Image
+                            src={post.image?.url || "/assets/images/blog/blogImage1.png"}
+                            alt={post.title}
+                            quality={100}
+                            width={640}
+                            height={301}
+                            className="rounded-2xl h-[300px] w-full object-cover"
+                        />
+                        <div className="absolute top-0 right-0 bg-black/40 w-24 rounded-lg p-3 lg:hidden">
+                            <h3 className='text-primary text-center font-bold'>
+                                <span className="text-orange-normal text-lg block">{day}</span>
+                                <span>{rest}</span>
+                            </h3>
+                        </div>
+                    </div>
+                )}
                 <div className="space-y-4 mt-2">
                     <h2 className="text-primary text-xl lg:text-3xl font-clashSemiBold font-semibold">
                         {post.title}
@@ -58,9 +81,8 @@ const BigPostCard: React.FC<PostCardProps> = ({ post }) => {
                     </div>
                 </div>
             </div>
-
         </article>
     )
 }
 
-export default BigPostCard
+export default BigPostCard;

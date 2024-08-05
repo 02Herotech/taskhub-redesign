@@ -212,7 +212,7 @@ const SearchResultsContent = () => {
                     </div>
                 </div>
             ) : (
-                <div className="min-h-[50vh] flex items-center justify-center flex-col">
+                <div className="lg:min-h-[50vh] flex items-center justify-center flex-col">
                     <CiSearch className='size-8 text-[#C1BADB]' />
                     <h3 className='text-[#C1BADB] lg:text-2xl font-clashSemiBold font-semibold'>No Result for <span className='text-primary'>{query}</span></h3>
                 </div>

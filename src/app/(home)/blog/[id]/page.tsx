@@ -3,9 +3,8 @@
 import Image from "next/image";
 import "../../../../styles/serviceProviderStyles.css";
 import { useParams, usePathname, } from "next/navigation";
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { IoIosCloseCircleOutline, IoIosShareAlt } from "react-icons/io";
-import { AiFillLike } from "react-icons/ai";
 import ShareComponent from "@/components/blog/SharePost";
 import { useGetPostByIdQuery, useGetUserByIdQuery } from "@/services/blog";
 import Newsletter from "@/components/blog/Newsletter";
@@ -22,6 +21,20 @@ const SingleBlogPost = () => {
     skip: !authorId
   });
   const pathname = usePathname()
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setShareDropdownOpen(false);
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   function formatDate(dateString: string) {
     const date = new Date(dateString);
@@ -30,7 +43,20 @@ const SingleBlogPost = () => {
     const month = date.toLocaleString('default', { month: 'long' });
     const year = date.getUTCFullYear();
 
-    return `${day} of ${month}, ${year}`;
+    // Function to get the ordinal suffix
+    function getOrdinalSuffix(day: number) {
+      if (day > 3 && day < 21) return 'th';
+      switch (day % 10) {
+        case 1: return "st";
+        case 2: return "nd";
+        case 3: return "rd";
+        default: return "th";
+      }
+    }
+
+    const ordinalSuffix = getOrdinalSuffix(day);
+
+    return `${day}${ordinalSuffix} of ${month}, ${year}`;
   }
 
   const formattedDate = formatDate(blog?.createdAt!);
@@ -57,40 +83,39 @@ const SingleBlogPost = () => {
             </div>
             <div className="flex items-center justify-between">
               <h3 className="text-primary text-base lg:text-lg font-satoshiBold font-bold capitalize">{blog?.category.title}</h3>
-              <div className="relative">
-                <button
-                  onClick={() => setShareDropdownOpen(!shareDropdownOpen)}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                      setShareDropdownOpen(!shareDropdownOpen);
-                    }
-                  }}
-                  className="flex items-center space-x-2 text-tc-orange cursor-pointer"
-                  aria-expanded={shareDropdownOpen}
-                  aria-haspopup="true"
-                >
-                  <IoIosShareAlt className="max-sm:size-8" />
-                  <p className="font-satoshiBold font-bold cursor-pointer hidden lg:block">Share post</p>
-                </button>
+                <div className="relative" ref={dropdownRef}>
+                  <button
+                    onClick={() => setShareDropdownOpen(!shareDropdownOpen)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        setShareDropdownOpen(!shareDropdownOpen);
+                      }
+                    }}
+                    className="flex items-center space-x-2 text-tc-orange cursor-pointer"
+                    aria-expanded={shareDropdownOpen}
+                    aria-haspopup="true"
+                  >
+                    <IoIosShareAlt className="max-sm:size-8" />
+                    <p className="font-satoshiBold font-bold cursor-pointer hidden lg:block">Share post</p>
+                  </button>
 
-                {shareDropdownOpen && (
                   <div
-                    className="fixed inset-0 z-10"
+                    className={`fixed inset-0 z-10 bg-black bg-opacity-50 transition-opacity ${shareDropdownOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'
+                      }`}
                     onClick={() => setShareDropdownOpen(false)}
                   ></div>
-                )}
 
-                <div
-                  className={`absolute left-0 top-full mt-2 w-full lg:min-w-60 rounded-md bg-white transition-all duration-300 overflow-hidden z-30 ${shareDropdownOpen ? "max-h-64 p-5 drop-shadow" : "max-h-0"
-                    }`}
-                >
-                  <div className="flex items-center justify-between mb-3">
-                    <h2 className="font-clashBold text-primary text-start font-bold">Share this post</h2>
-                    <IoIosCloseCircleOutline className="size-6 text-primary cursor-pointer" onClick={() => setShareDropdownOpen(false)} />
+                  <div
+                    className={`fixed sm:absolute left-0 right-0 sm:left-auto sm:right-0 bottom-0 sm:top-full sm:bottom-auto mt-2 w-full lg:w-64 rounded-t-2xl sm:rounded-md bg-white transition-all duration-300 overflow-hidden z-30 ${shareDropdownOpen ? "max-h-[80vh] p-5 drop-shadow" : "max-h-0"
+                      }`}
+                  >
+                    <div className="flex items-center justify-between mb-3">
+                      <h2 className="font-clashBold text-primary text-start font-bold">Share this post</h2>
+                      <IoIosCloseCircleOutline className="size-6 text-primary cursor-pointer" onClick={() => setShareDropdownOpen(false)} />
+                    </div>
+                    <ShareComponent pathname={pathname} />
                   </div>
-                  <ShareComponent pathname={pathname} />
                 </div>
-              </div>
             </div>
             <div className="gap flex items-center justify-between flex-wrap border-b-[1.5px] border-[#CACACC] py-2 lg:gap-8 lg:py-4">
               <div className="flex items-center space-x-3">
