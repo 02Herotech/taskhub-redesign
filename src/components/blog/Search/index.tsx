@@ -33,7 +33,6 @@ const BlogSearch = () => {
                     </span>
                     <input
                         type="text"
-                        placeholder="Search"
                         className="w-full pl-12 pr-4 py-3 rounded-l-2xl drop-shadow-lg bg-[#EEEEEF] appearance-none outline-none text-black border-none placeholder:text-[#C1BADB]"
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
