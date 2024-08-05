@@ -22,7 +22,7 @@ const BlogSearch = () => {
                     className="rounded-3xl h-[110px] lg:h-[202px]"
                 />
             </div>
-            <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-1/2 w-1/2 max-w-md text-[#C1BADB]">
+            <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-1/2 w-full lg:w-1/2 max-w-md text-[#C1BADB]">
                 <form className="relative w-full flex" onSubmit={(e) => {
                     e.preventDefault();
                     handleSearch(searchTerm);
@@ -33,7 +33,7 @@ const BlogSearch = () => {
                     <input
                         type="text"
                         placeholder="Search"
-                        className="w-full pl-12 pr-4 py-3 rounded-l-2xl drop-shadow-lg bg-[#EEEEEF] appearance-none outline-none border-none placeholder:text-[#C1BADB]"
+                        className="w-full pl-12 pr-4 py-3 rounded-l-2xl drop-shadow-lg bg-[#EEEEEF] appearance-none outline-none text-black border-none placeholder:text-[#C1BADB]"
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
                     />
