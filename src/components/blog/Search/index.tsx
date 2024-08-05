@@ -2,6 +2,7 @@ import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import React, { useState } from 'react'
 import { CiSearch } from 'react-icons/ci'
+import { IoSearch } from 'react-icons/io5'
 
 const BlogSearch = () => {
     const router = useRouter()
@@ -39,9 +40,15 @@ const BlogSearch = () => {
                     />
                     <button
                         type="submit"
-                        className="bg-primary text-white px-4 rounded-r-2xl"
+                        className="bg-primary/90 max-sm:hidden hover:bg-primary text-white px-4 rounded-r-2xl"
                     >
                         Search
+                    </button>
+                    <button
+                        type="submit"
+                        className="bg-primary/90 lg:hidden hover:bg-primary text-white px-4 rounded-r-2xl"
+                    >
+                        <IoSearch />
                     </button>
                 </form>
             </div>

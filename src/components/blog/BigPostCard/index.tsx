@@ -46,7 +46,7 @@ const BigPostCard: React.FC<PostCardProps> = ({ post }) => {
                 {post.image && (
                     <div className="relative w-full">
                         <Image
-                            src={post.image?.url || "/assets/images/blog/blogImage1.png"}
+                            src={post.image.url}
                             alt={post.title}
                             quality={100}
                             width={640}
@@ -54,8 +54,8 @@ const BigPostCard: React.FC<PostCardProps> = ({ post }) => {
                             className="rounded-2xl h-[300px] w-full object-cover"
                         />
                         <div className="absolute top-0 right-0 bg-black/40 w-24 rounded-lg p-3 lg:hidden">
-                            <h3 className='text-primary text-center font-bold'>
-                                <span className="text-orange-normal text-lg block">{day}</span>
+                            <h3 className='text-white text-center font-bold'>
+                                <span className="text-lg block">{day}</span>
                                 <span>{rest}</span>
                             </h3>
                         </div>
