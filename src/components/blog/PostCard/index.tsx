@@ -22,7 +22,7 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
                     className="rounded-2xl h-[240px] lg:h-[300px] max-sm:w-[115px] object-cover"
                 />
             )}
-            <div className="space-y-3">
+            <div className="space-y-1 lg:space-y-3">
                 <h3 className="text-tc-orange text-sm lg:text-base font-satoshiBold font-bold capitalize">
                     {post.category.title}
                 </h3>

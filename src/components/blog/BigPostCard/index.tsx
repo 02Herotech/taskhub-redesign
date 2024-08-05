@@ -36,7 +36,7 @@ const BigPostCard: React.FC<PostCardProps> = ({ post }) => {
             key={post.id}
             className="flex flex-col lg:flex-row mb-10 border-b border-[#CACACC] pb-5"
         >
-            <div className="max-lg:hidden w-24 flex-shrink-0 mr-4 text-primary">
+            <div className="max-lg:hidden min-w-24 flex-shrink-0 mr-4 text-primary">
                 <div className='text-primary font-bold flex flex-col items-start'>
                     <span className="text-4xl block">{day}</span>
                     <span className='text-sm'>{rest}</span>
