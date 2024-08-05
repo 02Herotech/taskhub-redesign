@@ -56,7 +56,7 @@ const SingleBlogPost = () => {
 
     const ordinalSuffix = getOrdinalSuffix(day);
 
-    return `${day}${ordinalSuffix} of ${month}, ${year}`;
+    return `${day}${ordinalSuffix} ${month}, ${year}`;
   }
 
   const formattedDate = formatDate(blog?.createdAt!);
