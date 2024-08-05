@@ -12,8 +12,34 @@ const FeaturedPost = ({ post }: FeaturedPostProps) => {
         skip: !authorId
     });
 
+    function formatDate(dateString: string) {
+        const date = new Date(dateString);
+
+        const day = date.getUTCDate();
+        const month = date.toLocaleString('default', { month: 'long' });
+        const year = date.getUTCFullYear();
+
+        // Function to get the ordinal suffix
+        function getOrdinalSuffix(day: number) {
+            if (day > 3 && day < 21) return 'th';
+            switch (day % 10) {
+                case 1: return "st";
+                case 2: return "nd";
+                case 3: return "rd";
+                default: return "th";
+            }
+        }
+
+        const ordinalSuffix = getOrdinalSuffix(day);
+
+        return `${day}${ordinalSuffix} ${month}, ${year}`;
+    }
+
     return (
-        <div className="lg:flex lg:space-x-4 max-sm:space-y-4 w-full mb-14">
+        <div className="lg:flex lg:space-x-4 max-sm:space-y-4 w-full mb-14 relative">
+            <div className="absolute top-0 right-0 bg-black/40 min-w-24 rounded-lg m-2 p-3 lg:hidden">
+                <h3 className='text-white text-center font-bold text-sm'>{formatDate(post.createdAt)}</h3>
+            </div>
             <div className="flex-shrink-0">
                 <Image
                     src={post.image?.url || "/assets/images/blog/blogImage1.png"}
@@ -21,7 +47,7 @@ const FeaturedPost = ({ post }: FeaturedPostProps) => {
                     quality={100}
                     width={590}
                     height={790}
-                    className="h-[300px] object-cover rounded-2xl"
+                    className="h-[320px] object-cover rounded-2xl"
                 />
             </div>
             <div className="lg:px-5 lg:py-2 space-y-4 flex flex-col justify-between">
@@ -45,15 +71,6 @@ const FeaturedPost = ({ post }: FeaturedPostProps) => {
             </div>
         </div>
     )
-}
-
-// Helper function to format the date
-function formatDate(dateString: string) {
-    const date = new Date(dateString);
-    const day = date.getDate();
-    const month = date.toLocaleString('default', { month: 'long' });
-    const year = date.getFullYear();
-    return `${day} of ${month}, ${year}`;
 }
 
 export default FeaturedPost

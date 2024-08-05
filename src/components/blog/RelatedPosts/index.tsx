@@ -32,7 +32,7 @@ const RelatedPosts: React.FC<RelatedPostsProps> = ({ relatedPosts, isLoading }) 
                                             quality={100}
                                             width={1600}
                                             height={1600}
-                                            className="h-full w-full object-cover"
+                                            className="h-[210px] w-full object-cover"
                                         />
                                     </div>
                                     <div className="col-span-8 flex flex-col space-y-4 h-full">

@@ -26,7 +26,7 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
                 <h3 className="text-tc-orange text-sm lg:text-base font-satoshiBold font-bold capitalize">
                     {post.category.title}
                 </h3>
-                <div className="min-h-14">
+                <div className="lg:min-h-14">
                     <h2 className="text-primary text-base lg:text-xl font-clashSemiBold font-semibold">
                         {post.title}
                     </h2>
@@ -34,7 +34,7 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
                 <p className="text-orange-normal text-sm lg:text-base">
                     Read Time: {post.readTime}
                 </p>
-                <h2 className="line-clamp-4 font-semibold text-violet-dark overflow-hidden">
+                <h2 className="line-clamp-3 lg:line-clamp-4 lg:min-h-32 font-semibold text-violet-dark overflow-hidden">
                     {post.postSummary}
                 </h2>
                 <div className="!mt-6">

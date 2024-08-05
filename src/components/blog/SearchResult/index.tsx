@@ -13,11 +13,33 @@ import { useGetAllPostsQuery, useGetPostCategoriesQuery } from '@/services/blog'
 import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
 
+const escapeRegExp = (string: string) => {
+    return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // Escape special characters
+};
+
 const filterPosts = (posts: BlogPost[], query: string): BlogPost[] => {
-    if (!query) return posts;
-    return posts.filter(post =>
-        post.title.toLowerCase().includes(query.toLowerCase())
-    );
+    // Trim whitespace and convert to lowercase
+    const trimmedQuery = query.trim().toLowerCase();
+
+    // Return all posts if the query is empty
+    if (!trimmedQuery) return posts;
+
+    // Escape special characters in the query for safe regex usage
+    const escapedQuery = escapeRegExp(trimmedQuery);
+    const regex = new RegExp(escapedQuery, 'i'); // Match anywhere in the title
+
+    return posts.filter(post => {
+        const title = post.title.toLowerCase();
+        return regex.test(title); // Check if the title includes the query
+    }).sort((a, b) => {
+        // Sort by relevance: titles that start with the query come first
+        const aStartsWith = a.title.toLowerCase().startsWith(trimmedQuery);
+        const bStartsWith = b.title.toLowerCase().startsWith(trimmedQuery);
+
+        if (aStartsWith && !bStartsWith) return -1; // a comes first
+        if (!aStartsWith && bStartsWith) return 1;  // b comes first
+        return 0; // maintain original order if both or neither start with the query
+    });
 };
 
 const SearchResultsContent = () => {
@@ -25,11 +47,13 @@ const SearchResultsContent = () => {
     const { data: categories, isLoading: categoriesLoading } = useGetPostCategoriesQuery();
 
     const searchParams = useSearchParams()
-    const query = searchParams.get('query') || ''
+    const query = decodeURIComponent(searchParams.get('query') || '');
     const [searchTerm, setSearchTerm] = useState(query)
     const router = useRouter()
 
     const [searchResults, setSearchResults] = useState<BlogPost[]>([])
+
+    console.log(query)
 
     useEffect(() => {
         if (blogPosts?.docs) {
@@ -212,7 +236,7 @@ const SearchResultsContent = () => {
                     </div>
                 </div>
             ) : (
-                <div className="min-h-[50vh] flex items-center justify-center flex-col">
+                <div className="lg:min-h-[50vh] flex items-center justify-center flex-col">
                     <CiSearch className='size-8 text-[#C1BADB]' />
                     <h3 className='text-[#C1BADB] lg:text-2xl font-clashSemiBold font-semibold'>No Result for <span className='text-primary'>{query}</span></h3>
                 </div>

@@ -64,6 +64,8 @@ export interface RelatedPost {
     populatedAuthors: any[];
     readTime: string;
     postSummary: string;
+    likes: number;
+    claps: number;
 }
 
 interface Meta {
@@ -88,6 +90,9 @@ export interface BlogPost {
     readTime: string;
     populatedAuthors: any[];
     postSummary: string;
+    likes: number;
+    claps: number;
+    featuredPost?: boolean;
 }
 
 export interface BlogPostsResponse {

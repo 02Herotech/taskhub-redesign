@@ -11,6 +11,8 @@ import BlogSearch from "@/components/blog/Search";
 
 const AllBlogsPage = () => {
   const { data: blogPosts, isLoading, error } = useGetAllPostsQuery();
+
+  const featuredPost = blogPosts?.docs.find(post => post.featuredPost);
   
   const LoadingSkeleton = () => (
     <>
@@ -62,7 +64,7 @@ const AllBlogsPage = () => {
       <hr className="border-[1.5px] border-[#CACACC]" />
 
       {/* Featured Post */}
-      <FeaturedPost post={blogPosts?.docs[0]!}/>
+      <FeaturedPost post={featuredPost!}/>
 
       {/* Blog posts */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
