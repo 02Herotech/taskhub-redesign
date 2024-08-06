@@ -99,8 +99,8 @@ const NewTasksCard = ({ task }: TaskCardProps) => {
                         >
                             <div className="px-2 py-1">
                                 {dropDownItems.map((item, index) => (
-                                    <div className="my-2">
-                                        <div key={index} onClick={item.onClick} className="flex items-center space-x-3 cursor-pointer">
+                                    <div className="my-2" key={index}>
+                                        <div onClick={item.onClick} className="flex items-center space-x-3 cursor-pointer">
                                             <span className="bg-[#140B31] p-1 rounded-full">
                                                 {item.icon}
                                             </span>
