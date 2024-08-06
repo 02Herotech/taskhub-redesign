@@ -4,31 +4,50 @@ import Image from 'next/image';
 import Button from '@/components/global/Button'
 import { HiOutlineLocationMarker } from 'react-icons/hi'
 import { FiCalendar, FiClock } from "react-icons/fi";
-import { useGetTaskByIdQuery } from '@/services/tasks';
+import { useGetTaskByIdQuery, useGetTasksOffersQuery } from '@/services/tasks';
 import { dayOfWeekNames, formatAmount, monthNames, suffixes } from '@/lib/utils';
 import Loading from '@/shared/loading';
 import TaskOffers from '@/components/main/explore/TaskOffers';
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import OfferForm from '@/components/main/explore/OfferForm';
+import { useSelector } from 'react-redux';
+import { RootState } from "@/store";
+import { connectSocket } from "@/lib/socket";
 
 const TaskDetailsPage = ({ params }: { params: { id: string } }) => {
     const [showOfferForm, setShowOfferForm] = useState(false);
     const offerButtonRef = useRef<HTMLDivElement>(null);
     const id = params.id;
     const { data: task, isLoading } = useGetTaskByIdQuery(id as unknown as number);
+    const { data: offers, refetch} = useGetTasksOffersQuery(id as unknown as number);
+    const { profile: user } = useSelector(
+        (state: RootState) => state.userProfile,
+    );
 
-    useEffect(() => {
-        function handleClickOutside(event: MouseEvent) {
-            if (offerButtonRef.current && !offerButtonRef.current.contains(event.target as Node)) {
-                setShowOfferForm(false);
+    const handleSubmitOffer = async (message: string) => {
+        const socket = connectSocket(id as unknown as number);
+
+        const data = {
+            taskId: id,
+            customerId: task?.posterId,
+            serviceProviderId: user?.id,
+            fullName: user?.firstName + " " + user?.lastName,
+            message,
+        };
+
+        if (user && socket) {
+            try {
+                socket.emit("offer", data, () => {});
+                refetch();
+            } catch (error) {
+                console.error('Error submitting offer:', error);
             }
+        } else {
+            console.error('Socket not connected or user not logged in');
         }
 
-        document.addEventListener("mousedown", handleClickOutside);
-        return () => {
-            document.removeEventListener("mousedown", handleClickOutside);
-        };
-    }, []);
+        handleCloseOfferForm();
+    };
 
     if (!task) {
         return (
@@ -44,11 +63,6 @@ const TaskDetailsPage = ({ params }: { params: { id: string } }) => {
 
     const handleCloseOfferForm = () => {
         setShowOfferForm(false);
-    };
-
-    const handleSubmitOffer = (offerAmount: number) => {
-        console.log(`Offer submitted: $${offerAmount}`);
-        // Handle offer submission logic here
     };
 
     const date = task?.taskDate ? new Date(task.taskDate[0], task.taskDate[1] - 1, task.taskDate[2]) : new Date();
@@ -73,55 +87,6 @@ const TaskDetailsPage = ({ params }: { params: { id: string } }) => {
     } else {
         formattedTime = `${hours === 0 ? 12 : hours}:${(minutes < 10 ? '0' : '') + minutes} AM`;
     }
-
-    const offers = [
-        {
-            id: '1',
-            user: {
-                name: 'Daniel Oluchi',
-                avatar: '/path/to/avatar1.jpg',
-            },
-            message: 'I can do it for $2000',
-            timestamp: '10 mins ago',
-        },
-        {
-            id: '2',
-            user: {
-                name: 'Jane Doe',
-                avatar: '/path/to/avatar2.jpg',
-            },
-            message: 'Can I get more information on the kind of pipes you use?',
-            timestamp: '8 mins ago',
-        },
-        {
-            id: '3',
-            user: {
-                name: 'John West',
-                avatar: '/path/to/avatar1.jpg',
-            },
-            message: 'I can do it for $2000',
-            timestamp: '10 mins ago',
-        },
-        {
-            id: '4',
-            user: {
-                name: 'John West',
-                avatar: '/path/to/avatar1.jpg',
-            },
-            message: 'I can do it for $200',
-            timestamp: '10 mins ago',
-        },
-        {
-            id: '5',
-            user: {
-                name: 'John West',
-                avatar: '/path/to/avatar1.jpg',
-            },
-            message: 'I can do it for $4500',
-            timestamp: '10 mins ago',
-        },
-        // ... more offers
-    ]
 
     return (
         <section className="py-20 container font-satoshi">
@@ -197,7 +162,7 @@ const TaskDetailsPage = ({ params }: { params: { id: string } }) => {
                     </div>
                 </>
             )}
-            <TaskOffers offers={offers} />
+            <TaskOffers offers={offers || []} posterId={task?.posterId} currentUserId={user?.id!} taskId={Number(id)} />
         </section>
     )
 }

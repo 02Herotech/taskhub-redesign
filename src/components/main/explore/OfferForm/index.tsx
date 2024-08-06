@@ -4,7 +4,7 @@ import { IoIosCloseCircleOutline } from "react-icons/io";
 
 interface OfferFormProps {
     onClose: () => void;
-    onSubmit: (offer: number) => void;
+    onSubmit: (offer: string) => void;
 }
 
 const OfferForm: React.FC<OfferFormProps> = ({ onClose, onSubmit }) => {
@@ -12,12 +12,12 @@ const OfferForm: React.FC<OfferFormProps> = ({ onClose, onSubmit }) => {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        onSubmit(Number(offerAmount));
+        onSubmit(offerAmount);
         onClose();
     };
 
     return (
-        <div className="fixed inset-0 z-10 bg-black bg-opacity-50 flex items-end sm:items-center justify-center">
+        <div className="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-end sm:items-center justify-center">
             <div className="bg-white w-full sm:w-[500px] rounded-t-3xl lg:rounded-2xl px-5 pb-8 pt-2 transition-all duration-300">
                 <div className="flex items-center justify-between mb-3">
                     <h2 className="font-clashBold text-primary text-start font-bold">Your Offer</h2>

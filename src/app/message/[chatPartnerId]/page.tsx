@@ -20,6 +20,7 @@ import { connectSocket, getSocket } from "@/lib/socket";
 import { GiCheckMark } from "react-icons/gi";
 import { formatTime, formatTimestamp } from "@/utils";
 import { FaCheckDouble } from "react-icons/fa6";
+import { Socket } from "dgram";
 
 type ChatMessagesGroupedType = {
   [date: string]: ChatMessageDisplayedType[];
@@ -217,8 +218,9 @@ const ServiceProviderChat = () => {
 
     return () => {
       socket.off("connect", handleConnect);
-    };
+    }
   }, [user]);
+
 
   // handle load contacts from the database
   const loadContacts = async () => {

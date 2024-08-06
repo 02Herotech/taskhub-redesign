@@ -58,7 +58,7 @@ export const task = createApi({
   reducerPath: "task",
   tagTypes: ["Task"],
   baseQuery: fetchBaseQuery({
-    baseUrl: process.env.NEXT_PUBLIC_API_URL + "/task",
+    baseUrl: process.env.NEXT_PUBLIC_API_URL,
     prepareHeaders: async (headers, { getState, endpoint }) => {
       const session = await getSession();
       //@ts-ignore
@@ -80,55 +80,59 @@ export const task = createApi({
   }),
   endpoints: (builder) => ({
     getActiveTasks: builder.query<GetTasksResponse, GetTasksRequest>({
-      query: (credentials) => getRequest(`/all-active-tasks/${credentials}`),
+      query: (credentials) => getRequest(`/task/all-active-tasks/${credentials}`),
       providesTags: ["Task"],
     }),
     getTaskById: builder.query<GetSingleTasksResponse, number>({
-      query: (id) => getRequest(`/get-task/${id}`),
+      query: (id) => getRequest(`/task/get-task/${id}`),
       providesTags: ["Task"],
     }),
     filterTaskByEarliestDate: builder.query<GetTasksResponse, number>({
-      query: (pageNumber) => getRequest(`/task-date-earliest/${pageNumber}`),
+      query: (pageNumber) => getRequest(`/task/task-date-earliest/${pageNumber}`),
       providesTags: ["Task"],
     }),
     filterTaskByLatestDate: builder.query<GetTasksResponse, number>({
-      query: (pageNumber) => getRequest(`/task-date-latest/${pageNumber}`),
+      query: (pageNumber) => getRequest(`/task/task-date-latest/${pageNumber}`),
       providesTags: ["Task"],
     }),
     filterTaskByPriceAsc: builder.query<GetTasksResponse, number>({
-      query: (pageNumber) => getRequest(`/task-price-asc/${pageNumber}`),
+      query: (pageNumber) => getRequest(`/task/task-price-asc/${pageNumber}`),
       providesTags: ["Task"],
     }),
     filterTaskByPriceDesc: builder.query<GetTasksResponse, number>({
-      query: (pageNumber) => getRequest(`/task-price-desc/${pageNumber}`),
+      query: (pageNumber) => getRequest(`/task/task-price-desc/${pageNumber}`),
       providesTags: ["Task"],
     }),
     getTaskByCustomerId: builder.query<GetCustomerTasksResponse, number>({
-      query: (customerId) => getRequest(`/tasks-by-customerId/${customerId}`),
+      query: (customerId) => getRequest(`/task/tasks-by-customerId/${customerId}`),
       providesTags: ["Task"],
     }),
     getCustomerOngoingTasks: builder.query<GetCustomerOngoingTasksResponse, number>({
-      query: (customerId) => getRequest(`/customer-ongoing-tasks/${customerId}`),
+      query: (customerId) => getRequest(`/task/customer-ongoing-tasks/${customerId}`),
       providesTags: ["Task"],
     }),
     getCustomerCompletedTasks: builder.query<GetCustomerTasksResponse, number>({
-      query: (customerId) => getRequest(`/customer-completed-tasks/${customerId}`),
+      query: (customerId) => getRequest(`/task/customer-completed-tasks/${customerId}`),
       providesTags: ["Task"],
     }),
     deleteTask: builder.mutation<void, number>({
-      query: (id) => postRequest(`/delete-task/${id}`,{}),
+      query: (id) => postRequest(`/task/delete-task/${id}`,{}),
       invalidatesTags: ["Task"],
     }),
     searchTaskByText: builder.query<GetTasksResponse, GetTaskByTextRequest>({
-      query: (credentials) => getRequest(`/text/${credentials.pageNumber}?text=${credentials.text}`),
+      query: (credentials) => getRequest(`/task/text/${credentials.pageNumber}?text=${credentials.text}`),
       providesTags: ["Task"],
     }),
     updateTask: builder.mutation<void, { id: number; details: FormData }>({
-      query: (credentials) => patchRequest(`/update-task/${credentials.id}`, credentials.details),
+      query: (credentials) => patchRequest(`/task/update-task/${credentials.id}`, credentials.details),
       invalidatesTags: ["Task"],
     }),
     filterTasks: builder.query<GetTasksResponse, GetFilterTasksRequest>({
-      query: (credentials) => getRequest(`/filter-tasks/${credentials.pageNumber}?category=${credentials.category}?typeOfService=${credentials.typeOfService}?location=${credentials.location}?minPrice=${credentials.minPrice}?maxPrice=${credentials.maxPrice}`),
+      query: (credentials) => getRequest(`/task/filter-tasks/${credentials.pageNumber}?category=${credentials.category}?typeOfService=${credentials.typeOfService}?location=${credentials.location}?minPrice=${credentials.minPrice}?maxPrice=${credentials.maxPrice}`),
+      providesTags: ["Task"],
+    }),
+    getTasksOffers: builder.query<Offer[], number>({
+      query: (id) => getRequest(`/chat/offer/${id}`),
       providesTags: ["Task"],
     }),
   }),
@@ -147,5 +151,6 @@ export const {
   useDeleteTaskMutation,
   useSearchTaskByTextQuery,
   useFilterTasksQuery,
-  useUpdateTaskMutation
+  useUpdateTaskMutation,
+  useGetTasksOffersQuery,
 } = task;
