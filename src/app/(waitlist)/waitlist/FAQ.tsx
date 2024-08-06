@@ -20,9 +20,9 @@ const faqlists: { question: string; answer: string }[] = [
       "Yes, your transactions are safe. We use industry-standard encryption and secure payment processing to protect your data. Our payment system is PCI compliant, and we regularly monitor and update our security measures to ensure your information remains secure.",
   },
   {
-    question: "Can i list all my products on Olojà?",
+    question: "Can I list all my products on Olojà?",
     answer:
-      "Yes you can showcase your entire range of legally permitted products on Oloja Hub via your personalized virtual store.",
+      "Yes, you can showcase your entire range of legally permitted products on Oloja Hub via your personalized virtual store.",
   },
   {
     question: "Are there ways to verify service providers on your platform?",

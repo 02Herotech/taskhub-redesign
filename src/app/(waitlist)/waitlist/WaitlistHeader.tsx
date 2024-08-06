@@ -1,7 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
-import { ReactTyped } from "react-typed";
 import TypedAnimation from "./TypedAnimation";
 
 const WaitlistHeader = () => {
@@ -40,7 +39,7 @@ const WaitlistHeader = () => {
           alt="olojà"
           width={160}
           height={160}
-          className=" absolute left-20 top-20 max-w-20 rounded-sm max-sm:left-16 max-sm:top-14 max-sm:w-8"
+          className=" absolute left-20 top-[5.5rem] max-w-20 rounded-sm max-sm:left-16 max-sm:top-14 max-sm:w-8"
         />
         <Image
           src="/assets/images/waitlist/Waitlist11.png"
