@@ -42,7 +42,7 @@ const WaitlistHeader = () => {
           className=" absolute left-20 top-[5.5rem] max-w-20 rounded-sm max-sm:left-16 max-sm:top-14 max-sm:w-8"
         />
         <Image
-          src="/assets/images/waitlist/Waitlistaaa.png"
+          src="/assets/images/waitlist/Waitlistaaaa.png"
           alt=""
           width={1200}
           height={1200}
