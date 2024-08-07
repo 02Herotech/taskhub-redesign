@@ -32,13 +32,13 @@ declare interface Offer {
   serviceProviderId: number;
   fullName: string;
   message: string;
-  createdAt: string;
+  createdAt: number[];
   offerThreadList: {
     taskId: number;
     offerId: string;
     message: string;
     fullName: string;
     userId: number;
-    timeStamp: string;
+    timeStamp: number[];
   }[];
 }

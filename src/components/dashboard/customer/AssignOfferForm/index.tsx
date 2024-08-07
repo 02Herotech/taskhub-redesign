@@ -1,49 +1,51 @@
 import React, { useState } from 'react';
 import Button from '@/components/global/Button';
 import { IoIosCloseCircleOutline } from "react-icons/io";
-
-interface User {
-    name: string;
-    avatar: string;
-}
-
-interface Offer {
-    id: string;
-    user: User;
-    message: string;
-    timestamp: string;
-}
+import Image from 'next/image';
+import { useAssignTaskMutation } from '@/services/tasks';
+import SuccessModal from '../AssignSuccessModal';
 
 interface AssignOfferFormProps {
     onClose: () => void;
     onAssign: (offerId: string) => void;
     offers: Offer[];
+    taskId: number;
 }
 
-const AssignOfferForm: React.FC<AssignOfferFormProps> = ({ onClose, onAssign, offers }) => {
+const AssignOfferForm: React.FC<AssignOfferFormProps> = ({ onClose, onAssign, offers, taskId }) => {
     const [selectedOffer, setSelectedOffer] = useState<string | null>(null);
     const [showConfirmation, setShowConfirmation] = useState(false);
+    const [showSuccessModal, setShowSuccessModal] = useState(false);
+    const [assignTask] = useAssignTaskMutation();
 
     const handleSelectOffer = (offerId: string) => {
         setSelectedOffer(offerId);
         setShowConfirmation(true);
     };
 
-    const handleConfirmAssign = () => {
-        if (selectedOffer) {
-            onAssign(selectedOffer);
-            onClose();
-        }
-    };
+    const handleConfirmAssign = async () => {
+        if (!selectedOffer) return; 
+        const selectedOfferData = offers.find(offer => offer.id === selectedOffer);
 
-    const extractOfferAmount = (message: string) => {
-        const match = message.match(/\$(\d+)/);
-        return match ? match[1] : 'N/A';
+        if (!selectedOfferData) return; 
+
+        try {
+            const body = {
+                taskId,
+                serviceProviderId: selectedOfferData.serviceProviderId, 
+            };
+            await assignTask(body).unwrap();
+            onAssign(selectedOffer);
+            setShowConfirmation(false);
+            setShowSuccessModal(true); 
+        } catch (error) {
+            console.error('Error assigning task:', error);
+        }
     };
 
     return (
         <div className="fixed inset-0 z-10 bg-black bg-opacity-50 flex items-center justify-center" onClick={onClose}>
-            <div className="bg-white w-full max-w-[600px] rounded-2xl px-5 pb-8 pt-2 pr-8 transition-all duration-300 h-[70vh]" onClick={(e) => e.stopPropagation()}>
+            <div className="bg-white w-full max-w-[600px] rounded-2xl px-5 pb-8 pt-2 pr-8 transition-all duration-300 max-h-[70vh]" onClick={(e) => e.stopPropagation()}>
                 <div className="flex items-center justify-between mb-3">
                     <h2 className="font-clashBold text-primary text-start font-bold">Assign Task</h2>
                     <div className="bg-[#EBE9F4] p-2 rounded-full" onClick={onClose}>
@@ -56,11 +58,15 @@ const AssignOfferForm: React.FC<AssignOfferFormProps> = ({ onClose, onAssign, of
                         {offers.map((offer) => (
                             <div key={offer.id} className="flex items-center justify-between p-3 border rounded-lg">
                                 <div className="flex items-center space-x-3">
-                                    <img src={offer.user.avatar} alt={offer.user.name} className="w-10 h-10 rounded-full" />
+                                    <Image
+                                        src="/assets/images/placeholder.jpeg"
+                                        alt={offer.fullName}
+                                        width={32}
+                                        height={32}
+                                        className="rounded-full mr-2"
+                                    />
                                     <div>
-                                        <p className="font-semibold">{offer.user.name}</p>
-                                        <p className="text-sm text-gray-600">Offer: ${extractOfferAmount(offer.message)}</p>
-                                        <p className="text-xs text-gray-500">{offer.timestamp}</p>
+                                        <p className="font-semibold">{offer.fullName}</p>
                                     </div>
                                 </div>
                                 <Button size='sm' onClick={() => handleSelectOffer(offer.id)} className="rounded-full">
@@ -74,8 +80,7 @@ const AssignOfferForm: React.FC<AssignOfferFormProps> = ({ onClose, onAssign, of
                         <h3 className="font-semibold">Are you sure you want to assign this task?</h3>
                         {selectedOffer && (
                             <div>
-                                <p>You are about to assign this task to {offers.find(o => o.id === selectedOffer)?.user.name}.</p>
-                                <p>Offer: ${extractOfferAmount(offers.find(o => o.id === selectedOffer)?.message || '')}</p>
+                                <p>You are about to assign this task to {offers.find(o => o.id === selectedOffer)?.fullName}.</p>
                             </div>
                         )}
                         <div className="flex justify-end space-x-3">
@@ -89,6 +94,10 @@ const AssignOfferForm: React.FC<AssignOfferFormProps> = ({ onClose, onAssign, of
                     </div>
                 )}
             </div>
+
+            {showSuccessModal && (
+                <SuccessModal onClose={() => setShowSuccessModal(false)} /> 
+            )}
         </div>
     );
 };
