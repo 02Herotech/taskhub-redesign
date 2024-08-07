@@ -26,7 +26,8 @@ const faqlists: { question: string; answer: string }[] = [
   },
   {
     question: "Are there ways to verify service providers on your platform?",
-    answer: "Pending",
+    answer:
+      "Service providers undergo identity verification using their identification documents.",
   },
 ];
 
