@@ -10,6 +10,8 @@ import { dayOfWeekNames, formatAmount, monthNames, suffixes } from "@/lib/utils"
 import { CustomerTasks } from "@/types/services/tasks";
 import Popup from "@/components/global/Popup";
 import EditTaskForm from "../EditTaskForm";
+import { useRouter } from "next/navigation";
+import { IoEye } from "react-icons/io5";
 
 interface TaskCardProps {
     task: CustomerTasks;
@@ -22,6 +24,7 @@ type DropDownItem = {
 };
 
 const NewTasksCard = ({ task }: TaskCardProps) => {
+    const router = useRouter();
     const dateArray = task.taskDate;
     let date: Date;
     let formattedDate: string;
@@ -38,13 +41,15 @@ const NewTasksCard = ({ task }: TaskCardProps) => {
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
-    // console.log("current task:", task)
-
-    // const day = date.getDate();
-    // const daySuffix = (day === 11 || day === 12 || day === 13) ? "th" : suffixes[day % 10] || suffixes[0];
-    // const formattedDate = `On ${dayOfWeekNames[date.getDay()]}, ${monthNames[date.getMonth()]} ${day}${daySuffix}`;
-
     const dropDownItems: DropDownItem[] = [
+        {
+            title: "View Task",
+            onClick: () => {
+                router.push(`/customer/tasks/${task.id}`);
+                setIsDropdownOpen(false);
+            },
+            icon: <IoEye className="text-white size-4 cursor-pointer" />,
+        },
         {
             title: "Edit Task",
             onClick: () => {
@@ -94,11 +99,13 @@ const NewTasksCard = ({ task }: TaskCardProps) => {
                         >
                             <div className="px-2 py-1">
                                 {dropDownItems.map((item, index) => (
-                                    <div key={index} onClick={item.onClick} className="flex items-center space-x-3 cursor-pointer">
-                                        <span className="bg-[#140B31] p-1 rounded-full">
-                                            {item.icon}
-                                        </span>
-                                        <span className='text-sm text-[#140B31] font-satoshiMedium'>{item.title}</span>
+                                    <div className="my-2" key={index}>
+                                        <div onClick={item.onClick} className="flex items-center space-x-3 cursor-pointer">
+                                            <span className="bg-[#140B31] p-1 rounded-full">
+                                                {item.icon}
+                                            </span>
+                                            <span className='text-sm text-[#140B31] font-satoshiMedium'>{item.title}</span>
+                                        </div>
                                     </div>
                                 ))}
                             </div>

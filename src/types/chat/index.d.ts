@@ -24,3 +24,21 @@ declare interface ChatMessageDisplayedType {
   time: string | number[];
   senderId: number;
 }
+
+declare interface Offer {
+  id: string;
+  taskId: number;
+  customerId: number;
+  serviceProviderId: number;
+  fullName: string;
+  message: string;
+  createdAt: string;
+  offerThreadList: {
+    taskId: number;
+    offerId: string;
+    message: string;
+    fullName: string;
+    userId: number;
+    timeStamp: string;
+  }[];
+}
