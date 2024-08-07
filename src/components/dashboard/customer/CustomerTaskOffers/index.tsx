@@ -9,14 +9,13 @@ import { useGetTasksOffersQuery } from '@/services/tasks';
 import { formatTimeAgo } from '@/lib/utils';
 
 interface OffersProps {
-    posterId: number;
-    currentUserId: number;
     taskId: number;
 }
 
-const OfferMessage: FC<{ message: Offer | Offer['offerThreadList'][0]; isThread: boolean }> = ({
+const OfferMessage: FC<{ message: Offer | Offer['offerThreadList'][0]; isThread: boolean; offer?: Offer}> = ({
     message,
     isThread,
+    offer
 }) => {
     const timestamp = isThread
         ? (message as Offer['offerThreadList'][0]).timeStamp
@@ -48,12 +47,14 @@ const OfferMessage: FC<{ message: Offer | Offer['offerThreadList'][0]; isThread:
     );
 };
 
-const TaskOffers: FC<OffersProps> = ({ currentUserId, taskId }) => {
+const CustomerTaskOffers: FC<OffersProps> = ({ taskId }) => {
     const [replyText, setReplyText] = useState<string>('');
     const [openReplyModal, setOpenReplyModal] = useState<{ [key: string]: boolean }>({});
     const { profile: user } = useSelector((state: RootState) => state.userProfile);
     const { data: offers, refetch } = useGetTasksOffersQuery(taskId);
     const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+    console.log(offers);
 
     // Use effect to focus on the textarea when the modal opens
     useEffect(() => {
@@ -103,11 +104,9 @@ const TaskOffers: FC<OffersProps> = ({ currentUserId, taskId }) => {
                 {offers?.map((offer) => (
                     <div key={offer.id} className="space-y-8">
                         <OfferMessage message={offer} isThread={false} />
-                        {offer.serviceProviderId === currentUserId && (
-                            <div className="mt-2">
-                                <h2 onClick={() => setOpenReplyModal((prev) => ({ ...prev, [offer.id]: true }))} className='text-primary cursor-pointer font-semibold'>Reply</h2>
-                            </div>
-                        )}
+                        <div className="mt-2">
+                            <h2 onClick={() => setOpenReplyModal((prev) => ({ ...prev, [offer.id]: true }))} className='text-primary cursor-pointer font-semibold'>Reply</h2>
+                        </div>
                         <div className="border-l-2 border-gray-300 pl-4">
                             {offer.offerThreadList.map((thread) => (
                                 <div className="mb-4" key={thread.message}>
@@ -128,7 +127,7 @@ const TaskOffers: FC<OffersProps> = ({ currentUserId, taskId }) => {
                                     <div>
                                         <textarea
                                             rows={5}
-                                            
+                                            ref={textareaRef}
                                             value={replyText}
                                             onChange={(e) => setReplyText(e.target.value)}
                                             className="w-full p-2 border border-primary rounded-xl mb-4"
@@ -146,4 +145,4 @@ const TaskOffers: FC<OffersProps> = ({ currentUserId, taskId }) => {
     );
 };
 
-export default TaskOffers;
+export default CustomerTaskOffers;

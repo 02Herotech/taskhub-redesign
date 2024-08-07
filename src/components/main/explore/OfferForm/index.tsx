@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Button from '@/components/global/Button';
 import { IoIosCloseCircleOutline } from "react-icons/io";
 
@@ -9,6 +9,12 @@ interface OfferFormProps {
 
 const OfferForm: React.FC<OfferFormProps> = ({ onClose, onSubmit }) => {
     const [offerAmount, setOfferAmount] = useState('');
+    const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+    // Use effect to focus on the textarea when the modal opens
+    useEffect(() => {
+        textareaRef.current?.focus();
+    }, []);
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -28,6 +34,7 @@ const OfferForm: React.FC<OfferFormProps> = ({ onClose, onSubmit }) => {
                 <form onSubmit={handleSubmit}>
                     <textarea
                         rows={5}
+                        ref={textareaRef}
                         value={offerAmount}
                         onChange={(e) => setOfferAmount(e.target.value)}
                         className="w-full p-2 border border-primary rounded-xl mb-4"
