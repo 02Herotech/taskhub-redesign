@@ -26,8 +26,7 @@ const faqlists: { question: string; answer: string }[] = [
   },
   {
     question: "Are there ways to verify service providers on your platform?",
-    answer:
-      "Service providers undergo identity verification using their identification documents.",
+    answer: "Yes, we verify the service providers on Oloja.",
   },
 ];
 
