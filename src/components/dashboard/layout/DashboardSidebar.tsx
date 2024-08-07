@@ -80,7 +80,7 @@ const DashboardSidebar = () => {
               <Link
                 key={item.label}
                 href={item.link}
-                className={`flex items-center  gap-4 rounded-md px-4 py-3 pl-16 text-sm  font-medium text-white transition-all duration-300 max-md:text-sm ${
+                className={`flex items-center gap-4 rounded-md px-4 py-3 pl-16 text-sm  font-medium text-white transition-all duration-300 max-md:text-sm ${
                   pathname === item.link
                     ? "bg-yellow-500 hover:bg-opacity-90"
                     : "hover:bg-violet-950"
@@ -95,7 +95,7 @@ const DashboardSidebar = () => {
         <div>
           <button
             onClick={handleLogUserOut}
-            className="flex   w-full items-center gap-4 rounded-md px-4 py-3 font-medium  text-white transition-all duration-300 hover:bg-violet-950 max-md:text-sm"
+            className="flex w-full items-center gap-4 rounded-md px-4 py-3 font-medium  text-white transition-all duration-300 hover:bg-violet-950 max-md:text-sm"
           >
             <span>
               <BiLogOut className="size-7" />
