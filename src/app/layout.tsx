@@ -3,8 +3,8 @@ import "./globals.css";
 import Provider from "@/store/Provider";
 
 export const metadata: Metadata = {
-  title: "Taskhub",
-  description: "Taskhub is a task management and booking app built with Next.js.",
+  title: "Olojà",
+  description: "Olojà is an AI-driven platform that transcends boundaries, connecting diverse communities with a world of authentic products and services.",
 };
 
 export default function RootLayout({
