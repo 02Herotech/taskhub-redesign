@@ -29,6 +29,8 @@ export default withAuth(
 );
 
 export const config = {
-    // Apply middleware to all routes
-    matcher: ['/((?!api|_next/static|_next/image|assets|favicon.ico).*)'],
+  // Apply middleware to all routes except for API routes and static assets
+  matcher: [
+    '/((?!api|_next/static|_next/image|assets|favicon.ico|assets/images|assets/icons).*)',
+  ],
 };
