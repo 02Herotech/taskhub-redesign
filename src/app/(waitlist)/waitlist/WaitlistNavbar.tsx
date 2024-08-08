@@ -7,11 +7,11 @@ const WaitlistNavbar = () => {
     <header className="flex items-center justify-between gap-4 py-4">
       <div className="text-white ">
         <Image
-          src={"/assets/images/waitlist/PF - Oloja 240731 - Logo Watermark.png"}
+          src={"/assets/images/waitlist/Layer_x0020_1.png"}
           alt="olojà"
           width={160}
           height={160}
-          className="max-w-20 rounded-sm bg-white p-1"
+          className="max-w-28 rounded-sm"
         />
       </div>
       <nav className="flex gap-8 font-clashMedium text-white max-md:hidden">
