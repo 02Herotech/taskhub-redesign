@@ -6,7 +6,7 @@ const WaitlistNavbar = () => {
   return (
     <header className="relative flex items-center justify-between gap-4 py-4">
       <Image
-        src={"/assets/images/waitlist/overlay logo.png"}
+        src={"/assets/images/waitlist/Frame 1618869733.png"}
         alt="olojà"
         width={160}
         height={160}
