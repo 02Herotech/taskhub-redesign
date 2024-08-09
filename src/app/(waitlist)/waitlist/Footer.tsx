@@ -57,7 +57,7 @@ const Footer = () => {
         <ScrollToTop />
       </div>
       <Image
-        src={"/assets/images/waitlist/Olojà.png"}
+        src={"/assets/images/waitlist/Olójà.png"}
         alt="oloja"
         width={1500}
         height={1500}
