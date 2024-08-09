@@ -6,13 +6,13 @@ import { BiChevronDown } from "react-icons/bi";
 
 const faqlists: { question: string; answer: string }[] = [
   {
-    question: "What is Olojà?",
+    question: "What is Olójà?",
     answer:
-      "Oloja is an AI-driven platform that transcends boundaries, connecting diverse communities with a world of authentic products and services.",
+      "Olójà is an AI-driven platform that transcends boundaries, connecting diverse communities with a world of authentic products and services.",
   },
   {
-    question: "Are there fees for using Olojà?",
-    answer: "Oloja Hub charges fees for renting a shop and service listings.",
+    question: "Are there fees for using Olójà?",
+    answer: "Olójà Hub charges fees for renting a shop and service listings.",
   },
   {
     question: "Are my transactions safe?",
@@ -20,13 +20,13 @@ const faqlists: { question: string; answer: string }[] = [
       "Yes, your transactions are safe. We use industry-standard encryption and secure payment processing to protect your data. Our payment system is PCI compliant, and we regularly monitor and update our security measures to ensure your information remains secure.",
   },
   {
-    question: "Can I list all my products on Olojà?",
+    question: "Can I list all my products on Olójà?",
     answer:
-      "Yes, you can showcase your entire range of legally permitted products on Oloja Hub via your personalized virtual store.",
+      "Yes, you can showcase your entire range of legally permitted products on Olójà Hub via your personalized virtual store.",
   },
   {
     question: "Are there ways to verify service providers on your platform?",
-    answer: "Yes, we verify the service providers on Oloja.",
+    answer: "Yes, we verify the service providers on Olójà.",
   },
 ];
 

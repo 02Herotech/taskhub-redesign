@@ -6,17 +6,17 @@ import TaskhubCanGlowingBox from "@/components/homepage/TaskhubCan/TaskhubCanGlo
 
 const Feature = () => {
   return (
-    <div className={` w-full bg-[#CEFDF930] `}>
+    <div className={` w-full `}>
       <h1 className="block px-12 py-10 text-center font-clashMedium text-[20px] font-[900] uppercase text-[#381F8C] lg:hidden">
-        With OLOJÀ you can:
+        With OLÓJÀ you can:
       </h1>
 
       <div
-        className={`font-SatoshiBold mx-auto flex max-w-7xl flex-wrap-reverse items-start  justify-between px-12 pb-20 lg:flex-nowrap lg:pt-[60px] xl:px-8 `}
+        className={`font-SatoshiBold mx-auto flex max-w-7xl flex-wrap-reverse items-start justify-between  gap-10 px-12 pb-20 lg:flex-nowrap lg:pt-[60px] xl:px-8 `}
       >
         <div className="flex w-[400px] flex-col gap-5 space-y-8 xl:w-1/2">
           <h1 className="hidden font-clashSemiBold uppercase text-[#381F8C]  lg:block lg:text-[55px] xl:text-[64px] ">
-            With OLO<span className="text-[#FE9B07]">JÀ,</span>
+            With OLÓ<span className="text-[#FE9B07]">JÀ,</span>
             <br /> you can:
           </h1>
           <div className="flex flex-col gap-5 lg:space-y-6">
@@ -65,7 +65,7 @@ const Feature = () => {
         </div>
 
         {/* Large screen Images  part*/}
-        <div className=" hidden w-[500px] lg:block xl:w-1/2    ">
+        <div className=" hidden w-[500px] px-4 lg:block xl:w-1/2    ">
           <div className="relative">
             <div className="mt-20 flex justify-end  ">
               <div className="flex rounded-[30px] bg-white shadow-md ">
