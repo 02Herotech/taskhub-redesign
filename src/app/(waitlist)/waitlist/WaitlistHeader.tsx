@@ -14,8 +14,8 @@ const WaitlistHeader = () => {
       </h2>
       <p className="mx-auto max-w-2xl text-center text-xl text-white md:text-2xl">
         We provide a dynamic AI enabled platform that bridges the gap between
-        individuals, businesses, and services, Fostering connections, driving
-        growth and empowering communities.
+        individuals, businesses, and services, where you can buy, sell and gain
+        business education.
       </p>
       <div className="mx-auto flex w-fit gap-6">
         <Link

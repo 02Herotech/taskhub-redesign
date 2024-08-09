@@ -11,7 +11,7 @@ const Footer = () => {
             Be a part of our online community
           </h2>
           <p className=" text-violet-light">
-            Oloja is an AI-driven platform that transcends boundaries,
+            Olójà is an AI-driven platform that transcends boundaries,
             connecting diverse communities with a world of authentic products
             and services
           </p>
