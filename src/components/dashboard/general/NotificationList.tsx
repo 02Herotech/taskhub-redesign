@@ -31,6 +31,7 @@ const NotificationList = ({
   const session = useSession();
   const isServiceProvider =
     session?.data?.user?.user?.roles[0] === "SERVICE_PROVIDER";
+    console.log("NotifiacationList", notifications);
 
   return (
     <div className="flex flex-col gap-4 pb-4">

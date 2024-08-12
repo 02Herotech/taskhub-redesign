@@ -7,6 +7,7 @@ import Button from '@/components/global/Button';
 import { IoIosCloseCircleOutline } from 'react-icons/io';
 import { useGetTasksOffersQuery } from '@/services/tasks';
 import { formatTimeAgo } from '@/lib/utils';
+import { useSession } from 'next-auth/react';
 
 interface OffersProps {
     posterId: number;
@@ -18,9 +19,10 @@ const OfferMessage: FC<{ message: Offer | Offer['offerThreadList'][0]; isThread:
     message,
     isThread,
 }) => {
-    const timestamp = isThread
-        ? (message as Offer['offerThreadList'][0]).timeStamp
-        : (message as Offer).createdAt;
+    const session = useSession()
+    const customerProfileImage = session.data?.user.user.profileImage
+    const timestamp = (message as Offer).createdAt;
+    const profileImageUrl = isThread ? customerProfileImage : (message as Offer).service_provider_profile_Image;
 
     return (
         <div className={`flex ${isThread ? 'justify-end' : 'justify-start'}`}>
@@ -28,16 +30,16 @@ const OfferMessage: FC<{ message: Offer | Offer['offerThreadList'][0]; isThread:
                 <div className="flex items-center justify-between mb-2">
                     <div className="flex items-center">
                         <Image
-                            src="/assets/images/placeholder.jpeg"
+                            src={profileImageUrl || ""}
                             alt={message.fullName}
-                            width={32}
-                            height={32}
-                            className="rounded-full mr-2"
+                            width={64} 
+                            height={64} 
+                            className="rounded-full mr-2 object-cover w-8 h-8"
                         />
                         <span className="font-semibold">{message.fullName}</span>
                     </div>
                     <span className="text-primary font-semibold text-sm">
-                        {formatTimeAgo(timestamp)}
+                        {/* {formatTimeAgo(timestamp)} */}
                     </span>
                 </div>
                 <div className={`p-3 rounded-lg ${isThread ? 'bg-[#F7DBB2]' : 'bg-[#EBE9F4]'}`}>

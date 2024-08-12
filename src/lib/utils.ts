@@ -160,14 +160,26 @@ export const formatTimeAgo = (timestamp: Timestamp): string => {
 		return 'Invalid date';
 	}
 
+	// Create a copy of the timestamp to avoid mutating the original
+	const updatedTimestamp = [...timestamp];
+
+	// Push the timestamp forward by 1 hour
+	updatedTimestamp[3] = (updatedTimestamp[3] || 0) + 1; // Increment the hour value by 1
+
+	// Handle overflow for hours
+	if (updatedTimestamp[3] >= 24) {
+		updatedTimestamp[3] = 0; // Reset hour to 0
+		updatedTimestamp[2] = (updatedTimestamp[2] || 1) + 1; // Increment the day
+	}
+
 	const date = new Date(
-		timestamp[0], // year
-		(timestamp[1] || 1) - 1, // month (0-indexed), default to January if not provided
-		timestamp[2] || 1, // day, default to 1 if not provided
-		timestamp[3] || 0, // hour, default to 0 if not provided
-		timestamp[4] || 0, // minute, default to 0 if not provided
-		timestamp[5] || 0, // second, default to 0 if not provided
-		(timestamp[6] || 0) / 1000000 // milliseconds, default to 0 if not provided
+		updatedTimestamp[0], // year
+		(updatedTimestamp[1] || 1) - 1, // month (0-indexed), default to January if not provided
+		updatedTimestamp[2] || 1, // day, default to 1 if not provided
+		updatedTimestamp[3] || 0, // hour, default to 0 if not provided
+		updatedTimestamp[4] || 0, // minute, default to 0 if not provided
+		updatedTimestamp[5] || 0, // second, default to 0 if not provided
+		(updatedTimestamp[6] || 0) / 1000000 // milliseconds, default to 0 if not provided
 	);
 
 	const now = new Date();
