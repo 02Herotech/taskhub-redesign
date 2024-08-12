@@ -128,6 +128,8 @@ const NotificationComponent = () => {
     // eslint-disable-next-line
   }, [bookingIds, userBookings]);
 
+  console.log(notifications);
+
   const handleChangeCategory = (category: string) => {
     setCurrentCategory(category);
     const newNotifications = allNotifications.filter((notification) => {
