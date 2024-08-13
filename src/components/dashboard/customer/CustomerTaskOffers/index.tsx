@@ -13,10 +13,9 @@ interface OffersProps {
     taskId: number;
 }
 
-const OfferMessage: FC<{ message: Offer | Offer['offerThreadList'][0]; isThread: boolean; offer?: Offer}> = ({
+const OfferMessage: FC<{ message: Offer | Offer['offerThreadList'][0]; isThread: boolean;}> = ({
     message,
     isThread,
-    offer
 }) => {
     const session = useSession()
     const customerProfileImage = session.data?.user.user.profileImage
@@ -59,7 +58,7 @@ const CustomerTaskOffers: FC<OffersProps> = ({ taskId }) => {
     const { data: offers, refetch } = useGetTasksOffersQuery(taskId);
     const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-    console.log(offers);
+    console.log("offers", offers);
 
     // Use effect to focus on the textarea when the modal opens
     useEffect(() => {
@@ -89,18 +88,18 @@ const CustomerTaskOffers: FC<OffersProps> = ({ taskId }) => {
                     // Optionally, you can clear the reply text or update the UI here
                     refetch();
                 });
+                setOpenReplyModal((prev) => ({ ...prev, [offerId]: false }))
+                setReplyText('');
             } catch (error) {
                 console.error('Error submitting reply:', error);
             }
         } else {
             console.error('Socket not connected or user not logged in');
         }
-        setReplyText('');
-        setOpenReplyModal((prev) => ({ ...prev, [offerId]: false }))
     };
 
     return (
-        <div className="max-h-96 overflow-y-scroll small-scrollbar pr-5 mt-14">
+        <div className="max-h-96 overflow-y-auto small-scrollbar pr-5 mt-14">
             <div className="flex justify-between items-center mb-6">
                 <h2 className="text-xl font-bold text-[#E58C06] lg:text-3xl">Offers</h2>
                 <button className="text-lg font-bold text-[#E58C06] lg:text-2xl">View all</button>

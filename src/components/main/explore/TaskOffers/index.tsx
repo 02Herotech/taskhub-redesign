@@ -39,7 +39,7 @@ const OfferMessage: FC<{ message: Offer | Offer['offerThreadList'][0]; isThread:
                         <span className="font-semibold">{message.fullName}</span>
                     </div>
                     <span className="text-primary font-semibold text-sm">
-                        {/* {formatTimeAgo(timestamp)} */}
+                        {formatTimeAgo(timestamp)}
                     </span>
                 </div>
                 <div className={`p-3 rounded-lg ${isThread ? 'bg-[#F7DBB2]' : 'bg-[#EBE9F4]'}`}>
@@ -56,7 +56,7 @@ const TaskOffers: FC<OffersProps> = ({ currentUserId, taskId }) => {
     const { profile: user } = useSelector((state: RootState) => state.userProfile);
     const { data: offers, refetch } = useGetTasksOffersQuery(taskId);
     const textareaRef = useRef<HTMLTextAreaElement>(null);
-
+    
     // Use effect to focus on the textarea when the modal opens
     useEffect(() => {
         const openOfferId = Object.keys(openReplyModal).find(id => openReplyModal[id]);

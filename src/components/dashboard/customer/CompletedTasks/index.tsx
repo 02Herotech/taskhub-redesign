@@ -1,13 +1,14 @@
 "use client";
 
 import { useGetCustomerCompletedTasksQuery } from "@/services/tasks";
-import { useSession } from "next-auth/react";
 import Loading from "@/shared/loading";
 import CompletedTasksCard from "../CompletedTasksCard";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store";
 
 const TaskList: React.FC = () => {
-    const session = useSession();
-    const userId = session.data?.user?.user.id;
+    const userProfile = useSelector((state: RootState) => state.userProfile);
+    const userId = userProfile.profile?.customerId
 
     const { data: tasksData, isLoading } = useGetCustomerCompletedTasksQuery(userId!, {
         skip: !userId, // This will skip the query if userId is not available
