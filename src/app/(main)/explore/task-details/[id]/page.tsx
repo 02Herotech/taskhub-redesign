@@ -30,7 +30,7 @@ const TaskDetailsPage = ({ params }: { params: { id: string } }) => {
         const data = {
             taskId: id,
             customerId: task?.posterId,
-            serviceProviderId: user?.id,
+            serviceProviderId: user?.serviceProviderId,
             fullName: user?.firstName + " " + user?.lastName,
             message,
         };

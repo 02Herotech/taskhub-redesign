@@ -24,20 +24,20 @@ const AssignOfferForm: React.FC<AssignOfferFormProps> = ({ onClose, onAssign, of
     };
 
     const handleConfirmAssign = async () => {
-        if (!selectedOffer) return; 
+        if (!selectedOffer) return;
         const selectedOfferData = offers.find(offer => offer.id === selectedOffer);
 
-        if (!selectedOfferData) return; 
+        if (!selectedOfferData) return;
 
         try {
             const body = {
                 taskId,
-                serviceProviderId: selectedOfferData.serviceProviderId, 
+                serviceProviderId: selectedOfferData.serviceProviderId,
             };
             await assignTask(body).unwrap();
             onAssign(selectedOffer);
             setShowConfirmation(false);
-            setShowSuccessModal(true); 
+            setShowSuccessModal(true);
         } catch (error) {
             console.error('Error assigning task:', error);
         }
@@ -55,25 +55,30 @@ const AssignOfferForm: React.FC<AssignOfferFormProps> = ({ onClose, onAssign, of
                 {!showConfirmation ? (
                     <div className="space-y-4 h-80 overflow-y-auto small-scrollbar">
                         <h3 className="font-semibold">Select a service provider to assign the task:</h3>
-                        {offers.map((offer) => (
-                            <div key={offer.id} className="flex items-center justify-between p-3 border rounded-lg">
-                                <div className="flex items-center space-x-3">
-                                    <Image
-                                        src="/assets/images/placeholder.jpeg"
-                                        alt={offer.fullName}
-                                        width={32}
-                                        height={32}
-                                        className="rounded-full mr-2"
-                                    />
-                                    <div>
-                                        <p className="font-semibold">{offer.fullName}</p>
+                        {offers.length > 0 ? (
+                            offers.map((offer) => (
+
+                                <div key={offer.id} className="flex items-center justify-between p-3 border rounded-lg">
+                                    <div className="flex items-center space-x-3">
+                                        <Image
+                                            src="/assets/images/placeholder.jpeg"
+                                            alt={offer.fullName}
+                                            width={32}
+                                            height={32}
+                                            className="rounded-full mr-2"
+                                        />
+                                        <div>
+                                            <p className="font-semibold">{offer.fullName}</p>
+                                        </div>
                                     </div>
+                                    <Button size='sm' onClick={() => handleSelectOffer(offer.id)} className="rounded-full">
+                                        Assign
+                                    </Button>
                                 </div>
-                                <Button size='sm' onClick={() => handleSelectOffer(offer.id)} className="rounded-full">
-                                    Assign
-                                </Button>
-                            </div>
-                        ))}
+                            ))
+                        ) : (
+                            <p className="font-semibold">No available offers to assign.</p>
+                        )}
                     </div>
                 ) : (
                     <div className="space-y-4">
@@ -96,7 +101,7 @@ const AssignOfferForm: React.FC<AssignOfferFormProps> = ({ onClose, onAssign, of
             </div>
 
             {showSuccessModal && (
-                <SuccessModal onClose={() => setShowSuccessModal(false)} /> 
+                <SuccessModal onClose={() => setShowSuccessModal(false)} />
             )}
         </div>
     );

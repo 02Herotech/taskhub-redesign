@@ -7,19 +7,23 @@ import Button from '@/components/global/Button';
 import { IoIosCloseCircleOutline } from 'react-icons/io';
 import { useGetTasksOffersQuery } from '@/services/tasks';
 import { formatTimeAgo } from '@/lib/utils';
+import { useSession } from 'next-auth/react';
 
 interface OffersProps {
     taskId: number;
 }
 
-const OfferMessage: FC<{ message: Offer | Offer['offerThreadList'][0]; isThread: boolean; offer?: Offer}> = ({
+const OfferMessage: FC<{ message: Offer | Offer['offerThreadList'][0]; isThread: boolean;}> = ({
     message,
     isThread,
-    offer
 }) => {
+    const session = useSession()
+    const customerProfileImage = session.data?.user.user.profileImage
     const timestamp = isThread
         ? (message as Offer['offerThreadList'][0]).timeStamp
         : (message as Offer).createdAt;
+
+    const profileImageUrl = isThread ? customerProfileImage : (message as Offer).service_provider_profile_Image;
 
     return (
         <div className={`flex ${isThread ? 'justify-end' : 'justify-start'}`}>
@@ -27,11 +31,11 @@ const OfferMessage: FC<{ message: Offer | Offer['offerThreadList'][0]; isThread:
                 <div className="flex items-center justify-between mb-2">
                     <div className="flex items-center">
                         <Image
-                            src="/assets/images/placeholder.jpeg"
+                            src={profileImageUrl || ""}
                             alt={message.fullName}
-                            width={32}
-                            height={32}
-                            className="rounded-full mr-2"
+                            width={64}
+                            height={64}
+                            className="rounded-full mr-2 object-cover w-8 h-8"
                         />
                         <span className="font-semibold">{message.fullName}</span>
                     </div>
@@ -54,7 +58,7 @@ const CustomerTaskOffers: FC<OffersProps> = ({ taskId }) => {
     const { data: offers, refetch } = useGetTasksOffersQuery(taskId);
     const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-    console.log(offers);
+    console.log("offers", offers);
 
     // Use effect to focus on the textarea when the modal opens
     useEffect(() => {
@@ -84,18 +88,18 @@ const CustomerTaskOffers: FC<OffersProps> = ({ taskId }) => {
                     // Optionally, you can clear the reply text or update the UI here
                     refetch();
                 });
+                setOpenReplyModal((prev) => ({ ...prev, [offerId]: false }))
+                setReplyText('');
             } catch (error) {
                 console.error('Error submitting reply:', error);
             }
         } else {
             console.error('Socket not connected or user not logged in');
         }
-        setReplyText('');
-        setOpenReplyModal((prev) => ({ ...prev, [offerId]: false }))
     };
 
     return (
-        <div className="max-h-96 overflow-y-scroll small-scrollbar pr-5 mt-14">
+        <div className="max-h-96 overflow-y-auto small-scrollbar pr-5 mt-14">
             <div className="flex justify-between items-center mb-6">
                 <h2 className="text-xl font-bold text-[#E58C06] lg:text-3xl">Offers</h2>
                 <button className="text-lg font-bold text-[#E58C06] lg:text-2xl">View all</button>
