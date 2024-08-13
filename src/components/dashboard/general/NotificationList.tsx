@@ -1,36 +1,58 @@
 "use client";
 
 import { formatRelativeDate } from "@/utils";
+import axios from "axios";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import React from "react";
 
 interface NotificationListProps {
   notifications: NotificationTypes[];
   heading: string;
-  userBookings: BookingType[];
-  userListings: ListingDataType[];
-  showSelectedNotification: ({
-    notification,
-    booking,
-    listing,
-  }: {
-    notification: NotificationTypes;
-    booking: BookingType;
-    listing: ListingDataType;
-  }) => Promise<void>;
 }
 
 const NotificationList = ({
   notifications,
   heading,
-  userBookings,
-  userListings,
-  showSelectedNotification,
 }: NotificationListProps) => {
   const session = useSession();
+  const router = useRouter();
+
+  console.log(notifications);
+
+  const token = session?.data?.user?.accessToken;
   const isServiceProvider =
     session?.data?.user?.user?.roles[0] === "SERVICE_PROVIDER";
+
+  const showSelectedNotification = async (notification: NotificationTypes) => {
+    try {
+      const type = notification.type;
+      const subType = notification.subType;
+      if (isServiceProvider) {
+        if (type === "TASK" && subType === "ASSIGNED") {
+          router.push(`/service-provider/jobs`);
+        }
+      }
+
+      if (type === "TASK") {
+        router.push(`/customer/tasks`);
+      }
+
+      const url =
+        "https://smp.jacinthsolutions.com.au/api/v1/notification/change-notification-status?notificationId=" +
+        notification.id;
+      await axios.post(
+        url,
+        { notificationId: notification.id },
+        {
+          headers: { Authorization: "Bearer " + token },
+        },
+      );
+    } catch (error: any) {
+      console.error(error?.response?.data || error);
+    }
+  };
 
   return (
     <div className="flex flex-col gap-4 pb-4">
@@ -38,23 +60,10 @@ const NotificationList = ({
         {heading}
       </h1>
       {notifications.map((item, index) => {
-        const booking = userBookings.find(
-          (singleBooking) => singleBooking.id === item.bookingId,
-        );
-        const listing = userListings.find(
-          (singleListing) => singleListing.id === booking?.listing.id,
-        );
-        // if (!booking || !listing) return;
         return (
           <div
             key={index}
-            onClick={() =>
-              showSelectedNotification({
-                notification: item,
-                booking: booking as BookingType,
-                listing: listing as ListingDataType,
-              })
-            }
+            onClick={() => showSelectedNotification(item)}
             className=" pointer-events-auto relative flex w-full cursor-pointer justify-between gap-2 rounded-md border-b border-b-violet-light p-2 py-4  transition-shadow duration-300 hover:bg-violet-light lg:items-center"
           >
             <div
@@ -63,9 +72,7 @@ const NotificationList = ({
             <div className=" flex gap-2 lg:items-center">
               <Image
                 src={
-                  (isServiceProvider
-                    ? booking?.customer?.user?.profileImage
-                    : listing?.serviceProvider.user.profileImage) ??
+                  item.notificationImage ??
                   "/assets/images/serviceProvider/user.jpg"
                 }
                 alt="checkicon"
@@ -78,15 +85,9 @@ const NotificationList = ({
               <div className="space-y-">
                 <div className="flex items-start gap-2 ">
                   <p className="cursor-pointer font-bold text-[#140B31]">
-                    {item.message} from{" "}
-                    {isServiceProvider
-                      ? booking?.customer?.user?.fullName
-                      : listing?.serviceProvider?.user?.fullName}
+                    {item.message}
                   </p>
                 </div>
-                <p className="text-#716F78 font-satoshiMedium">
-                  {booking?.bookingTitle}
-                </p>
               </div>
             </div>
 

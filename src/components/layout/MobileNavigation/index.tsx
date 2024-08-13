@@ -211,7 +211,7 @@ const MobileNavigation: React.FC<Props> = ({
                                               }
                                               href={subsublink.url!}
                                               className={cn(
-                                                "flex items-center py-2 pl-3 text-sm font-bold text-primary",
+                                                "flex items-center py-2 pl-3 text-lg font-bold text-primary",
                                                 {
                                                   "rounded-full bg-[#EBE9F4]":
                                                     pathname.includes(
