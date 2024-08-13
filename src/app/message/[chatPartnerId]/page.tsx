@@ -81,6 +81,8 @@ const ServiceProviderChat = () => {
   // finds current messages
   useEffect(() => {
     if (token && user) {
+      connectSocket(user.id);
+
       findChatMessages({
         recipientId: Number(chatPartnerId),
         senderId: user.id,
@@ -218,9 +220,8 @@ const ServiceProviderChat = () => {
 
     return () => {
       socket.off("connect", handleConnect);
-    }
+    };
   }, [user]);
-
 
   // handle load contacts from the database
   const loadContacts = async () => {
