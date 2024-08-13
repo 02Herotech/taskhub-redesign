@@ -26,8 +26,7 @@ declare interface NotificationTypes {
   message: string;
   read: boolean;
   bookingId: number;
-  type: string | null;
-  subType?: string | null;
+  type: null;
   notificationTime: number[];
 }
 
