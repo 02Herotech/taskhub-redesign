@@ -40,5 +40,6 @@ declare interface Offer {
     fullName: string;
     userId: number;
     timeStamp: number[];
+    userProfileImage: string;
   }[];
 }

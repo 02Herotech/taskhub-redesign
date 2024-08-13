@@ -12,14 +12,18 @@ interface OffersProps {
     taskId: number;
 }
 
-const OfferMessage: FC<{ message: Offer | Offer['offerThreadList'][0]; isThread: boolean; offer?: Offer}> = ({
+const OfferMessage: FC<{ message: Offer | Offer['offerThreadList'][0]; isThread: boolean;}> = ({
     message,
     isThread,
-    offer
 }) => {
+<<<<<<< HEAD
     const timestamp = isThread
         ? (message as Offer['offerThreadList'][0]).timeStamp
         : (message as Offer).createdAt;
+=======
+    const timestamp = isThread ? (message as Offer['offerThreadList'][0]).timeStamp : (message as Offer).createdAt;
+    const profileImageUrl = isThread ? (message as Offer['offerThreadList'][0]).userProfileImage : (message as Offer).service_provider_profile_Image;
+>>>>>>> 8db262d008ae64c7b54daa78f65b65f5f13598ef
 
     return (
         <div className={`flex ${isThread ? 'justify-end' : 'justify-start'}`}>
@@ -27,7 +31,11 @@ const OfferMessage: FC<{ message: Offer | Offer['offerThreadList'][0]; isThread:
                 <div className="flex items-center justify-between mb-2">
                     <div className="flex items-center">
                         <Image
+<<<<<<< HEAD
                             src="/assets/images/placeholder.jpeg"
+=======
+                            src={profileImageUrl || "/assets/images/placeholder.jpeg"}
+>>>>>>> 8db262d008ae64c7b54daa78f65b65f5f13598ef
                             alt={message.fullName}
                             width={32}
                             height={32}
@@ -54,8 +62,6 @@ const CustomerTaskOffers: FC<OffersProps> = ({ taskId }) => {
     const { data: offers, refetch } = useGetTasksOffersQuery(taskId);
     const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-    console.log(offers);
-
     // Use effect to focus on the textarea when the modal opens
     useEffect(() => {
         const openOfferId = Object.keys(openReplyModal).find(id => openReplyModal[id]);
@@ -66,39 +72,51 @@ const CustomerTaskOffers: FC<OffersProps> = ({ taskId }) => {
 
     const handleReply = (offerId: string) => {
         const socket = connectSocket(taskId);
+
+        if (!socket) {
+            console.error('Socket connection failed');
+            return;
+        }
+
+        if (!user || !user.id || !user.firstName || !user.lastName) {
+            console.error('User is not logged in or missing required information');
+            return;
+        }
+
+        if (!replyText) {
+            console.error('Reply text is empty');
+            return;
+        }
+
         const data = {
             offerThreadList: [
                 {
                     taskId,
                     offerId,
-                    userId: user?.id,
-                    fullName: user?.firstName + " " + user?.lastName,
+                    userId: user.customerId,
+                    fullName: `${user.firstName} ${user.lastName}`,
                     message: replyText,
                 },
             ],
         };
 
-        if (user && socket) {
-            try {
-                socket.emit("offer/replies", data, () => {
-                    // Optionally, you can clear the reply text or update the UI here
-                    refetch();
-                });
-            } catch (error) {
-                console.error('Error submitting reply:', error);
-            }
-        } else {
-            console.error('Socket not connected or user not logged in');
+        try {
+            socket.emit("offer/replies", data, (response: any) => {
+                console.log('Server response:', response);
+                refetch();
+            });
+            setOpenReplyModal((prev) => ({ ...prev, [offerId]: false }));
+            setReplyText('');
+        } catch (error) {
+            console.error('Error submitting reply:', error);
         }
-        setReplyText('');
-        setOpenReplyModal((prev) => ({ ...prev, [offerId]: false }))
     };
 
     return (
-        <div className="max-h-96 overflow-y-scroll small-scrollbar pr-5 mt-14">
+        <div className="max-h-96 overflow-y-auto small-scrollbar pr-5 mt-14">
             <div className="flex justify-between items-center mb-6">
                 <h2 className="text-xl font-bold text-[#E58C06] lg:text-3xl">Offers</h2>
-                <button className="text-lg font-bold text-[#E58C06] lg:text-2xl">View all</button>
+                {/* <button className="text-lg font-bold text-[#E58C06] lg:text-2xl">View all</button> */}
             </div>
             <div className="">
                 {offers?.map((offer) => (
