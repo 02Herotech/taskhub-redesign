@@ -28,6 +28,8 @@ declare interface NotificationTypes {
   bookingId: number;
   type: null;
   notificationTime: number[];
+  notificationImage: string;
+  subType: string | null;
 }
 
 declare interface InvoiceDraftType {

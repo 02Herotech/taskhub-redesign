@@ -33,6 +33,7 @@ declare interface Offer {
   fullName: string;
   message: string;
   createdAt: number[];
+  service_provider_profile_Image: string;
   offerThreadList: {
     taskId: number;
     offerId: string;
