@@ -1,53 +1,22 @@
 import { FC, useEffect, useRef, useState } from 'react';
-import Image from 'next/image';
 import { connectSocket } from '@/lib/socket';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/store';
 import Button from '@/components/global/Button';
 import { IoIosCloseCircleOutline } from 'react-icons/io';
 import { useGetTasksOffersQuery } from '@/services/tasks';
-import { formatTimeAgo } from '@/lib/utils';
+import { motion, AnimatePresence } from 'framer-motion';
+import OfferMessage from '../OfferMessage';
 
 interface OffersProps {
     taskId: number;
 }
 
-const OfferMessage: FC<{ message: Offer | Offer['offerThreadList'][0]; isThread: boolean;}> = ({
-    message,
-    isThread,
-}) => {
-    const timestamp = isThread ? (message as Offer['offerThreadList'][0]).timeStamp : (message as Offer).createdAt;
-    const profileImageUrl = isThread ? (message as Offer['offerThreadList'][0]).userProfileImage : (message as Offer).service_provider_profile_Image;
-
-    return (
-        <div className={`flex ${isThread ? 'justify-end' : 'justify-start'}`}>
-            <div className={`${isThread ? 'w-[80%]' : 'w-full'}`}>
-                <div className="flex items-center justify-between mb-2">
-                    <div className="flex items-center">
-                        <Image
-                            src={profileImageUrl || "/assets/images/placeholder.jpeg"}
-                            alt={message.fullName}
-                            width={100}
-                            height={100}
-                            className="rounded-full size-8 object-cover mr-2"
-                        />
-                        <span className="font-semibold">{message.fullName}</span>
-                    </div>
-                    <span className="text-primary font-semibold text-sm">
-                        {formatTimeAgo(timestamp)}
-                    </span>
-                </div>
-                <div className={`p-3 rounded-lg ${isThread ? 'bg-[#F7DBB2]' : 'bg-[#EBE9F4]'}`}>
-                    <p className='text-[#140B31] font-semibold'>{message.message}</p>
-                </div>
-            </div>
-        </div>
-    );
-};
 
 const CustomerTaskOffers: FC<OffersProps> = ({ taskId }) => {
     const [replyText, setReplyText] = useState<string>('');
     const [openReplyModal, setOpenReplyModal] = useState<{ [key: string]: boolean }>({});
+    const [showSuccessMessage, setShowSuccessMessage] = useState<boolean>(true);
     const { profile: user } = useSelector((state: RootState) => state.userProfile);
     const { data: offers, refetch } = useGetTasksOffersQuery(taskId);
     const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -91,12 +60,17 @@ const CustomerTaskOffers: FC<OffersProps> = ({ taskId }) => {
         };
 
         try {
-            socket.emit("offer/replies", data, (response: any) => {
-                console.log('Server response:', response);
+            socket.emit("offer/replies", data, () => {
                 refetch();
+                setReplyText('');
+                setShowSuccessMessage(true);
+
+                // Delay closing the modal and hiding the success message
+                setTimeout(() => {
+                    setShowSuccessMessage(false);
+                    setOpenReplyModal((prev) => ({ ...prev, [offerId]: false }));
+                }, 3000);
             });
-            setOpenReplyModal((prev) => ({ ...prev, [offerId]: false }));
-            setReplyText('');
         } catch (error) {
             console.error('Error submitting reply:', error);
         }
@@ -115,7 +89,7 @@ const CustomerTaskOffers: FC<OffersProps> = ({ taskId }) => {
                         <div className="mt-2">
                             <h2 onClick={() => setOpenReplyModal((prev) => ({ ...prev, [offer.id]: true }))} className='text-primary cursor-pointer font-semibold'>Reply</h2>
                         </div>
-                        <div className="border-l-2 border-gray-300 pl-4">
+                        <div className="pl-4">
                             {offer.offerThreadList.map((thread) => (
                                 <div className="mb-4" key={thread.message}>
                                     <OfferMessage message={thread} isThread={true} />
@@ -124,25 +98,63 @@ const CustomerTaskOffers: FC<OffersProps> = ({ taskId }) => {
                         </div>
 
                         {openReplyModal[offer.id] && (
-                            <div className="fixed inset-0 z-50 bg-black bg-opacity-20 flex items-end sm:items-center justify-center">
+                            <div className="fixed inset-0 z-50 bg-black h-screen bg-opacity-20 flex items-end sm:items-center justify-center">
                                 <div className="bg-white w-full sm:w-[500px] rounded-t-3xl lg:rounded-2xl px-5 pb-8 pt-2 transition-all duration-300">
                                     <div className="flex items-center justify-between mb-3">
                                         <h2 className="font-clashBold text-primary text-start font-bold">Reply</h2>
                                         <div className="bg-[#EBE9F4] p-2 rounded-full">
-                                            <IoIosCloseCircleOutline className="size-6 text-[#5A5960] cursor-pointer" onClick={() => setOpenReplyModal((prev) => ({ ...prev, [offer.id]: false }))} />
+                                            <IoIosCloseCircleOutline
+                                                className="size-6 text-[#5A5960] cursor-pointer"
+                                                onClick={() => setOpenReplyModal((prev) => ({ ...prev, [offer.id]: false }))}
+                                            />
                                         </div>
                                     </div>
                                     <div>
                                         <textarea
-                                            rows={5}
                                             ref={textareaRef}
+                                            rows={5}
                                             value={replyText}
                                             onChange={(e) => setReplyText(e.target.value)}
                                             className="w-full p-2 border border-primary rounded-xl mb-4"
                                             required
                                         />
-                                        <Button size="sm" type="submit" className="rounded-full" onClick={() => handleReply(offer.id)}>Send reply</Button>
+                                        <Button
+                                            size="sm"
+                                            type="button"
+                                            className="rounded-full"
+                                            disabled={!replyText.trim()}
+                                            onClick={() => handleReply(offer.id)}
+                                        >
+                                            Send reply
+                                        </Button>
                                     </div>
+                                    <AnimatePresence>
+                                        {showSuccessMessage && (
+                                            <motion.div
+                                                className="bg-green-100 border text-green-600 py-2 px-5 rounded-xl flex items-center"
+                                                initial={{ opacity: 0, y: -20 }}
+                                                animate={{ opacity: 1, y: 0 }}
+                                                exit={{ opacity: 0, y: -20 }}
+                                                transition={{ duration: 0.5 }}
+                                            >
+                                                <svg
+                                                    className="w-6 h-6 mr-2 text-green-600"
+                                                    fill="none"
+                                                    stroke="currentColor"
+                                                    viewBox="0 0 24 24"
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                >
+                                                    <path
+                                                        strokeLinecap="round"
+                                                        strokeLinejoin="round"
+                                                        strokeWidth={2}
+                                                        d="M5 13l4 4L19 7"
+                                                    />
+                                                </svg>
+                                                <h2 className="font-semibold">Reply sent successfully!</h2>
+                                            </motion.div>
+                                        )}
+                                    </AnimatePresence>
                                 </div>
                             </div>
                         )}

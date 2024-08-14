@@ -56,7 +56,13 @@ const AssignOfferForm: React.FC<AssignOfferFormProps> = ({ onClose, onAssign, of
                     <div className="space-y-4 h-80 overflow-y-auto small-scrollbar">
                         <h3 className="font-semibold">Select a service provider to assign the task:</h3>
                         {offers.length > 0 ? (
-                            offers.map((offer) => (
+                            offers.reduce<Offer[]>((uniqueOffers, offer) => {
+                                // Check if the service provider is already in the uniqueOffers array
+                                if (!uniqueOffers.some(uOffer => uOffer.serviceProviderId === offer.serviceProviderId)) {
+                                    uniqueOffers.push(offer); // Add the offer to uniqueOffers
+                                }
+                                return uniqueOffers; // Return the updated array
+                            }, []).map((offer) => (
                                 <div key={offer.id} className="flex items-center justify-between p-3 border rounded-lg">
                                     <div className="flex items-center space-x-3">
                                         <Image

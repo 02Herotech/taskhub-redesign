@@ -170,6 +170,9 @@ export const formatTimeAgo = (timestamp: Timestamp): string => {
 		(timestamp[6] || 0) / 1000000 // milliseconds, default to 0 if not provided
 	);
 
+	// Add 1 hour from the date
+	date.setHours(date.getHours() + 1);
+
 	const now = new Date();
 	const secondsAgo = Math.round((now.getTime() - date.getTime()) / 1000);
 

@@ -61,8 +61,8 @@ const TaskCard = ({ task }: TaskCardProps) => {
         <Image
           src={task?.taskImage ?? "/assets/images/placeholder.png"}
           alt="Logo"
-          width={46}
-          height={46}
+          width={100}
+          height={100}
           className="size-[46px] rounded-full border object-cover"
         />
       </div>
