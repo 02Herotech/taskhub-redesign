@@ -16,14 +16,8 @@ const OfferMessage: FC<{ message: Offer | Offer['offerThreadList'][0]; isThread:
     message,
     isThread,
 }) => {
-<<<<<<< HEAD
-    const timestamp = isThread
-        ? (message as Offer['offerThreadList'][0]).timeStamp
-        : (message as Offer).createdAt;
-=======
     const timestamp = isThread ? (message as Offer['offerThreadList'][0]).timeStamp : (message as Offer).createdAt;
     const profileImageUrl = isThread ? (message as Offer['offerThreadList'][0]).userProfileImage : (message as Offer).service_provider_profile_Image;
->>>>>>> 8db262d008ae64c7b54daa78f65b65f5f13598ef
 
     return (
         <div className={`flex ${isThread ? 'justify-end' : 'justify-start'}`}>
@@ -31,15 +25,11 @@ const OfferMessage: FC<{ message: Offer | Offer['offerThreadList'][0]; isThread:
                 <div className="flex items-center justify-between mb-2">
                     <div className="flex items-center">
                         <Image
-<<<<<<< HEAD
-                            src="/assets/images/placeholder.jpeg"
-=======
                             src={profileImageUrl || "/assets/images/placeholder.jpeg"}
->>>>>>> 8db262d008ae64c7b54daa78f65b65f5f13598ef
                             alt={message.fullName}
-                            width={32}
-                            height={32}
-                            className="rounded-full mr-2"
+                            width={100}
+                            height={100}
+                            className="rounded-full size-8 object-cover mr-2"
                         />
                         <span className="font-semibold">{message.fullName}</span>
                     </div>
