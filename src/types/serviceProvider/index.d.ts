@@ -25,8 +25,9 @@ declare interface NotificationTypes {
   id: number;
   message: string;
   read: boolean;
-  bookingId: number;
-  type: null;
+  notificationImage: null;
+  type: string;
+  subType: string;
   notificationTime: number[];
 }
 
@@ -43,27 +44,6 @@ declare interface InvoiceDraftType {
   platformCharge: number;
   price: number;
 }
-
-const f = {
-  id: 5,
-  invoiceId: 7,
-  customerId: 11,
-  providerId: 6,
-  jobTitle: "Novels Store",
-  taskTime: [21, 30],
-  jobDescription: "I need this novel",
-  createdAt: [2024, 6, 28, 0, 54, 21, 691824000],
-  jobStart: null,
-  jobEnd: null,
-  total: 50,
-  jobStatus: "PENDING",
-  customerAcceptance: "PENDING",
-  reports: [
-    {
-      job: "string",
-    },
-  ],
-};
 
 declare interface JobsType {
   id: number;

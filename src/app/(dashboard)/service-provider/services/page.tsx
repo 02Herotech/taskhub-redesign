@@ -57,10 +57,10 @@ const ServicesPage = () => {
         (item) => item.bookingStage === "ACCEPTED",
       );
 
-      const filteredOngoingData = data.filter(
-        (item) =>
-          item.bookingStage === "PAID" || item.bookingStage === "STARTED",
-      );
+      // const filteredOngoingData = data.filter(
+      //   (item) =>
+      //     item.bookingStage === "PAID" || item.bookingStage === "STARTED",
+      // );
       setAcceptedBookingData(filteredAcceptedData);
     } catch (error) {
       console.error("An error occurred while fetching services:", error);
