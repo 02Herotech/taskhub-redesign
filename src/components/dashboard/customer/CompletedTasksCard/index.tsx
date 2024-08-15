@@ -5,7 +5,7 @@ import { FiCalendar, FiClock } from "react-icons/fi";
 import { HiOutlineLocationMarker } from "react-icons/hi";
 import { motion } from "framer-motion";
 import { BsThreeDotsVertical } from "react-icons/bs";
-import { Task } from "@/types/services/tasks";
+import { CompletedTask, Task } from "@/types/services/tasks";
 import { useState } from "react";
 import Dropdown from "@/components/global/Dropdown";
 import { DeleteTaskSvg, DropReviewSvg, RebookSvg } from "@/lib/svgIcons";
@@ -14,7 +14,7 @@ import Button from "@/components/global/Button";
 import { useDeleteTaskMutation } from "@/services/tasks";
 
 interface TaskCardProps {
-    task: Task;
+    task: CompletedTask;
 }
 
 type DropDownItem = {
@@ -187,7 +187,7 @@ const CompletedTasksCard = ({ task }: TaskCardProps) => {
             >
                 <div className="flex w-full justify-between items-center space-x-2">
                     <h2 className="overflow-hidden truncate text-ellipsis whitespace-nowrap py-4 text-xl font-satoshiBold font-bold text-primary lg:text-[30px]">
-                        {task.taskBriefDescription}
+                        {task.jobTitle}
                     </h2>
                     <div className="relative">
                         <button
@@ -213,27 +213,27 @@ const CompletedTasksCard = ({ task }: TaskCardProps) => {
                         </div>
                     </div>
                 </div>
-                <p className="text-[#2A1769] text-sm font-satoshiMedium line-clamp-3">{task.taskDescription}</p>
+                <p className="text-[#2A1769] text-sm font-satoshiMedium line-clamp-3">{task.jobDescription}</p>
                 <div className="mt-auto">
-                    <div className="flex justify-between items-center my-2">
+                    {/* <div className="flex justify-between items-center my-2">
                         <HiOutlineLocationMarker className="h-5 w-5 font-bold text-[#716F78]" />
                         <div className="flex items-center space-x-2 font-medium text-[#716F78] w-2/3">
                             <p className="overflow-hidden truncate text-ellipsis whitespace-nowrap text-[15px] lg:text-lg">
-                                {task.state || `No location`}
+                                {task. || `No location`}
                             </p>
                         </div>
                         <div className="flex items-center space-x-2 font-medium text-[#716F78]">
                             <FiClock className="h-5 w-5 font-bold" />
                             <h5 className="text-[15px] lg:text-lg">{task.taskTime || "Flexible"}</h5>
                         </div>
-                    </div>
+                    </div> */}
                     <div className="flex justify-between items-end">
                         <div className="flex items-center space-x-2 font-medium text-[#716F78]">
                             <FiCalendar className="h-5 w-5 font-bold" />
                             <h5 className="text-[15px] lg:text-lg">{formattedDate}</h5>
                         </div>
                         <h2 className="text-2xl font-bold capitalize text-tc-orange lg:text-[20px]">
-                            {formatAmount(task.customerBudget, "USD", false)}
+                            {formatAmount(task.total, "USD", false)}
                         </h2>
                     </div>
                 </div>

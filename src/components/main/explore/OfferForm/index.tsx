@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import Button from '@/components/global/Button';
 import { IoIosCloseCircleOutline } from "react-icons/io";
+import { motion, AnimatePresence } from 'framer-motion';
 
 interface OfferFormProps {
     onClose: () => void;
@@ -9,9 +10,9 @@ interface OfferFormProps {
 
 const OfferForm: React.FC<OfferFormProps> = ({ onClose, onSubmit }) => {
     const [offerAmount, setOfferAmount] = useState('');
+    const [showSuccessMessage, setShowSuccessMessage] = useState<boolean>(false);
     const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-    // Use effect to focus on the textarea when the modal opens
     useEffect(() => {
         textareaRef.current?.focus();
     }, []);
@@ -19,7 +20,13 @@ const OfferForm: React.FC<OfferFormProps> = ({ onClose, onSubmit }) => {
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         onSubmit(offerAmount);
-        onClose();
+        setOfferAmount('');
+        setShowSuccessMessage(true);
+
+        setTimeout(() => {
+            setShowSuccessMessage(false);
+            onClose();
+        }, 3000);
     };
 
     return (
@@ -40,8 +47,42 @@ const OfferForm: React.FC<OfferFormProps> = ({ onClose, onSubmit }) => {
                         className="w-full p-2 border border-primary rounded-xl mb-4"
                         required
                     />
-                    <Button type="submit" className="rounded-full">Post your offer</Button>
+                    <Button
+                        type="submit"
+                        disabled={!offerAmount.trim()}
+                        className="rounded-full"
+                    >
+                        Post your offer
+                    </Button>
                 </form>
+
+                <AnimatePresence>
+                    {showSuccessMessage && (
+                        <motion.div
+                            className="bg-green-100 border-green-400 text-green-600 py-2 px-5 rounded-xl mt-4"
+                            initial={{ opacity: 0, y: -20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -20 }}
+                            transition={{ duration: 0.5 }}
+                        >
+                            <svg
+                                className="w-6 h-6 mr-2 text-green-600 inline-block"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                                xmlns="http://www.w3.org/2000/svg"
+                            >
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M5 13l4 4L19 7"
+                                />
+                            </svg>
+                            <span className="font-semibold">Offer posted successfully!</span>
+                        </motion.div>
+                    )}
+                </AnimatePresence>
             </div>
         </div>
     );

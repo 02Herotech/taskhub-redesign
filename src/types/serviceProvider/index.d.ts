@@ -29,6 +29,8 @@ declare interface NotificationTypes {
   type: string;
   subType: string;
   notificationTime: number[];
+  notificationImage: string;
+  subType: string | null;
 }
 
 declare interface InvoiceDraftType {

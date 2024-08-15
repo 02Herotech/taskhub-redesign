@@ -13,15 +13,20 @@ import {
 } from "@/lib/utils";
 import Loading from "@/shared/loading";
 import TaskOffers from "@/components/main/explore/TaskOffers";
-import { useRef, useState } from "react";
-import OfferForm from "@/components/main/explore/OfferForm";
+import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
 import { connectSocket } from "@/lib/socket";
+import { AnimatePresence, motion } from "framer-motion";
+import { IoIosCloseCircleOutline } from "react-icons/io";
+
 
 const TaskDetailsPage = ({ params }: { params: { id: string } }) => {
+  const [offerAmount, setOfferAmount] = useState('');
   const [showOfferForm, setShowOfferForm] = useState(false);
+  const [showSuccessMessage, setShowSuccessMessage] = useState<boolean>(false);
   const offerButtonRef = useRef<HTMLDivElement>(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
   const id = params.id;
   const { data: task, isLoading } = useGetTaskByIdQuery(
     id as unknown as number,
@@ -32,6 +37,10 @@ const TaskDetailsPage = ({ params }: { params: { id: string } }) => {
   const { profile: user } = useSelector(
     (state: RootState) => state.userProfile,
   );
+
+  useEffect(() => {
+    textareaRef.current?.focus();
+  }, []);
 
   const handleSubmitOffer = async (message: string) => {
     const socket = connectSocket(id as unknown as number);
@@ -46,16 +55,22 @@ const TaskDetailsPage = ({ params }: { params: { id: string } }) => {
 
     if (user && socket) {
       try {
-        socket.emit("offer", data, () => {});
-        refetch();
+        socket.emit("offer", data, () => {
+          refetch();
+          setOfferAmount('');
+          setShowSuccessMessage(true);
+
+          setTimeout(() => {
+            setShowSuccessMessage(false);
+            setShowOfferForm(false);
+          }, 3000);
+        });
       } catch (error) {
         console.error("Error submitting offer:", error);
       }
     } else {
       console.error("Socket not connected or user not logged in");
     }
-
-    handleCloseOfferForm();
   };
 
   if (!task) {
@@ -66,13 +81,6 @@ const TaskDetailsPage = ({ params }: { params: { id: string } }) => {
     );
   }
 
-  const handleMakeOffer = () => {
-    setShowOfferForm(true);
-  };
-
-  const handleCloseOfferForm = () => {
-    setShowOfferForm(false);
-  };
 
   const date = task?.taskDate
     ? new Date(task.taskDate[0], task.taskDate[1] - 1, task.taskDate[2])
@@ -170,24 +178,77 @@ const TaskDetailsPage = ({ params }: { params: { id: string } }) => {
                   </h2>
                   <div className="relative" ref={offerButtonRef}>
                     <Button
-                      onClick={handleMakeOffer}
+                      onClick={() => setShowOfferForm(true)}
                       onKeyDown={(e) => {
                         if (e.key === "Enter" || e.key === " ") {
-                          handleMakeOffer();
+                          setShowOfferForm(true)
                         }
                       }}
                       aria-expanded={showOfferForm}
                       aria-haspopup="true"
                       className="rounded-full"
+                      disabled={task?.taskStatus === 'ASSIGNED'}
                     >
                       Make an offer
                     </Button>
 
                     {showOfferForm && (
-                      <OfferForm
-                        onClose={handleCloseOfferForm}
-                        onSubmit={handleSubmitOffer}
-                      />
+                      <div className="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-end sm:items-center justify-center">
+                        <div className="bg-white w-full sm:w-[500px] rounded-t-3xl lg:rounded-2xl px-5 pb-8 pt-2 transition-all duration-300">
+                          <div className="flex items-center justify-between mb-3">
+                            <h2 className="font-clashBold text-primary text-start font-bold">Your Offer</h2>
+                            <div className="bg-[#EBE9F4] p-2 rounded-full">
+                              <IoIosCloseCircleOutline className="size-6 text-[#5A5960] cursor-pointer" onClick={() => setShowOfferForm(false)} />
+                            </div>
+                          </div>
+                          <div>
+                            <textarea
+                              rows={5}
+                              ref={textareaRef}
+                              value={offerAmount}
+                              onChange={(e) => setOfferAmount(e.target.value)}
+                              className="w-full p-2 border border-primary rounded-xl mb-4"
+                              required
+                            />
+                            <Button
+                              type="submit"
+                              disabled={!offerAmount.trim()}
+                              className="rounded-full"
+                              onClick={() => handleSubmitOffer(offerAmount)}
+                            >
+                              Post your offer
+                            </Button>
+                          </div>
+
+                          <AnimatePresence>
+                            {showSuccessMessage && (
+                              <motion.div
+                                className="bg-green-100 border-green-400 text-green-600 py-2 px-5 rounded-xl mt-4"
+                                initial={{ opacity: 0, y: -20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                exit={{ opacity: 0, y: -20 }}
+                                transition={{ duration: 0.5 }}
+                              >
+                                <svg
+                                  className="w-6 h-6 mr-2 text-green-600 inline-block"
+                                  fill="none"
+                                  stroke="currentColor"
+                                  viewBox="0 0 24 24"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                >
+                                  <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M5 13l4 4L19 7"
+                                  />
+                                </svg>
+                                <span className="font-semibold">Offer posted successfully!</span>
+                              </motion.div>
+                            )}
+                          </AnimatePresence>
+                        </div>
+                      </div>
                     )}
                   </div>
                 </div>
@@ -212,6 +273,7 @@ const TaskDetailsPage = ({ params }: { params: { id: string } }) => {
       )}
       {offers && offers.length > 0 && (
         <TaskOffers
+          offers={offers}
           posterId={task?.posterId}
           currentUserId={user?.serviceProviderId!}
           taskId={Number(id)}
