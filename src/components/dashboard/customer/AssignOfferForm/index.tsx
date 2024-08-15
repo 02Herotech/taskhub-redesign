@@ -45,7 +45,7 @@ const AssignOfferForm: React.FC<AssignOfferFormProps> = ({ onClose, onAssign, of
 
     return (
         <div className="fixed inset-0 z-10 bg-black bg-opacity-50 flex items-center justify-center" onClick={onClose}>
-            <div className="bg-white w-full max-w-[600px] rounded-2xl px-5 pb-8 pt-2 pr-8 transition-all duration-300 max-h-[70vh]" onClick={(e) => e.stopPropagation()}>
+            <div className="bg-[#EBE9F4] w-full max-w-[600px] rounded-2xl px-5 pb-8 pt-2 pr-8 transition-all duration-300 max-h-[70vh]" onClick={(e) => e.stopPropagation()}>
                 <div className="flex items-center justify-between mb-3">
                     <h2 className="font-clashBold text-primary text-start font-bold">Assign Task</h2>
                     <div className="bg-[#EBE9F4] p-2 rounded-full" onClick={onClose}>
@@ -63,7 +63,7 @@ const AssignOfferForm: React.FC<AssignOfferFormProps> = ({ onClose, onAssign, of
                                 }
                                 return uniqueOffers; // Return the updated array
                             }, []).map((offer) => (
-                                <div key={offer.id} className="flex items-center justify-between p-3 border rounded-lg">
+                                <div key={offer.id} className="flex items-center justify-between p-3 rounded-lg">
                                     <div className="flex items-center space-x-3">
                                         <Image
                                             src={offer.service_provider_profile_Image || "/assets/images/placeholder.jpeg"}
@@ -87,7 +87,7 @@ const AssignOfferForm: React.FC<AssignOfferFormProps> = ({ onClose, onAssign, of
                     </div>
                 ) : (
                     <div className="space-y-4">
-                        <h3 className="font-semibold">Are you sure you want to assign this task?</h3>
+                            <h3 className="font-semibold">Are you sure you want to unassign this task? click on confirm to continue</h3>
                         {selectedOffer && (
                             <div>
                                 <p>You are about to assign this task to {offers.find(o => o.id === selectedOffer)?.fullName}.</p>
@@ -98,7 +98,7 @@ const AssignOfferForm: React.FC<AssignOfferFormProps> = ({ onClose, onAssign, of
                                 Cancel
                             </Button>
                             <Button size='sm' onClick={handleConfirmAssign} className="rounded-full">
-                                Confirm Assignment
+                                Confirm
                             </Button>
                         </div>
                     </div>
