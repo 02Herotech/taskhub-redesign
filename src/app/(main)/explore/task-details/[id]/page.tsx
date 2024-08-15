@@ -19,7 +19,7 @@ import { RootState } from "@/store";
 import { connectSocket } from "@/lib/socket";
 import { AnimatePresence, motion } from "framer-motion";
 import { IoIosCloseCircleOutline } from "react-icons/io";
-
+import { FaCheck } from "react-icons/fa6";
 
 const TaskDetailsPage = ({ params }: { params: { id: string } }) => {
   const [offerAmount, setOfferAmount] = useState('');
@@ -195,56 +195,53 @@ const TaskDetailsPage = ({ params }: { params: { id: string } }) => {
                     {showOfferForm && (
                       <div className="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-end sm:items-center justify-center">
                         <div className="bg-white w-full sm:w-[500px] rounded-t-3xl lg:rounded-2xl px-5 pb-8 pt-2 transition-all duration-300">
-                          <div className="flex items-center justify-between mb-3">
-                            <h2 className="font-clashBold text-primary text-start font-bold">Your Offer</h2>
+                            <div className={`flex items-center justify-between ${showSuccessMessage !== true && "mb-3"}`}>
+                            <h2 className={`font-clashBold text-primary text-start font-bold ${showSuccessMessage && "hidden"}`}>Your Offer</h2>
                             <div className="bg-[#EBE9F4] p-2 rounded-full">
                               <IoIosCloseCircleOutline className="size-6 text-[#5A5960] cursor-pointer" onClick={() => setShowOfferForm(false)} />
                             </div>
                           </div>
-                          <div>
-                            <textarea
-                              rows={5}
-                              ref={textareaRef}
-                              value={offerAmount}
-                              onChange={(e) => setOfferAmount(e.target.value)}
-                              className="w-full p-2 border border-primary rounded-xl mb-4"
-                              required
-                            />
-                            <Button
-                              type="submit"
-                              disabled={!offerAmount.trim()}
-                              className="rounded-full"
-                              onClick={() => handleSubmitOffer(offerAmount)}
-                            >
-                              Post your offer
-                            </Button>
-                          </div>
 
                           <AnimatePresence>
-                            {showSuccessMessage && (
+                            {showSuccessMessage ? (
                               <motion.div
-                                className="bg-green-100 border-green-400 text-green-600 py-2 px-5 rounded-xl mt-4"
+                                className="py-2 px-5 rounded-xl w-full flex space-y-4 flex-col items-center justify-center"
                                 initial={{ opacity: 0, y: -20 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 exit={{ opacity: 0, y: -20 }}
                                 transition={{ duration: 0.5 }}
                               >
-                                <svg
-                                  className="w-6 h-6 mr-2 text-green-600 inline-block"
-                                  fill="none"
-                                  stroke="currentColor"
-                                  viewBox="0 0 24 24"
-                                  xmlns="http://www.w3.org/2000/svg"
+                                <div className="size-11 bg-[#4CAF50] rounded-full flex items-center justify-center">
+                                  <FaCheck className="text-white"/>
+                                </div>
+                                <h1 className="font-semibold text-primary text-center font-clashSemiBold text-2xl lg:text-4xl">Offer posted successfully!</h1>
+                                <h4 className="text-[#140B31] text-center text-xl font-medium font-satoshiMedium">Your offer has been sent to the customer, you will be notified when there’s a response.</h4>
+                                <Button
+                                  className="rounded-full"
+                                  onClick={() => setShowOfferForm(false)}
                                 >
-                                  <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth={2}
-                                    d="M5 13l4 4L19 7"
-                                  />
-                                </svg>
-                                <span className="font-semibold">Offer posted successfully!</span>
+                                  Go Back
+                                </Button>
                               </motion.div>
+                            ) : (
+                              <div>
+                                <textarea
+                                  rows={5}
+                                  ref={textareaRef}
+                                  value={offerAmount}
+                                  onChange={(e) => setOfferAmount(e.target.value)}
+                                  className="w-full p-2 border border-primary rounded-xl mb-4"
+                                  required
+                                />
+                                <Button
+                                  type="submit"
+                                  disabled={!offerAmount.trim()}
+                                  className="rounded-full"
+                                  onClick={() => handleSubmitOffer(offerAmount)}
+                                >
+                                  Post your offer
+                                </Button>
+                              </div>
                             )}
                           </AnimatePresence>
                         </div>
