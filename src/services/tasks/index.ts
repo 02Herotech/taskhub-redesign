@@ -6,6 +6,7 @@ import {
   GetTaskByTextRequest,
   GetTasksRequest,
   GetTasksResponse,
+  GetCustomerCompletedTasksResponse,
 } from "@/types/services/tasks";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { getSession } from "next-auth/react";
@@ -117,7 +118,7 @@ export const task = createApi({
       query: (customerId) => getRequest(`/task/customer-ongoing-tasks/${customerId}`),
       providesTags: ["Task"],
     }),
-    getCustomerCompletedTasks: builder.query<GetCustomerTasksResponse, number>({
+    getCustomerCompletedTasks: builder.query<GetCustomerCompletedTasksResponse, number>({
       query: (customerId) => getRequest(`/task/customer-completed-tasks/${customerId}`),
       providesTags: ["Task"],
     }),

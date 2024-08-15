@@ -16,7 +16,7 @@ interface OffersProps {
 const CustomerTaskOffers: FC<OffersProps> = ({ taskId }) => {
     const [replyText, setReplyText] = useState<string>('');
     const [openReplyModal, setOpenReplyModal] = useState<{ [key: string]: boolean }>({});
-    const [showSuccessMessage, setShowSuccessMessage] = useState<boolean>(true);
+    const [showSuccessMessage, setShowSuccessMessage] = useState<boolean>(false);
     const { profile: user } = useSelector((state: RootState) => state.userProfile);
     const { data: offers, refetch } = useGetTasksOffersQuery(taskId);
     const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -131,7 +131,7 @@ const CustomerTaskOffers: FC<OffersProps> = ({ taskId }) => {
                                     <AnimatePresence>
                                         {showSuccessMessage && (
                                             <motion.div
-                                                className="bg-green-100 border text-green-600 py-2 px-5 rounded-xl flex items-center"
+                                                className="bg-green-100 border text-green-600 py-2 px-5 mt-2 rounded-xl flex items-center"
                                                 initial={{ opacity: 0, y: -20 }}
                                                 animate={{ opacity: 1, y: 0 }}
                                                 exit={{ opacity: 0, y: -20 }}

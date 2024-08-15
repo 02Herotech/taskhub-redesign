@@ -71,6 +71,20 @@ export type GetTasksResponse = {
     content: Task[];
 };
 
+export type CompletedTask = {
+    id: number;
+    invoiceId: number;
+    bookingId: number;
+    total: number;
+    createdAt: [number, number, number, number, number, number, number];
+    taskTime: [number, number];
+    customerId: number;
+    jobTitle: string;
+    jobDescription: string;
+}
+
+export type GetCustomerCompletedTasksResponse = CompletedTask[];
+
 export type GetSingleTasksResponse = Task;
 
 export type GetFilterTaskByPriceRequest = {
