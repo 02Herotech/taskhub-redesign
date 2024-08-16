@@ -70,7 +70,7 @@ const TaskOffers: FC<OffersProps> = ({ currentUserId, taskId, offers }) => {
             <div className="flex justify-between items-center mb-6">
                 <h2 className="text-xl font-bold text-[#E58C06] lg:text-3xl">Offers</h2>
             </div>
-            <div className="">
+            <div className="mb-5 pb-1 border-b border-[#716F78]">
                 {offers?.map((offer) => (
                     <div key={offer.id} className="space-y-8">
                         <OfferMessage message={offer} isThread={false} />

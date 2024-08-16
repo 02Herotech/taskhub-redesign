@@ -7,6 +7,7 @@ import { IoIosCloseCircleOutline } from 'react-icons/io';
 import { useGetTasksOffersQuery } from '@/services/tasks';
 import { motion, AnimatePresence } from 'framer-motion';
 import OfferMessage from '../OfferMessage';
+import { FaCheck } from 'react-icons/fa';
 
 interface OffersProps {
     taskId: number;
@@ -84,7 +85,7 @@ const CustomerTaskOffers: FC<OffersProps> = ({ taskId }) => {
             </div>
             <div className="">
                 {offers?.map((offer) => (
-                    <div key={offer.id} className="space-y-8">
+                    <div key={offer.id} className="mb-5 pb-1 border-b border-[#716F78]">
                         <OfferMessage message={offer} isThread={false} />
                         <div className="mt-2">
                             <h2 onClick={() => setOpenReplyModal((prev) => ({ ...prev, [offer.id]: true }))} className='text-primary cursor-pointer font-semibold'>Reply</h2>
@@ -99,9 +100,9 @@ const CustomerTaskOffers: FC<OffersProps> = ({ taskId }) => {
 
                         {openReplyModal[offer.id] && (
                             <div className="fixed inset-0 z-50 bg-black h-screen bg-opacity-20 flex items-end sm:items-center justify-center">
-                                <div className="bg-white w-full sm:w-[500px] rounded-t-3xl lg:rounded-2xl px-5 pb-8 pt-2 transition-all duration-300">
-                                    <div className="flex items-center justify-between mb-3">
-                                        <h2 className="font-clashBold text-primary text-start font-bold">Reply</h2>
+                                <div className="bg-white w-full max-w-[600px] rounded-t-3xl lg:rounded-2xl px-5 pb-8 pt-2 transition-all duration-300">
+                                    <div className={`flex items-center justify-between ${showSuccessMessage !== true && "mb-3"}`}>
+                                        <h2 className={`font-clashBold text-primary text-start font-bold ${showSuccessMessage && "hidden"}`}>Reply</h2>
                                         <div className="bg-[#EBE9F4] p-2 rounded-full">
                                             <IoIosCloseCircleOutline
                                                 className="size-6 text-[#5A5960] cursor-pointer"
@@ -109,50 +110,47 @@ const CustomerTaskOffers: FC<OffersProps> = ({ taskId }) => {
                                             />
                                         </div>
                                     </div>
-                                    <div>
-                                        <textarea
-                                            ref={textareaRef}
-                                            rows={5}
-                                            value={replyText}
-                                            onChange={(e) => setReplyText(e.target.value)}
-                                            className="w-full p-2 border border-primary rounded-xl mb-4"
-                                            required
-                                        />
-                                        <Button
-                                            size="sm"
-                                            type="button"
-                                            className="rounded-full"
-                                            disabled={!replyText.trim()}
-                                            onClick={() => handleReply(offer.id)}
-                                        >
-                                            Send reply
-                                        </Button>
-                                    </div>
                                     <AnimatePresence>
-                                        {showSuccessMessage && (
+                                        {showSuccessMessage ? (
                                             <motion.div
-                                                className="bg-green-100 border text-green-600 py-2 px-5 mt-2 rounded-xl flex items-center"
+                                                className="py-2 px-5 rounded-xl w-full flex space-y-4 flex-col items-center justify-center"
                                                 initial={{ opacity: 0, y: -20 }}
                                                 animate={{ opacity: 1, y: 0 }}
                                                 exit={{ opacity: 0, y: -20 }}
                                                 transition={{ duration: 0.5 }}
                                             >
-                                                <svg
-                                                    className="w-6 h-6 mr-2 text-green-600"
-                                                    fill="none"
-                                                    stroke="currentColor"
-                                                    viewBox="0 0 24 24"
-                                                    xmlns="http://www.w3.org/2000/svg"
+                                                <div className="size-11 bg-[#4CAF50] rounded-full flex items-center justify-center">
+                                                    <FaCheck className="text-white" />
+                                                </div>
+                                                <h1 className="font-semibold text-primary text-center font-clashSemiBold text-2xl lg:text-4xl">Reply sent successfully!</h1>
+                                                <h4 className="text-[#140B31] text-center text-xl font-medium font-satoshiMedium">Your reply has been sent to the service provider, you will be notified when there’s a response.</h4>
+                                                <Button
+                                                    className="rounded-full"
+                                                    onClick={() => setOpenReplyModal((prev) => ({ ...prev, [offer.id]: false }))}
                                                 >
-                                                    <path
-                                                        strokeLinecap="round"
-                                                        strokeLinejoin="round"
-                                                        strokeWidth={2}
-                                                        d="M5 13l4 4L19 7"
-                                                    />
-                                                </svg>
-                                                <h2 className="font-semibold">Reply sent successfully!</h2>
+                                                    Go Back
+                                                </Button>
                                             </motion.div>
+                                        ) : (
+                                                <div>
+                                                    <textarea
+                                                        ref={textareaRef}
+                                                        rows={5}
+                                                        value={replyText}
+                                                        onChange={(e) => setReplyText(e.target.value)}
+                                                        className="w-full p-2 border border-primary rounded-xl mb-4"
+                                                        required
+                                                    />
+                                                    <Button
+                                                        size="sm"
+                                                        type="button"
+                                                        className="rounded-full"
+                                                        disabled={!replyText.trim()}
+                                                        onClick={() => handleReply(offer.id)}
+                                                    >
+                                                        Send reply
+                                                    </Button>
+                                                </div>
                                         )}
                                     </AnimatePresence>
                                 </div>

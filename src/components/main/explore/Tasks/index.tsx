@@ -445,7 +445,7 @@ const Tasks: React.FC = () => {
                 </div>
             </section>
 
-            <div className="relative flex justify-center md:hidden ">
+            <div className="relative flex justify-center md:hidden">
                 <ExploreMobileFilterModal
                     isMobileFilterModalShown={isMobileFilterModalShown}
                     setIsMobileFilterModalShown={setIsMobileFilterModalShown}
