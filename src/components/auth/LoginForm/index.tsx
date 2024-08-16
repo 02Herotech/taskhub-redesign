@@ -3,7 +3,7 @@
 import Button from "@/components/global/Button";
 import Input from "@/components/global/Input";
 import { useRouter, useSearchParams } from "next/navigation";
-import { FormProvider, set, SubmitHandler, useForm } from "react-hook-form";
+import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 import { signIn } from "next-auth/react";
 import Link from "next/link";
 import { useState } from "react";
@@ -27,7 +27,7 @@ const LoginForm = () => {
   });
 
   const {
-    formState: { errors, isValid },
+    formState: { isValid },
   } = methods;
 
   const searchParams = useSearchParams();
@@ -79,7 +79,7 @@ const LoginForm = () => {
       deleteCookie("redirectToAddTask");
     } catch (error: any) {
       setIsLoading(false);
-      setError(error.response.data.message);
+      setError(error.response.data.message || "Something went wrong, please try again");
     }
   };
 

@@ -223,9 +223,9 @@ const OnogoingTaskDetailsPage = ({ params }: { params: { id: string } }) => {
             )}
             {approvePaymentPopup && (
                 <Popup isOpen={approvePaymentPopup} onClose={() => setApprovePaymentPopup(false)}>
-                    <div className="relative bg-[#EBE9F4] rounded-2xl min-h-[200px] lg:w-[577px] font-satoshi overflow-y-auto">
+                    <div className="relative bg-[#EBE9F4] rounded-2xl min-h-[200px] w-full max-w-[600px] font-satoshi overflow-y-auto">
                         {paymentApproved ? (
-                            <div className="flex items-center justify-center h-full font-satoshi py-10 px-20">
+                            <div className="flex items-center justify-center h-full font-satoshi p-10">
                                 <div className="flex flex-col items-center space-y-5">
                                     <div className="bg-[#140B31] p-1 rounded-full size-14 flex items-center justify-center text-white"><svg width="34" height="32" viewBox="0 0 34 32" fill="none" xmlns="http://www.w3.org/2000/svg">
                                         <path d="M34 15.9924L30.2291 11.742L30.7545 6.11562L25.1755 4.86192L22.2545 0L17 2.2322L11.7455 0L8.82454 4.86192L3.24545 6.10033L3.77091 11.7267L0 15.9924L3.77091 20.2427L3.24545 25.8844L8.82454 27.1381L11.7455 32L17 29.7525L22.2545 31.9847L25.1755 27.1228L30.7545 25.8691L30.2291 20.2427L34 15.9924ZM13.9091 23.6369L7.72727 17.5213L9.90636 15.3655L13.9091 19.3101L24.0936 9.23459L26.2727 11.4056L13.9091 23.6369Z" fill="white" />
@@ -237,16 +237,18 @@ const OnogoingTaskDetailsPage = ({ params }: { params: { id: string } }) => {
                                         Great! your payment to the service provider has been approved. Please leave a review below
                                     </p>
                                     <Button
-                                        className="w-[151px] max-lg:text-sm rounded-full py-6 bg-[#E1DDEE] border-none"
+                                        className="max-lg:text-sm rounded-full bg-[#E1DDEE] border-none"
                                         onClick={() => {
                                             setApprovePaymentPopup(false)
                                             setPaymentApproved(false)
                                         }}
+                                        size='sm'
                                     >
                                         Cancel
                                     </Button>
                                     <Button
-                                        className="w-[151px] max-lg:text-sm rounded-full py-6"
+                                        className="max-lg:text-sm rounded-full"
+                                        size='sm'
                                     >
                                         Review
                                     </Button>
@@ -254,30 +256,32 @@ const OnogoingTaskDetailsPage = ({ params }: { params: { id: string } }) => {
                                 </div>
                             </div>
                         ) : (
-                        <div className="flex items-center justify-center h-full font-satoshi py-10 px-20">
-                            <div className="flex flex-col items-center space-y-5">
-                                <div className="bg-[#140B31] p-1 rounded-full size-14 flex items-center justify-center text-white"><svg width="34" height="32" viewBox="0 0 34 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M34 15.9924L30.2291 11.742L30.7545 6.11562L25.1755 4.86192L22.2545 0L17 2.2322L11.7455 0L8.82454 4.86192L3.24545 6.10033L3.77091 11.7267L0 15.9924L3.77091 20.2427L3.24545 25.8844L8.82454 27.1381L11.7455 32L17 29.7525L22.2545 31.9847L25.1755 27.1228L30.7545 25.8691L30.2291 20.2427L34 15.9924ZM13.9091 23.6369L7.72727 17.5213L9.90636 15.3655L13.9091 19.3101L24.0936 9.23459L26.2727 11.4056L13.9091 23.6369Z" fill="white" />
-                                </svg></div>
-                                <h1 className="font-black text-4xl text-[#2A1769]">
-                                    Approve payment
-                                </h1>
-                                <p className="mb-8 font-satoshiMedium text-center text-xl font-medium text-[#140B31]">
-                                    Satisfied with the service? Great! Once you approve this payment, your service will be marked as complete. Any revision after this step may attract extra charges.
-                                </p>
-                                <div className="flex items-center justify-center space-x-4">
-                                    <Button
-                                        className="w-[151px] max-lg:text-sm rounded-full py-6"
-                                        theme='outline'
-                                    >
-                                        Cancel
-                                    </Button>
-                                    <Button className="w-[151px] max-lg:text-sm rounded-full py-6" onClick={handleApprovePayment}>
-                                        Approve
-                                    </Button>
+                            <div className="flex items-center justify-center h-full font-satoshi p-10">
+                                <div className="flex flex-col items-center space-y-5">
+                                    <div className="bg-[#140B31] p-1 rounded-full size-14 flex items-center justify-center text-white"><svg width="34" height="32" viewBox="0 0 34 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M34 15.9924L30.2291 11.742L30.7545 6.11562L25.1755 4.86192L22.2545 0L17 2.2322L11.7455 0L8.82454 4.86192L3.24545 6.10033L3.77091 11.7267L0 15.9924L3.77091 20.2427L3.24545 25.8844L8.82454 27.1381L11.7455 32L17 29.7525L22.2545 31.9847L25.1755 27.1228L30.7545 25.8691L30.2291 20.2427L34 15.9924ZM13.9091 23.6369L7.72727 17.5213L9.90636 15.3655L13.9091 19.3101L24.0936 9.23459L26.2727 11.4056L13.9091 23.6369Z" fill="white" />
+                                    </svg></div>
+                                    <h1 className="font-black text-4xl text-[#2A1769]">
+                                        Approve payment
+                                    </h1>
+                                    <p className="mb-8 font-satoshiMedium text-center text-xl font-medium text-[#140B31]">
+                                        Satisfied with the service? Great! Once you approve this payment, your service will be marked as complete. Any revision after this step may attract extra charges.
+                                    </p>
+                                    <div className="flex items-center justify-center space-x-4">
+                                        <Button
+                                            className="max-lg:text-sm rounded-full"
+                                            theme='outline'
+                                            onClick={() => setApprovePaymentPopup(false)}
+                                            size='sm'
+                                        >
+                                            Cancel
+                                        </Button>
+                                        <Button className="max-lg:text-sm rounded-full" size='sm' onClick={handleApprovePayment}>
+                                            Approve
+                                        </Button>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
                         )}
                     </div>
                 </Popup>

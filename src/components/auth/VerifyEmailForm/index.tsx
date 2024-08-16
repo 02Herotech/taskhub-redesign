@@ -13,7 +13,7 @@ const VerifyEmailForm = ({ email }: { email: string }) => {
                         Verify Email Address
                     </h1>
                     <p className='lg:text-[15px] text-tc-gray font-satoshi'>
-                        {`A link has been sent to ${email}, click on the link to verify email`} <Link href="/auth/sign-up" className="text-primary"> Change Email</Link>
+                        {`A link has been sent to ${email}, click on the link to verify email`} <Link href="/auth/sign-up" className="text-primary underline"> Change Email</Link>
                     </p>
                     <h3 className="text-xl font-satoshiMedium">Have an existing account?
                         <Link href="/auth/login" className="text-primary"> Login</Link>

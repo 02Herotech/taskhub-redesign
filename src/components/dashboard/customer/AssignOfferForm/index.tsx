@@ -59,9 +59,9 @@ const AssignOfferForm: React.FC<AssignOfferFormProps> = ({ onClose, onAssign, of
                             offers.reduce<Offer[]>((uniqueOffers, offer) => {
                                 // Check if the service provider is already in the uniqueOffers array
                                 if (!uniqueOffers.some(uOffer => uOffer.serviceProviderId === offer.serviceProviderId)) {
-                                    uniqueOffers.push(offer); // Add the offer to uniqueOffers
+                                    uniqueOffers.push(offer)
                                 }
-                                return uniqueOffers; // Return the updated array
+                                return uniqueOffers; 
                             }, []).map((offer) => (
                                 <div key={offer.id} className="flex items-center justify-between p-3 rounded-lg">
                                     <div className="flex items-center space-x-3">
@@ -87,7 +87,7 @@ const AssignOfferForm: React.FC<AssignOfferFormProps> = ({ onClose, onAssign, of
                     </div>
                 ) : (
                     <div className="space-y-4">
-                            <h3 className="font-semibold">Are you sure you want to unassign this task? click on confirm to continue</h3>
+                            <h3 className="font-semibold">Are you sure you want to assign this task? click on confirm to continue</h3>
                         {selectedOffer && (
                             <div>
                                 <p>You are about to assign this task to {offers.find(o => o.id === selectedOffer)?.fullName}.</p>
