@@ -134,6 +134,7 @@ const OnogoingTaskDetailsPage = ({ params }: { params: { id: string } }) => {
             return;
         } else {
             setPaymentApproved(true);
+            setPaymentError('');
         }
     }
 
