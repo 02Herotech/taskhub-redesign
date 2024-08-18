@@ -12,9 +12,21 @@ const OfferForm: React.FC<OfferFormProps> = ({ onClose, onSubmit }) => {
     const [offerAmount, setOfferAmount] = useState('');
     const [showSuccessMessage, setShowSuccessMessage] = useState<boolean>(false);
     const textareaRef = useRef<HTMLTextAreaElement>(null);
+    const modalRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         textareaRef.current?.focus();
+
+        const handleResize = () => {
+            if (modalRef.current) {
+                modalRef.current.style.height = `${window.innerHeight}px`;
+            }
+        };
+
+        handleResize();
+        window.addEventListener('resize', handleResize);
+
+        return () => window.removeEventListener('resize', handleResize);
     }, []);
 
     const handleSubmit = (e: React.FormEvent) => {
@@ -30,8 +42,11 @@ const OfferForm: React.FC<OfferFormProps> = ({ onClose, onSubmit }) => {
     };
 
     return (
-        <div className="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-end sm:items-center justify-center">
-            <div className="bg-white w-full sm:w-[500px] rounded-t-3xl lg:rounded-2xl px-5 pb-8 pt-2 transition-all duration-300">
+        <div
+            ref={modalRef}
+            className="fixed inset-0 z-50 bg-black bg-opacity-50 flex flex-col justify-end sm:justify-center overflow-y-auto"
+        >
+            <div className="bg-white w-full sm:w-[500px] rounded-t-3xl lg:rounded-2xl px-5 pb-8 pt-2 transition-all duration-300 sm:mx-auto">
                 <div className="flex items-center justify-between mb-3">
                     <h2 className="font-clashBold text-primary text-start font-bold">Your Offer</h2>
                     <div className="bg-[#EBE9F4] p-2 rounded-full">
