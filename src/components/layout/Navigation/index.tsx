@@ -30,6 +30,7 @@ import {
   removeUserProfile,
   setAuthLoading,
   setUserProfileAuth,
+  setWalletBalance,
   updateUserProfile,
 } from "@/store/Features/userProfile";
 import ChatSocket from "@/components/main/message/ChatSocket";
@@ -146,6 +147,8 @@ const Navigation = () => {
     // eslint-disable-next-line
   }, [token]);
 
+  const a = 12;
+
   useEffect(() => {
     const fetchUserProfile = async () => {
       if (!user) return;
@@ -154,13 +157,24 @@ const Navigation = () => {
           "https://smp.jacinthsolutions.com.au/api/v1/user/user-profile/" +
           user.id;
         const { data } = await axios.get(url);
+        const userData: UserProfileTypes = data;
         dispatch(updateUserProfile(data));
+        if (isServiceProvider) {
+          const walleturl =
+            "https://smp.jacinthsolutions.com.au/api/v1/booking/wallet/provider/" +
+            userData.serviceProviderId;
+          const response = await axios.get(walleturl, {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+          dispatch(setWalletBalance(response.data.walletBalance));
+        }
       } catch (error: any) {
         console.error(error.response.data);
       }
     };
     fetchUserProfile();
-  }, [user, userProfile.refresh, dispatch]);
+    // eslint-disable-next-line
+  }, [user, userProfile.refresh, dispatch, a]);
 
   const notificationRoute = isServiceProvider
     ? "/service-provider/notification"
