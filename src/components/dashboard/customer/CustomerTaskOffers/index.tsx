@@ -21,6 +21,7 @@ const CustomerTaskOffers: FC<OffersProps> = ({ taskId }) => {
     const { profile: user } = useSelector((state: RootState) => state.userProfile);
     const { data: offers, refetch } = useGetTasksOffersQuery(taskId);
     const textareaRef = useRef<HTMLTextAreaElement>(null);
+    const modalRef = useRef<HTMLDivElement>(null);
 
     // Use effect to focus on the textarea when the modal opens
     useEffect(() => {
@@ -28,6 +29,17 @@ const CustomerTaskOffers: FC<OffersProps> = ({ taskId }) => {
         if (openOfferId && textareaRef.current) {
             textareaRef.current.focus();
         }
+
+        const handleResize = () => {
+            if (modalRef.current) {
+                modalRef.current.style.height = `${window.innerHeight}px`;
+            }
+        };
+
+        handleResize();
+        window.addEventListener('resize', handleResize);
+
+        return () => window.removeEventListener('resize', handleResize);
     }, [openReplyModal]);
 
     const handleReply = (offerId: string) => {
@@ -99,7 +111,7 @@ const CustomerTaskOffers: FC<OffersProps> = ({ taskId }) => {
                         </div>
 
                         {openReplyModal[offer.id] && (
-                            <div className="fixed inset-0 z-50 bg-black h-screen bg-opacity-20 flex items-end sm:items-center justify-center">
+                            <div ref={modalRef} className="fixed inset-0 z-50 bg-black h-screen bg-opacity-20 flex items-end sm:items-center justify-center">
                                 <div className="bg-white w-full max-w-[600px] rounded-t-3xl lg:rounded-2xl px-5 pb-8 pt-2 transition-all duration-300">
                                     <div className={`flex items-center justify-between ${showSuccessMessage !== true && "mb-3"}`}>
                                         <h2 className={`font-clashBold text-primary text-start font-bold ${showSuccessMessage && "hidden"}`}>Reply</h2>
