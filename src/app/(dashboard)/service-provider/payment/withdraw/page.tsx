@@ -1,5 +1,6 @@
 "use client";
 
+import WalletBalance from "@/components/dashboard/serviceProvider/Payment/WalletBalance";
 import { RootState } from "@/store";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
@@ -145,7 +146,8 @@ const WithdrawalPage = () => {
           <PiWarningDiamond className="size-5" />
         </span>
         <span>
-          Available funds to withdrawal: $0, minimum withdrawal request is $50
+          Available funds to withdrawal: $<WalletBalance />, minimum withdrawal
+          request is $50
         </span>
       </p>
       {user && (

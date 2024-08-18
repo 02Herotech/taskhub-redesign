@@ -10,6 +10,7 @@ interface InitialStateType {
     token: string | null;
   };
   authLoading: boolean;
+  walletBalance: number | string | null;
 }
 
 const initialState: InitialStateType = {
@@ -17,6 +18,7 @@ const initialState: InitialStateType = {
   refresh: false,
   userProfileAuth: { role: ["CUSTOMER"], token: null },
   authLoading: true,
+  walletBalance: null, // Fetch this from the API on login
 };
 
 export const userProfileSlice = createSlice({
@@ -40,6 +42,9 @@ export const userProfileSlice = createSlice({
       localStorage.removeItem("auth");
       return { ...initialState };
     },
+    setWalletBalance: (state, action) => {
+      return { ...state, walletBalance: action.payload };
+    },
   },
 });
 
@@ -49,6 +54,7 @@ export const {
   setUserProfileAuth,
   setAuthLoading,
   removeUserProfile,
+  setWalletBalance,
 } = userProfileSlice.actions;
 
 export default userProfileSlice.reducer;
