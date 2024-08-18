@@ -53,6 +53,7 @@ declare interface JobsType {
   customerId: number;
   providerId: number;
   jobTitle: string;
+  jobAddress: string;
   bookingId: number;
   taskTime: number[];
   jobDescription: string;

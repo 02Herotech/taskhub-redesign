@@ -29,19 +29,19 @@ const CompletedServices = ({ jobs, allBookings }: CompletedServices) => {
                 <h2 className="text-3xl font-bold text-violet-normal">
                   {item.jobTitle}
                 </h2>
-                <span className="flex items-center gap-2 rounded-full border border-green-500 bg-green-100 px-3 py-[1px] text-xs text-green-500">
+                <span className="flex items-center gap-2 rounded-full border border-green-500 bg-[#F4FCF4] px-4 py-px text-xs text-green-500">
                   <BiCheck />
                   Done
                 </span>
               </div>
-              {/* <div className="flex items-center justify-between gap-4">
+              <div className="flex items-center justify-between gap-4">
                 <span className="flex items-center gap-2 text-slate-700">
-                  <HiLocationMarker /> Brisbane
+                  <HiLocationMarker /> {item.jobAddress}
                 </span>
-                <span className="flex items-center gap-2 text-slate-700 ">
+                {/* <span className="flex items-center gap-2 text-slate-700 ">
                   Midday <CiClock1 />
-                </span>
-              </div> */}
+                </span> */}
+              </div>
               <div className="flex items-center justify-between gap-4">
                 <span className="flex items-center gap-2 text-slate-700">
                   <BiCalendarWeek /> {dateFromNumberArray(item.jobEnd)}
