@@ -270,7 +270,7 @@ const TaskDetailsPage = ({ params }: { params: { id: string } }) => {
       )}
       {offers && offers.length > 0 && (
         <TaskOffers
-          offers={offers}
+          // offers={offers}
           posterId={task?.posterId}
           currentUserId={user?.serviceProviderId!}
           taskId={Number(id)}
