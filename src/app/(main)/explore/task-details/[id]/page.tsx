@@ -27,6 +27,7 @@ const TaskDetailsPage = ({ params }: { params: { id: string } }) => {
   const [showSuccessMessage, setShowSuccessMessage] = useState<boolean>(false);
   const offerButtonRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const modalRef = useRef<HTMLDivElement>(null);
   const id = params.id;
   const { data: task, isLoading } = useGetTaskByIdQuery(
     id as unknown as number,
@@ -40,6 +41,17 @@ const TaskDetailsPage = ({ params }: { params: { id: string } }) => {
 
   useEffect(() => {
     textareaRef.current?.focus();
+
+    const handleResize = () => {
+      if (modalRef.current) {
+        modalRef.current.style.height = `${window.innerHeight}px`;
+      }
+    };
+
+    handleResize();
+    window.addEventListener('resize', handleResize);
+
+    return () => window.removeEventListener('resize', handleResize);
   }, []);
 
   const handleSubmitOffer = async (message: string) => {
@@ -193,7 +205,7 @@ const TaskDetailsPage = ({ params }: { params: { id: string } }) => {
                     </Button>
 
                     {showOfferForm && (
-                      <div className="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-end sm:items-center justify-center">
+                      <div ref={modalRef} className="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-end sm:items-center justify-center">
                         <div className="bg-white w-full sm:w-[600px] rounded-t-3xl lg:rounded-2xl px-5 pb-8 pt-2 transition-all duration-300">
                             <div className={`flex items-center justify-between ${showSuccessMessage !== true && "mb-3"}`}>
                             <h2 className={`font-clashBold text-primary text-start font-bold ${showSuccessMessage && "hidden"}`}>Your Offer</h2>

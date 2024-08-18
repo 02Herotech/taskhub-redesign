@@ -10,7 +10,7 @@ interface OfferFormProps {
 
 const OfferForm: React.FC<OfferFormProps> = ({ onClose, onSubmit }) => {
     const [offerAmount, setOfferAmount] = useState('');
-    const [showSuccessMessage, setShowSuccessMessage] = useState<boolean>(false);
+    const [showSuccessMessage, setShowSuccessMessage] = useState<boolean>(true);
     const textareaRef = useRef<HTMLTextAreaElement>(null);
     const modalRef = useRef<HTMLDivElement>(null);
 

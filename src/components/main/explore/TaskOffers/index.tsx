@@ -22,15 +22,9 @@ const TaskOffers: FC<OffersProps> = ({ currentUserId, taskId }) => {
     const [showSuccessMessage, setShowSuccessMessage] = useState<boolean>(false);
     const { profile: user } = useSelector((state: RootState) => state.userProfile);
     const { data: offers, refetch } = useGetTasksOffersQuery(taskId);
-    const textareaRef = useRef<HTMLTextAreaElement>(null);
     const modalRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-        const openOfferId = Object.keys(openReplyModal).find(id => openReplyModal[id]);
-        if (openOfferId && textareaRef.current) {
-            textareaRef.current.focus();
-        }
-
         const handleResize = () => {
             if (modalRef.current) {
                 modalRef.current.style.height = `${window.innerHeight}px`;
@@ -83,9 +77,9 @@ const TaskOffers: FC<OffersProps> = ({ currentUserId, taskId }) => {
             <div className="flex justify-between items-center mb-6">
                 <h2 className="text-xl font-bold text-[#E58C06] lg:text-3xl">Offers</h2>
             </div>
-            <div className="mb-5 pb-1 border-b border-[#716F78]">
+            <div className="mb-5">
                 {offers?.map((offer) => (
-                    <div key={offer.id} className="space-y-8">
+                    <div key={offer.id} className="space-y-8 border-b border-[#716F78] mb-5">
                         <OfferMessage message={offer} isThread={false} />
                         {offer.serviceProviderId === currentUserId && (
                             <div className="mt-2">
@@ -104,7 +98,7 @@ const TaskOffers: FC<OffersProps> = ({ currentUserId, taskId }) => {
                             <div ref={modalRef} className="fixed inset-0 z-50 bg-black h-screen bg-opacity-20 flex items-end sm:items-center justify-center">
                                 <div className="bg-white w-full sm:w-[500px] rounded-t-3xl lg:rounded-2xl max-sm:pb-20 px-5 pb-8 pt-2 transition-all duration-300">
                                     <div className="flex items-center justify-between mb-3">
-                                        <h2 className="font-clashBold text-primary text-start font-bold">Reply</h2>
+                                        <h2 className={`font-clashBold text-primary text-start font-bold ${showSuccessMessage && "hidden"}`}>Reply</h2>
                                         <div className="bg-[#EBE9F4] p-2 rounded-full">
                                             <IoIosCloseCircleOutline
                                                 className="size-6 text-[#5A5960] cursor-pointer"
@@ -137,7 +131,6 @@ const TaskOffers: FC<OffersProps> = ({ currentUserId, taskId }) => {
                                         ) : (
                                             <div>
                                                 <textarea
-                                                    ref={textareaRef}
                                                     rows={5}
                                                     value={replyText}
                                                     onChange={(e) => setReplyText(e.target.value)}
