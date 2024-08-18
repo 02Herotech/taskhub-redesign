@@ -12,6 +12,7 @@ import { BiX } from "react-icons/bi";
 interface NotificationListProps {
   notifications: NotificationTypes[];
   heading: string;
+  setRefresh: React.Dispatch<React.SetStateAction<number>>;
 }
 
 const notificationRoute = [
@@ -23,7 +24,73 @@ const notificationRoute = [
   },
   {
     type: "TASK",
-    subtype: "",
+    subtype: "ASSIGNED",
+    customerRoute: "",
+    providerRoute: "/service-provider/jobs",
+  },
+  {
+    type: "TASK",
+    subtype: "COMPLETED",
+    customerRoute: "",
+    providerRoute: "",
+  },
+  {
+    type: "TASK",
+    subtype: "OFFER",
+    customerRoute: "",
+    providerRoute: "",
+  },
+  {
+    type: "JOB",
+    subtype: "PENDING",
+    customerRoute: "",
+    providerRoute: "",
+  },
+  {
+    type: "JOB",
+    subtype: "ONGOING",
+    customerRoute: "",
+    providerRoute: "",
+  },
+  {
+    type: "JOB",
+    subtype: "COMPLETED",
+    customerRoute: "",
+    providerRoute: "/service-provider/services",
+  },
+  {
+    type: "INVOICE",
+    subtype: "PAID",
+    customerRoute: "",
+    providerRoute: "",
+  },
+  {
+    type: "INVOICE",
+    subtype: "UNPAID",
+    customerRoute: "",
+    providerRoute: "",
+  },
+  {
+    type: "INVOICE",
+    subtype: "EXPIRED",
+    customerRoute: "",
+    providerRoute: "",
+  },
+  {
+    type: "PAYMENT",
+    subtype: "SUCCESS",
+    customerRoute: "",
+    providerRoute: "",
+  },
+  {
+    type: "PAYMENT",
+    subtype: "FAILURE",
+    customerRoute: "",
+    providerRoute: "",
+  },
+  {
+    type: "PAYMENT",
+    subtype: "PENDING",
     customerRoute: "",
     providerRoute: "",
   },
@@ -32,6 +99,7 @@ const notificationRoute = [
 const NotificationList = ({
   notifications,
   heading,
+  setRefresh,
 }: NotificationListProps) => {
   const dialogRef = useRef<HTMLDialogElement>(null);
   const [currentNotification, setCurrentNotification] =
@@ -51,6 +119,17 @@ const NotificationList = ({
     try {
       setCurrentNotification(notification);
       dialogRef?.current?.showModal();
+      setRefresh((prev) => prev + 1);
+      const route = notificationRoute.filter(
+        (item) =>
+          item.type === notification.type &&
+          item.subtype === notification.subType,
+      )[0];
+      if (isServiceProvider) {
+        setCurrentRoute(route.providerRoute);
+      } else {
+        setCurrentRoute(route.customerRoute);
+      }
       const url =
         "https://smp.jacinthsolutions.com.au/api/v1/notification/change-notification-status?notificationId=" +
         notification.id;
@@ -77,8 +156,6 @@ const NotificationList = ({
     }
   };
 
-  console.log(isServiceProvider);
-
   const handleNavigateNotification = () => {
     if (!currentNotification) return;
     const route = notificationRoute.filter(
@@ -87,9 +164,9 @@ const NotificationList = ({
         item.subtype === currentNotification.subType,
     )[0];
     if (isServiceProvider) {
-      return route.providerRoute;
+      return router.push(route.providerRoute);
     }
-    return route.customerRoute;
+    return router.push(route.customerRoute);
   };
 
   return (
@@ -116,12 +193,14 @@ const NotificationList = ({
             <p className="text-violet-dark">{currentNotification?.message}</p>
           </div>
           <div className="flex items-center justify-center">
-            <Link
-              href={handleNavigateNotification() as string}
-              className="rounded-full bg-violet-normal px-4 py-2 text-white"
-            >
-              View
-            </Link>
+            {currentRoute && (
+              <Link
+                href={currentRoute}
+                className="rounded-full bg-violet-normal px-4 py-2 text-white"
+              >
+                View
+              </Link>
+            )}
           </div>
         </div>
       </dialog>

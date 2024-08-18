@@ -147,8 +147,6 @@ const Navigation = () => {
     // eslint-disable-next-line
   }, [token]);
 
-  const a = 12;
-
   useEffect(() => {
     const fetchUserProfile = async () => {
       if (!user) return;
@@ -169,12 +167,12 @@ const Navigation = () => {
           dispatch(setWalletBalance(response.data.walletBalance));
         }
       } catch (error: any) {
-        console.error(error.response.data);
+        console.error(error?.response?.data || error);
       }
     };
     fetchUserProfile();
     // eslint-disable-next-line
-  }, [user, userProfile.refresh, dispatch, a]);
+  }, [user, userProfile.refresh, dispatch]);
 
   const notificationRoute = isServiceProvider
     ? "/service-provider/notification"

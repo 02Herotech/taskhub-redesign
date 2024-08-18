@@ -15,6 +15,7 @@ const NotificationComponent = () => {
   const [allNotifications, setAlNotifications] = useState<NotificationTypes[]>(
     [],
   );
+  const [refresh, setRefresh] = useState(0);
 
   const session = useSession();
   const token = session?.data?.user?.accessToken;
@@ -46,7 +47,7 @@ const NotificationComponent = () => {
   useEffect(() => {
     handleFetchNotifications();
     // eslint-disable-next-line
-  }, [token]);
+  }, [token, refresh]);
 
   const handleChangeCategory = (category: string) => {
     setCurrentCategory(category);
@@ -99,7 +100,7 @@ const NotificationComponent = () => {
 
   return (
     <main className="mt-24 py-4 lg:p-8">
-      {loading ? (
+      {loading && !refresh ? (
         <div className="flex min-h-80 items-center justify-center">
           <Loading />
         </div>
@@ -138,24 +139,28 @@ const NotificationComponent = () => {
               <NotificationList
                 heading="Today"
                 notifications={categorizeNotifications(notifications).today}
+                setRefresh={setRefresh}
               />
             )}
             {categorizeNotifications(notifications).thisWeek.length > 0 && (
               <NotificationList
                 heading="This Week"
                 notifications={categorizeNotifications(notifications).thisWeek}
+                setRefresh={setRefresh}
               />
             )}
             {categorizeNotifications(notifications).thisMonth.length > 0 && (
               <NotificationList
                 heading="This Month"
                 notifications={categorizeNotifications(notifications).thisMonth}
+                setRefresh={setRefresh}
               />
             )}
             {categorizeNotifications(notifications).older.length > 0 && (
               <NotificationList
                 heading="Older"
                 notifications={categorizeNotifications(notifications).older}
+                setRefresh={setRefresh}
               />
             )}
           </div>
