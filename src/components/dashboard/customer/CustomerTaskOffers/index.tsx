@@ -20,15 +20,9 @@ const CustomerTaskOffers: FC<OffersProps> = ({ taskId }) => {
     const [showSuccessMessage, setShowSuccessMessage] = useState<boolean>(false);
     const { profile: user } = useSelector((state: RootState) => state.userProfile);
     const { data: offers, refetch } = useGetTasksOffersQuery(taskId);
-    const textareaRef = useRef<HTMLTextAreaElement>(null);
     const modalRef = useRef<HTMLDivElement>(null);
 
-    // Use effect to focus on the textarea when the modal opens
     useEffect(() => {
-        const openOfferId = Object.keys(openReplyModal).find(id => openReplyModal[id]);
-        if (openOfferId && textareaRef.current) {
-            textareaRef.current.focus();
-        }
 
         const handleResize = () => {
             if (modalRef.current) {
@@ -97,7 +91,7 @@ const CustomerTaskOffers: FC<OffersProps> = ({ taskId }) => {
             </div>
             <div className="">
                 {offers?.map((offer) => (
-                    <div key={offer.id} className="mb-5 pb-1 border-b border-[#716F78]">
+                    <div key={offer.id} className="border-b border-[#716F78] mb-5">
                         <OfferMessage message={offer} isThread={false} />
                         <div className="mt-2">
                             <h2 onClick={() => setOpenReplyModal((prev) => ({ ...prev, [offer.id]: true }))} className='text-primary cursor-pointer font-semibold'>Reply</h2>
@@ -146,7 +140,6 @@ const CustomerTaskOffers: FC<OffersProps> = ({ taskId }) => {
                                         ) : (
                                                 <div>
                                                     <textarea
-                                                        ref={textareaRef}
                                                         rows={5}
                                                         value={replyText}
                                                         onChange={(e) => setReplyText(e.target.value)}
