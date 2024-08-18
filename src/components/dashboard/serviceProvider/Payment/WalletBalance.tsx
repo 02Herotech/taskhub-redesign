@@ -7,8 +7,6 @@ const WalletBalance = () => {
   const { walletBalance } = useSelector(
     (state: RootState) => state.userProfile,
   );
-  console.log(walletBalance);
   return <span>{walletBalance}</span>;
 };
-
 export default WalletBalance;
