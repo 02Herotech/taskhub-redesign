@@ -119,7 +119,6 @@ const NotificationList = ({
     try {
       setCurrentNotification(notification);
       dialogRef?.current?.showModal();
-      setRefresh((prev) => prev + 1);
       const route = notificationRoute.filter(
         (item) =>
           item.type === notification.type &&
@@ -140,6 +139,7 @@ const NotificationList = ({
           headers: { Authorization: "Bearer " + token },
         },
       );
+      setRefresh((prev) => prev + 1);
     } catch (error: any) {
       console.error(error?.response?.data || error);
     }
@@ -156,19 +156,6 @@ const NotificationList = ({
     }
   };
 
-  const handleNavigateNotification = () => {
-    if (!currentNotification) return;
-    const route = notificationRoute.filter(
-      (item) =>
-        item.type === currentNotification.type &&
-        item.subtype === currentNotification.subType,
-    )[0];
-    if (isServiceProvider) {
-      return router.push(route.providerRoute);
-    }
-    return router.push(route.customerRoute);
-  };
-
   return (
     <div className="flex flex-col gap-4 pb-4">
       <dialog
@@ -176,7 +163,7 @@ const NotificationList = ({
         onClick={handleBackdropClick}
         className="bg-transparent"
       >
-        <div className="relative w-[90vw] max-w-md space-y-4 rounded-md bg-white p-6 shadow-sm">
+        <div className="relative w-[90vw] max-w-md space-y-5 rounded-md bg-white p-6 shadow-sm">
           <button
             className="absolute right-3 top-3 rounded-full bg-violet-light p-1 text-violet-normal"
             onClick={closeDialog}
