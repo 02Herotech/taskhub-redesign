@@ -17,6 +17,7 @@ import { Invoice } from "@/types/services/invoice";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { LuCalendarDays } from "react-icons/lu";
+import { set } from "zod";
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY!);
 
@@ -62,6 +63,7 @@ const Offers = () => {
 
   const fetchPaymentIntent = async () => {
     try {
+      setError("");
       setLoading(true);
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}/booking/payment-intent-stripe/${selectedInvoice?.id}`,

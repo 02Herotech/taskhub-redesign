@@ -21,6 +21,8 @@ import Dropdown from "@/components/global/Dropdown";
 import { useRouter } from "next/navigation";
 import Loading from "@/components/global/loading/page";
 import ProgressBar from "@/components/global/progressbar";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store";
 
 interface FormData {
   listingTitle: string;
@@ -139,6 +141,12 @@ const ProvideService: React.FC = () => {
     { value: "SATURDAY", label: "Saturday" },
     { value: "SUNDAY", label: "Sunday" },
   ];
+
+  const { profile: user } = useSelector(
+    (state: RootState) => state.userProfile,
+  );
+
+  console.log("user", user);
 
   // Handling getting the description from the marketplace when i user navigates from the marketplace
   useEffect(() => {

@@ -77,6 +77,12 @@ const notificationRoute = [
     providerRoute: "",
   },
   {
+    type: "INVOICE",
+    subtype: null,
+    customerRoute: "/customer/payment/offers",
+    providerRoute: "",
+  },
+  {
     type: "PAYMENT",
     subtype: "SUCCESS",
     customerRoute: "/customer/payment/payment-history",
