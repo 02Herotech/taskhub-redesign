@@ -186,6 +186,7 @@ const ProvideService: React.FC = () => {
           "https://smp.jacinthsolutions.com.au/api/v1/util/all-categories",
         );
         const data: Item[] = response.data;
+        console.log(data);
         setItems(data);
       } catch (error) {
         console.error("Error fetching items:", error);
@@ -203,6 +204,7 @@ const ProvideService: React.FC = () => {
             `https://smp.jacinthsolutions.com.au/api/v1/util/all-sub-categories-by-categoryId/${selectedCategory}`,
           );
           const data: Subcategory[] = response.data;
+          console.log(data);
           setSubcategories(data);
         } catch (error) {
           console.error("Error fetching subcategories:", error);
@@ -293,7 +295,7 @@ const ProvideService: React.FC = () => {
     setSelectedSubCategory(selectedId);
     setTask({
       ...task,
-      subCategoryId: selectedCategory,
+      subCategoryId: selectedId,
     });
   };
 
