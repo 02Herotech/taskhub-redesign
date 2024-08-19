@@ -51,6 +51,7 @@ html {
 .line-clamp-3 {
   display: -webkit-box;
   -webkit-line-clamp: 3;
+  line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -73,6 +74,10 @@ html {
 
 .custom-datepicker {
   transform: translate3d(0, 40px, 0) !important;
+}
+
+.datepicker-style {
+  z-index: 9999;
 }
 
 @layer base {
