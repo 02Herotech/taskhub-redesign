@@ -108,8 +108,6 @@ const ServicesPage = () => {
     }));
   };
 
-  console.log(jobs);
-
   return (
     <main className=" relative space-y-8 p-4 lg:p-8">
       <OngoingServiceModal
