@@ -5,7 +5,6 @@ import axios from "axios";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import React, { useRef, useState } from "react";
 import { BiX } from "react-icons/bi";
 
@@ -107,9 +106,6 @@ const NotificationList = ({
   const [currentRoute, setCurrentRoute] = useState("");
 
   const session = useSession();
-  const router = useRouter();
-
-  console.log(notifications);
 
   const token = session?.data?.user?.accessToken;
   const isServiceProvider =
@@ -119,15 +115,21 @@ const NotificationList = ({
     try {
       setCurrentNotification(notification);
       dialogRef?.current?.showModal();
-      const route = notificationRoute.filter(
+
+      // Find the route based on the notification type and subtype
+      const route = notificationRoute.find(
         (item) =>
           item.type === notification.type &&
           item.subtype === notification.subType,
-      )[0];
-      if (isServiceProvider) {
-        setCurrentRoute(route.providerRoute);
+      );
+      if (route) {
+        if (isServiceProvider) {
+          setCurrentRoute(route.providerRoute);
+        } else {
+          setCurrentRoute(route.customerRoute);
+        }
       } else {
-        setCurrentRoute(route.customerRoute);
+        console.error("No matching route found for the given notification.");
       }
       const url =
         "https://smp.jacinthsolutions.com.au/api/v1/notification/change-notification-status?notificationId=" +

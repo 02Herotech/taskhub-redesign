@@ -35,6 +35,7 @@ const NotificationComponent = () => {
           Authorization: "Bearer " + token,
         },
       });
+      console.log("refreshed");
       setAlNotifications(data);
       setNotifications(data);
     } catch (error: any) {
