@@ -487,9 +487,12 @@ const AddTaskForm: React.FC = () => {
         });
 
         setIsSuccessPopupOpen(true);
-      } catch (error) {
-        console.error("Error submitting form:", error);
-        setIsSuccessPopupOpen(true);
+      } catch (error: any) {
+        if (error.response.status === 400 || error.response.status === 500 || error.response.status === 409) {
+          setIsSuccessPopupOpen(false);
+        } else {
+          setIsSuccessPopupOpen(true);
+        }
       } finally {
         setLoading(false);
       }
