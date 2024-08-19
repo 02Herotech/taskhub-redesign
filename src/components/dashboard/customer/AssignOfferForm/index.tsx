@@ -16,7 +16,8 @@ const AssignOfferForm: React.FC<AssignOfferFormProps> = ({ onClose, onAssign, of
     const [selectedOffer, setSelectedOffer] = useState<string | null>(null);
     const [showConfirmation, setShowConfirmation] = useState(false);
     const [showSuccessModal, setShowSuccessModal] = useState(false);
-    const [assignTask] = useAssignTaskMutation();
+    const [errorMessage, setErrorMessage] = useState<string>("");
+    const [assignTask, { isLoading }] = useAssignTaskMutation();
 
     const handleSelectOffer = (offerId: string) => {
         setSelectedOffer(offerId);
@@ -38,8 +39,9 @@ const AssignOfferForm: React.FC<AssignOfferFormProps> = ({ onClose, onAssign, of
             onAssign(selectedOffer);
             setShowConfirmation(false);
             setShowSuccessModal(true);
-        } catch (error) {
+        } catch (error: any) {
             console.error('Error assigning task:', error);
+            setErrorMessage(error.data.message);
         }
     };
 
@@ -61,7 +63,7 @@ const AssignOfferForm: React.FC<AssignOfferFormProps> = ({ onClose, onAssign, of
                                 if (!uniqueOffers.some(uOffer => uOffer.serviceProviderId === offer.serviceProviderId)) {
                                     uniqueOffers.push(offer)
                                 }
-                                return uniqueOffers; 
+                                return uniqueOffers;
                             }, []).map((offer) => (
                                 <div key={offer.id} className="flex items-center justify-between p-3 rounded-lg">
                                     <div className="flex items-center space-x-3">
@@ -76,7 +78,7 @@ const AssignOfferForm: React.FC<AssignOfferFormProps> = ({ onClose, onAssign, of
                                             <p className="font-semibold">{offer.fullName}</p>
                                         </div>
                                     </div>
-                                    <Button size='sm' onClick={() => handleSelectOffer(offer.id)} className="rounded-full">
+                                    <Button size='sm' loading={isLoading} onClick={() => handleSelectOffer(offer.id)} className="rounded-full">
                                         Assign
                                     </Button>
                                 </div>
@@ -87,7 +89,7 @@ const AssignOfferForm: React.FC<AssignOfferFormProps> = ({ onClose, onAssign, of
                     </div>
                 ) : (
                     <div className="space-y-4">
-                            <h3 className="font-semibold">Are you sure you want to assign this task? click on confirm to continue</h3>
+                        <h3 className="font-semibold">Are you sure you want to assign this task? click on confirm to continue</h3>
                         {selectedOffer && (
                             <div>
                                 <p>You are about to assign this task to {offers.find(o => o.id === selectedOffer)?.fullName}.</p>
@@ -101,6 +103,7 @@ const AssignOfferForm: React.FC<AssignOfferFormProps> = ({ onClose, onAssign, of
                                 Confirm
                             </Button>
                         </div>
+                        {errorMessage && <h4 className='text-center text-sm text-red-500'>{`${errorMessage}. Please try again`}</h4>}
                     </div>
                 )}
             </div>
