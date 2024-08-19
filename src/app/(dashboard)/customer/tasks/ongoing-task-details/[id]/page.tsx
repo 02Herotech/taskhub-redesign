@@ -232,27 +232,29 @@ const OnogoingTaskDetailsPage = ({ params }: { params: { id: string } }) => {
                                         <path d="M34 15.9924L30.2291 11.742L30.7545 6.11562L25.1755 4.86192L22.2545 0L17 2.2322L11.7455 0L8.82454 4.86192L3.24545 6.10033L3.77091 11.7267L0 15.9924L3.77091 20.2427L3.24545 25.8844L8.82454 27.1381L11.7455 32L17 29.7525L22.2545 31.9847L25.1755 27.1228L30.7545 25.8691L30.2291 20.2427L34 15.9924ZM13.9091 23.6369L7.72727 17.5213L9.90636 15.3655L13.9091 19.3101L24.0936 9.23459L26.2727 11.4056L13.9091 23.6369Z" fill="white" />
                                     </svg></div>
                                     <h1 className="font-black text-3xl text-[#2A1769]">
-                                        Payment Successful
+                                        Payment has been approved!
                                     </h1>
                                     <p className="mb-8 font-satoshiMedium text-center text-lg font-medium text-[#140B31]">
                                         Great! your payment to the service provider has been approved. Please leave a review below
                                     </p>
-                                    <Button
-                                        className="max-lg:text-sm rounded-full bg-[#E1DDEE] border-none"
-                                        onClick={() => {
-                                            setApprovePaymentPopup(false)
-                                            setPaymentApproved(false)
-                                        }}
-                                        size='sm'
-                                    >
-                                        Cancel
-                                    </Button>
-                                    <Button
-                                        className="max-lg:text-sm rounded-full"
-                                        size='sm'
-                                    >
-                                        Review
-                                    </Button>
+                                    <div className="lg:flex items-center justify-center space-x-4">
+                                        <Button
+                                            className="max-lg:text-sm rounded-full bg-[#E1DDEE] border-none"
+                                            onClick={() => {
+                                                setApprovePaymentPopup(false)
+                                                setPaymentApproved(false)
+                                            }}
+                                            size='sm'
+                                        >
+                                            Cancel
+                                        </Button>
+                                        <Button
+                                            className="max-lg:text-sm rounded-full"
+                                            size='sm'
+                                        >
+                                            Review
+                                        </Button>
+                                    </div>
                                     {paymentError && <p className="text-red-600 text-sm mt-4 text-center">{paymentError}</p>}
                                 </div>
                             </div>
