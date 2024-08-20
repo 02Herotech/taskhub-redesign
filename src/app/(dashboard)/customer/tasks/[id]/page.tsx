@@ -132,7 +132,7 @@ const NewTaskDetails = ({ params }: { params: { id: string } }) => {
                 </>
             )}
             {offers && offers.length > 0 && (
-                <CustomerTaskOffers taskId={Number(id)} />
+                <CustomerTaskOffers taskId={Number(id)} posterId={task.posterId} />
             )}
             {showAssignForm && (
                 <AssignOfferForm
