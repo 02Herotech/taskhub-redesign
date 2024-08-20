@@ -1,3 +1,6 @@
+import Hero from "@/components/homepage/Hero";
+
+
 import HeroSection from "@/components/homepage/HeroSection";
 import SecurityFeatures from "@/components/homepage/SecurityFeatures";
 import SPHomepage from "@/components/homepage/ServiceProvider";
@@ -8,7 +11,13 @@ import WelcomeAboard from "@/components/homepage/WelcomeAboard";
 const HomePage = () => {
   return (
     <main className="min-h-screen">
-      <HeroSection />
+          <Hero />
+      {/* <HeroSection /> */}
+
+  
+
+
+
       <Taskhub />
       {/* <WelcomeAboard /> */}
       <SPHomepage />
