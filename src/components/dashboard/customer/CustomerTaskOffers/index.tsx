@@ -91,7 +91,7 @@ const CustomerTaskOffers: FC<OffersProps> = ({ taskId, posterId }) => {
             </div>
             <div className="">
                 {offers?.map((offer) => (
-                    <div key={offer.id} className="border-b border-[#716F78] pb-2 mb-5">
+                    <div key={offer.id} className="border-b border-[#716F78] space-y-8 mb-5">
                         <OfferMessage message={offer} isThread={false} posterId={posterId} />
                         <div className="mt-2">
                             <h2 onClick={() => setOpenReplyModal((prev) => ({ ...prev, [offer.id]: true }))} className='text-primary cursor-pointer font-semibold'>Reply</h2>
