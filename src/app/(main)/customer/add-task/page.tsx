@@ -376,13 +376,24 @@ const AddTaskForm: React.FC = () => {
 
   const formatTimeToString = (time: Date | null) => {
     if (time) {
-      // Formatting the time as "HH:mm"
-      const hours = String(time.getHours()).padStart(2, "0");
+      // Get the hours and minutes
+      let hours = time.getHours();
       const minutes = String(time.getMinutes()).padStart(2, "0");
-      return `${hours}:${minutes}`;
+
+      // Determine AM or PM
+      const period = hours >= 12 ? "PM" : "AM";
+
+      // Convert to 12-hour format
+      hours = hours % 12 || 12; // Converts "0" hours to "12" for 12 AM
+
+      // Format the hours with leading zero if necessary
+      const formattedHours = String(hours).padStart(2, "0");
+
+      return `${formattedHours}:${minutes} ${period}`;
     }
     return "";
   };
+
 
   const dateString = formatDateToString(selectedDate);
   const timeString = formatTimeToString(selectedTime);
@@ -487,9 +498,12 @@ const AddTaskForm: React.FC = () => {
         });
 
         setIsSuccessPopupOpen(true);
-      } catch (error) {
-        console.error("Error submitting form:", error);
-        setIsSuccessPopupOpen(true);
+      } catch (error: any) {
+        if (error.response.status === 400 || error.response.status === 500 || error.response.status === 409) {
+          setIsSuccessPopupOpen(false);
+        } else {
+          setIsSuccessPopupOpen(true);
+        }
       } finally {
         setLoading(false);
       }
