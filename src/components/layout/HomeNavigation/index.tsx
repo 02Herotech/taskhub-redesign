@@ -40,7 +40,7 @@ const HomeNavigation = () => {
 
   return (
     <>
-      <nav className="fixed left-0 right-0 top-0 z-50 w-full bg-[#F5E2FC]">
+      <nav className="fixed left-0 right-0 top-0 z-50 w-full bg-[#EBE9F4]">
         <div className="container flex items-center justify-between px-7 py-4 lg:px-12 lg:py-5">
           <Link href="/">
             <Logo />

@@ -69,7 +69,7 @@ const Hero = () => {
 
             <div className='relative z-10 mx-auto max-w-7xl mt-[-500px]'>
 
-                <div className='w-[90%] mx-auto'>
+                <div className='w-[90%] mx-auto pt-10'>
                     <h1 className='font-clashSemiBold my-4 text-center xl:text-[40px] text-[32px] text-[#140B31] '>
                         Every immigrant needs a <span className='text-[#E58C06]'>Product</span>
                     </h1>
@@ -104,68 +104,9 @@ const Hero = () => {
                     </div>
                 </div>
 
-                {/* <div className='flex justify-between w-[85%] mx-auto'>
-
-                    <div className='w-[24%] h-[350px] relative'>
-                        <Image
-                            src={heroImage1}
-                            alt='heroImage2'
-                            className='absolute'
-
-                        />
-
-                    </div>
 
 
-
-                    <div className='w-[48%] flex flex-col '>
-                        <div className='flex justify-between '>
-                            <div className='relative'>
-                                <Image
-                                    src={heroImage2a}
-                                    alt='heroImage2a'
-                                    className='absolute'
-
-                                />
-                            </div>
-
-                            <div className='relative'>
-                                <Image
-                                    src={heroImage2b}
-                                    alt='heroImage2b'
-                                    className='absolute'
-
-                                />
-                            </div>
-                        </div>
-
-                        <div className='relative'>
-                            <Image
-                                src={heroImage2c}
-                                alt='heroImage2c'
-                                className='absolute'
-
-                            />
-                        </div>
-
-                    </div>
-
-                    <div className='w-[24%]'>
-                        <Image
-                            src={heroImage3}
-                            alt='heroImage3'
-                            className='absolute'
-
-                        />
-                    </div>
-
-                </div> */}
-
-
-
-
-
-                <div className='flex justify-between w-[85%] mx-auto !h-[420px]'>
+                <div className='flex justify-between w-[85%] mx-auto xl:!h-[500px] !h-[420px] mt-10'>
 
                     <div className='w-[24%] h-[350px]'>
                         <Image
@@ -179,28 +120,29 @@ const Hero = () => {
                     </div>
 
 
-                    <div className='w-[48%] flex flex-col space-y-4'>
+                    <div className='w-[48%] flex flex-col justify-between xl:space-y-14'>
 
 
-                        <div className='flex justify-between space-x-4'>
-                            <div className='w-[48%] h-[200px]'>
+                        <div className='flex justify-between  space-x-4'>
+                            <div className='w-[45%] h-[200px]'>
                                 <Image
                                     src={heroImage2a}
                                     alt='heroImage2a'
                                     layout='responsive'
                                     width={500}
                                     height={200}
+                                    className='xl:!h-[240px] !h-[191px]'
                                 />
                             </div>
 
-                            <div className='w-[48%] h-[200px]'>
+                            <div className='w-[55%] h-[200px]'>
                                 <Image
                                     src={heroImage2b}
                                     alt='heroImage2b'
                                     // layout='responsive'
                                     width={500}
                                     height={200}
-                                    className='!h-[191px]'
+                                    className='xl:!h-[240px] !h-[191px]'
                                 />
                             </div>
 
@@ -213,9 +155,10 @@ const Hero = () => {
                             <Image
                                 src={heroImage2c}
                                 alt='heroImage2c'
-                                // layout='responsive'
+                                 layout='responsive'
                                 width={500}
                                 height={350}
+                                  className='xl:!h-[185px] lg:!h-[158px]'
                             />
                         </div>
 
