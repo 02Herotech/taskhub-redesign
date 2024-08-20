@@ -22,6 +22,23 @@ const NewTaskDetails = ({ params }: { params: { id: string } }) => {
         console.log(`Assigning task to offer: ${offerId}`);
     };
 
+    const isMounted = useRef(true);
+
+    useEffect(() => {
+        isMounted.current = true;
+
+        const intervalId = setInterval(() => {
+            if (isMounted.current) {
+                refetch();
+            }
+        }, 10000);
+
+        return () => {
+            isMounted.current = false;
+            clearInterval(intervalId);
+        };
+    }, [refetch]);
+
     if (!task) {
         return (
             <div className="w-full flex items-center justify-center h-[full]">
@@ -115,7 +132,7 @@ const NewTaskDetails = ({ params }: { params: { id: string } }) => {
                 </>
             )}
             {offers && offers.length > 0 && (
-                <CustomerTaskOffers taskId={Number(id)} />
+                <CustomerTaskOffers taskId={Number(id)} posterId={task.posterId} />
             )}
             {showAssignForm && (
                 <AssignOfferForm

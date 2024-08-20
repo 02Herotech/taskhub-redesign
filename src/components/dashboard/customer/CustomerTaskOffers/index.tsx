@@ -11,10 +11,10 @@ import { FaCheck } from 'react-icons/fa';
 
 interface OffersProps {
     taskId: number;
+    posterId: number;
 }
 
-
-const CustomerTaskOffers: FC<OffersProps> = ({ taskId }) => {
+const CustomerTaskOffers: FC<OffersProps> = ({ taskId, posterId }) => {
     const [replyText, setReplyText] = useState<string>('');
     const [openReplyModal, setOpenReplyModal] = useState<{ [key: string]: boolean }>({});
     const [showSuccessMessage, setShowSuccessMessage] = useState<boolean>(false);
@@ -91,15 +91,15 @@ const CustomerTaskOffers: FC<OffersProps> = ({ taskId }) => {
             </div>
             <div className="">
                 {offers?.map((offer) => (
-                    <div key={offer.id} className="border-b border-[#716F78] mb-5">
-                        <OfferMessage message={offer} isThread={false} />
+                    <div key={offer.id} className="border-b border-[#716F78] pb-2 mb-5">
+                        <OfferMessage message={offer} isThread={false} posterId={posterId} />
                         <div className="mt-2">
                             <h2 onClick={() => setOpenReplyModal((prev) => ({ ...prev, [offer.id]: true }))} className='text-primary cursor-pointer font-semibold'>Reply</h2>
                         </div>
                         <div className="pl-4">
                             {offer.offerThreadList.map((thread) => (
                                 <div className="mb-4" key={thread.message}>
-                                    <OfferMessage message={thread} isThread={true} />
+                                    <OfferMessage message={thread} isThread={true} posterId={posterId} />
                                 </div>
                             ))}
                         </div>
