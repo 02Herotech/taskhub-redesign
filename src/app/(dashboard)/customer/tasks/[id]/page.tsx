@@ -7,20 +7,22 @@ import { FiCalendar, FiClock } from "react-icons/fi";
 import { useGetTaskByIdQuery, useGetTasksOffersQuery } from '@/services/tasks';
 import { dayOfWeekNames, formatAmount, monthNames, suffixes } from '@/lib/utils';
 import Loading from '@/shared/loading';
-import { useEffect, useRef, useState } from 'react';
+import { useState } from 'react';
 import AssignOfferForm from '@/components/dashboard/customer/AssignOfferForm';
 import CustomerTaskOffers from '@/components/dashboard/customer/CustomerTaskOffers';
 
 const NewTaskDetails = ({ params }: { params: { id: string } }) => {
     const id = params.id;
     const { data: task, isLoading } = useGetTaskByIdQuery(id as unknown as number);
-    const { data: offers, refetch } = useGetTasksOffersQuery(id as unknown as number);
+    const { data: offers } = useGetTasksOffersQuery(id as unknown as number);
 
     const [showAssignForm, setShowAssignForm] = useState(false);
 
     const handleAssign = (offerId: string) => {
         console.log(`Assigning task to offer: ${offerId}`);
     };
+
+    console.log("task:", task)
 
     if (!task) {
         return (

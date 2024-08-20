@@ -16,7 +16,7 @@ interface OffersProps {
     // offers: Offer[] | undefined;
 }
 
-const TaskOffers: FC<OffersProps> = ({ currentUserId, taskId }) => {
+const TaskOffers: FC<OffersProps> = ({ currentUserId, taskId, posterId }) => {
     const [replyText, setReplyText] = useState<string>('');
     const [openReplyModal, setOpenReplyModal] = useState<{ [key: string]: boolean }>({});
     const [showSuccessMessage, setShowSuccessMessage] = useState<boolean>(false);
@@ -80,7 +80,7 @@ const TaskOffers: FC<OffersProps> = ({ currentUserId, taskId }) => {
             <div className="mb-5">
                 {offers?.map((offer) => (
                     <div key={offer.id} className="space-y-8 border-b border-[#716F78] mb-5">
-                        <OfferMessage message={offer} isThread={false} />
+                        <OfferMessage message={offer} isThread={false} posterId={posterId} />
                         {offer.serviceProviderId === currentUserId && (
                             <div className="mt-2">
                                 <h2 onClick={() => setOpenReplyModal((prev) => ({ ...prev, [offer.id]: true }))} className='text-primary cursor-pointer font-semibold'>Reply</h2>
@@ -89,7 +89,7 @@ const TaskOffers: FC<OffersProps> = ({ currentUserId, taskId }) => {
                         <div className="pl-4">
                             {offer.offerThreadList.map((thread) => (
                                 <div className="mb-4" key={thread.message}>
-                                    <OfferMessage message={thread} isThread={true} />
+                                    <OfferMessage message={thread} isThread={true} posterId={posterId} />
                                 </div>
                             ))}
                         </div>
