@@ -1,6 +1,6 @@
 "use client";
 
-import { dayOfWeekNames, formatAmount, monthNames, suffixes } from "@/lib/utils";
+import { dayOfWeekNames, formatAmount, formatTime24Hour, monthNames, suffixes } from "@/lib/utils";
 import { Task } from "@/types/services/tasks";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
@@ -82,7 +82,7 @@ const TaskCard = ({ task }: TaskCardProps) => {
         </div>
         <div className="flex w-full items-center space-x-2 font-medium text-[#716F78]">
           <FiClock className="h-6 w-6 font-bold" />
-          <h5 className="text-[14px]">{task.taskTime || "Flexible"}</h5>
+          <h5 className="text-[14px]">{formatTime24Hour(task.taskTime) || "Flexible"}</h5>
         </div>
       </div>
       <div className="flex items-center justify-end">

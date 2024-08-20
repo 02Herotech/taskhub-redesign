@@ -8,6 +8,7 @@ import { useGetTaskByIdQuery, useGetTasksOffersQuery } from "@/services/tasks";
 import {
   dayOfWeekNames,
   formatAmount,
+  formatTime24Hour,
   monthNames,
   suffixes,
 } from "@/lib/utils";
@@ -201,7 +202,7 @@ const TaskDetailsPage = ({ params }: { params: { id: string } }) => {
                 <div className="flex items-center space-x-3 text-[#716F78] max-lg:text-xs">
                   <FiClock className="h-6 w-6" />
                   <h5 className="font-satoshiMedium text-[15px] font-medium lg:text-xl">
-                    {task.taskTime || "Flexible"}
+                    {formatTime24Hour(task.taskTime) || "Flexible"}
                   </h5>
                 </div>
               </div>
