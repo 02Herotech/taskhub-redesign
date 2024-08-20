@@ -79,8 +79,6 @@ const EditTaskForm = ({ task, setShowEditModal }: TaskCardProps) => {
         resolver: zodResolver(taskSchema),
     });
 
-    console.log("errors", errors);
-
     useEffect(() => {
         if (task) {
             reset({
@@ -93,7 +91,7 @@ const EditTaskForm = ({ task, setShowEditModal }: TaskCardProps) => {
                 state: task.state,
                 taskImage: task.taskImage,
                 taskDate: task.taskDate,
-                taskTime: task.taskTime,
+                taskTime: formatTimeToString(new Date(task.taskTime[0], task.taskTime[1])),
                 customerBudget: task.customerBudget
             });
         }
