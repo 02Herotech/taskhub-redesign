@@ -6,7 +6,7 @@ import { HiOutlineLocationMarker } from "react-icons/hi";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { FaRegEdit } from "react-icons/fa";
 import { motion } from "framer-motion";
-import { dayOfWeekNames, formatAmount, monthNames, suffixes } from "@/lib/utils";
+import { dayOfWeekNames, formatAmount, formatTime24Hour, monthNames, suffixes } from "@/lib/utils";
 import { CustomerTasks } from "@/types/services/tasks";
 import Popup from "@/components/global/Popup";
 import EditTaskForm from "../EditTaskForm";
@@ -123,7 +123,7 @@ const NewTasksCard = ({ task }: TaskCardProps) => {
                         </div>
                         <div className="flex items-center space-x-2 font-medium text-[#716F78]">
                             <FiClock className="h-5 w-5 font-bold" />
-                            <h5 className="text-[15px] lg:text-lg">{task.taskTime || "Flexible"}</h5>
+                            <h5 className="text-[15px] lg:text-lg">{formatTime24Hour(task.taskTime) || "Flexible"}</h5>
                         </div>
                     </div>
                     <div className="flex justify-between items-end">
