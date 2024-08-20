@@ -54,6 +54,23 @@ const TaskDetailsPage = ({ params }: { params: { id: string } }) => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
+  const isMounted = useRef(true);
+
+  useEffect(() => {
+    isMounted.current = true;
+
+    const intervalId = setInterval(() => {
+      if (isMounted.current) {
+        refetch();
+      }
+    }, 10000);
+
+    return () => {
+      isMounted.current = false;
+      clearInterval(intervalId);
+    };
+  }, [refetch]);
+
   const handleSubmitOffer = async (message: string) => {
     const socket = connectSocket(id as unknown as number);
 
