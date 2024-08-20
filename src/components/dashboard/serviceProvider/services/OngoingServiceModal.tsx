@@ -4,6 +4,7 @@ import { RootState } from "@/store";
 import axios from "axios";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
+import Link from "next/link";
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { BiFlag, BiX } from "react-icons/bi";
 import { BsExclamationTriangle, BsTriangleFill } from "react-icons/bs";
@@ -78,11 +79,14 @@ const OngoingServiceModal = ({
         message: data.message,
       }));
     } catch (error: any) {
+      console.log("Error message", error.response?.data?.message || error);
       setModalData((prev) => ({
         ...prev,
         isStartService: true,
         isCompleteService: false,
-        error: "Kindly check your network connection",
+        error:
+          error.response?.data?.message ||
+          "Kindly check your network connection",
       }));
     } finally {
       setCompleteJobState({ ...completeJobState, loading: false });
@@ -133,7 +137,31 @@ const OngoingServiceModal = ({
         className="absolute inset-0 -z-20 h-screen  w-screen"
         onClick={handleCloseModal}
       ></div>
-      {modalData.isStartService ? (
+      {modalData.error ? (
+        <div className="relative z-10 flex w-[90vw] max-w-xl flex-col items-center justify-center gap-3 rounded-xl bg-white p-3 px-4 lg:space-y-4 lg:p-10">
+          <div className=" flex flex-col items-center justify-center gap-4">
+            <div className="flex size-20 items-center justify-center rounded-full bg-red-100 bg-opacity-60">
+              <div className=" flex size-14 items-center justify-center rounded-full bg-red-300 p-4">
+                <BsExclamationTriangle className="size-10 text-red-500" />
+              </div>
+            </div>
+            <p className="text-center font-satoshiBold text-2xl font-extrabold text-red-500">
+              Failure
+            </p>
+            <p className="text-center font-semibold text-violet-darker">
+              {modalData.error}
+            </p>
+            <div className="flex items-center gap-6">
+              <button
+                onClick={handleCloseModal}
+                className="rounded-full bg-violet-normal px-6 py-2 font-bold text-white max-sm:text-sm"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      ) : modalData.isStartService ? (
         <div className="flex w-[90vw] max-w-lg flex-col items-center justify-center gap-4  rounded-lg bg-violet-light p-5">
           <div className="flex size-20 items-center justify-center rounded-full bg-[#C1F6C3] bg-opacity-60">
             <div className=" flex size-14 items-center justify-center rounded-full bg-[#A6F8AA] p-2">
@@ -141,7 +169,7 @@ const OngoingServiceModal = ({
             </div>
           </div>
           <h2 className="font-satoshiBold text-2xl font-bold text-violet-normal">
-            Report Sent
+            Success
           </h2>
           <p className="text-center font-bold text-violet-darker ">
             {modalData.message}
