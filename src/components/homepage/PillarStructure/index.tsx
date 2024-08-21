@@ -1,13 +1,17 @@
 'use client'
 
 import React, { useEffect, useState } from 'react'
-import HubBackground from "../../../../public/assets/images/homepage/hub/hub-bg.jpeg";
+import HubBackground from "../../../../public/assets/images/homepage/pillarStructure/hub-bg.jpeg";
 import Link from 'next/link';
 import Image from 'next/image';
+import marketplace from "../../../../public/assets/images/homepage/pillarStructure/marketplace.png";
+import businessHub from "../../../../public/assets/images/homepage/pillarStructure/businessHub.png";
+import rentAShop from "../../../../public/assets/images/homepage/pillarStructure/rent.png";
 
-import marketplace from "../../../../public/assets/images/homepage/hub/marketplace.png";
 
-const MiniNavbar = ({ activeIndex, onNavChange }: any) => {
+import clsx from 'clsx';
+
+const MiniNavbar = ({ activeIndex, onNavChange, setIsHovering }: any) => {
     const links = [{
         link: 'matketplace',
         label: 'Marketplace',
@@ -34,6 +38,12 @@ const MiniNavbar = ({ activeIndex, onNavChange }: any) => {
                 <button
                     key={index}
                     onClick={() => onNavChange(index)}
+                    onMouseEnter={() => {
+                        onNavChange(index)
+                        setIsHovering(true)
+                    }}
+                    onMouseLeave={() => setIsHovering(false)}
+
                     className={`px-4 py-2 rounded-[40px] font-clashMedium font-[600] text-[20px] ${activeIndex === index ? 'underline' : ''}`}
                     style={{
                         backgroundColor: `#${link.bgColor}`,
@@ -45,14 +55,12 @@ const MiniNavbar = ({ activeIndex, onNavChange }: any) => {
             ))}
         </div>
     );
-
 }
 
 
-const Hub = () => {
+const PillarStructure = () => {
     const [activeIndex, setActiveIndex] = useState(0);
-
-
+    const [isHovering, setIsHovering] = useState(false);
 
     const content = [
         {
@@ -69,7 +77,7 @@ const Hub = () => {
             btnText: 'View resources',
             btnBgColor: 'F8E9FE',
             btnTextColor: '2A1769',
-            img: marketplace
+            img: businessHub
         },
 
         {
@@ -78,18 +86,19 @@ const Hub = () => {
             btnText: 'Rent a sho[p',
             btnBgColor: '381F8C',
             btnTextColor: 'FFFFF',
-            img: marketplace
+            img: rentAShop
         }
     ]
 
     useEffect(() => {
-        const interval = setInterval(() => {
-            setActiveIndex((prevIndex) => (prevIndex + 1) % content.length);
-        }, 5000); // Change every 3 seconds
+        if (!isHovering) {
+            const interval = setInterval(() => {
+                setActiveIndex((prevIndex) => (prevIndex + 1) % content.length);
+            }, 3000); 
 
-        return () => clearInterval(interval);
-    }, [content.length]);
-
+            return () => clearInterval(interval);
+        }
+    }, [isHovering, content.length]);
 
     return (
         <div
@@ -98,13 +107,10 @@ const Hub = () => {
                 backgroundImage: `url(${HubBackground.src})`,
             }}
         >
-
             <div className='mx-auto max-w-7xl'>
                 <div className='w-[85%] mx-auto '>
-
-
                     <div className='flex justify-center py-10'>
-                        <MiniNavbar activeIndex={activeIndex} onNavChange={setActiveIndex} />
+                        <MiniNavbar activeIndex={activeIndex} onNavChange={setActiveIndex} setIsHovering={setIsHovering} />
                     </div>
 
                     <div className='flex justify-between'>
@@ -116,18 +122,18 @@ const Hub = () => {
                             </p>
 
                             <button
-                                className="rounded-[50px]  text-[16px] font-satoshi font-[700] p-3 w-[250px] "
-                                style={{
-                                    backgroundColor: `#${content[activeIndex].btnBgColor}`,
-                                    color: `#${content[activeIndex].btnTextColor}`,
-                                }}
+                                className={clsx('rounded-[50px]  text-[16px] font-satoshi font-[700] p-3 w-[250px]',
+                                    activeIndex === 0 && 'bg-[#E58C06] text-white',
+                                    activeIndex === 1 && 'bg-[#F8E9FE] text-[#2A1769]',
+                                    activeIndex === 2 && 'bg-[#381F8C] text-white',
+
+                                )}
+
                             >
                                 <Link href="">
                                     {content[activeIndex].btnText}
                                 </Link>
                             </button>
-
-
                         </div>
 
                         <Image
@@ -136,15 +142,11 @@ const Hub = () => {
                             width={600}
                             height={400}
                         />
-
                     </div>
-
                 </div>
             </div>
-
-
         </div>
     )
 }
 
-export default Hub
+export default PillarStructure

@@ -1,5 +1,6 @@
 import Hero from "@/components/homepage/Hero";
-import Hub from "@/components/homepage/Hub";
+import Hub from "@/components/homepage/PillarStructure";
+import PillarStructure from "@/components/homepage/PillarStructure";
 
 
 import HeroSection from "@/components/homepage/HeroSection";
@@ -13,7 +14,7 @@ const HomePage = () => {
   return (
     <main className="min-h-screen">
           <Hero />
-          <Hub />
+          <PillarStructure />
       {/* <HeroSection /> */}
 
   
