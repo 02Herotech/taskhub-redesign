@@ -102,7 +102,7 @@ const PillarStructure = () => {
 
     return (
         <div
-            className=' min-h-screen bg-cover bg-center'
+            className='xl:h-[600px] lg:h-[680px]  bg-cover bg-center'
             style={{
                 backgroundImage: `url(${HubBackground.src})`,
             }}
@@ -113,11 +113,11 @@ const PillarStructure = () => {
                         <MiniNavbar activeIndex={activeIndex} onNavChange={setActiveIndex} setIsHovering={setIsHovering} />
                     </div>
 
-                    <div className='flex justify-between'>
+                    <div className='flex justify-between pb-14'>
                         <div className='w-[35%] text-white flex flex-col space-y-6'>
-                            <h2 className='xl:text-[40px] text-[32px] font-clashSemiBold'>{content[activeIndex].title}</h2>
+                            <h2 className='xl:text-[40px] text-[32px] font-clashSemiBold transition-all duration-500 ease-in-out'>{content[activeIndex].title}</h2>
 
-                            <p className='text-left font-satoshiMedium text-[30px] font-[500]'>
+                            <p className='text-left font-satoshiMedium text-[30px] font-[500] transition-all duration-500 ease-in-out'>
                                 {content[activeIndex].text}
                             </p>
 
