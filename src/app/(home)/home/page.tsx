@@ -1,5 +1,7 @@
 import Hero from "@/components/homepage/Hero";
-import Hub from "@/components/homepage/Hub";
+import PillarStructure from "@/components/homepage/PillarStructure";
+import StoreFront from "@/components/homepage/StoreFront";
+import YouCan from "@/components/homepage/YouCan";
 
 
 import HeroSection from "@/components/homepage/HeroSection";
@@ -12,15 +14,20 @@ import WelcomeAboard from "@/components/homepage/WelcomeAboard";
 const HomePage = () => {
   return (
     <main className="min-h-screen">
-          <Hero />
-          <Hub />
+      <Hero />
+      <PillarStructure />
+      <StoreFront />
+      <YouCan />
+
+
+
       {/* <HeroSection /> */}
 
-  
 
 
 
-      <Taskhub />
+
+      {/* <Taskhub /> */}
       {/* <WelcomeAboard /> */}
       <SPHomepage />
       <SecurityFeatures />
