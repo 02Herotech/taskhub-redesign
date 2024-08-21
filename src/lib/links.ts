@@ -213,7 +213,7 @@ export const mobileCustomerLinks: LinkRouteTypes[] = [
           },
           {
             label: "Notification settings",
-            url: "/customer/notification",
+            url: "/customer/notification-settings",
           },
         ],
       },
