@@ -128,6 +128,8 @@ const ViewJobs = () => {
     }
   }, [currentBooking]);
 
+  console.log(currentBooking);
+
   return (
     <>
       <Congratulations
@@ -197,18 +199,25 @@ const ViewJobs = () => {
                   <div>
                     <p className="font-bold uppercase">To be Started:</p>
                     <p className="font-bold capitalize">
-                      {dateFromNumberArray(currentBooking.startDate)}
+                      {/* {dateFromNumberArray(currentBooking.startDate)} */}
+                      {currentBooking.startDate
+                        ? dateFromNumberArray(currentBooking.startDate)
+                        : "Flexible"}
                     </p>
                   </div>
-                  <p className="flex items-center gap-2 text-sm font-bold text-violet-dark ">
-                    <span>
-                      <IoLocationOutline />
-                    </span>
-                    <span>
-                      {currentBooking.userAddress.state}{" "}
-                      {currentBooking.userAddress.suburb}
-                    </span>
-                  </p>
+                  {currentBooking?.userAddress && (
+                    <p className="flex items-center gap-2 text-sm font-bold text-violet-dark ">
+                      <span>
+                        <IoLocationOutline />
+                      </span>
+                      (
+                      <span>
+                        {currentBooking?.userAddress?.state}{" "}
+                        {currentBooking?.userAddress?.suburb}
+                      </span>
+                      )
+                    </p>
+                  )}
                 </div>
               </section>
               {/* left image side */}

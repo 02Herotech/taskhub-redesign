@@ -69,7 +69,7 @@ const Invoice = ({
       date:
         invoiceDraft?.serviceStartOn !== undefined
           ? invoiceDraft.serviceStartOn
-          : (currentBooking &&
+          : (currentBooking?.startDate &&
               convertToDateInputFormat(currentBooking?.startDate)) ??
             null,
       gst:
@@ -285,20 +285,24 @@ const Invoice = ({
                   <BsPencilSquare className="text-violet-normal" />
                 )}
               </span>
-              <DatePicker
-                selected={invoiceState.date as Date}
-                minDate={new Date()}
-                required
-                disabled={currentBooking?.invoiceSent}
-                onChange={(date: Date) =>
-                  setInvoiceState((prev) => ({
-                    ...prev,
-                    date: date,
-                  }))
-                }
-                className="w-full bg-transparent text-[#716F78]  outline-none  "
-                dateFormat="dd/MM/yyyy"
-              />
+              {invoiceState.date ? (
+                <DatePicker
+                  selected={invoiceState.date as Date}
+                  minDate={new Date()}
+                  required
+                  disabled={currentBooking?.invoiceSent}
+                  onChange={(date: Date) =>
+                    setInvoiceState((prev) => ({
+                      ...prev,
+                      date: date,
+                    }))
+                  }
+                  className="w-full bg-transparent text-[#716F78]  outline-none  "
+                  dateFormat="dd/MM/yyyy"
+                />
+              ) : (
+                <span>Flexible</span>
+              )}
             </label>
           </div>
           <div className="space-y-3 rounded-lg bg-violet-active p-3 py-4 text-violet-normal">

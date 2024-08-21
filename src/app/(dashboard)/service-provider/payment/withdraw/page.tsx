@@ -2,6 +2,7 @@
 
 import WalletBalance from "@/components/dashboard/serviceProvider/Payment/WalletBalance";
 import { RootState } from "@/store";
+import { refreshWallet } from "@/store/Features/userProfile";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
 import Link from "next/link";
@@ -9,7 +10,7 @@ import React, { useState, useEffect } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { BsExclamationTriangle } from "react-icons/bs";
 import { PiSealCheckFill, PiWarningDiamond } from "react-icons/pi";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { BeatLoader } from "react-spinners";
 import z from "zod";
 
@@ -19,6 +20,8 @@ const WithdrawalPage = () => {
   );
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const dispatch = useDispatch();
 
   const isServiceProvider = auth?.role?.[0] === "SERVICE_PROVIDER";
 
@@ -55,8 +58,8 @@ const WithdrawalPage = () => {
           Authorization: `Bearer ${auth.token}`,
         },
       });
-      console.log(response.data);
       setSuccess(true);
+      dispatch(refreshWallet());
       reset();
     } catch (error: any) {
       setError(error?.response?.data || "Insufficient balance");

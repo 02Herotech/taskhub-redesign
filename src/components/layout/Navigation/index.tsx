@@ -31,6 +31,7 @@ import {
   setAuthLoading,
   setUserProfileAuth,
   setWalletBalance,
+  setWalletLoading,
   updateUserProfile,
 } from "@/store/Features/userProfile";
 import ChatSocket from "@/components/main/message/ChatSocket";
@@ -55,9 +56,7 @@ const Navigation = () => {
 
   const dispatch = useDispatch();
   const userProfile = useSelector((state: RootState) => state.userProfile);
-  const { totalUnreadMessages, newMessage } = useSelector(
-    (state: RootState) => state.chat,
-  );
+  const { totalUnreadMessages } = useSelector((state: RootState) => state.chat);
 
   const pathname = usePathname();
 
@@ -151,6 +150,7 @@ const Navigation = () => {
     const fetchUserProfile = async () => {
       if (!user) return;
       try {
+        dispatch(setWalletLoading(true));
         const url =
           "https://smp.jacinthsolutions.com.au/api/v1/user/user-profile/" +
           user.id;
@@ -168,11 +168,13 @@ const Navigation = () => {
         }
       } catch (error: any) {
         console.error(error?.response?.data || error);
+      } finally {
+        dispatch(setWalletLoading(false));
       }
     };
     fetchUserProfile();
     // eslint-disable-next-line
-  }, [user, userProfile.refresh, dispatch]);
+  }, [user, userProfile.refresh, dispatch, userProfile.walletRefresh]);
 
   const notificationRoute = isServiceProvider
     ? "/service-provider/notification"

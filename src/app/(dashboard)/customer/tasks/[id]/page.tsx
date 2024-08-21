@@ -5,7 +5,7 @@ import Button from '@/components/global/Button'
 import { HiOutlineLocationMarker } from 'react-icons/hi'
 import { FiCalendar, FiClock } from "react-icons/fi";
 import { useGetTaskByIdQuery, useGetTasksOffersQuery } from '@/services/tasks';
-import { dayOfWeekNames, formatAmount, monthNames, suffixes } from '@/lib/utils';
+import { dayOfWeekNames, formatAmount, formatTime24Hour, monthNames, suffixes } from '@/lib/utils';
 import Loading from '@/shared/loading';
 import { useEffect, useRef, useState } from 'react';
 import AssignOfferForm from '@/components/dashboard/customer/AssignOfferForm';
@@ -21,6 +21,23 @@ const NewTaskDetails = ({ params }: { params: { id: string } }) => {
     const handleAssign = (offerId: string) => {
         console.log(`Assigning task to offer: ${offerId}`);
     };
+
+    const isMounted = useRef(true);
+
+    useEffect(() => {
+        isMounted.current = true;
+
+        const intervalId = setInterval(() => {
+            if (isMounted.current) {
+                refetch();
+            }
+        }, 10000);
+
+        return () => {
+            isMounted.current = false;
+            clearInterval(intervalId);
+        };
+    }, [refetch]);
 
     if (!task) {
         return (
@@ -86,7 +103,7 @@ const NewTaskDetails = ({ params }: { params: { id: string } }) => {
                                 </div>
                                 <div className="max-lg:text-xs flex items-center space-x-3 text-[#716F78]">
                                     <FiClock className="h-6 w-6" />
-                                    <h5 className='text-[15px] lg:text-xl font-satoshiMedium font-medium'>{task.taskTime || "Flexible"}</h5>
+                                        <h5 className='text-[15px] lg:text-xl font-satoshiMedium font-medium'>{formatTime24Hour(task.taskTime) || "Flexible"}</h5>
                                 </div>
                             </div>
                         </div>
@@ -115,7 +132,7 @@ const NewTaskDetails = ({ params }: { params: { id: string } }) => {
                 </>
             )}
             {offers && offers.length > 0 && (
-                <CustomerTaskOffers taskId={Number(id)} />
+                <CustomerTaskOffers taskId={Number(id)} posterId={task.posterId} />
             )}
             {showAssignForm && (
                 <AssignOfferForm

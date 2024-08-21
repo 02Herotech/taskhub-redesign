@@ -42,6 +42,8 @@ const Jobs = () => {
     // eslint-disable-next-line
   }, [token]);
 
+  console.log(bookingData);
+
   return (
     <>
       <main className="space-y-8 p-4 lg:p-8">
@@ -67,7 +69,7 @@ const Jobs = () => {
                     itemId={item.id}
                     viewJob={true}
                     title={item.bookingTitle}
-                    startDate={item.startDate}
+                    startDate={item.startDate ? item.startDate : "Flexible"}
                     price={item.price}
                     sendMessage={{
                       recipientId: item.customer.user.id.toString(),

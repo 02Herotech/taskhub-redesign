@@ -28,7 +28,7 @@ declare interface ChatMessageDisplayedType {
 declare interface Offer {
   id: string;
   taskId: number;
-  customerId: number;
+  userId: number;
   serviceProviderId: number;
   fullName: string;
   message: string;
