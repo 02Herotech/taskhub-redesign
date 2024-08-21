@@ -2,6 +2,7 @@ import Hero from "@/components/homepage/Hero";
 import PillarStructure from "@/components/homepage/PillarStructure";
 import StoreFront from "@/components/homepage/StoreFront";
 import YouCan from "@/components/homepage/YouCan";
+import BusinessHub from "@/components/homepage/BusinessHub";
 
 
 import HeroSection from "@/components/homepage/HeroSection";
@@ -18,19 +19,15 @@ const HomePage = () => {
       <PillarStructure />
       <StoreFront />
       <YouCan />
+      <BusinessHub />
 
 
 
       {/* <HeroSection /> */}
-
-
-
-
-
       {/* <Taskhub /> */}
       {/* <WelcomeAboard /> */}
-      <SPHomepage />
-      <SecurityFeatures />
+      {/* <SPHomepage />
+      <SecurityFeatures /> */}
       {/* <Testimonials /> */}
     </main>
 
