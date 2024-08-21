@@ -268,6 +268,8 @@ const AddTaskForm: React.FC = () => {
 
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     settermAccepted(event.target.checked);
+    setSelectedDate(null);
+    setSelectedTime(null);
   };
 
   const handleCategoryChange = (item: any) => {
@@ -704,7 +706,6 @@ const AddTaskForm: React.FC = () => {
                         type="checkbox"
                         name="check"
                         checked={termAccepted}
-                        disabled={accepted}
                         onChange={handleCheckboxChange}
                         className="mr-2"
                       />
