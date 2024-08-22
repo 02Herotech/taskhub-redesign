@@ -78,7 +78,7 @@ const AssignOfferForm: React.FC<AssignOfferFormProps> = ({ onClose, onAssign, of
                                             <p className="font-semibold">{offer.fullName}</p>
                                         </div>
                                     </div>
-                                    <Button size='sm' loading={isLoading} onClick={() => handleSelectOffer(offer.id)} className="rounded-full">
+                                    <Button size='sm' onClick={() => handleSelectOffer(offer.id)} className="rounded-full">
                                         Assign
                                     </Button>
                                 </div>
@@ -99,7 +99,7 @@ const AssignOfferForm: React.FC<AssignOfferFormProps> = ({ onClose, onAssign, of
                             <Button size='sm' onClick={() => setShowConfirmation(false)} theme='outline' className="rounded-full">
                                 Cancel
                             </Button>
-                            <Button size='sm' onClick={handleConfirmAssign} className="rounded-full">
+                            <Button size='sm' loading={isLoading} onClick={handleConfirmAssign} className="rounded-full">
                                 Confirm
                             </Button>
                         </div>
