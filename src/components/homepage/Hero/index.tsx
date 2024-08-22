@@ -135,12 +135,18 @@ bg-[#FE9B07] rounded-[20px]  '>
 
                         <div className='flex justify-between  space-x-4'>
                             <div className='w-[45%] h-[200px] relative flex flex-col items-center'>
-                                <Image
+                                {/* <Image
                                     src={heroImage2a}
                                     alt='heroImage2a'
                                     layout='responsive'
                                     width={500}
-                                    height={200}
+                                    height={210}
+                                    className='xl:!h-[250px] !h-[191px]'
+                                /> */}
+                                <Image
+                                    src={heroImage2a}
+                                    alt='heroImage2a'
+                                    fill
                                     className='xl:!h-[240px] !h-[191px]'
                                 />
 
@@ -149,7 +155,7 @@ bg-[#FE9B07] rounded-[20px]  '>
 flex flex-col items-center justify-center text-white h-[45px] space-y-1 
 bg-[#FE9B07] rounded-[20px]  '>
                                         <p className='font-satoshi font-[500] text-[11px]'>
-                                        I sell good african <br/> prints
+                                            I sell good african <br /> prints
                                         </p>
                                     </div>
 
