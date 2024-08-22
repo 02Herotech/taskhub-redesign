@@ -129,7 +129,7 @@ const WhatSetUsApart = () => {
                                         ></div> */}
                                         <div
                                             className="w-0 h-0 border-l-[15px] border-l-transparent border-r-[15px] border-r-transparent border-t-[25px]
-                                                 border-t-[#381F8C] group-hover:border-t-[#FE9B07] transition-colors duration-300 ease-in-out;"
+                                                 border-t-[#381F8C] group-hover:border-t-[#FE9B07] transition-colors duration-300 ease-in-out"
                                         ></div>
 
                                     </div>
@@ -197,7 +197,7 @@ const WhatSetUsApart = () => {
 
                                         <div
                                             className="w-0 h-0 border-l-[15px] border-l-transparent border-r-[15px] border-r-transparent border-b-[25px]
-                                                 border-b-[#381F8C] group-hover:border-b-[#FE9B07] transition-colors duration-300 ease-in-out;"
+                                                 border-b-[#381F8C] group-hover:border-b-[#FE9B07] transition-colors duration-300 ease-in-out"
                                         ></div>
 
 
