@@ -2,14 +2,10 @@ import Link from 'next/link'
 import React from 'react'
 import Image from 'next/image'
 
-
 import heroImage1 from "../../../../public/assets/images/homepage/hero/new/hero1.png";
-
 import heroImage2a from "../../../../public/assets/images/homepage/hero/new/hero2a.png";
 import heroImage2b from "../../../../public/assets/images/homepage/hero/new/hero2b.png";
 import heroImage2c from "../../../../public/assets/images/homepage/hero/new/hero2c.png";
-
-
 import heroImage3 from "../../../../public/assets/images/homepage/hero/new/hero3.png";
 
 
@@ -104,19 +100,33 @@ const Hero = () => {
                     </div>
                 </div>
 
-
-
                 <div className='flex justify-between w-[85%] mx-auto xl:!h-[500px] !h-[420px] mt-10'>
 
-                    <div className='w-[24%] h-[350px]'>
+                    <div className='w-[24%] h-[350px] flex flex-col items-center relative'>
                         <Image
                             src={heroImage1}
                             alt='heroImage1'
                             layout='responsive'
                             width={500}
                             height={350}
-                             className='xl:!h-[441px] lg:!h-[357px]'
+                            className='xl:!h-[441px] lg:!h-[357px]'
                         />
+
+
+                        <div className='w-[120px] flex flex-col items-center justify-center absolute top-0 mt-[-25px] '>
+                            <div className=' w-full text-center
+flex flex-col items-center justify-center text-white h-[45px] space-y-1 
+bg-[#FE9B07] rounded-[20px]  '>
+                                <p className='font-satoshi font-[500] text-[11px]'>
+                                    I need authentic <br /> local spice
+                                </p>
+                            </div>
+
+                            <div
+                                className="w-0 h-0 border-l-[10px] border-l-transparent border-r-[10px] border-r-transparent border-t-[15px]
+                                  border-t-[#FE9B07] "
+                            ></div>
+                        </div>
                     </div>
 
 
@@ -124,7 +134,7 @@ const Hero = () => {
 
 
                         <div className='flex justify-between  space-x-4'>
-                            <div className='w-[45%] h-[200px]'>
+                            <div className='w-[45%] h-[200px] relative flex flex-col items-center'>
                                 <Image
                                     src={heroImage2a}
                                     alt='heroImage2a'
@@ -133,9 +143,24 @@ const Hero = () => {
                                     height={200}
                                     className='xl:!h-[240px] !h-[191px]'
                                 />
+
+                                <div className='w-[120px] flex flex-col items-center justify-center absolute top-24 mt-[-25px] '>
+                                    <div className=' w-full text-center
+flex flex-col items-center justify-center text-white h-[45px] space-y-1 
+bg-[#FE9B07] rounded-[20px]  '>
+                                        <p className='font-satoshi font-[500] text-[11px]'>
+                                        I sell good african <br/> prints
+                                        </p>
+                                    </div>
+
+                                    <div
+                                        className="w-0 h-0 border-l-[10px] border-l-transparent border-r-[10px] border-r-transparent border-t-[15px]
+                                  border-t-[#FE9B07] "
+                                    ></div>
+                                </div>
                             </div>
 
-                            <div className='w-[55%] h-[200px]'>
+                            <div className='w-[55%] h-[200px] relative'>
                                 <Image
                                     src={heroImage2b}
                                     alt='heroImage2b'
@@ -144,27 +169,52 @@ const Hero = () => {
                                     height={200}
                                     className='xl:!h-[240px] !h-[191px]'
                                 />
+
+                                <div className='w-[125px] flex flex-col items-center justify-center absolute top-5 right-5 '>
+                                    <div className=' w-full text-center
+flex flex-col items-center justify-center text-white h-[45px] space-y-1 
+bg-primary rounded-[20px]  '>
+                                        <p className='font-satoshi font-[500] text-[11px]'>
+                                            I offer car maintenance <br /> services
+                                        </p>
+                                    </div>
+
+                                    <div
+                                        className="w-0 h-0 border-l-[10px] border-l-transparent border-r-[10px] border-r-transparent border-t-[15px]
+                                  border-primary "
+                                    ></div>
+                                </div>
                             </div>
-
-
-
-
                         </div>
 
-                        <div className='w-full h-[350px]'>
+                        <div className='w-full h-[350px] relative'>
                             <Image
                                 src={heroImage2c}
                                 alt='heroImage2c'
-                                 layout='responsive'
+                                layout='responsive'
                                 width={500}
                                 height={350}
-                                  className='xl:!h-[185px] lg:!h-[158px]'
+                                className='xl:!h-[185px] lg:!h-[158px]'
                             />
+                            <div className='w-[120px] flex flex-col items-center justify-center absolute top-5 right-5 '>
+                                <div className=' w-full text-center
+flex flex-col items-center justify-center text-white h-[45px] space-y-1 
+bg-primary rounded-[20px]  '>
+                                    <p className='font-satoshi font-[500] text-[11px]'>
+                                        I need someone to <br /> tie my gele.
+                                    </p>
+                                </div>
+
+                                <div
+                                    className="w-0 h-0 border-l-[10px] border-l-transparent border-r-[10px] border-r-transparent border-t-[15px]
+                                  border-primary "
+                                ></div>
+                            </div>
                         </div>
 
                     </div>
 
-                    <div className='w-[24%] h-[350px]'>
+                    <div className='w-[24%] h-[350px] relative'>
                         <Image
                             src={heroImage3}
                             alt='heroImage3'
@@ -173,14 +223,32 @@ const Hero = () => {
                             height={350}
                             className='xl:!h-[441px] lg:!h-[357px]'
                         />
+
+                        <div className='w-[120px] flex flex-col items-center justify-center absolute top-0 mt-[-25px] right-0 '>
+                            <div className=' w-full text-center
+flex flex-col items-center justify-center text-white h-[45px] space-y-1 
+bg-[#FE9B07] rounded-[20px]  '>
+                                <p className='font-satoshi font-[500] text-[11px]'>
+                                    I need authentic <br /> local spice
+                                </p>
+                            </div>
+
+                            <div
+                                className="w-0 h-0 border-l-[10px] border-l-transparent border-r-[10px] border-r-transparent border-t-[15px]
+                                  border-t-[#FE9B07] "
+                            ></div>
+                        </div>
                     </div>
-
-
-
-
                 </div>
 
+
+
+
+
+
             </div>
+
+
         </div>
     )
 }

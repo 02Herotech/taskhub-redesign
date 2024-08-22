@@ -3,6 +3,7 @@ import PillarStructure from "@/components/homepage/PillarStructure";
 import StoreFront from "@/components/homepage/StoreFront";
 import YouCan from "@/components/homepage/YouCan";
 import BusinessHub from "@/components/homepage/BusinessHub";
+import WhatSetUsApart from "@/components/homepage/WhatSetUsApart";
 
 
 import HeroSection from "@/components/homepage/HeroSection";
@@ -20,6 +21,7 @@ const HomePage = () => {
       <StoreFront />
       <YouCan />
       <BusinessHub />
+      <WhatSetUsApart />
 
 
 
