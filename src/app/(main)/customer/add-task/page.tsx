@@ -917,7 +917,7 @@ const AddTaskForm: React.FC = () => {
   return (
     <div className="mt-24 flex min-h-screen items-center justify-center">
       <Head>
-        <title>TaskHub | Add Task</title>
+        <title>Oloja | Add Task</title>
       </Head>
       <div className="w-full">
         <div className="fixed hidden lg:block left-0 top-20 z-10 w-full border-t-2 bg-white shadow-md">

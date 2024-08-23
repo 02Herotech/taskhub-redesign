@@ -7,6 +7,14 @@ type FeaturedPostProps = {
 }
 
 const FeaturedPost = ({ post }: FeaturedPostProps) => {
+    if (!post) {
+        return (
+            <div>
+                No Featured post
+            </div>
+        )
+    }
+
     const authorId = post?.authors[0]?.id;
     const { data: author, isLoading: isAuthorLoading, error: authorError } = useGetUserByIdQuery(authorId!, {
         skip: !authorId

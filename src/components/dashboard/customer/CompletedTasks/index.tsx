@@ -14,8 +14,6 @@ const TaskList: React.FC = () => {
         skip: !userId, // This will skip the query if userId is not available
     });
 
-    console.log('tasksData', tasksData);
-
     if (!userId || isLoading) {
         return <Loading />; 
     }

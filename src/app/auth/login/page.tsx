@@ -2,7 +2,7 @@ import LoginForm from "@/components/auth/LoginForm"
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "TaskHub | Login",
+  title: "Oloja | Login",
 };
 
 const LoginPage = () => {

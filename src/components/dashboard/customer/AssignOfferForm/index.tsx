@@ -17,7 +17,7 @@ const AssignOfferForm: React.FC<AssignOfferFormProps> = ({ onClose, onAssign, of
     const [showConfirmation, setShowConfirmation] = useState(false);
     const [showSuccessModal, setShowSuccessModal] = useState(false);
     const [errorMessage, setErrorMessage] = useState<string>("");
-    const [assignTask, { isLoading }] = useAssignTaskMutation();
+    const [assignTask, { isLoading, error }] = useAssignTaskMutation();
 
     const handleSelectOffer = (offerId: string) => {
         setSelectedOffer(offerId);
@@ -103,7 +103,7 @@ const AssignOfferForm: React.FC<AssignOfferFormProps> = ({ onClose, onAssign, of
                                 Confirm
                             </Button>
                         </div>
-                        {errorMessage && <h4 className='text-center text-sm text-red-500'>{`${errorMessage}. Please try again`}</h4>}
+                        {errorMessage || error && <h4 className='text-center text-sm text-red-500'>{`${errorMessage}. Please try again`}</h4>}
                     </div>
                 )}
             </div>
