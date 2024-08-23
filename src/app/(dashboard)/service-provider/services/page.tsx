@@ -90,7 +90,6 @@ const ServicesPage = () => {
 
   useEffect(() => {
     const handlefetches = async () => {
-      console.log("refreshing");
       await fetchBookings();
       await fetchJobs();
     };
