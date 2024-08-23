@@ -7,6 +7,14 @@ type FeaturedPostProps = {
 }
 
 const FeaturedPost = ({ post }: FeaturedPostProps) => {
+    const authorId = post?.authors[0]?.id;
+
+    // Call the hook regardless of the post's existence
+    const { data: author, isLoading: isAuthorLoading, error: authorError } = useGetUserByIdQuery(authorId!, {
+        skip: !authorId
+    });
+
+    // Early return if there's no post
     if (!post) {
         return (
             <div>
@@ -15,19 +23,12 @@ const FeaturedPost = ({ post }: FeaturedPostProps) => {
         )
     }
 
-    const authorId = post?.authors[0]?.id;
-    const { data: author, isLoading: isAuthorLoading, error: authorError } = useGetUserByIdQuery(authorId!, {
-        skip: !authorId
-    });
-
     function formatDate(dateString: string) {
         const date = new Date(dateString);
-
         const day = date.getUTCDate();
         const month = date.toLocaleString('default', { month: 'long' });
         const year = date.getUTCFullYear();
 
-        // Function to get the ordinal suffix
         function getOrdinalSuffix(day: number) {
             if (day > 3 && day < 21) return 'th';
             switch (day % 10) {
@@ -39,7 +40,6 @@ const FeaturedPost = ({ post }: FeaturedPostProps) => {
         }
 
         const ordinalSuffix = getOrdinalSuffix(day);
-
         return `${day}${ordinalSuffix} ${month}, ${year}`;
     }
 
