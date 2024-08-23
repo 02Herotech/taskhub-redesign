@@ -60,7 +60,7 @@ const ServicePayment = () => {
         <div className="relative space-y-6">
           <p className="font-bold text-violet-normal">Current balance</p>
           <h1 className="flex flex-col text-5xl font-bold text-orange-normal lg:text-6xl">
-            <span className="text-base font-normal">$</span> <WalletBalance />
+            <span className="text-2xl font-normal">$</span> <WalletBalance />
           </h1>
         </div>
         <Link

@@ -7,8 +7,9 @@ import Image from "next/image";
 import Link from "next/link";
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { BiFlag, BiX } from "react-icons/bi";
-import { BsExclamationTriangle, BsTriangleFill } from "react-icons/bs";
+import { BsExclamationTriangle, BsTriangleFill, BsX } from "react-icons/bs";
 import { GrFlagFill } from "react-icons/gr";
+import { IoWarning } from "react-icons/io5";
 import { PiSealCheckFill } from "react-icons/pi";
 import { useSelector } from "react-redux";
 import { BeatLoader } from "react-spinners";
@@ -32,6 +33,7 @@ const OngoingServiceModal = ({
     message: "",
     loading: false,
   });
+  const [isServiceCompleted, setIsServiceCompleted] = useState(false);
   const [categories, setCategories] = useState<CategoryType[]>([]);
   const [formState, setFormState] = useState({
     category: "Select a category",
@@ -58,6 +60,7 @@ const OngoingServiceModal = ({
       jobId: modalData.message,
       isReportSent: false,
     });
+    setIsServiceCompleted(false);
   };
 
   const handleCompleteService = async () => {
@@ -78,6 +81,7 @@ const OngoingServiceModal = ({
         isCompleteService: false,
         message: data.message,
       }));
+      setIsServiceCompleted(true);
     } catch (error: any) {
       console.log("Error message", error.response?.data?.message || error);
       setModalData((prev) => ({
@@ -162,32 +166,44 @@ const OngoingServiceModal = ({
           </div>
         </div>
       ) : modalData.isStartService ? (
-        <div className="flex w-[90vw] max-w-lg flex-col items-center justify-center gap-4  rounded-lg bg-violet-light p-5">
+        <div className="relative flex w-[90vw] max-w-lg flex-col items-center justify-center gap-4  rounded-lg bg-white p-5">
+          <button
+            onClick={handleCloseModal}
+            className="absolute right-3 top-3 rounded-full border border-violet-normal p-1 text-violet-normal"
+          >
+            <BsX />
+          </button>
           <div className="flex size-20 items-center justify-center rounded-full bg-[#C1F6C3] bg-opacity-60">
             <div className=" flex size-14 items-center justify-center rounded-full bg-[#A6F8AA] p-2">
               <PiSealCheckFill className="size-10 text-green-500" />
             </div>
           </div>
           <h2 className="font-satoshiBold text-2xl font-bold text-violet-normal">
-            Success
+            {isServiceCompleted
+              ? "Job Completed successfully"
+              : "Job Started successfully"}
           </h2>
           <p className="text-center font-bold text-violet-darker ">
-            {modalData.message}
+            {isServiceCompleted
+              ? "Success! Your job is complete. We will notify the customer you have completed it."
+              : "Success! Your job has started. We will notify the customer you are on it."}
+
+            {/* {modalData.message} */}
           </p>
           <div className="flex items-center justify-center">
             <button
               onClick={handleCloseModal}
               className="mx-auto rounded-full bg-violet-normal p-3 px-10 text-center font-bold text-white  transition-opacity duration-300 hover:opacity-90 "
             >
-              View my services
+              Cancel
             </button>
           </div>
         </div>
       ) : modalData.isCompleteService ? (
-        <div className="flex w-[90vw] max-w-lg flex-col items-center justify-center gap-4  rounded-lg bg-violet-light p-5">
-          <div className="flex size-20 items-center justify-center rounded-full bg-[#C1F6C3] bg-opacity-60">
-            <div className=" flex size-14 items-center justify-center rounded-full bg-[#A6F8AA] p-2">
-              <PiSealCheckFill className="size-10 text-green-500" />
+        <div className="flex w-[90vw] max-w-lg flex-col items-center justify-center gap-4  rounded-lg bg-white p-5">
+          <div className="flex size-20 items-center justify-center rounded-full bg-opacity-60">
+            <div className=" flex size-14 items-center justify-center rounded-full bg-violet-light p-2">
+              <IoWarning className="size-10 text-violet-normal" />
             </div>
           </div>
           <h2 className="font-satoshiBold text-2xl font-bold text-violet-normal">
