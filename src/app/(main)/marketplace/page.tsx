@@ -62,8 +62,6 @@ const MareketPlace = () => {
     }
   }, [isAuth, isComplete]);
 
-  console.log(session)
-
   return (
     <main className="mx-auto max-w-screen-2xl">
       {showPopup && (
@@ -71,7 +69,7 @@ const MareketPlace = () => {
           <div className="relative h-[312px] max-lg:mx-5 lg:w-[577px]">
             <div className="flex h-full flex-col items-center justify-center space-y-7 text-center">
               <h1 className="font-clashDisplay text-4xl font-semibold text-[#2A1769]">
-                Welcome to Oloja
+                Welcome to Olójà
               </h1>
               <p className="mb-8 font-satoshi text-xl font-medium text-black">
                 We are thrilled to have you! Please complete your profile to get
