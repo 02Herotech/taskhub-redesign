@@ -210,7 +210,6 @@ const ViewJobs = () => {
                       <span>
                         <IoLocationOutline />
                       </span>
-
                       <span>
                         {currentBooking?.userAddress?.state}{" "}
                         {currentBooking?.userAddress?.suburb}
