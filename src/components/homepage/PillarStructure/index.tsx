@@ -13,7 +13,7 @@ import clsx from 'clsx';
 
 const MiniNavbar = ({ activeIndex, onNavChange, setIsHovering }: any) => {
     const links = [{
-        link: 'matketplace',
+        link: 'marketplace',
         label: 'Marketplace',
         textColor: 'FFFFFF',
         bgColor: 'E58C06'
@@ -69,7 +69,8 @@ const PillarStructure = () => {
             btnText: 'Explore our marketplace',
             btnBgColor: 'E58C06',
             btnTextColor: 'FFFFF',
-            img: marketplace
+            img: marketplace,
+            link: '/marketplace'
         },
         {
             title: 'Business Hub',
@@ -77,7 +78,8 @@ const PillarStructure = () => {
             btnText: 'View resources',
             btnBgColor: 'F8E9FE',
             btnTextColor: '2A1769',
-            img: businessHub
+            img: businessHub,
+            link: '/'
         },
 
         {
@@ -86,7 +88,8 @@ const PillarStructure = () => {
             btnText: 'Rent a sho[p',
             btnBgColor: '381F8C',
             btnTextColor: 'FFFFF',
-            img: rentAShop
+            img: rentAShop,
+            link: '/'
         }
     ]
 
@@ -94,7 +97,7 @@ const PillarStructure = () => {
         if (!isHovering) {
             const interval = setInterval(() => {
                 setActiveIndex((prevIndex) => (prevIndex + 1) % content.length);
-            }, 3000); 
+            }, 3000);
 
             return () => clearInterval(interval);
         }
@@ -130,7 +133,7 @@ const PillarStructure = () => {
                                 )}
 
                             >
-                                <Link href="">
+                                <Link href={`${content[activeIndex].link}`}>
                                     {content[activeIndex].btnText}
                                 </Link>
                             </button>
