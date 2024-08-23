@@ -77,6 +77,16 @@ const AiDesciption: React.FC<AiGenerateProps> = ({
   const [AiLoading, setAiLoading] = useState(false);
   const [emptyQuerryField, setEmptyQuerryField] = useState(false);
 
+  // New lines
+  const authString = localStorage.getItem("auth");
+  let accessToken: string | null = null;
+  
+  if (authString) {
+    const authData = JSON.parse(authString);
+    accessToken = authData?.token || null;
+  }
+  // ends here
+
   const handleAiChatQuery = async (e: any) => {
     e.preventDefault();
     if (aiQuery === "") {
@@ -93,9 +103,28 @@ const AiDesciption: React.FC<AiGenerateProps> = ({
     ];
     setConversation(newConversation);
     setIsNewQuery(true);
+    // try {
+    //   const url = `${process.env.NEXT_PUBLIC_API_URL}/listing/create-listing/category/content-generate?category=${encodeURIComponent(aiQuery)}`;
+    //   const response = await axios.get(url);
+    //   const data = await response.data[0]?.message?.content;
+    //   setConversation([
+    //     ...newConversation,
+    //     { id: generateId(), type: "ai", text: data },
+    //   ]);
+    // } catch (error) {
+    //   console.error("Error fetching AI response:", error);
+    // } finally {
+    //   setAiQuery("");
+    //   setAiLoading(false);
+    // }
+
     try {
       const url = `${process.env.NEXT_PUBLIC_API_URL}/listing/create-listing/category/content-generate?category=${encodeURIComponent(aiQuery)}`;
-      const response = await axios.get(url);
+      const response = await axios.get(url, {
+        headers: {
+           Authorization: `Bearer ${accessToken}`
+        }
+      });
       const data = await response.data[0]?.message?.content;
       setConversation([
         ...newConversation,
