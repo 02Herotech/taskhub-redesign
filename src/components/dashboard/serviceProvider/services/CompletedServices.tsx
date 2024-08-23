@@ -29,7 +29,7 @@ const CompletedServices = ({ jobs, allBookings }: CompletedServices) => {
                 <h2 className="text-3xl font-bold text-violet-normal">
                   {item.jobTitle}
                 </h2>
-                <span className="flex items-center gap-2 rounded-full border border-green-500 bg-[#F4FCF4] px-4 py-px text-xs text-green-500">
+                <span className="flex h-fit  items-center gap-2 rounded-full border border-green-500 bg-[#F4FCF4] px-4  py-2 text-xs text-green-500">
                   <BiCheck />
                   Done
                 </span>

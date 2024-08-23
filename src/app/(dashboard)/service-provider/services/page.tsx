@@ -80,7 +80,7 @@ const ServicesPage = () => {
           Authorization: "Bearer " + token,
         },
       });
-      setJobs(data.reverse());
+      setJobs(data);
     } catch (error: any) {
       console.error(error.response?.data || error);
     } finally {

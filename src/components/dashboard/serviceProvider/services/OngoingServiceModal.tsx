@@ -162,17 +162,19 @@ const OngoingServiceModal = ({
           </div>
         </div>
       ) : modalData.isStartService ? (
-        <div className="flex w-[90vw] max-w-lg flex-col items-center justify-center gap-4  rounded-lg bg-violet-light p-5">
+        <div className="flex w-[90vw] max-w-lg flex-col items-center justify-center gap-4  rounded-lg bg-white p-5">
           <div className="flex size-20 items-center justify-center rounded-full bg-[#C1F6C3] bg-opacity-60">
             <div className=" flex size-14 items-center justify-center rounded-full bg-[#A6F8AA] p-2">
               <PiSealCheckFill className="size-10 text-green-500" />
             </div>
           </div>
           <h2 className="font-satoshiBold text-2xl font-bold text-violet-normal">
-            Success
+            Job Started successfully
           </h2>
           <p className="text-center font-bold text-violet-darker ">
-            {modalData.message}
+            Success! Your job has started. We will notify the customer you are
+            on it.
+            {/* {modalData.message} */}
           </p>
           <div className="flex items-center justify-center">
             <button
@@ -184,10 +186,10 @@ const OngoingServiceModal = ({
           </div>
         </div>
       ) : modalData.isCompleteService ? (
-        <div className="flex w-[90vw] max-w-lg flex-col items-center justify-center gap-4  rounded-lg bg-violet-light p-5">
+        <div className="flex w-[90vw] max-w-lg flex-col items-center justify-center gap-4  rounded-lg bg-white p-5">
           <div className="flex size-20 items-center justify-center rounded-full bg-[#C1F6C3] bg-opacity-60">
             <div className=" flex size-14 items-center justify-center rounded-full bg-[#A6F8AA] p-2">
-              <PiSealCheckFill className="size-10 text-green-500" />
+              <BsTriangleFill className="size-10 text-green-500" />
             </div>
           </div>
           <h2 className="font-satoshiBold text-2xl font-bold text-violet-normal">
