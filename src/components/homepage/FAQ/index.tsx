@@ -12,26 +12,26 @@ const FAQ = () => {
     const faqData = [
         {
             question: "What is Olójà?",
-            answer: "Olójà is an AI-driven platform that transcends boundaries, connecting diverse communities with a world of authentic products and services."
+            answer:
+                "Olójà is an AI-driven platform that transcends boundaries, connecting diverse communities with a world of authentic products and services.",
         },
-
-      
         {
             question: "Are there fees for using Olójà?",
-            answer: "Dummy text Dummy text Dummy text Dummy text Dummy text Dummy text Dummy text Dummy text "
+            answer: "Olójà Hub charges fees for renting a shop and service listings.",
         },
-
         {
             question: "Are my transactions safe?",
-             answer: "Dummy text Dummy text Dummy text Dummy text Dummy text Dummy text Dummy text Dummy text "
+            answer:
+                "Yes, your transactions are safe. We use industry-standard encryption and secure payment processing to protect your data. Our payment system is PCI compliant, and we regularly monitor and update our security measures to ensure your information remains secure.",
         },
         {
             question: "Can I list all my products on Olójà?",
-             answer: "Dummy text Dummy text Dummy text Dummy text Dummy text Dummy text Dummy text Dummy text "
+            answer:
+                "Yes, you can showcase your entire range of legally permitted products on Olójà Hub via your personalized virtual store.",
         },
         {
-            question: "Are there verified service providers on Olójà?",
-             answer: "Dummy text Dummy text Dummy text Dummy text Dummy text Dummy text Dummy text Dummy text "
+            question: "Are there ways to verify service providers on your platform?",
+            answer: "Yes, we verify the service providers on Olójà.",
         },
     ];
 

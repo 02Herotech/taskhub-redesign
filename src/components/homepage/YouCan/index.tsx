@@ -146,9 +146,9 @@ const YouCan = () => {
 
                     <button
                       className="rounded-[50px] bg-tc-orange text-[16px] font-satoshi font-[500]
-    p-3 text-[#EBE9F4] hover:bg-[#e79823] w-[250px] xl:w-[190px] lg:w-[175px]"
+    p-3 text-white hover:bg-[#e79823] w-[250px] xl:w-[190px] lg:w-[175px]"
                     >
-                      <Link href="">
+                       <Link href="/customer/add-task">
                         Add a task for free
                       </Link>
                     </button>
