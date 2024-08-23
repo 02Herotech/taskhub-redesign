@@ -16,7 +16,7 @@ const NewTaskDetails = ({ params }: { params: { id: string } }) => {
     const { data: task, isLoading, error } = useGetTaskByIdQuery(id as unknown as number);
     const { data: offers, refetch } = useGetTasksOffersQuery(id as unknown as number);
 
-    console.log(task);
+    console.log("task:", task);
 
     const [showAssignForm, setShowAssignForm] = useState(false);
 
@@ -83,7 +83,7 @@ const NewTaskDetails = ({ params }: { params: { id: string } }) => {
         formattedTime = `${hours === 0 ? 12 : hours}:${(minutes < 10 ? '0' : '') + minutes} AM`;
     }
 
-    const isAssigned = task?.taskStatus === 'ASSIGNED';
+    const isAssigned = task?.taskStatus === "ASSIGNED";
 
     return (
         <section className="py-5 lg:py-14 lg:px-10 font-satoshi">
