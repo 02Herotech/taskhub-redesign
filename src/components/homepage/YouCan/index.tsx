@@ -1,6 +1,10 @@
 'use client'
 import React, { useEffect, useState } from 'react'
 import Image from 'next/image'
+import axios from 'axios';
+import { signOut, useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
+
 import CheckSign from "../../../../public/assets/images/homepage/YouCan/CheckSign.png";
 import clsx from 'clsx';
 import Link from 'next/link';
@@ -42,6 +46,54 @@ const YouCan = () => {
 
 
   ]
+
+  const serviceProviderParams = new URLSearchParams({ userType: "Service Provider" });
+
+  const session = useSession();
+  const router = useRouter();
+  const isServiceProvider =
+    session?.data?.user?.user?.roles[0] === "SERVICE_PROVIDER";
+
+  const handleBecomeSP = async (e: { preventDefault: () => void }) => {
+    e.preventDefault();
+
+    try {
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/auth/logout`,
+      );
+
+      await signOut({
+        redirect: false,
+      });
+
+      console.log("Sign Out: ", response);
+
+      if (response.status === 200) {
+        router.push(`/auth/sign-up?${serviceProviderParams.toString()}`);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handlePostTask = async (e: { preventDefault: () => void }) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/auth/logout`,
+      );
+      console.log("Sign Out: ", response);
+
+      if (response.status === 200) {
+        await signOut({
+          redirect: false,
+        });
+        router.push("/customer/add-task");
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   const useImageTransition = (images: any, transitionDuration: any) => {
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -148,9 +200,13 @@ const YouCan = () => {
                       className="rounded-[50px] bg-tc-orange text-[16px] font-satoshi font-[500]
     p-3 text-white hover:bg-[#e79823] w-[250px] xl:w-[190px] lg:w-[175px]"
                     >
-                       <Link href="/customer/add-task">
-                        Add a task for free
-                      </Link>
+                      {isServiceProvider ? (
+                        <p onClick={handlePostTask}>Add a task for free</p>
+                      ) : (
+                        <Link href="/customer/add-task">
+                          Add a task for free
+                        </Link>
+                      )}
                     </button>
                   </div>
 
@@ -163,9 +219,18 @@ const YouCan = () => {
                       className="rounded-[50px] bg-primary text-[16px] font-satoshi font-[500]
     p-3 text-white hover:bg-[#25135f] w-[130px]"
                     >
-                      <Link href="">
-                        Post listing
-                      </Link>
+                      {!isServiceProvider ? (<div
+                        onClick={handleBecomeSP}
+                        className="flex items-center justify-center"
+                      >
+                        <p className="font-satoshiMedium">Post listing</p>
+                      </div>) : (<Link
+                        href={`/provide-service`}
+                        className="flex items-center justify-center"
+                      >
+                        <p className="">Post listing</p>
+
+                      </Link>)}
                     </button>
                   </div>
 
