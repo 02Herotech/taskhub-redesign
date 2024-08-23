@@ -8,6 +8,7 @@ import { useGetTaskByIdQuery, useGetTasksOffersQuery } from "@/services/tasks";
 import {
   dayOfWeekNames,
   formatAmount,
+  formatTime24Hour,
   monthNames,
   suffixes,
 } from "@/lib/utils";
@@ -54,22 +55,16 @@ const TaskDetailsPage = ({ params }: { params: { id: string } }) => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  const isMounted = useRef(true);
-
   useEffect(() => {
-    isMounted.current = true;
 
     const intervalId = setInterval(() => {
-      if (isMounted.current) {
         refetch();
-      }
-    }, 10000);
+    }, 5000);
 
     return () => {
-      isMounted.current = false;
       clearInterval(intervalId);
     };
-  }, [refetch]);
+  }, []);
 
   const handleSubmitOffer = async (message: string) => {
     const socket = connectSocket(id as unknown as number);
@@ -120,8 +115,6 @@ const TaskDetailsPage = ({ params }: { params: { id: string } }) => {
       </div>
     );
   }
-
-  console.log("error:", error);
 
   const date = task?.taskDate
     ? new Date(task.taskDate[0], task.taskDate[1] - 1, task.taskDate[2])
@@ -201,7 +194,7 @@ const TaskDetailsPage = ({ params }: { params: { id: string } }) => {
                 <div className="flex items-center space-x-3 text-[#716F78] max-lg:text-xs">
                   <FiClock className="h-6 w-6" />
                   <h5 className="font-satoshiMedium text-[15px] font-medium lg:text-xl">
-                    {task.taskTime || "Flexible"}
+                    {formatTime24Hour(task.taskTime) || "Flexible"}
                   </h5>
                 </div>
               </div>

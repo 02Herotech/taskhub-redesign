@@ -194,3 +194,23 @@ export const formatTimeAgo = (timestamp: Timestamp): string => {
 	const yearsAgo = Math.round(monthsAgo / 12);
 	return `${yearsAgo} ${yearsAgo === 1 ? 'year' : 'years'} ago`;
 };
+
+
+export function formatTime24Hour(timeArray: [number, number] | null): string {
+	// Check if the input is null
+	if (timeArray === null) {
+		return "Flexible";
+	}
+
+	const [hours, minutes] = timeArray;
+
+	// Check if the input is valid
+	if (hours < 0 || hours >= 24 || minutes < 0 || minutes >= 60) {
+		return "Invalid time input";
+	}
+
+	// Format the time in 24-hour format
+	const formattedTime = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
+
+	return formattedTime;
+}

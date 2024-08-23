@@ -90,7 +90,7 @@ const LoginForm = () => {
           <h1 className="font-clashSemiBold text-2xl text-[#190E3F] lg:text-4xl">
             Welcome to{" "}
             <span className="text-primary">
-              <b>Task</b>hub
+              <b>Oloja</b>
             </span>
           </h1>
           <p className="font-clashMedium text-xl text-tc-gray lg:text-2xl">

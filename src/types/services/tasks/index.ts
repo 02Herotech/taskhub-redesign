@@ -9,7 +9,7 @@ export type Task = {
         id: number;
         categoryName: string;
     }
-    taskTime: string;
+    taskTime: [number, number];
     taskDate: [number, number, number];
     hubTime: string | null;
     taskType: string;
@@ -28,7 +28,7 @@ export type CustomerTasks = {
     taskBriefDescription: string;
     taskDescription: string;
     taskImage: any;
-    taskTime: string;
+    taskTime: [number, number];
     taskDate: [number, number, number];
     category: {
         id: number;

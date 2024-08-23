@@ -80,7 +80,7 @@ const ServicesPage = () => {
           Authorization: "Bearer " + token,
         },
       });
-      setJobs(data.reverse());
+      setJobs(data);
     } catch (error: any) {
       console.error(error.response?.data || error);
     } finally {
@@ -90,7 +90,6 @@ const ServicesPage = () => {
 
   useEffect(() => {
     const handlefetches = async () => {
-      console.log("refreshing");
       await fetchBookings();
       await fetchJobs();
     };

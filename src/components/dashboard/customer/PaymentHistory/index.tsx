@@ -59,21 +59,29 @@ const PaymentHistory = () => {
 
     const downloadPdf = () => {
         const input = pdfRef.current;
+
         if (input) {
-            html2canvas(input).then((canvas) => {
+            html2canvas(input, {
+                logging: false,
+                useCORS: true,
+                // scale: 2, 
+            }).then((canvas) => {
                 const imgData = canvas.toDataURL('image/png');
-                const pdf = new jsPDF('p', 'mm', 'a4');
+                const pdf = new jsPDF({
+                    orientation: 'portrait',
+                    unit: 'px',
+                    format: 'a4', // Use a standard size
+                });
 
-                // Calculate the width and height for the PDF
-                const pdfWidth = pdf.internal.pageSize.getWidth();
-                const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
-
-                // Add the image to the PDF
-                pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
-                pdf.save('taskhub_receipt.pdf');
+                // Adjust dimensions if necessary
+                const imgWidth = canvas.width * 0.75; // Adjust width
+                const imgHeight = canvas.height * 0.75; // Adjust height
+                pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
+                pdf.save('oloja_receipt.pdf');
             });
+
+            setIsModalOpen(false);
         }
-        setIsModalOpen(false);
     };
 
     const formatCreatedAt = (dateArray: number[]): string => {

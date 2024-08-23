@@ -5,7 +5,7 @@ import Button from '@/components/global/Button'
 import { HiOutlineLocationMarker } from 'react-icons/hi'
 import { FiCalendar, FiClock } from "react-icons/fi";
 import { useGetTaskByIdQuery, useGetTasksOffersQuery } from '@/services/tasks';
-import { dayOfWeekNames, formatAmount, monthNames, suffixes } from '@/lib/utils';
+import { dayOfWeekNames, formatAmount, formatTime24Hour, monthNames, suffixes } from '@/lib/utils';
 import Loading from '@/shared/loading';
 import { useEffect, useRef, useState } from 'react';
 import AssignOfferForm from '@/components/dashboard/customer/AssignOfferForm';
@@ -13,8 +13,10 @@ import CustomerTaskOffers from '@/components/dashboard/customer/CustomerTaskOffe
 
 const NewTaskDetails = ({ params }: { params: { id: string } }) => {
     const id = params.id;
-    const { data: task, isLoading } = useGetTaskByIdQuery(id as unknown as number);
+    const { data: task, isLoading, error } = useGetTaskByIdQuery(id as unknown as number);
     const { data: offers, refetch } = useGetTasksOffersQuery(id as unknown as number);
+
+    console.log("task:", task);
 
     const [showAssignForm, setShowAssignForm] = useState(false);
 
@@ -39,12 +41,23 @@ const NewTaskDetails = ({ params }: { params: { id: string } }) => {
         };
     }, [refetch]);
 
-    if (!task) {
+    if (isLoading) {
         return (
             <div className="w-full flex items-center justify-center h-[full]">
                 <Loading />
             </div>
         )
+    }
+
+    if (!task || error) {
+        return (
+            <div className="flex h-[50vh] flex-col w-full items-center justify-center">
+                <h2 className="text-xl lg:text-3xl font-satoshiBold font-bold text-primary">Task not found!</h2>
+                <p className="text-lg lg:text-xl font-satoshiMedium text-[#140B31]">
+                    Something went wrong, please try again later.
+                </p>
+            </div>
+        );
     }
 
     const date = task?.taskDate ? new Date(task.taskDate[0], task.taskDate[1] - 1, task.taskDate[2]) : new Date();
@@ -70,7 +83,7 @@ const NewTaskDetails = ({ params }: { params: { id: string } }) => {
         formattedTime = `${hours === 0 ? 12 : hours}:${(minutes < 10 ? '0' : '') + minutes} AM`;
     }
 
-    const isAssigned = task?.taskStatus === 'ASSIGNED';
+    const isAssigned = task?.taskStatus === "ASSIGNED";
 
     return (
         <section className="py-5 lg:py-14 lg:px-10 font-satoshi">
@@ -103,7 +116,7 @@ const NewTaskDetails = ({ params }: { params: { id: string } }) => {
                                 </div>
                                 <div className="max-lg:text-xs flex items-center space-x-3 text-[#716F78]">
                                     <FiClock className="h-6 w-6" />
-                                    <h5 className='text-[15px] lg:text-xl font-satoshiMedium font-medium'>{task.taskTime || "Flexible"}</h5>
+                                        <h5 className='text-[15px] lg:text-xl font-satoshiMedium font-medium'>{formatTime24Hour(task.taskTime) || "Flexible"}</h5>
                                 </div>
                             </div>
                         </div>

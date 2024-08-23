@@ -84,14 +84,14 @@ const CustomerTaskOffers: FC<OffersProps> = ({ taskId, posterId }) => {
     };
 
     return (
-        <div className="max-h-96 overflow-y-auto small-scrollbar pr-5 mt-14">
+        <div className="min-h-96 pr-5 mt-14">
             <div className="flex justify-between items-center mb-6">
                 <h2 className="text-xl font-bold text-[#E58C06] lg:text-3xl">Offers</h2>
                 {/* <button className="text-lg font-bold text-[#E58C06] lg:text-2xl">View all</button> */}
             </div>
             <div className="">
                 {offers?.map((offer) => (
-                    <div key={offer.id} className="border-b border-[#716F78] pb-2 mb-5">
+                    <div key={offer.id} className="border-b border-[#716F78] space-y-8 mb-5">
                         <OfferMessage message={offer} isThread={false} posterId={posterId} />
                         <div className="mt-2">
                             <h2 onClick={() => setOpenReplyModal((prev) => ({ ...prev, [offer.id]: true }))} className='text-primary cursor-pointer font-semibold'>Reply</h2>

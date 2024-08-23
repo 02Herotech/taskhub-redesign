@@ -37,8 +37,6 @@ const JobCard = ({
   startJob,
   completeJob,
 }: CardPropsTypes) => {
-  console.log(startDate);
-
   return (
     <div className=" flex gap-3 border-slate-200 py-4  max-md:rounded-xl max-md:border max-md:border-violet-normal max-md:p-4 md:border-b  lg:grid lg:grid-cols-12 lg:items-center lg:px-8 lg:py-4">
       <div className="col-span-2 size-16 flex-shrink-0 overflow-hidden rounded-full border border-violet-normal max-md:hidden lg:size-24 ">
