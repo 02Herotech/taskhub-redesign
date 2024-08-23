@@ -20,10 +20,7 @@ const HomeNavigation = () => {
       label: "Home",
       url: "/home",
     },
-    {
-      label: "About Us",
-      url: "/about",
-    },
+
     {
       label: "Marketplace",
       url: "/marketplace",
@@ -31,6 +28,10 @@ const HomeNavigation = () => {
     {
       label: "Business Hub",
       url: "/",
+    },
+    {
+      label: "About Us",
+      url: "/about",
     },
   
     // {
