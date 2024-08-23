@@ -28,7 +28,7 @@ const OnogoingTaskDetailsPage = ({ params }: { params: { id: string } }) => {
     const [inspectionEndTime, setInspectionEndTime] = useState<Date | null>(null);
     const [inspectionError, setInspectionError] = useState('');
     const [revisionError, setRevisionError] = useState('');
-    const [paymentApproved, setPaymentApproved] = useState(true);
+    const [paymentApproved, setPaymentApproved] = useState(false);
     const [paymentError, setPaymentError] = useState('');
 
     const { data: task, isLoading } = useGetJobByIdQuery(id as unknown as number);
