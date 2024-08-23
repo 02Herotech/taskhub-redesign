@@ -195,7 +195,7 @@ const OngoingServiceModal = ({
               onClick={handleCloseModal}
               className="mx-auto rounded-full bg-violet-normal p-3 px-10 text-center font-bold text-white  transition-opacity duration-300 hover:opacity-90 "
             >
-              Cancel
+              Close
             </button>
           </div>
         </div>
