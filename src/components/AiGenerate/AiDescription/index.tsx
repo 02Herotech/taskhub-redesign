@@ -11,6 +11,7 @@ import icon2 from "../../../../public/assets/images/serviceProvider/AiButton2.pn
 import aiLine from "../../../../public/assets/images/serviceProvider/AiLine.svg";
 import Image from "next/image";
 import { TypeAnimation } from "react-type-animation";
+
 interface Message {
   id: number;
   type: "user" | "ai";
@@ -78,13 +79,7 @@ const AiDesciption: React.FC<AiGenerateProps> = ({
   const [emptyQuerryField, setEmptyQuerryField] = useState(false);
 
   // New lines
-  const authString = localStorage.getItem("auth");
-  let accessToken: string | null = null;
-  
-  if (authString) {
-    const authData = JSON.parse(authString);
-    accessToken = authData?.token || null;
-  }
+  const userToken = session?.data?.user?.accessToken;
   // ends here
 
   const handleAiChatQuery = async (e: any) => {
@@ -122,7 +117,7 @@ const AiDesciption: React.FC<AiGenerateProps> = ({
       const url = `${process.env.NEXT_PUBLIC_API_URL}/listing/create-listing/category/content-generate?category=${encodeURIComponent(aiQuery)}`;
       const response = await axios.get(url, {
         headers: {
-           Authorization: `Bearer ${accessToken}`
+           Authorization: `Bearer ${userToken}`
         }
       });
       const data = await response.data[0]?.message?.content;
