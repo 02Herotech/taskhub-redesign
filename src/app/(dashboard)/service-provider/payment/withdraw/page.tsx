@@ -87,11 +87,11 @@ const WithdrawalPage = () => {
                   <PiSealCheckFill className="size-10 text-green-500" />
                 </div>
               </div>
-              <p className="text-center font-satoshiBold text-2xl font-extrabold text-violet-normal">
-                Success
+              <p className="text-center font-clashBold text-2xl font-bold text-violet-normal">
+                Withdrawal Successful
               </p>
               <p className="text-center font-semibold text-violet-darker">
-                Your withdrawal is successfully
+                Please wait a few minutes to receive payment.
               </p>
               <div className="flex items-center gap-6">
                 <Link
