@@ -71,21 +71,21 @@ const HeroSection = () => {
   const handlePostTask = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
     try {
-        const response = await axios.post(
-            `${process.env.NEXT_PUBLIC_API_URL}/auth/logout`,
-        );
-        console.log("Sign Out: ", response);
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/auth/logout`,
+      );
+      console.log("Sign Out: ", response);
 
-        if (response.status === 200) {
-            await signOut({
-                redirect: false,
-            });
-            router.push("/customer/add-task");
-        }
+      if (response.status === 200) {
+        await signOut({
+          redirect: false,
+        });
+        router.push("/customer/add-task");
+      }
     } catch (error) {
-        console.error(error);
+      console.error(error);
     }
-};
+  };
 
   // Image1 transition
   const images1 = [heroImage1, heroImage1a];
