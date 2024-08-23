@@ -21,7 +21,7 @@ const HomeNavigation = () => {
       url: "/home",
     },
     {
-      label: "About",
+      label: "About Us",
       url: "/about",
     },
     {
@@ -29,13 +29,18 @@ const HomeNavigation = () => {
       url: "/marketplace",
     },
     {
-      label: "Blog",
-      url: "/blog",
+      label: "Business Hub",
+      url: "/",
     },
-    {
-      label: "Contact Us",
-      url: "/contact",
-    },
+  
+    // {
+    //   label: "Blog",
+    //   url: "/blog",
+    // },
+    // {
+    //   label: "Contact Us",
+    //   url: "/contact",
+    // },
   ];
 
   return (
@@ -45,14 +50,14 @@ const HomeNavigation = () => {
           <Link href="/">
             <Logo />
           </Link>
-          <ul className="hidden items-center space-x-20 lg:flex">
+          <ul className="hidden items-center space-x-8 lg:flex">
             {links.map((link) => {
               return (
                 <li key={link.url} className="relative">
                   <Link
                     href={link.url as string}
-                    className={cn("text-balck text-md", {
-                      "font-semibold text-tc-orange":
+                    className={cn("text-[#140B31] text-md font-clashMedium", {
+                      "font-semibold text-primary":
                         link.url === "/" && pathname === "/"
                           ? true
                           : link.url !== "/" && pathname.includes(link.url)
@@ -69,12 +74,16 @@ const HomeNavigation = () => {
 
           <div className="hidden items-center space-x-5 lg:flex">
             <Link href="/auth">
-              <Button className="rounded-full">Sign Up</Button>
+              <Button theme="outline" className="rounded-full bg-transparent">Sign Up</Button>
             </Link>
             <Link href="/auth/login">
               <Button theme="outline" className="rounded-full bg-transparent">
                 Login
               </Button>
+            </Link>
+
+            <Link href="">
+              <Button className="rounded-full">Rent a shop</Button>
             </Link>
           </div>
           <button

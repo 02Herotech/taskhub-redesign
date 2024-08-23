@@ -4,7 +4,7 @@ import StoreFront from "@/components/homepage/StoreFront";
 import YouCan from "@/components/homepage/YouCan";
 import BusinessHub from "@/components/homepage/BusinessHub";
 import WhatSetUsApart from "@/components/homepage/WhatSetUsApart";
-
+import FAQ from "@/components/homepage/FAQ";
 
 import HeroSection from "@/components/homepage/HeroSection";
 import SecurityFeatures from "@/components/homepage/SecurityFeatures";
@@ -12,6 +12,7 @@ import SPHomepage from "@/components/homepage/ServiceProvider";
 import Taskhub from "@/components/homepage/TaskhubCan";
 //import Testimonials from "@/components/homepage/Testimonials";
 import WelcomeAboard from "@/components/homepage/WelcomeAboard";
+
 
 const HomePage = () => {
   return (
@@ -22,6 +23,7 @@ const HomePage = () => {
       <YouCan />
       <BusinessHub />
       <WhatSetUsApart />
+      <FAQ />
 
 
 
