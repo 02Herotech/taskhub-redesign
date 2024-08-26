@@ -1,4 +1,5 @@
 'use client'
+import NewsLetter from '@/components/newsletter';
 import React, { useState } from 'react';
 import { FaChevronDown } from 'react-icons/fa';
 
@@ -36,7 +37,7 @@ const FAQ = () => {
     ];
 
     return (
-        <div className='bg-[#E1DDEE] py-10 xl:h-[700px] lg:h-[720px]'>
+        <div className='bg-[#E1DDEE] pt-10 xl:h-[790px] lg:h-[810px]'>
 
             <div className='mx-auto max-w-7xl'>
                 <div className='mx-auto w-[85%]'>
