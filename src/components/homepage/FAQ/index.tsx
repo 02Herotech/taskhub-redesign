@@ -1,4 +1,5 @@
 'use client'
+import NewsLetter from '@/components/newsletter';
 import React, { useState } from 'react';
 import { FaChevronDown } from 'react-icons/fa';
 
@@ -30,13 +31,13 @@ const FAQ = () => {
                 "Yes, you can showcase your entire range of legally permitted products on Olójà Hub via your personalized virtual store.",
         },
         {
-            question: "Are there ways to verify service providers on your platform?",
+            question: "Are there verified service providers on Olójà?",
             answer: "Yes, we verify the service providers on Olójà.",
         },
     ];
 
     return (
-        <div className='bg-[#E1DDEE] py-10 xl:h-[700px] lg:h-[720px]'>
+        <div className='bg-[#E1DDEE] pt-10 xl:h-[790px] lg:h-[810px]'>
 
             <div className='mx-auto max-w-7xl'>
                 <div className='mx-auto w-[85%]'>

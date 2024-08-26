@@ -3,7 +3,6 @@ import React, { useEffect, useState } from 'react'
 import Image from 'next/image';
 import CheckSign from "../../../../public/assets/images/homepage/storeFront/CheckSign.png";
 import clsx from 'clsx';
-
 import manage from "../../../../public/assets/images/homepage/storeFront/1-manage.png";
 import product from "../../../../public/assets/images/homepage/storeFront/2-product.png";
 import theme from "../../../../public/assets/images/homepage/storeFront/3-theme.png";
@@ -72,7 +71,7 @@ const StoreFront = () => {
                     <div className='space-y-5'>
                         <h2 className='xl:text-[40px] text-[32px] font-clashSemiBold text-[#140B31] text-center'>Get your personalized digital storefront</h2>
 
-                        <p className='text-left font-satoshiMedium text-[30px] font-[500] text-[#381F8C]'>
+                        <p className='text-left font-satoshi text-[30px] font-[900] text-[#381F8C]'>
                             Own your virtual store front hassel free
                         </p>
 

@@ -12,6 +12,7 @@ import SPHomepage from "@/components/homepage/ServiceProvider";
 import Taskhub from "@/components/homepage/TaskhubCan";
 //import Testimonials from "@/components/homepage/Testimonials";
 import WelcomeAboard from "@/components/homepage/WelcomeAboard";
+import NewsLetter from "@/components/newsletter";
 
 
 const HomePage = () => {
@@ -24,6 +25,7 @@ const HomePage = () => {
       <BusinessHub />
       <WhatSetUsApart />
       <FAQ />
+      {/* <NewsLetter /> */}
 
 
 
