@@ -85,7 +85,7 @@ const PillarStructure = () => {
         {
             title: 'Rent a shop',
             text: 'Own a personalized virtual shop for your business and get access to 5000+ potential customers from our community.',
-            btnText: 'Rent a sho[p',
+            btnText: 'Rent a shop',
             btnBgColor: '381F8C',
             btnTextColor: 'FFFFF',
             img: rentAShop,

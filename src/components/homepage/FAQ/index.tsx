@@ -30,7 +30,7 @@ const FAQ = () => {
                 "Yes, you can showcase your entire range of legally permitted products on Olójà Hub via your personalized virtual store.",
         },
         {
-            question: "Are there ways to verify service providers on your platform?",
+            question: "Are there verified service providers on Olójà?",
             answer: "Yes, we verify the service providers on Olójà.",
         },
     ];
