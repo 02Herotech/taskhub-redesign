@@ -13,7 +13,7 @@ import heroImage3 from "../../../../../public/assets/images/homepage/hero/hero3.
 
 const MobileHero = () => {
     return (
-        <div className='relative h-auto bg-[#EBE9F4] min-h-[1050px] ' >
+        <div className='relative h-auto bg-gradient-to-b from-[#d8cfe9] via-[#f8ede1] to-[#EBE9F4]  min-h-[1050px] ' >
 
             <div className='relative z-10 mx-auto w-[90%]  '>
 
