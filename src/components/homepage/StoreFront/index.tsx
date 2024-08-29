@@ -9,6 +9,7 @@ import theme from "../../../../public/assets/images/homepage/storeFront/3-theme.
 import domain from "../../../../public/assets/images/homepage/storeFront/4-domain.png";
 import launch from "../../../../public/assets/images/homepage/storeFront/5-launch.png";
 import Link from 'next/link';
+import MobileStoreFront from './MobileStoreFront';
 
 
 const StoreFront = () => {
@@ -64,7 +65,7 @@ const StoreFront = () => {
     return (
         <div className='bg-[#E1DDEE]'>
 
-            <div className='mx-auto max-w-7xl'>
+            <div className='mx-auto max-w-7xl hidden lg:block'>
                 <div className='w-[85%] mx-auto py-10 '>
 
 
@@ -115,11 +116,11 @@ const StoreFront = () => {
                     </div>
 
                     <div className='flex justify-center mt-10'>
-                        
+
 
                         <button
                             className="rounded-[50px] bg-primary text-[16px] font-satoshi font-[700]
-                                p-3 text-white hover:bg-[#25135f] w-[130px]"
+                                p-3 text-[#EBE9F4] hover:bg-[#25135f] w-[130px]"
                         >
                             <Link href="">
                                 Rent a Shop
@@ -132,7 +133,9 @@ const StoreFront = () => {
 
             </div>
 
-
+            <div className='lg:hidden'>
+                <MobileStoreFront />
+            </div>
         </div>
     )
 }
