@@ -13,7 +13,6 @@ const Footer = () => {
             <div className='h-[400px] bg-[#895404]'>Footer</div>
 
             <div className='absolute -top-24 w-full h-[200px] overflow-hidden'>
-
                 <NewsLetter />
             </div>
 
