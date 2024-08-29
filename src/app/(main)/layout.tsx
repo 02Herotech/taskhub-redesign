@@ -10,7 +10,7 @@ const MainLayout = ({ children }: MainLayoutProps) => {
     <div>
       <Navigation />
       <main className="mt-[20px]">{children}</main>
-      <Footer />
+      {/* <Footer /> */}
     </div>
   );
 };
