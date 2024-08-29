@@ -16,8 +16,13 @@ type SignInRequest = {
 };
 
 const LoginForm = () => {
-  const [error, setError] = useState<string | null>(null);
   const router = useRouter();
+  const [error, setError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  
+  const searchParams = useSearchParams();
+  const from = searchParams.get("from");
+
   const methods = useForm({
     mode: "onChange",
     defaultValues: {
@@ -30,56 +35,56 @@ const LoginForm = () => {
     formState: { isValid },
   } = methods;
 
-  const searchParams = useSearchParams();
+  const handleApiLogin = async (payload: SignInRequest) => {
+    const response = await axios.post(
+      `${process.env.NEXT_PUBLIC_API_URL}/auth/login`,
+      payload
+    );
+    return response.data;
+  };
 
-  const from = searchParams.get("from");
+  const handleNextAuthSignIn = async (payload: SignInRequest, userType: string) => {
+    const result = await signIn("credentials", {
+      redirect: false,
+      email: payload.emailAddress,
+      password: payload.password,
+      userType,
+    });
+    if (result?.error) {
+      throw new Error(result.error);
+    }
+  };
 
-  const [isLoading, setIsLoading] = useState(false);
+  const handleRedirect = () => {
+    const newRedirectToAddTask = getCookie("redirectToAddTask");
+    if (newRedirectToAddTask) {
+      router.push(newRedirectToAddTask);
+      deleteCookie("redirectToAddTask");
+    } else {
+      router.push(from || "/marketplace");
+    }
+  };
 
   const onSubmit: SubmitHandler<SignInRequest> = async (payload) => {
+    setIsLoading(true);
+    setError(null);
+
     try {
-      setIsLoading(true);
-      setError(null);
+      const loginData = await handleApiLogin(payload);
 
-      const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/auth/login`,
-        {
-          emailAddress: payload.emailAddress,
-          password: payload.password,
-        },
-      );
       const authData = {
-        token: response.data.accessToken,
-        role: response.data.user.roles,
+        token: loginData.accessToken,
+        role: loginData.user.roles,
       };
-      // sessionStorage.setItem("auth", JSON.stringify(authData));
       localStorage.setItem("auth", JSON.stringify(authData));
-      if (response.status === 200) {
-        const userTypeRole = response.data.user.roles[0];
 
-        await signIn("credentials", {
-          redirect: false,
-          email: payload.emailAddress,
-          password: payload.password,
-          userType: userTypeRole,
-        });
-      }
-      const newRedirectToAddTask = getCookie("redirectToAddTask");
+      await handleNextAuthSignIn(payload, loginData.user.roles[0]);
 
-      if (newRedirectToAddTask) {
-        router.push(newRedirectToAddTask);
-      } else {
-        if (from) {
-          router.push(from);
-        } else {
-          router.push("/marketplace");
-        }
-      }
-      setIsLoading(false);
-      deleteCookie("redirectToAddTask");
+      handleRedirect();
     } catch (error: any) {
+      setError(error.response?.data?.message || "Something went wrong, please try again");
+    } finally {
       setIsLoading(false);
-      setError(error.response.data.message || "Something went wrong, please try again");
     }
   };
 
