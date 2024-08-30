@@ -105,7 +105,7 @@ const MobileStoreFront = () => {
 
             <div className='flex justify-center mt-10'>
                 <button
-                    className="rounded-[50px] bg-primary text-[13px] font-satoshi font-[700]
+                    className="rounded-[50px] bg-primary text-[12px] font-satoshi font-[700]
         p-3 text-[#EBE9F4] hover:bg-[#25135f] w-[110px]"
                 >
                     <Link href="">

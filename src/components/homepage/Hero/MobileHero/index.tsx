@@ -18,13 +18,13 @@ const MobileHero = () => {
             <div className='relative z-10 mx-auto w-[90%]  '>
 
                 <div className='w-[90%] mx-auto pt-10'>
-                    <h1 className='font-clashSemiBold my-4 text-center text-[32px] text-[#140B31] '>
+                    <h1 className='font-clashSemiBold my-4 text-center text-[28px] text-[#140B31] '>
                         Every immigrant needs a <span className='text-[#E58C06]'>Product</span>
                     </h1>
 
-                    <p className='text-center font-satoshi text-[20px] text-[#381F8C] font-[600] py-0 '>
-                        We provide a dynamic <span className='text-[#E58C06]'>AI enabled </span> platform that bridges the gap <br />
-                        between individuals, businesses, and services, where you can buy,<br />
+                    <p className='text-center font-satoshi text-[18px] text-[#381F8C] font-[600] py-0 '>
+                        We provide a dynamic <span className='text-[#E58C06]'>AI enabled </span> platform that bridges the gap
+                        between individuals, businesses, and services, where you can buy,
                         sell and gain business education.
                     </p>
 
@@ -32,7 +32,7 @@ const MobileHero = () => {
                         <div className='flex space-x-4 w-auto '>
 
                             <button
-                                className="rounded-[50px] bg-primary text-[15px] font-satoshi font-[700]
+                                className="rounded-[50px] bg-primary text-[12px] font-satoshi font-[700]
                                 py-3 px-3 text-[#EBE9F4] hover:bg-[#25135f] max-w-[165px] "
                             >
                                 <Link href="/marketplace">
@@ -41,7 +41,7 @@ const MobileHero = () => {
                             </button>
 
                             <button
-                                className="rounded-[50px] bg-[#FE9B07] text-[15px] font-satoshi font-[700]
+                                className="rounded-[50px] bg-[#FE9B07] text-[12px] font-satoshi font-[700]
                                 py-3 px-3 text-white hover:bg-[#e79823] max-w-[125px] "
                             >
                                 <Link href="">
