@@ -37,7 +37,7 @@ const FAQ = () => {
     ];
 
     return (
-        <div className='bg-[#E1DDEE] pt-10 xl:h-[790px] lg:h-[810px]'>
+        <div className='bg-[#E1DDEE] pt-10 xl:h-[790px] lg:h-[810px] h-[810px]'>
 
             <div className='mx-auto max-w-7xl'>
                 <div className='mx-auto w-[85%]'>
@@ -58,7 +58,7 @@ const FAQ = () => {
                                         className="flex justify-between items-center cursor-pointer"
                                         onClick={() => toggleFAQ(index)}>
 
-                                        <h3 className='xl:text-[20px] text-[24px] text-black font-satoshiBold font-[700]'>
+                                        <h3 className='xl:text-[20px] lg:text-[24px] text-[16px] text-black font-satoshiBold font-[700]'>
                                             {item.question}
                                         </h3>
                                         <FaChevronDown
@@ -71,7 +71,7 @@ const FAQ = () => {
                                         className={`overflow-hidden transition-all duration-300 ease-in-out ${openIndex === index ? 'max-h-40' : 'max-h-0'
                                             }`}
                                     >
-                                        <p className="font-satoshiMedium mt-2 pr-4 text-black">
+                                        <p className="font-satoshiMedium mt-2 pr-4 text-black lg:text-[16px] text-[14px]">
                                             {item.answer}
                                         </p>
                                     </div>
