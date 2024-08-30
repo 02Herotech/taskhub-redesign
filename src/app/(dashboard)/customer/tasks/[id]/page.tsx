@@ -16,8 +16,6 @@ const NewTaskDetails = ({ params }: { params: { id: string } }) => {
     const { data: task, isLoading, error } = useGetTaskByIdQuery(id as unknown as number);
     const { data: offers, refetch } = useGetTasksOffersQuery(id as unknown as number);
 
-    console.log("task:", task);
-
     const [showAssignForm, setShowAssignForm] = useState(false);
 
     const handleAssign = (offerId: string) => {

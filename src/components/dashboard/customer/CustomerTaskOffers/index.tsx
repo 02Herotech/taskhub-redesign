@@ -36,6 +36,17 @@ const CustomerTaskOffers: FC<OffersProps> = ({ taskId, posterId }) => {
         return () => window.removeEventListener('resize', handleResize);
     }, [openReplyModal]);
 
+    useEffect(() => {
+
+        const intervalId = setInterval(() => {
+            refetch();
+        }, 3000);
+
+        return () => {
+            clearInterval(intervalId);
+        };
+    }, []);
+
     const handleReply = (offerId: string) => {
         const socket = connectSocket(taskId);
 
