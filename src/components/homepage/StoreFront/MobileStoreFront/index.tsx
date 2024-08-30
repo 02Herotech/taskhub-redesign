@@ -4,10 +4,10 @@ import Image from 'next/image';
 import CheckSign from "../../../../../public/assets/images/homepage/storeFront/CheckSign.png";
 import clsx from 'clsx';
 import manage from "../../../../../public/assets/images/homepage/storeFront/1-MobileManage.png";
-import product from "../../../../../public/assets/images/homepage/storeFront/1-MobileManage.png";
-import theme from "../../../../../public/assets/images/homepage/storeFront/1-MobileManage.png";
-import domain from "../../../../../public/assets/images/homepage/storeFront/1-MobileManage.png";
-import launch from "../../../../../public/assets/images/homepage/storeFront/1-MobileManage.png";
+import product from "../../../../../public/assets/images/homepage/storeFront/2-MobileProduct.png";
+import theme from "../../../../../public/assets/images/homepage/storeFront/3-MobileTheme.png";
+import domain from "../../../../../public/assets/images/homepage/storeFront/4-MobileDomain.png";
+import launch from "../../../../../public/assets/images/homepage/storeFront/5-MobileLaundh.png";
 import Link from 'next/link';
 
 const MobileStoreFront = () => {
@@ -32,7 +32,7 @@ const MobileStoreFront = () => {
         {
             data: (
                 <>
-                    Overcome Visa and Residency <br /> Challenges
+                    Overcome Visa and Residency Challenges
                 </>
             )
         },

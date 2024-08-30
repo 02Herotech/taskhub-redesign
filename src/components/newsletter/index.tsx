@@ -24,8 +24,9 @@ const NewsLetter = () => {
     }
 
     return (
-       
-            <div className='mx-auto z-50 xl:w-[53%] lg:w-[70%] overflow-hidden h-full'>
+
+        <div>
+            <div className='hidden lg:block mx-auto z-50 xl:w-[53%] lg:w-[70%] lg:h-[200px] overflow-hidden h-full'>
                 <div className='bg-[#140B31] px-10 py-10 rounded-3xl z-10'>
 
                     <div className='flex gap-[5%] items-center'>
@@ -82,6 +83,77 @@ const NewsLetter = () => {
                     </svg>
                 </div>
             </div>
+
+
+            <div className='lg:hidden bg-[#140B31]  mx-auto z-50 w-[90%] rounded-3xl 
+             overflow-hidden h-[392px]'>
+                <span className='flex justify-end h-[190px] overflow-hidden'>
+                    <svg width="229" height="221" viewBox="0 0 229 221" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M130.313 34.7593C120.07 6.05817 146.177 -2.32227 160.511 -2.92485C187.37 -3.34203 176.655 11.2589 198.782 20.5756C220.909 29.8924 198.782 34.3422 195.024 47.9697C191.267 61.5971 221.883 54.6443 214.368 79.5354C206.853 104.426 159.12 105.956 177.072 73.9731C195.024 41.9902 143.116 70.6358 130.313 34.7593Z" stroke="white" stroke-opacity="0.3" stroke-width="2" />
+                        <path d="M139.882 37.7035C132.003 15.593 152.086 9.13696 163.112 8.67275C183.773 8.35137 175.53 19.5995 192.551 26.7768C209.572 33.9542 192.551 37.3822 189.66 47.8804C186.77 58.3786 210.321 53.0224 204.54 72.1977C198.76 91.373 162.042 92.5514 175.851 67.9127C189.66 43.274 149.731 65.3417 139.882 37.7035Z" stroke="white" stroke-opacity="0.3" stroke-width="2" />
+                        <path d="M121.455 32.0048C109.024 -2.86182 140.71 -13.0425 158.107 -13.7745C190.705 -14.2813 177.699 3.45605 204.555 14.7742C231.41 26.0923 204.555 31.498 199.994 48.0529C195.434 64.6077 232.592 56.1614 223.471 86.3994C214.351 116.637 156.418 118.496 178.206 79.6423C199.994 40.789 136.994 75.588 121.455 32.0048Z" stroke="white" stroke-opacity="0.3" stroke-width="2" />
+                        <path d="M114.013 29.7214C99.7435 -10.2477 136.115 -21.9182 156.085 -22.7574C193.503 -23.3383 178.575 -3.00523 209.401 9.96921C240.228 22.9437 209.401 29.1404 204.167 48.1179C198.932 67.0955 241.585 57.4131 231.116 92.0761C220.646 126.739 154.146 128.869 179.156 84.3302C204.167 39.7911 131.85 79.6826 114.013 29.7214Z" stroke="white" stroke-opacity="0.3" stroke-width="2" />
+                        <path d="M103.382 26.394C86.4862 -21.0161 129.552 -34.8593 153.197 -35.8547C197.502 -36.5438 179.826 -12.4253 216.326 2.96458C252.827 18.3545 216.326 25.7049 210.128 48.2155C203.93 70.7261 254.434 59.2411 242.037 100.357C229.641 141.474 150.901 144 180.515 91.1694C210.128 38.3384 124.502 85.6566 103.382 26.394Z" stroke="white" stroke-opacity="0.3" stroke-width="2" />
+                        <path d="M90.979 22.4997C71.0193 -33.627 121.895 -50.0155 149.828 -51.1938C202.168 -52.0096 181.286 -23.4568 224.406 -5.23737C267.525 12.9821 224.406 21.6839 217.083 48.3332C209.761 74.9825 269.424 61.3859 254.779 110.062C240.135 158.738 147.116 161.729 182.1 99.1845C217.083 36.6401 115.929 92.6581 90.979 22.4997Z" stroke="white" stroke-opacity="0.3" stroke-width="2" />
+                    </svg>
+                </span>
+
+                <span>
+
+                    <svg width="194" height="208" viewBox="0 0 194 208" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M45.1302 103.09C21.4266 86.7138 7.38535 108.504 3.32769 121.447C-3.62535 145.872 12.3302 139.659 15.4239 162.145C18.5176 184.631 27.9955 165.514 41.3595 165.417C54.7235 165.32 40.8827 191.578 65.452 190.806C90.0213 190.034 103.098 146.818 69.4986 155.386C35.8991 163.954 74.7597 123.561 45.1302 103.09Z" stroke="white" stroke-opacity="0.3" stroke-width="2" />
+                        <path d="M45.4783 112.547C27.2149 99.942 16.4052 116.702 13.2833 126.657C7.93441 145.446 20.2231 140.671 22.6126 157.97C25.0021 175.27 32.2974 160.565 42.5915 160.495C52.8857 160.424 42.2317 180.62 61.1571 180.033C80.0824 179.446 90.1431 146.204 64.264 152.786C38.385 159.367 68.3076 128.304 45.4783 112.547Z" stroke="white" stroke-opacity="0.3" stroke-width="2" />
+                        <path d="M44.7838 94.3253C15.9854 74.4418 -1.06477 100.886 -5.99007 116.594C-14.4292 146.238 4.95077 138.702 8.71526 165.995C12.4797 193.289 23.9874 170.087 40.2212 169.974C56.4549 169.86 39.6495 201.726 69.4945 200.796C99.3395 199.866 115.212 147.416 74.3999 157.806C33.5878 168.196 80.7817 119.18 44.7838 94.3253Z" stroke="white" stroke-opacity="0.3" stroke-width="2" />
+                        <path d="M44.5179 86.9707C11.5098 64.1598 -8.04749 94.5186 -13.7001 112.549C-23.3866 146.578 -1.16561 137.92 3.13961 169.246C7.44484 200.572 20.6467 173.937 39.2578 173.8C57.869 173.664 38.5902 210.245 72.8062 209.166C107.022 208.087 125.239 147.881 78.4466 159.822C31.6538 171.763 85.7779 115.484 44.5179 86.9707Z" stroke="white" stroke-opacity="0.3" stroke-width="2" />
+                        <path d="M44.0793 76.4486C4.91879 49.4187 -18.2606 85.359 -24.9553 106.708C-36.4257 146.999 -10.0755 136.759 -4.95279 173.856C0.169938 210.954 15.8136 179.421 37.8869 179.269C59.9601 179.117 37.1143 222.426 77.6949 221.167C118.275 219.907 139.85 148.62 84.3584 162.736C28.8671 176.852 93.03 110.236 44.0793 76.4486Z" stroke="white" stroke-opacity="0.3" stroke-width="2" />
+                        <path d="M43.5604 64.1674C-2.81043 32.2065 -30.2251 74.656 -38.1361 99.8758C-51.6882 147.473 -20.5042 135.391 -14.4173 179.225C-8.33026 223.06 10.1672 185.813 36.295 185.647C62.4227 185.481 35.4075 236.638 83.4415 235.175C131.476 233.712 156.968 149.499 91.2924 166.143C25.6169 182.786 101.524 104.119 43.5604 64.1674Z" stroke="white" stroke-opacity="0.3" stroke-width="2" />
+                    </svg>
+                </span>
+
+
+
+
+
+
+                <div className='space-y-5 px-5 py-10 z-50 -mt-[400px]'>
+
+                    <h2 className=' text-[28px] font-clashSemiBold  text-white text-left'>
+                        Newsletter
+                    </h2>
+
+                    <p className='font-satoshi text-[16px] text-white'>
+                        Join our newsletter for an exclusive pass to the
+                        latest breaking news, in-depth analysis,
+                        and insider perspectives delivered straight to your inbox.
+                    </p>
+
+
+                    <div className=' '>
+                        {
+                            submitted ?
+                                <div className={`flex items-center ${styles.animation} text-[#EEEEEF]`}>
+                                    <span className='text-[15px] '><AiOutlineCheckCircle /></span>
+                                    <p className='text-[15px] ml-2'>Thank you for Subscribing</p>
+                                </div> :
+                                <form className={`w-full flex flex-col items-center space-y-5`} onSubmit={onSubmit}>
+                                    <input type="email" placeholder="Enter your email" className={`px-5 rounded-[60px] text-left  text-[12px] text-[#381F8C] outline-none h-[50px] w-full  `} value={email} onChange={handleEmailChange} />
+                                    <button className={`bg-[#E58C06] font-satoshi text-[17px] px-3 text-[#EEEEEF] font-[600] rounded-[60px] h-[40px] w-[100px] ${isAllFieldsFilled() ? '' : 'opacity-80 cursor-not-allowed'}`} type='submit'
+                                        disabled={!isAllFieldsFilled()} >
+                                        Subscribe
+                                    </button>
+                                </form>
+                        }
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+
+        </div>
     )
 }
 

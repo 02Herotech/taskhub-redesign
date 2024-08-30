@@ -4,10 +4,13 @@ const Footer = () => {
 
     return (
         <footer className='h-[600px] relative '>
-            <div className='h-[400px] bg-[#895404]'>Footer</div>
-            {/* <div className='absolute -top-24 w-full h-[200px] overflow-hidden'>
+            <div className='h-[600px] bg-[#895404]'>Footer</div>
+
+
+
+            <div className='absolute lg:-top-24 -top-44 w-full   overflow-hidden'>
                 <NewsLetter />
-            </div> */}
+            </div>
         </footer>
     )
 }

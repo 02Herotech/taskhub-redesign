@@ -10,7 +10,7 @@ import clsx from 'clsx';
 import Link from 'next/link';
 
 
-import Task1 from "../../../../../public/assets/images/homepage/YouCan/mobileTask1.png";
+import Task1 from "../../../../../public/assets/images/homepage/YouCan/task1.png";
 import Task2 from "../../../../../public/assets/images/homepage/YouCan/task2.png";
 import aiAssist from "../../../../../public/assets/images/homepage/YouCan/aiAssist.png";
 import service1 from "../../../../../public/assets/images/homepage/howTaskhubWorks/service-provider/service1.png";
@@ -24,7 +24,7 @@ const MobileYouCan = () => {
         {
             data: (
                 <>
-                    Find the right professional  in  <br /> one place.
+                    Find the right professional  in one place.
                 </>
             )
         },
@@ -32,7 +32,7 @@ const MobileYouCan = () => {
         {
             data: (
                 <>
-                    Choose from a range of<br /> services and experts.
+                    Choose from a range of services and experts.
                 </>
             )
         },
@@ -40,7 +40,7 @@ const MobileYouCan = () => {
         {
             data: (
                 <>
-                    Save time and money with  <br />multiple bids.
+                    Save time and money with multiple bids.
                 </>
             )
         },
@@ -149,8 +149,8 @@ const MobileYouCan = () => {
 
                 <div className='flex flex-col items-center'>
 
-                    <div className='h-[400px] w-[85%]  mx-auto bg-[#2A1769] rounded-[30px] flex items-center justify-center '>
-                        <div className='relative h-[350px] w-[85%]  mx-auto  rounded-[15px] ' >
+                    <div className='h-[300px] w-[85%]  mx-auto bg-[#2A1769] rounded-[30px] flex items-center justify-center '>
+                        <div className='relative h-[250px] w-[85%]  mx-auto  rounded-[15px] ' >
                             <Image
                                 src={images[currentImageIndex]}
                                 alt=""
@@ -161,8 +161,8 @@ const MobileYouCan = () => {
                     </div>
 
                     <button
-                        className="rounded-[50px] bg-tc-orange text-[16px] font-satoshi font-[700]
-p-3 text-white hover:bg-[#e79823] w-[175px] -mt-5"
+                        className="rounded-[50px] bg-tc-orange text-[14px] font-satoshi font-[700]
+p-2 text-white hover:bg-[#e79823] w-[150px] -mt-5"
                     >
                         {isServiceProvider ? (
                             <p onClick={handlePostTask}>Add a task for free</p>
@@ -200,7 +200,7 @@ p-3 text-white hover:bg-[#e79823] w-[175px] -mt-5"
 
                     </div>
 
-                    <h2 className=' text-[20px] ml-[150px] -mt-[130px] font-clashSemiBold text-tc-orange text-left font-[700]'>
+                    <h2 className=' text-[16px] ml-[150px] -mt-[130px] font-clashSemiBold text-tc-orange text-left font-[700]'>
                         ADD A TASK <br /> IN  FEW STEPS
                     </h2>
                 </div>
@@ -208,8 +208,8 @@ p-3 text-white hover:bg-[#e79823] w-[175px] -mt-5"
 
                 <div className='flex flex-col items-center'>
 
-                    <div className='h-[400px] w-[85%]  mx-auto bg-tc-orange rounded-[30px] flex items-center justify-center '>
-                        <div className='relative h-[350px] w-[85%]  mx-auto  rounded-[15px] ' >
+                    <div className='h-[350px] w-[85%]  mx-auto bg-tc-orange rounded-[30px] flex items-center justify-center '>
+                        <div className='relative h-[300px] w-[85%]  mx-auto  rounded-[15px] ' >
                             <Image
                                 src={SpImages[currentSpImageIndex]}
                                 alt=""
@@ -220,8 +220,8 @@ p-3 text-white hover:bg-[#e79823] w-[175px] -mt-5"
                     </div>
 
                     <button
-                        className="rounded-[50px] bg-primary text-[16px] font-satoshi font-[600]
-    p-3 text-white hover:bg-[#25135f] w-[130px] -mt-5"
+                        className="rounded-[50px] bg-primary text-[14px] font-satoshi font-[600]
+    p-2 text-white hover:bg-[#25135f] w-[110px] -mt-5"
                     >
                         {!isServiceProvider ? (<div
                             onClick={handleBecomeSP}

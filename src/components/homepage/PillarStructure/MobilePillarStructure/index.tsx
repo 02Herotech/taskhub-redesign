@@ -4,8 +4,8 @@ import React, { useEffect, useState } from 'react'
 import Link from 'next/link';
 import Image from 'next/image';
 import marketplace from "../../../../../public/assets/images/homepage/pillarStructure/mobileMarket.png";
-import businessHub from "../../../../../public/assets/images/homepage/pillarStructure/mobileMarket.png";
-import rentAShop from "../../../../../public/assets/images/homepage/pillarStructure/mobileMarket.png";
+import businessHub from "../../../../../public/assets/images/homepage/pillarStructure/mobileBusHub.png";
+import rentAShop from "../../../../../public/assets/images/homepage/pillarStructure/mobileRent.png";
 
 import clsx from 'clsx';
 
@@ -63,7 +63,7 @@ const MobilePillarStructure = () => {
                 <div className='w-full flex justify-center'>
 
                     <button
-                        className={clsx('rounded-[50px]  text-[24px] font-clash font-[700] p-3 w-[200px]',
+                        className={clsx('rounded-[50px]  text-[20px] font-clash font-[700] py-3 px-2 w-[190px]',
                             activeIndex === 0 && 'bg-[#E58C06] text-white',
                             activeIndex === 1 && 'bg-[#F8E9FE] text-[#2A1769]',
                             activeIndex === 2 && 'bg-[#381F8C] text-white',
@@ -79,14 +79,14 @@ const MobilePillarStructure = () => {
 
 
                 <div className='text-white space-y-3 my-8 '>
-                    <h2 className='text-[32px] font-clashSemiBold transition-all duration-500 ease-in-out text-left'>{content[activeIndex].title}</h2>
+                    <h2 className='text-[28px] font-clashSemiBold transition-all duration-500 ease-in-out text-left'>{content[activeIndex].title}</h2>
 
-                    <p className='text-left font-satoshiMedium text-[20px] font-[500] min-h-[130px] transition-all duration-500 ease-in-out'>
+                    <p className='text-left font-satoshiMedium text-[20px] font-[500] min-h-[150px] transition-all duration-500 ease-in-out'>
                         {content[activeIndex].text}
                     </p>
 
                     <button
-                        className={clsx('rounded-[50px]  text-[16px] font-satoshi font-[700] p-3 w-[200px]',
+                        className={clsx('rounded-[50px]  text-[15px] font-satoshi font-[700] p-3 px-4 min-w-[150px]',
                             activeIndex === 0 && 'bg-[#E58C06] text-white',
                             activeIndex === 1 && 'bg-[#F8E9FE] text-[#2A1769]',
                             activeIndex === 2 && 'bg-[#381F8C] text-white',
