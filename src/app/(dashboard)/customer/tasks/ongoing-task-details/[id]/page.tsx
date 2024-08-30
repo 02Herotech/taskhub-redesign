@@ -31,8 +31,8 @@ const OnogoingTaskDetailsPage = ({ params }: { params: { id: string } }) => {
     const [paymentApproved, setPaymentApproved] = useState(false);
     const [paymentError, setPaymentError] = useState('');
 
-    const { data: task, isLoading } = useGetJobByIdQuery(id as unknown as number);
-    const [approvePayment, { isLoading: isApproveLoading, error }] = useAcceptServiceMutation();
+    const { data: task, isLoading, error } = useGetJobByIdQuery(id as unknown as number);
+    const [approvePayment, { isLoading: isApproveLoading }] = useAcceptServiceMutation();
     const [inspectTask, { isLoading: inspectTaskLoading }] = useInspectTaskMutation();
     const [requestRevision, { isLoading: isRevisionLoading }] = useRequestRevisionMutation();
 
@@ -51,7 +51,7 @@ const OnogoingTaskDetailsPage = ({ params }: { params: { id: string } }) => {
                 <Loading />
             </div>
         )
-    } 
+    }
 
     if (!task || error) {
         return (
@@ -132,18 +132,22 @@ const OnogoingTaskDetailsPage = ({ params }: { params: { id: string } }) => {
     };
 
     const handleApprovePayment = async () => {
-        setPaymentError("")
-        const response = await approvePayment({ jobId: task.id });
-        if (response.error) {
-            console.log(response.error);
-            setPaymentError('Job has not been completed by Service Provider');
-            return;
-        } else {
-            setPaymentApproved(true);
-            setPaymentError('');
-            router.push('/customer/tasks?tab=Completed%20tasks');
+        try {
+            setPaymentError("");
+            const response = await approvePayment({ jobId: task.id });
+
+            if (response.error) {
+                console.error("Payment approval failed:", response.error);
+                setPaymentError('Job has not been completed by service provider');
+            } else {
+                setPaymentApproved(true);
+                router.push('/customer/tasks?tab=Completed%20tasks');
+            }
+        } catch (error) {
+            console.error("Payment approval failed:", error);
+            setPaymentError('Job has not been completed by service provider');
         }
-    }
+    };
 
     return (
         <>
@@ -162,7 +166,7 @@ const OnogoingTaskDetailsPage = ({ params }: { params: { id: string } }) => {
                             <div className="flex items-center justify-center h-full font-satoshi p-10">
                                 <div className="flex flex-col items-center space-y-5">
                                     <svg width="70" height="70" viewBox="0 0 70 70" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <circle cx="35" cy="35" r="35" fill="#C1F6C3" fill-opacity="0.6" />
+                                        <circle cx="35" cy="35" r="35" fill="#C1F6C3" fillOpacity="0.6" />
                                         <circle cx="34.5" cy="34.5" r="22.5" fill="#A6F8AA" />
                                         <path d="M52 34.9924L48.2291 30.742L48.7545 25.1156L43.1755 23.8619L40.2545 19L35 21.2322L29.7455 19L26.8245 23.8619L21.2455 25.1003L21.7709 30.7267L18 34.9924L21.7709 39.2427L21.2455 44.8844L26.8245 46.1381L29.7455 51L35 48.7525L40.2545 50.9847L43.1755 46.1228L48.7545 44.8691L48.2291 39.2427L52 34.9924ZM31.9091 42.6369L25.7273 36.5213L27.9064 34.3655L31.9091 38.3101L42.0936 28.2346L44.2727 30.4056L31.9091 42.6369Z" fill="#4CAF50" />
                                     </svg>
@@ -262,14 +266,14 @@ const OnogoingTaskDetailsPage = ({ params }: { params: { id: string } }) => {
                                             Cancel
                                         </Button>
                                     </div>
-                                    {paymentError && <p className="text-red-600 text-sm mt-4 text-center">{paymentError}</p>}
+                                    {/* {paymentError && <p className="text-red-600 text-sm mt-4 text-center">{paymentError}</p>} */}
                                 </div>
                             </div>
                         ) : (
                             <div className="flex items-center justify-center h-full font-satoshi p-10">
                                 <div className="flex flex-col items-center space-y-5">
                                     <svg width="70" height="70" viewBox="0 0 70 70" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <circle cx="35" cy="35" r="35" fill="#C1F6C3" fill-opacity="0.6" />
+                                        <circle cx="35" cy="35" r="35" fill="#C1F6C3" fillOpacity="0.6" />
                                         <circle cx="34.5" cy="34.5" r="22.5" fill="#A6F8AA" />
                                         <path d="M52 34.9924L48.2291 30.742L48.7545 25.1156L43.1755 23.8619L40.2545 19L35 21.2322L29.7455 19L26.8245 23.8619L21.2455 25.1003L21.7709 30.7267L18 34.9924L21.7709 39.2427L21.2455 44.8844L26.8245 46.1381L29.7455 51L35 48.7525L40.2545 50.9847L43.1755 46.1228L48.7545 44.8691L48.2291 39.2427L52 34.9924ZM31.9091 42.6369L25.7273 36.5213L27.9064 34.3655L31.9091 38.3101L42.0936 28.2346L44.2727 30.4056L31.9091 42.6369Z" fill="#4CAF50" />
                                     </svg>
@@ -288,11 +292,17 @@ const OnogoingTaskDetailsPage = ({ params }: { params: { id: string } }) => {
                                         >
                                             Cancel
                                         </Button>
-                                        <Button loading={isApproveLoading} className="text-sm rounded-full py-3" size='sm' onClick={handleApprovePayment}>
+                                        <Button
+                                            loading={isApproveLoading}
+                                            disabled={paymentError != ""}
+                                            className="text-sm rounded-full py-3"
+                                            size='sm'
+                                            onClick={handleApprovePayment}
+                                        >
                                             Approve
                                         </Button>
                                     </div>
-                                    {error && <h4 className='text-center text-sm text-red-500'>{`Something went wrong. Please try again`}</h4>}
+                                    {paymentError && <h4 className='text-center text-sm text-red-500'>{paymentError}</h4>}
                                 </div>
                             </div>
                         )}
@@ -368,7 +378,15 @@ const OnogoingTaskDetailsPage = ({ params }: { params: { id: string } }) => {
                         </h2>
                         <div className="flex items-center lg:justify-end space-x-10 lg:text-lg">
                             <button className='text-tc-orange' onClick={() => setRequestRevisionPopup(true)}>Request Revision</button>
-                            <button className='text-[#34A853]' onClick={() => setApprovePaymentPopup(true)}>Approve payment</button>
+                            <button
+                                className='text-[#34A853]'
+                                onClick={() => {
+                                    setPaymentError('')
+                                    setApprovePaymentPopup(true)
+                                }}
+                            >
+                                Approve payment
+                            </button>
                         </div>
                     </div>
                 </div>

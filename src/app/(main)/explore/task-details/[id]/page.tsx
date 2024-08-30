@@ -58,8 +58,8 @@ const TaskDetailsPage = ({ params }: { params: { id: string } }) => {
   useEffect(() => {
 
     const intervalId = setInterval(() => {
-        refetch();
-    }, 5000);
+      refetch();
+    }, 3000);
 
     return () => {
       clearInterval(intervalId);
@@ -229,7 +229,7 @@ const TaskDetailsPage = ({ params }: { params: { id: string } }) => {
                     {showOfferForm && (
                       <div ref={modalRef} className="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-end sm:items-center justify-center">
                         <div className="bg-white w-full sm:w-[600px] rounded-t-3xl lg:rounded-2xl px-5 pb-8 pt-2 transition-all duration-300">
-                            <div className={`flex items-center justify-between ${showSuccessMessage !== true && "mb-3"}`}>
+                          <div className={`flex items-center justify-between ${showSuccessMessage !== true && "mb-3"}`}>
                             <h2 className={`font-clashBold text-primary text-start font-bold ${showSuccessMessage && "hidden"}`}>Your Offer</h2>
                             <div className="bg-[#EBE9F4] p-2 rounded-full">
                               <IoIosCloseCircleOutline className="size-6 text-[#5A5960] cursor-pointer" onClick={() => setShowOfferForm(false)} />
@@ -246,7 +246,7 @@ const TaskDetailsPage = ({ params }: { params: { id: string } }) => {
                                 transition={{ duration: 0.5 }}
                               >
                                 <div className="size-11 bg-[#4CAF50] rounded-full flex items-center justify-center">
-                                  <FaCheck className="text-white"/>
+                                  <FaCheck className="text-white" />
                                 </div>
                                 <h1 className="font-semibold text-primary text-center font-clashSemiBold text-2xl lg:text-3xl">Offer posted successfully!</h1>
                                 <h4 className="text-[#140B31] text-center text-xl font-medium font-satoshiMedium">Your offer has been sent to the customer, you will be notified when there’s a response.</h4>
