@@ -111,3 +111,20 @@ export type GetTaskByTextRequest = {
     pageNumber: number;
     text: string;
 };
+
+export type PaymentIntentResponse = {
+    intentID: string;
+    clientSecret: string;
+};
+
+export type AcceptInvoiceResponse = {
+    data: string | null;
+    message: string;
+    status: string;
+}
+
+export type RejectInvoiceResponse = {
+    data: string | null;
+    message: string;
+    status: string;
+}
