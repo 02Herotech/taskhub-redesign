@@ -1,5 +1,5 @@
 "use client";
-import MessageButton from "@/components/global/MessageButton";
+
 import { marketPlaceModalIcon } from "@/lib/svgIcons";
 import Loading from "@/shared/loading";
 import { isOlder, isThisMonth, isThisWeek, isToday } from "@/utils";
@@ -68,6 +68,8 @@ const NotificationComponent = () => {
         return notificationDate >= oneWeekAgo;
       } else if (category === "Old") {
         return notificationDate < oneWeekAgo;
+      } else if (category === "All") {
+        return true;
       }
       return true;
     });
@@ -98,6 +100,8 @@ const NotificationComponent = () => {
   useEffect(() => {
     notifications && categorizeNotifications(notifications);
   }, [notifications]);
+
+  console.log("not", notifications);
 
   return (
     <main className="mt-24 py-4 lg:p-8">
@@ -136,14 +140,14 @@ const NotificationComponent = () => {
             </button>
           </div>
           <div className="space-y-2">
-            {categorizeNotifications(notifications).today.length > 0 && (
+            {/* {categorizeNotifications(notifications).today.length > 0 && ( */}
               <NotificationList
                 heading="Today"
-                notifications={categorizeNotifications(notifications).today}
+                notifications={notifications}
                 setRefresh={setRefresh}
               />
-            )}
-            {categorizeNotifications(notifications).thisWeek.length > 0 && (
+            {/* )} */}
+            {/* {categorizeNotifications(notifications).thisWeek.length > 0 && (
               <NotificationList
                 heading="This Week"
                 notifications={categorizeNotifications(notifications).thisWeek}
@@ -163,7 +167,7 @@ const NotificationComponent = () => {
                 notifications={categorizeNotifications(notifications).older}
                 setRefresh={setRefresh}
               />
-            )}
+            )} */}
           </div>
         </div>
       )}
