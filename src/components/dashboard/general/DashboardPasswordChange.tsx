@@ -6,7 +6,7 @@ import axios from "axios";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import React, { useState } from "react";
-import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
+import { FormProvider, set, SubmitHandler, useForm } from "react-hook-form";
 import { IoMdEye, IoMdEyeOff } from "react-icons/io";
 import { motion, AnimatePresence } from "framer-motion";
 import { FiAlertTriangle } from "react-icons/fi";
@@ -33,6 +33,7 @@ const DashboardPasswordChange = () => {
 
   const handlePasswordVerification = async (e: any) => {
     e.preventDefault();
+    setError(null);
     try {
       setIsLoading(true);
       const response = await axios.post(
@@ -45,29 +46,18 @@ const DashboardPasswordChange = () => {
             Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
           },
-        },
+        }
       );
       setIsLoading(false);
       setIsPasswordVerified(true);
     } catch (error: any) {
       setIsLoading(false);
-      console.log("Error:", error?.response?.data?.message || error);
-      if (
-        error?.response?.data?.message === "Unauthorized! Incorrect password"
-      ) {
-        setError("Incorrect password");
-        setTimeout(() => {
-          setError(null);
-        }, 2000);
-      }
-      if (
-        error?.response?.data?.message ===
-        "You can only change your password once every 30 days. Please try again in 30 days."
-      ) {
-        setError(
-          "You can only change your password once every 30 days. Please try again in 30 days.",
-        );
-      }
+      const errorMessage =
+        error?.response?.data?.message || "An unknown error occurred.";
+      setError(errorMessage);
+      // setTimeout(() => {
+      //   setError(null);
+      // }, 2000);
     }
   };
 
