@@ -28,7 +28,7 @@ import Progress from "@/components/global/progress";
 
 interface FormData {
   taskBriefDescription: string;
-  taskImage?: File | null | Blob;
+  taskImage?: File | null;
   taskTime: string;
   taskDate: string;
   taskType: string;
@@ -341,11 +341,6 @@ const AddTaskForm: React.FC = () => {
     }
   };
 
-  const convertUrlToBlob = async (url: string): Promise<Blob> => {
-    const response = await fetch(url);
-    const blob = await response.blob();
-    return blob;
-  };
 
   const getImageURL = () => {
     if (task.taskImage instanceof File) {
@@ -465,8 +460,7 @@ const AddTaskForm: React.FC = () => {
         }
 
         if (!task.taskImage) {
-          const defaultImageBlob = await convertUrlToBlob(defaultImageSrc);
-          finalTask = { ...finalTask, taskImage: defaultImageBlob };
+          finalTask = { ...finalTask, taskImage: null };
         }
 
         console.log(finalTask);
@@ -876,7 +870,7 @@ const AddTaskForm: React.FC = () => {
                   placeholder="500"
                   className={`appearance-none rounded-2xl bg-[#EBE9F4] p-3 pl-6 text-[13px] placeholder:font-bold ${error.customerBudget ? "border border-[#ff0000] outline-[#FF0000]" : "border-none outline-none"}`}
                 />
-                <p className="absolute left-3 top-8">$</p>
+                <p className="absolute left-3 top-7 md:top-8">$</p>
               </div>
               <div className="text-[#FF0000]">
                 {errors.city ||
