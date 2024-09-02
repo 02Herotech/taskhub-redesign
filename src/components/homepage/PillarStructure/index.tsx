@@ -10,6 +10,7 @@ import rentAShop from "../../../../public/assets/images/homepage/pillarStructure
 
 
 import clsx from 'clsx';
+import MobilePillarStructure from './MobilePillarStructure';
 
 const MiniNavbar = ({ activeIndex, onNavChange, setIsHovering }: any) => {
     const links = [{
@@ -105,12 +106,12 @@ const PillarStructure = () => {
 
     return (
         <div
-            className='xl:h-[600px] lg:h-[680px]  bg-cover bg-center'
+            className='xl:min-h-[600px] lg:min-h-[680px] min-h-[1050px]  bg-cover bg-center'
             style={{
                 backgroundImage: `url(${HubBackground.src})`,
             }}
         >
-            <div className='mx-auto max-w-7xl'>
+            <div className='mx-auto max-w-7xl hidden lg:block'>
                 <div className='w-[85%] mx-auto '>
                     <div className='flex justify-center py-10'>
                         <MiniNavbar activeIndex={activeIndex} onNavChange={setActiveIndex} setIsHovering={setIsHovering} />
@@ -147,6 +148,10 @@ const PillarStructure = () => {
                         />
                     </div>
                 </div>
+            </div>
+
+            <div className='lg:hidden'>
+                <MobilePillarStructure />
             </div>
         </div>
     )
