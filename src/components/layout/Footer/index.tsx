@@ -4,13 +4,14 @@ import Logo from '../Logo'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useDispatch } from "react-redux";
-
 import {
     filterMarketPlace,
     setFilterLoadingState,
     setFilterParams,
 } from "@/store/Features/marketplace";
 import axios from "axios";
+import mobileFooter from "../../../../public/assets/images/homepage/mobileFooter.png"
+
 
 const Footer = () => {
     const router = useRouter()
@@ -95,13 +96,61 @@ const Footer = () => {
 
     return (
         <footer className=' relative '>
-            <div className='lg:h-[650px] h-[900px] bg-[#895404] lg:pt-36 pt-56 '>
-               
-               
+            <div className='lg:h-[650px] h-[900px] bg-[#895404] '>
 
-               
-               
-                {/* <div className=' mx-auto max-w-7xl'>
+                <div className='hidden lg:flex justify-between overflow-hidden'>
+                    <div
+                        style={{
+                            position: 'relative',
+                            height: '650px',
+                            width: '250px',
+                            float: 'left',
+                            top: '300px',
+                            zIndex: '2'
+
+                        }}
+                    >
+                        <div
+                            style={{
+                                height: '650px',
+                                width: '500px',
+                                borderRadius: '50%',
+                                backgroundImage: 'radial-gradient(circle, #aa7933, transparent)',
+                                filter: 'blur(30px)',
+                                position: 'absolute',
+                                left: '-250px',
+                            }}
+                        ></div>
+                    </div>
+
+                    <div
+                        style={{
+                            position: 'relative',
+                            height: '500px',
+                            width: '250px',
+                            float: 'right',
+                            // top: '-160px'
+                        }}
+                    >
+                        <div
+                            style={{
+                                height: '500px',
+                                width: '500px',
+                                borderRadius: '50%',
+                                backgroundImage: 'radial-gradient(circle, #aa7933, transparent)',
+                                filter: 'blur(70px)',
+                                position: 'absolute',
+                                right: '-200px',
+                            }}
+                        ></div>
+                    </div>
+
+                </div>
+
+                <div className="lg:hidden block h-full w-full -z-1 bg-cover bg-no-repeat" style={{ backgroundImage: `url(${mobileFooter.src})` }}>
+                </div>
+
+                <div className=' mx-auto max-w-7xl lg:mt-[-500px] mt-[-680px]  z-50'>
                     <div className='w-[85%] mx-auto flex flex-col items-center space-y-8 mt-12 lg:mt-0' >
 
                         <Link href="/">
@@ -157,8 +206,6 @@ const Footer = () => {
 
                                 ))}
                             </ul>
-
-
 
                             <div className='flex space-x-3'>
                                 <Link href={'/'}>
@@ -248,12 +295,9 @@ const Footer = () => {
                             </p>
                         </div>
                     </div>
-                </div> */}
-
-
-
+                </div>
             </div>
-            <div className='absolute lg:-top-24 -top-44 w-full   overflow-hidden'>
+            <div className='absolute lg:-top-24 -top-44 w-full   overflow-hidden z-20'>
                 <NewsLetter />
             </div>
         </footer>
