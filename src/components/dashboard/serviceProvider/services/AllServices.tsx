@@ -83,9 +83,9 @@ const AllServices = () => {
               <p className="text-xl font-medium text-violet-normal">
                 No active Listing
               </p>
-              <button className="rounded-full bg-violet-normal px-6 py-2 text-white transition-all hover:opacity-90">
+              <Link href="/provide-service" className="rounded-full bg-violet-normal px-6 py-2 text-white transition-all hover:opacity-90">
                 Provide Service
-              </button>
+              </Link>
             </div>
           ) : (
             servicesData.map((item, index) => (

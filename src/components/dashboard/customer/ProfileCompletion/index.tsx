@@ -22,7 +22,7 @@ const ProfileCompletion = ({ fetchedUserData }: ProfileCompletionType) => {
   const profileProgressData = [
     {
       title: "Profile Picture",
-      status: user?.profileImage,
+      status: fetchedUserData?.profileImage,
     },
     {
       title: "Email Address",
@@ -56,6 +56,9 @@ const ProfileCompletion = ({ fetchedUserData }: ProfileCompletionType) => {
     }));
     // eslint-disable-next-line
   }, [fetchedUserData, user]);
+
+  console.log("user", fetchedUserData);
+
 
   return (
     <section className="flex min-h-64 flex-col items-center gap-3 rounded-lg bg-[#EBE9F4] p-4 md:grid md:grid-cols-12">
