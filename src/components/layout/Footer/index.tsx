@@ -157,7 +157,7 @@ const Footer = () => {
                             <Logo />
                         </Link>
 
-                        <p className='font-satoshi lg:text-[16px] text-[13px] text-white font-[500] text-center lg:w-[50%]'>
+                        <p className='font-satoshi lg:text-[16px] text-[13px] text-[#EBE9F4] font-[500] text-center lg:w-[50%]'>
                             This platform aims to help immigrants succeed in the
                             Australian economy by providing resources and opportunities.
                         </p>
