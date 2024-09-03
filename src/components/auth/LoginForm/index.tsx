@@ -137,7 +137,7 @@ const LoginForm = () => {
                   href="/auth/forgot-password"
                   className="flex items-center font-bold underline underline-offset-2"
                 >
-                  Forgot password
+                  Forgot password?
                 </Button>
               </div>
               <div className="max-lg:flex max-lg:flex-col max-lg:items-center max-lg:justify-center">
