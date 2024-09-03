@@ -1,10 +1,173 @@
+"use client"
+
 import WalletBalance from "@/components/dashboard/serviceProvider/Payment/WalletBalance";
+import Button from "@/components/global/Button";
+import Loading from "@/components/global/loading/page";
 import { PaymentSvg } from "@/lib/svgIcons";
+import { formatAmount } from "@/lib/utils";
+import { useGetServiceProviderPaymentHistoryQuery } from "@/services/stripe";
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
+import React, { useState } from "react";
+import { FiClock } from "react-icons/fi";
 
 const ServicePayment = () => {
+  const [visibleTransactions, setVisibleTransactions] = useState(4);
+  const { data: paymentHistoryData, isLoading } = useGetServiceProviderPaymentHistoryQuery({});
+
+  // const paymentHistoryData: GetServiceProviderPaymentHistoryResponse = [
+  //   {
+  //     amount: 1000,
+  //     serviceProvider: { id: 1 },
+  //     transactionType: "DEPOSIT",
+  //     transactionStatus: "COMPLETED",
+  //     transactionID: "uuidv4()",
+  //     referenceNumber: "DEP-001",
+  //     transactionDate: new Date().toISOString()
+  //   },
+  //   {
+  //     amount: 500,
+  //     serviceProvider: { id: 2 },
+  //     transactionType: "WITHDRAWAL",
+  //     transactionStatus: "PENDING",
+  //     transactionID: "uuidv4()",
+  //     referenceNumber: "WIT-001",
+  //     transactionDate: new Date(Date.now() - 86400000).toISOString() // 1 day ago
+  //   },
+  //   {
+  //     amount: 250,
+  //     serviceProvider: { id: 3 },
+  //     transactionType: "TRANSFER",
+  //     transactionStatus: "COMPLETED",
+  //     transactionID: "uuidv4()",
+  //     referenceNumber: "TRF-001",
+  //     transactionDate: new Date(Date.now() - 172800000).toISOString() // 2 days ago
+  //   },
+  //   {
+  //     amount: 750,
+  //     serviceProvider: { id: 1 },
+  //     transactionType: "DEPOSIT",
+  //     transactionStatus: "FAILED",
+  //     transactionID: "uuidv4()",
+  //     referenceNumber: "DEP-002",
+  //     transactionDate: new Date(Date.now() - 259200000).toISOString() // 3 days ago
+  //   },
+  //   {
+  //     amount: 100,
+  //     serviceProvider: { id: 2 },
+  //     transactionType: "WITHDRAWAL",
+  //     transactionStatus: "COMPLETED",
+  //     transactionID: "uuidv4()",
+  //     referenceNumber: "WIT-002",
+  //     transactionDate: new Date(Date.now() - 345600000).toISOString() // 4 days ago
+  //   },
+  //   {
+  //     amount: 100,
+  //     serviceProvider: { id: 2 },
+  //     transactionType: "WITHDRAWAL",
+  //     transactionStatus: "COMPLETED",
+  //     transactionID: "uuidv4()",
+  //     referenceNumber: "WIT-002",
+  //     transactionDate: new Date(Date.now() - 345600000).toISOString() // 4 days ago
+  //   },
+  //   {
+  //     amount: 100,
+  //     serviceProvider: { id: 2 },
+  //     transactionType: "WITHDRAWAL",
+  //     transactionStatus: "COMPLETED",
+  //     transactionID: "uuidv4()",
+  //     referenceNumber: "WIT-002",
+  //     transactionDate: new Date(Date.now() - 345600000).toISOString() // 4 days ago
+  //   },
+  //   {
+  //     amount: 100,
+  //     serviceProvider: { id: 2 },
+  //     transactionType: "WITHDRAWAL",
+  //     transactionStatus: "COMPLETED",
+  //     transactionID: "uuidv4()",
+  //     referenceNumber: "WIT-002",
+  //     transactionDate: new Date(Date.now() - 345600000).toISOString() // 4 days ago
+  //   }
+  // ];
+
+  const gropedTransactionsByDate = (transactions: ServiceProviderPaymentHistory[]) => {
+    if (!transactions || !Array.isArray(transactions)) {
+      return [];
+    }
+
+    const grouped = transactions.reduce((acc, offer) => {
+      const date = new Date(offer.transactionDate).toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      });
+
+      if (!acc[date]) {
+        acc[date] = [];
+      }
+      acc[date].push(offer);
+      return acc;
+    }, {} as Record<string, ServiceProviderPaymentHistory[]>);
+
+    return Object.entries(grouped).sort((a, b) =>
+      new Date(b[0]).getTime() - new Date(a[0]).getTime()
+    );
+  };
+
+  const groupedTransactions = gropedTransactionsByDate(paymentHistoryData!);
+
+  const handleLoadMore = () => {
+    setVisibleTransactions((prevVisible) => prevVisible + 4);
+  };
+
+  const getStatusColor = (status: TransactionStatus) => {
+    switch (status) {
+      case "COMPLETED":
+        return "text-[#4CAF50]";
+      case "PENDING":
+        return "text-[#E58C06]";
+      case "FAILED":
+        return "text-[#EB1717]";
+      default:
+        return "text-gray-500";
+    }
+  }
+
+  const getStatusDotColor = (status: string) => {
+    switch (status) {
+      case 'COMPLETED':
+        return 'bg-[#4CAF50]';
+      case 'PENDING':
+        return 'bg-[#E58C06]';
+      case 'FAILED':
+        return 'bg-[#EB1717]';
+      default:
+        return 'bg-gray-500';
+    }
+  };
+
+  const getTransactionTypeIcon = (transactionType: string) => {
+    switch (transactionType) {
+      case 'DEPOSIT':
+        return <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M16.6316 5.23529V1H3.36842V5.23529M19 11.5882V5.23529H1V19H19" stroke="#FE9B07" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+          <path d="M12.369 11.5866L10.0006 15.2925H19.0006M10.948 8.41016H9.05325M6.21114 8.41016H4.31641" stroke="#FE9B07" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>;
+      case 'WITHDRAWAL':
+        return <svg width="17" height="13" viewBox="0 0 17 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M10.4112 8.375H10.3359M11.9109 8.375H11.8361" stroke="#FE9B07" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+          <path d="M15.25 4.25H1.75" stroke="#FE9B07" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+          <path d="M14.5001 1.25H2.49988C2.08588 1.25 1.75 1.58588 1.75 1.99988V10.9999C1.75 11.4139 2.08588 11.7498 2.49988 11.7498H14.5001C14.9141 11.7498 15.25 11.4142 15.25 10.9999V1.99988C15.25 1.58588 14.9141 1.25 14.5001 1.25Z" stroke="#FE9B07" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>;
+      default:
+        return <svg width="17" height="13" viewBox="0 0 17 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M10.4112 8.375H10.3359M11.9109 8.375H11.8361" stroke="#FE9B07" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+          <path d="M15.25 4.25H1.75" stroke="#FE9B07" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+          <path d="M14.5001 1.25H2.49988C2.08588 1.25 1.75 1.58588 1.75 1.99988V10.9999C1.75 11.4139 2.08588 11.7498 2.49988 11.7498H14.5001C14.9141 11.7498 15.25 11.4142 15.25 10.9999V1.99988C15.25 1.58588 14.9141 1.25 14.5001 1.25Z" stroke="#FE9B07" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>;
+    }
+  }
+
   return (
     <main className="space-y-8 p-4 lg:p-8">
       <section className="flex flex-wrap items-center justify-between gap-2 rounded-lg bg-violet-active p-3 lg:p-6 ">
@@ -60,7 +223,7 @@ const ServicePayment = () => {
         <div className="relative space-y-6">
           <p className="font-bold text-violet-normal">Current balance</p>
           <h1 className="flex flex-col text-5xl font-bold text-orange-normal lg:text-6xl">
-            <span className="text-2xl font-normal">$</span> <WalletBalance />
+            <WalletBalance />
           </h1>
         </div>
         <Link
@@ -70,18 +233,71 @@ const ServicePayment = () => {
           Withdraw
         </Link>
       </section>
+
       <section className="space-y-4">
         <h1 className="text-2xl font-bold  text-violet-dark">
           Payment History
         </h1>
-        <div className="flex flex-col  flex-wrap items-center justify-center gap-2 rounded-lg bg-violet-active px-4 py-8 lg:p-6  lg:py-16 ">
-          {PaymentSvg}
-          <p className="text-center text-violet-normal">
-            Looks like you do not have any transaction yet!
-          </p>
+        <div className="flex flex-col flex-wrap items-start justify-start gap-2 rounded-lg bg-violet-active p-4 lg:p-6">
+          {isLoading && (
+            <div className="flex items-center justify-center w-full">
+              <Loading />
+            </div>
+          )}
+          {groupedTransactions.length > 0 ? (
+            <div className="flex flex-col space-y-4 w-full lg:px-5">
+              {groupedTransactions.slice(0, visibleTransactions).map(([date, transactions]) => (
+                <div key={date} className="">
+                  <h3 className="mb-2 font-satoshiBold text-base font-bold text-[#140B31]">
+                    {date}
+                  </h3>
+                  <div className="space-y-5">
+                    {transactions.map((transaction, index) => (
+                      <div
+                        key={index}
+                        className="flex justify-between border-b-[1.5px] border-[#E9ECF1] p-2 lg:px-5 py-4 items-center"
+                      >
+                        <div className="flex items-center gap-3 lg:gap-10">
+                          <div className="bg-white size-10 flex items-center justify-center rounded-full">
+                            {getTransactionTypeIcon(transaction.transactionType)}
+                          </div>
+                          <div className="space-y-1 flex-1 w-full">
+                            <span className="text-[#140B31] font-satoshiBold">{transaction.transactionType}</span>
+                            <span className={`flex items-center space-x-2 ${getStatusColor(transaction.transactionStatus)}`}>
+                              <div className={`size-1 rounded-full ${getStatusDotColor(transaction.transactionStatus)}`}></div>
+                              <span className="text-sm">{transaction.transactionStatus}</span>
+                            </span>
+                          </div>
+                        </div>
+                        <span className={`font-satoshiMedium text-sm ${getStatusColor(transaction.transactionStatus)}`}>{formatAmount(transaction.amount, "USD", false)}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ))}
+              {visibleTransactions < groupedTransactions.length && (
+                <div className="flex items-center justify-center">
+                  <Button
+                    onClick={handleLoadMore}
+                    className="flex items-center space-x-2 rounded-full"
+                  >
+                    <FiClock className="text-white" />
+                    <p>Load more...</p>
+                  </Button>
+                </div>
+              )}
+            </div>
+          ) : (
+            <div className="flex flex-col items-center justify-center w-full">
+              {PaymentSvg}
+              <p className="text-center text-violet-normal">
+                Looks like you do not have any transactions yet!
+              </p>
+            </div>
+          )}
         </div>
       </section>
-    </main>
+    </main >
   );
 };
 

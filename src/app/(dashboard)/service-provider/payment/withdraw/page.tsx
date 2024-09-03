@@ -149,7 +149,7 @@ const WithdrawalPage = () => {
           <PiWarningDiamond className="size-5" />
         </span>
         <span>
-          Available funds to withdrawal: $<WalletBalance />, minimum withdrawal
+          Available funds to withdraw: <WalletBalance />, minimum withdrawal
           request is $50
         </span>
       </p>
