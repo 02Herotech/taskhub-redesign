@@ -90,31 +90,41 @@ const ServicePayment = () => {
   //   }
   // ];
 
-  const gropedTransactionsByDate = (transactions: ServiceProviderPaymentHistory[]) => {
-    if (!transactions || !Array.isArray(transactions)) {
+  const groupTransactionsByDate = (transactions: ServiceProviderPaymentHistory[]): [string, ServiceProviderPaymentHistory[]][] => {
+    if (!Array.isArray(transactions)) {
       return [];
     }
 
-    const grouped = transactions.reduce((acc, offer) => {
-      const date = new Date(offer.transactionDate).toLocaleDateString("en-US", {
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-      });
+    const formatDate = (date: Date): string => {
+      const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+      const day = date.getDate();
+      const month = months[date.getMonth()];
+      const year = date.getFullYear();
+      const suffix = ['th', 'st', 'nd', 'rd'][day % 10 > 3 ? 0 : (day % 100 - 20) % 10 || 3];
+      return `${month} ${day}${suffix} ${year}`;
+    };
 
-      if (!acc[date]) {
-        acc[date] = [];
+    const grouped = transactions.reduce((acc, transaction) => {
+      // Parse the ISO 8601 date string
+      const date = new Date(transaction.transactionDate);
+
+      // Format the date as requested
+      const dateKey = formatDate(date);
+
+      if (!acc[dateKey]) {
+        acc[dateKey] = [];
       }
-      acc[date].push(offer);
+      acc[dateKey].push(transaction);
       return acc;
     }, {} as Record<string, ServiceProviderPaymentHistory[]>);
 
+    // Sort the entries by date in descending order
     return Object.entries(grouped).sort((a, b) =>
       new Date(b[0]).getTime() - new Date(a[0]).getTime()
     );
   };
 
-  const groupedTransactions = gropedTransactionsByDate(paymentHistoryData!);
+  const groupedTransactions = groupTransactionsByDate(paymentHistoryData!);
 
   const handleLoadMore = () => {
     setVisibleTransactions((prevVisible) => prevVisible + 4);
@@ -165,6 +175,19 @@ const ServicePayment = () => {
           <path d="M15.25 4.25H1.75" stroke="#FE9B07" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
           <path d="M14.5001 1.25H2.49988C2.08588 1.25 1.75 1.58588 1.75 1.99988V10.9999C1.75 11.4139 2.08588 11.7498 2.49988 11.7498H14.5001C14.9141 11.7498 15.25 11.4142 15.25 10.9999V1.99988C15.25 1.58588 14.9141 1.25 14.5001 1.25Z" stroke="#FE9B07" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
         </svg>;
+    }
+  }
+
+  const getTransactionDescription = (transactionType: string, amount: number) => {
+    switch (transactionType) {
+      case 'DEPOSIT':
+        return `Your wallet was credited with ${amount}`;
+      case 'WITHDRAWAL':
+        return `You withdrew ${amount} from your wallet`;
+      case 'TRANSFER':
+        return `You transferred ${amount} to another user`;
+      default:
+        return `You made a transaction of ${amount}`;
     }
   }
 
@@ -236,7 +259,7 @@ const ServicePayment = () => {
 
       <section className="space-y-4">
         <h1 className="text-2xl font-bold  text-violet-dark">
-          Payment History
+          Transaction History
         </h1>
         <div className="flex flex-col flex-wrap items-start justify-start gap-2 rounded-lg bg-violet-active p-4 lg:p-6">
           {isLoading && (
@@ -262,7 +285,7 @@ const ServicePayment = () => {
                             {getTransactionTypeIcon(transaction.transactionType)}
                           </div>
                           <div className="space-y-1 flex-1 w-full">
-                            <span className="text-[#140B31] font-satoshiBold">{transaction.transactionType}</span>
+                            <span className="text-[#140B31] font-satoshiBold">{getTransactionDescription(transaction.transactionType, transaction.amount)}</span>
                             <span className={`flex items-center space-x-2 ${getStatusColor(transaction.transactionStatus)}`}>
                               <div className={`size-1 rounded-full ${getStatusDotColor(transaction.transactionStatus)}`}></div>
                               <span className="text-sm">{transaction.transactionStatus}</span>
