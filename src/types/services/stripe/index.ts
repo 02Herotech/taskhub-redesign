@@ -12,7 +12,7 @@ type ServiceProviderPaymentHistory = {
     transactionStatus: TransactionStatus;
     transactionID: string;
     referenceNumber: string;
-    transactionDate: string; // ISO 8601 date string
+    transactionDate: [number, number, number, number, number, number, number]; 
 }
 
 type GetServiceProviderPaymentHistoryResponse = ServiceProviderPaymentHistory[];
