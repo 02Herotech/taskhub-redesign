@@ -10,11 +10,11 @@ import { RootState } from '@/store';
 import { useGetReceiptsByCustomerIdQuery } from '@/services/bookings';
 import { Receipt } from '@/types/services/invoice';
 import Loading from '@/components/global/loading/page';
-import html2canvas from 'html2canvas';
-import jsPDF from 'jspdf';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { LuCalendarDays } from "react-icons/lu";
+import PaymentReceipt from '../PaymentReceipt';
+import { PDFDownloadLink } from '@react-pdf/renderer';
 
 const PaymentHistory = () => {
     const [visibleTransactions, setVisibleTransactions] = useState(4);
@@ -57,40 +57,14 @@ const PaymentHistory = () => {
         );
     }
 
-    const downloadPDF = () => {
-        const input = pdfRef.current;
-
-        if (!input) {
-            return;
-        }
-
-        html2canvas(input)
-            .then((canvas) => {
-                const imgData = canvas.toDataURL('image/png');
-                const pdf = new jsPDF('p', 'mm', 'a4');
-                const pdfWidth = pdf.internal.pageSize.getWidth();
-                const pdfHeight = pdf.internal.pageSize.getWidth();
-                const imgWidth = canvas.width;
-                const imgHeight = canvas.height;
-                const ratio = Math.min(pdfWidth / imgWidth, pdfHeight / imgHeight);
-                const imgX = (pdfWidth - imgWidth * ratio) / 2;
-                const imgY = 30;
-                pdf.addImage(imgData, 'PNG', imgX, imgY, imgWidth * ratio, imgHeight * ratio);
-                pdf.save('oloja-receipt.pdf');
-            })
-            .catch((error) => {
-                console.error('Failed to generate PDF:', error);
-            });
-    };
-
-    const formatCreatedAt = (dateArray: number[]): string => {
-        const [year, month, day] = dateArray;
-        return new Date(year, month - 1, day).toLocaleDateString('en-US', {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric'
-        });
-    };
+    // const formatCreatedAt = (dateArray: number[]): string => {
+    //     const [year, month, day] = dateArray;
+    //     return new Date(year, month - 1, day).toLocaleDateString('en-US', {
+    //         year: 'numeric',
+    //         month: 'long',
+    //         day: 'numeric'
+    //     });
+    // };
 
     const groupReceiptsByDate = (receipts: Receipt[], filterDate: Date | null) => {
         if (!receipts || !Array.isArray(receipts)) {
@@ -260,11 +234,23 @@ const PaymentHistory = () => {
                                 </div>
                             </div>
                         </div>
-                        <div className="flex items-center justify-center space-x-2 mb-4 cursor-pointer" onClick={downloadPDF}>
-                            <svg width="16" height="20" viewBox="0 0 16 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path fill-rule="evenodd" clip-rule="evenodd" d="M2 0C1.46957 0 0.960859 0.210714 0.585786 0.585786C0.210714 0.960859 0 1.46957 0 2V18C0 18.5304 0.210714 19.0391 0.585786 19.4142C0.960859 19.7893 1.46957 20 2 20H14C14.5304 20 15.0391 19.7893 15.4142 19.4142C15.7893 19.0391 16 18.5304 16 18V4.414C15.9999 3.88361 15.7891 3.37499 15.414 3L13 0.586C12.625 0.210901 12.1164 0.000113275 11.586 0H2ZM2 2H11.586L14 4.414V18H2V2ZM12.238 8.793C12.3335 8.70075 12.4097 8.59041 12.4621 8.4684C12.5145 8.3464 12.5421 8.21518 12.5433 8.0824C12.5444 7.94962 12.5191 7.81794 12.4688 7.69505C12.4185 7.57215 12.3443 7.4605 12.2504 7.3666C12.1565 7.27271 12.0449 7.19846 11.922 7.14818C11.7991 7.0979 11.6674 7.0726 11.5346 7.07375C11.4018 7.0749 11.2706 7.10249 11.1486 7.1549C11.0266 7.20731 10.9162 7.28349 10.824 7.379L6.582 11.622L5.167 10.207C4.9784 10.0248 4.7258 9.92405 4.4636 9.92633C4.2014 9.9286 3.95059 10.0338 3.76518 10.2192C3.57977 10.4046 3.4746 10.6554 3.47233 10.9176C3.47005 11.1798 3.57084 11.4324 3.753 11.621L5.803 13.672C5.90515 13.7742 6.02644 13.8553 6.15993 13.9106C6.29342 13.9659 6.4365 13.9944 6.581 13.9944C6.7255 13.9944 6.86858 13.9659 7.00207 13.9106C7.13556 13.8553 7.25685 13.7742 7.359 13.672L12.238 8.793Z" fill="#E58C06" />
-                            </svg>
-                            <h2 className='text-tc-orange font-bold text-lg cursor-pointer'>Download Receipt</h2>
+                        <div className="flex items-center justify-center w-full">
+                            <PDFDownloadLink
+                                document={<PaymentReceipt selectedPayment={selectedPayment} user={user} formattedDate={formattedDate} />}
+                                fileName="oloja_receipt.pdf"
+                                style={{
+                                    textAlign: "center",
+                                    marginTop: 5,
+                                    marginBottom: 5,
+                                    textDecoration: "underline",
+                                    color: "#E58C06",
+                                    fontWeight: "bold",
+                                }}
+                            >
+                                {({ blob, url, loading, error }) =>
+                                    loading ? 'Loading document...' : 'Download PDF'
+                                }
+                            </PDFDownloadLink>
                         </div>
                     </div>
                 </Popup>

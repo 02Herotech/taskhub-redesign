@@ -64,7 +64,7 @@ export const serviceProviderDashboardLinks: DashboardLinks[] = [
     icon: NotificationIcon,
   },
   {
-    label: "Payments and Wallet",
+    label: "Payment and Wallet",
     link: "/service-provider/payment",
     icon: PaymentIcon,
   },

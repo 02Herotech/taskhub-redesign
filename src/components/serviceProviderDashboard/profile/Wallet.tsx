@@ -16,17 +16,13 @@ const Wallet = () => {
       <h4 className="font-satoshiBold text-base font-bold text-[#381F8C] md:text-2xl ">
         Wallet
       </h4>
-      <h1 className="flex flex-col font-clash text-[#FE9B07]">
-        <span className="text-xs md:text-base"> $ </span>
-        <span className="text-4xl md:text-7xl">
-          {" "}
-          <WalletBalance />{" "}
-        </span>
-      </h1>
-      <div className="flex max-md:items-center max-md:justify-center">
+      <span className="text-3xl md:text-5xl font-clash text-[#FE9B07]">
+        <WalletBalance />
+      </span>
+      <div className="flex items-end max-md:items-center max-md:justify-center">
         <Link
           href="/service-provider/payment/withdraw"
-          className="w-fit rounded-full  bg-[#381F8C] px-4 py-2 text-white max-md:text-sm"
+          className="w-fit rounded-full bg-[#381F8C] px-4 py-2 text-white max-md:text-sm"
         >
           Withdraw
         </Link>
