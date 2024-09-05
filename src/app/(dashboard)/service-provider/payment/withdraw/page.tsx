@@ -158,7 +158,7 @@ const WithdrawalPage = () => {
           onSubmit={handleSubmit(submitWithdraw)}
           className="space-y-3 rounded-xl bg-violet-active p-3 lg:p-6"
         >
-          <h2 className="text-3xl font-medium text-violet-normal">
+          <h2 className="text-xl lg:text-2xl font-semibold text-violet-normal">
             Withdrawal Method
           </h2>
           <div className="grid grid-cols-2 gap-3 outline-none lg:gap-6">
