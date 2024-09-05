@@ -22,6 +22,12 @@ const notificationRoute = [
     providerRoute: "/service-provider/jobs",
   },
   {
+    type: "BOOKING",
+    subtype: "PROPOSED",
+    customerRoute: "",
+    providerRoute: "/service-provider/jobs",
+  },
+  {
     type: "TASK",
     subtype: "ASSIGNED",
     customerRoute: "/customer/tasks?tab=New tasks",

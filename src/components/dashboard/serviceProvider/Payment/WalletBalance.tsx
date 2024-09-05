@@ -9,7 +9,9 @@ const WalletBalance: React.FC = () => {
     (state: RootState) => state.userProfile,
   );
 
-  return <span>{walletLoading ? "---" : formatAmount(walletBalance as unknown as number, "USD", false)}</span>;
+  const balance = walletBalance as unknown as number || 0;  
+
+  return <span>{walletLoading ? "---" : formatAmount(balance, "USD", false)}</span>;
 };
 
 export default WalletBalance;
