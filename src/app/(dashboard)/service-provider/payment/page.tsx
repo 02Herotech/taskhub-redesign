@@ -12,10 +12,10 @@ import Link from 'next/link';
 import { FiClock } from 'react-icons/fi';
 
 const ServicePayment: React.FC = () => {
-  const [visibleTransactions, setVisibleTransactions] = useState(3);
+  const [visibleTransactions, setVisibleTransactions] = useState(4);
   const { data: paymentHistoryData, isLoading } = useGetServiceProviderPaymentHistoryQuery({});
 
-  const groupedTransactions = useMemo(() => {
+  const flattenedTransactions = useMemo(() => {
     if (!Array.isArray(paymentHistoryData)) {
       return [];
     }
@@ -26,30 +26,23 @@ const ServicePayment: React.FC = () => {
       return `${monthNames[month - 1]} ${day}${suffix} ${year}`;
     };
 
-    const grouped = paymentHistoryData.reduce((acc, transaction) => {
-      const dateArray = transaction.transactionDate;
-      const dateKey = formatDate(dateArray);
-
-      if (!acc[dateKey]) {
-        acc[dateKey] = [];
-      }
-      acc[dateKey].push(transaction);
-      return acc;
-    }, {} as Record<string, ServiceProviderPaymentHistory[]>);
-
-    // Sort the entries by date in descending order
-    return Object.entries(grouped).sort((a, b) =>
-      new Date(b[0]).getTime() - new Date(a[0]).getTime()
-    );
+    return paymentHistoryData.map(transaction => ({
+      ...transaction,
+      formattedDate: formatDate(transaction.transactionDate)
+    })).sort((a, b) => new Date(b.formattedDate).getTime() - new Date(a.formattedDate).getTime());
   }, [paymentHistoryData]);
 
   const handleLoadMore = () => {
-    setVisibleTransactions((prevVisible) => prevVisible + 4);
+    setVisibleTransactions(prevVisible => prevVisible + visibleTransactions);
+  };
+
+  const handleLoadLess = () => {
+    setVisibleTransactions(prevVisible => Math.max(prevVisible - 4, 4)); // Ensures the value doesn't go below the initial number
   };
 
   const getStatusColor = (status: TransactionStatus) => {
     switch (status) {
-      case 'COMPLETED':
+      case 'SUCCESSFUL':
         return 'text-[#4CAF50]';
       case 'PENDING':
         return 'text-[#E58C06]';
@@ -62,7 +55,7 @@ const ServicePayment: React.FC = () => {
 
   const getStatusDotColor = (status: string) => {
     switch (status) {
-      case 'COMPLETED':
+      case 'SUCCESSFUL':
         return 'bg-[#4CAF50]';
       case 'PENDING':
         return 'bg-[#E58C06]';
@@ -156,47 +149,60 @@ const ServicePayment: React.FC = () => {
       </section>
 
       <section className="space-y-4">
-        <h1 className="text-2xl font-bold  text-violet-dark">Transaction History</h1>
+        <h1 className="text-2xl font-bold text-violet-dark">Transaction History</h1>
         <div className="flex flex-col flex-wrap items-start justify-start gap-2 rounded-lg bg-violet-active p-4 lg:p-6">
           {isLoading && (
             <div className="flex items-center justify-center w-full">
               <Loading />
             </div>
           )}
-          {groupedTransactions.length > 0 ? (
+          {flattenedTransactions.length > 0 ? (
             <div className="flex flex-col space-y-4 w-full lg:px-5">
-              {groupedTransactions.slice(0, visibleTransactions).map(([date, transactions]) => (
-                <div key={date} className="">
-                  <h3 className="mb-2 font-satoshiBold text-base font-bold text-[#140B31]">{date}</h3>
-                  <div className="space-y-5">
-                    {transactions.slice(0, visibleTransactions).map((transaction, index) => (
-                      <div key={index} className="flex justify-between border-b-[1.5px] border-[#E9ECF1] p-2 lg:px-5 py-4 items-center">
-                        <div className="flex items-center gap-3 lg:gap-10">
-                          <div className="bg-white size-10 flex items-center justify-center rounded-full">
-                            {getTransactionTypeIcon(transaction.transactionType)}
-                          </div>
-                          <div className="space-y-1 flex-1 w-full">
-                            <span className="text-[#140B31] font-satoshiBold font-semibold">{getTransactionDescription(transaction.transactionType)}</span>
-                            <span className={`flex items-center space-x-2 font-semibold ${getStatusColor(transaction.transactionStatus)}`}>
-                              <div className={`size-1 rounded-full font-semibold ${getStatusDotColor(transaction.transactionStatus)}`}></div>
-                              <span className="text-sm font-semibold">{transaction.transactionStatus}</span>
-                            </span>
-                          </div>
-                        </div>
-                        <span className={`font-satoshiMedium text-sm ${getAmountColor(transaction.transactionType)}`}>{formatAmount(transaction.amount, "USD", false)}</span>
+              {flattenedTransactions.slice(0, visibleTransactions).map((transaction, index) => (
+                <div key={index} className="border-b-[1.5px] border-[#E9ECF1] p-2 lg:px-5 py-4">
+                  <h3 className="mb-2 font-satoshiBold text-base font-bold text-[#140B31]">{transaction.formattedDate}</h3>
+                  <div className="flex justify-between items-center">
+                    <div className="flex items-center gap-3 lg:gap-10">
+                      <div className="bg-white size-10 flex items-center justify-center rounded-full">
+                        {getTransactionTypeIcon(transaction.transactionType)}
                       </div>
-                    ))}
+                      <div className="space-y-1 flex-1 w-full">
+                        <span className="text-[#140B31] font-satoshiBold font-semibold">{getTransactionDescription(transaction.transactionType)}</span>
+                        <span className={`flex items-center space-x-2 font-semibold ${getStatusColor(transaction.transactionStatus)}`}>
+                          <div className={`size-1 rounded-full font-semibold ${getStatusDotColor(transaction.transactionStatus)}`}></div>
+                          <span className="text-sm font-semibold">
+                            {transaction.transactionStatus.charAt(0).toUpperCase() +
+                              transaction.transactionStatus.slice(1).toLowerCase()}
+                          </span>
+                        </span>
+                      </div>
+                    </div>
+                    <span className={`font-satoshiMedium text-sm ${getAmountColor(transaction.transactionType)}`}>
+                      {formatAmount(transaction.amount, "USD", false)}
+                    </span>
                   </div>
                 </div>
               ))}
-              {groupedTransactions.some(([, transactions]) => transactions.length > visibleTransactions) && (
-                <div className="flex items-center justify-center">
-                  <Button onClick={handleLoadMore} className="flex items-center space-x-2 rounded-full">
+              <div className="flex flex-col items-center justify-center space-y-4 sm:flex-row sm:space-y-0 sm:space-x-4">
+                {visibleTransactions > 4 && (
+                  <Button
+                    onClick={handleLoadLess}
+                    className="flex items-center space-x-2 rounded-full p-2 sm:p-4"
+                  >
                     <FiClock className="text-white" />
-                    <p>Load more...</p>
+                    <p className="text-sm sm:text-base">Show less</p>
                   </Button>
-                </div>
-              )}
+                )}
+                {visibleTransactions < flattenedTransactions.length && (
+                  <Button
+                    onClick={handleLoadMore}
+                    className="flex items-center space-x-2 rounded-full p-2 sm:p-4"
+                  >
+                    <FiClock className="text-white" />
+                    <p className="text-sm sm:text-base">Load more...</p>
+                  </Button>
+                )}
+              </div>
             </div>
           ) : (
             <div className="flex flex-col items-center justify-center w-full">

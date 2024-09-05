@@ -25,14 +25,14 @@ export const customerDashboardLinks: DashboardLinks[] = [
     link: "/customer/tasks",
     icon: JobsIcon,
   },
-  {
+  { 
     label: "My Notifications",
     link: "/customer/notifications",
     icon: NotificationIcon,
   },
   {
     label: "Payments",
-    link: "/customer/payment/payment-history",
+    link: "/customer/payment",
     icon: PaymentIcon,
   },
   // {

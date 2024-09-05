@@ -1,5 +1,5 @@
 type TransactionType = "DEPOSIT" | "WITHDRAWAL" | "TRANSFER"; 
-type TransactionStatus = "PENDING" | "COMPLETED" | "FAILED"; 
+type TransactionStatus = "PENDING" | "SUCCESSFUL" | "FAILED"; 
 
 type ServiceProvider = {
     id: number;
