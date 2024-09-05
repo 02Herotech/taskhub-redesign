@@ -70,8 +70,8 @@ const Invoice = ({
         invoiceDraft?.serviceStartOn !== undefined
           ? invoiceDraft.serviceStartOn
           : (currentBooking?.startDate &&
-              convertToDateInputFormat(currentBooking?.startDate)) ??
-            null,
+            convertToDateInputFormat(currentBooking?.startDate)) ??
+          null,
       gst:
         invoiceDraft?.gst !== undefined
           ? invoiceDraft.gst
@@ -83,10 +83,10 @@ const Invoice = ({
           ? invoiceDraft.total
           : currentBooking
             ? Math.floor(
-                currentBooking.price -
-                  (currentBooking.price / 100) * 10 -
-                  (currentBooking.price / 100) * 2,
-              )
+              currentBooking.price -
+              (currentBooking.price / 100) * 10 -
+              (currentBooking.price / 100) * 2,
+            )
             : 0,
 
       successData: "",
@@ -184,8 +184,8 @@ const Invoice = ({
       gst: Math.floor((Number(invoiceState.price) / 100) * 10),
       total: Math.floor(
         Number(invoiceState.price) -
-          (Number(invoiceState.price) / 100) * 10 -
-          (Number(invoiceState.price) / 100) * 2,
+        (Number(invoiceState.price) / 100) * 10 -
+        (Number(invoiceState.price) / 100) * 2,
       ),
     }));
     // eslint-disable-next-line
@@ -231,10 +231,10 @@ const Invoice = ({
           </p>
           <div className="flex  items-center justify-center gap-10">
             <button
-              onClick={() => router.push("/service-provider/services")}
+              onClick={() => router.push("/service-provider/jobs")}
               className="rounded-full bg-violet-normal px-4 py-2 font-semibold text-white transition-opacity duration-300 hover:opacity-90"
             >
-              View Services
+              View Jobs
             </button>
           </div>
         </div>
@@ -245,7 +245,7 @@ const Invoice = ({
         >
           <div>
             <h1 className="font-clashBold text-3xl font-extrabold leading-6 text-violet-dark">
-              {!currentBooking?.invoiceSent && "Make an"} Offer
+              {!currentBooking?.invoiceSent && "Make an "} Offer
             </h1>
             <p className="text-sm text-violet-active ">
               {currentBooking?.bookingTitle}
@@ -256,18 +256,18 @@ const Invoice = ({
             <label className="flex-grow rounded-lg bg-violet-light p-4 py-2 font-bold ">
               <span className="flex items-center gap-2 text-[#716F78] ">
                 <span>Amount</span>{" "}
-                {/* {!currentBooking?.invoiceSent && ( */}
+                {!currentBooking?.invoiceSent && (
                   <BsPencilSquare className="text-violet-normal" />
-                {/* )} */}
+                )}
               </span>
               <div className="flex w-full items-center gap-1">
-                <p>$</p>
+                <p>$ </p>
                 <input
                   type="number"
                   name="price"
                   value={invoiceState.price}
                   placeholder={currentBooking?.price?.toString()}
-                  // disabled={currentBooking?.invoiceSent}
+                  disabled={currentBooking?.invoiceSent}
                   className="w-full bg-violet-light py-2 outline-none"
                   onChange={(event) =>
                     setInvoiceState((prev) => ({
@@ -281,16 +281,16 @@ const Invoice = ({
             <label className="flex flex-grow flex-col gap-2 rounded-lg bg-violet-light p-4 py-2 font-bold ">
               <span className="flex items-center gap-2 text-[#716F78]">
                 <span>Start Date</span>
-                {/* {!currentBooking?.invoiceSent && ( */}
+                {!currentBooking?.invoiceSent && (
                   <BsPencilSquare className="text-violet-normal" />
-                {/* )} */}
+                )}
               </span>
               {invoiceState.date ? (
                 <DatePicker
                   selected={invoiceState.date as Date}
                   minDate={new Date()}
                   required
-                  // disabled={currentBooking?.invoiceSent}
+                  disabled={currentBooking?.invoiceSent}
                   onChange={(date: Date) =>
                     setInvoiceState((prev) => ({
                       ...prev,
@@ -340,13 +340,13 @@ const Invoice = ({
                   <p className="font-medium  text-[#4E5158]">Due On</p>
                 </div>
                 <div>
-                  <p className=" font-extrabold text-violet-dark">Bill To</p>
+                  <p className=" font-extrabold text-violet-dark  ">Bill To</p>
                   <p className="font-medium  text-[#4E5158]">
                     {currentBooking?.customer?.user?.fullName}
                   </p>
                 </div>
                 <div>
-                  <p className=" font-extrabold text-violet-dark">
+                  <p className=" font-extrabold text-violet-dark  ">
                     ${invoiceState.total}
                   </p>
                   <p className="font-medium  text-[#4E5158]">
@@ -370,7 +370,7 @@ const Invoice = ({
           )}
           {!isDownloadingImage && (
             <div className="flex gap-2">
-              {/* {!currentBooking?.invoiceSent && ( */}
+              {!currentBooking?.invoiceSent && (
                 <button
                   onClick={generateInvoice}
                   className="rounded-full bg-violet-normal px-4 py-2 font-medium text-white"
@@ -385,29 +385,29 @@ const Invoice = ({
                     "Send"
                   )}
                 </button>
-              {/* )} */}
+              )}
               <button
                 onClick={() => setIsModalOpen(false)}
-                className="rounded-full bg-orange-100 px-4 py-2 font-medium text-violet-normal transition-colors duration-300 hover:bg-orange-200"
+                className=" rounded-full bg-orange-100 px-4 py-2 font-medium text-violet-normal transition-colors duration-300 hover:bg-orange-200"
               >
                 Back
               </button>
               {!currentBooking?.invoiceSent && (
                 <button
                   onClick={safeInvoiceToDraft}
-                  className="rounded-full bg-violet-light px-4 py-2 font-medium text-violet-normal"
+                  className=" rounded-full bg-violet-light px-4 py-2 font-medium text-violet-normal"
                 >
                   Save to draft
                 </button>
               )}
-              {/* {currentBooking?.invoiceSent && (
+              {currentBooking?.invoiceSent && (
                 <button
                   onClick={handleDownloadImage}
-                  className="rounded-full bg-violet-normal px-4 py-2 font-medium text-white"
+                  className=" rounded-full bg-violet-normal px-4 py-2 font-medium text-white"
                 >
                   Download Offer
                 </button>
-              )} */}
+              )}
             </div>
           )}
         </div>

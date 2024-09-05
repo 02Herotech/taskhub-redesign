@@ -293,15 +293,15 @@ const ViewJobs = () => {
                 )}
                 {(currentBooking.bookingStage === "PROPOSED" ||
                   currentBooking.bookingStage === "ACCEPTED") && (
-                  <div className="flex w-fit items-center gap-2 max-md:w-full max-md:flex-col">
-                    <MessageButton
-                      recipientId={currentBooking?.customer.user.id.toString()}
-                      recipientName={currentBooking?.customer.user.fullName}
-                      message="Chat With Customer"
-                      className="border border-violet-normal  bg-transparent text-violet-normal hover:bg-violet-100  max-md:w-full max-md:px-4 max-md:py-2 "
-                    />
+                    <div className="flex w-fit items-center gap-2 max-md:w-full max-md:flex-col">
+                      <MessageButton
+                        recipientId={currentBooking?.customer.user.id.toString()}
+                        recipientName={currentBooking?.customer.user.fullName}
+                        message="Chat With Customer"
+                        className="border border-violet-normal  bg-transparent text-violet-normal hover:bg-violet-100  max-md:w-full max-md:px-4 max-md:py-2 "
+                      />
 
-                    {/* {invoiceDraft && (
+                      {/* {invoiceDraft && (
                       <button
                         onClick={() => setIsModalOpen(true)}
                         className="rounded-full bg-violet-active px-6 py-3 text-sm font-bold  text-violet-normal transition-opacity duration-300 hover:opacity-90 max-md:w-full max-md:px-4 max-md:py-2 max-md:text-sm "
@@ -309,14 +309,14 @@ const ViewJobs = () => {
                         View Saved Offer
                       </button>
                     )} */}
-                        <button
+                      {/* <button
                           onClick={() => setIsModalOpen(true)}
                           className="rounded-full bg-violet-normal px-6 py-3 text-sm font-medium text-white transition-opacity duration-300 hover:opacity-90 max-md:w-full max-md:px-4 max-md:py-2 max-md:text-sm"
                         >
                           Make An Offer
-                        </button>
-                  </div>
-                )}
+                        </button> */}
+                    </div>
+                  )}
               </div>
               {requestStatus.error && (
                 <p className="font-medium text-red-500">
