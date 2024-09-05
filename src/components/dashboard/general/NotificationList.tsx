@@ -67,7 +67,7 @@ const notificationRoute = [
     type: "INVOICE",
     subtype: "UNPAID",
     customerRoute: "/customer/payment/offers",
-    providerRoute: "",
+    providerRoute: "/service-provider/services",
   },
   {
     type: "INVOICE",

@@ -178,7 +178,7 @@ const Offers = () => {
         {offers.length === 0 && (
           <div className="flex h-[50vh] flex-col items-center justify-center space-y-5">
             <h2 className="text-center text-2xl font-bold text-primary">
-              No invoice found
+              No offer found
             </h2>
           </div>
         )}

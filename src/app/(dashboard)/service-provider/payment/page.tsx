@@ -5,7 +5,7 @@ import WalletBalance from '@/components/dashboard/serviceProvider/Payment/Wallet
 import Button from '@/components/global/Button';
 import Loading from '@/components/global/loading/page';
 import { PaymentSvg } from '@/lib/svgIcons';
-import { formatAmount } from '@/lib/utils';
+import { formatAmount, monthNames } from '@/lib/utils';
 import { useGetServiceProviderPaymentHistoryQuery } from '@/services/stripe';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -22,9 +22,8 @@ const ServicePayment: React.FC = () => {
 
     const formatDate = (dateArray: [number, number, number, number, number, number, number]): string => {
       const [year, month, day] = dateArray;
-      const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
       const suffix = day === 1 ? 'st' : day === 2 ? 'nd' : day === 3 ? 'rd' : 'th';
-      return `${months[month - 1]} ${day}${suffix} ${year}`;
+      return `${monthNames[month - 1]} ${day}${suffix} ${year}`;
     };
 
     const grouped = paymentHistoryData.reduce((acc, transaction) => {
