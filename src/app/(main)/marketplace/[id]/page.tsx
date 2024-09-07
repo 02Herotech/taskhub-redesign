@@ -1,19 +1,20 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import { BiCalendar, BiCalendarCheck, BiLocationPlus } from "react-icons/bi";
 import { FaStar } from "react-icons/fa";
-
 import PricingPlan from "@/components/matkeplaceSingleTask/PricingPlan";
 import Reviews from "@/components/matkeplaceSingleTask/Reviews";
 import { formatDateFromNumberArray } from "@/utils";
 import axios from "axios";
 import ImageModal from "@/components/main/marketplace/ImageModal";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
 import MessageButton from "@/components/global/MessageButton";
+import Link from "next/link";
 
 const Page = () => {
   const [displayData, setDisplayData] = useState<ListingDataType>();
@@ -22,7 +23,7 @@ const Page = () => {
     state: false,
     image: "",
   });
-
+  const route = useRouter();
   const { id } = useParams();
 
   const { userProfileAuth: auth } = useSelector(
@@ -130,6 +131,7 @@ const Page = () => {
                 </h1>
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-4">
+                    <Link href={`/marketplace/${id}/about`}>
                     <Image
                       src={
                         displayData?.serviceProvider?.user.profileImage ??
@@ -140,7 +142,8 @@ const Page = () => {
                       height={80}
                       quality={100}
                       className="size-20 rounded-full object-cover "
-                    />
+                      />
+                    </Link>
                     <div className="space-y-2">
                       <p className="text-xl font-medium">
                         {displayData?.serviceProvider?.user?.fullName}
