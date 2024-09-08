@@ -32,12 +32,24 @@ const ServicePayment: React.FC = () => {
     })).sort((a, b) => new Date(b.formattedDate).getTime() - new Date(a.formattedDate).getTime());
   }, [paymentHistoryData]);
 
+  const visibleTransactionsList = flattenedTransactions.slice(0, visibleTransactions);
+
+  const groupedTransactions = useMemo(() => {
+    return visibleTransactionsList.reduce((acc, transaction) => {
+      if (!acc[transaction.formattedDate]) {
+        acc[transaction.formattedDate] = [];
+      }
+      acc[transaction.formattedDate].push(transaction);
+      return acc;
+    }, {} as Record<string, typeof visibleTransactionsList>);
+  }, [visibleTransactionsList]);
+
   const handleLoadMore = () => {
-    setVisibleTransactions(prevVisible => prevVisible + visibleTransactions);
+    setVisibleTransactions(prevVisible => Math.min(prevVisible + 4, flattenedTransactions.length));
   };
 
   const handleLoadLess = () => {
-    setVisibleTransactions(prevVisible => Math.max(prevVisible - 4, 4)); // Ensures the value doesn't go below the initial number
+    setVisibleTransactions(prevVisible => Math.max(prevVisible - 4, 4));
   };
 
   const getStatusColor = (status: TransactionStatus) => {
@@ -156,38 +168,42 @@ const ServicePayment: React.FC = () => {
               <Loading />
             </div>
           )}
-          {flattenedTransactions.length > 0 ? (
+          {Object.keys(groupedTransactions).length > 0 ? (
             <div className="flex flex-col space-y-4 w-full lg:px-5">
-              {flattenedTransactions.slice(0, visibleTransactions).map((transaction, index) => (
-                <div key={index} className="border-b-[1.5px] border-[#E9ECF1] p-2 lg:px-5 py-4">
-                  <h3 className="mb-2 font-satoshiBold text-base font-bold text-[#140B31]">{transaction.formattedDate}</h3>
-                  <div className="flex justify-between items-center">
-                    <div className="flex items-center gap-3 lg:gap-10">
-                      <div className="bg-white size-10 flex items-center justify-center rounded-full">
-                        {getTransactionTypeIcon(transaction.transactionType)}
-                      </div>
-                      <div className="space-y-1 flex-1 w-full">
-                        <span className="text-[#140B31] font-satoshiBold font-semibold">{getTransactionDescription(transaction.transactionType)}</span>
-                        <span className={`flex items-center space-x-2 font-semibold ${getStatusColor(transaction.transactionStatus)}`}>
-                          <div className={`size-1 rounded-full font-semibold ${getStatusDotColor(transaction.transactionStatus)}`}></div>
-                          <span className="text-sm font-semibold">
-                            {transaction.transactionStatus.charAt(0).toUpperCase() +
-                              transaction.transactionStatus.slice(1).toLowerCase()}
-                          </span>
+              {Object.entries(groupedTransactions).map(([date, transactions]) => (
+                <div key={date} className="border-b-[1.5px] border-[#E9ECF1] p-2 lg:px-5 py-4">
+                  <h3 className="mb-4 font-satoshiBold text-lg font-bold text-[#140B31]">{date}</h3>
+                  {transactions.map((transaction, index) => (
+                    <div key={index} className="mb-4 last:mb-0">
+                      <div className="flex justify-between items-center">
+                        <div className="flex items-center gap-3 lg:gap-10">
+                          <div className="bg-white size-10 flex items-center justify-center rounded-full">
+                            {getTransactionTypeIcon(transaction.transactionType)}
+                          </div>
+                          <div className="space-y-1 flex-1 w-full">
+                            <span className="text-[#140B31] font-satoshiBold font-semibold">{getTransactionDescription(transaction.transactionType)}</span>
+                            <span className={`flex items-center space-x-2 font-semibold ${getStatusColor(transaction.transactionStatus)}`}>
+                              <div className={`size-1 rounded-full font-semibold ${getStatusDotColor(transaction.transactionStatus)}`}></div>
+                              <span className="text-sm font-semibold">
+                                {transaction.transactionStatus.charAt(0).toUpperCase() +
+                                  transaction.transactionStatus.slice(1).toLowerCase()}
+                              </span>
+                            </span>
+                          </div>
+                        </div>
+                        <span className={`font-satoshiMedium text-sm ${getAmountColor(transaction.transactionType)}`}>
+                          {formatAmount(transaction.amount, "USD", false)}
                         </span>
                       </div>
                     </div>
-                    <span className={`font-satoshiMedium text-sm ${getAmountColor(transaction.transactionType)}`}>
-                      {formatAmount(transaction.amount, "USD", false)}
-                    </span>
-                  </div>
+                  ))}
                 </div>
               ))}
-              <div className="flex flex-col items-center justify-center space-y-4 sm:flex-row sm:space-y-0 sm:space-x-4">
+              <div className="flex flex-col items-center justify-center space-y-4 sm:flex-row sm:space-y-0 sm:space-x-4 w-full">
                 {visibleTransactions > 4 && (
                   <Button
                     onClick={handleLoadLess}
-                    className="flex items-center space-x-2 rounded-full p-2 sm:p-4"
+                    className="flex max-sm:w-full items-center space-x-2 rounded-full p-2 sm:p-4"
                   >
                     <FiClock className="text-white" />
                     <p className="text-sm sm:text-base">Show less</p>
@@ -196,7 +212,7 @@ const ServicePayment: React.FC = () => {
                 {visibleTransactions < flattenedTransactions.length && (
                   <Button
                     onClick={handleLoadMore}
-                    className="flex items-center space-x-2 rounded-full p-2 sm:p-4"
+                    className="flex max-sm:w-full items-center space-x-2 rounded-full p-2 sm:p-4"
                   >
                     <FiClock className="text-white" />
                     <p className="text-sm sm:text-base">Load more...</p>

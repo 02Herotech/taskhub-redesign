@@ -67,7 +67,7 @@ const Popup: React.FC<PopupProps> = ({ isOpen, onClose, children, popUpTitle }) 
                                 onClick={onClose}
                                 className="text-primary hover:text-gray-800 bg-[#EBE9F4] rounded-3xl p-2"
                             >
-                                <IoMdClose className="w-[24px] h-[24px] border-2 border-primary rounded-3xl" />
+                                <IoMdClose className="size-4 border-2 border-primary rounded-3xl" />
                             </button>
                         </div>
                         {children}
