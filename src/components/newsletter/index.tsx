@@ -1,5 +1,5 @@
 'use client'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { AiOutlineCheckCircle } from 'react-icons/ai'
 import styles from './newsletter.module.css'
 
@@ -13,6 +13,14 @@ const NewsLetter = () => {
     const handleEmailChange = (e: { target: { value: React.SetStateAction<string> } }) => {
         setEmail(e.target.value)
     }
+
+    useEffect(() => {
+      const timer =  setTimeout(() => {
+            setResOk(false)
+        }, 4000)
+
+        return () => clearTimeout(timer)
+    }, [resOK])
 
     const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -95,7 +103,7 @@ const NewsLetter = () => {
                                         <p className='text-[15px] ml-2'>Thank you for Subscribing</p>
                                     </div> :
                                     <form className={`w-full bg-white rounded-[60px] flex justify-between  items-center px-2   `} onSubmit={onSubmit}>
-                                        <input type="email" required placeholder="Enter your email" className={`px-5 rounded-[60px] text-left  text-[12px] text-[#381F8C] outline-none h-[50px] w-[70%]  `} value={email} onChange={handleEmailChange} />
+                                        <input type="email" required placeholder="Enter your email" className={`px-5 rounded-[60px] text-left  text-[12px] font-semibold text-[#381F8C] outline-none h-[50px] w-[70%]  `} value={email} onChange={handleEmailChange} />
                                         <button className={`bg-[#E58C06]   font-satoshi text-[17px] px-3 text-[#EEEEEF] font-[600] rounded-[60px] h-[40px] w-[140px] `} type='submit'
                                         >
                                             {isLoading ? 'Subscribing...' : 'Subscribe'}
@@ -161,7 +169,7 @@ const NewsLetter = () => {
                                     <p className='text-[15px] ml-2'>Thank you for Subscribing</p>
                                 </div> :
                                 <form className={`w-full flex flex-col items-center space-y-5`} onSubmit={onSubmit}>
-                                    <input type="email" required placeholder="Enter your email" className={`px-5 rounded-[60px] text-left  text-[12px] text-[#381F8C] outline-none h-[50px] w-full  `} value={email} onChange={handleEmailChange} />
+                                    <input type="email" required placeholder="Enter your email" className={`px-5 rounded-[60px] text-left  text-[12px] font-semibold text-[#381F8C] outline-none h-[50px] w-full  `} value={email} onChange={handleEmailChange} />
                                     <button className={`bg-[#E58C06] font-satoshi text-[15px] px-3 text-[#EEEEEF] font-[600] rounded-[60px] h-[40px] w-[130px]`} type='submit'
                                     >
                                         {isLoading ? 'Subscribing...' : 'Subscribe'}

@@ -208,7 +208,8 @@ const Footer = () => {
                             </ul>
 
                             <div className='flex space-x-3'>
-                                <Link href={'/'}>
+                                <Link href={'https://www.instagram.com/oloja_au?igsh=dzRuYW52MjZ4bjJq'}
+                                    target="_blank" rel="noopener noreferrer">
                                     <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
                                         <rect x="0.5" y="0.5" width="47" height="47" rx="23.5" fill="#C1BADB" />
                                         <rect x="0.5" y="0.5" width="47" height="47" rx="23.5" stroke="#C6C6C6" />
@@ -226,7 +227,8 @@ const Footer = () => {
 
                                 </Link>
 
-                                <Link href={'/'}>
+                                <Link href={'https://bit.ly/SyncSkillsX'}
+                                    target="_blank" rel="noopener noreferrer">
                                     <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
                                         <rect x="0.5" y="0.5" width="47" height="47" rx="23.5" fill="#C1BADB" />
                                         <rect x="0.5" y="0.5" width="47" height="47" rx="23.5" stroke="#C6C6C6" />
@@ -247,7 +249,8 @@ const Footer = () => {
                                     </svg>
                                 </Link>
 
-                                <Link href={'/'}>
+                                <Link href={'https://www.youtube.com/@syncskillsau'}
+                                    target="_blank" rel="noopener noreferrer">
                                     <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
                                         <rect x="0.5" y="0.5" width="47" height="47" rx="23.5" fill="#C1BADB" />
                                         <rect x="0.5" y="0.5" width="47" height="47" rx="23.5" stroke="#EEEEEF" />
@@ -265,7 +268,8 @@ const Footer = () => {
 
                                 </Link>
 
-                                <Link href={'/'}>
+                                <Link href={'https://bit.ly/SyncskillsFb'}
+                                    target="_blank" rel="noopener noreferrer">
                                     <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
                                         <rect x="0.5" y="0.5" width="47" height="47" rx="23.5" fill="#C1BADB" />
                                         <rect x="0.5" y="0.5" width="47" height="47" rx="23.5" stroke="#C6C6C6" />
