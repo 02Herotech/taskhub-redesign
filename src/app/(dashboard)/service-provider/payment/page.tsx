@@ -171,10 +171,10 @@ const ServicePayment: React.FC = () => {
           {Object.keys(groupedTransactions).length > 0 ? (
             <div className="flex flex-col space-y-4 w-full lg:px-5">
               {Object.entries(groupedTransactions).map(([date, transactions]) => (
-                <div key={date} className="border-b-[1.5px] border-[#E9ECF1] p-2 lg:px-5 py-4">
+                <div key={date} className="p-2 lg:px-5 py-4">
                   <h3 className="mb-4 font-satoshiBold text-lg font-bold text-[#140B31]">{date}</h3>
                   {transactions.map((transaction, index) => (
-                    <div key={index} className="mb-4 last:mb-0">
+                    <div key={index} className="mb-4 last:mb-0 pt-6 border-b-[1.5px] border-[#E9ECF1] p-2">
                       <div className="flex justify-between items-center">
                         <div className="flex items-center gap-3 lg:gap-10">
                           <div className="bg-white size-10 flex items-center justify-center rounded-full">
