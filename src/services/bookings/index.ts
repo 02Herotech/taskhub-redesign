@@ -100,8 +100,8 @@ export const booking = createApi({
             query: ({ invoiceId }) => postRequest(`/reject-invoice?invoiceId=${invoiceId}`, {}),
             invalidatesTags: ["Booking"],
         }),
-        rebookJob: builder.mutation<void, { jobId: number; date: string; time: string; description: string; }>({
-            query: ({ jobId, date, time, description }) => postRequest(`/re-booking/${jobId}`, { date, time, description }),
+        rebookJob: builder.mutation<void, { jobId: number; date: string; time: string; description: string; amount: number; }>({
+            query: ({ jobId, date, time, description, amount }) => postRequest(`/re-booking/${jobId}`, { date, time, description, amount }),
             invalidatesTags: ["Booking"],
         }),
     }),

@@ -240,6 +240,7 @@ const RebookForm: React.FC<RebookFormProps> = ({ onClose, jobId }) => {
                 jobId,
                 date: formatDateToString(selectedDate),
                 time: formatTimeToString(selectedTime),
+                amount,
                 description,
             }).unwrap();
 
