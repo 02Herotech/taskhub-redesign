@@ -17,8 +17,6 @@ const ProfileCompletion = ({ fetchedUserData }: ProfileCompletionType) => {
     (state: RootState) => state.userProfile,
   );
 
-  console.log(user?.profileImage);
-
   const [chartData, setChartData] = useState({ total: 0, completed: 0 });
 
   const profileProgressData = [

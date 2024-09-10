@@ -61,7 +61,7 @@ const WithdrawalPage: React.FC = () => {
       reset();
     } catch (error: any) {
       setStatus('error');
-      setErrorMessage(error?.response?.data || "Insufficient balance");
+      setErrorMessage(error?.response?.data || "Something went wrong, please try again");
       console.error(error?.response?.data || error);
     }
   };
@@ -182,7 +182,6 @@ const WithdrawalForm: React.FC<{
       <InputField
         label="Amount"
         type="number"
-        min={50}
         register={register("amount")}
         error={errors.amount}
       />

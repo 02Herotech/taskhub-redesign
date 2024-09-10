@@ -148,8 +148,8 @@ const Page = () => {
                         {displayData?.serviceProvider?.user?.fullName}
                       </p>
                     <div>
-                      <Link href={`/marketplace/${id}/about`}>
-                          <p className="text-xl font-medium text-[#e58c06] underline">View Profile</p>
+                      <Link href={`/marketplace/${id}/about`} className="cursor-pointer">
+                          <p className="text-xl font-medium text-[#e58c06] underline cursor-pointer">View Profile</p>
                         </Link>
                         {/* <div className="flex items-center gap-2">
                           <FaStar
