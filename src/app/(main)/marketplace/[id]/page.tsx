@@ -131,7 +131,7 @@ const Page = () => {
                 </h1>
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-4">
-                    <Link href={`/marketplace/${id}/about`}>
+                    
                     <Image
                       src={
                         displayData?.serviceProvider?.user.profileImage ??
@@ -143,18 +143,15 @@ const Page = () => {
                       quality={100}
                       className="size-20 rounded-full object-cover "
                       />
-                    </Link>
                     <div className="space-y-2">
                       <p className="text-xl font-medium">
                         {displayData?.serviceProvider?.user?.fullName}
                       </p>
-                      <div>
-                        {/* <p className="text-xs text-slate-300 "> 4.5 </p> */}
-                        <div className="flex items-center gap-2">
-                          {/* <FaStar fill="gold" />
-                          <FaStar fill="gold" />
-                          <FaStar fill="gold" />
-                          <FaStar fill="gold" /> */}
+                    <div>
+                      <Link href={`/marketplace/${id}/about`}>
+                          <p className="text-xl font-medium text-[#e58c06] underline">View Profile</p>
+                        </Link>
+                        {/* <div className="flex items-center gap-2">
                           <FaStar
                             fill="rgb(203 213 225)"
                             color="rgb(203 213 225)"
@@ -175,7 +172,7 @@ const Page = () => {
                             fill="rgb(203 213 225)"
                             color="rgb(203 213 225)"
                           />
-                        </div>
+                        </div> */}
                       </div>
                     </div>
                   </div>
@@ -187,6 +184,7 @@ const Page = () => {
                         recipientName={
                           currentListing?.serviceProvider.user.fullName
                         }
+                      
                       />
                     )}
                 </div>
