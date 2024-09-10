@@ -227,6 +227,9 @@ const Footer = () => {
 
                                 </Link>
 
+                                {/* There is no link for oloja yet */}
+                                 
+{/* 
                                 <Link href={'https://bit.ly/SyncSkillsX'}
                                     target="_blank" rel="noopener noreferrer">
                                     <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -284,7 +287,7 @@ const Footer = () => {
                                             </clipPath>
                                         </defs>
                                     </svg>
-                                </Link>
+                                </Link> */}
                             </div>
                             <p className='
                             flex space-x-2 items-center font-satoshi font-[500] lg:text-[15px] text-[12px] text-[#EBE9F4]'>
