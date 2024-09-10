@@ -201,7 +201,7 @@ export const mobileCustomerLinks: LinkRouteTypes[] = [
       },
       {
         label: "Payment",
-        url: "/customer/payment/payment-history",
+        url: "/customer/payment?tab=paymentHistory",
       },
       {
         label: "Settings",
