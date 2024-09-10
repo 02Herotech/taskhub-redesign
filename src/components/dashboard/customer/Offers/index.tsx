@@ -170,7 +170,7 @@ const Offers = () => {
   }
 
   const stripeOptions = {
-    clientSecret: clientSecret,
+    clientSecret,
   };
 
   return (

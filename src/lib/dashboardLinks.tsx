@@ -32,7 +32,7 @@ export const customerDashboardLinks: DashboardLinks[] = [
   },
   {
     label: "Payments",
-    link: "/customer/payment",
+    link: "/customer/payment?tab=paymentHistory",
     icon: PaymentIcon,
   },
   // {
