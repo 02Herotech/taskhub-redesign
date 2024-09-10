@@ -1,4 +1,5 @@
 import React from 'react'
+import MobileWhatSetUsApart from './MobileWhatSetUsApart'
 
 const WhatSetUsApart = () => {
 
@@ -96,7 +97,7 @@ const WhatSetUsApart = () => {
     return (
         <div className='bg-[#EBE9F4]'>
 
-            <div className='max-w-7xl mx-auto'>
+            <div className='max-w-7xl mx-auto hidden lg:block'>
                 <div className='w-[85%] mx-auto py-10'>
 
                     <h2 className='xl:text-[32px] text-[28px] font-clashSemiBold  text-[#2A1769] text-left pb-10'>
@@ -122,11 +123,6 @@ const WhatSetUsApart = () => {
                                                 {eachData.details}
                                             </p>
                                         </div>
-
-                                        {/* <div
-                                            className="w-0 h-0 border-l-[20px] border-l-transparent border-r-[20px] border-r-transparent border-t-[30px]
-                                                 border-t-[#381F8C] group-hover:border-t-[#FE9B07] transition-colors duration-300 ease-in-out;"
-                                        ></div> */}
                                         <div
                                             className="w-0 h-0 border-l-[15px] border-l-transparent border-r-[15px] border-r-transparent border-t-[25px]
                                                  border-t-[#381F8C] group-hover:border-t-[#FE9B07] transition-colors duration-300 ease-in-out"
@@ -190,11 +186,6 @@ const WhatSetUsApart = () => {
                                 bottomData.map((eachData, index) => (
                                     <div key={index} className=' group xl:w-[190px] w-[170px] flex flex-col items-center justify-center '>
 
-                                        {/* <div
-                                            className="w-0 h-0 border-l-[20px] border-l-transparent border-r-[20px] border-r-transparent border-b-[30px]
-                                                 border-b-[#381F8C] group-hover:border-b-[#FE9B07] transition-colors duration-300 ease-in-out;"
-                                        ></div> */}
-
                                         <div
                                             className="w-0 h-0 border-l-[15px] border-l-transparent border-r-[15px] border-r-transparent border-b-[25px]
                                                  border-b-[#381F8C] group-hover:border-b-[#FE9B07] transition-colors duration-300 ease-in-out"
@@ -223,7 +214,9 @@ const WhatSetUsApart = () => {
 
             </div>
 
-
+            <div className='lg:hidden'>
+                <MobileWhatSetUsApart />
+            </div>
         </div>
     )
 }

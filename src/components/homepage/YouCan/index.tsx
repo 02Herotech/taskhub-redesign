@@ -13,6 +13,7 @@ import Task2 from "../../../../public/assets/images/homepage/YouCan/task2.png";
 import aiAssist from "../../../../public/assets/images/homepage/YouCan/aiAssist.png";
 import service1 from "../../../../public/assets/images/homepage/howTaskhubWorks/service-provider/service1.png";
 import service2 from "../../../../public/assets/images/homepage/howTaskhubWorks/service-provider/service2.png";
+import MobileYouCan from './MobileYouCan';
 
 
 
@@ -115,7 +116,7 @@ const YouCan = () => {
   return (
     <div className='bg-[#EBE9F4]'>
 
-      <div className=' mx-auto max-w-7xl'>
+      <div className=' mx-auto max-w-7xl hidden lg:block'>
         <div className='w-[85%] mx-auto py-10 '>
 
 
@@ -255,6 +256,10 @@ const YouCan = () => {
             </div>
           </div>
         </div>
+      </div>
+
+      <div className='lg:hidden'>
+        <MobileYouCan />
       </div>
     </div>
   )
