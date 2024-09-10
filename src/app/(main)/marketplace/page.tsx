@@ -5,9 +5,6 @@ import { FaHome } from "react-icons/fa";
 import { MdPersonalInjury } from "react-icons/md";
 import { GrPersonalComputer } from "react-icons/gr";
 import { BsCalendar2EventFill } from "react-icons/bs";
-import { GiStoneCrafting } from "react-icons/gi";
-import { FaBabyCarriage } from "react-icons/fa";
-import { MdSecurity } from "react-icons/md";
 import { MdLocalGroceryStore } from "react-icons/md";
 import { FaHeartbeat } from "react-icons/fa";
 import { FaGraduationCap } from "react-icons/fa";
@@ -56,7 +53,7 @@ const MareketPlace = () => {
   // Setting user popup state
   useEffect(() => {
     const popupCookie = getCookie("showPopup");
-    if (!popupCookie && isAuth && isComplete) {
+    if (!isComplete) {
       setCookie("showPopup", true, { maxAge: 60 * 2 });
       setShowPopup(true);
     }
@@ -108,7 +105,7 @@ const MareketPlace = () => {
       {!isFiltering && <MarketPlaceHeader />}
 
       <div
-        className={`mx-auto flex max-w-screen-xl flex-col px-6 md:px-16  ${isFiltering ? "pt-16 " : "lg:pt-32"}    `}
+        className={`mx-auto flex max-w-screen-xl flex-col px-6 md:px-16 ${isFiltering ? "pt-16 " : "lg:pt-32"}`}
       >
         <MarketPlaceFilter />
         <div>
