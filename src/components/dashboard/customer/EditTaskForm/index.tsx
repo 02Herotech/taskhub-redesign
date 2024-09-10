@@ -1,7 +1,6 @@
 import Button from '@/components/global/Button';
 import Dropdown from '@/components/global/Dropdown';
 import axios from 'axios';
-import { useSession } from 'next-auth/react';
 import React, { useEffect, useRef, useState } from 'react'
 import { FaSortDown } from 'react-icons/fa6';
 import DatePicker from "react-datepicker";
@@ -30,10 +29,8 @@ const EditTaskForm = ({ task, setShowEditModal }: TaskCardProps) => {
     const [activeEditModalLink, setActiveEditModalLink] = useState<string>("Task Details");
     const [categories, setCategories] = useState<{ id: number; categoryName: string }[]>([]);
     const [updatedPostCode, setUpdatedPostCode] = useState<any>(task.postCode);
-    const [updatedCustomerBudget, setUpdatedCustomerBudget] = useState<string>(task.customerBudget.toString());
     const [updatedDate, setUpdatedDate] = useState<Date | null>(null);
     const [updatedTime, setUpdatedTime] = useState<Date | null>(null);
-    const [error, setError] = useState("");
     const [taskImage, setTaskImage] = useState<File | null>(null);
     const taskImageRef = useRef<HTMLInputElement>(null);
     const [suburbList, setSuburbList] = useState([]);
@@ -91,7 +88,7 @@ const EditTaskForm = ({ task, setShowEditModal }: TaskCardProps) => {
                 state: task.state,
                 taskImage: task.taskImage,
                 taskDate: task.taskDate,
-                taskTime: formatTimeToString(new Date(task.taskTime[0], task.taskTime[1])),
+                taskTime: task.taskTime ? formatTimeToString(new Date(task.taskTime[0], task.taskTime[1])) : "Flexible",
                 customerBudget: task.customerBudget
             });
         }
