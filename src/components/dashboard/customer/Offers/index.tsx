@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { formatAmount, formatDate, getYesterday } from "@/lib/utils";
 import { FiClock } from "react-icons/fi";
 import Button from "@/components/global/Button";
@@ -9,7 +9,12 @@ import { loadStripe } from "@stripe/stripe-js";
 import { Elements } from "@stripe/react-stripe-js";
 import { useSession } from "next-auth/react";
 import CheckoutForm from "../CheckoutForm";
-import { useAcceptInvoiceMutation, useGeneratePaymentIntentMutation, useGetInvoiceByCustomerIdQuery, useRejectInvoiceMutation } from "@/services/bookings";
+import {
+  useAcceptInvoiceMutation,
+  useGeneratePaymentIntentMutation,
+  useGetInvoiceByCustomerIdQuery,
+  useRejectInvoiceMutation
+} from "@/services/bookings";
 import Loading from "@/shared/loading";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";

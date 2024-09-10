@@ -307,6 +307,7 @@ const RebookForm: React.FC<RebookFormProps> = ({ onClose, jobId }) => {
                                         name="taskDate"
                                         customInput={<DateCustomInput />}
                                         className="w-full cursor-pointer rounded-2xl bg-[#EBE9F4] px-2 py-1 outline-none placeholder:text-[14px] placeholder:font-bold"
+                                        popperPlacement="bottom-end"
                                     />
                                     {errors.date && <p className="text-red-500 text-xs mt-1">{errors.date}</p>}
                                 </div>
