@@ -140,6 +140,7 @@ const Page = () => {
                                                 recipientName={
                                                     currentListing?.serviceProvider.user.fullName
                                                 }
+                                            className="h-[50px]"
                                             />
                                         )}
                                 </div>
