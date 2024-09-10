@@ -248,7 +248,7 @@ const PaymentHistory = () => {
                                 }}
                             >
                                 {({ blob, url, loading, error }) =>
-                                    loading ? 'Loading document...' : 'Download PDF'
+                                    loading ? 'Loading document...' : 'Download Receipt'
                                 }
                             </PDFDownloadLink>
                         </div>

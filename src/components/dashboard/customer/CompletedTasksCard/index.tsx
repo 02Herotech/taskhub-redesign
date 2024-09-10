@@ -1,17 +1,19 @@
 "use client";
 
 import { dayOfWeekNames, formatAmount, monthNames, suffixes } from "@/lib/utils";
-import { FiCalendar, FiClock } from "react-icons/fi";
-import { HiOutlineLocationMarker } from "react-icons/hi";
+import { FiCalendar } from "react-icons/fi";
 import { motion } from "framer-motion";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { CompletedTask, Task } from "@/types/services/tasks";
 import { useState } from "react";
-import Dropdown from "@/components/global/Dropdown";
 import { DeleteTaskSvg, DropReviewSvg, RebookSvg } from "@/lib/svgIcons";
 import Popup from "@/components/global/Popup";
 import Button from "@/components/global/Button";
 import { useDeleteTaskMutation } from "@/services/tasks";
+import Input from "@/components/global/Input";
+import { FaCalendar } from "react-icons/fa";
+import ReactDatePicker from "react-datepicker";
+import RebookForm from "../RebookForm";
 
 interface TaskCardProps {
     task: CompletedTask;
@@ -29,6 +31,7 @@ const CompletedTasksCard = ({ task }: TaskCardProps) => {
     const [selectedReview, setSelectedReview] = useState<string | null>(null);
     const [reviewSent, setReviewSent] = useState(false);
     const [deleteTaskPopup, setDeleteTaskPopup] = useState(false);
+    const [rebookTaskPopup, setRebookTaskPopup] = useState(false);
 
     const dateArray = task.createdAt;
     const date = new Date(dateArray[0], dateArray[1] - 1, dateArray[2]);
@@ -52,12 +55,15 @@ const CompletedTasksCard = ({ task }: TaskCardProps) => {
             onClick: () => {
                 setIsDropdownOpen(false);
                 setDropReviewPopup(true);
-            }, 
+            },
             icon: DropReviewSvg,
         },
         {
             title: "Re-book",
-            onClick: () => { },
+            onClick: () => {
+                setIsDropdownOpen(false);
+                setRebookTaskPopup(true);
+            },
             icon: RebookSvg,
         },
         {
@@ -78,6 +84,11 @@ const CompletedTasksCard = ({ task }: TaskCardProps) => {
 
     return (
         <>
+            {rebookTaskPopup && (
+                <Popup isOpen={rebookTaskPopup} onClose={() => setRebookTaskPopup(false)}>
+                    <RebookForm onClose={() => setRebookTaskPopup(false)} jobId={task.id} />
+                </Popup>
+            )}
             {deleteTaskPopup && (
                 <Popup isOpen={deleteTaskPopup} onClose={() => setDeleteTaskPopup(false)}>
                     <div className="relative bg-[#EBE9F4] rounded-2xl min-h-[200px] lg:w-[577px] font-satoshi">
@@ -128,7 +139,7 @@ const CompletedTasksCard = ({ task }: TaskCardProps) => {
                                         className="w-[151px] max-lg:text-sm rounded-full py-6"
                                         onClick={() => {
                                             setDropReviewPopup(false)
-                                            setReviewSent(false) 
+                                            setReviewSent(false)
 
                                         }}
                                     >
