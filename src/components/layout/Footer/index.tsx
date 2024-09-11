@@ -4,6 +4,7 @@ import Logo from '../Logo'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useDispatch } from "react-redux";
+import { usePathname } from 'next/navigation'
 import {
     filterMarketPlace,
     setFilterLoadingState,
@@ -13,8 +14,11 @@ import axios from "axios";
 import mobileFooter from "../../../../public/assets/images/homepage/mobileFooter.png"
 
 
+
 const Footer = () => {
     const router = useRouter()
+    const pathname = usePathname()
+
     const link_1 = [
         {
             label: "About Us",
@@ -292,9 +296,12 @@ const Footer = () => {
                     </div>
                 </div>
             </div>
-            <div className='absolute lg:-top-24 -top-44 w-full   overflow-hidden z-20'>
-                <NewsLetter />
-            </div>
+            {pathname === '/home' && (
+                <div className='absolute lg:-top-24 -top-44 w-full   overflow-hidden z-20'>
+                    <NewsLetter />
+                </div>
+            )}
+
         </footer>
     )
 }
