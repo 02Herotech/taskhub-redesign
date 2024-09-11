@@ -870,7 +870,7 @@ const AddTaskForm: React.FC = () => {
                   placeholder="500"
                   className={`appearance-none rounded-2xl bg-[#EBE9F4] p-3 pl-6 text-[13px] placeholder:font-bold ${error.customerBudget ? "border border-[#ff0000] outline-[#FF0000]" : "border-none outline-none"}`}
                 />
-                <p className="absolute left-3 top-7 md:top-8">$</p>
+                <p className="absolute left-3 top-8 md:top-8">$</p>
               </div>
               <div className="text-[#FF0000]">
                 {errors.city ||
