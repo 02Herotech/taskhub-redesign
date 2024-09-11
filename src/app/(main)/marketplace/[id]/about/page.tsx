@@ -144,7 +144,7 @@ const Page = () => {
                                             />
                                         )}
                                 </div>
-                                <p className="font-bold text-[#381f8c]">BIO detail</p>
+                                <p className="font-bold text-[#381f8c]">Bio Details</p>
                                 <p className="font-medium text-[#381f8c]">
                                     {/* @ts-ignore */}
                                     {currentListing?.serviceProvider.bio}
