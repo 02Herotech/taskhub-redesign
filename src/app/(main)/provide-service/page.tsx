@@ -30,10 +30,10 @@ interface FormData {
   planOneDescription: string;
   planTwoDescription: string;
   planThreeDescription: string;
-  image1: File | null | Blob;
-  image2?: File | null | Blob;
-  image3?: File | null | Blob;
-  image4?: File | null | Blob;
+  image1: File | null ;
+  image2?: File | null ;
+  image3?: File | null ;
+  image4?: File | null ;
   taskType: string;
   planOnePrice: number | null;
   planTwoPrice: number | null;
@@ -72,8 +72,6 @@ const ProvideService: React.FC = () => {
   const route = useRouter();
   const id = session?.data?.user.user.id;
   const isAuthenticated = session?.data?.user.user.enabled === false;
-  const defaultImageSrc =
-    "https://static.wixstatic.com/media/7d1889_ab302adc66e943f9b6be9de260cbc40f~mv2.png";
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const [task, setTask] = useState<FormData>({
@@ -437,12 +435,6 @@ const ProvideService: React.FC = () => {
   const imageURL2 = getImageURL(2);
   const imageURL3 = getImageURL(3);
 
-  const convertUrlToBlob = async (url: string): Promise<Blob> => {
-    const response = await fetch(url);
-    const blob = await response.blob();
-    return blob;
-  };
-
   const calculateProgress = () => {
     const requiredFields = [
       task.listingDescription,
@@ -498,28 +490,6 @@ const ProvideService: React.FC = () => {
 
         if (selectedDays) {
           finalTask = { ...finalTask, availableDays: selectedDays };
-        }
-
-        if (!task.image2) {
-          const defaultImageBlob = await convertUrlToBlob(defaultImageSrc);
-          finalTask = {
-            ...finalTask,
-            image2: defaultImageBlob,
-          };
-        }
-        if (!task.image3) {
-          const defaultImageBlob = await convertUrlToBlob(defaultImageSrc);
-          finalTask = {
-            ...finalTask,
-            image3: defaultImageBlob,
-          };
-        }
-        if (!task.image4) {
-          const defaultImageBlob = await convertUrlToBlob(defaultImageSrc);
-          finalTask = {
-            ...finalTask,
-            image4: defaultImageBlob,
-          };
         }
 
         finalTask = { ...finalTask, negotiable: negotiable };
