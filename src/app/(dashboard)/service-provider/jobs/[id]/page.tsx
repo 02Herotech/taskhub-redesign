@@ -5,7 +5,7 @@ import Invoice from "@/components/serviceProviderDashboard/jobs/Invoice";
 import Loading from "@/shared/loading";
 import { RootState } from "@/store";
 import {
-  dateFromNumberArray,
+  dateFromArrays,
   formatDateFromNumberArray,
   formatDateFromNumberArrayToRelativeDate,
 } from "@/utils";
@@ -201,7 +201,7 @@ const ViewJobs = () => {
                     <p className="font-bold capitalize">
                       {/* {dateFromNumberArray(currentBooking.startDate)} */}
                       {currentBooking.startDate
-                        ? dateFromNumberArray(currentBooking.startDate)
+                            ? dateFromArrays(currentBooking.startDate, currentBooking.startTime)
                         : "Flexible"}
                     </p>
                   </div>

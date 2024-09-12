@@ -8,6 +8,7 @@ import userProfileReducer from "./Features/userProfile";
 import chatReducer from "./Features/chat";
 import exploreReducer from "./Features/explore";
 import { stripe } from "@/services/stripe";
+import profileProgressReducer from "@/services/profile"
 
 export const store = configureStore({
   reducer: {
@@ -19,7 +20,8 @@ export const store = configureStore({
     market: marketReducer,
     userProfile: userProfileReducer,
     chat: chatReducer,
-    explore: exploreReducer
+    explore: exploreReducer,
+    profileProgress: profileProgressReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(

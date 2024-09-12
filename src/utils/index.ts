@@ -173,20 +173,37 @@ export function formatDateFromNumberArrayToPastDate(
   }
 }
 
-export function dateFromNumberArray(dateArray: number[]) {
-  const [year, month, day, hour = 0, minute = 0, second = 0, nanosecond = 0] =
-    dateArray;
+type DateInput = number[] | { year: number; month: number; day: number };
+type TimeInput = number[] | { hour: number; minute: number; second?: number; nano?: number };
 
-  // Create a JavaScript Date object from the timestamp array
+export function dateFromArrays(startDate: DateInput, startTime: TimeInput) {
+  let year: number, month: number, day: number;
+  let hour: number, minute: number, second: number = 0, nano: number = 0;
+
+  // Process startDate
+  if (Array.isArray(startDate)) {
+    [year, month, day] = startDate;
+  } else {
+    ({ year, month, day } = startDate);
+  }
+
+  // Process startTime
+  if (Array.isArray(startTime)) {
+    [hour, minute, second = 0, nano = 0] = startTime;
+  } else {
+    ({ hour, minute, second = 0, nano = 0 } = startTime);
+  }
+
+  // Create a JavaScript Date object from the date and time components
   const dateObject = new Date(
     year,
     month - 1,
     day,
-    hour + 1,
+    hour,
     minute,
     second,
-    Math.floor(nanosecond / 1e6),
-  ); // convert nanoseconds to milliseconds
+    Math.floor(nano / 1e6), // convert nanoseconds to milliseconds
+  );
 
   // Create a Moment object from the date
   const timestampMoment = moment(dateObject);
