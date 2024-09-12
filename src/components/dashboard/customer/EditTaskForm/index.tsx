@@ -208,7 +208,6 @@ const EditTaskForm = ({ task, setShowEditModal }: TaskCardProps) => {
     // };
 
     const handleUpdateTask: SubmitHandler<taskZodType> = async (data) => {
-        console.log("data sent ", data);
         const formData = new FormData();
 
         const fields = {

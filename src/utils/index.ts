@@ -218,6 +218,68 @@ export function dateFromNumberArray(dateArray: number[]) {
   }
 }
 
+type DateInput = number[] | { year: number; month: number; day: number };
+type TimeInput = number[] | { hour: number; minute: number; second?: number; nano?: number };
+
+export function dateFromArrays(startDate: DateInput, startTime: TimeInput) {
+  let year: number, month: number, day: number;
+  let hour: number, minute: number, second: number = 0, nano: number = 0;
+
+  // Process startDate
+  if (Array.isArray(startDate)) {
+    [year, month, day] = startDate;
+  } else {
+    ({ year, month, day } = startDate);
+  }
+
+  // Process startTime
+  if (Array.isArray(startTime)) {
+    [hour, minute, second = 0, nano = 0] = startTime;
+  } else {
+    ({ hour, minute, second = 0, nano = 0 } = startTime);
+  }
+
+  // Create a JavaScript Date object from the date and time components
+  const dateObject = new Date(
+    year,
+    month - 1,
+    day,
+    hour,
+    minute,
+    second,
+    Math.floor(nano / 1e6), // convert nanoseconds to milliseconds
+  );
+
+  // Create a Moment object from the date
+  const timestampMoment = moment(dateObject);
+
+  // Get the current time as a Moment object
+  const now = moment();
+
+  // Calculate the difference between now and the timestamp
+  const differenceInDays = now.diff(timestampMoment, "days");
+
+  if (differenceInDays === 0) {
+    // Today
+    return timestampMoment.format("[Today at] hh:mm A");
+  } else if (differenceInDays === 1) {
+    // Yesterday
+    return `Yesterday`;
+  } else if (differenceInDays < 7) {
+    // This week
+    return timestampMoment.from(now);
+  } else if (differenceInDays < 30) {
+    // This month
+    return timestampMoment.format("MMM D");
+  } else if (differenceInDays < 365) {
+    // This year
+    return timestampMoment.format("MMM D");
+  } else {
+    // Earlier years
+    return timestampMoment.format("YYYY-MM-DD");
+  }
+}
+
 export function formatRelativeDate(timestampArray: number[]): string {
   const [year, month, day, hour = 0, minute = 0, second = 0] = timestampArray;
   const now = new Date();

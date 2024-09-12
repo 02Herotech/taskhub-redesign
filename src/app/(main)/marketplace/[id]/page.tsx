@@ -4,7 +4,6 @@
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import { BiCalendar, BiCalendarCheck, BiLocationPlus } from "react-icons/bi";
-import { FaStar } from "react-icons/fa";
 import PricingPlan from "@/components/matkeplaceSingleTask/PricingPlan";
 import Reviews from "@/components/matkeplaceSingleTask/Reviews";
 import { formatDateFromNumberArray } from "@/utils";
