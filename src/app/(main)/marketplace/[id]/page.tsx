@@ -210,7 +210,7 @@ const Page = () => {
           )}
         </section>
 
-        {/* Portfolio */}
+        {/* Portfolio
         <section className="mx-auto w-full space-y-4 p-4  py-8 lg:p-16 ">
           <h1 className="text-3xl font-bold text-violet-darkHover">
             Portfolio
@@ -249,8 +249,7 @@ const Page = () => {
                 ))}
             </div>
           </div>
-        </section>
-
+        </section> */}
         <Reviews />
       </main>
     </>

@@ -4,6 +4,7 @@ import Logo from '../Logo'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useDispatch } from "react-redux";
+import { usePathname } from 'next/navigation'
 import {
     filterMarketPlace,
     setFilterLoadingState,
@@ -13,8 +14,11 @@ import axios from "axios";
 import mobileFooter from "../../../../public/assets/images/homepage/mobileFooter.png"
 
 
+
 const Footer = () => {
     const router = useRouter()
+    const pathname = usePathname()
+
     const link_1 = [
         {
             label: "About Us",
@@ -227,64 +231,55 @@ const Footer = () => {
 
                                 </Link>
 
-                                <Link href={'https://bit.ly/SyncSkillsX'}
-                                    target="_blank" rel="noopener noreferrer">
-                                    <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <rect x="0.5" y="0.5" width="47" height="47" rx="23.5" fill="#C1BADB" />
-                                        <rect x="0.5" y="0.5" width="47" height="47" rx="23.5" stroke="#C6C6C6" />
-                                        <g clip-path="url(#clip0_3535_8219)">
-                                            <g clip-path="url(#clip1_3535_8219)">
-                                                <path d="M33.75 12.5626H14.25C13.8076 12.5581 13.3814 12.7293 13.065 13.0386C12.7487 13.348 12.5679 13.7702 12.5625 14.2126V33.7913C12.5689 34.2331 12.7501 34.6544 13.0663 34.9629C13.3826 35.2714 13.8082 35.4421 14.25 35.4376H33.75C34.1925 35.4411 34.6183 35.2693 34.9345 34.9598C35.2507 34.6503 35.4316 34.2282 35.4375 33.7857V14.207C35.4296 13.7658 35.2479 13.3456 34.9319 13.0377C34.6159 12.7298 34.1912 12.5591 33.75 12.5626Z" fill="#381F8C" />
-                                                <path fill-rule="evenodd" clip-rule="evenodd" d="M32 32L25.743 22.6749L25.7537 22.6836L31.3953 16H29.51L24.9142 21.44L21.2645 16H16.3201L22.1617 24.7062L22.161 24.7055L16 32H17.8853L22.9948 25.9476L27.0556 32H32ZM20.5176 17.4545L29.2966 30.5455H27.8026L19.0165 17.4545H20.5176Z" fill="white" />
-                                            </g>
+                                <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <rect x="0.5" y="0.5" width="47" height="47" rx="23.5" fill="#C1BADB" />
+                                    <rect x="0.5" y="0.5" width="47" height="47" rx="23.5" stroke="#C6C6C6" />
+                                    <g clip-path="url(#clip0_3535_8219)">
+                                        <g clip-path="url(#clip1_3535_8219)">
+                                            <path d="M33.75 12.5626H14.25C13.8076 12.5581 13.3814 12.7293 13.065 13.0386C12.7487 13.348 12.5679 13.7702 12.5625 14.2126V33.7913C12.5689 34.2331 12.7501 34.6544 13.0663 34.9629C13.3826 35.2714 13.8082 35.4421 14.25 35.4376H33.75C34.1925 35.4411 34.6183 35.2693 34.9345 34.9598C35.2507 34.6503 35.4316 34.2282 35.4375 33.7857V14.207C35.4296 13.7658 35.2479 13.3456 34.9319 13.0377C34.6159 12.7298 34.1912 12.5591 33.75 12.5626Z" fill="#381F8C" />
+                                            <path fill-rule="evenodd" clip-rule="evenodd" d="M32 32L25.743 22.6749L25.7537 22.6836L31.3953 16H29.51L24.9142 21.44L21.2645 16H16.3201L22.1617 24.7062L22.161 24.7055L16 32H17.8853L22.9948 25.9476L27.0556 32H32ZM20.5176 17.4545L29.2966 30.5455H27.8026L19.0165 17.4545H20.5176Z" fill="white" />
                                         </g>
-                                        <defs>
-                                            <clipPath id="clip0_3535_8219">
-                                                <rect width="24" height="24" fill="white" transform="translate(12 12)" />
-                                            </clipPath>
-                                            <clipPath id="clip1_3535_8219">
-                                                <rect width="24" height="24" fill="white" transform="translate(12 12)" />
-                                            </clipPath>
-                                        </defs>
-                                    </svg>
-                                </Link>
+                                    </g>
+                                    <defs>
+                                        <clipPath id="clip0_3535_8219">
+                                            <rect width="24" height="24" fill="white" transform="translate(12 12)" />
+                                        </clipPath>
+                                        <clipPath id="clip1_3535_8219">
+                                            <rect width="24" height="24" fill="white" transform="translate(12 12)" />
+                                        </clipPath>
+                                    </defs>
+                                </svg>
 
-                                <Link href={'https://www.youtube.com/@syncskillsau'}
-                                    target="_blank" rel="noopener noreferrer">
-                                    <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <rect x="0.5" y="0.5" width="47" height="47" rx="23.5" fill="#C1BADB" />
-                                        <rect x="0.5" y="0.5" width="47" height="47" rx="23.5" stroke="#EEEEEF" />
-                                        <g clip-path="url(#clip0_3535_8224)">
-                                            <path d="M30.375 12H17.625C14.5184 12 12 14.5184 12 17.625V30.375C12 33.4816 14.5184 36 17.625 36H30.375C33.4816 36 36 33.4816 36 30.375V17.625C36 14.5184 33.4816 12 30.375 12Z" fill="white" />
-                                            <path d="M30.375 12H17.625C14.5184 12 12 14.5184 12 17.625V30.375C12 33.4816 14.5184 36 17.625 36H30.375C33.4816 36 36 33.4816 36 30.375V17.625C36 14.5184 33.4816 12 30.375 12Z" fill="#381F8C" />
-                                            <path d="M30.7054 20.3482C31.0268 21.4732 31.0268 23.8839 31.0268 23.8839C31.0268 23.8839 31.0268 26.2679 30.7054 27.4196C30.5446 28.0625 30.0357 28.5446 29.4196 28.7054C28.2679 29 23.7143 29 23.7143 29C23.7143 29 19.1339 29 17.9821 28.7054C17.3661 28.5446 16.8571 28.0625 16.6964 27.4196C16.375 26.2679 16.375 23.8839 16.375 23.8839C16.375 23.8839 16.375 21.4732 16.6964 20.3482C16.8571 19.7054 17.3661 19.1964 17.9821 19.0357C19.1339 18.7143 23.7143 18.7143 23.7143 18.7143C23.7143 18.7143 28.2679 18.7143 29.4196 19.0357C30.0357 19.1964 30.5446 19.7054 30.7054 20.3482ZM22.2143 26.0536L26.0179 23.8839L22.2143 21.7143V26.0536Z" fill="white" />
-                                        </g>
-                                        <defs>
-                                            <clipPath id="clip0_3535_8224">
-                                                <rect width="24" height="24" fill="white" transform="translate(12 12)" />
-                                            </clipPath>
-                                        </defs>
-                                    </svg>
+                                <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <rect x="0.5" y="0.5" width="47" height="47" rx="23.5" fill="#C1BADB" />
+                                    <rect x="0.5" y="0.5" width="47" height="47" rx="23.5" stroke="#EEEEEF" />
+                                    <g clip-path="url(#clip0_3535_8224)">
+                                        <path d="M30.375 12H17.625C14.5184 12 12 14.5184 12 17.625V30.375C12 33.4816 14.5184 36 17.625 36H30.375C33.4816 36 36 33.4816 36 30.375V17.625C36 14.5184 33.4816 12 30.375 12Z" fill="white" />
+                                        <path d="M30.375 12H17.625C14.5184 12 12 14.5184 12 17.625V30.375C12 33.4816 14.5184 36 17.625 36H30.375C33.4816 36 36 33.4816 36 30.375V17.625C36 14.5184 33.4816 12 30.375 12Z" fill="#381F8C" />
+                                        <path d="M30.7054 20.3482C31.0268 21.4732 31.0268 23.8839 31.0268 23.8839C31.0268 23.8839 31.0268 26.2679 30.7054 27.4196C30.5446 28.0625 30.0357 28.5446 29.4196 28.7054C28.2679 29 23.7143 29 23.7143 29C23.7143 29 19.1339 29 17.9821 28.7054C17.3661 28.5446 16.8571 28.0625 16.6964 27.4196C16.375 26.2679 16.375 23.8839 16.375 23.8839C16.375 23.8839 16.375 21.4732 16.6964 20.3482C16.8571 19.7054 17.3661 19.1964 17.9821 19.0357C19.1339 18.7143 23.7143 18.7143 23.7143 18.7143C23.7143 18.7143 28.2679 18.7143 29.4196 19.0357C30.0357 19.1964 30.5446 19.7054 30.7054 20.3482ZM22.2143 26.0536L26.0179 23.8839L22.2143 21.7143V26.0536Z" fill="white" />
+                                    </g>
+                                    <defs>
+                                        <clipPath id="clip0_3535_8224">
+                                            <rect width="24" height="24" fill="white" transform="translate(12 12)" />
+                                        </clipPath>
+                                    </defs>
+                                </svg>
 
-                                </Link>
+                                <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <rect x="0.5" y="0.5" width="47" height="47" rx="23.5" fill="#C1BADB" />
+                                    <rect x="0.5" y="0.5" width="47" height="47" rx="23.5" stroke="#C6C6C6" />
+                                    <g clip-path="url(#clip0_3535_8230)">
+                                        <path d="M30.375 12H17.625C14.5184 12 12 14.5184 12 17.625V30.375C12 33.4816 14.5184 36 17.625 36H30.375C33.4816 36 36 33.4816 36 30.375V17.625C36 14.5184 33.4816 12 30.375 12Z" fill="white" />
+                                        <path d="M30.375 12H17.625C14.5184 12 12 14.5184 12 17.625V30.375C12 33.4816 14.5184 36 17.625 36H30.375C33.4816 36 36 33.4816 36 30.375V17.625C36 14.5184 33.4816 12 30.375 12Z" fill="#381F8C" />
+                                        <path d="M34 24C34 18.48 29.52 14 24 14C18.48 14 14 18.48 14 24C14 28.84 17.44 32.87 22 33.8V27H20V24H22V21.5C22 19.57 23.57 18 25.5 18H28V21H26C25.45 21 25 21.45 25 22V24H28V27H25V33.95C30.05 33.45 34 29.19 34 24Z" fill="white" />
+                                    </g>
+                                    <defs>
+                                        <clipPath id="clip0_3535_8230">
+                                            <rect width="24" height="24" fill="white" transform="translate(12 12)" />
+                                        </clipPath>
+                                    </defs>
+                                </svg>
 
-                                <Link href={'https://bit.ly/SyncskillsFb'}
-                                    target="_blank" rel="noopener noreferrer">
-                                    <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <rect x="0.5" y="0.5" width="47" height="47" rx="23.5" fill="#C1BADB" />
-                                        <rect x="0.5" y="0.5" width="47" height="47" rx="23.5" stroke="#C6C6C6" />
-                                        <g clip-path="url(#clip0_3535_8230)">
-                                            <path d="M30.375 12H17.625C14.5184 12 12 14.5184 12 17.625V30.375C12 33.4816 14.5184 36 17.625 36H30.375C33.4816 36 36 33.4816 36 30.375V17.625C36 14.5184 33.4816 12 30.375 12Z" fill="white" />
-                                            <path d="M30.375 12H17.625C14.5184 12 12 14.5184 12 17.625V30.375C12 33.4816 14.5184 36 17.625 36H30.375C33.4816 36 36 33.4816 36 30.375V17.625C36 14.5184 33.4816 12 30.375 12Z" fill="#381F8C" />
-                                            <path d="M34 24C34 18.48 29.52 14 24 14C18.48 14 14 18.48 14 24C14 28.84 17.44 32.87 22 33.8V27H20V24H22V21.5C22 19.57 23.57 18 25.5 18H28V21H26C25.45 21 25 21.45 25 22V24H28V27H25V33.95C30.05 33.45 34 29.19 34 24Z" fill="white" />
-                                        </g>
-                                        <defs>
-                                            <clipPath id="clip0_3535_8230">
-                                                <rect width="24" height="24" fill="white" transform="translate(12 12)" />
-                                            </clipPath>
-                                        </defs>
-                                    </svg>
-                                </Link>
                             </div>
                             <p className='
                             flex space-x-2 items-center font-satoshi font-[500] lg:text-[15px] text-[12px] text-[#EBE9F4]'>
@@ -301,9 +296,12 @@ const Footer = () => {
                     </div>
                 </div>
             </div>
-            <div className='absolute lg:-top-24 -top-44 w-full   overflow-hidden z-20'>
-                <NewsLetter />
-            </div>
+            {pathname === '/home' && (
+                <div className='absolute lg:-top-24 -top-44 w-full   overflow-hidden z-20'>
+                    <NewsLetter />
+                </div>
+            )}
+
         </footer>
     )
 }
