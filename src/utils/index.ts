@@ -139,10 +139,6 @@ export function formatDateFromNumberArrayToPastDate(
   const diffHours = Math.floor(diffMinutes / 60);
   const diffDays = Math.floor(diffHours / 24);
 
-  console.log(diffMinutes, "minute");
-  console.log(diffHours, "Hours");
-  console.log(diffDays, "Days");
-
   if (diffDays === 0) {
     if (diffHours === 0) {
       if (diffMinutes === 0) {
