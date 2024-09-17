@@ -132,12 +132,15 @@ const MareketPlace = () => {
       setCookie("showPopup", true, { maxAge: 60 * 2 });
       setShowPopup(true);
     }
-  }, [isAuth, profileProgressData]);
+  }, []);
 
   return (
     <main className="mx-auto max-w-screen-2xl">
       {showPopup && (
-        <Popup isOpen={showPopup} onClose={() => setShowPopup(false)}>
+        <Popup isOpen={showPopup} onClose={() =>{
+          setCookie("showPopup", false)
+          setShowPopup(false)
+        } }>
           <div className="relative h-[312px] max-lg:mx-5 lg:w-[577px]">
             <div className="flex h-full flex-col items-center justify-center space-y-7 text-center">
               <h1 className="font-clashDisplay text-4xl font-semibold text-[#2A1769]">
