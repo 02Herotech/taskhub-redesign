@@ -53,7 +53,7 @@ const MareketPlace = () => {
   // Setting user popup state
   useEffect(() => {
     const popupCookie = getCookie("showPopup");
-    if (!isComplete) {
+    if (isAuth && !isComplete) {
       setCookie("showPopup", true, { maxAge: 60 * 2 });
       setShowPopup(true);
     }
