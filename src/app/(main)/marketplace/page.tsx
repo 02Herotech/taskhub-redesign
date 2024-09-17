@@ -23,6 +23,8 @@ import Button from "@/components/global/Button";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { setCookie, getCookie } from "cookies-next";
+import axios from "axios";
+import { defaultUserDetails } from "@/data/data";
 
 const categoryIcons = [
   FaHome,
@@ -47,17 +49,90 @@ const MareketPlace = () => {
   const isAuth = session.status === "authenticated";
   const isComplete = session?.data?.user?.user?.enabled;
   const isServiceProvider =
-    session?.data?.user?.user?.roles[0] === "SERVICE_PROVIDER";
+  session?.data?.user?.user?.roles[0] === "SERVICE_PROVIDER";
   const [showPopup, setShowPopup] = useState(false);
+  const [fetchedUserData, setFetchedUserData] = useState(defaultUserDetails);
+
+  const token = session?.data?.user?.accessToken;
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      if (!token) return;
+      try {
+        const url =
+          "https://smp.jacinthsolutions.com.au/api/v1/customer/profile";
+        const { data } = await axios.get(url, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "multipart/form-data",
+          },
+        });
+        setFetchedUserData(data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchUserData();
+  }, [token]);
+
+  const { profile: user } = useSelector(
+    (state: RootState) => state.userProfile,
+  );
+
+  const [chartData, setChartData] = useState({ total: 0, completed: 0 });
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const profileProgressData = [
+    {
+      title: "Profile Picture",
+      status: fetchedUserData?.profileImage,
+    },
+    {
+      title: "Email Address",
+      status: user?.emailAddress,
+    },
+    {
+      title: "Address Information",
+      status: user?.address?.state,
+    },
+    {
+      title: "Mobile Number",
+      status: user?.phoneNumber,
+    },
+    {
+      title: "Identification Document",
+      status: fetchedUserData.idImage,
+    },
+    {
+      title: "Date of Birth",
+      status: fetchedUserData.dateOfBirth,
+    },
+  ];
+
+  useEffect(() => {
+    setChartData((prev) => ({
+      ...prev,
+      total: profileProgressData.length,
+      completed: profileProgressData.filter(
+        (item) => item.status !== "" && item.status !== null,
+      ).length,
+    }));
+    // eslint-disable-next-line
+  }, [fetchedUserData, user]);
 
   // Setting user popup state
   useEffect(() => {
-    const popupCookie = getCookie("showPopup");
-    if (isAuth && !isComplete) {
+    // Check if all fields in profileProgressData have been filled
+    const isProfileComplete = profileProgressData.every(
+      (item) => item.status !== "" && item.status !== null && item.status !== undefined
+    );
+
+    // Only show the popup if the user is authenticated and the profile is incomplete
+    if (isAuth && !isProfileComplete) {
       setCookie("showPopup", true, { maxAge: 60 * 2 });
       setShowPopup(true);
     }
-  }, [isAuth, isComplete]);
+  }, [isAuth, profileProgressData]);
 
   return (
     <main className="mx-auto max-w-screen-2xl">
