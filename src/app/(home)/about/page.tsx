@@ -76,7 +76,7 @@ const About = () => {
                         </div>
                         <div className="bg-[#221354] w-[218px] h-[225px] flex flex-col items-center text-[#EBE9F4] p-4 rounded-lg shadow-lg space-y-3 hover:bg-[#FE9B07] transition-colors duration-500">
                             <Image src="/assets/images/about/icon3.png" width={18} alt="" />
-                            <p className="font-[700] text-[18px] text-center font-satoshiMedium">Ratings and <br /> Reviews</p>
+                            <p className="font-[700] text-[18px] text-center font-satoshiMedium">Ratings and <br /> s</p>
                             <p className="text-justify font-[300] text-[13px]">Users can provide feedback and ratings, helping others make informed decisions.</p>
                         </div>
                         <div className="bg-[#221354] w-[218px] h-[225px] flex flex-col items-center text-[#EBE9F4] p-4 rounded-lg shadow-lg space-y-3 hover:bg-[#FE9B07] transition-colors duration-500">

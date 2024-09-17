@@ -211,10 +211,10 @@ const DashboardPasswordChange = () => {
               </label>
               <div className="relative">
                 <div
-                  className="absolute right-2 top-1/2 -translate-y-1/2 cursor-pointer"
+                  className="absolute right-4 top-1/2 -translate-y-1/2 cursor-pointer"
                   onClick={() => setShowCurrentPassword(!showCurrentPassword)}
                 >
-                  {showCurrentPassword ? <IoMdEyeOff /> : <IoMdEye />}
+                  {showCurrentPassword ? <IoMdEyeOff size={28} /> : <IoMdEye size={28} />}
                 </div>
                 <input
                   type={showCurrentPassword ? "text" : "password"}

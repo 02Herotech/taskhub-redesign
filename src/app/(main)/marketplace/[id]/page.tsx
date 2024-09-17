@@ -53,7 +53,7 @@ const Page = () => {
 
   return (
     <>
-      <main className=" relative  pt-16 font-satoshiMedium text-[#221354] ">
+      <main className=" relative  py-16 font-satoshiMedium text-[#221354] ">
         <ImageModal
           showImageModal={showImageModal}
           setShowImageModal={setShowImageModal}
@@ -250,7 +250,6 @@ const Page = () => {
             </div>
           </div>
         </section> */}
-        <Reviews />
       </main>
     </>
   );
