@@ -30,7 +30,7 @@ const Page = () => {
     });
 
     const { id } = useParams();
-
+    const serviceProviderId = displayData?.serviceProvider.id;
     const { userProfileAuth: auth } = useSelector(
         (state: RootState) => state.userProfile,
     );
@@ -46,12 +46,12 @@ const Page = () => {
     useEffect(() => {
         const fetchListing = async () => {
             try {
-                if (!displayData) return;
+                if (!id) return;
                 const url = `https://smp.jacinthsolutions.com.au/api/v1/listing/${id}`;
                 const { data } = await axios.get(url);
                 setCurrentListing(data);
             } catch (error: any) {
-                console.log(error.response.data);
+                console.log(error.response);
             }
         };
         fetchListing();
@@ -60,7 +60,7 @@ const Page = () => {
     useEffect(() => {
         const fetchProviderListings = async () => {
             try {
-                const serviceProviderId = displayData?.serviceProvider.id;
+                if (!serviceProviderId) return;
                 console.log(serviceProviderId)
                 const url = `https://smp.jacinthsolutions.com.au/api/v1/service_provider/get-profile/${serviceProviderId}`;
                 const response = await axios.get(url,
@@ -70,14 +70,16 @@ const Page = () => {
                         },
                     }
                  );
-                console.log(response.data?.serviceProviderListing)
+                // console.log(response.data?.serviceProviderListing)
                 setProviderListings(response.data?.serviceProviderListing); 
             } catch (error: any) {
-                console.log(error.response.data);
+                console.log(error.response);
             }
         };
-        fetchProviderListings();
-    }, [token, displayData]);
+        if (displayData?.serviceProvider?.id) {
+            fetchProviderListings();
+        }
+    }, [token, displayData, serviceProviderId]);
 
     return (
         <>
@@ -263,8 +265,7 @@ const Page = () => {
                         ))}
                     </div>
                 </section>
-
-                <Reviews />
+                <Reviews serviceProviderId={displayData?.serviceProvider.id} categoryId={id} />
             </main>
         </>
     );
