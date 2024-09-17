@@ -11,7 +11,7 @@ const TopActivities = () => {
           <IoIosAddCircleOutline className='size-8'/>
           Add a Task
         </Link>
-        <Link href="/customer/payment/payment-history" className="bg-[#F7DBB2] rounded-2xl p-4 w-full h-full font-bold text-primary flex flex-col space-y-5">
+        <Link href="/customer/payment?tab=paymentHistory" className="bg-[#F7DBB2] rounded-2xl p-4 w-full h-full font-bold text-primary flex flex-col space-y-5">
           <GoCreditCard className='size-8' />
           Payment history
         </Link>
