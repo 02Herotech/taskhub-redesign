@@ -49,9 +49,8 @@ const MareketPlace = () => {
   const isServiceProvider = session?.data?.user?.user?.roles[0] === "SERVICE_PROVIDER";
   const [showPopup, setShowPopup] = useState(false);
   const [fetchedUserData, setFetchedUserData] = useState(defaultUserDetails);
-  const [loadingProfile, setLoadingProfile] = useState(true); // New loading state for profile
+  const [loadingProfile, setLoadingProfile] = useState(true); 
 
-  // Fetch user data
   useEffect(() => {
     const fetchUserData = async () => {
       if (!token) return;
@@ -67,7 +66,7 @@ const MareketPlace = () => {
       } catch (error) {
         console.error(error);
       } finally {
-        setLoadingProfile(false); // Set loading to false when data is fetched
+        setLoadingProfile(false)
       }
     };
     fetchUserData();
@@ -79,7 +78,7 @@ const MareketPlace = () => {
   const profileProgressData = [
     {
       title: "Profile Picture",
-      status: fetchedUserData?.profileImage,
+      status: user?.profileImage,
     },
     {
       title: "Email Address",
@@ -105,11 +104,10 @@ const MareketPlace = () => {
 
   // Popup logic to show after profile data is fully loaded
   useEffect(() => {
-    if (!loadingProfile) {
+    if (!loadingProfile && user) {
       const isProfileComplete = profileProgressData.every(
         (item) => item.status !== "" && item.status !== null && item.status !== undefined
       );
-      console.log("Profile Complete:", isProfileComplete);
 
       if (isAuth && !isProfileComplete) {
         setShowPopup(true);
@@ -117,7 +115,7 @@ const MareketPlace = () => {
         setShowPopup(false);
       }
     }
-  }, [isAuth, profileProgressData, loadingProfile]);
+  }, []);
 
   return (
     <main className="mx-auto max-w-screen-2xl">
