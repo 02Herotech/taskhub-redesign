@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 import { FaHome } from "react-icons/fa";
 import { MdPersonalInjury } from "react-icons/md";
 import { GrPersonalComputer } from "react-icons/gr";
@@ -23,6 +23,8 @@ import Button from "@/components/global/Button";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { setCookie, getCookie } from "cookies-next";
+import axios from "axios";
+import { defaultUserDetails } from "@/data/data";
 
 const categoryIcons = [
   FaHome,
@@ -36,33 +38,94 @@ const categoryIcons = [
 ];
 
 const MareketPlace = () => {
-  // set states for market place
   const { categories, isFiltering, isFilteringLoading } = useSelector(
     (state: RootState) => state.market,
   );
 
-  // Getting session and router for pop up and user anthentication state
   const session = useSession();
   const router = useRouter();
   const isAuth = session.status === "authenticated";
-  const isComplete = session?.data?.user?.user?.enabled;
-  const isServiceProvider =
-    session?.data?.user?.user?.roles[0] === "SERVICE_PROVIDER";
+  const token = session?.data?.user?.accessToken;
+  const isServiceProvider = session?.data?.user?.user?.roles[0] === "SERVICE_PROVIDER";
   const [showPopup, setShowPopup] = useState(false);
+  const [fetchedUserData, setFetchedUserData] = useState(defaultUserDetails);
+  const [loadingProfile, setLoadingProfile] = useState(true); // New loading state for profile
 
-  // Setting user popup state
+  // Fetch user data
   useEffect(() => {
-    const popupCookie = getCookie("showPopup");
-    if (!isComplete) {
-      setCookie("showPopup", true, { maxAge: 60 * 2 });
-      setShowPopup(true);
+    const fetchUserData = async () => {
+      if (!token) return;
+      try {
+        const url = "https://smp.jacinthsolutions.com.au/api/v1/customer/profile";
+        const { data } = await axios.get(url, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "multipart/form-data",
+          },
+        });
+        setFetchedUserData(data);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoadingProfile(false); // Set loading to false when data is fetched
+      }
+    };
+    fetchUserData();
+  }, [token]);
+
+  const { profile: user } = useSelector((state: RootState) => state.userProfile);
+
+  /* eslint-disable react-hooks/exhaustive-deps */
+  const profileProgressData = [
+    {
+      title: "Profile Picture",
+      status: fetchedUserData?.profileImage,
+    },
+    {
+      title: "Email Address",
+      status: user?.emailAddress,
+    },
+    {
+      title: "Address Information",
+      status: user?.address?.state,
+    },
+    {
+      title: "Mobile Number",
+      status: user?.phoneNumber,
+    },
+    {
+      title: "Identification Document",
+      status: fetchedUserData.idImage,
+    },
+    {
+      title: "Date of Birth",
+      status: fetchedUserData.dateOfBirth,
+    },
+  ];
+
+  // Popup logic to show after profile data is fully loaded
+  useEffect(() => {
+    if (!loadingProfile) {
+      const isProfileComplete = profileProgressData.every(
+        (item) => item.status !== "" && item.status !== null && item.status !== undefined
+      );
+      console.log("Profile Complete:", isProfileComplete);
+
+      if (isAuth && !isProfileComplete) {
+        setShowPopup(true);
+      } else {
+        setShowPopup(false);
+      }
     }
-  }, [isAuth, isComplete]);
+  }, [isAuth, profileProgressData, loadingProfile]);
 
   return (
     <main className="mx-auto max-w-screen-2xl">
       {showPopup && (
-        <Popup isOpen={showPopup} onClose={() => setShowPopup(false)}>
+        <Popup isOpen={showPopup} onClose={() =>{
+          setCookie("showPopup", false)
+          setShowPopup(false)
+        } }>
           <div className="relative h-[312px] max-lg:mx-5 lg:w-[577px]">
             <div className="flex h-full flex-col items-center justify-center space-y-7 text-center">
               <h1 className="font-clashDisplay text-4xl font-semibold text-[#2A1769]">
