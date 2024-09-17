@@ -50,6 +50,7 @@ const MareketPlace = () => {
   const [showPopup, setShowPopup] = useState(false);
   const [fetchedUserData, setFetchedUserData] = useState(defaultUserDetails);
   const [loadingProfile, setLoadingProfile] = useState(true); 
+  const [hasClosedPopup, setHasClosedPopup] = useState(false);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -104,25 +105,24 @@ const MareketPlace = () => {
 
   // Popup logic to show after profile data is fully loaded
   useEffect(() => {
-    if (!loadingProfile && user) {
+    const showPopupCookie = getCookie("showPopup");
+    if (!loadingProfile && user && !hasClosedPopup) {
       const isProfileComplete = profileProgressData.every(
         (item) => item.status !== "" && item.status !== null && item.status !== undefined
       );
 
-      if (isAuth && !isProfileComplete) {
+        if (isAuth && !isProfileComplete) {
         setShowPopup(true);
-      } else {
-        setShowPopup(false);
       }
     }
-  }, []);
+  }, [loadingProfile, user, fetchedUserData, isAuth, profileProgressData]);
 
   return (
     <main className="mx-auto max-w-screen-2xl">
       {showPopup && (
         <Popup isOpen={showPopup} onClose={() =>{
-          setCookie("showPopup", false)
           setShowPopup(false)
+          setHasClosedPopup(true);
         } }>
           <div className="relative h-[312px] max-lg:mx-5 lg:w-[577px]">
             <div className="flex h-full flex-col items-center justify-center space-y-7 text-center">
