@@ -71,7 +71,7 @@ const ProvideService: React.FC = () => {
   const session = useSession();
   const route = useRouter();
   const id = session?.data?.user.user.id;
-  const isAuthenticated = session?.data?.user.user.enabled === false;
+  const isAuthenticated = session?.data?.user.user.enabled;
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const [task, setTask] = useState<FormData>({
@@ -1453,7 +1453,7 @@ const ProvideService: React.FC = () => {
         </div>
       </div>
       <div>
-        {isAuthenticated ? (
+        {!isAuthenticated ? (
           <Popup
             isOpen={isSuccessPopupOpen}
             onClose={() => {

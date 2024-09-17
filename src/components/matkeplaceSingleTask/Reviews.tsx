@@ -31,7 +31,7 @@ const Reviews = ({ serviceProviderId }: any) => {
           }
         );
           setReviews(response.data.review);
-          console.log(response.data);
+          console.log(response.data.review);
       } catch (error) {
         console.error("Error fetching reviews:", error);
       }
