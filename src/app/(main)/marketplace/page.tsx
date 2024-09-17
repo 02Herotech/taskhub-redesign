@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 import { FaHome } from "react-icons/fa";
 import { MdPersonalInjury } from "react-icons/md";
 import { GrPersonalComputer } from "react-icons/gr";
@@ -38,29 +38,25 @@ const categoryIcons = [
 ];
 
 const MareketPlace = () => {
-  // set states for market place
   const { categories, isFiltering, isFilteringLoading } = useSelector(
     (state: RootState) => state.market,
   );
 
-  // Getting session and router for pop up and user anthentication state
   const session = useSession();
   const router = useRouter();
   const isAuth = session.status === "authenticated";
-  const isComplete = session?.data?.user?.user?.enabled;
-  const isServiceProvider =
-  session?.data?.user?.user?.roles[0] === "SERVICE_PROVIDER";
+  const token = session?.data?.user?.accessToken;
+  const isServiceProvider = session?.data?.user?.user?.roles[0] === "SERVICE_PROVIDER";
   const [showPopup, setShowPopup] = useState(false);
   const [fetchedUserData, setFetchedUserData] = useState(defaultUserDetails);
+  const [loadingProfile, setLoadingProfile] = useState(true); // New loading state for profile
 
-  const token = session?.data?.user?.accessToken;
-
+  // Fetch user data
   useEffect(() => {
     const fetchUserData = async () => {
       if (!token) return;
       try {
-        const url =
-          "https://smp.jacinthsolutions.com.au/api/v1/customer/profile";
+        const url = "https://smp.jacinthsolutions.com.au/api/v1/customer/profile";
         const { data } = await axios.get(url, {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -70,18 +66,16 @@ const MareketPlace = () => {
         setFetchedUserData(data);
       } catch (error) {
         console.error(error);
+      } finally {
+        setLoadingProfile(false); // Set loading to false when data is fetched
       }
     };
     fetchUserData();
   }, [token]);
 
-  const { profile: user } = useSelector(
-    (state: RootState) => state.userProfile,
-  );
+  const { profile: user } = useSelector((state: RootState) => state.userProfile);
 
-  const [chartData, setChartData] = useState({ total: 0, completed: 0 });
-
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+  /* eslint-disable react-hooks/exhaustive-deps */
   const profileProgressData = [
     {
       title: "Profile Picture",
@@ -109,30 +103,21 @@ const MareketPlace = () => {
     },
   ];
 
+  // Popup logic to show after profile data is fully loaded
   useEffect(() => {
-    setChartData((prev) => ({
-      ...prev,
-      total: profileProgressData.length,
-      completed: profileProgressData.filter(
-        (item) => item.status !== "" && item.status !== null,
-      ).length,
-    }));
-    // eslint-disable-next-line
-  }, [fetchedUserData, user]);
+    if (!loadingProfile) {
+      const isProfileComplete = profileProgressData.every(
+        (item) => item.status !== "" && item.status !== null && item.status !== undefined
+      );
+      console.log("Profile Complete:", isProfileComplete);
 
-  // Setting user popup state
-  useEffect(() => {
-    // Check if all fields in profileProgressData have been filled
-    const isProfileComplete = profileProgressData.every(
-      (item) => item.status !== "" && item.status !== null && item.status !== undefined
-    );
-
-    // Only show the popup if the user is authenticated and the profile is incomplete
-    if (isAuth && !isProfileComplete) {
-      setCookie("showPopup", true, { maxAge: 60 * 2 });
-      setShowPopup(true);
+      if (isAuth && !isProfileComplete) {
+        setShowPopup(true);
+      } else {
+        setShowPopup(false);
+      }
     }
-  }, []);
+  }, [isAuth, profileProgressData, loadingProfile]);
 
   return (
     <main className="mx-auto max-w-screen-2xl">
