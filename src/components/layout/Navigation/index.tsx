@@ -3,7 +3,7 @@
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import React, { useEffect, useLayoutEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useMemo, useState } from "react";
 import MobileNavigation from "../MobileNavigation";
 import { AnimatePresence } from "framer-motion";
 import { BsChat } from "react-icons/bs";
@@ -57,7 +57,6 @@ const Navigation = () => {
   const dispatch = useDispatch();
   const userProfile = useSelector((state: RootState) => state.userProfile);
   const { totalUnreadMessages } = useSelector((state: RootState) => state.chat);
-
   const pathname = usePathname();
 
   const userRole = session?.data?.user.user.roles;
@@ -77,25 +76,46 @@ const Navigation = () => {
     }
   };
 
+  const getActiveLinks = useMemo(() => (authState: any): LinkRouteTypes[] => {
+    if (!authState.token) {
+      return homeLinks;
+    }
+
+    switch (authState.role) {
+      case 'SERVICE_PROVIDER':
+        return serviceProviderLinks;
+      case 'CUSTOMER':
+        return customerLinks;
+      default:
+        console.warn('Unknown user role:', authState.role);
+        return homeLinks; // Fallback to home links if role is unknown
+    }
+  }, []);
+
   useLayoutEffect(() => {
     dispatch(setAuthLoading(true));
-    const authStatus = localStorage.getItem("auth");
-    let auth: { token: string | null; role: string[] | null } =
-      initialAuthState;
-    if (authStatus) {
-      auth = JSON.parse(authStatus);
-      setAuth(auth);
-      const activeLink = !auth.token
-        ? homeLinks
-        : auth.role && auth.role[0] === "SERVICE_PROVIDER"
-          ? serviceProviderLinks
-          : customerLinks;
-      setCurrentLinks(activeLink);
-      dispatch(setUserProfileAuth(auth));
+
+    try {
+      const authStatus = localStorage.getItem("auth");
+
+      if (authStatus) {
+        const parsedAuth = JSON.parse(authStatus);
+        setAuth(parsedAuth);
+
+        const activeLinks = getActiveLinks(parsedAuth);
+        setCurrentLinks(activeLinks);
+
+        dispatch(setUserProfileAuth(parsedAuth));
+      }
+    } catch (error) {
+      console.error('Error parsing auth status:', error);
+      // Handle error appropriately, maybe set to initialAuthState
+      setAuth(initialAuthState);
+      setCurrentLinks(homeLinks);
+    } finally {
+      dispatch(setAuthLoading(false));
     }
-    dispatch(setAuthLoading(false));
-    // eslint-disable-next-line
-  }, []);
+  }, [dispatch, getActiveLinks]);
 
   const dropdownItems = [
     {
@@ -179,6 +199,8 @@ const Navigation = () => {
   const notificationRoute = isServiceProvider
     ? "/service-provider/notification"
     : "/customer/notifications";
+
+    console.log("current", currentLinks)
 
   return (
     <>
