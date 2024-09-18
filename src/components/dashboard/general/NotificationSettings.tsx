@@ -47,6 +47,7 @@ const NotificationsSettings = () => {
       value: "PAYMENT",
     },
   ];
+  
 
   // Fetch current notification preferences
   const handleGetPreferences = async () => {
