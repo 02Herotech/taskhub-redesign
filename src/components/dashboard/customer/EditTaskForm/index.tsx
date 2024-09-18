@@ -690,8 +690,8 @@ const EditTaskForm = ({ task, setShowEditModal }: TaskCardProps) => {
                         )}
                     </form>
                 </div>
-            </div >
-        </div >
+            </div>
+        </div>
     );
 
 };

@@ -138,14 +138,14 @@ const OnogoingTaskDetailsPage = ({ params }: { params: { id: string } }) => {
 
             if (response.error) {
                 console.error("Payment approval failed:", response.error);
-                setPaymentError('Job has not been completed by service provider');
+                setPaymentError('Something went wrong, please try again');
             } else {
                 setPaymentApproved(true);
                 router.push('/customer/tasks?tab=Completed%20tasks');
             }
         } catch (error) {
             console.error("Payment approval failed:", error);
-            setPaymentError('Job has not been completed by service provider');
+            setPaymentError('Something went wrong, please try again');
         }
     };
 
