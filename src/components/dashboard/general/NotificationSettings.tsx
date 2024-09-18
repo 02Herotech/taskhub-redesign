@@ -82,7 +82,7 @@ const NotificationsSettings = () => {
     try {
       setLoading(true);
       const url = `https://smp.jacinthsolutions.com.au/api/v1/notification/preference?userId=${user.id}`;
-      await axios.post(url, notificationPreferences, {
+      await axios.post(url, {
         headers: {
           Authorization: `Bearer ${auth.token}`,
         },
