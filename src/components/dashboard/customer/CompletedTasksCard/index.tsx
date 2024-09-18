@@ -36,8 +36,22 @@ const CompletedTasksCard = ({ task }: TaskCardProps) => {
     const dateArray = task.createdAt;
     const date = new Date(dateArray[0], dateArray[1] - 1, dateArray[2]);
     const day = date.getDate();
-    const daySuffix = suffixes[(day % 10) - 1] || suffixes[0];
+
+    // Function to get the correct ordinal suffix
+    function getOrdinalSuffix(day: any) {
+        if (day > 3 && day < 21) return 'th';
+        switch (day % 10) {
+            case 1: return "st";
+            case 2: return "nd";
+            case 3: return "rd";
+            default: return "th";
+        }
+    }
+
+    const daySuffix = getOrdinalSuffix(day);
     const formattedDate = `On ${dayOfWeekNames[date.getDay()]}, ${monthNames[date.getMonth()]} ${day}${daySuffix}`;
+
+    console.log("date", dateArray)
 
     const reviews = [
         "He/she stole an item in my home",
