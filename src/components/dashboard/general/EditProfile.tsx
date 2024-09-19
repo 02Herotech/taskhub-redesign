@@ -63,8 +63,8 @@ const EditProfile = () => {
   const [suburbList, setSuburbList] = useState([]);
   const [userDetails, setUserDetails] = useState(defaultUserDetails);
   const [selectedDocument, setSelectedDocument] = useState<File | null>(null);
-  const [isProfileUpdatedSuccessfully, setIsProfileUpdatedSuccessfully] =
-    useState(false);
+  const [isProfileUpdatedSuccessfully, setIsProfileUpdatedSuccessfully] = useState(false);
+  const [error, setError] = useState("");
 
   const userProfile = useSelector((state: RootState) => state.userProfile);
 
@@ -174,6 +174,7 @@ const EditProfile = () => {
   }, [userDetails, reset, user]);
 
   const handleSubmitUserData: SubmitHandler<userDataType> = async (data) => {
+    setError("")
     try {
       let submitData: any;
 
@@ -232,6 +233,7 @@ const EditProfile = () => {
       setIsEditingEnabled(false);
     } catch (error: any) {
       console.log(error);
+      setError("Something went wrong, please try again")
     }
   };
 
@@ -616,6 +618,11 @@ const EditProfile = () => {
           </div>
         </section>
 
+        {error && (
+          <div className="my-1 text-base text-end lg:px-24 font-semibold text-status-error-100">
+            {error}
+          </div>
+        )}
         {/* ----------------- submit  button -------------------- */}
         <div className="flex lg:items-end lg:justify-end lg:px-24">
           <button className="w-fit rounded-full border border-violet-normal bg-violet-light px-6 py-3 font-satoshiBold font-bold  text-violet-normal transition-all duration-300 hover:bg-violet-200 hover:shadow-md">
