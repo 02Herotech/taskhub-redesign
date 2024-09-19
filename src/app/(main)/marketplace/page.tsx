@@ -22,7 +22,6 @@ import Popup from "@/components/global/Popup";
 import Button from "@/components/global/Button";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { setCookie, getCookie } from "cookies-next";
 import axios from "axios";
 import { defaultUserDetails } from "@/data/data";
 
@@ -105,7 +104,6 @@ const MareketPlace = () => {
 
   // Popup logic to show after profile data is fully loaded
   useLayoutEffect(() => {
-    const showPopupCookie = getCookie("showPopup");
     if (!loadingProfile && user && !hasClosedPopup) {
       const isProfileComplete = profileProgressData.every(
         (item) => item.status !== "" && item.status !== null && item.status !== undefined
@@ -114,8 +112,6 @@ const MareketPlace = () => {
         if (isAuth && !isProfileComplete) {
         setShowPopup(true);
       }
-
-      console.log("complete:", isProfileComplete)
     }
   }, [loadingProfile, user, fetchedUserData, isAuth, profileProgressData]);
 
