@@ -42,8 +42,6 @@ const Jobs = () => {
     // eslint-disable-next-line
   }, [token]);
 
-  console.log(bookingData);
-
   return (
     <>
       <main className="space-y-8 p-4 lg:p-8">
