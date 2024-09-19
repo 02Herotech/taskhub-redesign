@@ -56,7 +56,7 @@ const MareketPlace = () => {
     const fetchUserData = async () => {
       if (!token) return;
       try {
-        const url = "https://smp.jacinthsolutions.com.au/api/v1/customer/profile";
+        const url = isServiceProvider ? "https://smp.jacinthsolutions.com.au/api/v1/service_provider/profile" : "https://smp.jacinthsolutions.com.au/api/v1/customer/profile";
         const { data } = await axios.get(url, {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -71,7 +71,7 @@ const MareketPlace = () => {
       }
     };
     fetchUserData();
-  }, [token]);
+  }, [token, isServiceProvider]);
 
   const { profile: user } = useSelector((state: RootState) => state.userProfile);
 
@@ -104,7 +104,7 @@ const MareketPlace = () => {
   ];
 
   // Popup logic to show after profile data is fully loaded
-  useEffect(() => {
+  useLayoutEffect(() => {
     const showPopupCookie = getCookie("showPopup");
     if (!loadingProfile && user && !hasClosedPopup) {
       const isProfileComplete = profileProgressData.every(
@@ -114,6 +114,8 @@ const MareketPlace = () => {
         if (isAuth && !isProfileComplete) {
         setShowPopup(true);
       }
+
+      console.log("complete:", isProfileComplete)
     }
   }, [loadingProfile, user, fetchedUserData, isAuth, profileProgressData]);
 
