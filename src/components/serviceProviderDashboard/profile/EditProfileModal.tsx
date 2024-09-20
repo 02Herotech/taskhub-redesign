@@ -315,12 +315,11 @@ const EditProfileModal = ({
                 </span>
                 <span className="text-sm font-medium text-slate-500">
                   Take a picture of yourself holding up your preferred document
-                  on the left side of your head showing a clear Id number . See
-                  example
+                  on the left side of your head showing a clear Id number.
                 </span>
               </p>
               <p className="flex gap-4">
-                <span className="h-fit w-fit rounded-full bg-violet-light p-1 ">
+                <span className="h-fit w-fit rounded-full bg-violet-light p-1">
                   <BiCheck className="size-4 text-violet-normal" />
                 </span>
                 <span className="text-sm font-medium text-slate-500">
