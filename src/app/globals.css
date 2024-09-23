@@ -2,6 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Import slick-carousel CSS */
+@import "~slick-carousel/slick/slick.css";
+@import "~slick-carousel/slick/slick-theme.css";
+
+
 html {
   scroll-behavior: smooth;
 }
@@ -139,4 +144,41 @@ body {
 
 .no-AiScroll {
   overflow: hidden;
+}
+
+
+/* General slider container styles */
+.slider-container {
+  width: 80%;
+  margin: 0 auto;
+}
+
+.slider-title {
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+/* Card styling */
+.slider-card {
+  background-color: #f5f5f5;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 20px;
+  text-align: center;
+}
+
+.card-content h3 {
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+
+.card-content p {
+  font-size: 16px;
+  color: #666;
+}
+
+.slick-list {
+  margin: 0 0px; 
 }

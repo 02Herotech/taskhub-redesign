@@ -181,7 +181,8 @@ const NotificationsSettings = () => {
             <div className="mt-6 flex items-center justify-center lg:justify-end">
               <button
                 className="rounded-full bg-violet-normal px-4 py-2 font-bold text-white lg:w-48"
-                disabled={loading}
+                  disabled={loading}
+                  type="submit"
               >
                 {loading ? (
                   <BeatLoader color="white" loading={loading} />

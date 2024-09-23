@@ -81,6 +81,8 @@ export type CompletedTask = {
     customerId: number;
     jobTitle: string;
     jobDescription: string;
+    providerId: number;
+    categoryId: number;
 }
 
 export type GetCustomerCompletedTasksResponse = CompletedTask[];
