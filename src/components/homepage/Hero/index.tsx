@@ -95,7 +95,7 @@ const Hero = () => {
                                     className="rounded-[50px] bg-[#FE9B07] text-[16px] font-satoshi font-[700]
                                 p-3 text-white hover:bg-[#e79823] w-[130px]"
                                 >
-                                    <Link href="">
+                                    <Link href="/coming-soon">
                                         Rent a Shop
                                     </Link>
                                 </button>

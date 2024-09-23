@@ -83,7 +83,7 @@ const HomeNavigation = () => {
               </Button>
             </Link>
 
-            <Link href="">
+            <Link href="/coming-soon">
               <Button className="rounded-full">Rent a shop</Button>
             </Link>
           </div>
