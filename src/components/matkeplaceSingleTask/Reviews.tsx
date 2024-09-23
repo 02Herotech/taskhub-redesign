@@ -4,7 +4,7 @@ import { useSession } from "next-auth/react";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Slider from "react-slick";
-import { FaStar } from "react-icons/fa";
+import { FaStar, FaArrowRight, FaArrowLeft } from "react-icons/fa";
 import Image from "next/image";
 
 interface Review {
@@ -12,12 +12,36 @@ interface Review {
   rating: number;
   customer: {
     user: {
-      firstName: string
-      lastName: string
+      firstName: string;
+      lastName: string;
       profileImage: string;
     }
   }
 }
+
+const NextArrow = (props: any) => {
+  const { onClick } = props;
+  return (
+    <div
+      className="absolute right-[-40px] top-1/2 transform -translate-y-1/2 bg-status-purpleBase p-2 rounded-full cursor-pointer"
+      onClick={onClick}
+    >
+      <FaArrowRight className="text-white text-xl" />
+    </div>
+  );
+};
+
+const PrevArrow = (props: any) => {
+  const { onClick } = props;
+  return (
+    <div
+      className="absolute left-[-40px] top-1/2 transform -translate-y-1/2 bg-status-purpleBase p-2 rounded-full cursor-pointer"
+      onClick={onClick}
+    >
+      <FaArrowLeft className="text-white text-xl" />
+    </div>
+  );
+};
 
 const Reviews = ({ serviceProviderId }: any) => {
   const session = useSession();
@@ -28,7 +52,7 @@ const Reviews = ({ serviceProviderId }: any) => {
   useEffect(() => {
     const fetchReviews = async () => {
       if (!serviceProviderId) return;
-      console.log(serviceProviderId)
+      console.log(serviceProviderId);
       try {
         const response = await axios.get(
           `https://smp.jacinthsolutions.com.au/api/v1/service_provider/get-profile/${serviceProviderId}`,
@@ -48,19 +72,49 @@ const Reviews = ({ serviceProviderId }: any) => {
     fetchReviews();
   }, [serviceProviderId, token]);
 
-  // Settings for react-slick slider
   const settings = {
-    dots: true,
+    dots: false,
     infinite: true,
     speed: 500,
-    slidesToShow: 2, // Show 2 reviews per slide to match the image
+    slidesToShow: 2,
     slidesToScroll: 1,
     autoplay: false,
     autoplaySpeed: 3000,
     arrows: true,
-    nextArrow: <div className="next-arrow">→</div>,
-    prevArrow: <div className="prev-arrow">←</div>,
+    nextArrow: <NextArrow />,
+    prevArrow: <PrevArrow />,
+    responsive: [
+      {
+        breakpoint: 1024,
+        settings: {
+          slidesToShow: 1, 
+          slidesToScroll: 1,
+          infinite: true,
+          autoplay: true,
+          arrows: false
+        },
+      },
+      {
+        breakpoint: 768, 
+        settings: {
+          slidesToShow: 1, 
+          slidesToScroll: 1,
+          autoplay: true,
+          arrows: false
+        },
+      },
+      {
+        breakpoint: 480,
+        settings: {
+          slidesToShow: 1,
+          slidesToScroll: 1,
+          autoplay: true,
+          arrows: false
+        },
+      },
+    ],
   };
+
 
   const renderStars = (rating: number) => {
     const stars = [];
@@ -79,43 +133,53 @@ const Reviews = ({ serviceProviderId }: any) => {
       </h1>
 
       {/* Slider to display fetched reviews */}
-      {!Auth ? (
-        <div>
-          <p className="animate-pulse text-lg font-medium text-center min-h-[30vh]">
-            Please login to view reviews
+      
+        {!Auth ? (
+          <div>
+            <p className="animate-pulse text-lg font-medium text-center min-h-[30vh]">
+              Please login to view reviews
+            </p>
+          </div>
+        ) : reviews.length === 0 ? (
+          <p className="animate-pulse text-lg font-medium text-center min-h-[50vh]">
+            No current reviews...
           </p>
-        </div>
-      ) : reviews.length === 0 ? (
-        <p className="animate-pulse text-lg font-medium text-center min-h-[50vh]">
-          No current reviews...
-        </p>
-      ) : (
-        <Slider {...settings} className="w-full max-w-6xl mx-auto">
-          {reviews.map((review, index) => (
-            <div key={index} className="p-6 rounded-lg shadow-lg bg-white w-[487px] h-[240px]">
-              <div className="flex flex-col gap-4">
-                <div className="flex items-center gap-2">{renderStars(review.rating)}</div>
-                <p className="text-base lg:text-lg font-medium">{review.comment}</p>
-                <div className="flex items-end">
-                <div className="flex items-center gap-3">
-                  <Image
-                    src={review.customer.user.profileImage}
-                    alt="user"
-                    width={50}
-                    height={50}
-                    className="rounded-full"
-                  />
-                  <div className="flex flex-col">
-                    <p className="text-lg font-bold">{review.customer.user.firstName}{" "}{review.customer.user.lastName }</p>
-                    <p className="text-sm text-gray-500">Date of review drop</p>
+        ) : (
+          <Slider {...settings} className="w-full max-w-6xl mx-auto relative flex justify-center">
+            {reviews.map((review, index) => (
+              <div key={index} className="p-6 rounded-lg bg-transparent">
+                <div className="flex flex-col gap-4">
+                  <div className="flex items-center gap-2">
+                    {renderStars(review.rating)}
                   </div>
+                  <p className="text-base lg:text-lg font-medium">
+                    {review.comment}
+                  </p>
+                  <div className="flex items-end">
+                    <div className="flex items-center gap-3">
+                      <Image
+                        src={review.customer.user.profileImage}
+                        alt="user"
+                        width={50}
+                        height={50}
+                        className="rounded-full"
+                      />
+                      <div className="flex flex-col">
+                        <p className="text-lg font-bold">
+                          {review.customer.user.firstName}{" "}
+                          {review.customer.user.lastName}
+                        </p>
+                        <p className="text-sm text-gray-500">
+                          Date of review drop
+                        </p>
+                      </div>
+                    </div>
                   </div>
-                  </div>
+                </div>
               </div>
-            </div>
-          ))}
-      </Slider>
-      )}
+            ))}
+          </Slider>
+        )}
     </section>
   );
 };

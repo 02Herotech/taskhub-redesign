@@ -159,9 +159,6 @@ body {
   font-size: 24px;
   font-weight: bold;
 }
-.slick-list {
-  margin: 0 -15px; 
-}
 
 /* Card styling */
 .slider-card {
@@ -169,7 +166,6 @@ body {
   border: 1px solid #ddd;
   border-radius: 10px;
   padding: 20px;
-  margin: 10px;
   text-align: center;
 }
 
@@ -183,3 +179,6 @@ body {
   color: #666;
 }
 
+.slick-list {
+  margin: 0 0px; 
+}

@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 
 import Button from "@/components/global/Button";
@@ -20,8 +19,11 @@ const NotificationsSettings = () => {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [pageLoading, setPageLoading] = useState(false);
-  const [notificationPreferences, setNotificationPreferences] = useState<string[]>([]);
-  const [fetchedNotificationPreferences, setFetchedNotificationPreferences] = useState<string[]>([]);
+  const [notificationPreferences, setNotificationPreferences] = useState<
+    string[]
+  >([]);
+  const [fetchedNotificationPreferences, setFetchedNotificationPreferences] =
+    useState<string[]>([]);
 
   const isServiceProvider = auth?.role?.[0] === "SERVICE_PROVIDER";
 
@@ -31,7 +33,7 @@ const NotificationsSettings = () => {
       value: "BOOKING",
     },
     {
-      label: "When someone sends me an offer",
+      label: "When someone send me an offer",
       value: "INVOICE",
     },
     {
@@ -47,40 +49,9 @@ const NotificationsSettings = () => {
       value: "PAYMENT",
     },
   ];
-  
 
-  // Fetch current notification preferences
-  const handleGetPreferences = async () => {
-    if (!auth || !user) return;
-    setPageLoading(true);
-    const url = `https://smp.jacinthsolutions.com.au/api/v1/notification/preference?userId=${user.id}`;
-    try {
-      const { data } = await axios.get(url, {
-        headers: {
-          Authorization: `Bearer ${auth.token}`,
-        },
-      });
-      setFetchedNotificationPreferences(data);
-      console.log(data)
-      // setNotificationPreferences(data);
-    } catch (error: any) {
-      console.error(error?.response?.data || error);
-    } finally {
-      setPageLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    if (auth && user) {
-      handleGetPreferences();
-    }
-  }, [auth, user]);
-  console.log(notificationPreferences);
-  // Handle form submission
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
-   
     event.preventDefault();
-    console.log('ntami')
     if (!auth || !user) return;
     try {
       setLoading(true);
@@ -92,18 +63,34 @@ const NotificationsSettings = () => {
       });
       setSuccess(true);
     } catch (error: any) {
-      console.error(error?.response?.data);
+      console.log(error?.response?.data || error);
     } finally {
       setLoading(false);
     }
   };
 
-  // Handle checkbox changes
-  // const handleCheckboxChange = (value: string, checked: boolean) => {
-  //   setNotificationPreferences((prev) =>
-  //     checked ? [...prev, value] : prev.filter((item) => item !== value),
-  //   );
-  // };
+  const handleGetPreferences = async () => {
+    if (!auth || !user) return;
+    setPageLoading(true);
+    const url = `https://smp.jacinthsolutions.com.au/api/v1/notification/preference?userId=${user.id}`;
+    try {
+      const { data } = await axios.get(url, {
+        headers: {
+          Authorization: `Bearer ${auth.token}`,
+        },
+      });
+      setNotificationPreferences(data);
+    } catch (error: any) {
+      console.log(error?.response?.data || error);
+    } finally {
+      setPageLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    handleGetPreferences();
+    // eslint-disable-next-line
+  }, [auth, user]);
 
   return (
     <>
@@ -120,9 +107,9 @@ const NotificationsSettings = () => {
                 onClick={() => setSuccess(false)}
               />
               <div className="relative z-10 flex w-[90vw] max-w-xl flex-col items-center justify-center gap-3 rounded-xl bg-white p-3 px-4 lg:space-y-4 lg:p-10">
-                <div className="flex flex-col items-center justify-center gap-4">
+                <div className=" flex flex-col items-center justify-center gap-4">
                   <div className="flex size-20 items-center justify-center rounded-full bg-[#C1F6C3] bg-opacity-60">
-                    <div className="flex size-14 items-center justify-center rounded-full bg-[#A6F8AA] p-2">
+                    <div className=" flex size-14 items-center justify-center rounded-full bg-[#A6F8AA] p-2">
                       <PiSealCheckFill className="size-10 text-green-500" />
                     </div>
                   </div>
@@ -130,7 +117,7 @@ const NotificationsSettings = () => {
                     Success
                   </p>
                   <p className="text-center font-semibold text-violet-darker">
-                    Your Notification preferences have been successfully updated.
+                    Your Notification preference has succesfully
                   </p>
                   <div className="flex items-center gap-6">
                     <Link
@@ -148,7 +135,6 @@ const NotificationsSettings = () => {
               </div>
             </section>
           )}
-
           <div className="flex items-center justify-between rounded-2xl bg-[#EBE9F4] px-6 py-3 lg:px-8 lg:py-4">
             <div className="space-y-3">
               <h3 className="font-satoshiBold text-xl font-bold text-[#140B31] lg:text-2xl">
@@ -162,7 +148,6 @@ const NotificationsSettings = () => {
               <IoIosNotificationsOutline className="size-5 lg:size-8" />
             </div>
           </div>
-
           <form
             onSubmit={handleSubmit}
             className="mt-5 rounded-2xl bg-[#EBE9F4] px-6 py-3 lg:px-8 lg:py-4"
@@ -193,14 +178,17 @@ const NotificationsSettings = () => {
                   />
                 </div>
               ))}
-
             <div className="mt-6 flex items-center justify-center lg:justify-end">
               <button
                 className="rounded-full bg-violet-normal px-4 py-2 font-bold text-white lg:w-48"
                   disabled={loading}
                   type="submit"
               >
-                {loading ? <BeatLoader color="white" loading={loading} /> : "Save"}
+                {loading ? (
+                  <BeatLoader color="white" loading={loading} />
+                ) : (
+                  "Save"
+                )}
               </button>
             </div>
           </form>

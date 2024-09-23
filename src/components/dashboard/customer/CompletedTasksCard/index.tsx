@@ -28,7 +28,7 @@ const CompletedTasksCard = ({ task }: TaskCardProps) => {
     const session = useSession();
     const [dropReviewPopup, setDropReviewPopup] = useState(false);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-    const [reviewSent, setReviewSent] = useState(false);
+    const [reviewSent, setReviewSent] = useState<boolean>(false);
     const [deleteTaskPopup, setDeleteTaskPopup] = useState(false);
     const [rebookTaskPopup, setRebookTaskPopup] = useState(false);
     const [rating, setRating] = useState<number | 0>(0);
@@ -41,6 +41,7 @@ const CompletedTasksCard = ({ task }: TaskCardProps) => {
     const categoryId = task.categoryId;
     const comment = review;
     const token = session.data?.user.refreshToken;
+   
     // Function to get the correct ordinal suffix
     function getOrdinalSuffix(day: any) {
         if (day > 3 && day < 21) return 'th';
@@ -100,14 +101,15 @@ const CompletedTasksCard = ({ task }: TaskCardProps) => {
                 {
                     rating,
                     comment
-                })
-            setReviewSent(true)
-            console.log(response.data)
+                }, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            })
+            setReviewSent(true)           
         } catch {
             setReviewSent(false)
-        } finally {
-            setReviewSent(false)
-        }
+        } 
     }
 
     return (
@@ -213,9 +215,9 @@ const CompletedTasksCard = ({ task }: TaskCardProps) => {
                                             <Button
                                                 className="w-[151px] max-lg:text-sm rounded-full py-6"
                                                 type="submit"
-                                                // onClick={() => {
-                                                //     handleReviewSubmission
-                                                // }}
+                                                onClick={() => {
+                                                    handleReviewSubmission
+                                                }}
                                             >
                                                 Submit
                                             </Button>
