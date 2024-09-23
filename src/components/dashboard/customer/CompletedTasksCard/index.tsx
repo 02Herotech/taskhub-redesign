@@ -43,7 +43,6 @@ const CompletedTasksCard = ({ task }: TaskCardProps) => {
     const categoryId = task.categoryId;
     const comment = review;
     const token = session.data?.user.refreshToken;
-   
     // Function to get the correct ordinal suffix
     function getOrdinalSuffix(day: any) {
         if (day > 3 && day < 21) return 'th';
@@ -103,13 +102,15 @@ const CompletedTasksCard = ({ task }: TaskCardProps) => {
                 {
                     rating,
                     comment
-                }, {
+                },
+                {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
             })
             setReviewSent(true)           
-        } catch {
+        } catch(error: any) {
+            console.log(error.response)
             setReviewSent(false)
         } 
     }
@@ -155,17 +156,17 @@ const CompletedTasksCard = ({ task }: TaskCardProps) => {
                 </Popup>
             )}
             {dropReviewPopup && (
-                <Popup isOpen={dropReviewPopup} onClose={() => { setDropReviewPopup(false); setRating(0) }}>
+                <Popup isOpen={dropReviewPopup} onClose={() => { setDropReviewPopup(false); setRating(0); setReview(""); setReviewSent(false) }}>
                     <div className="relative bg-[#EBE9F4] rounded-2xl min-h-[200px] lg:w-[577px] font-satoshi">
                         {reviewSent ? (
-                            <div className="flex items-center justify-center h-full font-satoshi py-10 px-20">
+                            <div className="flex items-center justify-center h-full font-satoshi p-5 lg:py-10 lg:px-20">
                                 <div className="flex flex-col items-center space-y-5">
                                     <div><Image src={imags} alt="image" /></div>
                                     <h1 className="font-black text-4xl text-[#2A1769]">
                                         Review Sent
                                     </h1>
                                     <p className="mb-8 font-satoshiMedium text-center text-xl font-medium text-[#140B31]">
-                                        Thank you for your review, we will look into it and get back to you as soon as possible
+                                        Your review has been submitted successfully! Thank you for your feedback
                                     </p>
                                     <Button
                                         className="w-[151px] max-lg:text-sm rounded-full py-6"

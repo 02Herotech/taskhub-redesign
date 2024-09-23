@@ -1,5 +1,3 @@
-"use client";
-
 import { useSession } from "next-auth/react";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
@@ -17,6 +15,7 @@ interface Review {
       profileImage: string;
     }
   }
+  createdAt: string
 }
 
 const NextArrow = (props: any) => {
@@ -87,20 +86,20 @@ const Reviews = ({ serviceProviderId }: any) => {
       {
         breakpoint: 1024,
         settings: {
-          slidesToShow: 1, 
+          slidesToShow: 1,
           slidesToScroll: 1,
           infinite: true,
           autoplay: true,
-          arrows: false
+          arrows: false,
         },
       },
       {
-        breakpoint: 768, 
+        breakpoint: 768,
         settings: {
-          slidesToShow: 1, 
+          slidesToShow: 1,
           slidesToScroll: 1,
           autoplay: true,
-          arrows: false
+          arrows: false,
         },
       },
       {
@@ -109,12 +108,11 @@ const Reviews = ({ serviceProviderId }: any) => {
           slidesToShow: 1,
           slidesToScroll: 1,
           autoplay: true,
-          arrows: false
+          arrows: false,
         },
       },
     ],
   };
-
 
   const renderStars = (rating: number) => {
     const stars = [];
@@ -125,6 +123,21 @@ const Reviews = ({ serviceProviderId }: any) => {
     }
     return stars;
   };
+  const formatDate = (createdAtArray: any) => {
+    // Check if the createdAtArray is valid and contains at least 3 elements
+    if (!createdAtArray || createdAtArray.length < 3) {
+      return 'Invalid Date'; // Or return any fallback value
+    }
+
+    const year = createdAtArray[0];
+    const month = createdAtArray[1].toString().padStart(2, '0'); // Add leading zero for month
+    const day = createdAtArray[2].toString().padStart(2, '0');   // Add leading zero for day
+
+    return `${day}-${month}-${year}`;  // Format as YYYY-MM-DD
+  };
+
+
+ 
 
   return (
     <section className="space-y-8 bg-status-lightViolet p-4 lg:p-10">
@@ -132,54 +145,46 @@ const Reviews = ({ serviceProviderId }: any) => {
         Reviews/Testimonials from Satisfied Customers
       </h1>
 
-      {/* Slider to display fetched reviews */}
-      
-        {!Auth ? (
-          <div>
-            <p className="animate-pulse text-lg font-medium text-center min-h-[30vh]">
-              Please login to view reviews
-            </p>
-          </div>
-        ) : reviews.length === 0 ? (
-          <p className="animate-pulse text-lg font-medium text-center min-h-[50vh]">
-            No current reviews...
-          </p>
-        ) : (
-          <Slider {...settings} className="w-full max-w-6xl mx-auto relative ">
-            {reviews.map((review, index) => (
-              <div key={index} className="p-6 rounded-lg bg-transparent flex justify-center">
-                <div className="flex flex-col gap-4">
+      {reviews.length === 0 ? (
+        <p className="animate-pulse text-lg font-medium text-center min-h-[50vh]">
+          No current reviews...
+        </p>
+      ) : (
+        <Slider {...settings} className="w-full max-w-6xl mx-auto relative ">
+          {reviews.map((review, index) => (
+            <div key={index} className="p- rounded-lg bg-transparent flex justify-center">
+              <div className="flex flex-col gap-4">
+                <div className="flex justify-between">
+                  <div className="flex items-center gap-3">
+                    <Image
+                      src={review.customer.user.profileImage}
+                      alt="user"
+                      width={50}
+                      height={50}
+                      className="rounded-full"
+                    />
+                    <div className="flex flex-col">
+                      <p className="text-lg font-bold">
+                        {review.customer.user.firstName}{" "}
+                        {review.customer.user.lastName}
+                      </p>
+                      <p className="text-sm text-gray-500">
+                        {formatDate(review.createdAt)}
+                      </p>
+                    </div>
+                  </div>
                   <div className="flex items-center gap-2">
                     {renderStars(review.rating)}
                   </div>
-                  <p className="text-base lg:text-lg font-medium">
-                    {review.comment}
-                  </p>
-                  <div className="flex items-end">
-                    <div className="flex items-center gap-3">
-                      {/* <Image
-                        src={review.customer.user.profileImage}
-                        alt="user"
-                        width={50}
-                        height={50}
-                        className="rounded-full"
-                      /> */}
-                      <div className="flex flex-col">
-                        <p className="text-lg font-bold">
-                          {review.customer.user.firstName}{" "}
-                          {review.customer.user.lastName}
-                        </p>
-                        <p className="text-sm text-gray-500">
-                          Date of review drop
-                        </p>
-                      </div>
-                    </div>
-                  </div>
                 </div>
+                <p className="text-base lg:text-lg font-medium">
+                  {review.comment}
+                </p>
               </div>
-            ))}
-          </Slider>
-        )}
+            </div>
+          ))}
+        </Slider>
+      )}
     </section>
   );
 };
