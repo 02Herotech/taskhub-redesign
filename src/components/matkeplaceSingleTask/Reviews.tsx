@@ -145,9 +145,9 @@ const Reviews = ({ serviceProviderId }: any) => {
             No current reviews...
           </p>
         ) : (
-          <Slider {...settings} className="w-full max-w-6xl mx-auto relative flex justify-center">
+          <Slider {...settings} className="w-full max-w-6xl mx-auto relative ">
             {reviews.map((review, index) => (
-              <div key={index} className="p-6 rounded-lg bg-transparent">
+              <div key={index} className="p-6 rounded-lg bg-transparent flex justify-center">
                 <div className="flex flex-col gap-4">
                   <div className="flex items-center gap-2">
                     {renderStars(review.rating)}
