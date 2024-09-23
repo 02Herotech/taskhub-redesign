@@ -122,7 +122,7 @@ const StoreFront = () => {
                             className="rounded-[50px] bg-primary text-[16px] font-satoshi font-[700]
                                 p-3 text-[#EBE9F4] hover:bg-[#25135f] w-[130px]"
                         >
-                            <Link href="">
+                            <Link href="/coming-soon">
                                 Rent a Shop
                             </Link>
                         </button>

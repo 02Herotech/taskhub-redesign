@@ -42,7 +42,7 @@ const MobilePillarStructure = () => {
             btnTextColor: 'FFFFF',
             img: rentAShop,
             label: 'Rent a shop',
-            link: '/'
+            link: '/coming-soon'
         }
     ];
 
