@@ -11,7 +11,7 @@ const TaskList: React.FC = () => {
     const userId = userProfile.profile?.customerId
 
     const { data: tasksData, isLoading } = useGetCustomerCompletedTasksQuery(userId!, {
-        skip: !userId, // This will skip the query if userId is not available
+        skip: !userId, 
     });
 
     if (!userId || isLoading) {

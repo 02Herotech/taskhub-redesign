@@ -62,7 +62,7 @@ const NotificationsSettings = () => {
       });
       setFetchedNotificationPreferences(data);
       console.log(data)
-      setNotificationPreferences(data);
+      // setNotificationPreferences(data);
     } catch (error: any) {
       console.error(error?.response?.data || error);
     } finally {
@@ -75,33 +75,35 @@ const NotificationsSettings = () => {
       handleGetPreferences();
     }
   }, [auth, user]);
-
+  console.log(notificationPreferences);
   // Handle form submission
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+   
     event.preventDefault();
+    console.log('ntami')
     if (!auth || !user) return;
     try {
       setLoading(true);
       const url = `https://smp.jacinthsolutions.com.au/api/v1/notification/preference?userId=${user.id}`;
-      await axios.post(url, {
+      await axios.post(url, notificationPreferences, {
         headers: {
           Authorization: `Bearer ${auth.token}`,
         },
       });
       setSuccess(true);
     } catch (error: any) {
-      console.error(error?.response?.data || error);
+      console.error(error?.response?.data);
     } finally {
       setLoading(false);
     }
   };
 
   // Handle checkbox changes
-  const handleCheckboxChange = (value: string, checked: boolean) => {
-    setNotificationPreferences((prev) =>
-      checked ? [...prev, value] : prev.filter((item) => item !== value),
-    );
-  };
+  // const handleCheckboxChange = (value: string, checked: boolean) => {
+  //   setNotificationPreferences((prev) =>
+  //     checked ? [...prev, value] : prev.filter((item) => item !== value),
+  //   );
+  // };
 
   return (
     <>
@@ -179,7 +181,13 @@ const NotificationsSettings = () => {
                     value={option.value}
                     checked={notificationPreferences.includes(option.value)}
                     onChange={(event) =>
-                      handleCheckboxChange(option.value, event.target.checked)
+                      setNotificationPreferences((prev) =>
+                        event.target.checked
+                          ? [...(prev as string[]), option.value]
+                          : (prev.filter(
+                            (item) => item !== option.value,
+                          ) as string[]),
+                      )
                     }
                     className="h-4 w-4 cursor-pointer lg:h-5 lg:w-5"
                   />
@@ -189,7 +197,8 @@ const NotificationsSettings = () => {
             <div className="mt-6 flex items-center justify-center lg:justify-end">
               <button
                 className="rounded-full bg-violet-normal px-4 py-2 font-bold text-white lg:w-48"
-                disabled={loading}
+                  disabled={loading}
+                  type="submit"
               >
                 {loading ? <BeatLoader color="white" loading={loading} /> : "Save"}
               </button>
