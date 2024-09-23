@@ -44,7 +44,7 @@ const MobileHero = () => {
                                 className="rounded-[50px] bg-[#FE9B07] text-[12px] font-satoshi font-[700]
                                 py-3 px-3 text-white hover:bg-[#e79823] max-w-[125px] "
                             >
-                                <Link href="">
+                                <Link href="/coming-soon">
                                     Rent a Shop
                                 </Link>
                             </button>

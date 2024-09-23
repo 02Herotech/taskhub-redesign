@@ -108,7 +108,7 @@ const MobileStoreFront = () => {
                     className="rounded-[50px] bg-primary text-[12px] font-satoshi font-[700]
         p-3 text-[#EBE9F4] hover:bg-[#25135f] w-[110px]"
                 >
-                    <Link href="">
+                    <Link href="/coming-soon">
                         Rent a Shop
                     </Link>
                 </button>
