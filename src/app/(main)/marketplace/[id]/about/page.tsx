@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { FaStar } from "react-icons/fa";
 import Reviews from "@/components/matkeplaceSingleTask/Reviews";
 import axios from "axios";
@@ -30,10 +30,11 @@ const Page = () => {
     });
 
     const { id } = useParams();
-    const serviceProviderId = displayData?.serviceProvider.id;
     const { userProfileAuth: auth } = useSelector(
         (state: RootState) => state.userProfile,
     );
+
+    const serviceProviderId = useMemo(() => displayData?.serviceProvider.id, [displayData]);
 
     useEffect(() => {
         const tempList = localStorage.getItem("content");
@@ -265,7 +266,7 @@ const Page = () => {
                         ))}
                     </div>
                 </section>
-                <Reviews serviceProviderId={displayData?.serviceProvider.id} categoryId={id} />
+                <Reviews serviceProviderId={serviceProviderId} categoryId={id} />
             </main>
         </>
     );

@@ -13,6 +13,8 @@ import { useDeleteTaskMutation } from "@/services/tasks";
 import RebookForm from "../RebookForm";
 import axios from "axios";
 import { useSession } from "next-auth/react";
+import Image from "next/image";
+import imags from "../../../../../public/assets/images/tickk.png";
 
 interface TaskCardProps {
     task: CompletedTask;
@@ -158,7 +160,7 @@ const CompletedTasksCard = ({ task }: TaskCardProps) => {
                         {reviewSent ? (
                             <div className="flex items-center justify-center h-full font-satoshi py-10 px-20">
                                 <div className="flex flex-col items-center space-y-5">
-                                    <div className="bg-[#140B31] p-1 rounded-full size-14 flex items-center justify-center text-white">{DropReviewSvg}</div>
+                                    <div><Image src={imags} alt="image" /></div>
                                     <h1 className="font-black text-4xl text-[#2A1769]">
                                         Review Sent
                                     </h1>
@@ -303,15 +305,17 @@ type StarProps = {
 };
 
 const Star: React.FC<StarProps> = ({ starId, rating, hoverRating, onClick, onMouseEnter, onMouseLeave }) => {
-    const fill = hoverRating >= starId || (!hoverRating && rating >= starId) ? 'text-yellow-500' : 'text-gray-300';
+    const isActive = hoverRating >= starId || (!hoverRating && rating >= starId);
+    const fillColor = isActive ? '#ffd700' : 'none'; // Fill the star when active
+    const strokeColor = isActive ? '#ffd700' : 'gray'; // Border color when active/inactive
 
     return (
         <svg
             xmlns="http://www.w3.org/2000/svg"
-            className={`h-6 w-6 cursor-pointer ${fill}`}
-            fill="none"
+            className="h-6 w-6 cursor-pointer"
+            fill={fillColor} // Set the fill color dynamically
             viewBox="0 0 24 24"
-            stroke="currentColor"
+            stroke={strokeColor} // Set the stroke color dynamically
             onClick={onClick}
             onMouseEnter={onMouseEnter}
             onMouseLeave={onMouseLeave}

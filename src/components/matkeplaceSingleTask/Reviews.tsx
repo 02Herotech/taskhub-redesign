@@ -157,13 +157,13 @@ const Reviews = ({ serviceProviderId }: any) => {
                   </p>
                   <div className="flex items-end">
                     <div className="flex items-center gap-3">
-                      <Image
+                      {/* <Image
                         src={review.customer.user.profileImage}
                         alt="user"
                         width={50}
                         height={50}
                         className="rounded-full"
-                      />
+                      /> */}
                       <div className="flex flex-col">
                         <p className="text-lg font-bold">
                           {review.customer.user.firstName}{" "}
