@@ -73,7 +73,7 @@ const EditTaskForm = ({ task, setShowEditModal }: TaskCardProps) => {
         watch,
         setValue,
     } = useForm<taskZodType>({
-        resolver: zodResolver(taskSchema),
+        // resolver: zodResolver(taskSchema),
     });
 
     useEffect(() => {
@@ -173,40 +173,6 @@ const EditTaskForm = ({ task, setShowEditModal }: TaskCardProps) => {
 
     const [updateTask] = useUpdateTaskMutation();
 
-    // const handleUpdateTask: SubmitHandler<taskZodType> = async (data) => {
-    //     console.log("data sent ", data)
-    //     const body = Object.entries({
-    //         taskBriefDescription: data.taskBriefDescription,
-    //         taskDescription: data.taskDescription,
-    //         categoryId: categories.find(category => category.categoryName === data.category)?.id,
-    //         taskType: data.taskType,
-    //         postCode: data.postCode,
-    //         suburb: data.suburb,
-    //         state: data.state,
-    //         taskImage,
-    //         taskDate: dateString,
-    //         taskTime: timeString,
-    //         customerBudget: data.customerBudget,
-    //     }).reduce((acc, [key, value]) => {
-    //         if (
-    //             value !== null &&
-    //             value !== undefined &&
-    //             value !== "" &&
-    //             value !== 0
-    //         ) {
-    //             // @ts-expect-error "type of key not known"
-    //             acc[key] = value;
-    //         }
-    //         return acc;
-    //     }, {});
-    //     try {
-    //         await updateTask({ id: task.id, details: body }).unwrap();
-    //     } catch (error: any) {
-    //         console.log(error);
-    //         // setError(error.response.data.message);
-    //     }
-    // };
-
     const handleUpdateTask: SubmitHandler<taskZodType> = async (data) => {
         const formData = new FormData();
 
@@ -242,26 +208,6 @@ const EditTaskForm = ({ task, setShowEditModal }: TaskCardProps) => {
             // setError(error.response.data.message);
         }
     };
-
-    // useEffect(() => {
-    //     const words = watchField?.taskBriefDescription?.trim().split(/\s+/);
-    //     const count = words?.filter((word) => word).length; // Filter out empty strings
-
-    //     if (count > 10) {
-    //         const trimmedValue = words.slice(0, 10).join(" ");
-    //         setValue("taskBriefDescription", trimmedValue);
-    //     }
-
-    //     const description = watchField?.taskDescription?.trim().split(/\s+/);
-    //     const descCount = description?.filter((word) => word).length; // Filter out empty strings
-
-    //     if (descCount > 50) {
-    //         const trimmedValue = description.slice(0, 50).join(" ");
-    //         setValue("taskDescription", trimmedValue);
-    //     }
-
-    //     // eslint-disable-next-line
-    // }, [watchField]);
 
     const handleDateChange = (date: Date | null) => {
         setUpdatedDate(date);
