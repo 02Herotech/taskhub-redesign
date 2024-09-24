@@ -263,7 +263,7 @@ const Page = () => {
                         ))}
                     </div>
                 </section>
-                <Reviews serviceProvider={id} />
+                <Reviews serviceProviderId={id} />
             </main>
         </>
     );
