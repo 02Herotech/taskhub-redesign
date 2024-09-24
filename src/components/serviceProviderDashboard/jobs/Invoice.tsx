@@ -17,6 +17,7 @@ import { BeatLoader } from "react-spinners";
 import { BsPencilSquare } from "react-icons/bs";
 import { PiSealCheckFill } from "react-icons/pi";
 import { toPng } from "html-to-image";
+import { formatAmount } from "@/lib/utils";
 
 interface ModalPropType {
   isModalOpen: boolean;
@@ -38,12 +39,14 @@ const Invoice = ({
     date: Date | null;
     gst: number;
     total: number;
+    serviceCharge: number;
     successData: string;
     loading: boolean;
   }>({
     price: "",
     date: null,
     gst: 0,
+    serviceCharge: 0,
     total: 0,
     successData: "",
     loading: false,
@@ -61,37 +64,31 @@ const Invoice = ({
   const user = session?.data?.user?.user;
 
   useEffect(() => {
-    setInvoiceState({
-      price:
-        invoiceDraft?.price !== undefined
-          ? invoiceDraft.price
-          : currentBooking?.price ?? "",
-      date:
-        invoiceDraft?.serviceStartOn !== undefined
-          ? invoiceDraft.serviceStartOn
-          : (currentBooking?.startDate &&
-            convertToDateInputFormat(currentBooking?.startDate)) ??
-          null,
-      gst:
-        invoiceDraft?.gst !== undefined
-          ? invoiceDraft.gst
-          : currentBooking
-            ? Math.floor((currentBooking.price / 100) * 10)
-            : 0,
-      total:
-        invoiceDraft?.total !== undefined
-          ? invoiceDraft.total
-          : currentBooking
-            ? Math.floor(
-              currentBooking.price -
-              (currentBooking.price / 100) * 10 -
-              (currentBooking.price / 100) * 2,
-            )
-            : 0,
+    const calculateUserEarnings = () => {
+      const price = invoiceDraft?.price || currentBooking?.price || 0;
 
-      successData: "",
-      loading: false,
-    });
+      // Calculate GST deduction (10% of the price)
+      const gstAmount = price * 0.10;
+
+      // Calculate service charge deduction (2% of the price)
+      const serviceChargeAmount = price * 0.02;
+
+      // Final amount the user earns after deductions
+      const userEarnings = price - (gstAmount + serviceChargeAmount);
+
+      // Update state with calculated values
+      setInvoiceState({
+        price,
+        date: invoiceDraft?.serviceStartOn || convertToDateInputFormat(currentBooking?.startDate!),
+        gst: gstAmount, // Rounds GST to 2 decimal places
+        serviceCharge: serviceChargeAmount, // Rounds service charge to 2 decimal places
+        total: userEarnings, // The amount user earns
+        successData: "",
+        loading: false,
+      });
+    };
+
+    calculateUserEarnings();
   }, [currentBooking, invoiceDraft]);
 
   function convertToDateInputFormat(dateArray: number[]) {
@@ -179,16 +176,23 @@ const Invoice = ({
   };
 
   useEffect(() => {
+    const price = invoiceDraft?.price || currentBooking?.price || 0;
+
+    // Calculate GST deduction (10% of the price)
+    const gstAmount = price * 0.10;
+
+    // Calculate service charge deduction (2% of the price)
+    const serviceChargeAmount = price * 0.02;
+
+    // Final amount the user earns after deductions
+    const userEarnings = price - (gstAmount + serviceChargeAmount);// 2% Service charge
+
     setInvoiceState((prev) => ({
       ...prev,
-      gst: Math.floor((Number(invoiceState.price) / 100) * 10),
-      total: Math.floor(
-        Number(invoiceState.price) -
-        (Number(invoiceState.price) / 100) * 10 -
-        (Number(invoiceState.price) / 100) * 2,
-      ),
+      gst: gstAmount,
+      serviceCharge: serviceChargeAmount,
+      total: userEarnings,
     }));
-    // eslint-disable-next-line
   }, [invoiceState.price]);
 
   const handleDownloadImage = async () => {
@@ -309,7 +313,7 @@ const Invoice = ({
             <p className="font-bold uppercase text-violet-normal ">
               Service Information
             </p>
-            <div className="grid grid-cols-2 gap-3 ">
+            <div className="grid grid-cols-2 gap-3">
               <div className="space-y-3">
                 <div>
                   <p className="font-black text-violet-dark  ">
@@ -340,19 +344,29 @@ const Invoice = ({
                   <p className="font-medium  text-[#4E5158]">Due On</p>
                 </div>
                 <div>
-                  <p className=" font-extrabold text-violet-dark  ">Bill To</p>
+                  <p className=" font-extrabold text-violet-dark">Bill To</p>
                   <p className="font-medium  text-[#4E5158]">
                     {currentBooking?.customer?.user?.fullName}
                   </p>
                 </div>
                 <div>
-                  <p className=" font-extrabold text-violet-dark  ">
-                    ${invoiceState.total}
+                  <p className="font-extrabold text-violet-dark">
+                      ${invoiceState.serviceCharge}
                   </p>
-                  <p className="font-medium  text-[#4E5158]">
-                    Amount + Service fee (2%)
+                  <p className="font-medium text-[#E10909]">
+                    Service fee (2%)
                   </p>
                 </div>
+              </div>
+            </div>
+            <div className="flex items-center justify-center">
+              <div>
+                  <p className="font-extrabold text-[#006F05] text-center font-satoshiBold text-xl lg:text-3xl">
+                  ${invoiceState.total}
+                </p>
+                  <p className="font-medium text-[#4E5158]">
+                    Total Amount Payable 
+                </p>
               </div>
             </div>
           </div>
