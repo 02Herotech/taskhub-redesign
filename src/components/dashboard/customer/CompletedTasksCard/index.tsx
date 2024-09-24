@@ -189,7 +189,7 @@ const CompletedTasksCard = ({ task }: TaskCardProps) => {
 
                                         }}
                                     >
-                                        Cancel
+                                        Done
                                     </Button>
                                 </div>
                             </div>
