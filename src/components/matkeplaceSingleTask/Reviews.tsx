@@ -153,7 +153,7 @@ const Reviews = ({ serviceProviderId }: any) => {
       ) : (
         <Slider {...settings} className="w-full max-w-6xl mx-auto relative ">
           {reviews.map((review, index) => (
-            <div key={index} className="p- rounded-lg bg-transparent flex justify-center">
+            <div key={index} className="p-6 lg:p-12 rounded-lg bg-transparent flex justify-center">
               <div className="flex flex-col gap-4">
                 <div className="flex justify-between">
                   <div className="flex items-center gap-3">
@@ -170,7 +170,7 @@ const Reviews = ({ serviceProviderId }: any) => {
                         {review.customer.user.lastName}
                       </p>
                       <p className="text-sm text-gray-500">
-                        {formatDate(review.createdAt)}
+                        {formatDate(review.createdAt)|| "09-12-2024"}
                       </p>
                     </div>
                   </div>
