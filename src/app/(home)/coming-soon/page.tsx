@@ -95,7 +95,7 @@ const ComingSoon: React.FC = () => {
               height={30}
             />
           </Link>
-          <Link href="https://www.youtube.com/@syncskillsau" className="text-white">
+          <Link href="#" className="text-white">
             <Image
               src="/assets/images/coming-soon/youtube.png"
               alt="YouTube"

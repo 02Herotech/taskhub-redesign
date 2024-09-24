@@ -1077,7 +1077,7 @@ const AddTaskForm: React.FC = () => {
                     Back
                   </button>
                 </Link>
-                <Link href="/marketplace">
+                <Link href="/customer/profile">
                   <button className="rounded-2xl bg-status-purpleBase p-2 text-[14px] text-white outline-none md:w-[100px]">
                     Go to profile
                   </button>
