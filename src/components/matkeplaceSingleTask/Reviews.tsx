@@ -60,7 +60,6 @@ const Reviews = ({serviceProviderId}: any) => {
             },
           }
         );
-        // console.log(response.data);
         setReviews(response.data.review);
        
       } catch (error) {
