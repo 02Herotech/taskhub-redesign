@@ -34,8 +34,6 @@ const Page = () => {
         (state: RootState) => state.userProfile,
     );
 
-    const serviceProviderId = useMemo(() => displayData?.serviceProvider.id, [displayData]);
-
     useEffect(() => {
         const tempList = localStorage.getItem("content");
         if (tempList) {
@@ -61,9 +59,9 @@ const Page = () => {
     useEffect(() => {
         const fetchProviderListings = async () => {
             try {
-                if (!serviceProviderId) return;
-                console.log(serviceProviderId)
-                const url = `https://smp.jacinthsolutions.com.au/api/v1/service_provider/get-profile/${serviceProviderId}`;
+                if (!id) return;
+                console.log(id)
+                const url = `https://smp.jacinthsolutions.com.au/api/v1/service_provider/get-profile/${id}`;
                 const response = await axios.get(url,
                     {
                         headers: {
@@ -71,7 +69,6 @@ const Page = () => {
                         },
                     }
                  );
-                // console.log(response.data?.serviceProviderListing)
                 setProviderListings(response.data?.serviceProviderListing); 
             } catch (error: any) {
                 console.log(error.response);
@@ -80,7 +77,7 @@ const Page = () => {
         if (displayData?.serviceProvider?.id) {
             fetchProviderListings();
         }
-    }, [token, displayData, serviceProviderId]);
+    }, [token, displayData, id]);
 
     return (
         <>
@@ -266,7 +263,7 @@ const Page = () => {
                         ))}
                     </div>
                 </section>
-                <Reviews serviceProviderId={serviceProviderId} categoryId={id} />
+                <Reviews serviceProvider={id} />
             </main>
         </>
     );

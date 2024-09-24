@@ -79,6 +79,7 @@ const NotificationsSettings = () => {
           Authorization: `Bearer ${auth.token}`,
         },
       });
+      console.log(data);
       setNotificationPreferences(data);
     } catch (error: any) {
       console.log(error?.response?.data || error);
@@ -181,8 +182,7 @@ const NotificationsSettings = () => {
             <div className="mt-6 flex items-center justify-center lg:justify-end">
               <button
                 className="rounded-full bg-violet-normal px-4 py-2 font-bold text-white lg:w-48"
-                  disabled={loading}
-                  type="submit"
+                disabled={loading}
               >
                 {loading ? (
                   <BeatLoader color="white" loading={loading} />
