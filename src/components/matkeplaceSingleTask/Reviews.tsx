@@ -42,7 +42,7 @@ const PrevArrow = (props: any) => {
   );
 };
 
-const Reviews = ({ serviceProviderId }: any) => {
+const Reviews = ({serviceProviderId}: any) => {
   const session = useSession();
   const [reviews, setReviews] = useState<Review[]>([]);
   const token = session?.data?.user.refreshToken;
@@ -51,7 +51,6 @@ const Reviews = ({ serviceProviderId }: any) => {
   useEffect(() => {
     const fetchReviews = async () => {
       if (!serviceProviderId) return;
-      console.log(serviceProviderId);
       try {
         const response = await axios.get(
           `https://smp.jacinthsolutions.com.au/api/v1/service_provider/get-profile/${serviceProviderId}`,
@@ -62,7 +61,7 @@ const Reviews = ({ serviceProviderId }: any) => {
           }
         );
         setReviews(response.data.review);
-        console.log(response.data.review.createdAt);
+       
       } catch (error) {
         console.error("Error fetching reviews:", error);
       }
@@ -70,6 +69,8 @@ const Reviews = ({ serviceProviderId }: any) => {
 
     fetchReviews();
   }, [serviceProviderId, token]);
+
+console.log(reviews)
 
   const settings = {
     dots: false,
@@ -125,16 +126,15 @@ const Reviews = ({ serviceProviderId }: any) => {
   };
 
   const formatDate = (createdAtArray: any) => {
-    // Check if the createdAtArray is valid and contains at least 3 elements
-    if (createdAtArray == null || createdAtArray.length < 3) {
-      return 'Invalid Date'; // Or return any fallback value
+    if (!createdAtArray || createdAtArray.length < 3) {
+      return 'Invalid Date'; 
     }
 
     const year = createdAtArray[0];
-    const month = createdAtArray[1].toString().padStart(2, '0'); // Add leading zero for month
-    const day = createdAtArray[2].toString().padStart(2, '0');   // Add leading zero for day
+    const month = createdAtArray[1].toString().padStart(2, '0'); 
+    const day = createdAtArray[2].toString().padStart(2, '0');  
 
-    return `${day}-${month}-${year}`;  // Format as YYYY-MM-DD
+    return `${day}-${month}-${year}`; 
   };
 
 
@@ -153,12 +153,12 @@ const Reviews = ({ serviceProviderId }: any) => {
       ) : (
         <Slider {...settings} className="w-full max-w-6xl mx-auto relative ">
           {reviews.map((review, index) => (
-            <div key={index} className="p-6 lg:p-12 rounded-lg bg-transparent flex justify-center">
+            <div key={index} className="p-12 rounded-lg bg-transparent flex justify-center">
               <div className="flex flex-col gap-4">
                 <div className="flex justify-between">
                   <div className="flex items-center gap-3">
                     <Image
-                      src={review.customer.user.profileImage}
+                      src={review.customer.user.profileImage || ""}
                       alt="user"
                       width={50}
                       height={50}
@@ -170,7 +170,7 @@ const Reviews = ({ serviceProviderId }: any) => {
                         {review.customer.user.lastName}
                       </p>
                       <p className="text-sm text-gray-500">
-                        {formatDate(review.createdAt)|| "09-12-2024"}
+                        {formatDate(review.createdAt)}
                       </p>
                     </div>
                   </div>
