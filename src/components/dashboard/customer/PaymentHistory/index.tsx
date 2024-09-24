@@ -192,8 +192,8 @@ const PaymentHistory = () => {
 
             {isModalOpen && selectedPayment && (
                 <Popup isOpen={isModalOpen} onClose={closeModal}>
-                    <div className="bg-[#EBE9F4] rounded-2xl">
-                        <div ref={pdfRef} className="relative rounded-2xl lg:w-[500px] max-h-[70vh] font-satoshi p-5">
+                    <div className="bg-[#EBE9F4] rounded-2xl lg:w-[500px]">
+                        <div ref={pdfRef} className="relative rounded-2xl max-w-[500px] h-auto min-h-[60vh] max-h-[80vh] overflow-y-auto font-satoshi p-4 sm:p-6">
                             <div className="flex items-center justify-center mb-3">
                                 <svg width="70" height="70" viewBox="0 0 70 70" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <circle cx="35" cy="35" r="35" fill="#C1F6C3" fill-opacity="0.6" />
@@ -201,10 +201,10 @@ const PaymentHistory = () => {
                                     <path d="M52 34.9924L48.2291 30.742L48.7545 25.1156L43.1755 23.8619L40.2545 19L35 21.2322L29.7455 19L26.8245 23.8619L21.2455 25.1003L21.7709 30.7267L18 34.9924L21.7709 39.2427L21.2455 44.8844L26.8245 46.1381L29.7455 51L35 48.7525L40.2545 50.9847L43.1755 46.1228L48.7545 44.8691L48.2291 39.2427L52 34.9924ZM31.9091 42.6369L25.7273 36.5213L27.9064 34.3655L31.9091 38.3101L42.0936 28.2346L44.2727 30.4056L31.9091 42.6369Z" fill="#4CAF50" />
                                 </svg>
                             </div>
-                            <h3 className="text-3xl text-center font-bold text-primary mb-2">Success</h3>
-                            <h3 className="text-xl text-center font-bold text-[#55535A] mb-2">Your transaction was successful</h3>
+                            <h3 className="text-2xl sm:text-3xl text-center font-bold text-primary mb-2">Success</h3>
+                            <h3 className="text-lg sm:text-xl text-center font-bold text-[#55535A] mb-2">Your transaction was successful</h3>
                             <div className="flex items-center justify-center !mb-4">
-                                <div className="bg-[#C1BADB] p-3 w-60 rounded-3xl">
+                                <div className="bg-[#C1BADB] p-3 w-full max-w-[240px] rounded-3xl">
                                     <h2 className="text-xl font-bold text-center capitalize text-primary lg:text-[22px]">
                                         AUD{formatAmount(selectedPayment.total, "USD", false)}
                                     </h2>
@@ -212,40 +212,33 @@ const PaymentHistory = () => {
                                 </div>
                             </div>
                             <div className="space-y-3">
-                                <div className="border-b border-[#C1BADB] flex items-center justify-between px-2 py-1">
+                                <div className="border-b border-[#C1BADB] flex flex-col sm:flex-row items-start sm:items-center justify-between px-2 py-1">
                                     <h2 className='text-[#333236] font-satoshiMedium'>Transaction ID:</h2>
-                                    <p className='text-primary font-bold text-xl'>#{selectedPayment.id}</p>
+                                    <p className='text-primary font-bold text-lg sm:text-xl'>#{selectedPayment.id}</p>
                                 </div>
-                                <div className="border-b border-[#C1BADB] flex items-center justify-between px-2 py-1">
+                                <div className="border-b border-[#C1BADB] flex flex-col sm:flex-row items-start sm:items-center justify-between px-2 py-1">
                                     <h2 className='text-[#333236] font-satoshiMedium'>Transaction title:</h2>
-                                    <p className='text-primary font-bold text-xl'>{selectedPayment.bookingTitle}</p>
+                                    <p className='text-primary font-bold text-lg sm:text-xl'>{selectedPayment.bookingTitle}</p>
                                 </div>
-                                <div className="border-b border-[#C1BADB] flex items-center justify-between px-2 py-1">
+                                <div className="border-b border-[#C1BADB] flex flex-col sm:flex-row items-start sm:items-center justify-between px-2 py-1">
                                     <h2 className='text-[#333236] font-satoshiMedium'>From:</h2>
-                                    <p className='text-primary font-bold text-xl'>{user?.firstName} {user?.lastName}</p>
+                                    <p className='text-primary font-bold text-lg sm:text-xl'>{user?.firstName} {user?.lastName}</p>
                                 </div>
-                                <div className="border-b border-[#C1BADB] flex items-center justify-between px-2 py-1">
+                                <div className="border-b border-[#C1BADB] flex flex-col sm:flex-row items-start sm:items-center justify-between px-2 py-1">
                                     <h2 className='text-[#333236] font-satoshiMedium'>To:</h2>
-                                    <p className='text-primary font-bold text-xl'>{selectedPayment.serviceProvider.user.fullName}</p>
+                                    <p className='text-primary font-bold text-lg sm:text-xl'>{selectedPayment.serviceProvider.user.fullName}</p>
                                 </div>
-                                <div className="border-b border-[#C1BADB] flex items-center justify-between px-2 py-1">
+                                <div className="border-b border-[#C1BADB] flex flex-col sm:flex-row items-start sm:items-center justify-between px-2 py-1">
                                     <h2 className='text-[#333236] font-satoshiMedium'>Date:</h2>
-                                    <p className='text-primary font-bold text-xl'>{formattedDate}</p>
+                                    <p className='text-primary font-bold text-lg sm:text-xl'>{formattedDate}</p>
                                 </div>
                             </div>
                         </div>
-                        <div className="flex items-center justify-center w-full !mt-10">
+                        <div className="flex items-center justify-center w-full !mt-4 sm:!mt-6 pb-4 sm:pb-6">
                             <PDFDownloadLink
                                 document={<PaymentReceipt selectedPayment={selectedPayment} user={user} formattedDate={formattedDate} />}
                                 fileName="oloja_receipt.pdf"
-                                style={{
-                                    textAlign: "center",
-                                    marginTop: 5,
-                                    marginBottom: 5,
-                                    textDecoration: "underline",
-                                    color: "#E58C06",
-                                    fontWeight: "bold",
-                                }}
+                                className="text-center text-[#E58C06] font-bold underline hover:text-[#c77905] transition-colors duration-300"
                             >
                                 {({ blob, url, loading, error }) =>
                                     loading ? 'Loading document...' : 'Download Receipt'
