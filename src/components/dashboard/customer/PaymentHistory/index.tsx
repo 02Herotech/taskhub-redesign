@@ -193,7 +193,7 @@ const PaymentHistory = () => {
             {isModalOpen && selectedPayment && (
                 <Popup isOpen={isModalOpen} onClose={closeModal}>
                     <div className="bg-[#EBE9F4] rounded-2xl">
-                        <div ref={pdfRef} className="relative rounded-2xl lg:w-[577px] font-satoshi p-5 lg:p-7">
+                        <div ref={pdfRef} className="relative rounded-2xl lg:w-[500px] max-h-[70vh] font-satoshi p-5">
                             <div className="flex items-center justify-center mb-3">
                                 <svg width="70" height="70" viewBox="0 0 70 70" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <circle cx="35" cy="35" r="35" fill="#C1F6C3" fill-opacity="0.6" />
@@ -211,30 +211,30 @@ const PaymentHistory = () => {
                                     <h4 className='text-[#55535A] font-bold text-center mt-2'>Amount</h4>
                                 </div>
                             </div>
-                            <div className="space-y-4">
-                                <div className="border-b border-[#C1BADB] flex items-center justify-between px-4 py-2">
+                            <div className="space-y-3">
+                                <div className="border-b border-[#C1BADB] flex items-center justify-between px-2 py-1">
                                     <h2 className='text-[#333236] font-satoshiMedium'>Transaction ID:</h2>
                                     <p className='text-primary font-bold text-xl'>#{selectedPayment.id}</p>
                                 </div>
-                                <div className="border-b border-[#C1BADB] flex items-center justify-between px-4 py-2">
+                                <div className="border-b border-[#C1BADB] flex items-center justify-between px-2 py-1">
                                     <h2 className='text-[#333236] font-satoshiMedium'>Transaction title:</h2>
                                     <p className='text-primary font-bold text-xl'>{selectedPayment.bookingTitle}</p>
                                 </div>
-                                <div className="border-b border-[#C1BADB] flex items-center justify-between px-4 py-2">
+                                <div className="border-b border-[#C1BADB] flex items-center justify-between px-2 py-1">
                                     <h2 className='text-[#333236] font-satoshiMedium'>From:</h2>
                                     <p className='text-primary font-bold text-xl'>{user?.firstName} {user?.lastName}</p>
                                 </div>
-                                <div className="border-b border-[#C1BADB] flex items-center justify-between px-4 py-2">
+                                <div className="border-b border-[#C1BADB] flex items-center justify-between px-2 py-1">
                                     <h2 className='text-[#333236] font-satoshiMedium'>To:</h2>
                                     <p className='text-primary font-bold text-xl'>{selectedPayment.serviceProvider.user.fullName}</p>
                                 </div>
-                                <div className="border-b border-[#C1BADB] flex items-center justify-between px-4 py-2">
+                                <div className="border-b border-[#C1BADB] flex items-center justify-between px-2 py-1">
                                     <h2 className='text-[#333236] font-satoshiMedium'>Date:</h2>
                                     <p className='text-primary font-bold text-xl'>{formattedDate}</p>
                                 </div>
                             </div>
                         </div>
-                        <div className="flex items-center justify-center w-full">
+                        <div className="flex items-center justify-center w-full !mt-10">
                             <PDFDownloadLink
                                 document={<PaymentReceipt selectedPayment={selectedPayment} user={user} formattedDate={formattedDate} />}
                                 fileName="oloja_receipt.pdf"
