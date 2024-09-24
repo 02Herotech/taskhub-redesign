@@ -62,7 +62,7 @@ const Reviews = ({ serviceProviderId }: any) => {
           }
         );
         setReviews(response.data.review);
-        console.log(response.data.review);
+        console.log(response.data.review.createdAt);
       } catch (error) {
         console.error("Error fetching reviews:", error);
       }
@@ -123,9 +123,10 @@ const Reviews = ({ serviceProviderId }: any) => {
     }
     return stars;
   };
+
   const formatDate = (createdAtArray: any) => {
     // Check if the createdAtArray is valid and contains at least 3 elements
-    if (!createdAtArray || createdAtArray.length < 3) {
+    if (createdAtArray == null || createdAtArray.length < 3) {
       return 'Invalid Date'; // Or return any fallback value
     }
 
