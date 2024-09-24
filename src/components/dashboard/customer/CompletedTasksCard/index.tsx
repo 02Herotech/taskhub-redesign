@@ -36,6 +36,7 @@ const CompletedTasksCard = ({ task }: TaskCardProps) => {
     const [rating, setRating] = useState<number | 0>(0);
     const [review, setReview] = useState<string>('');
     const [hoverRating, setHoverRating] = useState<number | 0>(0);
+    const [wordCount, setWordCount] = useState(0);
     const dateArray = task.createdAt;
     const date = new Date(dateArray[0], dateArray[1] - 1, dateArray[2]);
     const day = date.getDate();
@@ -93,6 +94,18 @@ const CompletedTasksCard = ({ task }: TaskCardProps) => {
             icon: DeleteTaskSvg,
         },
     ];
+
+
+    const handleChange = (
+        e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+    ) => {
+        const value = e.target.value
+        const wordArray = e.target.value.split(/\s+/).filter(Boolean);
+        if (wordArray.length <= 60) {
+            setReview(value)
+            setWordCount(wordArray.length);
+        }
+    };
 
     const handleReviewSubmission = async (e: React.FormEvent) => {
         e.preventDefault(); 
@@ -210,10 +223,14 @@ const CompletedTasksCard = ({ task }: TaskCardProps) => {
                                                 className="w-full px-3 h-[150px] py-2 leading-tight text-gray-700 border border-gray-700 rounded shadow appearance-none resize-none focus:outline-none focus:shadow-outline"
                                                 placeholder="Write your review..."
                                                 value={review}
-                                                onChange={(e) => setReview(e.target.value)}
-                                                required
-                                            />
-                                        </div>
+                                                onChange={handleChange}
+                                                    required
+                                                />
+                                                <div className="text-right text-sm text-status-darkpurple">
+                                                    {wordCount}/60 words
+                                                </div>
+                                            </div>
+                                            
                                         <div className="flex justify-center">
                                             <Button
                                                 className="w-[151px] max-lg:text-sm rounded-full py-6"

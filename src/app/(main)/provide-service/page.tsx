@@ -144,7 +144,6 @@ const ProvideService: React.FC = () => {
     (state: RootState) => state.userProfile,
   );
 
-  console.log("user", user);
 
   // Handling getting the description from the marketplace when i user navigates from the marketplace
   useEffect(() => {
