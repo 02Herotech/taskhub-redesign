@@ -143,7 +143,7 @@ console.log(reviews)
   return (
     <section className="space-y-8 bg-status-lightViolet p-4 lg:p-10">
       <h1 className="mx-auto text-center text-2xl font-bold lg:text-4xl">
-        Reviews/Testimonials from Satisfied Customers
+        Rating & Reviews
       </h1>
 
       {reviews.length === 0 ? (
@@ -162,7 +162,7 @@ console.log(reviews)
                       alt="user"
                       width={50}
                       height={50}
-                      className="rounded-full"
+                      className="size-[46px] rounded-full object-cover"
                     />
                     <div className="flex flex-col">
                       <p className="text-lg font-bold">
