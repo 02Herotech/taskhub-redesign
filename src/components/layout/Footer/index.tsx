@@ -13,7 +13,6 @@ import {
 import axios from "axios";
 import mobileFooter from "../../../../public/assets/images/homepage/mobileFooter.png"
 
-
 const Footer = () => {
     const router = useRouter()
     const pathname = usePathname()

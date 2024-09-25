@@ -143,7 +143,7 @@ console.log(reviews)
   return (
     <section className="space-y-8 bg-status-lightViolet p-4 lg:p-10">
       <h1 className="mx-auto text-center text-2xl font-bold lg:text-4xl">
-        Rating & Reviews
+        Ratings & Reviews
       </h1>
 
       {reviews.length === 0 ? (

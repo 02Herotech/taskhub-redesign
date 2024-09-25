@@ -67,7 +67,7 @@ type PaymentReceiptProps = {
 
 const PaymentReceipt = ({ selectedPayment, user, formattedDate }: PaymentReceiptProps) => (
     <Document>
-        <Page size="LETTER" style={styles.page}>
+        <Page size="A5" style={styles.page}>
             <View style={styles.section}>
                 <View>
                     <View style={{ alignItems: 'center', marginBottom: 15 }}>
