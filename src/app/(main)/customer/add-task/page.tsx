@@ -126,7 +126,7 @@ const AddTaskForm: React.FC = () => {
   // End of getting description from the marketplace
 
   const handleLoginNavigation = () => {
-    setCookie("redirectToAddTask", "/customer/add-task", { maxAge: 10000 });
+    setCookie("redirectToAddTask", "/customer/add-task", { maxAge: 360000 });
     router.push(
       "/auth/sign-up?userType=Service+Provider?from=/customer/add-task",
     );
@@ -134,18 +134,18 @@ const AddTaskForm: React.FC = () => {
 
   useEffect(() => {
     setCookie("taskBriefDescription", task.taskBriefDescription, {
-      maxAge: 120,
+      maxAge: 1200,
     });
-    setCookie("taskTime", task.taskTime, { maxAge: 120 });
-    setCookie("taskDate", task.taskDate, { maxAge: 120 });
-    setCookie("taskType", task.taskType, { maxAge: 120 });
-    setCookie("suburb", task.suburb, { maxAge: 120 });
-    setCookie("postCode", task.postCode, { maxAge: 120 });
-    setCookie("state", task.state, { maxAge: 120 });
-    setCookie("customerBudget", task.customerBudget, { maxAge: 120 });
-    setCookie("hubTime", task.termAccepted, { maxAge: 120 });
-    setCookie("categoryId", task.categoryId?.toString(), { maxAge: 120 });
-    setCookie("taskDescription", task.taskDescription, { maxAge: 120 });
+    setCookie("taskTime", task.taskTime, { maxAge: 1200 });
+    setCookie("taskDate", task.taskDate, { maxAge: 1200 });
+    setCookie("taskType", task.taskType, { maxAge: 1200 });
+    setCookie("suburb", task.suburb, { maxAge: 1200 });
+    setCookie("postCode", task.postCode, { maxAge: 1200 });
+    setCookie("state", task.state, { maxAge: 1200 });
+    setCookie("customerBudget", task.customerBudget, { maxAge: 1200 });
+    setCookie("hubTime", task.termAccepted, { maxAge: 1200 });
+    setCookie("categoryId", task.categoryId?.toString(), { maxAge: 1200 });
+    setCookie("taskDescription", task.taskDescription, { maxAge: 1200 });
   }, [task]);
 
   useEffect(() => {
