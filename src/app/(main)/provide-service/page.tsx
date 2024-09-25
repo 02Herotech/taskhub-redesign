@@ -23,6 +23,7 @@ import Loading from "@/components/global/loading/page";
 import ProgressBar from "@/components/global/progressbar";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
+import { getCookie, setCookie } from "cookies-next";
 
 interface FormData {
   listingTitle: string;
@@ -75,22 +76,22 @@ const ProvideService: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const [task, setTask] = useState<FormData>({
-    listingTitle: "",
-    listingDescription: "",
-    planOneDescription: "",
-    planTwoDescription: "",
-    planThreeDescription: "",
+    listingTitle: getCookie("listingTitle") || "",
+    listingDescription: getCookie("listingDescription")|| "",
+    planOneDescription: getCookie("planOneDescription") ||"",
+    planTwoDescription: getCookie("planTwoDescription") ||"",
+    planThreeDescription: getCookie("planThreeDescription") ||"",
     image1: null,
     image2: null,
     image3: null,
     image4: null,
-    taskType: "",
+    taskType: getCookie("taskType") ||"",
     planOnePrice: null,
     planTwoPrice: null,
     planThreePrice: null,
     availableDays: [],
     suburb: "",
-    postCode: "",
+    postCode: getCookie("postCode") ||"",
     state: "",
     categoryId: null,
     subCategoryId: null,
@@ -124,6 +125,23 @@ const ProvideService: React.FC = () => {
   const [selectedDays, setSelectedDays] = useState<string[]>([]);
   const maxSize = 5 * 1024 * 1024;
   3;
+
+  useEffect(() => {
+    setCookie("lisitingTitle", task.listingTitle, {
+      maxAge: 1200,
+    });
+    setCookie("listingDescription", task.listingDescription, { maxAge: 1200 });
+    setCookie("planOnePrice", task.planOnePrice, { maxAge: 1200 });
+    setCookie("planOneDescription", task.planOneDescription, { maxAge: 1200 });
+    setCookie("planTwoDescription", task.planTwoDescription, { maxAge: 1200 });
+    setCookie("planTwoPrice", task.planTwoPrice, { maxAge: 1200 });
+    setCookie("planThreeDescritpion", task.planThreeDescription, { maxAge: 1200 });
+    setCookie("taskType", task.taskType, { maxAge: 1200 });
+    setCookie("availableDays", task.availableDays, { maxAge: 1200 });
+    setCookie("categoryId", task.categoryId?.toString(), { maxAge: 1200 });
+    setCookie("postCode", task.postCode, { maxAge: 1200 });
+  }, [task]);
+
   const [errs, setErrs] = useState({
     image1: "",
     image2: "",
