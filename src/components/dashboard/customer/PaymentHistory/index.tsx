@@ -205,10 +205,10 @@ const PaymentHistory = () => {
                             <h3 className="text-lg sm:text-xl text-center font-bold text-[#55535A] mb-2">Your transaction was successful</h3>
                             <div className="flex items-center justify-center !mb-4">
                                 <div className="bg-[#C1BADB] p-3 w-full max-w-[240px] rounded-3xl">
+                                    <h4 className='text-[#55535A] font-bold text-center my-2'>Amount</h4>
                                     <h2 className="text-xl font-bold text-center capitalize text-primary lg:text-[22px]">
                                         AUD{formatAmount(selectedPayment.total, "USD", false)}
                                     </h2>
-                                    <h4 className='text-[#55535A] font-bold text-center mt-2'>Amount</h4>
                                 </div>
                             </div>
                             <div className="space-y-2">
