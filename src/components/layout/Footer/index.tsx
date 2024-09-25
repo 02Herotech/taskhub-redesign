@@ -29,7 +29,7 @@ const Footer = () => {
         },
         {
             label: "Business Hub",
-            url: "/",
+            url: "/coming-soon",
 
         }
     ]

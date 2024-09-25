@@ -1,5 +1,6 @@
 import AboutHeroSection from "@/components/about/Hero";
 import Mission from "@/components/about/Mission";
+import Values from "@/components/about/Values";
 import Image from "next/image";
 
 const About = () => {
@@ -7,6 +8,7 @@ const About = () => {
         <main className="mt-20">
             <AboutHeroSection />
             <Mission />
+            <Values />
         </main>
     );
 }
