@@ -193,8 +193,8 @@ const PaymentHistory = () => {
             {isModalOpen && selectedPayment && (
                 <Popup isOpen={isModalOpen} onClose={closeModal}>
                     <div className="bg-[#EBE9F4] rounded-2xl lg:w-[500px]">
-                        <div ref={pdfRef} className="relative rounded-2xl max-w-[500px] h-auto min-h-[60vh] max-h-[80vh] overflow-y-auto font-satoshi p-4 sm:p-6">
-                            <div className="flex items-center justify-center mb-3">
+                        <div ref={pdfRef} className="relative rounded-2xl max-w-[500px] h-auto min-h-[60vh] max-h-[80vh] overflow-y-auto font-satoshi py-2 px-4">
+                            <div className="flex items-center justify-center mb-2">
                                 <svg width="70" height="70" viewBox="0 0 70 70" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <circle cx="35" cy="35" r="35" fill="#C1F6C3" fill-opacity="0.6" />
                                     <circle cx="34.5" cy="34.5" r="22.5" fill="#A6F8AA" />
@@ -211,7 +211,7 @@ const PaymentHistory = () => {
                                     <h4 className='text-[#55535A] font-bold text-center mt-2'>Amount</h4>
                                 </div>
                             </div>
-                            <div className="space-y-3">
+                            <div className="space-y-2">
                                 <div className="border-b border-[#C1BADB] flex flex-col sm:flex-row items-start sm:items-center justify-between px-2 py-1">
                                     <h2 className='text-[#333236] font-satoshiMedium'>Transaction ID:</h2>
                                     <p className='text-primary font-bold text-lg sm:text-xl'>#{selectedPayment.id}</p>
@@ -234,7 +234,7 @@ const PaymentHistory = () => {
                                 </div>
                             </div>
                         </div>
-                        <div className="flex items-center justify-center w-full !mt-4 sm:!mt-6 pb-4 sm:pb-6">
+                        <div className="flex items-center justify-center w-full !mt-4 sm:!mt-3 pb-2 sm:pb-3">
                             <PDFDownloadLink
                                 document={<PaymentReceipt selectedPayment={selectedPayment} user={user} formattedDate={formattedDate} />}
                                 fileName="oloja_receipt.pdf"

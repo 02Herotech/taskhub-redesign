@@ -15,7 +15,7 @@ export default function RootLayout({
     return (
         <main>
             <HomeNavigation />
-            <div className="min-h-[70vh]">
+            <div className="">
                 {children}
             </div>
             <Footer />
