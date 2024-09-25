@@ -193,7 +193,7 @@ const PaymentHistory = () => {
             {isModalOpen && selectedPayment && (
                 <Popup isOpen={isModalOpen} onClose={closeModal}>
                     <div className="bg-[#EBE9F4] rounded-2xl lg:w-[500px]">
-                        <div ref={pdfRef} className="relative rounded-2xl max-w-[500px] h-auto min-h-[60vh] max-h-[80vh] overflow-y-auto font-satoshi py-2 px-4">
+                        <div ref={pdfRef} className="relative rounded-2xl max-w-[500px] h-auto min-h-[60vh] max-h-[90vh] font-satoshi py-2 px-4">
                             <div className="flex items-center justify-center mb-2">
                                 <svg width="70" height="70" viewBox="0 0 70 70" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <circle cx="35" cy="35" r="35" fill="#C1F6C3" fill-opacity="0.6" />
