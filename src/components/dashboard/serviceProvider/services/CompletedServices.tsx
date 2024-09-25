@@ -10,6 +10,20 @@ interface CompletedServices {
 }
 
 const CompletedServices = ({ jobs, allBookings }: CompletedServices) => {
+
+
+  const formatDate = (createdAtArray: any) => {
+    if (!createdAtArray || createdAtArray.length < 3) {
+      return 'Invalid Date';
+    }
+
+    const year = createdAtArray[0];
+    const month = createdAtArray[1].toString().padStart(2, '0');
+    const day = createdAtArray[2].toString().padStart(2, '0');
+
+    return `${day}-${month}-${year}`;
+  };
+  // console.log(jobs)
   return (
     <div className="flex flex-wrap gap-8 pb-4  max-sm:flex-col">
       {jobs
@@ -44,7 +58,7 @@ const CompletedServices = ({ jobs, allBookings }: CompletedServices) => {
               </div>
               <div className="flex items-center justify-between gap-4">
                 <span className="flex items-center gap-2 text-slate-700">
-                  <BiCalendarWeek /> {dateFromNumberArray(item.jobEnd)}
+                  <BiCalendarWeek /> {formatDate(item.jobEnd)}
                 </span>
                 <span className="text-xl font-bold text-violet-normal">
                   ${item.total}
