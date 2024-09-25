@@ -304,7 +304,7 @@ const EditTaskForm = ({ task, setShowEditModal }: TaskCardProps) => {
                 </section>
             )}
             <div className="border-b-2 border-[#140B31] w-full" />
-            <div className="rounded-2xl max-h-[80vh] min-w-[80%] lg:w-[700px] font-satoshi overflow-y-auto small-scrollbar">
+            <div className="rounded-2xl max-h-[80vh] w-full lg:w-[700px] font-satoshi overflow-y-auto small-scrollbar">
                 <div className="lg:flex h-full lg:space-x-3 p-2">
                     <div className="hidden lg:block border-r-2 border-[#140B31] pr-8 pb-10 space-y-5 pt-5">
                         <div className={`cursor-pointer text-lg font-bold ${activeEditModalLink === "Task Details" ? "bg-tc-orange rounded-lg pl-2 pr-5 py-2 text-white" : "text-primary"}`} onClick={() => setActiveEditModalLink("Task Details")}>Task Details</div>
@@ -371,6 +371,7 @@ const EditTaskForm = ({ task, setShowEditModal }: TaskCardProps) => {
                                         // onClick={closeModal}
                                         type="button"
                                         className="rounded-full px-10"
+                                        size='sm'
                                     >
                                         Back
                                     </Button>
@@ -379,6 +380,8 @@ const EditTaskForm = ({ task, setShowEditModal }: TaskCardProps) => {
                                         type="button"
                                         onClick={() => setActiveEditModalLink("Location")}
                                         className="rounded-full px-10"
+                                        size='sm'
+
                                     >
                                         Next
                                     </Button>
@@ -431,7 +434,7 @@ const EditTaskForm = ({ task, setShowEditModal }: TaskCardProps) => {
                                         Set Day and Time
                                     </label>
                                     <div className="flex items-center space-x-6">
-                                        <div className="flex items-center space-x-3">
+                                        <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
                                             <div className="relative">
                                                 <DatePicker
                                                     value={updatedTime as unknown as string}
@@ -496,6 +499,7 @@ const EditTaskForm = ({ task, setShowEditModal }: TaskCardProps) => {
                                         onClick={() => setActiveEditModalLink("Task Details")}
                                         className="rounded-full px-10"
                                         type="button"
+                                        size='sm'
                                     >
                                         Back
                                     </Button>
@@ -503,6 +507,7 @@ const EditTaskForm = ({ task, setShowEditModal }: TaskCardProps) => {
                                         type="button"
                                         onClick={() => setActiveEditModalLink("Budget")}
                                         className="rounded-full px-10"
+                                        size='sm'
                                     >
                                         Next
                                     </Button>
@@ -619,6 +624,7 @@ const EditTaskForm = ({ task, setShowEditModal }: TaskCardProps) => {
                                             onClick={() => setActiveEditModalLink("Location")}
                                             className="rounded-full px-10"
                                             type="button"
+                                            size='sm'
                                         >
                                             Back
                                         </Button>
@@ -626,7 +632,8 @@ const EditTaskForm = ({ task, setShowEditModal }: TaskCardProps) => {
                                             theme="primary"
                                             loading={isSubmitting}
                                             type='submit'
-                                            className="rounded-full px-10"
+                                            className="rounded-full"
+                                            size='sm'
                                         >
                                             Save changes
                                         </Button>
