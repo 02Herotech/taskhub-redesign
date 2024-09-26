@@ -6,8 +6,6 @@ import BusinessHub from "@/components/homepage/BusinessHub";
 import WhatSetUsApart from "@/components/homepage/WhatSetUsApart";
 import FAQ from "@/components/homepage/FAQ";
 
-
-
 const HomePage = () => {
   return (
     <main className="min-h-screen">
