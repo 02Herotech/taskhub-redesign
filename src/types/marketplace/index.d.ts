@@ -25,6 +25,9 @@ declare interface SubCategoryType {
   name: string;
 }
 
+type Review = {
+  rating: number | 0;
+};
 declare interface ListingDataType {
   id: number;
   state: string;
@@ -41,7 +44,7 @@ declare interface ListingDataType {
   negotiable: boolean;
   createdAt: number[];
   availableDays: string[];
-  reviews: number[];
+  reviews: Review[];
   businessPictures: string[];
   listingTitle: string;
   listingDescription: string;

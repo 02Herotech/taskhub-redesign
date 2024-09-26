@@ -6,7 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 import React, { useState, useEffect } from "react";
 import { BsStarFill } from "react-icons/bs";
-import { FaRegUser } from "react-icons/fa6";
+import { FaRegUser, FaStar } from "react-icons/fa6";
 
 interface ListingCardProps {
   listingId: number;
@@ -17,6 +17,7 @@ interface ListingCardProps {
   fullName: string;
   profileImage: string;
   singleListing: ListingDataType;
+  review: Review[];
 }
 
 const SingleListingCard = ({
@@ -28,9 +29,30 @@ const SingleListingCard = ({
   fullName,
   profileImage,
   singleListing,
+  review
 }: ListingCardProps) => {
   const handlestoreListingId = (listingId: number, posterId: number) => {
     localStorage.setItem("content", JSON.stringify(singleListing));
+  };
+  const totalRatings = review.reduce((sum, reviews) => sum + reviews.rating, 0);
+  const averageRating = Math.round(totalRatings / review.length);
+
+  function abbreviateNumber(amount: number): string {
+    if (amount < 1000) return amount.toString();
+    const suffixes = ["", "K", "M", "B", "T"];
+    const suffixIndex = Math.floor(("" + amount).length / 3);
+    const abbreviatedAmount = (amount / Math.pow(1000, suffixIndex)).toFixed(1);
+    return `${abbreviatedAmount}${suffixes[suffixIndex]}`;
+  }
+
+  const renderStars = (rating: number) => {
+    const stars = [];
+    for (let i = 1; i <= 5; i++) {
+      stars.push(
+        <FaStar key={i} fill={i <= rating ? "gold" : "rgb(203 213 225)"} />
+      );
+    }
+    return stars;
   };
 
   return (
@@ -39,7 +61,7 @@ const SingleListingCard = ({
       onClick={() => handlestoreListingId(listingId, posterId)}
       className="group transition-transform duration-300 hover:-translate-y-2 "
     >
-      <div className=" my-3 flex w-full justify-center">
+      <div className=" my-3 flex w-full lg:h-[320px] justify-center">
         <div className="flex w-full max-w-sm flex-col gap-2 rounded-2xl  bg-[#EBE9F4] p-3 ">
           <div className="">
             <Image
@@ -55,19 +77,8 @@ const SingleListingCard = ({
             <h2 className="text-lg font-bold  first-letter:uppercase md:text-lg">
               {truncateText(businessName, 20)}
             </h2>
-            <div className="py-4 ">
-              {/* <p className="text-xs">4.5</p> */}
-              <div className="flex items-center gap-1 ">
-                {/* <BsStarFill className="size-3 fill-orange-normal" />
-                <BsStarFill className="size-3 fill-orange-normal" />
-                <BsStarFill className="size-3 fill-orange-normal" />
-                <BsStarFill className="size-3 fill-orange-normal" /> */}
-                <BsStarFill className="size-3 fill-violet-400" />
-                <BsStarFill className="size-3 fill-violet-400" />
-                <BsStarFill className="size-3 fill-violet-400" />
-                <BsStarFill className="size-3 fill-violet-400" />
-                <BsStarFill className="size-3 fill-violet-400" />
-              </div>
+            <div className="flex items-center gap-2">
+              {renderStars(averageRating)}
             </div>
 
             <div className="flex items-center justify-between gap-5">
@@ -85,7 +96,7 @@ const SingleListingCard = ({
                   {truncateText(fullName, 10)}
                 </p>
               </div>
-              <p className="font-bold text-violet-normal">From ${pricing}</p>
+              <p className="font-bold text-violet-normal text-[16px]">From ${abbreviateNumber(pricing)}</p>
             </div>
           </div>
         </div>
