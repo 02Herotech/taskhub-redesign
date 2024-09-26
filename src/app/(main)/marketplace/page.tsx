@@ -122,7 +122,7 @@ const MareketPlace = () => {
           setShowPopup(false)
           setHasClosedPopup(true);
         } }>
-          <div className="relative h-[312px] max-lg:mx-5 lg:w-[577px]">
+          <div className="relative h-[312px] max-lg:mx-2 w-full lg:w-[577px]">
             <div className="flex h-full flex-col items-center justify-center space-y-7 text-center">
               <h1 className="font-clashDisplay text-4xl font-semibold text-[#2A1769]">
                 Welcome to Olójà
@@ -147,7 +147,7 @@ const MareketPlace = () => {
             <Image
               src="/assets/images/marketplace/complete-profile-2.png"
               alt="image"
-              className="absolute bottom-1 left-1  size-1/4 lg:size-[160px] "
+              className="absolute bottom-1 left-1 size-1/4 lg:size-[160px] "
               width={160}
               height={160}
             />

@@ -29,7 +29,7 @@ const Footer = () => {
         },
         {
             label: "Business Hub",
-            url: "/",
+            url: "/coming-soon",
 
         }
     ]
@@ -294,7 +294,7 @@ const Footer = () => {
                     </div>
                 </div>
             </div>
-            {pathname === '/home' && (
+            {(pathname === '/home' || pathname === '/about') && (
                 <div className='absolute lg:-top-24 -top-44 w-full   overflow-hidden z-20'>
                     <NewsLetter />
                 </div>
