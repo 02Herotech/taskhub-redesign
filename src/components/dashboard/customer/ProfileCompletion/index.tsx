@@ -30,7 +30,7 @@ const ProfileCompletion = ({ fetchedUserData }: ProfileCompletionType) => {
     },
     {
       title: "Address Information",
-      status: user?.address?.state,
+      status: user?.address?.postCode,
     },
     {
       title: "Mobile Number",
@@ -56,7 +56,6 @@ const ProfileCompletion = ({ fetchedUserData }: ProfileCompletionType) => {
     }));
     // eslint-disable-next-line
   }, [fetchedUserData, user]);
-
 
   return (
     <section className="flex min-h-64 flex-col items-center gap-3 rounded-lg bg-[#EBE9F4] p-4 md:grid md:grid-cols-12">
