@@ -86,7 +86,7 @@ const MareketPlace = () => {
     },
     {
       title: "Address Information",
-      status: user?.address?.state,
+      status: user?.address?.postCode,
     },
     {
       title: "Mobile Number",
@@ -132,7 +132,7 @@ const MareketPlace = () => {
                 access to all our features.
               </p>
               <Button
-                className="w-[151px] rounded-full py-6 max-lg:text-sm"
+                className="lg:w-[151px] rounded-full lg:py-6 max-lg:text-sm"
                 onClick={() =>
                   router.push(
                     isServiceProvider

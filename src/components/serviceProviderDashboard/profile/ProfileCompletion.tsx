@@ -30,7 +30,7 @@ const ProfileCompletion = ({ fetchedUserData }: ProfileCompletionType) => {
     },
     {
       title: "Address Information",
-      status: user?.address?.state,
+      status: user?.address?.postCode,
     },
     {
       title: "Mobile Number",
