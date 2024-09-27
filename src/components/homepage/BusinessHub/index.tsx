@@ -177,7 +177,7 @@ const BusinesHub = () => {
 
                                 </div>
 
-                                <div className='text-center xl:space-y-2 lg:space-y-3'>
+                                <div className='xl:space-y-2 lg:space-y-3'>
                                     <h2 className=' text-[#ECECF4] font-satoshi font-[700]  xl:text-[25px] text-[22px] '>
                                         {eachData.title}
                                     </h2>

@@ -55,7 +55,7 @@ const Footer = () => {
     const link_3 = [
         {
             label: "FAQs",
-            url: "/",
+            url: "/home#FAQSection",
         },
 
         {

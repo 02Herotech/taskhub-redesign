@@ -37,7 +37,7 @@ const FAQ = () => {
     ];
 
     return (
-        <div className='bg-[#E1DDEE] pt-10 xl:h-[790px] lg:h-[810px] h-[965px]'>
+        <div className='bg-[#E1DDEE] pt-10 xl:h-[790px] lg:h-[810px] h-[965px]' id='FAQSection'>
 
             <div className='mx-auto max-w-7xl'>
                 <div className='mx-auto w-[85%]'>
