@@ -229,7 +229,7 @@ const Footer = () => {
 
                                 </Link>
 
-                                <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                {/* <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <rect x="0.5" y="0.5" width="47" height="47" rx="23.5" fill="#C1BADB" />
                                     <rect x="0.5" y="0.5" width="47" height="47" rx="23.5" stroke="#C6C6C6" />
                                     <g clip-path="url(#clip0_3535_8219)">
@@ -276,7 +276,7 @@ const Footer = () => {
                                             <rect width="24" height="24" fill="white" transform="translate(12 12)" />
                                         </clipPath>
                                     </defs>
-                                </svg>
+                                </svg> */}
 
                             </div>
                             <p className='
