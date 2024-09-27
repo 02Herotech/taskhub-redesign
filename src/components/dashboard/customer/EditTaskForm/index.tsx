@@ -42,16 +42,16 @@ const EditTaskForm = ({ task, setShowEditModal }: TaskCardProps) => {
     const taskSchema = z.object({
         taskBriefDescription: z
             .string(),
-            // .min(3, "Minimum of 3 characters")
-            // .refine((str) => str.split(" ").filter(Boolean).length > 0, {
-            //     message: `Title must have ${1} word or more`,
-            // }),
+        // .min(3, "Minimum of 3 characters")
+        // .refine((str) => str.split(" ").filter(Boolean).length > 0, {
+        //     message: `Title must have ${1} word or more`,
+        // }),
         taskDescription: z
             .string(),
-            // .min(10, "Minimum of 10 characters")
-            // .refine((str) => str.split(" ").filter(Boolean).length >= 5, {
-            //     message: `Description must have ${5} words or more`,
-            // }),
+        // .min(10, "Minimum of 10 characters")
+        // .refine((str) => str.split(" ").filter(Boolean).length >= 5, {
+        //     message: `Description must have ${5} words or more`,
+        // }),
         category: z.string(),
         taskType: z.string(),
         postCode: z.string().nullable().optional(),
@@ -217,7 +217,7 @@ const EditTaskForm = ({ task, setShowEditModal }: TaskCardProps) => {
         setUpdatedTime(time);
     };
 
-    const formatDateToLocalDateString = (date: Date | null ) => {
+    const formatDateToLocalDateString = (date: Date | null) => {
         if (date) {
             const year = date.getFullYear();
             const month = String(date.getMonth() + 1).padStart(2, "0");
@@ -297,14 +297,14 @@ const EditTaskForm = ({ task, setShowEditModal }: TaskCardProps) => {
                                 >
                                     Close
                                 </button>
-                                
+
                             </div>
                         </div>
                     </div>
                 </section>
             )}
             <div className="border-b-2 border-[#140B31] w-full" />
-            <div className="rounded-2xl max-h-[80vh] w-full lg:w-[700px] font-satoshi overflow-y-auto small-scrollbar">
+            <div className="rounded-2xl max-h-[80vh] w-full lg:w-[800px] font-satoshi overflow-y-auto small-scrollbar">
                 <div className="lg:flex h-full lg:space-x-3 p-2">
                     <div className="hidden lg:block border-r-2 border-[#140B31] pr-8 pb-10 space-y-5 pt-5">
                         <div className={`cursor-pointer text-lg font-bold ${activeEditModalLink === "Task Details" ? "bg-tc-orange rounded-lg pl-2 pr-5 py-2 text-white" : "text-primary"}`} onClick={() => setActiveEditModalLink("Task Details")}>Task Details</div>
@@ -433,62 +433,58 @@ const EditTaskForm = ({ task, setShowEditModal }: TaskCardProps) => {
                                     <label className="text-[13px] font-semibold text-status-darkpurple lg:text-[16px]">
                                         Set Day and Time
                                     </label>
-                                    <div className="flex items-center space-x-6">
-                                        <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                                            <div className="relative">
-                                                <DatePicker
-                                                    value={updatedTime as unknown as string}
-                                                    selected={updatedTime}
-                                                    onChange={handleTimeChange}
-                                                    showTimeSelect
-                                                    showTimeSelectOnly
-                                                    timeFormat="HH:mm"
-                                                    timeIntervals={15}
-                                                    dateFormat="h:mm aa"
-                                                    placeholderText="Choose Time"
-                                                    disabled={isFlexible}
-                                                    id="taskTime"
-                                                    name="taskTime"
-                                                    // disabled={termAccepted}
-                                                    customInput={<CustomInputs />}
-                                                    className="w-full cursor-pointer rounded-2xl bg-[#EBE9F4] px-2 py-1 outline-none placeholder:text-[14px] placeholder:font-bold"
-                                                />
-                                            </div>
-                                            <div className="relative">
-                                                <DatePicker
-                                                    value={updatedDate as unknown as string}
-                                                    selected={updatedDate}
-                                                    onChange={handleDateChange}
-                                                    dateFormat="dd-MM-yyyy"
-                                                    minDate={new Date()}
-                                                    placeholderText="Choose Date"
-                                                    id="taskDate"
-                                                    name="taskDate"
-                                                    disabled={isFlexible}
-                                                    // disabled={termAccepted}
-                                                    customInput={<CustomInput />}
-                                                    className="w-full cursor-pointer rounded-2xl bg-[#EBE9F4] px-2 py-1 outline-none placeholder:text-[14px] placeholder:font-bold"
-                                                />
-                                            </div>
-                                            <div>
-                                                <div className="flex items-center">
-                                                    <input
-                                                        type="checkbox"
-                                                        name="check"
-                                                        checked={isFlexible}
-                                                        // disabled={!!dateString || !!timeString}
-                                                        onChange={() => {
-                                                            setIsFlexible(!isFlexible)
-                                                            setUpdatedDate(null)
-                                                            setUpdatedTime(null)
-                                                        }}
-                                                        className="mr-2"
-                                                    />
-                                                    <span className="text-[12px] text-status-darkpurple">
-                                                        I’m Flexible
-                                                    </span>
-                                                </div>
-                                            </div>
+                                    <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 w-full">
+                                        <div>
+                                            <DatePicker
+                                                value={updatedTime as unknown as string}
+                                                selected={updatedTime}
+                                                onChange={handleTimeChange}
+                                                showTimeSelect
+                                                showTimeSelectOnly
+                                                timeFormat="HH:mm"
+                                                timeIntervals={15}
+                                                dateFormat="h:mm aa"
+                                                placeholderText="Choose Time"
+                                                disabled={isFlexible}
+                                                id="taskTime"
+                                                name="taskTime"
+                                                // disabled={termAccepted}
+                                                customInput={<CustomInputs />}
+                                                className="w-full cursor-pointer rounded-2xl bg-[#EBE9F4] px-2 py-1 outline-none placeholder:text-[14px] placeholder:font-bold"
+                                            />
+                                        </div>
+                                        <div>
+                                            <DatePicker
+                                                value={updatedDate as unknown as string}
+                                                selected={updatedDate}
+                                                onChange={handleDateChange}
+                                                dateFormat="dd-MM-yyyy"
+                                                minDate={new Date()}
+                                                placeholderText="Choose Date"
+                                                id="taskDate"
+                                                name="taskDate"
+                                                disabled={isFlexible}
+                                                // disabled={termAccepted}
+                                                customInput={<CustomInput />}
+                                                className="w-full cursor-pointer rounded-2xl bg-[#EBE9F4] px-2 py-1 outline-none placeholder:text-[14px] placeholder:font-bold"
+                                            />
+                                        </div>
+                                        <div className="flex items-center">
+                                            <input
+                                                type="checkbox"
+                                                name="check"
+                                                checked={isFlexible}
+                                                // disabled={!!dateString || !!timeString}
+                                                onChange={() => {
+                                                    setIsFlexible(!isFlexible)
+                                                    setUpdatedDate(null)
+                                                    setUpdatedTime(null)
+                                                }}
+                                                className="mr-2"
+                                            />
+                                            <span className="text-[12px] text-status-darkpurple">
+                                                I’m Flexible
+                                            </span>
                                         </div>
                                     </div>
                                 </div>
@@ -545,7 +541,7 @@ const EditTaskForm = ({ task, setShowEditModal }: TaskCardProps) => {
                                                         type="number"
                                                         className="rounded-2xl bg-violet-light p-3 text-[13px] outline-none w-full"
                                                         {...register("postCode")}
-                                                        />
+                                                    />
                                                 </div>
 
                                                 {/* suburb */}
