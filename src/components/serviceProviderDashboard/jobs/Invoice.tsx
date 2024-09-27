@@ -36,7 +36,7 @@ const Invoice = ({
 
   const [invoiceState, setInvoiceState] = useState<{
     price: string | number;
-    date: Date | null;
+    date: Date | null | string;
     gst: number;
     total: number;
     serviceCharge: number;
@@ -68,30 +68,32 @@ const Invoice = ({
       const price = invoiceDraft?.price || currentBooking?.price || 0;
 
       // Calculate GST deduction (10% of the price)
-      const gstAmount = price * 0.10;
+      const gstAmount = Number(price) * 0.10;
 
       // Calculate service charge deduction (2% of the price)
-      const serviceChargeAmount = price * 0.02;
+      const serviceChargeAmount = Number(price) * 0.02;
 
       // Final amount the user earns after deductions
-      const userEarnings = price - (gstAmount + serviceChargeAmount);
+      const userEarnings = Number(price) - (gstAmount + serviceChargeAmount);
 
       // Update state with calculated values
-      setInvoiceState({
-        price,
-        date: invoiceDraft?.serviceStartOn || convertToDateInputFormat(currentBooking?.startDate!),
-        gst: gstAmount, // Rounds GST to 2 decimal places
-        serviceCharge: serviceChargeAmount, // Rounds service charge to 2 decimal places
-        total: userEarnings, // The amount user earns
-        successData: "",
-        loading: false,
-      });
+      setInvoiceState(prev => ({
+        ...prev,
+        price: price.toString(), // Convert to string for input field
+        gst: gstAmount,
+        serviceCharge: serviceChargeAmount,
+        total: userEarnings,
+      }));
     };
 
     calculateUserEarnings();
   }, [currentBooking, invoiceDraft]);
 
   function convertToDateInputFormat(dateArray: number[]) {
+    if (!dateArray) {
+      return "Flexible"
+    }
+
     const [year, month, day] = dateArray;
 
     // Ensure month and day are two digits
@@ -175,25 +177,26 @@ const Invoice = ({
     }));
   };
 
-  useEffect(() => {
-    const price = invoiceDraft?.price || currentBooking?.price || 0;
+  const handlePriceChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const newPrice = event.target.value;
+    setInvoiceState(prev => ({
+      ...prev,
+      price: newPrice,
+    }));
 
-    // Calculate GST deduction (10% of the price)
+    // Recalculate GST, service charge, and total
+    const price = Number(newPrice) || 0;
     const gstAmount = price * 0.10;
-
-    // Calculate service charge deduction (2% of the price)
     const serviceChargeAmount = price * 0.02;
+    const userEarnings = price - (gstAmount + serviceChargeAmount);
 
-    // Final amount the user earns after deductions
-    const userEarnings = price - (gstAmount + serviceChargeAmount);// 2% Service charge
-
-    setInvoiceState((prev) => ({
+    setInvoiceState(prev => ({
       ...prev,
       gst: gstAmount,
       serviceCharge: serviceChargeAmount,
       total: userEarnings,
     }));
-  }, [invoiceState.price]);
+  };
 
   const handleDownloadImage = async () => {
     if (invoiceContainerRef.current) {
@@ -266,20 +269,15 @@ const Invoice = ({
               </span>
               <div className="flex w-full items-center gap-1">
                 <p>$ </p>
-                <input
-                  type="number"
-                  name="price"
-                  value={invoiceState.price}
-                  placeholder={currentBooking?.price?.toString()}
-                  disabled={currentBooking?.invoiceSent}
-                  className="w-full bg-violet-light py-2 outline-none"
-                  onChange={(event) =>
-                    setInvoiceState((prev) => ({
-                      ...prev,
-                      price: event.target.value,
-                    }))
-                  }
-                />
+                  <input
+                    type="number"
+                    name="price"
+                    value={invoiceState.price}
+                    placeholder={currentBooking?.price?.toString()}
+                    disabled={currentBooking?.invoiceSent}
+                    className="w-full bg-violet-light py-2 outline-none"
+                    onChange={handlePriceChange}
+                  />
               </div>
             </label>
             <label className="flex flex-grow flex-col gap-2 rounded-lg bg-violet-light p-4 py-2 font-bold ">
@@ -289,24 +287,33 @@ const Invoice = ({
                   <BsPencilSquare className="text-violet-normal" />
                 )}
               </span>
-              {invoiceState.date ? (
-                <DatePicker
-                  selected={invoiceState.date as Date}
-                  minDate={new Date()}
-                  required
-                  disabled={currentBooking?.invoiceSent}
-                  onChange={(date: Date) =>
-                    setInvoiceState((prev) => ({
-                      ...prev,
-                      date: date,
-                    }))
-                  }
-                  className="w-full bg-transparent text-[#716F78]  outline-none  "
-                  dateFormat="dd/MM/yyyy"
-                />
-              ) : (
-                <span>Flexible</span>
-              )}
+                {invoiceState.date ? (
+                  typeof invoiceState.date === 'string' ? (
+                    <input
+                      type="text"
+                      value={invoiceState.date}
+                      readOnly
+                      className="w-full bg-transparent text-[#716F78] outline-none"
+                    />
+                  ) : (
+                    <DatePicker
+                      selected={invoiceState.date}
+                      minDate={new Date()}
+                      required
+                      disabled={currentBooking?.invoiceSent}
+                      onChange={(date: Date) =>
+                        setInvoiceState((prev) => ({
+                          ...prev,
+                          date: date,
+                        }))
+                      }
+                      className="w-full bg-transparent text-[#716F78] outline-none"
+                      dateFormat="dd/MM/yyyy"
+                    />
+                  )
+                ) : (
+                  <span>Flexible</span>
+                )}
             </label>
           </div>
           <div className="space-y-3 rounded-lg bg-violet-active p-3 py-4 text-violet-normal">
@@ -351,7 +358,7 @@ const Invoice = ({
                 </div>
                 <div>
                   <p className="font-extrabold text-violet-dark">
-                      ${invoiceState.serviceCharge}
+                    ${invoiceState.serviceCharge}
                   </p>
                   <p className="font-medium text-[#E10909]">
                     Service fee (2%)
@@ -361,11 +368,11 @@ const Invoice = ({
             </div>
             <div className="flex items-center justify-center">
               <div>
-                  <p className="font-extrabold text-[#006F05] text-center font-satoshiBold text-xl lg:text-3xl">
+                <p className="font-extrabold text-[#006F05] text-center font-satoshiBold text-xl lg:text-3xl">
                   ${invoiceState.total}
                 </p>
-                  <p className="font-medium text-[#4E5158]">
-                    Total Amount Payable 
+                <p className="font-medium text-[#4E5158]">
+                  Total Amount Payable
                 </p>
               </div>
             </div>
