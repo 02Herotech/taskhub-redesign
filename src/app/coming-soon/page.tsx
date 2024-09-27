@@ -98,7 +98,7 @@ const ComingSoon: React.FC = () => {
                 height={30}
               />
             </Link>
-            <Link href="#" className="text-white">
+            {/* <Link href="#" className="text-white">
               <Image
                 src="/assets/images/coming-soon/youtube.png"
                 alt="YouTube"
@@ -121,7 +121,7 @@ const ComingSoon: React.FC = () => {
                 width={30}
                 height={30}
               />
-            </Link>
+            </Link> */}
           </div>
         </div>
       </div>

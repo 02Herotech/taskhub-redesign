@@ -1,4 +1,5 @@
 'use client'
+
 import React, { useEffect, useState } from 'react'
 import Image from 'next/image'
 import CheckSignOrange from "../../../../public/assets/images/homepage/businessHub/CheckSignOrange.png";
@@ -16,7 +17,6 @@ const BusinesHub = () => {
         {
             id: 1,
             title: 'Financial Literacy',
-            // icon: <Image alt='' src={CheckSignOrange} fill className='absolute object-contain' />,
             icon: CheckSignOrange,
             details: (
                 <>
@@ -42,7 +42,6 @@ const BusinesHub = () => {
         {
             id: 3,
             title: 'Personalized Learning',
-            // icon: <Image alt='' src={CheckSignOrange} fill className='absolute object-contain' />,
             icon: CheckSignOrange,
             details: (
                 <>
@@ -55,7 +54,6 @@ const BusinesHub = () => {
         {
             id: 4,
             title: 'Expert Support',
-            // icon: <Image alt='' src={CheckSignOrange} fill className='absolute object-contain' />,
             icon: CheckSignOrange,
             details: (
                 <>
@@ -71,7 +69,6 @@ const BusinesHub = () => {
         {
             id: 1,
             title: 'Financial Literacy',
-            // icon: <Image alt='' src={CheckSignOrange} fill className='absolute object-contain' />,
             icon: CheckSignOrange,
             details: (
                 <>
@@ -97,7 +94,6 @@ const BusinesHub = () => {
         {
             id: 3,
             title: 'Personalized Learning',
-            // icon: <Image alt='' src={CheckSignOrange} fill className='absolute object-contain' />,
             icon: CheckSignOrange,
             details: (
                 <>
@@ -110,7 +106,6 @@ const BusinesHub = () => {
         {
             id: 4,
             title: 'Expert Support',
-            // icon: <Image alt='' src={CheckSignOrange} fill className='absolute object-contain' />,
             icon: CheckSignOrange,
             details: (
                 <>
@@ -173,8 +168,8 @@ const BusinesHub = () => {
                                 <div className='rounded-2xl bg-[#ECECF4] flex items-center justify-center h-[70px] w-[70px]'>
                                     <Image
                                         src={eachData.icon}
-                                        alt='' />
-
+                                        alt=''
+                                    />
                                 </div>
 
                                 <div className='xl:space-y-2 lg:space-y-3'>
