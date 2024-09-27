@@ -25,8 +25,8 @@ declare interface SubCategoryType {
   name: string;
 }
 
-type Review = {
-  rating: number | 0;
+interface Review {
+  rating: number;
 };
 declare interface ListingDataType {
   id: number;
@@ -59,7 +59,7 @@ declare interface ListingDataType {
   subCategory: {
     name: string;
   };
-  deleted: bolean;
+  deleted: boolean;
 }
 
 declare interface ListingDataType2 {

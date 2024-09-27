@@ -24,6 +24,7 @@ const Page = () => {
     const [displayData, setDisplayData] = useState<ListingDataType>();
     const [currentListing, setCurrentListing] = useState<ListingDataType>();
     const [providerListings, setProviderListings] = useState<ListingDataType[]>([]);
+    const [reviews, setReviews] = useState<Review[]>([]);
     const [showImageModal, setShowImageModal] = useState({
         state: false,
         image: "",
@@ -69,7 +70,9 @@ const Page = () => {
                         },
                     }
                  );
-                setProviderListings(response.data?.serviceProviderListing); 
+                setProviderListings(response.data?.serviceProviderListing);
+                setReviews(response.data.review);
+                console.log(response.data)
             } catch (error: any) {
                 console.log(error.response);
             }
@@ -78,6 +81,19 @@ const Page = () => {
             fetchProviderListings();
         }
     }, [token, displayData, id]);
+
+    const totalRatings = reviews.reduce((sum, review) => sum + review.rating, 0) || 0;
+    const averageRating = Math.round(totalRatings / reviews.length)
+
+    const renderStars = (rating: number) => {
+        const stars = [];
+        for (let i = 1; i <= 5; i++) {
+            stars.push(
+                <FaStar key={i} fill={i <= rating ? "gold" : "rgb(203 213 225)"} />
+            );
+        }
+        return stars;
+    };
 
     return (
         <>
@@ -108,26 +124,7 @@ const Page = () => {
                                             </p>
                                             <div>
                                                 <div className="flex listings-center gap-2">
-                                                    <FaStar
-                                                        fill="rgb(203 213 225)"
-                                                        color="rgb(203 213 225)"
-                                                    />
-                                                    <FaStar
-                                                        fill="rgb(203 213 225)"
-                                                        color="rgb(203 213 225)"
-                                                    />
-                                                    <FaStar
-                                                        fill="rgb(203 213 225)"
-                                                        color="rgb(203 213 225)"
-                                                    />
-                                                    <FaStar
-                                                        fill="rgb(203 213 225)"
-                                                        color="rgb(203 213 225)"
-                                                    />
-                                                    <FaStar
-                                                        fill="rgb(203 213 225)"
-                                                        color="rgb(203 213 225)"
-                                                    />
+                                                    {renderStars(averageRating)}
                                                 </div>
                                             </div>
                                         </div>

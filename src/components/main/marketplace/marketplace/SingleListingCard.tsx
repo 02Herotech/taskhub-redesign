@@ -38,11 +38,7 @@ const SingleListingCard = ({
   const averageRating = Math.round(totalRatings / review.length);
 
   function abbreviateNumber(amount: number): string {
-    if (amount < 1000) return amount.toString();
-    const suffixes = ["", "K", "M", "B", "T"];
-    const suffixIndex = Math.floor(("" + amount).length / 3);
-    const abbreviatedAmount = (amount / Math.pow(1000, suffixIndex)).toFixed(1);
-    return `${abbreviatedAmount}${suffixes[suffixIndex]}`;
+      return amount.toLocaleString();
   }
 
   const renderStars = (rating: number) => {
@@ -77,9 +73,8 @@ const SingleListingCard = ({
             <h2 className="text-lg font-bold  first-letter:uppercase md:text-lg">
               {truncateText(businessName, 20)}
             </h2>
-            <div className="flex items-center gap-2">
-              {renderStars(averageRating)}
-            </div>
+            <p className="font-bold text-violet-normal text-[16px]">From ${abbreviateNumber(pricing)}</p>
+            
 
             <div className="flex items-center justify-between gap-5">
               <div className="flex items-center gap-2">
@@ -96,7 +91,9 @@ const SingleListingCard = ({
                   {truncateText(fullName, 10)}
                 </p>
               </div>
-              <p className="font-bold text-violet-normal text-[16px]">From ${abbreviateNumber(pricing)}</p>
+              <div className="flex items-center gap-2">
+                {renderStars(averageRating)}
+              </div>
             </div>
           </div>
         </div>
