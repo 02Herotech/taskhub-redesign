@@ -75,7 +75,7 @@ const BusinesHub = () => {
             icon: CheckSignOrange,
             details: (
                 <>
-                    Understand how to manage your finances    and access capital.
+                    Understand how to manage your finances and access capital.
                 </>
             ),
             bgColour: '2A1769'
@@ -87,7 +87,7 @@ const BusinesHub = () => {
             icon: CheckSignBlue,
             details: (
                 <>
-                    Learn the fundamentals of starting   and  running a successful business
+                    Learn the fundamentals of starting and running a successful business
                 </>
             ),
             bgColour: 'E58C06'
@@ -101,7 +101,7 @@ const BusinesHub = () => {
             icon: CheckSignOrange,
             details: (
                 <>
-                    Get tailored guidance with our AI- powered  platform.
+                    Get tailored guidance with our AI- powered platform.
                 </>
             ),
             bgColour: 'rgba(144, 35, 181, 1)'
@@ -185,11 +185,7 @@ const BusinesHub = () => {
                                     <p className='text-[#ECECF4] font-satoshi font-[500]  xl:text-[16px] text-[15px] '>
                                         {eachData.details}
                                     </p>
-
                                 </div>
-
-
-
                             </div>
                         ))
                     }
