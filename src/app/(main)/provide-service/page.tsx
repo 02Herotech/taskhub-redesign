@@ -1529,7 +1529,7 @@ const ProvideService: React.FC = () => {
               setIsSuccessPopupOpen(false);
             }}
           >
-            <div className="px-10 py-10 lg:px-24">
+            <div className="px-5 py-10 lg:px-24">
               <div className="relative grid items-center justify-center space-y-3">
                 <div className="flex justify-center text-[1px] text-white">
                   <Image src={imag} alt="image" />
@@ -1548,7 +1548,7 @@ const ProvideService: React.FC = () => {
                 <Image
                   src={image}
                   alt="image"
-                  className="lg:top-54 absolute -right-16  top-44 w-28 font-satoshiMedium lg:-right-24"
+                  className="lg:top-54 absolute -right-5 top-56  lg:top-44 lg:w-28 w-20 font-satoshiMedium lg:-right-24"
                 />
                 <div className="flex justify-center">
                   <Link href="/marketplace">
