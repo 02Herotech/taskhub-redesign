@@ -20,6 +20,9 @@ import { RootState } from "@/store";
 import "react-datepicker/dist/react-datepicker.css";
 import { defaultUserDetails } from "@/data/data";
 import Button from "@/components/global/Button";
+import { useRouter, useSearchParams } from "next/navigation";
+import { getCookie, deleteCookie } from "cookies-next";
+
 
 const userDataSchema = z.object({
   firstName: z.string().min(2).optional(),
@@ -63,6 +66,20 @@ const EditProfile = () => {
   const user = session?.user?.user;
   const token = session?.user?.accessToken;
   const isServiceProvider = user?.roles[0] === "SERVICE_PROVIDER";
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const from = searchParams.get("from");
+
+
+  const handleRedirect = () => {
+    const newRedirectToProvideService = getCookie("redirectToProvideService");
+    if (newRedirectToProvideService) {
+      router.push(newRedirectToProvideService);
+      deleteCookie("redirectToProvideService");
+    } else {
+      router.push(from || "/marketplace");
+    }
+  };
 
   const {
     register,
@@ -246,6 +263,7 @@ const EditProfile = () => {
         isProfileUpdatedSuccessfully={isProfileUpdatedSuccessfully}
         setIsProfileUpdatedSuccessfully={setIsProfileUpdatedSuccessfully}
         setSelectedDocument={setSelectedDocument}
+        handleRedirect = {handleRedirect}
       />
 
       {/* Profile Image Section */}
