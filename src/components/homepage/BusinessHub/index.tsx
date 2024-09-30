@@ -159,11 +159,11 @@ const BusinesHub = () => {
             </div>
 
             {/* desktop */}
-            <div className='hidden lg:block xl:pl-[150px] lg:pl-[100px] relative py-10  '>
-                <div className='space-y-5 '>
+            <div className='hidden lg:block xl:pl-[120px] lg:pl-[80px] relative py-10'>
+                <div className='space-y-5'>
                     {
                         BusinessHubData.map((eachData, index) => (
-                            <div key={index} style={{ backgroundColor: eachData.bgColour }} className={`bg-[#${eachData.bgColour}] flex items-center gap-5 px-5 xl:h-[120px] lg:h-[130px] xl:w-[35%] lg:w-[45%] rounded-3xl `}>
+                            <div key={index} style={{ backgroundColor: eachData.bgColour }} className={`bg-[#${eachData.bgColour}] flex items-center gap-5 px-5 xl:h-[120px] lg:h-[130px] xl:w-[45%] lg:w-[55%] rounded-3xl `}>
 
                                 <div className='rounded-2xl bg-[#ECECF4] flex items-center justify-center h-[70px] w-[70px]'>
                                     <Image

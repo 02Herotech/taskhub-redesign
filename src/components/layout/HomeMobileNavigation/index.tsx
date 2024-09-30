@@ -46,7 +46,7 @@ const HomeMobileNavigation = ({ showMobileNav, setShowMobileNav }: Props) => {
                       'bg-[#EBE9F4] rounded-full': isActive,
                     })}
                   >
-                    {link.icon && <span className="mr-5">{link.icon}</span>}
+                    {link.icon && <span className="mr-8 w-5">{link.icon}</span>}
                     {link.label}
                   </Link>
                 </li>
