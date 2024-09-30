@@ -174,7 +174,7 @@ const Offers = () => {
   };
 
   return (
-    <>
+    <div>
       <div className="relative w-full rounded-[20px] bg-[#EBE9F4] p-4 font-satoshi">
 
         {/* <h3 className="mb-5 font-satoshiBold text-base font-bold text-[#140B31]">
@@ -315,7 +315,7 @@ const Offers = () => {
                   />
                 </Elements>
               ) : (
-                <>
+                <div>
                   <h3 className="font-clashSemiBold text-3xl text-[#060D1F]">
                     Offer Details
                   </h3>
@@ -381,16 +381,18 @@ const Offers = () => {
                           <div className="flex items-center space-x-4">
                             <Button
                               loading={acceptInvoiceLoading}
-                              className="rounded-full"
+                              className="rounded-full max-lg:text-xs"
                               onClick={handleAcceptInvoice}
+                              size="sm"
                             >
                               Accept Offer
                             </Button>
                             <Button
                               theme="outline"
-                              className="rounded-full"
+                              className="rounded-full max-lg:text-xs"
                               onClick={handleRejectInvoice}
                               loading={rejectInvoiceLoading}
+                              size="sm"
                             >
                               Reject Offer
                             </Button>
@@ -410,13 +412,13 @@ const Offers = () => {
                       </div>
                     </div>
                   </div>
-                </>
+                </div>
               )}
             </div>
           </Popup>
         )}
       </div>
-    </>
+    </div>
   );
 };
 

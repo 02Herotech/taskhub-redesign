@@ -192,7 +192,7 @@ const ContactUsPage = () => {
                             <div className="">
                                 <h4 className="font-bold text-base lg:text-xl text-primary">Queensland Australia</h4>
                                 <a
-                                    href="https://www.google.com/maps/search/?api=1&query=290+Maryam+Springs+260%2C+Courbevoie%2C+Sydney+Australia"
+                                    href="https://maps.app.goo.gl/KqruzJD5MuJ9bFEA7"
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     className="text-[#190E3F] text-xs lg:text-base font-medium hover:underline"
@@ -208,7 +208,7 @@ const ContactUsPage = () => {
                             </svg>
                             <div className="">
                                 <h4 className="font-bold text-base lg:text-xl text-primary">Call Us</h4>
-                                <a href="tel:+61245673890" className="text-[#190E3F] text-xs lg:text-base font-medium">(+61) 0426131854</a>
+                                <a href="tel:+61245673890" className="text-[#190E3F] text-xs lg:text-base font-medium">(+61) 426131854</a>
                             </div>
                         </div>
 
