@@ -7,6 +7,7 @@ import heroImage2a from "../../../../../public/assets/images/homepage/hero/hero2
 import heroImage2b from "../../../../../public/assets/images/homepage/hero/hero2b.png";
 import heroImage2c from "../../../../../public/assets/images/homepage/hero/hero2c.png";
 import heroImage3 from "../../../../../public/assets/images/homepage/hero/hero3.png";
+import AnimatedText from '../AnimatedText';
 
 
 
@@ -15,12 +16,10 @@ const MobileHero = () => {
     return (
         <div className='relative h-auto bg-gradient-to-b from-[#d8cfe9] via-[#f8ede1] to-[#EBE9F4]  min-h-[1050px] ' >
 
-            <div className='relative z-10 mx-auto w-[90%]  '>
+            <div className='relative z-10 mx-auto w-full'>
 
                 <div className='w-[90%] mx-auto pt-10'>
-                    <h1 className='font-clashSemiBold my-4 text-center text-[28px] text-[#140B31] '>
-                        Every immigrant needs a <span className='text-[#E58C06]'>Product</span>
-                    </h1>
+                    <AnimatedText />
 
                     <p className='text-center font-satoshi text-[18px] text-[#381F8C] font-[600] py-0 '>
                         We provide a dynamic <span className='text-[#E58C06]'>AI enabled </span> platform that bridges the gap
