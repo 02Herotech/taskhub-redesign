@@ -126,6 +126,13 @@ const ProvideService: React.FC = () => {
   const maxSize = 5 * 1024 * 1024;
   3;
 
+  const handleProfile= () => {
+    setCookie("redirectToProvideService", "/provide-service", { maxAge: 360000 });
+    route.push(
+      "/service-provider/profile/edit-profile?userType=Service+Provider?from=/provide-service",
+    );
+  };
+
   useEffect(() => {
     setCookie("lisitingTitle", task.listingTitle, {
       maxAge: 1200,
@@ -1470,7 +1477,7 @@ const ProvideService: React.FC = () => {
         </div>
       </div>
       <div>
-        {!isAuthenticated ? (
+        {isAuthenticated ? (
           <Popup
             isOpen={isSuccessPopupOpen}
             onClose={() => {
@@ -1501,16 +1508,15 @@ const ProvideService: React.FC = () => {
                   className="absolute -left-12 top-12 w-12 lg:-left-[53px] lg:top-8 lg:w-16"
                 />
                 <div className="flex justify-center space-x-3 md:justify-around">
-                  <Link href="/marketplace">
+                  <Link href="/marketplace?">
                     <button className="rounded-2xl border-2 border-status-purpleBase p-2 text-[14px] font-semibold text-status-purpleBase outline-none md:w-[100px]">
                       Back
                     </button>
                   </Link>
-                  <Link href="/service-provider/profile">
-                    <button className="rounded-2xl bg-status-purpleBase p-2 text-[14px] text-white outline-none md:w-[100px]">
+                  
+                    <button onClick={handleProfile} className="rounded-2xl bg-status-purpleBase p-2 text-[14px] text-white outline-none md:w-[100px]">
                       Go to profile
                     </button>
-                  </Link>
                 </div>
               </div>
             </div>
