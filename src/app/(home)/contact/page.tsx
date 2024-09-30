@@ -208,7 +208,7 @@ const ContactUsPage = () => {
                             </svg>
                             <div className="">
                                 <h4 className="font-bold text-base lg:text-xl text-primary">Call Us</h4>
-                                <a href="tel:+61245673890" className="text-[#190E3F] text-xs lg:text-base font-medium">(+61) 426131854</a>
+                                <a href="tel:+61426131854" className="text-[#190E3F] text-xs lg:text-base font-medium">(+61) 426131854</a>
                             </div>
                         </div>
 
@@ -218,7 +218,7 @@ const ContactUsPage = () => {
                             </svg>
                             <div className="">
                                 <h4 className="font-bold text-base lg:text-xl text-primary">Send us an Email</h4>
-                                <a href="mailto:privacy@taskhub.com.au" className="text-[#190E3F] hover:underline text-xs lg:text-base font-medium">operations@jacinthsolutions.com.au</a>
+                                <a href="mailto:operations@jacinthsolutions.com.au" className="text-[#190E3F] hover:underline text-xs lg:text-base font-medium">operations@jacinthsolutions.com.au</a>
                             </div>
                         </div>
                         <h2 className="font-bold text-base lg:text-xl text-primary lg:!mt-10 text-center">Oloja, a trading name of Jacinth Solutions. ABN 48672884472</h2>
