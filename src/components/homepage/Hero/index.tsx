@@ -1,5 +1,7 @@
+"use client"
+
 import Link from 'next/link'
-import React from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
 
 import heroImage1 from "../../../../public/assets/images/homepage/hero/hero1.png";
@@ -9,7 +11,7 @@ import heroImage2c from "../../../../public/assets/images/homepage/hero/hero2c.p
 import heroImage3 from "../../../../public/assets/images/homepage/hero/hero3.png";
 
 import MobileHero from './MobileHero';
-
+import AnimatedText from './AnimatedText';
 
 const Hero = () => {
     return (
@@ -69,9 +71,7 @@ const Hero = () => {
                 <div className='relative z-10 mx-auto max-w-7xl mt-[-500px] '>
 
                     <div className='w-[90%] mx-auto pt-10'>
-                        <h1 className='font-clashSemiBold my-4 text-center xl:text-[40px] text-[32px] text-[#140B31] '>
-                            Every immigrant needs a <span className='text-[#E58C06]'>Product</span>
-                        </h1>
+                        <AnimatedText />
 
                         <p className='text-center font-satoshiMedium text-[28px] text-[#381F8C] font-[500] py-0 '>
                             We provide a dynamic <span className='text-[#E58C06]'>AI enabled </span> platform that bridges the gap <br />
@@ -250,12 +250,6 @@ bg-[#FE9B07] rounded-[20px]  '>
                             </div>
                         </div>
                     </div>
-
-
-
-
-
-
                 </div>
 
             </div>
