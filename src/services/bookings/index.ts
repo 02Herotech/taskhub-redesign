@@ -1,5 +1,5 @@
 import { GetInvoiceByCustomerIdResponse, GetReceiptByCustomerIdResponse } from "@/types/services/invoice";
-import { OngoingTask } from "@/types/services/tasks";
+import { AcceptInvoiceResponse, OngoingTask, PaymentIntentResponse, RejectInvoiceResponse } from "@/types/services/tasks";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { getSession } from "next-auth/react";
 
@@ -54,7 +54,7 @@ export const booking = createApi({
         prepareHeaders: async (headers) => {
             const session = await getSession();
             //@ts-ignore
-            const token = session?.user?.accessToken; 
+            const token = session?.user?.accessToken;
 
             if (token) {
                 headers.set("Authorization", `Bearer ${token}`);
@@ -88,6 +88,22 @@ export const booking = createApi({
             query: ({ jobId, rejectionReason }) => postRequest(`/revision-service`, { rejectionReason, jobId }),
             invalidatesTags: ["Booking"],
         }),
+        generatePaymentIntent: builder.mutation<PaymentIntentResponse, { invoiceId: number }>({
+            query: ({ invoiceId }) => postRequest(`/payment-intent-stripe/${invoiceId}`, {}),
+            invalidatesTags: ["Booking"],
+        }),
+        acceptInvoice: builder.mutation<AcceptInvoiceResponse, { invoiceId: number }>({
+            query: ({ invoiceId }) => postRequest(`/accept-invoice?invoiceId=${invoiceId}`, {}),
+            invalidatesTags: ["Booking"],
+        }),
+        rejectInvoice: builder.mutation<RejectInvoiceResponse, { invoiceId: number }>({
+            query: ({ invoiceId }) => postRequest(`/reject-invoice?invoiceId=${invoiceId}`, {}),
+            invalidatesTags: ["Booking"],
+        }),
+        rebookJob: builder.mutation<void, { jobId: number; date: string; time: string; description: string; amount: number; }>({
+            query: ({ jobId, date, time, description, amount }) => postRequest(`/re-booking/${jobId}`, { date, time, description, amount }),
+            invalidatesTags: ["Booking"],
+        }),
     }),
 });
 
@@ -98,4 +114,8 @@ export const {
     useAcceptServiceMutation,
     useInspectTaskMutation,
     useRequestRevisionMutation,
+    useGeneratePaymentIntentMutation,
+    useAcceptInvoiceMutation,
+    useRejectInvoiceMutation,
+    useRebookJobMutation,
 } = booking;

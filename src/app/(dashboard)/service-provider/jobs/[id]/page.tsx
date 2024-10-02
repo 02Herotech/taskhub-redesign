@@ -5,7 +5,7 @@ import Invoice from "@/components/serviceProviderDashboard/jobs/Invoice";
 import Loading from "@/shared/loading";
 import { RootState } from "@/store";
 import {
-  dateFromNumberArray,
+  dateFromArrays,
   formatDateFromNumberArray,
   formatDateFromNumberArrayToRelativeDate,
 } from "@/utils";
@@ -128,6 +128,8 @@ const ViewJobs = () => {
     }
   }, [currentBooking]);
 
+  console.log(currentBooking);
+
   return (
     <>
       <Congratulations
@@ -197,18 +199,23 @@ const ViewJobs = () => {
                   <div>
                     <p className="font-bold uppercase">To be Started:</p>
                     <p className="font-bold capitalize">
-                      {dateFromNumberArray(currentBooking.startDate)}
+                      {/* {dateFromNumberArray(currentBooking.startDate)} */}
+                      {currentBooking.startDate
+                        ? dateFromArrays(currentBooking.startDate, currentBooking.startTime)
+                        : "Flexible"}
                     </p>
                   </div>
-                  <p className="flex items-center gap-2 text-sm font-bold text-violet-dark ">
-                    <span>
-                      <IoLocationOutline />
-                    </span>
-                    <span>
-                      {currentBooking.userAddress.state}{" "}
-                      {currentBooking.userAddress.suburb}
-                    </span>
-                  </p>
+                  {currentBooking?.userAddress && (
+                    <p className="flex items-center gap-2 text-sm font-bold text-violet-dark ">
+                      <span>
+                        <IoLocationOutline />
+                      </span>
+                      <span>
+                        {currentBooking?.userAddress?.state}{" "}
+                        {currentBooking?.userAddress?.suburb}
+                      </span>
+                    </p>
+                  )}
                 </div>
               </section>
               {/* left image side */}
@@ -294,14 +301,20 @@ const ViewJobs = () => {
                         className="border border-violet-normal  bg-transparent text-violet-normal hover:bg-violet-100  max-md:w-full max-md:px-4 max-md:py-2 "
                       />
 
-                      {invoiceDraft && (
-                        <button
+                      {/* {invoiceDraft && (
+                      <button
+                        onClick={() => setIsModalOpen(true)}
+                        className="rounded-full bg-violet-active px-6 py-3 text-sm font-bold  text-violet-normal transition-opacity duration-300 hover:opacity-90 max-md:w-full max-md:px-4 max-md:py-2 max-md:text-sm "
+                      >
+                        View Saved Offer
+                      </button>
+                    )} */}
+                      {/* <button
                           onClick={() => setIsModalOpen(true)}
-                          className="rounded-full bg-violet-active px-6 py-3 text-sm font-bold  text-violet-normal transition-opacity duration-300 hover:opacity-90 max-md:w-full max-md:px-4 max-md:py-2 max-md:text-sm "
+                          className="rounded-full bg-violet-normal px-6 py-3 text-sm font-medium text-white transition-opacity duration-300 hover:opacity-90 max-md:w-full max-md:px-4 max-md:py-2 max-md:text-sm"
                         >
-                          View Saved Offer
-                        </button>
-                      )}
+                          Make An Offer
+                        </button> */}
                     </div>
                   )}
               </div>

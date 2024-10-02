@@ -25,14 +25,14 @@ export const customerDashboardLinks: DashboardLinks[] = [
     link: "/customer/tasks",
     icon: JobsIcon,
   },
-  {
+  { 
     label: "My Notifications",
     link: "/customer/notifications",
     icon: NotificationIcon,
   },
   {
     label: "Payments",
-    link: "/customer/payment/payment-history",
+    link: "/customer/payment?tab=paymentHistory",
     icon: PaymentIcon,
   },
   // {
@@ -64,7 +64,7 @@ export const serviceProviderDashboardLinks: DashboardLinks[] = [
     icon: NotificationIcon,
   },
   {
-    label: "Payments and Wallet",
+    label: "Payment and Wallet",
     link: "/service-provider/payment",
     icon: PaymentIcon,
   },

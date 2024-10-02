@@ -3,8 +3,8 @@ import Footer from "@/components/layout/Footer";
 import HomeNavigation from "@/components/layout/HomeNavigation";
 
 export const metadata: Metadata = {
-    title: "Taskhub",
-    description: "Taskhub is a task management and booking app built with Next.js.",
+    title: "Oloja",
+    description: "Oloja is a task management and booking app built with Next.js.",
 };
 
 export default function RootLayout({
@@ -15,7 +15,7 @@ export default function RootLayout({
     return (
         <main>
             <HomeNavigation />
-            <div className="min-h-[70vh]">
+            <div className="">
                 {children}
             </div>
             <Footer />

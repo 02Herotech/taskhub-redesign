@@ -149,7 +149,7 @@ const ExploreCategoryLising: React.FC<ExploreCategoryLisingProps> = ({ category 
             {ErrorMsg && (
                 <div className="flex min-h-64 w-full flex-col items-center justify-center gap-4 md:h-[100px]">
                     <p className="sm:text[13px] text-center font-semibold text-red-500 md:text-[16px]">
-                        Kindly check your connection
+                        Something went wrong, please try again
                     </p>
                 </div>
             )}

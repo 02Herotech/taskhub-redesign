@@ -1,13 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 import { FaHome } from "react-icons/fa";
 import { MdPersonalInjury } from "react-icons/md";
 import { GrPersonalComputer } from "react-icons/gr";
 import { BsCalendar2EventFill } from "react-icons/bs";
-import { GiStoneCrafting } from "react-icons/gi";
-import { FaBabyCarriage } from "react-icons/fa";
-import { MdSecurity } from "react-icons/md";
 import { MdLocalGroceryStore } from "react-icons/md";
 import { FaHeartbeat } from "react-icons/fa";
 import { FaGraduationCap } from "react-icons/fa";
@@ -25,7 +22,8 @@ import Popup from "@/components/global/Popup";
 import Button from "@/components/global/Button";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { setCookie, getCookie } from "cookies-next";
+import axios from "axios";
+import { defaultUserDetails } from "@/data/data";
 
 const categoryIcons = [
   FaHome,
@@ -39,46 +37,102 @@ const categoryIcons = [
 ];
 
 const MareketPlace = () => {
-  // set states for market place
   const { categories, isFiltering, isFilteringLoading } = useSelector(
     (state: RootState) => state.market,
   );
 
-  // Getting session and router for pop up and user anthentication state
   const session = useSession();
   const router = useRouter();
   const isAuth = session.status === "authenticated";
-  const isComplete = session?.data?.user?.user?.enabled;
-  const isServiceProvider =
-    session?.data?.user?.user?.roles[0] === "SERVICE_PROVIDER";
+  const token = session?.data?.user?.accessToken;
+  const isServiceProvider = session?.data?.user?.user?.roles[0] === "SERVICE_PROVIDER";
   const [showPopup, setShowPopup] = useState(false);
+  const [fetchedUserData, setFetchedUserData] = useState(defaultUserDetails);
+  const [loadingProfile, setLoadingProfile] = useState(true); 
+  const [hasClosedPopup, setHasClosedPopup] = useState(false);
 
-  // Setting user popup state
   useEffect(() => {
-    const popupCookie = getCookie("showPopup");
-    if (!popupCookie && isAuth && isComplete) {
-      setCookie("showPopup", true, { maxAge: 60 * 2 });
-      setShowPopup(true);
-    }
-  }, [isAuth, isComplete]);
+    const fetchUserData = async () => {
+      if (!token) return;
+      try {
+        const url = isServiceProvider ? "https://smp.jacinthsolutions.com.au/api/v1/service_provider/profile" : "https://smp.jacinthsolutions.com.au/api/v1/customer/profile";
+        const { data } = await axios.get(url, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "multipart/form-data",
+          },
+        });
+        setFetchedUserData(data);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoadingProfile(false)
+      }
+    };
+    fetchUserData();
+  }, [token, isServiceProvider]);
 
-  console.log(session)
+  const { profile: user } = useSelector((state: RootState) => state.userProfile);
+
+  /* eslint-disable react-hooks/exhaustive-deps */
+  const profileProgressData = [
+    {
+      title: "Profile Picture",
+      status: user?.profileImage,
+    },
+    {
+      title: "Email Address",
+      status: user?.emailAddress,
+    },
+    {
+      title: "Address Information",
+      status: user?.address?.postCode,
+    },
+    {
+      title: "Mobile Number",
+      status: user?.phoneNumber,
+    },
+    {
+      title: "Identification Document",
+      status: fetchedUserData.idImage,
+    },
+    {
+      title: "Date of Birth",
+      status: fetchedUserData.dateOfBirth,
+    },
+  ];
+
+  // Popup logic to show after profile data is fully loaded
+  useLayoutEffect(() => {
+    if (!loadingProfile && user && !hasClosedPopup) {
+      const isProfileComplete = profileProgressData.every(
+        (item) => item.status !== "" && item.status !== null && item.status !== undefined
+      );
+
+        if (isAuth && !isProfileComplete) {
+        setShowPopup(true);
+      }
+    }
+  }, [loadingProfile, user, fetchedUserData, isAuth, profileProgressData]);
 
   return (
     <main className="mx-auto max-w-screen-2xl">
       {showPopup && (
-        <Popup isOpen={showPopup} onClose={() => setShowPopup(false)}>
-          <div className="relative h-[312px] max-lg:mx-5 lg:w-[577px]">
+        <Popup isOpen={showPopup} onClose={() =>{
+          setShowPopup(false)
+          setHasClosedPopup(true);
+        } }>
+          <div className="relative h-[312px] max-lg:mx-2 w-full lg:w-[577px]">
             <div className="flex h-full flex-col items-center justify-center space-y-7 text-center">
               <h1 className="font-clashDisplay text-4xl font-semibold text-[#2A1769]">
-                Welcome to TaskHUB
+                Welcome to Olójà
               </h1>
               <p className="mb-8 font-satoshi text-xl font-medium text-black">
                 We are thrilled to have you! Please complete your profile to get
                 access to all our features.
               </p>
               <Button
-                className="w-[151px] rounded-full py-6 max-lg:text-sm"
+                className="lg:w-[151px] rounded-full lg:py-6 max-lg:text-sm"
                 onClick={() =>
                   router.push(
                     isServiceProvider
@@ -93,7 +147,7 @@ const MareketPlace = () => {
             <Image
               src="/assets/images/marketplace/complete-profile-2.png"
               alt="image"
-              className="absolute bottom-1 left-1  size-1/4 lg:size-[160px] "
+              className="absolute bottom-1 left-1 size-1/4 lg:size-[160px] "
               width={160}
               height={160}
             />
@@ -110,7 +164,7 @@ const MareketPlace = () => {
       {!isFiltering && <MarketPlaceHeader />}
 
       <div
-        className={`mx-auto flex max-w-screen-xl flex-col px-6 md:px-16  ${isFiltering ? "pt-16 " : "lg:pt-32"}    `}
+        className={`mx-auto flex max-w-screen-xl flex-col px-6 md:px-16 ${isFiltering ? "pt-16 " : "lg:pt-32"}`}
       >
         <MarketPlaceFilter />
         <div>

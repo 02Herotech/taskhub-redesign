@@ -6,6 +6,7 @@ import {
   GetTaskByTextRequest,
   GetTasksRequest,
   GetTasksResponse,
+  GetCustomerCompletedTasksResponse,
 } from "@/types/services/tasks";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { getSession } from "next-auth/react";
@@ -29,9 +30,9 @@ const getRequest = <T>(url: string, params?: T) => {
     url: !params
       ? url
       : url +
-        `?${queryString({
-          ...cleanedParams,
-        })}`,
+      `?${queryString({
+        ...cleanedParams,
+      })}`,
     method: "GET",
   };
 };
@@ -51,6 +52,12 @@ const patchRequest = (url: string, details: unknown) => ({
 const postRequest = (url: string, details: unknown) => ({
   url,
   method: "POST",
+  body: details,
+});
+
+const putRequest = (url: string, details: unknown) => ({
+  url,
+  method: "PUT",
   body: details,
 });
 
@@ -111,12 +118,12 @@ export const task = createApi({
       query: (customerId) => getRequest(`/task/customer-ongoing-tasks/${customerId}`),
       providesTags: ["Task"],
     }),
-    getCustomerCompletedTasks: builder.query<GetCustomerTasksResponse, number>({
+    getCustomerCompletedTasks: builder.query<GetCustomerCompletedTasksResponse, number>({
       query: (customerId) => getRequest(`/task/customer-completed-tasks/${customerId}`),
       providesTags: ["Task"],
     }),
     deleteTask: builder.mutation<void, number>({
-      query: (id) => postRequest(`/task/delete-task/${id}`,{}),
+      query: (id) => postRequest(`/task/delete-task/${id}`, {}),
       invalidatesTags: ["Task"],
     }),
     searchTaskByText: builder.query<GetTasksResponse, GetTaskByTextRequest>({
@@ -134,6 +141,10 @@ export const task = createApi({
     getTasksOffers: builder.query<Offer[], number>({
       query: (id) => getRequest(`/chat/offer/${id}`),
       providesTags: ["Task"],
+    }),
+    assignTask: builder.mutation<void, { taskId: number; serviceProviderId: number }>({
+      query: (credentials) => putRequest(`/task/assign-task/${credentials.taskId}/${credentials.serviceProviderId}`, {}),
+      invalidatesTags: ["Task"],
     }),
   }),
 });
@@ -153,4 +164,5 @@ export const {
   useFilterTasksQuery,
   useUpdateTaskMutation,
   useGetTasksOffersQuery,
+  useAssignTaskMutation,
 } = task;

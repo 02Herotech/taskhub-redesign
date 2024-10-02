@@ -77,9 +77,9 @@ const Page = () => {
           <CompletionRate />
         </motion.div>
 
-        <div className="flex items-center gap-6 w-full md:hidden overflow-auto " >
+        <div className="flex items-center gap-6 w-full md:hidden overflow-auto">
           <motion.div
-            className=" flex-shrink-0 "
+            className="flex-shrink-0"
             initial={{ opacity: 0, translateY: "5rem" }}
             whileInView={{ opacity: 1, translateY: "0" }}
             transition={{ duration: 1.5 }}

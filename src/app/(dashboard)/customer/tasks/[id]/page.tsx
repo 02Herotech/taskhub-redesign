@@ -4,59 +4,41 @@ import Image from 'next/image';
 import Button from '@/components/global/Button'
 import { HiOutlineLocationMarker } from 'react-icons/hi'
 import { FiCalendar, FiClock } from "react-icons/fi";
-import { useGetTaskByIdQuery } from '@/services/tasks';
-import { dayOfWeekNames, formatAmount, monthNames, suffixes } from '@/lib/utils';
+import { useGetTaskByIdQuery, useGetTasksOffersQuery } from '@/services/tasks';
+import { dayOfWeekNames, formatAmount, formatTime24Hour, monthNames, suffixes } from '@/lib/utils';
 import Loading from '@/shared/loading';
 import { useEffect, useRef, useState } from 'react';
-import AssignOfferForm from '@/components/main/explore/AssignOfferForm';
+import AssignOfferForm from '@/components/dashboard/customer/AssignOfferForm';
+import CustomerTaskOffers from '@/components/dashboard/customer/CustomerTaskOffers';
 
 const NewTaskDetails = ({ params }: { params: { id: string } }) => {
-    const [showOfferForm, setShowOfferForm] = useState(false);
-    const offerButtonRef = useRef<HTMLDivElement>(null);
     const id = params.id;
-    const { data: task, isLoading } = useGetTaskByIdQuery(id as unknown as number);
+    const { data: task, isLoading, error } = useGetTaskByIdQuery(id as unknown as number);
+    const { data: offers, refetch } = useGetTasksOffersQuery(id as unknown as number);
 
     const [showAssignForm, setShowAssignForm] = useState(false);
 
     const handleAssign = (offerId: string) => {
         console.log(`Assigning task to offer: ${offerId}`);
-        // Implement your assignment logic here
-        // You might want to find the user associated with this offer and use their details
-        const assignedOffer = offers.find(o => o.id === offerId);
-        if (assignedOffer) {
-            console.log(`Assigned to: ${assignedOffer.user.name}`);
-        }
     };
-
-    const [replyingTo, setReplyingTo] = useState<string | null>(null);
-    const [replyText, setReplyText] = useState('');
-
-    const handleReply = (offerId: string) => {
-        setReplyingTo(offerId);
-        setReplyText('');
-    };
-
-    const handleSubmitReply = (offerId: string) => {
-        console.log(`Reply to offer ${offerId}: ${replyText}`);
-        // Here you would typically send the reply to your backend
-        setReplyingTo(null);
-        setReplyText('');
-    };
+    const isMounted = useRef(true);
 
     useEffect(() => {
-        function handleClickOutside(event: MouseEvent) {
-            if (offerButtonRef.current && !offerButtonRef.current.contains(event.target as Node)) {
-                setShowOfferForm(false);
+        isMounted.current = true;
+
+        const intervalId = setInterval(() => {
+            if (isMounted.current) {
+                refetch();
             }
-        }
+        }, 10000);
 
-        document.addEventListener("mousedown", handleClickOutside);
         return () => {
-            document.removeEventListener("mousedown", handleClickOutside);
+            isMounted.current = false;
+            clearInterval(intervalId);
         };
-    }, []);
+    }, [refetch]);
 
-    if (!task) {
+    if (isLoading) {
         return (
             <div className="w-full flex items-center justify-center h-[full]">
                 <Loading />
@@ -64,18 +46,16 @@ const NewTaskDetails = ({ params }: { params: { id: string } }) => {
         )
     }
 
-    const handleMakeOffer = () => {
-        setShowOfferForm(true);
-    };
-
-    const handleCloseOfferForm = () => {
-        setShowOfferForm(false);
-    };
-
-    const handleSubmitOffer = (offerAmount: string) => {
-        console.log(`Offer submitted: ${offerAmount}`);
-        // Handle offer submission logic here
-    };
+    if (!task || error) {
+        return (
+            <div className="flex h-[50vh] flex-col w-full items-center justify-center">
+                <h2 className="text-xl lg:text-3xl font-satoshiBold font-bold text-primary">Task not found!</h2>
+                <p className="text-lg lg:text-xl font-satoshiMedium text-[#140B31]">
+                    Something went wrong, please try again later.
+                </p>
+            </div>
+        );
+    }
 
     const date = task?.taskDate ? new Date(task.taskDate[0], task.taskDate[1] - 1, task.taskDate[2]) : new Date();
     const day = date.getDate();
@@ -100,54 +80,7 @@ const NewTaskDetails = ({ params }: { params: { id: string } }) => {
         formattedTime = `${hours === 0 ? 12 : hours}:${(minutes < 10 ? '0' : '') + minutes} AM`;
     }
 
-    const offers = [
-        {
-            id: '1',
-            user: {
-                name: 'Daniel Oluchi',
-                avatar: '/path/to/avatar1.jpg',
-            },
-            message: 'I can do it for $2000',
-            timestamp: '10 mins ago',
-        },
-        {
-            id: '2',
-            user: {
-                name: 'Jane Doe',
-                avatar: '/path/to/avatar2.jpg',
-            },
-            message: 'Can I get more information on the kind of pipes you use?',
-            timestamp: '8 mins ago',
-        },
-        {
-            id: '3',
-            user: {
-                name: 'John West',
-                avatar: '/path/to/avatar1.jpg',
-            },
-            message: 'I can do it for $2000',
-            timestamp: '10 mins ago',
-        },
-        {
-            id: '4',
-            user: {
-                name: 'John West',
-                avatar: '/path/to/avatar1.jpg',
-            },
-            message: 'I can do it for $200',
-            timestamp: '10 mins ago',
-        },
-        {
-            id: '5',
-            user: {
-                name: 'John West',
-                avatar: '/path/to/avatar1.jpg',
-            },
-            message: 'I can do it for $4500',
-            timestamp: '10 mins ago',
-        },
-        // ... more offers
-    ]
+    const isAssigned = task?.taskStatus === "ASSIGNED";
 
     return (
         <section className="py-5 lg:py-14 lg:px-10 font-satoshi">
@@ -180,7 +113,7 @@ const NewTaskDetails = ({ params }: { params: { id: string } }) => {
                                 </div>
                                 <div className="max-lg:text-xs flex items-center space-x-3 text-[#716F78]">
                                     <FiClock className="h-6 w-6" />
-                                    <h5 className='text-[15px] lg:text-xl font-satoshiMedium font-medium'>{task.taskTime || "Flexible"}</h5>
+                                        <h5 className='text-[15px] lg:text-xl font-satoshiMedium font-medium'>{formatTime24Hour(task.taskTime) || "Flexible"}</h5>
                                 </div>
                             </div>
                         </div>
@@ -196,6 +129,7 @@ const NewTaskDetails = ({ params }: { params: { id: string } }) => {
                                     <Button
                                         onClick={() => setShowAssignForm(true)}
                                         className='rounded-full'
+                                        disabled={isAssigned}
                                     >
                                         Assign Task
                                     </Button>
@@ -207,76 +141,15 @@ const NewTaskDetails = ({ params }: { params: { id: string } }) => {
                     </div>
                 </>
             )}
-            <div className="max-h-96 overflow-y-scroll small-scrollbar pr-5 mt-14">
-                <div className="flex justify-between items-center mb-6">
-                    <h2 className="text-xl font-bold text-[#E58C06] lg:text-3xl">Offers</h2>
-                    <button className="text-lg font-bold text-[#E58C06] lg:text-2xl">View all</button>
-                </div>
-                <div className="space-y-5">
-                    {offers.map((offer) => (
-                        <div key={offer.id} className="flex flex-col">
-                            <div className={`flex justify-start w-full`}>
-                                <div className={`w-full`}>
-                                    <div className="flex items-center justify-between mb-2">
-                                        <div className="flex items-center">
-                                            <Image
-                                                src={offer.user.avatar}
-                                                alt={offer.user.name}
-                                                width={32}
-                                                height={32}
-                                                className="rounded-full mr-2"
-                                            />
-                                            <span className="font-semibold">{offer.user.name}</span>
-                                        </div>
-                                        <span className="text-primary font-semibold">{offer.timestamp}</span>
-                                    </div>
-                                    <div className="p-3 rounded-lg bg-gray-100">
-                                        <p>{offer.message}</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="mt-2 flex justify-start">
-                                <div
-                                    onClick={() => handleReply(offer.id)}
-                                    className="text-sm text-primary font-semibold py-1 cursor-pointer"
-                                >
-                                    Reply
-                                </div>
-                            </div>
-                            {replyingTo === offer.id && (
-                                <div className="mt-2">
-                                    <textarea
-                                        value={replyText}
-                                        onChange={(e) => setReplyText(e.target.value)}
-                                        className="w-full p-2 border border-gray-300 rounded"
-                                        rows={3}
-                                        placeholder="Type your reply here..."
-                                    ></textarea>
-                                    <div className="mt-2 flex justify-end space-x-2">
-                                        <div
-                                            onClick={() => setReplyingTo(null)}
-                                            className="text-sm py-1 font-semibold text-rose-600 cursor-pointer"
-                                        >
-                                            Cancel
-                                        </div>
-                                        <div
-                                            onClick={() => handleSubmitReply(offer.id)}
-                                            className="text-sm py-1 text-primary font-semibold cursor-pointer"
-                                        >
-                                            Send Reply
-                                        </div>
-                                    </div>
-                                </div>
-                            )}
-                        </div>
-                    ))}
-                </div>
-            </div>
+            {offers && offers.length > 0 && (
+                <CustomerTaskOffers taskId={Number(id)} posterId={task.posterId} />
+            )}
             {showAssignForm && (
                 <AssignOfferForm
                     onClose={() => setShowAssignForm(false)}
                     onAssign={handleAssign}
-                    offers={offers}
+                    offers={offers || []}
+                    taskId={Number(id)}
                 />
             )}
         </section>

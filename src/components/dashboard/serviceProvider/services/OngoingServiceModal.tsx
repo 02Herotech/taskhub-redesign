@@ -4,10 +4,12 @@ import { RootState } from "@/store";
 import axios from "axios";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
+import Link from "next/link";
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { BiFlag, BiX } from "react-icons/bi";
-import { BsExclamationTriangle, BsTriangleFill } from "react-icons/bs";
+import { BsExclamationTriangle, BsTriangleFill, BsX } from "react-icons/bs";
 import { GrFlagFill } from "react-icons/gr";
+import { IoWarning } from "react-icons/io5";
 import { PiSealCheckFill } from "react-icons/pi";
 import { useSelector } from "react-redux";
 import { BeatLoader } from "react-spinners";
@@ -31,6 +33,7 @@ const OngoingServiceModal = ({
     message: "",
     loading: false,
   });
+  const [isServiceCompleted, setIsServiceCompleted] = useState(false);
   const [categories, setCategories] = useState<CategoryType[]>([]);
   const [formState, setFormState] = useState({
     category: "Select a category",
@@ -57,6 +60,7 @@ const OngoingServiceModal = ({
       jobId: modalData.message,
       isReportSent: false,
     });
+    setIsServiceCompleted(false);
   };
 
   const handleCompleteService = async () => {
@@ -77,12 +81,16 @@ const OngoingServiceModal = ({
         isCompleteService: false,
         message: data.message,
       }));
+      setIsServiceCompleted(true);
     } catch (error: any) {
+      console.log("Error message", error.response?.data?.message || error);
       setModalData((prev) => ({
         ...prev,
         isStartService: true,
         isCompleteService: false,
-        error: "Kindly check your network connection",
+        error:
+          error.response?.data?.message ||
+          "Kindly check your network connection",
       }));
     } finally {
       setCompleteJobState({ ...completeJobState, loading: false });
@@ -133,33 +141,69 @@ const OngoingServiceModal = ({
         className="absolute inset-0 -z-20 h-screen  w-screen"
         onClick={handleCloseModal}
       ></div>
-      {modalData.isStartService ? (
-        <div className="flex w-[90vw] max-w-lg flex-col items-center justify-center gap-4  rounded-lg bg-violet-light p-5">
+      {modalData.error ? (
+        <div className="relative z-10 flex w-[90vw] max-w-xl flex-col items-center justify-center gap-3 rounded-xl bg-white p-3 px-4 lg:space-y-4 lg:p-10">
+          <div className=" flex flex-col items-center justify-center gap-4">
+            <div className="flex size-20 items-center justify-center rounded-full bg-red-100 bg-opacity-60">
+              <div className=" flex size-14 items-center justify-center rounded-full bg-red-300 p-4">
+                <BsExclamationTriangle className="size-10 text-red-500" />
+              </div>
+            </div>
+            <p className="text-center font-satoshiBold text-2xl font-extrabold text-red-500">
+              Failure
+            </p>
+            <p className="text-center font-semibold text-violet-darker">
+              {modalData.error}
+            </p>
+            <div className="flex items-center gap-6">
+              <button
+                onClick={handleCloseModal}
+                className="rounded-full bg-violet-normal px-6 py-2 font-bold text-white max-sm:text-sm"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      ) : modalData.isStartService ? (
+        <div className="relative flex w-[90vw] max-w-lg flex-col items-center justify-center gap-4  rounded-lg bg-white p-5">
+          <button
+            onClick={handleCloseModal}
+            className="absolute right-3 top-3 rounded-full border border-violet-normal p-1 text-violet-normal"
+          >
+            <BsX />
+          </button>
           <div className="flex size-20 items-center justify-center rounded-full bg-[#C1F6C3] bg-opacity-60">
             <div className=" flex size-14 items-center justify-center rounded-full bg-[#A6F8AA] p-2">
               <PiSealCheckFill className="size-10 text-green-500" />
             </div>
           </div>
           <h2 className="font-satoshiBold text-2xl font-bold text-violet-normal">
-            Report Sent
+            {isServiceCompleted
+              ? "Job Completed successfully"
+              : "Job Started successfully"}
           </h2>
           <p className="text-center font-bold text-violet-darker ">
-            {modalData.message}
+            {isServiceCompleted
+              ? "Success! Your job is complete. We will notify the customer you have completed it."
+              : "Success! Your job has started. We will notify the customer you are on it."}
+
+            {/* {modalData.message} */}
           </p>
           <div className="flex items-center justify-center">
             <button
               onClick={handleCloseModal}
               className="mx-auto rounded-full bg-violet-normal p-3 px-10 text-center font-bold text-white  transition-opacity duration-300 hover:opacity-90 "
             >
-              View my services
+              Close
             </button>
           </div>
         </div>
       ) : modalData.isCompleteService ? (
-        <div className="flex w-[90vw] max-w-lg flex-col items-center justify-center gap-4  rounded-lg bg-violet-light p-5">
-          <div className="flex size-20 items-center justify-center rounded-full bg-[#C1F6C3] bg-opacity-60">
-            <div className=" flex size-14 items-center justify-center rounded-full bg-[#A6F8AA] p-2">
-              <PiSealCheckFill className="size-10 text-green-500" />
+        <div className="flex w-[90vw] max-w-lg flex-col items-center justify-center gap-4  rounded-lg bg-white p-5">
+          <div className="flex size-20 items-center justify-center rounded-full bg-opacity-60">
+            <div className=" flex size-14 items-center justify-center rounded-full bg-violet-light p-2">
+              <IoWarning className="size-10 text-violet-normal" />
             </div>
           </div>
           <h2 className="font-satoshiBold text-2xl font-bold text-violet-normal">

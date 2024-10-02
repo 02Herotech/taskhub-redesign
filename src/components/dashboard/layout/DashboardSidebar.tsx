@@ -13,6 +13,15 @@ import {
 import Link from "next/link";
 import { SettingsIcon } from "@/lib/svgIcons";
 import axios from "axios";
+import { useDispatch } from "react-redux";
+import {
+  removeUserProfile
+} from "@/store/Features/userProfile";
+
+const initialAuthState = {
+  token: null,
+  role: null,
+};
 
 const DashboardSidebar = () => {
   const [showSettings, setShowSettings] = useState(false);
@@ -22,15 +31,22 @@ const DashboardSidebar = () => {
   const pathname = usePathname();
   const router = useRouter();
 
-  const handleLogUserOut = async () => {
+  const [auth, setAuth] = useState<{
+    token: string | null;
+    role: string[] | null;
+  }>(initialAuthState);
+
+  const dispatch = useDispatch();
+
+  const handleLogout = async () => {
     try {
-      await signOut();
       await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/logout`);
+      setAuth(initialAuthState);
+      dispatch(removeUserProfile());
+      await signOut({ callbackUrl: "https://taskhub.com.au/home" });
       router.push("/home");
     } catch (error: any) {
       console.log(error);
-    } finally {
-      router.push("/home");
     }
   };
 
@@ -64,7 +80,7 @@ const DashboardSidebar = () => {
           {/* Settings Dropdown section */}
           <button
             onClick={() => setShowSettings((prev) => !prev)}
-            className={`flex items-center gap-4 rounded-md px-4 py-3 text-sm font-medium  text-white transition-all duration-300 max-md:text-sm ${
+            className={`flex items-center gap-4 rounded-md px-4 py-3 text-sm font-medium  text-white ${isServiceProvider ? "gap-4" : "gap-8"} transition-all duration-300 max-md:text-sm ${
               pathname.includes("/service-provider/dashboard/settings")
                 ? "bg-yellow-500 hover:bg-opacity-90"
                 : "bg-violet-normal hover:bg-violet-950"
@@ -80,7 +96,7 @@ const DashboardSidebar = () => {
               <Link
                 key={item.label}
                 href={item.link}
-                className={`flex items-center  gap-4 rounded-md px-4 py-3 pl-16 text-sm  font-medium text-white transition-all duration-300 max-md:text-sm ${
+                className={`flex items-center gap-4 rounded-md px-4 py-3 pl-16 text-sm  font-medium text-white transition-all duration-300 max-md:text-sm ${
                   pathname === item.link
                     ? "bg-yellow-500 hover:bg-opacity-90"
                     : "hover:bg-violet-950"
@@ -94,8 +110,8 @@ const DashboardSidebar = () => {
         </div>
         <div>
           <button
-            onClick={handleLogUserOut}
-            className="flex   w-full items-center gap-4 rounded-md px-4 py-3 font-medium  text-white transition-all duration-300 hover:bg-violet-950 max-md:text-sm"
+            onClick={handleLogout}
+            className="flex w-full items-center gap-4 rounded-md px-4 py-3 font-medium  text-white transition-all duration-300 hover:bg-violet-950 max-md:text-sm"
           >
             <span>
               <BiLogOut className="size-7" />

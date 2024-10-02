@@ -17,6 +17,7 @@ import { BeatLoader } from "react-spinners";
 import { BsPencilSquare } from "react-icons/bs";
 import { PiSealCheckFill } from "react-icons/pi";
 import { toPng } from "html-to-image";
+import { formatAmount } from "@/lib/utils";
 
 interface ModalPropType {
   isModalOpen: boolean;
@@ -35,15 +36,17 @@ const Invoice = ({
 
   const [invoiceState, setInvoiceState] = useState<{
     price: string | number;
-    date: Date | null;
+    date: Date | null | string;
     gst: number;
     total: number;
+    serviceCharge: number;
     successData: string;
     loading: boolean;
   }>({
     price: "",
     date: null,
     gst: 0,
+    serviceCharge: 0,
     total: 0,
     successData: "",
     loading: false,
@@ -61,40 +64,36 @@ const Invoice = ({
   const user = session?.data?.user?.user;
 
   useEffect(() => {
-    setInvoiceState({
-      price:
-        invoiceDraft?.price !== undefined
-          ? invoiceDraft.price
-          : currentBooking?.price ?? "",
-      date:
-        invoiceDraft?.serviceStartOn !== undefined
-          ? invoiceDraft.serviceStartOn
-          : (currentBooking &&
-            convertToDateInputFormat(currentBooking?.startDate)) ??
-          null,
-      gst:
-        invoiceDraft?.gst !== undefined
-          ? invoiceDraft.gst
-          : currentBooking
-            ? Math.floor((currentBooking.price / 100) * 10)
-            : 0,
-      total:
-        invoiceDraft?.total !== undefined
-          ? invoiceDraft.total
-          : currentBooking
-            ? Math.floor(
-              currentBooking.price -
-              (currentBooking.price / 100) * 10 -
-              (currentBooking.price / 100) * 2,
-            )
-            : 0,
+    const calculateUserEarnings = () => {
+      const price = invoiceDraft?.price || currentBooking?.price || 0;
 
-      successData: "",
-      loading: false,
-    });
+      // Calculate GST deduction (10% of the price)
+      const gstAmount = Number(price) * 0.10;
+
+      // Calculate service charge deduction (2% of the price)
+      const serviceChargeAmount = Number(price) * 0.02;
+
+      // Final amount the user earns after deductions
+      const userEarnings = Number(price) - (gstAmount + serviceChargeAmount);
+
+      // Update state with calculated values
+      setInvoiceState(prev => ({
+        ...prev,
+        price: price.toString(), // Convert to string for input field
+        gst: gstAmount,
+        serviceCharge: serviceChargeAmount,
+        total: userEarnings,
+      }));
+    };
+
+    calculateUserEarnings();
   }, [currentBooking, invoiceDraft]);
 
   function convertToDateInputFormat(dateArray: number[]) {
+    if (!dateArray) {
+      return "Flexible"
+    }
+
     const [year, month, day] = dateArray;
 
     // Ensure month and day are two digits
@@ -178,18 +177,26 @@ const Invoice = ({
     }));
   };
 
-  useEffect(() => {
-    setInvoiceState((prev) => ({
+  const handlePriceChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const newPrice = event.target.value;
+    setInvoiceState(prev => ({
       ...prev,
-      gst: Math.floor((Number(invoiceState.price) / 100) * 10),
-      total: Math.floor(
-        Number(invoiceState.price) -
-        (Number(invoiceState.price) / 100) * 10 -
-        (Number(invoiceState.price) / 100) * 2,
-      ),
+      price: newPrice,
     }));
-    // eslint-disable-next-line
-  }, [invoiceState.price]);
+
+    // Recalculate GST, service charge, and total
+    const price = Number(newPrice) || 0;
+    const gstAmount = price * 0.10;
+    const serviceChargeAmount = price * 0.02;
+    const userEarnings = price - (gstAmount + serviceChargeAmount);
+
+    setInvoiceState(prev => ({
+      ...prev,
+      gst: gstAmount,
+      serviceCharge: serviceChargeAmount,
+      total: userEarnings,
+    }));
+  };
 
   const handleDownloadImage = async () => {
     if (invoiceContainerRef.current) {
@@ -262,20 +269,15 @@ const Invoice = ({
               </span>
               <div className="flex w-full items-center gap-1">
                 <p>$ </p>
-                <input
-                  type="number"
-                  name="price"
-                  value={invoiceState.price}
-                  placeholder={currentBooking?.price?.toString()}
-                  disabled={currentBooking?.invoiceSent}
-                  className="w-full bg-violet-light py-2 outline-none"
-                  onChange={(event) =>
-                    setInvoiceState((prev) => ({
-                      ...prev,
-                      price: event.target.value,
-                    }))
-                  }
-                />
+                  <input
+                    type="number"
+                    name="price"
+                    value={invoiceState.price}
+                    placeholder={currentBooking?.price?.toString()}
+                    disabled={currentBooking?.invoiceSent}
+                    className="w-full bg-violet-light py-2 outline-none"
+                    onChange={handlePriceChange}
+                  />
               </div>
             </label>
             <label className="flex flex-grow flex-col gap-2 rounded-lg bg-violet-light p-4 py-2 font-bold ">
@@ -285,27 +287,40 @@ const Invoice = ({
                   <BsPencilSquare className="text-violet-normal" />
                 )}
               </span>
-              <DatePicker
-                selected={invoiceState.date as Date}
-                minDate={new Date()}
-                required
-                disabled={currentBooking?.invoiceSent}
-                onChange={(date: Date) =>
-                  setInvoiceState((prev) => ({
-                    ...prev,
-                    date: date,
-                  }))
-                }
-                className="w-full bg-transparent text-[#716F78]  outline-none  "
-                dateFormat="dd/MM/yyyy"
-              />
+                {invoiceState.date ? (
+                  typeof invoiceState.date === 'string' ? (
+                    <input
+                      type="text"
+                      value={invoiceState.date}
+                      readOnly
+                      className="w-full bg-transparent text-[#716F78] outline-none"
+                    />
+                  ) : (
+                    <DatePicker
+                      selected={invoiceState.date}
+                      minDate={new Date()}
+                      required
+                      disabled={currentBooking?.invoiceSent}
+                      onChange={(date: Date) =>
+                        setInvoiceState((prev) => ({
+                          ...prev,
+                          date: date,
+                        }))
+                      }
+                      className="w-full bg-transparent text-[#716F78] outline-none"
+                      dateFormat="dd/MM/yyyy"
+                    />
+                  )
+                ) : (
+                  <span>Flexible</span>
+                )}
             </label>
           </div>
           <div className="space-y-3 rounded-lg bg-violet-active p-3 py-4 text-violet-normal">
             <p className="font-bold uppercase text-violet-normal ">
               Service Information
             </p>
-            <div className="grid grid-cols-2 gap-3 ">
+            <div className="grid grid-cols-2 gap-3">
               <div className="space-y-3">
                 <div>
                   <p className="font-black text-violet-dark  ">
@@ -336,19 +351,29 @@ const Invoice = ({
                   <p className="font-medium  text-[#4E5158]">Due On</p>
                 </div>
                 <div>
-                  <p className=" font-extrabold text-violet-dark  ">Bill To</p>
+                  <p className=" font-extrabold text-violet-dark">Bill To</p>
                   <p className="font-medium  text-[#4E5158]">
                     {currentBooking?.customer?.user?.fullName}
                   </p>
                 </div>
                 <div>
-                  <p className=" font-extrabold text-violet-dark  ">
-                    ${invoiceState.total}
+                  <p className="font-extrabold text-violet-dark">
+                    ${invoiceState.serviceCharge}
                   </p>
-                  <p className="font-medium  text-[#4E5158]">
-                    Amount + Service fee (2%)
+                  <p className="font-medium text-[#E10909]">
+                    Service fee (2%)
                   </p>
                 </div>
+              </div>
+            </div>
+            <div className="flex items-center justify-center">
+              <div>
+                <p className="font-extrabold text-[#006F05] text-center font-satoshiBold text-xl lg:text-3xl">
+                  ${invoiceState.total}
+                </p>
+                <p className="font-medium text-[#4E5158]">
+                  Total Amount Payable
+                </p>
               </div>
             </div>
           </div>

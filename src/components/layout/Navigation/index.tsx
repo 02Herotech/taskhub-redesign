@@ -30,6 +30,8 @@ import {
   removeUserProfile,
   setAuthLoading,
   setUserProfileAuth,
+  setWalletBalance,
+  setWalletLoading,
   updateUserProfile,
 } from "@/store/Features/userProfile";
 import ChatSocket from "@/components/main/message/ChatSocket";
@@ -54,9 +56,7 @@ const Navigation = () => {
 
   const dispatch = useDispatch();
   const userProfile = useSelector((state: RootState) => state.userProfile);
-  const { totalUnreadMessages, newMessage } = useSelector(
-    (state: RootState) => state.chat,
-  );
+  const { totalUnreadMessages } = useSelector((state: RootState) => state.chat);
 
   const pathname = usePathname();
 
@@ -150,17 +150,31 @@ const Navigation = () => {
     const fetchUserProfile = async () => {
       if (!user) return;
       try {
+        dispatch(setWalletLoading(true));
         const url =
           "https://api.oloja.com.au/api/v1/user/user-profile/" +
           user.id;
         const { data } = await axios.get(url);
+        const userData: UserProfileTypes = data;
         dispatch(updateUserProfile(data));
+        if (isServiceProvider) {
+          const walleturl =
+            "https://smp.jacinthsolutions.com.au/api/v1/booking/wallet/provider/" +
+            userData.serviceProviderId;
+          const response = await axios.get(walleturl, {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+          dispatch(setWalletBalance(response.data.walletBalance));
+        }
       } catch (error: any) {
-        console.error(error.response.data);
+        console.error(error?.response?.data || error);
+      } finally {
+        dispatch(setWalletLoading(false));
       }
     };
     fetchUserProfile();
-  }, [user, userProfile.refresh, dispatch]);
+    // eslint-disable-next-line
+  }, [user, userProfile.refresh, dispatch, userProfile.walletRefresh]);
 
   const notificationRoute = isServiceProvider
     ? "/service-provider/notification"

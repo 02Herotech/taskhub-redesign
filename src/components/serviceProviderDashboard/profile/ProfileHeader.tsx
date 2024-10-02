@@ -79,7 +79,7 @@ const ProfileHeader = () => {
               href={editProfileLink}
               className="text-md font-satoshi font-semibold text-primary underline"
             >
-              Edit Account Details
+              View Profile
             </Link>
             <p className="text-sm font-medium text-[#140B31]">
               {/* @ts-expect-error "Type error in the user declaration as number array" */}

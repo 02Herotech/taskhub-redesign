@@ -17,8 +17,6 @@ const ProfileCompletion = ({ fetchedUserData }: ProfileCompletionType) => {
     (state: RootState) => state.userProfile,
   );
 
-  console.log(user?.profileImage);
-
   const [chartData, setChartData] = useState({ total: 0, completed: 0 });
 
   const profileProgressData = [
@@ -32,7 +30,7 @@ const ProfileCompletion = ({ fetchedUserData }: ProfileCompletionType) => {
     },
     {
       title: "Address Information",
-      status: user?.address?.state,
+      status: user?.address?.postCode,
     },
     {
       title: "Mobile Number",
@@ -64,7 +62,7 @@ const ProfileCompletion = ({ fetchedUserData }: ProfileCompletionType) => {
 
   return (
     <section className="flex min-h-64 flex-col items-center gap-3 rounded-lg bg-[#EBE9F4] p-4 md:grid md:grid-cols-12">
-      <h2 className="text-center text-3xl font-bold text-[#140B31] md:hidden ">
+      <h2 className="text-center text-3xl font-bold text-[#140B31] md:hidden">
         Profile Completion
       </h2>
       <div className="col-span-4 max-md:max-w-32">

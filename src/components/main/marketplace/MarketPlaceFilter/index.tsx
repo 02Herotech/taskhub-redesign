@@ -184,7 +184,7 @@ const MarketPlaceFilter = () => {
             setIsMobileFilterModalShown={setIsMobileFilterModalShown}
             setfilterDataStructure={setfilterDataStructure}
             filterDataStructure={filterDataStructure}
-          // handleResetFilters={handleResetFilters}
+            // handleResetFilters={handleResetFilters}
           />
           <div className="flex gap-4">
             <button
@@ -354,9 +354,9 @@ const MarketPlaceFilter = () => {
                   {filterDataStructure.typeOfServiceDisplay === ""
                     ? "Type of service"
                     : truncateText(
-                      filterDataStructure.typeOfServiceDisplay,
-                      12,
-                    )}
+                        filterDataStructure.typeOfServiceDisplay,
+                        12,
+                      )}
                   <span>
                     <BsTriangleFill
                       fill="rgb(56 31 140)"
@@ -387,22 +387,22 @@ const MarketPlaceFilter = () => {
               </div>
               {/* ----------------------------------------- */}
               {/* Pricing */}
-              <div className="relative z-20">
+              <div className="relative">
                 {(filterDataStructure.minPrice !== 5 ||
                   filterDataStructure.maxPrice !== 1000) && (
-                    <button
-                      className="absolute -right-1 -top-1 flex size-6 items-center justify-center rounded-full bg-violet-normal text-white"
-                      onClick={() =>
-                        setfilterDataStructure((prev) => ({
-                          ...prev,
-                          minPrice: 5,
-                          maxPrice: 1000,
-                        }))
-                      }
-                    >
-                      <BsX />
-                    </button>
-                  )}
+                  <button
+                    className="absolute -right-1 -top-1 flex size-6 items-center justify-center rounded-full bg-violet-normal text-white"
+                    onClick={() =>
+                      setfilterDataStructure((prev) => ({
+                        ...prev,
+                        minPrice: 5,
+                        maxPrice: 1000,
+                      }))
+                    }
+                  >
+                    <BsX />
+                  </button>
+                )}
                 <button
                   className="flex items-center gap-2 rounded-3xl border border-violet-normal  bg-violet-light px-4 py-2 text-base font-bold text-violet-normal transition-colors duration-300 hover:bg-violet-200 "
                   onClick={() => handleShowDropdown("pricing")}

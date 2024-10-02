@@ -57,10 +57,10 @@ const ServicesPage = () => {
         (item) => item.bookingStage === "ACCEPTED",
       );
 
-      const filteredOngoingData = data.filter(
-        (item) =>
-          item.bookingStage === "PAID" || item.bookingStage === "STARTED",
-      );
+      // const filteredOngoingData = data.filter(
+      //   (item) =>
+      //     item.bookingStage === "PAID" || item.bookingStage === "STARTED",
+      // );
       setAcceptedBookingData(filteredAcceptedData);
     } catch (error) {
       console.error("An error occurred while fetching services:", error);
@@ -80,7 +80,7 @@ const ServicesPage = () => {
           Authorization: "Bearer " + token,
         },
       });
-      setJobs(data.reverse());
+      setJobs(data);
     } catch (error: any) {
       console.error(error.response?.data || error);
     } finally {
@@ -90,7 +90,6 @@ const ServicesPage = () => {
 
   useEffect(() => {
     const handlefetches = async () => {
-      console.log("refreshing");
       await fetchBookings();
       await fetchJobs();
     };
