@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 import axios from "axios";
 import Head from "next/head";
 import Image from "next/image";
@@ -24,6 +24,7 @@ import ProgressBar from "@/components/global/progressbar";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
 import { getCookie, setCookie } from "cookies-next";
+import { defaultUserDetails } from "@/data/data";
 
 interface FormData {
   listingTitle: string;
@@ -72,7 +73,7 @@ const ProvideService: React.FC = () => {
   const session = useSession();
   const route = useRouter();
   const id = session?.data?.user.user.id;
-  const isAuthenticated = session?.data?.user.user.enabled;
+  const token = session?.data?.user?.accessToken;
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const [task, setTask] = useState<FormData>({
@@ -148,6 +149,12 @@ const ProvideService: React.FC = () => {
     setCookie("categoryId", task.categoryId?.toString(), { maxAge: 1200 });
     setCookie("postCode", task.postCode, { maxAge: 1200 });
   }, [task]);
+  const isServiceProvider = session?.data?.user?.user?.roles[0] === "SERVICE_PROVIDER";
+  const [complete, setComplete] = useState(false);
+  const [fetchedUserData, setFetchedUserData] = useState(defaultUserDetails);
+  const [loadingProfile, setLoadingProfile] = useState(true);
+  const [hasClosedPopup, setHasClosedPopup] = useState(false);
+  const isAuth = session.status === "authenticated";
 
   const [errs, setErrs] = useState({
     image1: "",
@@ -165,9 +172,6 @@ const ProvideService: React.FC = () => {
     { value: "SUNDAY", label: "Sunday" },
   ];
 
-  const { profile: user } = useSelector(
-    (state: RootState) => state.userProfile,
-  );
 
 
   // Handling getting the description from the marketplace when i user navigates from the marketplace
@@ -182,6 +186,71 @@ const ProvideService: React.FC = () => {
     }
   }, []);
   // End of getting description from the marketplace
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      if (!token) return;
+      try {
+        const url = isServiceProvider ? "https://smp.jacinthsolutions.com.au/api/v1/service_provider/profile" : "https://smp.jacinthsolutions.com.au/api/v1/customer/profile";
+        const { data } = await axios.get(url, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "multipart/form-data",
+          },
+        });
+        setFetchedUserData(data);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoadingProfile(false)
+      }
+    };
+    fetchUserData();
+  }, [token, isServiceProvider]);
+
+  const { profile: user } = useSelector((state: RootState) => state.userProfile);
+
+  /* eslint-disable react-hooks/exhaustive-deps */
+  const profileProgressData = [
+    {
+      title: "Profile Picture",
+      status: user?.profileImage,
+    },
+    {
+      title: "Email Address",
+      status: user?.emailAddress,
+    },
+    {
+      title: "Address Information",
+      status: user?.address?.postCode,
+    },
+    {
+      title: "Mobile Number",
+      status: user?.phoneNumber,
+    },
+    {
+      title: "Identification Document",
+      status: fetchedUserData.idImage,
+    },
+    {
+      title: "Date of Birth",
+      status: fetchedUserData.dateOfBirth,
+    },
+  ];
+
+  // Popup logic to show after profile data is fully loaded
+  useLayoutEffect(() => {
+    if (!loadingProfile && user && !hasClosedPopup) {
+      const isProfileComplete = profileProgressData.every(
+        (item) => item.status !== "" && item.status !== null && item.status !== undefined
+      );
+
+      if (isAuth && !isProfileComplete) {
+        setComplete(true)
+      }
+    }
+  }, [loadingProfile, user, fetchedUserData, isAuth, profileProgressData]);
+
 
   useEffect(() => {
     const fetchPostalCodeData = async () => {
@@ -1477,7 +1546,7 @@ const ProvideService: React.FC = () => {
         </div>
       </div>
       <div>
-        {!isAuthenticated ? (
+        {complete ? (
           <Popup
             isOpen={isSuccessPopupOpen}
             onClose={() => {
