@@ -30,7 +30,8 @@ const ServiceProviderChat = () => {
   const [contact, setContact] = useState<ChatContactTypes | null>();
   const router = useRouter()
 
-  const [groupedChatMessages, setGroupedChatMessages] = useState<ChatMessagesGroupedType | null>(null);
+  const [groupedChatMessages, setGroupedChatMessages] =
+    useState<ChatMessagesGroupedType | null>(null);
 
   const session = useSession();
   const dispatch = useDispatch();
@@ -250,29 +251,14 @@ const ServiceProviderChat = () => {
     }
   };
 
-  const formatDateIntoReadableFormat = (input: string | number[]): string => {
-    let date: Date;
-
-    if (Array.isArray(input)) {
-      // Handle array input [year, month, day, hour, minute, second, millisecond]
-      const [year, month, day, hour = 0, minute = 0, second = 0, millisecond = 0] = input;
-      date = new Date(year, month - 1, day, hour, minute, second, millisecond);
-    } else if (typeof input === 'string') {
-      date = new Date(input);
-    } else {
-      throw new Error('Invalid input type. Expected string or number array.');
-    }
-
-    if (isNaN(date.getTime())) {
-      throw new Error('Invalid date');
-    }
-
+  const formatDateIntoReadableFormat = (dateString: string): string => {
+    const date = new Date(dateString);
     const day = date.getDate();
     const month = date.toLocaleString("default", { month: "long" });
     const year = date.getFullYear();
 
     // Determine the ordinal suffix
-    const ordinalSuffix = (day: number): string => {
+    const ordinalSuffix = (day: number) => {
       if (day > 3 && day < 21) return "th";
       switch (day % 10) {
         case 1:
