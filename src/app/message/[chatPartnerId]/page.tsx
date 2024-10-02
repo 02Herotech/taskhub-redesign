@@ -30,8 +30,7 @@ const ServiceProviderChat = () => {
   const [contact, setContact] = useState<ChatContactTypes | null>();
   const router = useRouter()
 
-  const [groupedChatMessages, setGroupedChatMessages] =
-    useState<ChatMessagesGroupedType | null>(null);
+  const [groupedChatMessages, setGroupedChatMessages] = useState<ChatMessagesGroupedType | null>(null);
 
   const session = useSession();
   const dispatch = useDispatch();
@@ -98,6 +97,8 @@ const ServiceProviderChat = () => {
           );
           const groupedMessages = groupMessagesByDate(displayMessages);
           setGroupedChatMessages(groupedMessages);
+
+          console.log("ss", displayMessages)
         })
         .catch((error: any) => {
           console.log(error.response.data || error.message || error);
@@ -249,14 +250,29 @@ const ServiceProviderChat = () => {
     }
   };
 
-  const formatDateIntoReadableFormat = (dateString: string): string => {
-    const date = new Date(dateString);
+  const formatDateIntoReadableFormat = (input: string | number[]): string => {
+    let date: Date;
+
+    if (Array.isArray(input)) {
+      // Handle array input [year, month, day, hour, minute, second, millisecond]
+      const [year, month, day, hour = 0, minute = 0, second = 0, millisecond = 0] = input;
+      date = new Date(year, month - 1, day, hour, minute, second, millisecond);
+    } else if (typeof input === 'string') {
+      date = new Date(input);
+    } else {
+      throw new Error('Invalid input type. Expected string or number array.');
+    }
+
+    if (isNaN(date.getTime())) {
+      throw new Error('Invalid date');
+    }
+
     const day = date.getDate();
     const month = date.toLocaleString("default", { month: "long" });
     const year = date.getFullYear();
 
     // Determine the ordinal suffix
-    const ordinalSuffix = (day: number) => {
+    const ordinalSuffix = (day: number): string => {
       if (day > 3 && day < 21) return "th";
       switch (day % 10) {
         case 1:
@@ -274,7 +290,7 @@ const ServiceProviderChat = () => {
   };
 
   return (
-    <main className="h-[calc(100cqh-5rem)] space-y-5 overflow-hidden   p-4 lg:p-8 ">
+    <main className="h-[calc(100cqh-5rem)] space-y-5 overflow-hidden p-4 lg:p-8 ">
       <section className="grid gap-10 divide-slate-400 lg:grid-cols-12 lg:divide-x ">
         <section className="col-span-5 h-full max-md:hidden ">
           <ChatNavigation />
@@ -348,9 +364,7 @@ const ServiceProviderChat = () => {
                               <p>{item.content}</p>
                               <div className="flex items-center justify-end gap-2 text-[0.7rem]">
                                 <span className="">
-                                  {typeof item.time === "string"
-                                    ? formatTime(item.time)
-                                    : formatTimestamp(item.time as number[])}
+                                  {formatTimestamp(item.time as number[])}
                                 </span>
                                 {item.senderId === user.id && (
                                   <span className="block">
