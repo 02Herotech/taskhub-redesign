@@ -17,7 +17,35 @@ export function cn(...inputs: ClassValue[]) {
 
 export function formatDate(input: string | number | Date): string {
 	if (!input) return "";
-	const date = new Date(input);
+
+	let date: Date;
+
+	if (input instanceof Date) {
+		date = input;
+	} else if (typeof input === 'number') {
+		date = new Date(input);
+	} else {
+		// For string input, try to parse it
+		const parsedDate = new Date(input);
+		if (isNaN(parsedDate.getTime())) {
+			// If parsing fails, try to manually parse the string
+			const parts = input.split(/[-T:]/);
+			date = new Date(
+				parseInt(parts[0], 10),
+				parseInt(parts[1], 10) - 1,
+				parseInt(parts[2], 10)
+			);
+		} else {
+			date = parsedDate;
+		}
+	}
+
+	// Check if the date is valid
+	if (isNaN(date.getTime())) {
+		console.error('Invalid date input:', input);
+		return "";
+	}
+
 	const year = date.getFullYear();
 	const month = String(date.getMonth() + 1).padStart(2, "0");
 	const day = String(date.getDate()).padStart(2, "0");
