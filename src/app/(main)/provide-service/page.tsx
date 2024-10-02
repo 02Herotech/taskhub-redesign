@@ -1477,7 +1477,7 @@ const ProvideService: React.FC = () => {
         </div>
       </div>
       <div>
-        {isAuthenticated == false ? (
+        {isAuthenticated === false ? (
           <Popup
             isOpen={isSuccessPopupOpen}
             onClose={() => {
