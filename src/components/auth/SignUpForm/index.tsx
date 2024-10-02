@@ -68,7 +68,10 @@ const SignUpForm = () => {
             setCookie('userType', userType);
 
             const timeoutPromise = new Promise((_, reject) =>
-                setTimeout(() => reject(setError('Something went wrong, please try again')), 30000)
+                setTimeout(() => {
+                    reject(setError('Something went wrong, please try again'))
+                    setIsLoading(false);
+                }, 30000)
             );
 
             const signUpPromise = userType === 'Service Provider'
