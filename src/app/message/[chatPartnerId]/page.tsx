@@ -98,6 +98,8 @@ const ServiceProviderChat = () => {
           );
           const groupedMessages = groupMessagesByDate(displayMessages);
           setGroupedChatMessages(groupedMessages);
+
+          console.log("ss", displayMessages)
         })
         .catch((error: any) => {
           console.log(error.response.data || error.message || error);
@@ -274,7 +276,7 @@ const ServiceProviderChat = () => {
   };
 
   return (
-    <main className="h-[calc(100cqh-5rem)] space-y-5 overflow-hidden   p-4 lg:p-8 ">
+    <main className="h-[calc(100cqh-5rem)] space-y-5 overflow-hidden p-4 lg:p-8 ">
       <section className="grid gap-10 divide-slate-400 lg:grid-cols-12 lg:divide-x ">
         <section className="col-span-5 h-full max-md:hidden ">
           <ChatNavigation />
@@ -348,9 +350,7 @@ const ServiceProviderChat = () => {
                               <p>{item.content}</p>
                               <div className="flex items-center justify-end gap-2 text-[0.7rem]">
                                 <span className="">
-                                  {typeof item.time === "string"
-                                    ? formatTime(item.time)
-                                    : formatTimestamp(item.time as number[])}
+                                  {formatTimestamp(item.time as number[])}
                                 </span>
                                 {item.senderId === user.id && (
                                   <span className="block">

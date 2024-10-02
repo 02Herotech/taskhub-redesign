@@ -15,14 +15,74 @@ export function cn(...inputs: ClassValue[]) {
 	return twMerge(clsx(inputs));
 }
 
-export function formatDate(input: string | number | Date): string {
+function debugLog(message: string) {
+	const debugElement = document.getElementById('debug-output') || createDebugElement();
+	const logEntry = document.createElement('p');
+	logEntry.textContent = message;
+	debugElement.appendChild(logEntry);
+}
+
+function createDebugElement() {
+	const debugElement = document.createElement('div');
+	debugElement.id = 'debug-output';
+	debugElement.style.cssText = 'position: fixed; bottom: 0; left: 0; right: 0; background: rgba(0,0,0,0.8); color: white; padding: 10px; max-height: 50%; overflow-y: auto; z-index: 9999;';
+	document.body.appendChild(debugElement);
+	return debugElement;
+}
+
+export function formatDate(input: string | number | Date | number[]): string {
 	if (!input) return "";
-	const date = new Date(input);
-	const year = date.getFullYear();
-	const month = String(date.getMonth() + 1).padStart(2, "0");
-	const day = String(date.getDate()).padStart(2, "0");
+
+	let date: Date;
+
+	if (input instanceof Date) {
+		date = input;
+	} else if (Array.isArray(input) && input.length === 3) {
+		// Handle array input [year, month, day]
+		const [year, month, day] = input;
+		// Note: JavaScript months are 0-indexed, so we subtract 1 from the month
+		date = new Date(Date.UTC(year, month - 1, day));
+	} else if (typeof input === 'number') {
+		date = new Date(input);
+	} else if (typeof input === 'string') {
+		const [yearStr, monthStr, dayStr] = input.split(/[-T]/);
+		const year = parseInt(yearStr, 10);
+		const month = parseInt(monthStr, 10) - 1; // JavaScript months are 0-indexed
+		const day = parseInt(dayStr, 10);
+
+		if (isNaN(year) || isNaN(month) || isNaN(day)) {
+			console.error('Invalid date string:', input);
+			return "";
+		}
+
+		date = new Date(Date.UTC(year, month, day));
+	} else {
+		console.error('Unsupported input type:', typeof input);
+		return "";
+	}
+
+	// Validate the date
+	if (isNaN(date.getTime())) {
+		console.error('Invalid date:', input);
+		return "";
+	}
+
+	// Use UTC methods to avoid timezone issues
+	const year = date.getUTCFullYear();
+	const month = String(date.getUTCMonth() + 1).padStart(2, "0");
+	const day = String(date.getUTCDate()).padStart(2, "0");
+
 	return `${year}-${month}-${day}`;
 }
+
+// Test cases
+// debugLog("Starting test cases");
+// debugLog(`Test 1: ${formatDate("2023-04-15")}`);
+// debugLog(`Test 2: ${formatDate(new Date("2023-04-15"))}`);
+// debugLog(`Test 3: ${formatDate(1681516800000)}`);
+// debugLog(`Test 4: ${formatDate("")}`);
+// debugLog(`Test 5: ${formatDate("invalid date")}`);
+// debugLog("Test cases completed");
 
 export function numberWithCommas(x: string | number) {
 	return x?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");

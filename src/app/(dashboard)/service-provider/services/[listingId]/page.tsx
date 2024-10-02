@@ -877,9 +877,9 @@ const EditListing = () => {
                       src={
                         watchImageArray[item - 1] ??
                         currentListing?.businessPictures?.[item - 1] ??
-                        ""
+                        "/assets/images/upload-placeholder.png"
                       }
-                      alt="Captured or Selected"
+                      alt="Select image"
                       width={300}
                       height={300}
                       className="size-40 rounded-xl object-cover"

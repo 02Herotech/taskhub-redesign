@@ -221,9 +221,7 @@ const ContactUsPage = () => {
                                 <a href="mailto:operations@jacinthsolutions.com.au" className="text-[#190E3F] hover:underline text-xs lg:text-base font-medium">operations@jacinthsolutions.com.au</a>
                             </div>
                         </div>
-                        <h2 className="font-bold text-base lg:text-xl text-primary lg:!mt-10 text-center">Oloja, a trading name of Jacinth Solutions. ABN 48672884472</h2>
                     </div>
-
                 </div>
             </div>
         </div>

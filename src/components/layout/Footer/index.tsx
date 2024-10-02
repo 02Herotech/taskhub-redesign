@@ -287,7 +287,7 @@ const Footer = () => {
                                 </svg>
 
                                 <span>
-                                    {currentYear} Olójà. All Rights Reserved.
+                                    {currentYear} Olójà, a trading name of Jacinth Solutions. ABN 48672884472. All Rights Reserved.
                                 </span>
                             </p>
                         </div>
