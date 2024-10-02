@@ -41,7 +41,7 @@ const Page = () => {
     const fetchListing = async () => {
       try {
         if (!displayData) return;
-        const url = "https://smp.jacinthsolutions.com.au/api/v1/listing/" + id;
+        const url = "https://api.oloja.com.au/api/v1/listing/" + id;
         const { data } = await axios.get(url);
         setCurrentListing(data);
       } catch (error: any) {

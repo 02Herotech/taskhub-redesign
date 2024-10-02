@@ -151,7 +151,7 @@ const Navigation = () => {
       if (!user) return;
       try {
         const url =
-          "https://smp.jacinthsolutions.com.au/api/v1/user/user-profile/" +
+          "https://api.oloja.com.au/api/v1/user/user-profile/" +
           user.id;
         const { data } = await axios.get(url);
         dispatch(updateUserProfile(data));

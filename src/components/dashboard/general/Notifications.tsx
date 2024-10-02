@@ -60,7 +60,7 @@ const NotificationComponent = () => {
     try {
       setLoading(true);
       const url =
-        "https://smp.jacinthsolutions.com.au/api/v1/notification?userId=" +
+        "https://api.oloja.com.au/api/v1/notification?userId=" +
         userId;
       const { data } = await axios.get(url, {
         headers: {
@@ -87,7 +87,7 @@ const NotificationComponent = () => {
   const fetchBookingById = async () => {
     try {
       const requests = bookingIds.map((bookingId) => {
-        const url = `https://smp.jacinthsolutions.com.au/api/v1/booking/${bookingId}`;
+        const url = `https://api.oloja.com.au/api/v1/booking/${bookingId}`;
         return axios.get(url, {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -105,7 +105,7 @@ const NotificationComponent = () => {
   const fetchListingById = async () => {
     try {
       const requests = userBookings.map((item) => {
-        const url = `https://smp.jacinthsolutions.com.au/api/v1/listing/${item.listing.id}`;
+        const url = `https://api.oloja.com.au/api/v1/listing/${item.listing.id}`;
         return axios.get(url);
       });
 
@@ -172,7 +172,7 @@ const NotificationComponent = () => {
     const notificationId = notification.id;
     try {
       const url =
-        "https://smp.jacinthsolutions.com.au/api/v1/notification/change-notification-status?notificationId=" +
+        "https://api.oloja.com.au/api/v1/notification/change-notification-status?notificationId=" +
         notificationId;
       await axios.post(
         url,
@@ -284,52 +284,52 @@ const NotificationComponent = () => {
                   <>
                     {categorizeNotifications(notifications).today.length >
                       0 && (
-                      <NotificationList
-                        heading="Today"
-                        notifications={
-                          categorizeNotifications(notifications).today
-                        }
-                        userBookings={userBookings}
-                        userListings={userListings}
-                        showSelectedNotification={showSelectedNotification}
-                      />
-                    )}
+                        <NotificationList
+                          heading="Today"
+                          notifications={
+                            categorizeNotifications(notifications).today
+                          }
+                          userBookings={userBookings}
+                          userListings={userListings}
+                          showSelectedNotification={showSelectedNotification}
+                        />
+                      )}
                     {categorizeNotifications(notifications).thisWeek.length >
                       0 && (
-                      <NotificationList
-                        heading="This Week"
-                        notifications={
-                          categorizeNotifications(notifications).thisWeek
-                        }
-                        userBookings={userBookings}
-                        userListings={userListings}
-                        showSelectedNotification={showSelectedNotification}
-                      />
-                    )}
+                        <NotificationList
+                          heading="This Week"
+                          notifications={
+                            categorizeNotifications(notifications).thisWeek
+                          }
+                          userBookings={userBookings}
+                          userListings={userListings}
+                          showSelectedNotification={showSelectedNotification}
+                        />
+                      )}
                     {categorizeNotifications(notifications).thisMonth.length >
                       0 && (
-                      <NotificationList
-                        heading="This Month"
-                        notifications={
-                          categorizeNotifications(notifications).thisMonth
-                        }
-                        userBookings={userBookings}
-                        userListings={userListings}
-                        showSelectedNotification={showSelectedNotification}
-                      />
-                    )}
+                        <NotificationList
+                          heading="This Month"
+                          notifications={
+                            categorizeNotifications(notifications).thisMonth
+                          }
+                          userBookings={userBookings}
+                          userListings={userListings}
+                          showSelectedNotification={showSelectedNotification}
+                        />
+                      )}
                     {categorizeNotifications(notifications).older.length >
                       0 && (
-                      <NotificationList
-                        heading="Older"
-                        notifications={
-                          categorizeNotifications(notifications).older
-                        }
-                        userBookings={userBookings}
-                        userListings={userListings}
-                        showSelectedNotification={showSelectedNotification}
-                      />
-                    )}
+                        <NotificationList
+                          heading="Older"
+                          notifications={
+                            categorizeNotifications(notifications).older
+                          }
+                          userBookings={userBookings}
+                          userListings={userListings}
+                          showSelectedNotification={showSelectedNotification}
+                        />
+                      )}
                   </>
                 ) : selectedNotification.loading ? (
                   <div className="flex min-h-80 items-center justify-center">
@@ -359,7 +359,7 @@ const NotificationComponent = () => {
                         <p className="font-satoshiMedium font-semibold text-violet-normal">
                           {truncateText(
                             selectedNotification.listing?.listingDescription ??
-                              "",
+                            "",
                             60,
                           )}
                         </p>
@@ -406,9 +406,9 @@ const NotificationComponent = () => {
                             src={
                               (isServiceProvider
                                 ? selectedNotification.booking?.customer?.user
-                                    ?.profileImage
+                                  ?.profileImage
                                 : selectedNotification.listing?.serviceProvider
-                                    .user.profileImage) ??
+                                  .user.profileImage) ??
                               "/assets/images/serviceProvider/user.jpg"
                             }
                             alt="booking image"
@@ -421,14 +421,14 @@ const NotificationComponent = () => {
                             <p className="font-satoshiBold font-semibold text-violet-normal">
                               {isServiceProvider
                                 ? selectedNotification.booking?.customer?.user
-                                    ?.fullName
+                                  ?.fullName
                                 : selectedNotification.listing?.serviceProvider
-                                    ?.user.fullName}
+                                  ?.user.fullName}
                             </p>
                             <p className="text-[ #111111] font-satoshiMediumfont-semibold">
                               Location/
                               {typeData[0].value ===
-                              selectedNotification.listing?.taskType
+                                selectedNotification.listing?.taskType
                                 ? "Remote Service"
                                 : "Physical Service"}
                             </p>
@@ -457,9 +457,9 @@ const NotificationComponent = () => {
                                 recipientName={
                                   isServiceProvider
                                     ? selectedNotification.booking.customer.user
-                                        .fullName
+                                      .fullName
                                     : selectedNotification.listing
-                                        .serviceProvider.user.fullName
+                                      .serviceProvider.user.fullName
                                 }
                               />
                             )}

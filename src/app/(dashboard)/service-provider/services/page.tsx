@@ -45,7 +45,7 @@ const ServicesPage = () => {
     try {
       setLoading(true);
       const url =
-        "https://smp.jacinthsolutions.com.au/api/v1/booking/service-provider";
+        "https://api.oloja.com.au/api/v1/booking/service-provider";
       const response = await axios.get(url, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -73,7 +73,7 @@ const ServicesPage = () => {
     try {
       setLoading(true);
       const url =
-        "https://smp.jacinthsolutions.com.au/api/v1/booking/job/service-provider/" +
+        "https://api.oloja.com.au/api/v1/booking/job/service-provider/" +
         user?.serviceProviderId;
       const { data } = await axios.get(url, {
         headers: {

@@ -63,7 +63,7 @@ const OngoingServiceModal = ({
     try {
       setCompleteJobState({ ...completeJobState, loading: true });
       const url =
-        "https://smp.jacinthsolutions.com.au/api/v1/booking/complete-task?jobId=" +
+        "https://api.oloja.com.au/api/v1/booking/complete-task?jobId=" +
         modalData.message;
       const body = { jobId: modalData.message };
       const { data } = await axios.post(url, body, {
@@ -110,7 +110,7 @@ const OngoingServiceModal = ({
         description: formState.message,
       };
       const url =
-        "https://smp.jacinthsolutions.com.au/api/v1/booking/job/report/" +
+        "https://api.oloja.com.au/api/v1/booking/job/report/" +
         modalData.message;
       const { data } = await axios.post(url, body, {
         headers: {

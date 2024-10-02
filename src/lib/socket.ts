@@ -5,7 +5,7 @@ let socket: Socket | null = null;
 
 export const connectSocket = (userId: number) => {
   if (!socket) {
-    socket = io("https://smp.jacinthsolutions.com.au", {
+    socket = io("https://api.oloja.com.au", {
       query: { userId },
     });
   }

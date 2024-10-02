@@ -41,7 +41,7 @@ const MessageButton = ({
       }
       try {
         const url =
-          "https://smp.jacinthsolutions.com.au/api/v1/user/user-profile/" +
+          "https://api.oloja.com.au/api/v1/user/user-profile/" +
           recipientId;
         const { data } = await axios.get(url);
         const newData: UserProfileTypes = data;

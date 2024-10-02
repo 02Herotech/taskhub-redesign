@@ -20,7 +20,7 @@ const CustomerProfilePage = () => {
       if (!token) return;
       try {
         const url =
-          "https://smp.jacinthsolutions.com.au/api/v1/customer/profile";
+          "https://api.oloja.com.au/api/v1/customer/profile";
         const { data } = await axios.get(url, {
           headers: {
             Authorization: `Bearer ${token}`,

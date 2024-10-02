@@ -38,7 +38,7 @@ const DeleteListingModal = ({
     try {
       setLoading(true);
       const url =
-        "https://smp.jacinthsolutions.com.au/api/v1/listing/delete-listing/" +
+        "https://api.oloja.com.au/api/v1/listing/delete-listing/" +
         isDeleteModalShown.id;
       const { data } = await axios.delete(url, {
         headers: {

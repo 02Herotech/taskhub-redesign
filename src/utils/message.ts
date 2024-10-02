@@ -1,7 +1,7 @@
 import axios from "axios";
 
 export async function getUsers({ token }: { token: string }) {
-  const url = "https://smp.jacinthsolutions.com.au/api/v1/chat/chatted-withs";
+  const url = "https://api.oloja.com.au/api/v1/chat/chatted-withs";
   const { data } = await axios.get(url, {
     headers: {
       Authorization: "Bearer " + token,
@@ -21,7 +21,7 @@ export async function countNewMessages({
   token: string;
 }) {
   const url =
-    "https://smp.jacinthsolutions.com.au/api/v1/chat/messages/" +
+    "https://api.oloja.com.au/api/v1/chat/messages/" +
     senderId +
     "/" +
     recipientId +
@@ -44,7 +44,7 @@ export async function findChatMessages({
   token: string;
 }) {
   const url =
-    "https://smp.jacinthsolutions.com.au/api/v1/chat/messages/" +
+    "https://api.oloja.com.au/api/v1/chat/messages/" +
     senderId +
     "/" +
     recipientId;
@@ -63,7 +63,7 @@ export async function findChatMessage({
   id: string;
   token: string;
 }) {
-  const url = "https://smp.jacinthsolutions.com.au/api/v1/chat/messages/" + id;
+  const url = "https://api.oloja.com.au/api/v1/chat/messages/" + id;
   const { data } = await axios.get(url, {
     headers: {
       Authorization: "Bearer " + token,

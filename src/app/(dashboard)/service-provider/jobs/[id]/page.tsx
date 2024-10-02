@@ -42,7 +42,7 @@ const ViewJobs = () => {
     if (!token) return;
     try {
       setLoading(true);
-      const url = "https://smp.jacinthsolutions.com.au/api/v1/booking/" + id;
+      const url = "https://api.oloja.com.au/api/v1/booking/" + id;
       const response = await axios.get(url, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -66,7 +66,7 @@ const ViewJobs = () => {
     try {
       setRequestStatus((prev) => ({ ...prev, isAcceptRequesting: true }));
       const url =
-        "https://smp.jacinthsolutions.com.au/api/v1/booking/accept-proposal?bookingId=" +
+        "https://api.oloja.com.au/api/v1/booking/accept-proposal?bookingId=" +
         currentBooking?.id;
       const response = await axios.post(
         url,
@@ -94,7 +94,7 @@ const ViewJobs = () => {
     try {
       setRequestStatus((prev) => ({ ...prev, isRejectRequesting: true }));
       const url =
-        "https://smp.jacinthsolutions.com.au/api/v1/booking/reject-proposal?bookingId=" +
+        "https://api.oloja.com.au/api/v1/booking/reject-proposal?bookingId=" +
         currentBooking?.id;
       const response = await axios.post(
         url,
@@ -286,24 +286,24 @@ const ViewJobs = () => {
                 )}
                 {(currentBooking.bookingStage === "PROPOSED" ||
                   currentBooking.bookingStage === "ACCEPTED") && (
-                  <div className="flex w-fit items-center gap-2 max-md:w-full max-md:flex-col">
-                    <MessageButton
-                      recipientId={currentBooking?.customer.user.id.toString()}
-                      recipientName={currentBooking?.customer.user.fullName}
-                      message="Chat With Customer"
-                      className="border border-violet-normal  bg-transparent text-violet-normal hover:bg-violet-100  max-md:w-full max-md:px-4 max-md:py-2 "
-                    />
+                    <div className="flex w-fit items-center gap-2 max-md:w-full max-md:flex-col">
+                      <MessageButton
+                        recipientId={currentBooking?.customer.user.id.toString()}
+                        recipientName={currentBooking?.customer.user.fullName}
+                        message="Chat With Customer"
+                        className="border border-violet-normal  bg-transparent text-violet-normal hover:bg-violet-100  max-md:w-full max-md:px-4 max-md:py-2 "
+                      />
 
-                    {invoiceDraft && (
-                      <button
-                        onClick={() => setIsModalOpen(true)}
-                        className="rounded-full bg-violet-active px-6 py-3 text-sm font-bold  text-violet-normal transition-opacity duration-300 hover:opacity-90 max-md:w-full max-md:px-4 max-md:py-2 max-md:text-sm "
-                      >
-                        View Saved Offer
-                      </button>
-                    )}
-                  </div>
-                )}
+                      {invoiceDraft && (
+                        <button
+                          onClick={() => setIsModalOpen(true)}
+                          className="rounded-full bg-violet-active px-6 py-3 text-sm font-bold  text-violet-normal transition-opacity duration-300 hover:opacity-90 max-md:w-full max-md:px-4 max-md:py-2 max-md:text-sm "
+                        >
+                          View Saved Offer
+                        </button>
+                      )}
+                    </div>
+                  )}
               </div>
               {requestStatus.error && (
                 <p className="font-medium text-red-500">

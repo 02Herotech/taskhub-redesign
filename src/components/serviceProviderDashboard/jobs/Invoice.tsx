@@ -70,8 +70,8 @@ const Invoice = ({
         invoiceDraft?.serviceStartOn !== undefined
           ? invoiceDraft.serviceStartOn
           : (currentBooking &&
-              convertToDateInputFormat(currentBooking?.startDate)) ??
-            null,
+            convertToDateInputFormat(currentBooking?.startDate)) ??
+          null,
       gst:
         invoiceDraft?.gst !== undefined
           ? invoiceDraft.gst
@@ -83,10 +83,10 @@ const Invoice = ({
           ? invoiceDraft.total
           : currentBooking
             ? Math.floor(
-                currentBooking.price -
-                  (currentBooking.price / 100) * 10 -
-                  (currentBooking.price / 100) * 2,
-              )
+              currentBooking.price -
+              (currentBooking.price / 100) * 10 -
+              (currentBooking.price / 100) * 2,
+            )
             : 0,
 
       successData: "",
@@ -128,7 +128,7 @@ const Invoice = ({
     try {
       setInvoiceState((prev) => ({ ...prev, loading: true }));
       const url =
-        "https://smp.jacinthsolutions.com.au/api/v1/booking/generate-invoice";
+        "https://api.oloja.com.au/api/v1/booking/generate-invoice";
       await axios.post(url, invoiceData, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -184,8 +184,8 @@ const Invoice = ({
       gst: Math.floor((Number(invoiceState.price) / 100) * 10),
       total: Math.floor(
         Number(invoiceState.price) -
-          (Number(invoiceState.price) / 100) * 10 -
-          (Number(invoiceState.price) / 100) * 2,
+        (Number(invoiceState.price) / 100) * 10 -
+        (Number(invoiceState.price) / 100) * 2,
       ),
     }));
     // eslint-disable-next-line

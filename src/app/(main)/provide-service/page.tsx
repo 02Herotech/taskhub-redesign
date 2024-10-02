@@ -122,7 +122,7 @@ const ProvideService: React.FC = () => {
   const [subcategories, setSubcategories] = useState<Subcategory[]>([]);
   const [selectedDay, setSelectedDay] = useState("");
   const [selectedDays, setSelectedDays] = useState<string[]>([]);
-  const maxSize = 5 * 1024 * 1024;3
+  const maxSize = 5 * 1024 * 1024; 3
   const [errs, setErrs] = useState({ image1: '', image2: '', image3: '', image4: '' })
   const daysOfWeek = [
     { value: "MONDAY", label: "Monday" },
@@ -149,7 +149,7 @@ const ProvideService: React.FC = () => {
     const fetchPostalCodeData = async () => {
       try {
         const response = await axios.get(
-          `https://smp.jacinthsolutions.com.au/api/v1/util/locations/search?postcode=${selectedCode}`,
+          `https://api.oloja.com.au/api/v1/util/locations/search?postcode=${selectedCode}`,
         );
         setPostalCodeData(response.data as PostalCodeData[]);
       } catch (error) {
@@ -167,7 +167,7 @@ const ProvideService: React.FC = () => {
     const fetchItems = async () => {
       try {
         const response = await axios.get(
-          "https://smp.jacinthsolutions.com.au/api/v1/util/all-categories",
+          "https://api.oloja.com.au/api/v1/util/all-categories",
         );
         const data: Item[] = response.data;
         setItems(data);
@@ -184,7 +184,7 @@ const ProvideService: React.FC = () => {
       const fetchSubcategories = async () => {
         try {
           const response = await axios.get(
-            `https://smp.jacinthsolutions.com.au/api/v1/util/all-sub-categories-by-categoryId/${selectedCategory}`,
+            `https://api.oloja.com.au/api/v1/util/all-sub-categories-by-categoryId/${selectedCategory}`,
           );
           const data: Subcategory[] = response.data;
           setSubcategories(data);
@@ -491,12 +491,12 @@ const ProvideService: React.FC = () => {
             image2: defaultImageBlob,
           };
         }
-        if ( !task.image3) {
+        if (!task.image3) {
           const defaultImageBlob = await convertUrlToBlob(defaultImageSrc);
           finalTask = {
             ...finalTask,
             image3: defaultImageBlob,
-            
+
           };
         }
         if (!task.image4) {
@@ -508,11 +508,11 @@ const ProvideService: React.FC = () => {
         }
 
         finalTask = { ...finalTask, negotiable: negotiable };
-        
+
         console.log(finalTask);
         await Promise.race([
           axios.post(
-            `https://smp.jacinthsolutions.com.au/api/v1/listing/create-listing?userId=${id}`,
+            `https://api.oloja.com.au/api/v1/listing/create-listing?userId=${id}`,
             finalTask,
             {
               headers: {
@@ -1413,7 +1413,7 @@ const ProvideService: React.FC = () => {
             </div>
           </div>
         </div>
-        <ProgressBar currentPage={currentPage} progress={progress} setCurrentPage={setCurrentPage}/>
+        <ProgressBar currentPage={currentPage} progress={progress} setCurrentPage={setCurrentPage} />
         <div className="pt-24">
           <div className="mt-8 lg:flex">
             {currentPage === 1 && (
@@ -1521,11 +1521,11 @@ const ProvideService: React.FC = () => {
                   please click on the button to proceed to{" "}
                   marketplace
                 </div>
-                  <div className="text-center hidden lg:block font-satoshiMedium lg:text-[20px]">
-                    Your Service Listing has been created!
-                    <p>please click on the button to proceed to{" "}
-                      marketplace</p>
-                  </div>
+                <div className="text-center hidden lg:block font-satoshiMedium lg:text-[20px]">
+                  Your Service Listing has been created!
+                  <p>please click on the button to proceed to{" "}
+                    marketplace</p>
+                </div>
                 <Image
                   src={image}
                   alt="image"

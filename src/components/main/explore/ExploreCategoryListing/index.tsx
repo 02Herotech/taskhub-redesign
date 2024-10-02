@@ -44,11 +44,11 @@ const ExploreCategoryLising: React.FC<ExploreCategoryLisingProps> = ({ category 
             let url, content;
             if (category === "All") {
                 url =
-                    "https://smp.jacinthsolutions.com.au/api/v1/task/all-active-tasks/" +
+                    "https://api.oloja.com.au/api/v1/task/all-active-tasks/" +
                     currentPage;
             } else if (categoryId) {
                 url =
-                    "https://smp.jacinthsolutions.com.au/api/v1/task/filter-tasks/" +
+                    "https://api.oloja.com.au/api/v1/task/filter-tasks/" +
                     currentPage +
                     "?category=" +
                     categoryId.categoryName;
@@ -74,12 +74,12 @@ const ExploreCategoryLising: React.FC<ExploreCategoryLisingProps> = ({ category 
             let url = "";
             if (filterParams.includes("?text=")) {
                 url =
-                    "https://smp.jacinthsolutions.com.au/api/v1/task/text/" +
+                    "https://api.oloja.com.au/api/v1/task/text/" +
                     page.currentPage +
                     filterParams;
             } else {
                 url =
-                    "https://smp.jacinthsolutions.com.au/api/v1/task/filter-tasks/" +
+                    "https://api.oloja.com.au/api/v1/task/filter-tasks/" +
                     page.currentPage +
                     filterParams;
             }

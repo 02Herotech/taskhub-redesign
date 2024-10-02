@@ -20,7 +20,7 @@ const daysData: string[] = [
   "MONDAY",
   "TUESDAY",
   "WEDNESDAY",
-  "THURSDAY", 
+  "THURSDAY",
   "FRIDAY",
   "SATURDAY",
   "SUNDAY",
@@ -115,7 +115,7 @@ const EditListing = () => {
     const fetchCurentListing = async () => {
       try {
         const url =
-          "https://smp.jacinthsolutions.com.au/api/v1/listing/" + listingId;
+          "https://api.oloja.com.au/api/v1/listing/" + listingId;
         const { data } = await axios.get(url);
         setCurrentListing(data);
       } catch (error: any) {
@@ -196,7 +196,7 @@ const EditListing = () => {
   const handleFectchLocationByPostcode = async () => {
     try {
       const url =
-        "https://smp.jacinthsolutions.com.au/api/v1/util/locations/search?postcode=" +
+        "https://api.oloja.com.au/api/v1/util/locations/search?postcode=" +
         watchField.postcode;
       const { data } = await axios.get(url);
       const suburb = data.map((item: any) => item.name);
@@ -286,7 +286,7 @@ const EditListing = () => {
     }, {});
     try {
       const url =
-        "https://smp.jacinthsolutions.com.au/api/v1/listing/update-listing/" +
+        "https://api.oloja.com.au/api/v1/listing/update-listing/" +
         listingId;
       await axios.patch(url, body, {
         headers: {
@@ -432,8 +432,8 @@ const EditListing = () => {
                   String(
                     watchField?.listingTitle?.split(" ").filter(Boolean).length,
                   ) +
-                    " /" +
-                    " 10"}
+                  " /" +
+                  " 10"}
               </p>
             </div>
           </label>
@@ -498,8 +498,8 @@ const EditListing = () => {
                     watchField?.listingDescription?.split(" ").filter(Boolean)
                       .length,
                   ) +
-                    " /" +
-                    " 50"}
+                  " /" +
+                  " 50"}
               </p>
             </div>
           </div>

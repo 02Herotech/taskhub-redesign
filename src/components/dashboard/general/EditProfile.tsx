@@ -107,9 +107,9 @@ const EditProfile = () => {
         let url;
         if (isServiceProvider) {
           url =
-            "https://smp.jacinthsolutions.com.au/api/v1/service_provider/profile";
+            "https://api.oloja.com.au/api/v1/service_provider/profile";
         } else {
-          url = "https://smp.jacinthsolutions.com.au/api/v1/customer/profile";
+          url = "https://api.oloja.com.au/api/v1/customer/profile";
         }
         const { data } = await axios.get(url, {
           headers: {
@@ -198,7 +198,7 @@ const EditProfile = () => {
           return acc;
         }, {});
         url =
-          "https://smp.jacinthsolutions.com.au/api/v1/service_provider/update";
+          "https://api.oloja.com.au/api/v1/service_provider/update";
       } else {
         submitData = Object.entries({
           firstName: data.firstName,
@@ -217,7 +217,7 @@ const EditProfile = () => {
           }
           return acc;
         }, {});
-        url = "https://smp.jacinthsolutions.com.au/api/v1/customer/update";
+        url = "https://api.oloja.com.au/api/v1/customer/update";
       }
 
       console.log(submitData);
@@ -248,7 +248,7 @@ const EditProfile = () => {
     const handleFectchLocationByPostcode = async () => {
       try {
         const url =
-          "https://smp.jacinthsolutions.com.au/api/v1/util/locations/search?postcode=" +
+          "https://api.oloja.com.au/api/v1/util/locations/search?postcode=" +
           watchField.postcode;
         const { data } = await axios.get(url);
         const suburb = data.map((item: any) => item.name);
@@ -550,10 +550,10 @@ const EditProfile = () => {
                     {watchField.idType === ""
                       ? "Select Id Type"
                       : idTypeObject.find(
-                          (item) =>
-                            item.value === watchField.idType ||
-                            item.label === watchField.idType,
-                        )?.label + " Number"}
+                        (item) =>
+                          item.value === watchField.idType ||
+                          item.label === watchField.idType,
+                      )?.label + " Number"}
                   </span>
                   {!errors.idNumber &&
                     watchField.idNumber &&

@@ -55,7 +55,7 @@ const NotificationsSettings = () => {
     if (!auth || !user) return;
     try {
       setLoading(true);
-      const url = `https://smp.jacinthsolutions.com.au/api/v1/notification/preference?userId=${user.id}`;
+      const url = `https://api.oloja.com.au/api/v1/notification/preference?userId=${user.id}`;
       await axios.post(url, notificationPreferences, {
         headers: {
           Authorization: `Bearer ${auth.token}`,
@@ -72,7 +72,7 @@ const NotificationsSettings = () => {
   const handleGetPreferences = async () => {
     if (!auth || !user) return;
     setPageLoading(true);
-    const url = `https://smp.jacinthsolutions.com.au/api/v1/notification/preference?userId=${user.id}`;
+    const url = `https://api.oloja.com.au/api/v1/notification/preference?userId=${user.id}`;
     try {
       const { data } = await axios.get(url, {
         headers: {
@@ -170,8 +170,8 @@ const NotificationsSettings = () => {
                         event.target.checked
                           ? [...(prev as string[]), option.value]
                           : (prev.filter(
-                              (item) => item !== option.value,
-                            ) as string[]),
+                            (item) => item !== option.value,
+                          ) as string[]),
                       )
                     }
                     className="h-4 w-4 cursor-pointer lg:h-5 lg:w-5"

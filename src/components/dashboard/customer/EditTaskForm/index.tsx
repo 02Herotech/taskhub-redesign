@@ -45,16 +45,16 @@ const EditTaskForm = ({ task, setShowEditModal }: TaskCardProps) => {
     const taskSchema = z.object({
         taskBriefDescription: z
             .string(),
-            // .min(3, "Minimum of 3 characters")
-            // .refine((str) => str.split(" ").filter(Boolean).length > 0, {
-            //     message: `Title must have ${1} word or more`,
-            // }),
+        // .min(3, "Minimum of 3 characters")
+        // .refine((str) => str.split(" ").filter(Boolean).length > 0, {
+        //     message: `Title must have ${1} word or more`,
+        // }),
         taskDescription: z
             .string(),
-            // .min(10, "Minimum of 10 characters")
-            // .refine((str) => str.split(" ").filter(Boolean).length >= 5, {
-            //     message: `Description must have ${5} words or more`,
-            // }),
+        // .min(10, "Minimum of 10 characters")
+        // .refine((str) => str.split(" ").filter(Boolean).length >= 5, {
+        //     message: `Description must have ${5} words or more`,
+        // }),
         category: z.string(),
         taskType: z.string(),
         postCode: z.string().nullable().optional(),
@@ -115,7 +115,7 @@ const EditTaskForm = ({ task, setShowEditModal }: TaskCardProps) => {
         const fetchPostalCodeData = async () => {
             try {
                 const { data } = await axios.get(
-                    `https://smp.jacinthsolutions.com.au/api/v1/util/locations/search?postcode=${watchField.postCode}`,
+                    `https://api.oloja.com.au/api/v1/util/locations/search?postcode=${watchField.postCode}`,
                 );
                 const suburb = data.map((item: any) => item.name);
                 setSuburbList(suburb);
@@ -133,7 +133,7 @@ const EditTaskForm = ({ task, setShowEditModal }: TaskCardProps) => {
         const fetchAllCategories = async () => {
             try {
                 const response = await axios.get(
-                    "https://smp.jacinthsolutions.com.au/api/v1/util/all-categories",
+                    "https://api.oloja.com.au/api/v1/util/all-categories",
                 );
                 setCategories(response.data);
             } catch (error) {
@@ -277,7 +277,7 @@ const EditTaskForm = ({ task, setShowEditModal }: TaskCardProps) => {
         setUpdatedTime(time);
     };
 
-    const formatDateToLocalDateString = (date: Date | null ) => {
+    const formatDateToLocalDateString = (date: Date | null) => {
         if (date) {
             const year = date.getFullYear();
             const month = String(date.getMonth() + 1).padStart(2, "0");
@@ -357,7 +357,7 @@ const EditTaskForm = ({ task, setShowEditModal }: TaskCardProps) => {
                                 >
                                     Close
                                 </button>
-                                
+
                             </div>
                         </div>
                     </div>
@@ -600,7 +600,7 @@ const EditTaskForm = ({ task, setShowEditModal }: TaskCardProps) => {
                                                         type="number"
                                                         className="rounded-2xl bg-violet-light p-3 text-[13px] outline-none w-full"
                                                         {...register("postCode")}
-                                                        />
+                                                    />
                                                 </div>
 
                                                 {/* suburb */}

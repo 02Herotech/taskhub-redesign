@@ -130,10 +130,10 @@ const EditProfileModal = ({
         let url;
         if (isServiceProvider) {
           url =
-            "https://smp.jacinthsolutions.com.au/api/v1/service_provider/profile_picture";
+            "https://api.oloja.com.au/api/v1/service_provider/profile_picture";
         } else {
           url =
-            "https://smp.jacinthsolutions.com.au/api/v1/customer/profile_picture";
+            "https://api.oloja.com.au/api/v1/customer/profile_picture";
         }
         try {
           await axios.post(
@@ -147,7 +147,7 @@ const EditProfileModal = ({
             },
           );
           const profileUrl =
-            "https://smp.jacinthsolutions.com.au/api/v1/user/user-profile/" +
+            "https://api.oloja.com.au/api/v1/user/user-profile/" +
             user?.id;
           const { data } = await axios.get(profileUrl);
           dispatch(updateUserProfile(data));

@@ -22,7 +22,7 @@ const BoxFilter: React.FC<BoxFilterProper> = ({ category, Icon, id }) => {
     dispatch(setFilterLoadingState(true));
     try {
       const url =
-        "https://smp.jacinthsolutions.com.au/api/v1/listing/filter-listings/0?category=" +
+        "https://api.oloja.com.au/api/v1/listing/filter-listings/0?category=" +
         category;
       const { data } = await axios.get(url);
       dispatch(

@@ -48,7 +48,7 @@ const WithdrawalPage = () => {
   const submitWithdraw: SubmitHandler<WithdrawalType> = async (data) => {
     if (!auth.token) return;
     try {
-      const url = "https://smp.jacinthsolutions.com.au/api/v1/stripe/payout";
+      const url = "https://api.oloja.com.au/api/v1/stripe/payout";
       const response = await axios.post(url, data, {
         headers: {
           Authorization: `Bearer ${auth.token}`,
