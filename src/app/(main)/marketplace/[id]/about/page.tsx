@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { FaStar } from "react-icons/fa";
 import Reviews from "@/components/matkeplaceSingleTask/Reviews";
 import axios from "axios";
@@ -24,13 +24,13 @@ const Page = () => {
     const [displayData, setDisplayData] = useState<ListingDataType>();
     const [currentListing, setCurrentListing] = useState<ListingDataType>();
     const [providerListings, setProviderListings] = useState<ListingDataType[]>([]);
+    const [reviews, setReviews] = useState<Review[]>([]);
     const [showImageModal, setShowImageModal] = useState({
         state: false,
         image: "",
     });
 
     const { id } = useParams();
-    const serviceProviderId = displayData?.serviceProvider.id;
     const { userProfileAuth: auth } = useSelector(
         (state: RootState) => state.userProfile,
     );
@@ -60,9 +60,9 @@ const Page = () => {
     useEffect(() => {
         const fetchProviderListings = async () => {
             try {
-                if (!serviceProviderId) return;
-                console.log(serviceProviderId)
-                const url = `https://smp.jacinthsolutions.com.au/api/v1/service_provider/get-profile/${serviceProviderId}`;
+                if (!id) return;
+                console.log(id)
+                const url = `https://smp.jacinthsolutions.com.au/api/v1/service_provider/get-profile/${id}`;
                 const response = await axios.get(url,
                     {
                         headers: {
@@ -70,8 +70,9 @@ const Page = () => {
                         },
                     }
                  );
-                // console.log(response.data?.serviceProviderListing)
-                setProviderListings(response.data?.serviceProviderListing); 
+                setProviderListings(response.data?.serviceProviderListing);
+                setReviews(response.data.review);
+                console.log(response.data)
             } catch (error: any) {
                 console.log(error.response);
             }
@@ -79,7 +80,20 @@ const Page = () => {
         if (displayData?.serviceProvider?.id) {
             fetchProviderListings();
         }
-    }, [token, displayData, serviceProviderId]);
+    }, [token, displayData, id]);
+
+    const totalRatings = reviews.reduce((sum, review) => sum + review.rating, 0) || 0;
+    const averageRating = Math.round(totalRatings / reviews.length)
+
+    const renderStars = (rating: number) => {
+        const stars = [];
+        for (let i = 1; i <= 5; i++) {
+            stars.push(
+                <FaStar key={i} fill={i <= rating ? "gold" : "rgb(203 213 225)"} />
+            );
+        }
+        return stars;
+    };
 
     return (
         <>
@@ -110,26 +124,7 @@ const Page = () => {
                                             </p>
                                             <div>
                                                 <div className="flex listings-center gap-2">
-                                                    <FaStar
-                                                        fill="rgb(203 213 225)"
-                                                        color="rgb(203 213 225)"
-                                                    />
-                                                    <FaStar
-                                                        fill="rgb(203 213 225)"
-                                                        color="rgb(203 213 225)"
-                                                    />
-                                                    <FaStar
-                                                        fill="rgb(203 213 225)"
-                                                        color="rgb(203 213 225)"
-                                                    />
-                                                    <FaStar
-                                                        fill="rgb(203 213 225)"
-                                                        color="rgb(203 213 225)"
-                                                    />
-                                                    <FaStar
-                                                        fill="rgb(203 213 225)"
-                                                        color="rgb(203 213 225)"
-                                                    />
+                                                    {renderStars(averageRating)}
                                                 </div>
                                             </div>
                                         </div>
@@ -265,7 +260,7 @@ const Page = () => {
                         ))}
                     </div>
                 </section>
-                <Reviews serviceProviderId={displayData?.serviceProvider.id} categoryId={id} />
+                <Reviews serviceProviderId={id} />
             </main>
         </>
     );

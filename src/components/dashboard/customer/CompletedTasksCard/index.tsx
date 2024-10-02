@@ -10,10 +10,11 @@ import { DeleteTaskSvg, DropReviewSvg, RebookSvg } from "@/lib/svgIcons";
 import Popup from "@/components/global/Popup";
 import Button from "@/components/global/Button";
 import { useDeleteTaskMutation } from "@/services/tasks";
-import Input from "@/components/global/Input";
-import { FaCalendar } from "react-icons/fa";
-import ReactDatePicker from "react-datepicker";
 import RebookForm from "../RebookForm";
+import axios from "axios";
+import { useSession } from "next-auth/react";
+import Image from "next/image";
+import imags from "../../../../../public/assets/images/tickk.png";
 
 interface TaskCardProps {
     task: CompletedTask;
@@ -26,17 +27,23 @@ type DropDownItem = {
 };
 
 const CompletedTasksCard = ({ task }: TaskCardProps) => {
+    const session = useSession();
     const [dropReviewPopup, setDropReviewPopup] = useState(false);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-    const [selectedReview, setSelectedReview] = useState<string | null>(null);
-    const [reviewSent, setReviewSent] = useState(false);
+    const [reviewSent, setReviewSent] = useState<boolean>(false);
     const [deleteTaskPopup, setDeleteTaskPopup] = useState(false);
     const [rebookTaskPopup, setRebookTaskPopup] = useState(false);
-
+    const [rating, setRating] = useState<number | 0>(0);
+    const [review, setReview] = useState<string>('');
+    const [hoverRating, setHoverRating] = useState<number | 0>(0);
+    const [wordCount, setWordCount] = useState(0);
     const dateArray = task.createdAt;
     const date = new Date(dateArray[0], dateArray[1] - 1, dateArray[2]);
     const day = date.getDate();
-
+    const serviceProviderId = task.providerId;
+    const categoryId = task.categoryId;
+    const comment = review;
+    const token = session.data?.user.refreshToken;
     // Function to get the correct ordinal suffix
     function getOrdinalSuffix(day: any) {
         if (day > 3 && day < 21) return 'th';
@@ -50,8 +57,6 @@ const CompletedTasksCard = ({ task }: TaskCardProps) => {
 
     const daySuffix = getOrdinalSuffix(day);
     const formattedDate = `On ${dayOfWeekNames[date.getDay()]}, ${monthNames[date.getMonth()]} ${day}${daySuffix}`;
-
-    console.log("date", dateArray)
 
     const reviews = [
         "He/she stole an item in my home",
@@ -90,10 +95,37 @@ const CompletedTasksCard = ({ task }: TaskCardProps) => {
         },
     ];
 
-    const handleReviewSubmission = () => {
-        if (selectedReview) {
-            setReviewSent(true);
+
+    const handleChange = (
+        e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+    ) => {
+        const value = e.target.value
+        const wordArray = e.target.value.split(/\s+/).filter(Boolean);
+        if (wordArray.length <= 60) {
+            setReview(value)
+            setWordCount(wordArray.length);
         }
+    };
+
+    const handleReviewSubmission = async (e: React.FormEvent) => {
+        e.preventDefault(); 
+        console.log(comment, rating, serviceProviderId, categoryId)
+        try {
+            const response = await axios.post(`https://smp.jacinthsolutions.com.au/api/v1/service_provider/review/${serviceProviderId}/${categoryId}`,
+                {
+                    rating,
+                    comment
+                },
+                {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            })
+            setReviewSent(true)           
+        } catch(error: any) {
+            console.log(error.response)
+            setReviewSent(false)
+        } 
     }
 
     return (
@@ -137,17 +169,17 @@ const CompletedTasksCard = ({ task }: TaskCardProps) => {
                 </Popup>
             )}
             {dropReviewPopup && (
-                <Popup isOpen={dropReviewPopup} onClose={() => setDropReviewPopup(false)}>
+                <Popup isOpen={dropReviewPopup} onClose={() => { setDropReviewPopup(false); setRating(0); setReview(""); setReviewSent(false) }}>
                     <div className="relative bg-[#EBE9F4] rounded-2xl min-h-[200px] lg:w-[577px] font-satoshi">
                         {reviewSent ? (
-                            <div className="flex items-center justify-center h-full font-satoshi py-10 px-20">
+                            <div className="flex items-center justify-center h-full font-satoshi p-5 lg:py-10 lg:px-20">
                                 <div className="flex flex-col items-center space-y-5">
-                                    <div className="bg-[#140B31] p-1 rounded-full size-14 flex items-center justify-center text-white">{DropReviewSvg}</div>
+                                    <div><Image src={imags} alt="image" /></div>
                                     <h1 className="font-black text-4xl text-[#2A1769]">
                                         Review Sent
                                     </h1>
                                     <p className="mb-8 font-satoshiMedium text-center text-xl font-medium text-[#140B31]">
-                                        Thank you for your review, we will look into it and get back to you as soon as possible
+                                        Your review has been submitted successfully! Thank you for your feedback
                                     </p>
                                     <Button
                                         className="w-[151px] max-lg:text-sm rounded-full py-6"
@@ -157,7 +189,7 @@ const CompletedTasksCard = ({ task }: TaskCardProps) => {
 
                                         }}
                                     >
-                                        Cancel
+                                        Done
                                     </Button>
                                 </div>
                             </div>
@@ -167,40 +199,51 @@ const CompletedTasksCard = ({ task }: TaskCardProps) => {
                                     <div className="bg-[#140B31] p-1 rounded-full size-9 flex items-center justify-center text-white">{DropReviewSvg}</div>
                                     <h2 className="text-primary font-bold lg:text-2xl">Drop a review</h2>
                                 </div>
-                                <form onSubmit={handleReviewSubmission} className="max-lg:p-5 lg:py-5 lg:px-8">
-                                    <div className="mb-8 font-satoshi text-xl font-medium text-black space-y-5">
-                                        {reviews.map((review, index) => (
-                                            <div key={index} className="flex items-center space-x-5">
-                                                <input
-                                                    type="radio"
-                                                    name="review"
-                                                    required
-                                                    value={review}
-                                                    checked={selectedReview === review}
-                                                    onChange={() => setSelectedReview(review)}
-                                                />
-                                                <h4>{review}</h4>
+                                <div className="p-6 bg-white rounded-md shadow-md">
+                                    <form onSubmit={handleReviewSubmission}>
+                                        <div className="mb-4">
+                                            <label className="block mb-2 text-sm font-bold text-gray-700">Ratings*</label>
+                                            <div className="flex">
+                                                {[1, 2, 3, 4, 5].map((star) => (
+                                                    <Star
+                                                        key={star}
+                                                        starId={star}
+                                                        rating={rating}
+                                                        hoverRating={hoverRating}
+                                                        onClick={() => setRating(star)}
+                                                        onMouseEnter={() => setHoverRating(star)}
+                                                        onMouseLeave={() => setHoverRating(0)}
+                                                    />
+                                                ))}
                                             </div>
-                                        ))}
-                                    </div>
-                                    {selectedReview === "Others" && (
-                                        <div className="space-y-2">
-                                            <label className="font-bold text-[#140B31] text-lg">Describe your review</label>
-                                            <textarea
-                                                placeholder="Please provide additional feedback"
-                                                className="w-full h-24 p-2 border border-[#381F8C] rounded"
-                                            />
                                         </div>
-                                    )}
-                                    <div className="flex items-center justify-center w-full mt-10">
-                                        <Button
-                                            className="w-[151px] max-lg:text-sm rounded-full py-6"
-                                            type="submit"
-                                        >
-                                            Submit
-                                        </Button>
-                                    </div>
-                                </form>
+                                        <div className="mb-4">
+                                            <label className="block mb-2 text-sm font-bold text-gray-700">Describe your review</label>
+                                            <textarea
+                                                className="w-full px-3 h-[150px] py-2 leading-tight text-gray-700 border border-gray-700 rounded shadow appearance-none resize-none focus:outline-none focus:shadow-outline"
+                                                placeholder="Write your review..."
+                                                value={review}
+                                                onChange={handleChange}
+                                                    required
+                                                />
+                                                <div className="text-right text-sm text-status-darkpurple">
+                                                    {wordCount}/60 words
+                                                </div>
+                                            </div>
+                                            
+                                        <div className="flex justify-center">
+                                            <Button
+                                                className="w-[151px] max-lg:text-sm rounded-full py-6"
+                                                type="submit"
+                                                onClick={() => {
+                                                    handleReviewSubmission
+                                                }}
+                                            >
+                                                Submit
+                                            </Button>
+                                        </div>
+                                    </form>
+                                </div>
                             </>
                         )}
                     </div>
@@ -270,5 +313,37 @@ const CompletedTasksCard = ({ task }: TaskCardProps) => {
 export default CompletedTasksCard;
 
 
+type StarProps = {
+    starId: number;
+    rating: number | 0;
+    hoverRating: number | 0;
+    onClick: () => void;
+    onMouseEnter: () => void;
+    onMouseLeave: () => void;
+};
 
+const Star: React.FC<StarProps> = ({ starId, rating, hoverRating, onClick, onMouseEnter, onMouseLeave }) => {
+    const isActive = hoverRating >= starId || (!hoverRating && rating >= starId);
+    const fillColor = isActive ? '#ffd700' : 'none'; // Fill the star when active
+    const strokeColor = isActive ? '#ffd700' : 'gray'; // Border color when active/inactive
 
+    return (
+        <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-6 w-6 cursor-pointer"
+            fill={fillColor} // Set the fill color dynamically
+            viewBox="0 0 24 24"
+            stroke={strokeColor} // Set the stroke color dynamically
+            onClick={onClick}
+            onMouseEnter={onMouseEnter}
+            onMouseLeave={onMouseLeave}
+        >
+            <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.42 4.368a1 1 0 00.95.69h4.584c.969 0 1.371 1.24.588 1.81l-3.708 2.686a1 1 0 00-.364 1.118l1.42 4.368c.3.922-.755 1.688-1.54 1.118l-3.708-2.686a1 1 0 00-1.176 0l-3.708 2.686c-.785.57-1.84-.196-1.54-1.118l1.42-4.368a1 1 0 00-.364-1.118L2.51 9.796c-.783-.57-.38-1.81.588-1.81h4.584a1 1 0 00.95-.69l1.42-4.368z"
+            />
+        </svg>
+    );
+};

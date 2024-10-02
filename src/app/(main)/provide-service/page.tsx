@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 import axios from "axios";
 import Head from "next/head";
 import Image from "next/image";
@@ -23,6 +23,8 @@ import Loading from "@/components/global/loading/page";
 import ProgressBar from "@/components/global/progressbar";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
+import { getCookie, setCookie } from "cookies-next";
+import { defaultUserDetails } from "@/data/data";
 
 interface FormData {
   listingTitle: string;
@@ -71,26 +73,26 @@ const ProvideService: React.FC = () => {
   const session = useSession();
   const route = useRouter();
   const id = session?.data?.user.user.id;
-  const isAuthenticated = session?.data?.user.user.enabled;
+  const token = session?.data?.user?.accessToken;
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const [task, setTask] = useState<FormData>({
-    listingTitle: "",
-    listingDescription: "",
-    planOneDescription: "",
-    planTwoDescription: "",
-    planThreeDescription: "",
+    listingTitle: getCookie("listingTitle") || "",
+    listingDescription: getCookie("listingDescription")|| "",
+    planOneDescription: getCookie("planOneDescription") ||"",
+    planTwoDescription: getCookie("planTwoDescription") ||"",
+    planThreeDescription: getCookie("planThreeDescription") ||"",
     image1: null,
     image2: null,
     image3: null,
     image4: null,
-    taskType: "",
+    taskType: getCookie("taskType") ||"",
     planOnePrice: null,
     planTwoPrice: null,
     planThreePrice: null,
     availableDays: [],
     suburb: "",
-    postCode: "",
+    postCode: getCookie("postCode") ||"",
     state: "",
     categoryId: null,
     subCategoryId: null,
@@ -124,6 +126,36 @@ const ProvideService: React.FC = () => {
   const [selectedDays, setSelectedDays] = useState<string[]>([]);
   const maxSize = 5 * 1024 * 1024;
   3;
+
+  const handleProfile= () => {
+    setCookie("redirectToProvideService", "/provide-service", { maxAge: 360000 });
+    route.push(
+      "/service-provider/profile/edit-profile?userType=Service+Provider?from=/provide-service",
+    );
+  };
+
+  useEffect(() => {
+    setCookie("lisitingTitle", task.listingTitle, {
+      maxAge: 1200,
+    });
+    setCookie("listingDescription", task.listingDescription, { maxAge: 1200 });
+    setCookie("planOnePrice", task.planOnePrice, { maxAge: 1200 });
+    setCookie("planOneDescription", task.planOneDescription, { maxAge: 1200 });
+    setCookie("planTwoDescription", task.planTwoDescription, { maxAge: 1200 });
+    setCookie("planTwoPrice", task.planTwoPrice, { maxAge: 1200 });
+    setCookie("planThreeDescritpion", task.planThreeDescription, { maxAge: 1200 });
+    setCookie("taskType", task.taskType, { maxAge: 1200 });
+    setCookie("availableDays", task.availableDays, { maxAge: 1200 });
+    setCookie("categoryId", task.categoryId?.toString(), { maxAge: 1200 });
+    setCookie("postCode", task.postCode, { maxAge: 1200 });
+  }, [task]);
+  const isServiceProvider = session?.data?.user?.user?.roles[0] === "SERVICE_PROVIDER";
+  const [complete, setComplete] = useState(false);
+  const [fetchedUserData, setFetchedUserData] = useState(defaultUserDetails);
+  const [loadingProfile, setLoadingProfile] = useState(true);
+  const [hasClosedPopup, setHasClosedPopup] = useState(false);
+  const isAuth = session.status === "authenticated";
+
   const [errs, setErrs] = useState({
     image1: "",
     image2: "",
@@ -140,11 +172,7 @@ const ProvideService: React.FC = () => {
     { value: "SUNDAY", label: "Sunday" },
   ];
 
-  const { profile: user } = useSelector(
-    (state: RootState) => state.userProfile,
-  );
 
-  console.log("user", user);
 
   // Handling getting the description from the marketplace when i user navigates from the marketplace
   useEffect(() => {
@@ -158,6 +186,71 @@ const ProvideService: React.FC = () => {
     }
   }, []);
   // End of getting description from the marketplace
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      if (!token) return;
+      try {
+        const url = isServiceProvider ? "https://smp.jacinthsolutions.com.au/api/v1/service_provider/profile" : "https://smp.jacinthsolutions.com.au/api/v1/customer/profile";
+        const { data } = await axios.get(url, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "multipart/form-data",
+          },
+        });
+        setFetchedUserData(data);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoadingProfile(false)
+      }
+    };
+    fetchUserData();
+  }, [token, isServiceProvider]);
+
+  const { profile: user } = useSelector((state: RootState) => state.userProfile);
+
+  /* eslint-disable react-hooks/exhaustive-deps */
+  const profileProgressData = [
+    {
+      title: "Profile Picture",
+      status: user?.profileImage,
+    },
+    {
+      title: "Email Address",
+      status: user?.emailAddress,
+    },
+    {
+      title: "Address Information",
+      status: user?.address?.postCode,
+    },
+    {
+      title: "Mobile Number",
+      status: user?.phoneNumber,
+    },
+    {
+      title: "Identification Document",
+      status: fetchedUserData.idImage,
+    },
+    {
+      title: "Date of Birth",
+      status: fetchedUserData.dateOfBirth,
+    },
+  ];
+
+  // Popup logic to show after profile data is fully loaded
+  useLayoutEffect(() => {
+    if (!loadingProfile && user && !hasClosedPopup) {
+      const isProfileComplete = profileProgressData.every(
+        (item) => item.status !== "" && item.status !== null && item.status !== undefined
+      );
+
+      if (isAuth && !isProfileComplete) {
+        setComplete(true)
+      }
+    }
+  }, [loadingProfile, user, fetchedUserData, isAuth, profileProgressData]);
+
 
   useEffect(() => {
     const fetchPostalCodeData = async () => {
@@ -1453,7 +1546,7 @@ const ProvideService: React.FC = () => {
         </div>
       </div>
       <div>
-        {!isAuthenticated ? (
+        {complete ? (
           <Popup
             isOpen={isSuccessPopupOpen}
             onClose={() => {
@@ -1484,16 +1577,15 @@ const ProvideService: React.FC = () => {
                   className="absolute -left-12 top-12 w-12 lg:-left-[53px] lg:top-8 lg:w-16"
                 />
                 <div className="flex justify-center space-x-3 md:justify-around">
-                  <Link href="/marketplace">
+                  <Link href="/marketplace?">
                     <button className="rounded-2xl border-2 border-status-purpleBase p-2 text-[14px] font-semibold text-status-purpleBase outline-none md:w-[100px]">
                       Back
                     </button>
                   </Link>
-                  <Link href="/service-provider/profile">
-                    <button className="rounded-2xl bg-status-purpleBase p-2 text-[14px] text-white outline-none md:w-[100px]">
+                  
+                    <button onClick={handleProfile} className="rounded-2xl bg-status-purpleBase p-2 text-[14px] text-white outline-none md:w-[100px]">
                       Go to profile
                     </button>
-                  </Link>
                 </div>
               </div>
             </div>
@@ -1506,7 +1598,7 @@ const ProvideService: React.FC = () => {
               setIsSuccessPopupOpen(false);
             }}
           >
-            <div className="px-10 py-10 lg:px-24">
+            <div className="px-5 py-10 lg:px-24">
               <div className="relative grid items-center justify-center space-y-3">
                 <div className="flex justify-center text-[1px] text-white">
                   <Image src={imag} alt="image" />
@@ -1525,7 +1617,7 @@ const ProvideService: React.FC = () => {
                 <Image
                   src={image}
                   alt="image"
-                  className="lg:top-54 absolute -right-16  top-44 w-28 font-satoshiMedium lg:-right-24"
+                  className="lg:top-54 absolute -right-5 top-56  lg:top-44 lg:w-28 w-20 font-satoshiMedium lg:-right-24"
                 />
                 <div className="flex justify-center">
                   <Link href="/marketplace">

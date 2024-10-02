@@ -21,7 +21,6 @@ const NewTaskDetails = ({ params }: { params: { id: string } }) => {
     const handleAssign = (offerId: string) => {
         console.log(`Assigning task to offer: ${offerId}`);
     };
-
     const isMounted = useRef(true);
 
     useEffect(() => {

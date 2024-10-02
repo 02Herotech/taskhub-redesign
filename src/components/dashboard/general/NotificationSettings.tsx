@@ -82,6 +82,7 @@ const NotificationsSettings = () => {
           Authorization: `Bearer ${auth.token}`,
         },
       });
+      console.log(data);
       setNotificationPreferences(data);
     } catch (error: any) {
       console.log(error?.response?.data || error);

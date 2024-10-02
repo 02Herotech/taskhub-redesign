@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 import { useState, useEffect } from "react";
 import axios from "axios";
@@ -28,9 +29,7 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
   const [displayListing, setDisplayListing] = useState<ListingDataType[]>([]);
   const [page, setPage] = useState({ totalPages: 1, currentPage: 0 });
   const [buttonNumbers, setButtonNumbers] = useState<number[]>([]);
-
   const dispatch = useDispatch();
-
   const handleFetchCategory = async (currentPage: number) => {
     const categoryId = categories.find( 
       (item) => item.categoryName === category,
@@ -216,6 +215,7 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
                   pricing={item.planOnePrice ?? 0}
                   fullName={item?.serviceProvider?.user?.fullName}
                   profileImage={item?.serviceProvider?.user?.profileImage}
+                  review={item.reviews}
                 />
               );
             })}
@@ -247,6 +247,7 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
                 pricing={item.planOnePrice ?? 0}
                 fullName={item?.serviceProvider?.user?.fullName}
                 profileImage={item?.serviceProvider?.user?.profileImage}
+                review = {item.reviews}
               />
             );
           })}
