@@ -42,7 +42,7 @@ const PrevArrow = (props: any) => {
   );
 };
 
-const Reviews = ({serviceProviderId}: any) => {
+const Reviews = ({ serviceProviderId }: any) => {
   const session = useSession();
   const [reviews, setReviews] = useState<Review[]>([]);
   const token = session?.data?.user.refreshToken;
@@ -53,7 +53,7 @@ const Reviews = ({serviceProviderId}: any) => {
       if (!serviceProviderId) return;
       try {
         const response = await axios.get(
-          `https://smp.jacinthsolutions.com.au/api/v1/service_provider/get-profile/${serviceProviderId}`,
+          `https://api.oloja.com.au/api/v1/service_provider/get-profile/${serviceProviderId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -61,7 +61,7 @@ const Reviews = ({serviceProviderId}: any) => {
           }
         );
         setReviews(response.data.review);
-       
+
       } catch (error) {
         console.error("Error fetching reviews:", error);
       }
@@ -70,7 +70,7 @@ const Reviews = ({serviceProviderId}: any) => {
     fetchReviews();
   }, [serviceProviderId, token]);
 
-console.log(reviews)
+  console.log(reviews)
 
   const settings = {
     dots: false,
@@ -127,18 +127,18 @@ console.log(reviews)
 
   const formatDate = (createdAtArray: any) => {
     if (!createdAtArray || createdAtArray.length < 3) {
-      return 'Invalid Date'; 
+      return 'Invalid Date';
     }
 
     const year = createdAtArray[0];
-    const month = createdAtArray[1].toString().padStart(2, '0'); 
-    const day = createdAtArray[2].toString().padStart(2, '0');  
+    const month = createdAtArray[1].toString().padStart(2, '0');
+    const day = createdAtArray[2].toString().padStart(2, '0');
 
-    return `${day}-${month}-${year}`; 
+    return `${day}-${month}-${year}`;
   };
 
 
- 
+
 
   return (
     <section className="space-y-8 bg-status-lightViolet p-4 lg:p-10">

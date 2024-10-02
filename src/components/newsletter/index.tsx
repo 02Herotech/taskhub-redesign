@@ -15,7 +15,7 @@ const NewsLetter = () => {
     }
 
     useEffect(() => {
-      const timer =  setTimeout(() => {
+        const timer = setTimeout(() => {
             setResOk(false)
         }, 4000)
 
@@ -28,7 +28,7 @@ const NewsLetter = () => {
         setMessage('');
 
         try {
-            const response = await fetch('https://smp.jacinthsolutions.com.au/api/v1/util/blog/subscribe-to-newsletter', {
+            const response = await fetch('https://api.oloja.com.au/api/v1/util/blog/subscribe-to-newsletter', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

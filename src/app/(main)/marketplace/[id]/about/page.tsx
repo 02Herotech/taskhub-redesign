@@ -47,7 +47,7 @@ const Page = () => {
         const fetchListing = async () => {
             try {
                 if (!id) return;
-                const url = `https://smp.jacinthsolutions.com.au/api/v1/listing/${id}`;
+                const url = `https://api.oloja.com.au/api/v1/listing/${id}`;
                 const { data } = await axios.get(url);
                 setCurrentListing(data);
             } catch (error: any) {
@@ -62,14 +62,14 @@ const Page = () => {
             try {
                 if (!id) return;
                 console.log(id)
-                const url = `https://smp.jacinthsolutions.com.au/api/v1/service_provider/get-profile/${id}`;
+                const url = `https://api.oloja.com.au/api/v1/service_provider/get-profile/${id}`;
                 const response = await axios.get(url,
                     {
                         headers: {
                             Authorization: `Bearer ${token}`,
                         },
                     }
-                 );
+                );
                 setProviderListings(response.data?.serviceProviderListing);
                 setReviews(response.data.review);
                 console.log(response.data)
@@ -137,7 +137,7 @@ const Page = () => {
                                                 recipientName={
                                                     currentListing?.serviceProvider.user.fullName
                                                 }
-                                            className="h-[50px]"
+                                                className="h-[50px]"
                                             />
                                         )}
                                 </div>
@@ -255,7 +255,7 @@ const Page = () => {
                                         </div>
                                     </div>
                                 </div>
-                                </motion.div>
+                            </motion.div>
                             //</Link>
                         ))}
                     </div>

@@ -269,15 +269,15 @@ const Invoice = ({
               </span>
               <div className="flex w-full items-center gap-1">
                 <p>$ </p>
-                  <input
-                    type="number"
-                    name="price"
-                    value={invoiceState.price}
-                    placeholder={currentBooking?.price?.toString()}
-                    disabled={currentBooking?.invoiceSent}
-                    className="w-full bg-violet-light py-2 outline-none"
-                    onChange={handlePriceChange}
-                  />
+                <input
+                  type="number"
+                  name="price"
+                  value={invoiceState.price}
+                  placeholder={currentBooking?.price?.toString()}
+                  disabled={currentBooking?.invoiceSent}
+                  className="w-full bg-violet-light py-2 outline-none"
+                  onChange={handlePriceChange}
+                />
               </div>
             </label>
             <label className="flex flex-grow flex-col gap-2 rounded-lg bg-violet-light p-4 py-2 font-bold ">
@@ -287,33 +287,33 @@ const Invoice = ({
                   <BsPencilSquare className="text-violet-normal" />
                 )}
               </span>
-                {invoiceState.date ? (
-                  typeof invoiceState.date === 'string' ? (
-                    <input
-                      type="text"
-                      value={invoiceState.date}
-                      readOnly
-                      className="w-full bg-transparent text-[#716F78] outline-none"
-                    />
-                  ) : (
-                    <DatePicker
-                      selected={invoiceState.date}
-                      minDate={new Date()}
-                      required
-                      disabled={currentBooking?.invoiceSent}
-                      onChange={(date: Date) =>
-                        setInvoiceState((prev) => ({
-                          ...prev,
-                          date: date,
-                        }))
-                      }
-                      className="w-full bg-transparent text-[#716F78] outline-none"
-                      dateFormat="dd/MM/yyyy"
-                    />
-                  )
+              {invoiceState.date ? (
+                typeof invoiceState.date === 'string' ? (
+                  <input
+                    type="text"
+                    value={invoiceState.date}
+                    readOnly
+                    className="w-full bg-transparent text-[#716F78] outline-none"
+                  />
                 ) : (
-                  <span>Flexible</span>
-                )}
+                  <DatePicker
+                    selected={invoiceState.date}
+                    minDate={new Date()}
+                    required
+                    disabled={currentBooking?.invoiceSent}
+                    onChange={(date: Date) =>
+                      setInvoiceState((prev) => ({
+                        ...prev,
+                        date: date,
+                      }))
+                    }
+                    className="w-full bg-transparent text-[#716F78] outline-none"
+                    dateFormat="dd/MM/yyyy"
+                  />
+                )
+              ) : (
+                <span>Flexible</span>
+              )}
             </label>
           </div>
           <div className="space-y-3 rounded-lg bg-violet-active p-3 py-4 text-violet-normal">

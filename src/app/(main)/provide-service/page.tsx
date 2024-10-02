@@ -191,7 +191,7 @@ const ProvideService: React.FC = () => {
     const fetchUserData = async () => {
       if (!token) return;
       try {
-        const url = isServiceProvider ? "https://smp.jacinthsolutions.com.au/api/v1/service_provider/profile" : "https://smp.jacinthsolutions.com.au/api/v1/customer/profile";
+        const url = isServiceProvider ? "https://api.oloja.com.au/api/v1/service_provider/profile" : "https://api.oloja.com.au/api/v1/customer/profile";
         const { data } = await axios.get(url, {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -256,7 +256,7 @@ const ProvideService: React.FC = () => {
     const fetchPostalCodeData = async () => {
       try {
         const response = await axios.get(
-          `https://smp.jacinthsolutions.com.au/api/v1/util/locations/search?postcode=${selectedCode}`,
+          `https://api.oloja.com.au/api/v1/util/locations/search?postcode=${selectedCode}`,
         );
         setPostalCodeData(response.data as PostalCodeData[]);
       } catch (error) {
@@ -274,7 +274,7 @@ const ProvideService: React.FC = () => {
     const fetchItems = async () => {
       try {
         const response = await axios.get(
-          "https://smp.jacinthsolutions.com.au/api/v1/util/all-categories",
+          "https://api.oloja.com.au/api/v1/util/all-categories",
         );
         const data: Item[] = response.data;
         console.log(data);
@@ -292,7 +292,7 @@ const ProvideService: React.FC = () => {
       const fetchSubcategories = async () => {
         try {
           const response = await axios.get(
-            `https://smp.jacinthsolutions.com.au/api/v1/util/all-sub-categories-by-categoryId/${selectedCategory}`,
+            `https://api.oloja.com.au/api/v1/util/all-sub-categories-by-categoryId/${selectedCategory}`,
           );
           const data: Subcategory[] = response.data;
           console.log(data);
@@ -590,7 +590,7 @@ const ProvideService: React.FC = () => {
         console.log(finalTask);
         await Promise.race([
           axios.post(
-            `https://smp.jacinthsolutions.com.au/api/v1/listing/create-listing?userId=${id}`,
+            `https://api.oloja.com.au/api/v1/listing/create-listing?userId=${id}`,
             finalTask,
             {
               headers: {
@@ -825,8 +825,8 @@ const ProvideService: React.FC = () => {
                   <div className="relative grid space-y-4 text-[13px] text-[#221354]">
                     <input
                       className={`rounded-2xl ${activePlanIndex === 0
-                          ? " disabled bg-transparent p-1 text-lg font-bold text-status-darkViolet"
-                          : "bg-[#EBE9F4] p-4 hover:bg-status-darkViolet hover:text-white "
+                        ? " disabled bg-transparent p-1 text-lg font-bold text-status-darkViolet"
+                        : "bg-[#EBE9F4] p-4 hover:bg-status-darkViolet hover:text-white "
                         } cursor-pointer text-left outline-none placeholder:font-satoshiMedium placeholder:font-medium placeholder:text-[#2A1769] hover:placeholder:text-white `}
                       name="physical"
                       onClick={() => handlePlan(0)}
@@ -874,8 +874,8 @@ const ProvideService: React.FC = () => {
                     )}
                     <input
                       className={`rounded-2xl ${activePlanIndex === 1
-                          ? " disabled bg-transparent p-1 text-lg font-bold text-status-darkViolet"
-                          : "bg-[#EBE9F4] p-4 hover:bg-status-darkViolet hover:text-white"
+                        ? " disabled bg-transparent p-1 text-lg font-bold text-status-darkViolet"
+                        : "bg-[#EBE9F4] p-4 hover:bg-status-darkViolet hover:text-white"
                         } cursor-pointer text-left outline-none placeholder:font-satoshiMedium placeholder:font-medium placeholder:text-[#2A1769] hover:placeholder:text-white`}
                       name="physical"
                       onClick={() => handlePlan(1)}
@@ -921,8 +921,8 @@ const ProvideService: React.FC = () => {
                     )}
                     <input
                       className={`rounded-2xl ${activePlanIndex === 2
-                          ? " disabled bg-transparent p-1 text-lg font-bold text-status-darkViolet"
-                          : "bg-[#EBE9F4] p-4 hover:bg-status-darkViolet hover:text-white"
+                        ? " disabled bg-transparent p-1 text-lg font-bold text-status-darkViolet"
+                        : "bg-[#EBE9F4] p-4 hover:bg-status-darkViolet hover:text-white"
                         } cursor-pointer text-left outline-none placeholder:font-satoshiMedium placeholder:font-medium placeholder:text-[#2A1769] hover:placeholder:text-white`}
                       name="physical"
                       onClick={() => handlePlan(2)}
@@ -976,8 +976,8 @@ const ProvideService: React.FC = () => {
                   <div className="flex space-x-4 text-[13px] text-[#221354]">
                     <input
                       className={`w-[150px] rounded-2xl p-2 lg:w-full ${activeButtonIndex === 0
-                          ? "bg-status-purpleBase text-white"
-                          : "bg-[#EBE9F4] placeholder:text-white hover:bg-status-purpleBase hover:text-white"
+                        ? "bg-status-purpleBase text-white"
+                        : "bg-[#EBE9F4] placeholder:text-white hover:bg-status-purpleBase hover:text-white"
                         } cursor-pointer text-center font-satoshiBold text-status-darkpurple outline-none`}
                       name="physical"
                       onClick={() => handleClick(0)}
@@ -987,8 +987,8 @@ const ProvideService: React.FC = () => {
                     />
                     <input
                       className={`w-[150px] rounded-2xl p-2 lg:w-full ${activeButtonIndex === 1
-                          ? "bg-status-purpleBase text-white"
-                          : "bg-[#EBE9F4] placeholder:text-white hover:bg-status-purpleBase hover:text-white "
+                        ? "bg-status-purpleBase text-white"
+                        : "bg-[#EBE9F4] placeholder:text-white hover:bg-status-purpleBase hover:text-white "
                         } cursor-pointer text-center font-satoshiBold text-status-darkpurple outline-none`}
                       name="remote"
                       onClick={() => {
@@ -1402,15 +1402,15 @@ const ProvideService: React.FC = () => {
           <div className="mb-3 flex justify-center pt-4 font-bold md:space-x-5">
             <div
               className={`${currentPage === 1
-                  ? "text-status-purpleBase"
-                  : "text-status-purpleBase"
+                ? "text-status-purpleBase"
+                : "text-status-purpleBase"
                 }`}
             >
               <p className="flex items-center gap-1 text-[9px] md:text-[16px] lg:gap-3">
                 <span
                   className={`${currentPage === 1
-                      ? "bg-status-purpleBase text-white"
-                      : "bg-status-purpleBase text-white"
+                    ? "bg-status-purpleBase text-white"
+                    : "bg-status-purpleBase text-white"
                     } rounded-2xl border-none px-2 py-1 lg:px-3 lg:py-2`}
                 >
                   01
@@ -1423,15 +1423,15 @@ const ProvideService: React.FC = () => {
             </div>
             <div
               className={`${currentPage === 2 || currentPage === 3
-                  ? "text-status-purpleBase"
-                  : " text-[#716F78]"
+                ? "text-status-purpleBase"
+                : " text-[#716F78]"
                 }`}
             >
               <p className="flex items-center gap-1 text-[9px] md:text-[16px] lg:gap-3">
                 <span
                   className={`${currentPage === 2 || currentPage === 3
-                      ? "bg-status-purpleBase text-white"
-                      : "bg-[#EAE9EB] text-[#716F78]"
+                    ? "bg-status-purpleBase text-white"
+                    : "bg-[#EAE9EB] text-[#716F78]"
                     } rounded-2xl border-none px-2 py-1 lg:px-3 lg:py-2`}
                 >
                   02
@@ -1449,8 +1449,8 @@ const ProvideService: React.FC = () => {
               <p className="flex items-center gap-1 text-[9px] md:text-[16px] lg:gap-3">
                 <span
                   className={`${currentPage === 3
-                      ? "bg-status-purpleBase text-white"
-                      : "bg-[#EAE9EB] text-[#716F78]"
+                    ? "bg-status-purpleBase text-white"
+                    : "bg-[#EAE9EB] text-[#716F78]"
                     } rounded-2xl border-none px-2 py-1 lg:px-3 lg:py-2`}
                 >
                   03
@@ -1473,10 +1473,10 @@ const ProvideService: React.FC = () => {
                 <div className="h-1 w-2/3 overflow-hidden bg-[#EAE9EB]">
                   <div
                     className={`h-full ${currentPage === 1
+                      ? "bg-status-purpleBase"
+                      : currentPage === 2
                         ? "bg-status-purpleBase"
-                        : currentPage === 2
-                          ? "bg-status-purpleBase"
-                          : "bg-status-purpleBase"
+                        : "bg-status-purpleBase"
                       }`}
                     style={{ width: `${progress}%` }}
                   />

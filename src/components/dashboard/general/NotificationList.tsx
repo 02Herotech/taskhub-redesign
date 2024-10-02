@@ -144,7 +144,7 @@ const NotificationList = ({
         console.error("No matching route found for the given notification.");
       }
       const url =
-        "https://smp.jacinthsolutions.com.au/api/v1/notification/change-notification-status?notificationId=" +
+        "https://api.oloja.com.au/api/v1/notification/change-notification-status?notificationId=" +
         notification.id;
       await axios.post(
         url,
@@ -247,7 +247,7 @@ const NotificationList = ({
             </p>
           </div>
         );
-      })} 
+      })}
     </div>
   );
 };

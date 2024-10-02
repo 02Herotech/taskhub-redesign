@@ -159,7 +159,7 @@ const Navigation = () => {
         dispatch(updateUserProfile(data));
         if (isServiceProvider) {
           const walleturl =
-            "https://smp.jacinthsolutions.com.au/api/v1/booking/wallet/provider/" +
+            "https://api.oloja.com.au/api/v1/booking/wallet/provider/" +
             userData.serviceProviderId;
           const response = await axios.get(walleturl, {
             headers: { Authorization: `Bearer ${token}` },
