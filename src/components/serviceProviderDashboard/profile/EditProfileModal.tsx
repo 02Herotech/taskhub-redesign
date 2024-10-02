@@ -42,6 +42,7 @@ type ModalPropsTypes = {
     React.SetStateAction<boolean>
   >;
   isProfileUpdatedSuccessfully: boolean;
+  handleRedirect: () => void;
 };
 
 const EditProfileModal = ({
@@ -53,6 +54,7 @@ const EditProfileModal = ({
   isProfileUpdatedSuccessfully,
   setIsProfileUpdatedSuccessfully,
   setSelectedDocument,
+  handleRedirect
 }: ModalPropsTypes) => {
   // set initial state value
   const [isUploadInitiated, setIsUploadInitiated] = useState(false);
@@ -205,12 +207,12 @@ const EditProfileModal = ({
               >
                 Close
               </button>
-              <Link
-                href={"/marketplace"}
+              <button
+                onClick={handleRedirect}
                 className="rounded-full bg-violet-normal px-4 py-2 font-bold text-white max-sm:text-sm"
               >
                 Proceed to marketplace
-              </Link>
+              </button>
             </div>
           </div>
         ) : isEditingProfilePicture.isEditing || isUploadInitiated ? (
@@ -315,12 +317,11 @@ const EditProfileModal = ({
                 </span>
                 <span className="text-sm font-medium text-slate-500">
                   Take a picture of yourself holding up your preferred document
-                  on the left side of your head showing a clear Id number . See
-                  example
+                  on the left side of your head showing a clear Id number.
                 </span>
               </p>
               <p className="flex gap-4">
-                <span className="h-fit w-fit rounded-full bg-violet-light p-1 ">
+                <span className="h-fit w-fit rounded-full bg-violet-light p-1">
                   <BiCheck className="size-4 text-violet-normal" />
                 </span>
                 <span className="text-sm font-medium text-slate-500">

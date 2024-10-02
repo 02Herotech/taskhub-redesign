@@ -11,7 +11,7 @@ import {
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setContacts, setTotalUnreadMessages } from "@/store/Features/chat";
@@ -20,7 +20,6 @@ import { connectSocket, getSocket } from "@/lib/socket";
 import { GiCheckMark } from "react-icons/gi";
 import { formatTime, formatTimestamp } from "@/utils";
 import { FaCheckDouble } from "react-icons/fa6";
-import { Socket } from "dgram";
 
 type ChatMessagesGroupedType = {
   [date: string]: ChatMessageDisplayedType[];
@@ -29,6 +28,7 @@ type ChatMessagesGroupedType = {
 const ServiceProviderChat = () => {
   const [message, setMessage] = useState("");
   const [contact, setContact] = useState<ChatContactTypes | null>();
+  const router = useRouter()
 
   const [groupedChatMessages, setGroupedChatMessages] =
     useState<ChatMessagesGroupedType | null>(null);
@@ -53,16 +53,16 @@ const ServiceProviderChat = () => {
     // eslint-disable-next-line
   }, []);
 
-  const handleFocus = () => {
-    document.body.style.overflow = "auto";
-    setTimeout(() => {
-      inputRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
-    }, 300); // Delay to account for keyboard animation
-  };
+  // const handleFocus = () => {
+  //   document.body.style.overflow = "auto";
+  //   setTimeout(() => {
+  //     inputRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+  //   }, 300); // Delay to account for keyboard animation
+  // };
 
-  const handleBlur = () => {
-    document.body.style.overflow = "hidden";
-  };
+  // const handleBlur = () => {
+  //   document.body.style.overflow = "hidden";
+  // };
 
   const groupMessagesByDate = (
     messages: ChatMessageDisplayedType[],
@@ -98,6 +98,8 @@ const ServiceProviderChat = () => {
           );
           const groupedMessages = groupMessagesByDate(displayMessages);
           setGroupedChatMessages(groupedMessages);
+
+          console.log("ss", displayMessages)
         })
         .catch((error: any) => {
           console.log(error.response.data || error.message || error);
@@ -274,7 +276,7 @@ const ServiceProviderChat = () => {
   };
 
   return (
-    <main className="h-[calc(100cqh-5rem)] space-y-5 overflow-hidden   p-4 lg:p-8 ">
+    <main className="h-[calc(100cqh-5rem)] space-y-5 overflow-hidden p-4 lg:p-8 ">
       <section className="grid gap-10 divide-slate-400 lg:grid-cols-12 lg:divide-x ">
         <section className="col-span-5 h-full max-md:hidden ">
           <ChatNavigation />
@@ -348,9 +350,7 @@ const ServiceProviderChat = () => {
                               <p>{item.content}</p>
                               <div className="flex items-center justify-end gap-2 text-[0.7rem]">
                                 <span className="">
-                                  {typeof item.time === "string"
-                                    ? formatTime(item.time)
-                                    : formatTimestamp(item.time as number[])}
+                                  {formatTimestamp(item.time as number[])}
                                 </span>
                                 {item.senderId === user.id && (
                                   <span className="block">
@@ -384,8 +384,8 @@ const ServiceProviderChat = () => {
                 value={message}
                 ref={inputRef}
                 onChange={(event) => setMessage(event.target.value)}
-                onFocus={handleFocus}
-                onBlur={handleBlur}
+                // onFocus={handleFocus}
+                // onBlur={handleBlur}
                 onKeyDown={(event) => {
                   if (event.key === "Enter") {
                     sendMessage(message);

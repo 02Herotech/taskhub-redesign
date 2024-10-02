@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { formatAmount, formatDate, getYesterday } from "@/lib/utils";
 import { FiClock } from "react-icons/fi";
 import Button from "@/components/global/Button";
@@ -9,7 +9,12 @@ import { loadStripe } from "@stripe/stripe-js";
 import { Elements } from "@stripe/react-stripe-js";
 import { useSession } from "next-auth/react";
 import CheckoutForm from "../CheckoutForm";
-import { useGetInvoiceByCustomerIdQuery } from "@/services/bookings";
+import {
+  useAcceptInvoiceMutation,
+  useGeneratePaymentIntentMutation,
+  useGetInvoiceByCustomerIdQuery,
+  useRejectInvoiceMutation
+} from "@/services/bookings";
 import Loading from "@/shared/loading";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
@@ -26,12 +31,15 @@ const Offers = () => {
   const [selectedInvoice, setSelectedInvoice] = useState<Invoice | null>(null);
   const [initiatePayment, setInitiatePayment] = useState(false);
   const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
   const [clientSecret, setClientSecret] = useState("");
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
+  const [invoiceAccepted, setInvoiceAccepted] = useState(false);
+  const [generatePaymentIntent, { isLoading: paymentIntentLoading, error: paymentIntentError }] = useGeneratePaymentIntentMutation();
+  const [acceptInvoice, { isLoading: acceptInvoiceLoading, error: acceptInvoiceError }] = useAcceptInvoiceMutation();
+  const [rejectInvoice, { isLoading: rejectInvoiceLoading, error: rejectInvoiceError }] = useRejectInvoiceMutation();
+
   const { data: session } = useSession();
-  const userToken = session?.user?.accessToken;
   const firstName = session?.user?.user.firstName;
   const lastName = session?.user?.user.lastName;
   const fullName = `${firstName} ${lastName}`;
@@ -40,9 +48,13 @@ const Offers = () => {
     setVisibleTransactions((prevVisible) => prevVisible + 4);
   };
 
-  const handleCardClick = async (invoice: Invoice) => {
+  const handleCardClick = (invoice: Invoice) => {
     setSelectedInvoice(invoice);
     setIsModalOpen(true);
+    setInvoiceAccepted(false);
+    setInitiatePayment(false);
+    setClientSecret("");
+    setError("");
   };
 
   const closeModal = () => {
@@ -50,6 +62,8 @@ const Offers = () => {
     setSelectedInvoice(null);
     setInitiatePayment(false);
     setClientSecret("");
+    setInvoiceAccepted(false);
+    setError("");
   };
 
   const { profile: user } = useSelector(
@@ -60,39 +74,61 @@ const Offers = () => {
     user?.customerId!,
   );
 
-  const fetchPaymentIntent = async () => {
-    try {
-      setLoading(true);
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/booking/payment-intent-stripe/${selectedInvoice?.id}`,
-        {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${userToken}`,
-            "Content-Type": "application/json",
-          },
-        },
-      );
+  const handleAcceptInvoice = async () => {
+    if (!selectedInvoice) return;
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+    try {
+      const response = await acceptInvoice({ invoiceId: selectedInvoice.id }).unwrap();
+
+      if (acceptInvoiceError) {
+        setError(response.message);
+        return;
+      } else {
+        setInvoiceAccepted(true);
+        setError("");
       }
 
-      const data = await response.json();
-      setClientSecret(data.clientSecret);
-      setLoading(false);
-    } catch (error) {
-      setLoading(false);
-      console.log("Error fetching payment intent:", error);
-      setError("An error occurred, please try again later ...");
+    } catch (err) {
+      console.log(err);
     }
   };
 
-  useEffect(() => {
-    if (isModalOpen && userToken) {
-      fetchPaymentIntent();
+  const handleRejectInvoice = async () => {
+    if (!selectedInvoice) return;
+
+    try {
+      const response = await rejectInvoice({ invoiceId: selectedInvoice.id }).unwrap();
+
+      if (rejectInvoiceError) {
+        setError(response.message);
+        return;
+      } else {
+        setError("");
+        closeModal();
+      }
+    } catch (err) {
+      console.log(err);
     }
-  }, [isModalOpen, userToken]);
+  };
+
+  const handleInitiatePayment = async () => {
+    if (!selectedInvoice || !invoiceAccepted) return;
+
+    try {
+      const response = await generatePaymentIntent({ invoiceId: selectedInvoice.id }).unwrap();
+      setClientSecret(response.clientSecret);
+      setInitiatePayment(true);
+      setError("");
+    } catch (err) {
+      setError("Failed to generate payment intent. Please try again.");
+    }
+  };
+
+  // useEffect(() => {
+  //   if (isModalOpen && userToken) {
+  //     fetchPaymentIntent();
+  //   }
+  // }, [isModalOpen, userToken]);
 
   const groupOffersByDate = (offers: Invoice[], filterDate: Date | null) => {
     if (!offers || !Array.isArray(offers)) {
@@ -134,20 +170,20 @@ const Offers = () => {
   }
 
   const stripeOptions = {
-    clientSecret: clientSecret,
+    clientSecret,
   };
 
   return (
-    <>
+    <div>
       <div className="relative w-full rounded-[20px] bg-[#EBE9F4] p-4 font-satoshi">
-        
+
         {/* <h3 className="mb-5 font-satoshiBold text-base font-bold text-[#140B31]">
           {todayDate}
         </h3> */}
         {offers.length === 0 && (
           <div className="flex h-[50vh] flex-col items-center justify-center space-y-5">
             <h2 className="text-center text-2xl font-bold text-primary">
-              No invoice found
+              No offer found
             </h2>
           </div>
         )}
@@ -163,7 +199,7 @@ const Offers = () => {
                 View all
               </Button>
             )}
-            <div className="bg-primary text-white p-[6px] rounded-full cursor-pointer flex items-center justify-center hover:scale-105 transition-all" onClick={() => setIsDatePickerOpen(!isDatePickerOpen)}>
+            <div className="bg-primary absolute top-0 right-0 text-white p-[6px] rounded-full cursor-pointer flex items-center justify-center hover:scale-105 transition-all" onClick={() => setIsDatePickerOpen(!isDatePickerOpen)}>
               <LuCalendarDays
                 size={20}
               />
@@ -195,12 +231,11 @@ const Offers = () => {
           <div className="flex h-[50vh] flex-col items-center justify-center space-y-5">
             <h2 className="text-center text-2xl font-bold text-primary">
               {selectedDate
-                ? `No offers found for ${selectedDate.toLocaleDateString("en-US", {
+                && `No offers found for ${selectedDate.toLocaleDateString("en-US", {
                   year: "numeric",
                   month: "long",
                   day: "numeric",
-                })}`
-                : "No invoice found"}
+                })}`}
             </h2>
           </div>
         ) : (
@@ -280,7 +315,7 @@ const Offers = () => {
                   />
                 </Elements>
               ) : (
-                <>
+                <div>
                   <h3 className="font-clashSemiBold text-3xl text-[#060D1F]">
                     Offer Details
                   </h3>
@@ -342,33 +377,48 @@ const Offers = () => {
                         </div>
                       )}
                       <div className="!mt-6 flex items-center space-x-4">
-                        <Button
-                          loading={loading}
-                          disabled={!clientSecret}
-                          className="rounded-full"
-                          onClick={() => {
-                            setInitiatePayment(true);
-                          }}
-                        >
-                          Accept Offer
-                        </Button>
-                        <Button
-                          theme="outline"
-                          className="rounded-full"
-                          onClick={closeModal}
-                        >
-                          Reject Offer
-                        </Button>
+                        {!invoiceAccepted ? (
+                          <div className="flex items-center space-x-4">
+                            <Button
+                              loading={acceptInvoiceLoading}
+                              className="rounded-full max-lg:text-xs"
+                              onClick={handleAcceptInvoice}
+                              size="sm"
+                            >
+                              Accept Offer
+                            </Button>
+                            <Button
+                              theme="outline"
+                              className="rounded-full max-lg:text-xs"
+                              onClick={handleRejectInvoice}
+                              loading={rejectInvoiceLoading}
+                              size="sm"
+                            >
+                              Reject Offer
+                            </Button>
+                          </div>
+                        ) : (
+                          <div className="flex justify-center w-full">
+                            <Button
+                              loading={paymentIntentLoading}
+                              className="rounded-full w-full"
+                              onClick={handleInitiatePayment}
+                            >
+                              Proceed to Payment
+                            </Button>
+                          </div>
+                        )}
+
                       </div>
                     </div>
                   </div>
-                </>
+                </div>
               )}
             </div>
           </Popup>
         )}
       </div>
-    </>
+    </div>
   );
 };
 

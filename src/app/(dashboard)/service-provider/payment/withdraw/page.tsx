@@ -1,41 +1,38 @@
 "use client";
 
-import { RootState } from "@/store";
+import React, { useState, useEffect } from "react";
+import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useDispatch, useSelector } from "react-redux";
+import { z } from "zod";
 import axios from "axios";
 import Link from "next/link";
-import React, { useState, useEffect } from "react";
-import { SubmitHandler, useForm } from "react-hook-form";
-import { BsExclamationTriangle } from "react-icons/bs";
-import { PiSealCheckFill, PiWarningDiamond } from "react-icons/pi";
-import { useSelector } from "react-redux";
 import { BeatLoader } from "react-spinners";
-import z from "zod";
+import { PiSealCheckFill, PiWarningDiamond } from "react-icons/pi";
+import { BsExclamationTriangle } from "react-icons/bs";
 
-const WithdrawalPage = () => {
-  const { userProfileAuth: auth, profile: user } = useSelector(
-    (state: RootState) => state.userProfile,
-  );
-  const [success, setSuccess] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+import WalletBalance from "@/components/dashboard/serviceProvider/Payment/WalletBalance";
+import { RootState } from "@/store";
+import { refreshWallet } from "@/store/Features/userProfile";
+
+// Schema definition
+const withdrawalSchema = z.object({
+  accountName: z.string().min(3).max(50),
+  accountNumber: z.string().regex(/^\d+$/, "Account Number must be a number"),
+  routingNumber: z.string().min(3).max(6),
+  amount: z.string().regex(/^\d+$/, "Amount must be a number").transform(Number),
+});
+
+type WithdrawalType = z.infer<typeof withdrawalSchema>;
+
+// Component definition
+const WithdrawalPage: React.FC = () => {
+  const dispatch = useDispatch();
+  const { userProfileAuth: auth, profile: user } = useSelector((state: RootState) => state.userProfile);
+  const [status, setStatus] = useState<'idle' | 'success' | 'error'>('idle');
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const isServiceProvider = auth?.role?.[0] === "SERVICE_PROVIDER";
-
-  const withdrawalSchema = z.object({
-    accountName: z.string().min(3).max(50),
-    accountNumber: z.string().refine((val) => !isNaN(Number(val)), {
-      message: "Account Number must be a number",
-    }),
-    routingNumber: z.string().min(3).max(6),
-    amount: z
-      .string()
-      .refine((val) => !isNaN(Number(val)), {
-        message: "Amount must be a number",
-      })
-      .transform(Number),
-  });
-
-  type WithdrawalType = z.infer<typeof withdrawalSchema>;
 
   const {
     handleSubmit,
@@ -45,190 +42,187 @@ const WithdrawalPage = () => {
     formState: { errors, isSubmitting },
   } = useForm<WithdrawalType>({ resolver: zodResolver(withdrawalSchema) });
 
+  useEffect(() => {
+    if (user) {
+      setValue("accountName", `${user.lastName} ${user.firstName}`);
+    }
+  }, [user, setValue]);
+
   const submitWithdraw: SubmitHandler<WithdrawalType> = async (data) => {
     if (!auth.token) return;
+
     try {
       const url = "https://smp.jacinthsolutions.com.au/api/v1/stripe/payout";
-      const response = await axios.post(url, data, {
-        headers: {
-          Authorization: `Bearer ${auth.token}`,
-        },
+      await axios.post(url, data, {
+        headers: { Authorization: `Bearer ${auth.token}` },
       });
-      console.log(response.data);
-      setSuccess(true);
+      setStatus('success');
+      dispatch(refreshWallet());
       reset();
     } catch (error: any) {
-      setError(error?.response?.data || "Insufficient balance");
-      console.log(error?.response?.data || error);
+      setStatus('error');
+      setErrorMessage(error?.response?.data || "Something went wrong, please try again");
+      console.error(error?.response?.data || error);
     }
   };
 
-  useEffect(() => {
-    user && setValue("accountName", `${user.lastName} ${user.firstName}`);
-    // eslint-disable-next-line
-  }, [user]);
+  const resetStatus = () => setStatus('idle');
 
   return (
     <main className="space-y-8 p-4 lg:p-8">
-      {success && (
-        <section className="fixed inset-0 z-50 flex h-screen w-screen items-center justify-center bg-black bg-opacity-70">
-          <div
-            className="absolute inset-0 h-screen w-screen"
-            onClick={() => setSuccess(false)}
-          />
-          <div className="relative z-10 flex w-[90vw] max-w-xl flex-col items-center justify-center gap-3 rounded-xl bg-white p-3 px-4 lg:space-y-4 lg:p-10">
-            <div className=" flex flex-col items-center justify-center gap-4">
-              <div className="flex size-20 items-center justify-center rounded-full bg-[#C1F6C3] bg-opacity-60">
-                <div className=" flex size-14 items-center justify-center rounded-full bg-[#A6F8AA] p-2">
-                  <PiSealCheckFill className="size-10 text-green-500" />
-                </div>
-              </div>
-              <p className="text-center font-satoshiBold text-2xl font-extrabold text-violet-normal">
-                Success
-              </p>
-              <p className="text-center font-semibold text-violet-darker">
-                Your withdrawal is successfully
-              </p>
-              <div className="flex items-center gap-6">
-                <Link
-                  href={
-                    isServiceProvider
-                      ? "/service-provider/profile"
-                      : "/customer/profile"
-                  }
-                  className="rounded-full bg-violet-normal px-4 py-2 font-bold text-white max-sm:text-sm"
-                >
-                  Proceed to profile
-                </Link>
-              </div>
-            </div>
-          </div>
-        </section>
+      {status !== 'idle' && (
+        <StatusModal
+          status={status}
+          errorMessage={errorMessage}
+          onClose={resetStatus}
+          isServiceProvider={isServiceProvider}
+        />
       )}
-      {error && (
-        <section className="fixed inset-0 z-50 flex h-screen w-screen items-center justify-center bg-black bg-opacity-70">
-          <div
-            className="absolute inset-0 h-screen w-screen"
-            onClick={() => setError(null)}
-          />
-          <div className="relative z-10 flex w-[90vw] max-w-xl flex-col items-center justify-center gap-3 rounded-xl bg-white p-3 px-4 lg:space-y-4 lg:p-10">
-            <div className=" flex flex-col items-center justify-center gap-4">
-              <div className="flex size-20 items-center justify-center rounded-full bg-red-100 bg-opacity-60">
-                <div className=" flex size-14 items-center justify-center rounded-full bg-red-300 p-4">
-                  <BsExclamationTriangle className="size-10 text-red-500" />
-                </div>
-              </div>
-              <p className="text-center font-satoshiBold text-2xl font-extrabold text-red-500">
-                Failure
-              </p>
-              <p className="text-center font-semibold text-violet-darker">
-                {error}
-              </p>
-              <div className="flex items-center gap-6">
-                <Link
-                  href={
-                    isServiceProvider
-                      ? "/service-provider/profile"
-                      : "/customer/profile"
-                  }
-                  className="rounded-full bg-violet-normal px-4 py-2 font-bold text-white max-sm:text-sm"
-                >
-                  Proceed to profile
-                </Link>
-              </div>
-            </div>
-          </div>
-        </section>
-      )}
-      <p className="flex items-center gap-2 rounded-xl bg-orange-normal p-5 font-normal text-white">
-        <span>
-          <PiWarningDiamond className="size-5" />
-        </span>
-        <span>
-          Available funds to withdrawal: $0, minimum withdrawal request is $50
-        </span>
-      </p>
-      {user && (
-        <form
-          onSubmit={handleSubmit(submitWithdraw)}
-          className="space-y-3 rounded-xl bg-violet-active p-3 lg:p-6"
-        >
-          <h2 className="text-3xl font-medium text-violet-normal">
-            Withdrawal Method
-          </h2>
-          <div className="grid grid-cols-2 gap-3 outline-none lg:gap-6">
-            <label className="flex flex-col gap-2">
-              <span className="text-lg font-bold text-violet-normal">
-                Account name
-              </span>
-              <input
-                type="text"
-                value={`${user.lastName} ${user.firstName}`}
-                className="w-full rounded-md bg-white p-3 outline-none"
-                disabled={true}
-                {...register("accountName")}
-              />
-              {errors.accountName && (
-                <p className="text-red-600">{errors.accountName.message}</p>
-              )}
-            </label>
-            <label className="flex flex-col gap-2">
-              <span className="text-lg font-bold text-violet-normal">
-                Account number
-              </span>
-              <input
-                type="text"
-                className="w-full rounded-md bg-white p-3"
-                {...register("accountNumber")}
-              />
-              {errors.accountNumber && (
-                <p className="text-red-600">{errors.accountNumber.message}</p>
-              )}
-            </label>
-            <label className="flex flex-col gap-2">
-              <span className="text-lg font-bold text-violet-normal">BSB</span>
-              <input
-                type="text"
-                className="w-full rounded-md bg-white p-3"
-                {...register("routingNumber")}
-              />
-              {errors.routingNumber && (
-                <p className="text-red-600">{errors.routingNumber.message}</p>
-              )}
-            </label>
-            <label className="flex flex-col gap-2">
-              <span className="text-lg font-bold text-violet-normal">
-                Amount
-              </span>
-              <input
-                type="number"
-                min={50}
-                className="w-full rounded-md bg-white p-3"
-                {...register("amount")}
-              />
-              {errors.amount && (
-                <p className="text-red-600">{errors.amount.message}</p>
-              )}
-            </label>
-          </div>
 
-          <div className="flex justify-end">
-            <button
-              type="submit"
-              className="w-fit rounded-full bg-violet-normal px-6 py-3 font-medium text-white"
-              disabled={isSubmitting}
-            >
-              {isSubmitting ? (
-                <BeatLoader color="white" loading={isSubmitting} />
-              ) : (
-                " Request Withdrawal"
-              )}
-            </button>
-          </div>
-        </form>
+      <WarningBanner />
+
+      {user && (
+        <WithdrawalForm
+          user={user}
+          onSubmit={handleSubmit(submitWithdraw)}
+          register={register}
+          errors={errors}
+          isSubmitting={isSubmitting}
+        />
       )}
     </main>
   );
 };
+
+// Sub-components
+const StatusModal: React.FC<{
+  status: 'success' | 'error';
+  errorMessage: string | null;
+  onClose: () => void;
+  isServiceProvider: boolean;
+}> = ({ status, errorMessage, onClose, isServiceProvider }) => (
+  <section className="fixed inset-0 z-50 flex h-screen w-screen items-center justify-center bg-black bg-opacity-70">
+    <div className="absolute inset-0 h-screen w-screen" onClick={onClose} />
+    <div className="relative z-10 flex w-[90vw] max-w-xl flex-col items-center justify-center gap-3 rounded-xl bg-white p-3 px-4 lg:space-y-4 lg:p-10">
+      <div className="flex flex-col items-center justify-center gap-4">
+        <StatusIcon status={status} />
+        <p className="text-center font-clashBold text-2xl font-bold text-violet-normal">
+          {status === 'success' ? 'Withdrawal Successful' : 'Failure'}
+        </p>
+        <p className="text-center font-semibold text-violet-darker">
+          {status === 'success'
+            ? 'Please wait a few minutes to receive payment.'
+            : errorMessage}
+        </p>
+        <Link
+          href={isServiceProvider ? "/service-provider/profile" : "/customer/profile"}
+          className="rounded-full bg-violet-normal px-4 py-2 font-bold text-white max-sm:text-sm"
+        >
+          Proceed to profile
+        </Link>
+      </div>
+    </div>
+  </section>
+);
+
+const StatusIcon: React.FC<{ status: 'success' | 'error' }> = ({ status }) => (
+  <div className={`flex size-20 items-center justify-center rounded-full ${status === 'success' ? 'bg-[#C1F6C3]' : 'bg-red-100'
+    } bg-opacity-60`}>
+    <div className={`flex size-14 items-center justify-center rounded-full ${status === 'success' ? 'bg-[#A6F8AA]' : 'bg-red-300'
+      } p-2`}>
+      {status === 'success'
+        ? <PiSealCheckFill className="size-10 text-green-500" />
+        : <BsExclamationTriangle className="size-10 text-red-500" />
+      }
+    </div>
+  </div>
+);
+
+const WarningBanner: React.FC = () => (
+  <p className="flex items-center gap-2 rounded-xl bg-orange-normal p-5 font-normal text-white">
+    <PiWarningDiamond className="size-5" />
+    <span>
+      Available funds to withdraw: <WalletBalance />
+    </span>
+  </p>
+);
+
+const WithdrawalForm: React.FC<{
+  user: any;
+  onSubmit: (e?: React.BaseSyntheticEvent) => Promise<void>;
+  register: any;
+  errors: any;
+  isSubmitting: boolean;
+}> = ({ user, onSubmit, register, errors, isSubmitting }) => (
+  <form onSubmit={onSubmit} className="space-y-3 rounded-xl bg-violet-active p-3 lg:p-6">
+    <h2 className="text-xl lg:text-2xl font-semibold text-violet-normal">
+      Withdrawal Method
+    </h2>
+    <div className="grid grid-cols-2 gap-3 outline-none lg:gap-6">
+      <InputField
+        label="Account name"
+        type="text"
+        value={`${user.lastName} ${user.firstName}`}
+        disabled={true}
+        register={register("accountName")}
+        error={errors.accountName}
+      />
+      <InputField
+        label="Account number"
+        type="text"
+        register={register("accountNumber")}
+        error={errors.accountNumber}
+      />
+      <InputField
+        label="BSB"
+        type="text"
+        register={register("routingNumber")}
+        error={errors.routingNumber}
+      />
+      <InputField
+        label="Amount"
+        type="number"
+        register={register("amount")}
+        error={errors.amount}
+      />
+    </div>
+    <div className="flex justify-end">
+      <button
+        type="submit"
+        className="w-fit rounded-full bg-violet-normal px-6 py-3 font-medium text-white"
+        disabled={isSubmitting}
+      >
+        {isSubmitting ? (
+          <BeatLoader color="white" loading={isSubmitting} />
+        ) : (
+          "Request Withdrawal"
+        )}
+      </button>
+    </div>
+  </form>
+);
+
+const InputField: React.FC<{
+  label: string;
+  type: string;
+  register?: any;
+  error?: any;
+  value?: string;
+  disabled?: boolean;
+  min?: number;
+}> = ({ label, type, register, error, value, disabled, min }) => (
+  <label className="flex flex-col gap-2">
+    <span className="text-lg font-bold text-violet-normal">{label}</span>
+    <input
+      type={type}
+      className="w-full rounded-md bg-white p-3 outline-none"
+      disabled={disabled}
+      value={value}
+      min={min}
+      {...register}
+    />
+    {error && <p className="text-red-600">{error.message}</p>}
+  </label>
+);
 
 export default WithdrawalPage;

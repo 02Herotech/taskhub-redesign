@@ -9,7 +9,7 @@ export type Task = {
         id: number;
         categoryName: string;
     }
-    taskTime: string;
+    taskTime: [number, number];
     taskDate: [number, number, number];
     hubTime: string | null;
     taskType: string;
@@ -28,7 +28,7 @@ export type CustomerTasks = {
     taskBriefDescription: string;
     taskDescription: string;
     taskImage: any;
-    taskTime: string;
+    taskTime: [number, number];
     taskDate: [number, number, number];
     category: {
         id: number;
@@ -71,6 +71,22 @@ export type GetTasksResponse = {
     content: Task[];
 };
 
+export type CompletedTask = {
+    id: number;
+    invoiceId: number;
+    bookingId: number;
+    total: number;
+    createdAt: [number, number, number, number, number, number, number];
+    taskTime: [number, number];
+    customerId: number;
+    jobTitle: string;
+    jobDescription: string;
+    providerId: number;
+    categoryId: number;
+}
+
+export type GetCustomerCompletedTasksResponse = CompletedTask[];
+
 export type GetSingleTasksResponse = Task;
 
 export type GetFilterTaskByPriceRequest = {
@@ -97,3 +113,20 @@ export type GetTaskByTextRequest = {
     pageNumber: number;
     text: string;
 };
+
+export type PaymentIntentResponse = {
+    intentID: string;
+    clientSecret: string;
+};
+
+export type AcceptInvoiceResponse = {
+    data: string | null;
+    message: string;
+    status: string;
+}
+
+export type RejectInvoiceResponse = {
+    data: string | null;
+    message: string;
+    status: string;
+}

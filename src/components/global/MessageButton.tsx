@@ -67,7 +67,7 @@ const MessageButton = ({
   return (
     <button
       className={cn(
-        "rounded-full bg-violet-normal px-6 py-3 text-white duration-300 hover:opacity-90 disabled:cursor-not-allowed",
+        "rounded-full bg-violet-normal px-6 py-2 lg:py-3 text-white duration-300 hover:opacity-90 disabled:cursor-not-allowed",
         className,
       )}
       disabled={messageLoading}

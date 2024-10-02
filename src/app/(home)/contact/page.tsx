@@ -121,8 +121,8 @@ const ContactUsPage = () => {
                                         </span>
                                         <div
                                             className={`small-scrollbar right-0 absolute top-[calc(100%+0.2rem)] flex w-full flex-col rounded-md bg-white transition-all duration-300 ${isDropdownOpen
-                                                    ? "max-h-64 overflow-y-auto border-[1.5px] border-[#E9ECF1]"
-                                                    : "max-h-0 overflow-hidden"
+                                                ? "max-h-64 overflow-y-auto border-[1.5px] border-[#E9ECF1]"
+                                                : "max-h-0 overflow-hidden"
                                                 }`}
                                         >
                                             <div className="p-5 space-y-3 w-full">
@@ -192,7 +192,7 @@ const ContactUsPage = () => {
                             <div className="">
                                 <h4 className="font-bold text-base lg:text-xl text-primary">Queensland Australia</h4>
                                 <a
-                                    href="https://www.google.com/maps/search/?api=1&query=290+Maryam+Springs+260%2C+Courbevoie%2C+Sydney+Australia"
+                                    href="https://maps.app.goo.gl/KqruzJD5MuJ9bFEA7"
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     className="text-[#190E3F] text-xs lg:text-base font-medium hover:underline"
@@ -208,7 +208,7 @@ const ContactUsPage = () => {
                             </svg>
                             <div className="">
                                 <h4 className="font-bold text-base lg:text-xl text-primary">Call Us</h4>
-                                <a href="tel:+61245673890" className="text-[#190E3F] text-xs lg:text-base font-medium">(+61) 0426131854</a>
+                                <a href="tel:+61426131854" className="text-[#190E3F] text-xs lg:text-base font-medium">(+61) 426131854</a>
                             </div>
                         </div>
 
@@ -218,7 +218,7 @@ const ContactUsPage = () => {
                             </svg>
                             <div className="">
                                 <h4 className="font-bold text-base lg:text-xl text-primary">Send us an Email</h4>
-                                <a href="mailto:privacy@taskhub.com.au" className="text-[#190E3F] hover:underline text-xs lg:text-base font-medium">privacy@taskhub.com.au</a>
+                                <a href="mailto:operations@jacinthsolutions.com.au" className="text-[#190E3F] hover:underline text-xs lg:text-base font-medium">operations@jacinthsolutions.com.au</a>
                             </div>
                         </div>
                     </div>

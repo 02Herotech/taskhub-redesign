@@ -1,19 +1,19 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import { BiCalendar, BiCalendarCheck, BiLocationPlus } from "react-icons/bi";
-import { FaStar } from "react-icons/fa";
-
 import PricingPlan from "@/components/matkeplaceSingleTask/PricingPlan";
 import Reviews from "@/components/matkeplaceSingleTask/Reviews";
 import { formatDateFromNumberArray } from "@/utils";
 import axios from "axios";
 import ImageModal from "@/components/main/marketplace/ImageModal";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
 import MessageButton from "@/components/global/MessageButton";
+import Link from "next/link";
 
 const Page = () => {
   const [displayData, setDisplayData] = useState<ListingDataType>();
@@ -22,7 +22,7 @@ const Page = () => {
     state: false,
     image: "",
   });
-
+  const route = useRouter();
   const { id } = useParams();
 
   const { userProfileAuth: auth } = useSelector(
@@ -51,9 +51,10 @@ const Page = () => {
     fetchListing();
   }, [displayData]);
 
+
   return (
     <>
-      <main className=" relative  pt-16 font-satoshiMedium text-[#221354] ">
+      <main className=" relative  py-16 font-satoshiMedium text-[#221354] ">
         <ImageModal
           showImageModal={showImageModal}
           setShowImageModal={setShowImageModal}
@@ -130,6 +131,7 @@ const Page = () => {
                 </h1>
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-4">
+                    
                     <Image
                       src={
                         displayData?.serviceProvider?.user.profileImage ??
@@ -140,18 +142,16 @@ const Page = () => {
                       height={80}
                       quality={100}
                       className="size-20 rounded-full object-cover "
-                    />
+                      />
                     <div className="space-y-2">
                       <p className="text-xl font-medium">
                         {displayData?.serviceProvider?.user?.fullName}
                       </p>
-                      <div>
-                        {/* <p className="text-xs text-slate-300 "> 4.5 </p> */}
-                        <div className="flex items-center gap-2">
-                          {/* <FaStar fill="gold" />
-                          <FaStar fill="gold" />
-                          <FaStar fill="gold" />
-                          <FaStar fill="gold" /> */}
+                    <div>
+                      <Link href={`/marketplace/${displayData?.serviceProvider.id}/about`} className="cursor-pointer">
+                          <p className="text-xl font-medium text-[#e58c06] underline cursor-pointer">View Profile</p>
+                        </Link>
+                        {/* <div className="flex items-center gap-2">
                           <FaStar
                             fill="rgb(203 213 225)"
                             color="rgb(203 213 225)"
@@ -172,7 +172,7 @@ const Page = () => {
                             fill="rgb(203 213 225)"
                             color="rgb(203 213 225)"
                           />
-                        </div>
+                        </div> */}
                       </div>
                     </div>
                   </div>
@@ -184,6 +184,7 @@ const Page = () => {
                         recipientName={
                           currentListing?.serviceProvider.user.fullName
                         }
+                      
                       />
                     )}
                 </div>
@@ -210,7 +211,7 @@ const Page = () => {
           )}
         </section>
 
-        {/* Portfolio */}
+        {/* Portfolio
         <section className="mx-auto w-full space-y-4 p-4  py-8 lg:p-16 ">
           <h1 className="text-3xl font-bold text-violet-darkHover">
             Portfolio
@@ -249,9 +250,7 @@ const Page = () => {
                 ))}
             </div>
           </div>
-        </section>
-
-        <Reviews />
+        </section> */}
       </main>
     </>
   );

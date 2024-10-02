@@ -22,7 +22,7 @@ const ProfileCompletion = ({ fetchedUserData }: ProfileCompletionType) => {
   const profileProgressData = [
     {
       title: "Profile Picture",
-      status: user?.profileImage,
+      status: fetchedUserData?.profileImage,
     },
     {
       title: "Email Address",
@@ -30,7 +30,7 @@ const ProfileCompletion = ({ fetchedUserData }: ProfileCompletionType) => {
     },
     {
       title: "Address Information",
-      status: user?.address?.state,
+      status: user?.address?.postCode,
     },
     {
       title: "Mobile Number",

@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 import axios from "axios";
 import Head from "next/head";
 import Image from "next/image";
@@ -21,6 +21,10 @@ import Dropdown from "@/components/global/Dropdown";
 import { useRouter } from "next/navigation";
 import Loading from "@/components/global/loading/page";
 import ProgressBar from "@/components/global/progressbar";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store";
+import { getCookie, setCookie } from "cookies-next";
+import { defaultUserDetails } from "@/data/data";
 
 interface FormData {
   listingTitle: string;
@@ -28,10 +32,10 @@ interface FormData {
   planOneDescription: string;
   planTwoDescription: string;
   planThreeDescription: string;
-  image1: File | null | Blob;
-  image2?: File | null | Blob;
-  image3?: File | null | Blob;
-  image4?: File | null | Blob;
+  image1: File | null ;
+  image2?: File | null ;
+  image3?: File | null ;
+  image4?: File | null ;
   taskType: string;
   planOnePrice: number | null;
   planTwoPrice: number | null;
@@ -69,28 +73,26 @@ const ProvideService: React.FC = () => {
   const session = useSession();
   const route = useRouter();
   const id = session?.data?.user.user.id;
-  const isAuthenticated = session?.data?.user.user.enabled === false;
-  const defaultImageSrc =
-    "https://static.wixstatic.com/media/7d1889_ab302adc66e943f9b6be9de260cbc40f~mv2.png";
+  const token = session?.data?.user?.accessToken;
   const [currentPage, setCurrentPage] = useState(1);
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
   const [task, setTask] = useState<FormData>({
-    listingTitle: "",
-    listingDescription: "",
-    planOneDescription: "",
-    planTwoDescription: "",
-    planThreeDescription: "",
+    listingTitle: getCookie("listingTitle") || "",
+    listingDescription: getCookie("listingDescription")|| "",
+    planOneDescription: getCookie("planOneDescription") ||"",
+    planTwoDescription: getCookie("planTwoDescription") ||"",
+    planThreeDescription: getCookie("planThreeDescription") ||"",
     image1: null,
     image2: null,
     image3: null,
     image4: null,
-    taskType: "",
+    taskType: getCookie("taskType") ||"",
     planOnePrice: null,
     planTwoPrice: null,
     planThreePrice: null,
     availableDays: [],
     suburb: "",
-    postCode: "",
+    postCode: getCookie("postCode") ||"",
     state: "",
     categoryId: null,
     subCategoryId: null,
@@ -122,8 +124,44 @@ const ProvideService: React.FC = () => {
   const [subcategories, setSubcategories] = useState<Subcategory[]>([]);
   const [selectedDay, setSelectedDay] = useState("");
   const [selectedDays, setSelectedDays] = useState<string[]>([]);
-  const maxSize = 5 * 1024 * 1024;3
-  const [errs, setErrs] = useState({ image1: '', image2: '', image3: '', image4: '' })
+  const maxSize = 5 * 1024 * 1024;
+  3;
+
+  const handleProfile= () => {
+    setCookie("redirectToProvideService", "/provide-service", { maxAge: 360000 });
+    route.push(
+      "/service-provider/profile/edit-profile?userType=Service+Provider?from=/provide-service",
+    );
+  };
+
+  useEffect(() => {
+    setCookie("lisitingTitle", task.listingTitle, {
+      maxAge: 1200,
+    });
+    setCookie("listingDescription", task.listingDescription, { maxAge: 1200 });
+    setCookie("planOnePrice", task.planOnePrice, { maxAge: 1200 });
+    setCookie("planOneDescription", task.planOneDescription, { maxAge: 1200 });
+    setCookie("planTwoDescription", task.planTwoDescription, { maxAge: 1200 });
+    setCookie("planTwoPrice", task.planTwoPrice, { maxAge: 1200 });
+    setCookie("planThreeDescritpion", task.planThreeDescription, { maxAge: 1200 });
+    setCookie("taskType", task.taskType, { maxAge: 1200 });
+    setCookie("availableDays", task.availableDays, { maxAge: 1200 });
+    setCookie("categoryId", task.categoryId?.toString(), { maxAge: 1200 });
+    setCookie("postCode", task.postCode, { maxAge: 1200 });
+  }, [task]);
+  const isServiceProvider = session?.data?.user?.user?.roles[0] === "SERVICE_PROVIDER";
+  const [complete, setComplete] = useState(false);
+  const [fetchedUserData, setFetchedUserData] = useState(defaultUserDetails);
+  const [loadingProfile, setLoadingProfile] = useState(true);
+  const [hasClosedPopup, setHasClosedPopup] = useState(false);
+  const isAuth = session.status === "authenticated";
+
+  const [errs, setErrs] = useState({
+    image1: "",
+    image2: "",
+    image3: "",
+    image4: "",
+  });
   const daysOfWeek = [
     { value: "MONDAY", label: "Monday" },
     { value: "TUESDAY", label: "Tuesday" },
@@ -134,16 +172,85 @@ const ProvideService: React.FC = () => {
     { value: "SUNDAY", label: "Sunday" },
   ];
 
+
+
+  // Handling getting the description from the marketplace when i user navigates from the marketplace
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const marketplaceDescription = urlParams.get("marketplaceDescription");
     if (marketplaceDescription) {
       setTask((prev) => ({
         ...prev,
-        taskBriefDescription: marketplaceDescription,
+        listingTitle: marketplaceDescription,
       }));
     }
   }, []);
+  // End of getting description from the marketplace
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      if (!token) return;
+      try {
+        const url = isServiceProvider ? "https://smp.jacinthsolutions.com.au/api/v1/service_provider/profile" : "https://smp.jacinthsolutions.com.au/api/v1/customer/profile";
+        const { data } = await axios.get(url, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "multipart/form-data",
+          },
+        });
+        setFetchedUserData(data);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoadingProfile(false)
+      }
+    };
+    fetchUserData();
+  }, [token, isServiceProvider]);
+
+  const { profile: user } = useSelector((state: RootState) => state.userProfile);
+
+  /* eslint-disable react-hooks/exhaustive-deps */
+  const profileProgressData = [
+    {
+      title: "Profile Picture",
+      status: user?.profileImage,
+    },
+    {
+      title: "Email Address",
+      status: user?.emailAddress,
+    },
+    {
+      title: "Address Information",
+      status: user?.address?.postCode,
+    },
+    {
+      title: "Mobile Number",
+      status: user?.phoneNumber,
+    },
+    {
+      title: "Identification Document",
+      status: fetchedUserData.idImage,
+    },
+    {
+      title: "Date of Birth",
+      status: fetchedUserData.dateOfBirth,
+    },
+  ];
+
+  // Popup logic to show after profile data is fully loaded
+  useLayoutEffect(() => {
+    if (!loadingProfile && user && !hasClosedPopup) {
+      const isProfileComplete = profileProgressData.every(
+        (item) => item.status !== "" && item.status !== null && item.status !== undefined
+      );
+
+      if (isAuth && !isProfileComplete) {
+        setComplete(true)
+      }
+    }
+  }, [loadingProfile, user, fetchedUserData, isAuth, profileProgressData]);
+
 
   useEffect(() => {
     const fetchPostalCodeData = async () => {
@@ -170,6 +277,7 @@ const ProvideService: React.FC = () => {
           "https://smp.jacinthsolutions.com.au/api/v1/util/all-categories",
         );
         const data: Item[] = response.data;
+        console.log(data);
         setItems(data);
       } catch (error) {
         console.error("Error fetching items:", error);
@@ -187,6 +295,7 @@ const ProvideService: React.FC = () => {
             `https://smp.jacinthsolutions.com.au/api/v1/util/all-sub-categories-by-categoryId/${selectedCategory}`,
           );
           const data: Subcategory[] = response.data;
+          console.log(data);
           setSubcategories(data);
         } catch (error) {
           console.error("Error fetching subcategories:", error);
@@ -277,7 +386,7 @@ const ProvideService: React.FC = () => {
     setSelectedSubCategory(selectedId);
     setTask({
       ...task,
-      subCategoryId: selectedCategory,
+      subCategoryId: selectedId,
     });
   };
 
@@ -340,7 +449,6 @@ const ProvideService: React.FC = () => {
     setnegotiable(event.target.checked);
   };
 
-
   const handleChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
@@ -351,10 +459,10 @@ const ProvideService: React.FC = () => {
     const uploadedFile = event.target.files?.[0];
     if (uploadedFile) {
       if (uploadedFile.size > maxSize) {
-        setErrs((prev) => ({ ...prev, image1: 'File size exceeds 5MB.' }));
+        setErrs((prev) => ({ ...prev, image1: "File size exceeds 5MB." }));
       } else {
         setTask({ ...task, image1: uploadedFile });
-        setErrs((prev) => ({ ...prev, image1: '' }));
+        setErrs((prev) => ({ ...prev, image1: "" }));
       }
     }
   };
@@ -363,10 +471,10 @@ const ProvideService: React.FC = () => {
     const uploadedFile = event.target.files?.[0];
     if (uploadedFile) {
       if (uploadedFile.size > maxSize) {
-        setErrs((prev) => ({ ...prev, image1: 'File size exceeds 5MB.' }));
+        setErrs((prev) => ({ ...prev, image1: "File size exceeds 5MB." }));
       } else {
         setTask({ ...task, image2: uploadedFile });
-        setErrs((prev) => ({ ...prev, image2: '' }));
+        setErrs((prev) => ({ ...prev, image2: "" }));
       }
     }
   };
@@ -375,10 +483,10 @@ const ProvideService: React.FC = () => {
     const uploadedFile = event.target.files?.[0];
     if (uploadedFile) {
       if (uploadedFile.size > maxSize) {
-        setErrs((prev) => ({ ...prev, image2: 'File size exceeds 5MB.' }));
+        setErrs((prev) => ({ ...prev, image2: "File size exceeds 5MB." }));
       } else {
         setTask({ ...task, image3: uploadedFile });
-        setErrs((prev) => ({ ...prev, image2: '' }));
+        setErrs((prev) => ({ ...prev, image2: "" }));
       }
     }
   };
@@ -387,10 +495,10 @@ const ProvideService: React.FC = () => {
     const uploadedFile = event.target.files?.[0];
     if (uploadedFile) {
       if (uploadedFile.size > maxSize) {
-        setErrs((prev) => ({ ...prev, image3: 'File size exceeds 5MB.' }));
+        setErrs((prev) => ({ ...prev, image3: "File size exceeds 5MB." }));
       } else {
         setTask({ ...task, image4: uploadedFile });
-        setErrs((prev) => ({ ...prev, image3: '' }));
+        setErrs((prev) => ({ ...prev, image3: "" }));
       }
     }
   };
@@ -419,12 +527,6 @@ const ProvideService: React.FC = () => {
   const imageURL1 = getImageURL(1);
   const imageURL2 = getImageURL(2);
   const imageURL3 = getImageURL(3);
-
-  const convertUrlToBlob = async (url: string): Promise<Blob> => {
-    const response = await fetch(url);
-    const blob = await response.blob();
-    return blob;
-  };
 
   const calculateProgress = () => {
     const requiredFields = [
@@ -455,10 +557,9 @@ const ProvideService: React.FC = () => {
   const progress = calculateProgress();
   const timeout = (ms: number) => {
     return new Promise((_, reject) => {
-      setTimeout(() => reject(new Error('Request timed out')), ms);
+      setTimeout(() => reject(new Error("Request timed out")), ms);
     });
   };
-
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -484,31 +585,8 @@ const ProvideService: React.FC = () => {
           finalTask = { ...finalTask, availableDays: selectedDays };
         }
 
-        if (!task.image2) {
-          const defaultImageBlob = await convertUrlToBlob(defaultImageSrc);
-          finalTask = {
-            ...finalTask,
-            image2: defaultImageBlob,
-          };
-        }
-        if ( !task.image3) {
-          const defaultImageBlob = await convertUrlToBlob(defaultImageSrc);
-          finalTask = {
-            ...finalTask,
-            image3: defaultImageBlob,
-            
-          };
-        }
-        if (!task.image4) {
-          const defaultImageBlob = await convertUrlToBlob(defaultImageSrc);
-          finalTask = {
-            ...finalTask,
-            image4: defaultImageBlob,
-          };
-        }
-
         finalTask = { ...finalTask, negotiable: negotiable };
-        
+
         console.log(finalTask);
         await Promise.race([
           axios.post(
@@ -518,7 +596,7 @@ const ProvideService: React.FC = () => {
               headers: {
                 "Content-Type": "multipart/form-data",
               },
-            }
+            },
           ),
           timeout(10000), // 10 seconds timeout
         ]);
@@ -556,7 +634,6 @@ const ProvideService: React.FC = () => {
     }
   };
 
-
   const renderPage = () => {
     switch (currentPage) {
       case 1:
@@ -569,8 +646,9 @@ const ProvideService: React.FC = () => {
               >
                 <div className="grid space-y-4">
                   <div className="flex items-center justify-between gap-3">
-                    <label className="font-semibold text-[12px] lg:text-[16px]">
-                      Write a short title that accurately describes your service.{" "}
+                    <label className="text-[12px] font-semibold lg:text-[16px]">
+                      Write a short title that accurately describes your
+                      service.{" "}
                       <span className="font-extrabold text-[#ff0000]">*</span>
                     </label>
                     {task.listingTitle && (
@@ -590,7 +668,7 @@ const ProvideService: React.FC = () => {
                 </div>
                 <div className="relative grid space-y-4">
                   <div className="flex items-center justify-between gap-3">
-                    <label className="font-semibold text-[13px] lg:text-[16px]">
+                    <label className="text-[13px] font-semibold lg:text-[16px]">
                       Choose the best category for your listing.{" "}
                       <span className="font-extrabold text-[#ff0000]">*</span>
                     </label>
@@ -605,9 +683,7 @@ const ProvideService: React.FC = () => {
                       <div
                         className={`flex h-full w-full cursor-pointer appearance-none justify-between rounded-2xl bg-[#EBE9F4] p-3 text-[13px] ${errors.category ? "border border-[#ff0000] outline-[#FF0000]" : "border-none outline-none"}`}
                       >
-                        <h2 className="font-satoshi">
-                          {selectedCategoryName}
-                        </h2>
+                        <h2 className="font-satoshi">{selectedCategoryName}</h2>
                         <FaSortDown />
                       </div>
                     )}
@@ -631,7 +707,7 @@ const ProvideService: React.FC = () => {
                 </div>
                 <div className="relative grid space-y-4">
                   <div className="flex items-center justify-between gap-3">
-                    <label className="font-bold text-[13px] lg:text-[16px]">
+                    <label className="text-[13px] font-bold lg:text-[16px]">
                       Choose a subcategory.{" "}
                       <span className="font-extrabold text-[#ff0000]">*</span>
                     </label>
@@ -679,7 +755,7 @@ const ProvideService: React.FC = () => {
                 </div>
                 <div className="grid space-y-3">
                   <div className="flex items-center justify-between gap-3">
-                    <label className="font-semibold text-[13px] lg:text-[16px]">
+                    <label className="text-[13px] font-semibold lg:text-[16px]">
                       Please give a detailed description of the service{" "}
                       <span className="font-extrabold text-[#ff0000]">*</span>
                     </label>
@@ -690,7 +766,7 @@ const ProvideService: React.FC = () => {
                     )}
                   </div>
                   <textarea
-                    className={` h-[350px] rounded-2xl bg-[#EBE9F4] p-3 placeholder:text-[12px] placeholder:font-satoshi placeholder:text-status-darkpurple ${errors.description ? "border border-[#ff0000] outline-[#FF0000]" : "border-none outline-none"}`}
+                    className={` h-[350px] rounded-2xl bg-[#EBE9F4] p-3 placeholder:font-satoshi placeholder:text-[12px] placeholder:text-status-darkpurple ${errors.description ? "border border-[#ff0000] outline-[#FF0000]" : "border-none outline-none"}`}
                     placeholder="Casual Babysitting"
                     name="description"
                     value={task.listingDescription}
@@ -712,7 +788,7 @@ const ProvideService: React.FC = () => {
                     errors.category ||
                     errors.subCategory}
                 </div>
-                <Button className="rounded-3xl w-full lg:w-1/3" type="submit">
+                <Button className="w-full rounded-3xl lg:w-1/3" type="submit">
                   Next
                 </Button>
               </form>
@@ -728,7 +804,7 @@ const ProvideService: React.FC = () => {
                 className="space-y-10 font-satoshi font-medium "
               >
                 <div className="space-y-4">
-                  <h2 className="font-bold text-[13px] lg:text-[16px]">
+                  <h2 className="text-[13px] font-bold lg:text-[16px]">
                     Choose the pricing plans.{" "}
                     <span className="font-extrabold text-[#ff0000]">*</span>
                   </h2>
@@ -741,17 +817,18 @@ const ProvideService: React.FC = () => {
                         onChange={handleCheckboxChange}
                         className="mr-2"
                       />
-                      <span className="text-[#381F8C] text-[13px] lg:text-[16px]">
+                      <span className="text-[13px] text-[#381F8C] lg:text-[16px]">
                         Payment plans are negotiable
                       </span>
                     </div>
                   </div>
                   <div className="relative grid space-y-4 text-[13px] text-[#221354]">
                     <input
-                      className={`rounded-2xl ${activePlanIndex === 0
-                        ? " disabled bg-transparent p-1 text-lg font-bold text-status-darkViolet"
-                        : "bg-[#EBE9F4] p-4 hover:bg-status-darkViolet hover:text-white "
-                        } cursor-pointer text-left outline-none placeholder:font-satoshiMedium placeholder:font-medium placeholder:text-[#2A1769] hover:placeholder:text-white `}
+                      className={`rounded-2xl ${
+                        activePlanIndex === 0
+                          ? " disabled bg-transparent p-1 text-lg font-bold text-status-darkViolet"
+                          : "bg-[#EBE9F4] p-4 hover:bg-status-darkViolet hover:text-white "
+                      } cursor-pointer text-left outline-none placeholder:font-satoshiMedium placeholder:font-medium placeholder:text-[#2A1769] hover:placeholder:text-white `}
                       name="physical"
                       onClick={() => handlePlan(0)}
                       placeholder="Plan 1"
@@ -760,7 +837,7 @@ const ProvideService: React.FC = () => {
                     />
                     {isOpen && activePlanIndex === 0 && (
                       <div className="space-y-3">
-                        <label className="font-semibold text-[13px] lg:text-[16px]">
+                        <label className="text-[13px] font-semibold lg:text-[16px]">
                           Give Details about everything this plan includes
                         </label>
                         <div className="grid space-y-3 rounded-2xl border-2 pb-5">
@@ -771,7 +848,9 @@ const ProvideService: React.FC = () => {
                             value={task.planOneDescription}
                             onChange={handleChange}
                           ></textarea>
-                          <label className="pl-2 font-satoshiMedium">Price</label>
+                          <label className="pl-2 font-satoshiMedium">
+                            Price
+                          </label>
                           <div className="relative flex items-center space-x-2 pl-2">
                             <input
                               type="number"
@@ -795,10 +874,11 @@ const ProvideService: React.FC = () => {
                       </div>
                     )}
                     <input
-                      className={`rounded-2xl ${activePlanIndex === 1
-                        ? " disabled bg-transparent p-1 text-lg font-bold text-status-darkViolet"
-                        : "bg-[#EBE9F4] p-4 hover:bg-status-darkViolet hover:text-white"
-                        } cursor-pointer text-left outline-none placeholder:font-satoshiMedium placeholder:font-medium placeholder:text-[#2A1769] hover:placeholder:text-white`}
+                      className={`rounded-2xl ${
+                        activePlanIndex === 1
+                          ? " disabled bg-transparent p-1 text-lg font-bold text-status-darkViolet"
+                          : "bg-[#EBE9F4] p-4 hover:bg-status-darkViolet hover:text-white"
+                      } cursor-pointer text-left outline-none placeholder:font-satoshiMedium placeholder:font-medium placeholder:text-[#2A1769] hover:placeholder:text-white`}
                       name="physical"
                       onClick={() => handlePlan(1)}
                       placeholder="Plan 2  (Optional)"
@@ -807,7 +887,7 @@ const ProvideService: React.FC = () => {
                     />
                     {isOpen && activePlanIndex === 1 && (
                       <div>
-                        <label className="font-bold text-[13px] lg:text-[16px]">
+                        <label className="text-[13px] font-bold lg:text-[16px]">
                           Give Details about everything this plan includes
                         </label>
                         <div className="grid space-y-3 rounded-2xl border-2 pb-5">
@@ -842,10 +922,11 @@ const ProvideService: React.FC = () => {
                       </div>
                     )}
                     <input
-                      className={`rounded-2xl ${activePlanIndex === 2
-                        ? " disabled bg-transparent p-1 text-lg font-bold text-status-darkViolet"
-                        : "bg-[#EBE9F4] p-4 hover:bg-status-darkViolet hover:text-white"
-                        } cursor-pointer text-left outline-none placeholder:font-satoshiMedium placeholder:font-medium placeholder:text-[#2A1769] hover:placeholder:text-white`}
+                      className={`rounded-2xl ${
+                        activePlanIndex === 2
+                          ? " disabled bg-transparent p-1 text-lg font-bold text-status-darkViolet"
+                          : "bg-[#EBE9F4] p-4 hover:bg-status-darkViolet hover:text-white"
+                      } cursor-pointer text-left outline-none placeholder:font-satoshiMedium placeholder:font-medium placeholder:text-[#2A1769] hover:placeholder:text-white`}
                       name="physical"
                       onClick={() => handlePlan(2)}
                       placeholder="Plan 3  (Optional)"
@@ -854,7 +935,7 @@ const ProvideService: React.FC = () => {
                     />
                     {isOpen && activePlanIndex === 2 && (
                       <div>
-                        <label className="font-bold text-[13px] lg:text-[16px]">
+                        <label className="text-[13px] font-bold lg:text-[16px]">
                           Give Details about everything this plan includes
                         </label>
                         <div className="grid space-y-3 rounded-2xl border-2 pb-5">
@@ -897,10 +978,11 @@ const ProvideService: React.FC = () => {
                   </h2>
                   <div className="flex space-x-4 text-[13px] text-[#221354]">
                     <input
-                      className={`rounded-2xl p-2 w-[150px] lg:w-full ${activeButtonIndex === 0
-                        ? "bg-status-purpleBase text-white"
-                        : "bg-[#EBE9F4] placeholder:text-white hover:bg-status-purpleBase hover:text-white"
-                        } cursor-pointer outline-none font-satoshiBold text-status-darkpurple text-center`}
+                      className={`w-[150px] rounded-2xl p-2 lg:w-full ${
+                        activeButtonIndex === 0
+                          ? "bg-status-purpleBase text-white"
+                          : "bg-[#EBE9F4] placeholder:text-white hover:bg-status-purpleBase hover:text-white"
+                      } cursor-pointer text-center font-satoshiBold text-status-darkpurple outline-none`}
                       name="physical"
                       onClick={() => handleClick(0)}
                       placeholder="Physical Services"
@@ -908,10 +990,11 @@ const ProvideService: React.FC = () => {
                       readOnly
                     />
                     <input
-                      className={`rounded-2xl p-2 w-[150px] lg:w-full ${activeButtonIndex === 1
-                        ? "bg-status-purpleBase text-white"
-                        : "bg-[#EBE9F4] placeholder:text-white hover:bg-status-purpleBase hover:text-white "
-                        } cursor-pointer outline-none font-satoshiBold text-status-darkpurple text-center`}
+                      className={`w-[150px] rounded-2xl p-2 lg:w-full ${
+                        activeButtonIndex === 1
+                          ? "bg-status-purpleBase text-white"
+                          : "bg-[#EBE9F4] placeholder:text-white hover:bg-status-purpleBase hover:text-white "
+                      } cursor-pointer text-center font-satoshiBold text-status-darkpurple outline-none`}
                       name="remote"
                       onClick={() => {
                         handleClick(1);
@@ -929,7 +1012,7 @@ const ProvideService: React.FC = () => {
                     type="text"
                     value={isRemote}
                     readOnly
-                    className="rounded-2xl bg-[#EBE9F4] p-3 font-satoshiBold text-center "
+                    className="rounded-2xl bg-[#EBE9F4] p-3 text-center font-satoshiBold "
                   />
                 )}
                 {isOpen && activeButtonIndex === 0 && (
@@ -938,7 +1021,9 @@ const ProvideService: React.FC = () => {
                       <div className="grid space-y-4">
                         <label>
                           Postal code{" "}
-                          <span className="font-extrabold text-[#ff0000]">*</span>
+                          <span className="font-extrabold text-[#ff0000]">
+                            *
+                          </span>
                         </label>
                         <input
                           value={selectedCode}
@@ -951,7 +1036,9 @@ const ProvideService: React.FC = () => {
                       <div className="relative grid space-y-4">
                         <label>
                           Suburb{" "}
-                          <span className="font-extrabold text-[#ff0000]">*</span>
+                          <span className="font-extrabold text-[#ff0000]">
+                            *
+                          </span>
                         </label>
                         <Dropdown
                           trigger={() => (
@@ -1001,16 +1088,16 @@ const ProvideService: React.FC = () => {
                     error.postalCode ||
                     error.city}
                 </div>
-                <div className="flex lg:justify-between flex-wrap gap-3">
+                <div className="flex flex-wrap gap-3 lg:justify-between">
                   <Button
-                    className="rounded-3xl w-full lg:w-1/3"
+                    className="w-full rounded-3xl lg:w-1/3"
                     type="button"
                     theme="outline"
                     onClick={prevPage}
                   >
                     Back
                   </Button>
-                  <Button className="rounded-3xl w-full lg:w-1/3" type="submit">
+                  <Button className="w-full rounded-3xl lg:w-1/3" type="submit">
                     Next
                   </Button>
                 </div>
@@ -1035,7 +1122,7 @@ const ProvideService: React.FC = () => {
                       <FaSortDown />
                     </div>
                   )}
-                  className="small-scrollbar left-0 right-0 lg:w-1/2 top-14 max-h-64 overflow-y-auto bg-white transition-all duration-300"
+                  className="small-scrollbar left-0 right-0 top-14 max-h-64 overflow-y-auto bg-white transition-all duration-300 lg:w-1/2"
                 >
                   {daysOfWeek.map((day) => (
                     <button
@@ -1073,7 +1160,7 @@ const ProvideService: React.FC = () => {
                 </div>
               </div>
               <div className="space-y-3">
-                <label className="text-status-darkpurple text-[13px] lg:text-[16px]">
+                <label className="text-[13px] text-status-darkpurple lg:text-[16px]">
                   Upload an Image <br /> This is the main image that would be
                   seen by customers{" "}
                   <span className="font-extrabold text-[#ff0000]">*</span>
@@ -1126,13 +1213,13 @@ const ProvideService: React.FC = () => {
                     />
                   </label>
                 )}
-                {errs && (
-                  <div className="text-red-500">{errs.image1}</div>
-                )}
+                {errs && <div className="text-red-500">{errs.image1}</div>}
               </div>
 
               <div className="space-y-4">
-                <p className="text-[13px] lg:text-[16px]">Add a portfolio (Images)</p>
+                <p className="text-[13px] lg:text-[16px]">
+                  Add a portfolio (Images)
+                </p>
                 <div className="flex flex-col space-y-3 lg:flex-row lg:space-x-3 lg:space-y-0">
                   <div className=" space-y-3">
                     {task.image2 ? (
@@ -1182,9 +1269,7 @@ const ProvideService: React.FC = () => {
                         />
                       </label>
                     )}
-                    {errs && (
-                      <div className="text-red-500">{errs.image2}</div>
-                    )}
+                    {errs && <div className="text-red-500">{errs.image2}</div>}
                   </div>
 
                   <div className=" space-y-3">
@@ -1234,9 +1319,7 @@ const ProvideService: React.FC = () => {
                         />
                       </label>
                     )}
-                    {errs && (
-                      <div className="text-red-500">{errs.image3}</div>
-                    )}
+                    {errs && <div className="text-red-500">{errs.image3}</div>}
                   </div>
 
                   <div className=" space-y-3">
@@ -1286,26 +1369,23 @@ const ProvideService: React.FC = () => {
                         />
                       </label>
                     )}
-                    {errs && (
-                      <div className="text-red-500">{errs.image4}</div>
-                    )}
+                    {errs && <div className="text-red-500">{errs.image4}</div>}
                   </div>
-
                 </div>
               </div>
               <div className="text-red-600">
                 {err.image || err.availableDays}
               </div>
-              <div className="flex justify-between flex-wrap gap-3">
+              <div className="flex flex-wrap justify-between gap-3">
                 <Button
-                  className="rounded-3xl w-full lg:w-1/3"
+                  className="w-full rounded-3xl lg:w-1/3"
                   theme="outline"
                   type="button"
                   onClick={prevPage}
                 >
                   Back
                 </Button>
-                <Button className="rounded-3xl w-full lg:w-1/3" type="submit">
+                <Button className="w-full rounded-3xl lg:w-1/3" type="submit">
                   Post Listing
                 </Button>
               </div>
@@ -1323,20 +1403,22 @@ const ProvideService: React.FC = () => {
         <title>TaskHub | Provide Service</title>
       </Head>
       <div className="w-full">
-        <div className="fixed hidden lg:block left-0 top-20 z-10 w-full border-t-2 bg-white shadow-md">
+        <div className="fixed left-0 top-20 z-10 hidden w-full border-t-2 bg-white shadow-md lg:block">
           <div className="mb-3 flex justify-center pt-4 font-bold md:space-x-5">
             <div
-              className={`${currentPage === 1
-                ? "text-status-purpleBase"
-                : "text-status-purpleBase"
-                }`}
+              className={`${
+                currentPage === 1
+                  ? "text-status-purpleBase"
+                  : "text-status-purpleBase"
+              }`}
             >
               <p className="flex items-center gap-1 text-[9px] md:text-[16px] lg:gap-3">
                 <span
-                  className={`${currentPage === 1
-                    ? "bg-status-purpleBase text-white"
-                    : "bg-status-purpleBase text-white"
-                    } rounded-2xl border-none px-2 py-1 lg:px-3 lg:py-2`}
+                  className={`${
+                    currentPage === 1
+                      ? "bg-status-purpleBase text-white"
+                      : "bg-status-purpleBase text-white"
+                  } rounded-2xl border-none px-2 py-1 lg:px-3 lg:py-2`}
                 >
                   01
                 </span>{" "}
@@ -1347,17 +1429,19 @@ const ProvideService: React.FC = () => {
               </p>
             </div>
             <div
-              className={`${currentPage === 2 || currentPage === 3
-                ? "text-status-purpleBase"
-                : " text-[#716F78]"
-                }`}
+              className={`${
+                currentPage === 2 || currentPage === 3
+                  ? "text-status-purpleBase"
+                  : " text-[#716F78]"
+              }`}
             >
               <p className="flex items-center gap-1 text-[9px] md:text-[16px] lg:gap-3">
                 <span
-                  className={`${currentPage === 2 || currentPage === 3
-                    ? "bg-status-purpleBase text-white"
-                    : "bg-[#EAE9EB] text-[#716F78]"
-                    } rounded-2xl border-none px-2 py-1 lg:px-3 lg:py-2`}
+                  className={`${
+                    currentPage === 2 || currentPage === 3
+                      ? "bg-status-purpleBase text-white"
+                      : "bg-[#EAE9EB] text-[#716F78]"
+                  } rounded-2xl border-none px-2 py-1 lg:px-3 lg:py-2`}
                 >
                   02
                 </span>{" "}
@@ -1368,15 +1452,17 @@ const ProvideService: React.FC = () => {
               </p>
             </div>
             <div
-              className={`${currentPage === 3 ? "text-status-purpleBase" : " text-[#716F78]"
-                }`}
+              className={`${
+                currentPage === 3 ? "text-status-purpleBase" : " text-[#716F78]"
+              }`}
             >
               <p className="flex items-center gap-1 text-[9px] md:text-[16px] lg:gap-3">
                 <span
-                  className={`${currentPage === 3
-                    ? "bg-status-purpleBase text-white"
-                    : "bg-[#EAE9EB] text-[#716F78]"
-                    } rounded-2xl border-none px-2 py-1 lg:px-3 lg:py-2`}
+                  className={`${
+                    currentPage === 3
+                      ? "bg-status-purpleBase text-white"
+                      : "bg-[#EAE9EB] text-[#716F78]"
+                  } rounded-2xl border-none px-2 py-1 lg:px-3 lg:py-2`}
                 >
                   03
                 </span>{" "}
@@ -1397,12 +1483,13 @@ const ProvideService: React.FC = () => {
                 {/* Progress bar */}
                 <div className="h-1 w-2/3 overflow-hidden bg-[#EAE9EB]">
                   <div
-                    className={`h-full ${currentPage === 1
-                      ? "bg-status-purpleBase"
-                      : currentPage === 2
+                    className={`h-full ${
+                      currentPage === 1
                         ? "bg-status-purpleBase"
-                        : "bg-status-purpleBase"
-                      }`}
+                        : currentPage === 2
+                          ? "bg-status-purpleBase"
+                          : "bg-status-purpleBase"
+                    }`}
                     style={{ width: `${progress}%` }}
                   />
                 </div>
@@ -1413,7 +1500,11 @@ const ProvideService: React.FC = () => {
             </div>
           </div>
         </div>
-        <ProgressBar currentPage={currentPage} progress={progress} setCurrentPage={setCurrentPage}/>
+        <ProgressBar
+          currentPage={currentPage}
+          progress={progress}
+          setCurrentPage={setCurrentPage}
+        />
         <div className="pt-24">
           <div className="mt-8 lg:flex">
             {currentPage === 1 && (
@@ -1455,14 +1546,14 @@ const ProvideService: React.FC = () => {
         </div>
       </div>
       <div>
-        {isAuthenticated ? (
+        {complete ? (
           <Popup
             isOpen={isSuccessPopupOpen}
             onClose={() => {
               setIsSuccessPopupOpen(false);
             }}
           >
-            <div className="lg:px-24 px-16 py-10">
+            <div className="px-16 py-10 lg:px-24">
               <div className="relative grid items-center justify-center space-y-5">
                 <p className="font-clashDisplay text-center text-[20px] font-extrabold text-[#2A1769] md:text-[36px] lg:text-[37px] ">
                   You are almost done!!!
@@ -1486,16 +1577,15 @@ const ProvideService: React.FC = () => {
                   className="absolute -left-12 top-12 w-12 lg:-left-[53px] lg:top-8 lg:w-16"
                 />
                 <div className="flex justify-center space-x-3 md:justify-around">
-                  <Link href="/marketplace">
+                  <Link href="/marketplace?">
                     <button className="rounded-2xl border-2 border-status-purpleBase p-2 text-[14px] font-semibold text-status-purpleBase outline-none md:w-[100px]">
                       Back
                     </button>
                   </Link>
-                  <Link href="/marketplace">
-                    <button className="rounded-2xl bg-status-purpleBase p-2 text-[14px] text-white outline-none md:w-[100px]">
+                  
+                    <button onClick={handleProfile} className="rounded-2xl bg-status-purpleBase p-2 text-[14px] text-white outline-none md:w-[100px]">
                       Go to profile
                     </button>
-                  </Link>
                 </div>
               </div>
             </div>
@@ -1508,7 +1598,7 @@ const ProvideService: React.FC = () => {
               setIsSuccessPopupOpen(false);
             }}
           >
-            <div className="lg:px-24 px-10 py-10">
+            <div className="px-5 py-10 lg:px-24">
               <div className="relative grid items-center justify-center space-y-3">
                 <div className="flex justify-center text-[1px] text-white">
                   <Image src={imag} alt="image" />
@@ -1516,20 +1606,18 @@ const ProvideService: React.FC = () => {
                 <p className=" text-center font-clashBold text-[32px] font-extrabold text-[#2A1769] lg:text-[42px]">
                   Service created
                 </p>
-                <div className="lg:hidden text-center font-satoshiMedium lg:text-[20px]">
-                  Your Service Listing has been created!
-                  please click on the button to proceed to{" "}
-                  marketplace
+                <div className="text-center font-satoshiMedium lg:hidden lg:text-[20px]">
+                  Your Service Listing has been created! please click on the
+                  button to proceed to marketplace
                 </div>
-                  <div className="text-center hidden lg:block font-satoshiMedium lg:text-[20px]">
-                    Your Service Listing has been created!
-                    <p>please click on the button to proceed to{" "}
-                      marketplace</p>
-                  </div>
+                <div className="hidden text-center font-satoshiMedium lg:block lg:text-[20px]">
+                  Your Service Listing has been created!
+                  <p>please click on the button to proceed to marketplace</p>
+                </div>
                 <Image
                   src={image}
                   alt="image"
-                  className="absolute -right-16 top-44  w-28 font-satoshiMedium lg:-right-24 lg:top-54"
+                  className="lg:top-54 absolute -right-5 top-56  lg:top-44 lg:w-28 w-20 font-satoshiMedium lg:-right-24"
                 />
                 <div className="flex justify-center">
                   <Link href="/marketplace">

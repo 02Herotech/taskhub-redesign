@@ -11,6 +11,7 @@ import icon2 from "../../../../public/assets/images/serviceProvider/AiButton2.pn
 import aiLine from "../../../../public/assets/images/serviceProvider/AiLine.svg";
 import Image from "next/image";
 import { TypeAnimation } from "react-type-animation";
+
 interface Message {
   id: number;
   type: "user" | "ai";
@@ -77,6 +78,10 @@ const AiDesciption: React.FC<AiGenerateProps> = ({
   const [AiLoading, setAiLoading] = useState(false);
   const [emptyQuerryField, setEmptyQuerryField] = useState(false);
 
+  // New lines
+  const userToken = session?.data?.user?.accessToken;
+  // ends here
+
   const handleAiChatQuery = async (e: any) => {
     e.preventDefault();
     if (aiQuery === "") {
@@ -93,9 +98,14 @@ const AiDesciption: React.FC<AiGenerateProps> = ({
     ];
     setConversation(newConversation);
     setIsNewQuery(true);
+
     try {
       const url = `${process.env.NEXT_PUBLIC_API_URL}/listing/create-listing/category/content-generate?category=${encodeURIComponent(aiQuery)}`;
-      const response = await axios.get(url);
+      const response = await axios.get(url, {
+        headers: {
+           Authorization: `Bearer ${userToken}`
+        }
+      });
       const data = await response.data[0]?.message?.content;
       setConversation([
         ...newConversation,
@@ -128,7 +138,11 @@ const AiDesciption: React.FC<AiGenerateProps> = ({
 
     try {
       const url = `${process.env.NEXT_PUBLIC_API_URL}/listing/create-listing/category/content-generate?category=${encodeURIComponent(currentQuery)}`;
-      const response = await axios.get(url);
+      const response = await axios.get(url, {
+        headers: {
+           Authorization: `Bearer ${userToken}`
+        }
+      });
       const data = await response.data[0]?.message?.content;
       const newConversation: Message[] = [
         ...conversation,
@@ -159,7 +173,11 @@ const AiDesciption: React.FC<AiGenerateProps> = ({
     setConversation(newConversation);
     try {
       const url = `${process.env.NEXT_PUBLIC_API_URL}/listing/create-listing/category/content-generate?category=${encodeURIComponent(AiSuggestions[index])}`;
-      const response = await axios.get(url);
+      const response = await axios.get(url, {
+        headers: {
+           Authorization: `Bearer ${userToken}`
+        }
+      });
       const data = await response.data[0]?.message?.content;
       setConversation([
         ...newConversation,

@@ -19,7 +19,7 @@ import imags from "../../../../../public/assets/images/tickk.png";
 import imgg from "../../../../../public/assets/images/girl.png";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter} from "next/navigation";
 import { setCookie, getCookie } from "cookies-next";
 import { FaSortDown } from "react-icons/fa6";
 import Dropdown from "@/components/global/Dropdown";
@@ -28,7 +28,7 @@ import Progress from "@/components/global/progress";
 
 interface FormData {
   taskBriefDescription: string;
-  taskImage?: File | null | Blob;
+  taskImage?: File | null;
   taskTime: string;
   taskDate: string;
   taskType: string;
@@ -76,9 +76,9 @@ const AddTaskForm: React.FC = () => {
     taskTime: getCookie("taskTime") || "",
     taskDate: getCookie("taskDate") || "",
     taskType: getCookie("taskType") || "",
-    suburb: getCookie("suburb") || "", 
+    suburb: getCookie("suburb") || "",
     state: getCookie("state") || "",
-    postCode: getCookie("postCode")||"",
+    postCode: getCookie("postCode") || "",
     customerBudget: getCookie("categoryId")
       ? parseInt(getCookie("categoryId") as string)
       : null,
@@ -126,7 +126,7 @@ const AddTaskForm: React.FC = () => {
   // End of getting description from the marketplace
 
   const handleLoginNavigation = () => {
-    setCookie("redirectToAddTask", "/customer/add-task", { maxAge: 10000 });
+    setCookie("redirectToAddTask", "/customer/add-task", { maxAge: 360000 });
     router.push(
       "/auth/sign-up?userType=Service+Provider?from=/customer/add-task",
     );
@@ -134,18 +134,18 @@ const AddTaskForm: React.FC = () => {
 
   useEffect(() => {
     setCookie("taskBriefDescription", task.taskBriefDescription, {
-      maxAge: 120,
+      maxAge: 1200,
     });
-    setCookie("taskTime", task.taskTime, { maxAge: 120 });
-    setCookie("taskDate", task.taskDate, { maxAge: 120 });
-    setCookie("taskType", task.taskType, { maxAge: 120 });
-    setCookie("suburb", task.suburb, { maxAge: 120 });
-    setCookie("postCode", task.postCode, { maxAge: 120 });
-    setCookie("state", task.state, { maxAge: 120 });
-    setCookie("customerBudget", task.customerBudget, { maxAge: 120 });
-    setCookie("hubTime", task.termAccepted, { maxAge: 120 });
-    setCookie("categoryId", task.categoryId?.toString(), { maxAge: 120 });
-    setCookie("taskDescription", task.taskDescription, { maxAge: 120 });
+    setCookie("taskTime", task.taskTime, { maxAge: 1200 });
+    setCookie("taskDate", task.taskDate, { maxAge: 1200 });
+    setCookie("taskType", task.taskType, { maxAge: 1200 });
+    setCookie("suburb", task.suburb, { maxAge: 1200 });
+    setCookie("postCode", task.postCode, { maxAge: 1200 });
+    setCookie("state", task.state, { maxAge: 1200 });
+    setCookie("customerBudget", task.customerBudget, { maxAge: 1200 });
+    setCookie("hubTime", task.termAccepted, { maxAge: 1200 });
+    setCookie("categoryId", task.categoryId?.toString(), { maxAge: 1200 });
+    setCookie("taskDescription", task.taskDescription, { maxAge: 1200 });
   }, [task]);
 
   useEffect(() => {
@@ -268,6 +268,8 @@ const AddTaskForm: React.FC = () => {
 
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     settermAccepted(event.target.checked);
+    setSelectedDate(null);
+    setSelectedTime(null);
   };
 
   const handleCategoryChange = (item: any) => {
@@ -293,10 +295,10 @@ const AddTaskForm: React.FC = () => {
   const handlePrice = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
     const numberValue = value === "" ? "" : parseFloat(value);
-      setTask({
-        ...task,
-        [name]: numberValue,
-      });
+    setTask({
+      ...task,
+      [name]: numberValue,
+    });
   };
 
 
@@ -339,11 +341,6 @@ const AddTaskForm: React.FC = () => {
     }
   };
 
-  const convertUrlToBlob = async (url: string): Promise<Blob> => {
-    const response = await fetch(url);
-    const blob = await response.blob();
-    return blob;
-  };
 
   const getImageURL = () => {
     if (task.taskImage instanceof File) {
@@ -376,13 +373,24 @@ const AddTaskForm: React.FC = () => {
 
   const formatTimeToString = (time: Date | null) => {
     if (time) {
-      // Formatting the time as "HH:mm"
-      const hours = String(time.getHours()).padStart(2, "0");
+      // Get the hours and minutes
+      let hours = time.getHours();
       const minutes = String(time.getMinutes()).padStart(2, "0");
-      return `${hours}:${minutes}`;
+
+      // Determine AM or PM
+      const period = hours >= 12 ? "PM" : "AM";
+
+      // Convert to 12-hour format
+      hours = hours % 12 || 12; // Converts "0" hours to "12" for 12 AM
+
+      // Format the hours with leading zero if necessary
+      const formattedHours = String(hours).padStart(2, "0");
+
+      return `${formattedHours}:${minutes} ${period}`;
     }
     return "";
   };
+
 
   const dateString = formatDateToString(selectedDate);
   const timeString = formatTimeToString(selectedTime);
@@ -452,8 +460,7 @@ const AddTaskForm: React.FC = () => {
         }
 
         if (!task.taskImage) {
-          const defaultImageBlob = await convertUrlToBlob(defaultImageSrc);
-          finalTask = { ...finalTask, taskImage: defaultImageBlob };
+          finalTask = { ...finalTask, taskImage: null };
         }
 
         console.log(finalTask);
@@ -487,9 +494,12 @@ const AddTaskForm: React.FC = () => {
         });
 
         setIsSuccessPopupOpen(true);
-      } catch (error) {
-        console.error("Error submitting form:", error);
-        setIsSuccessPopupOpen(true);
+      } catch (error: any) {
+        if (error.response.status === 400 || error.response.status === 500 || error.response.status === 409) {
+          setIsSuccessPopupOpen(false);
+        } else {
+          setIsSuccessPopupOpen(true);
+        }
       } finally {
         setLoading(false);
       }
@@ -690,7 +700,6 @@ const AddTaskForm: React.FC = () => {
                         type="checkbox"
                         name="check"
                         checked={termAccepted}
-                        disabled={accepted}
                         onChange={handleCheckboxChange}
                         className="mr-2"
                       />
@@ -727,22 +736,20 @@ const AddTaskForm: React.FC = () => {
               </h2>
               <div className="flex space-x-4 text-[13px] text-[#221354]">
                 <button
-                  className={`rounded-2xl p-2 ${
-                    activeButtonIndex === 0
+                  className={`rounded-2xl p-2 ${activeButtonIndex === 0
                       ? "bg-status-purpleBase text-white"
                       : "bg-[#EBE9F4] hover:bg-status-purpleBase hover:text-white"
-                  } outline-none`}
+                    } outline-none`}
                   name="physical"
                   onClick={() => handleClick(0)}
                 >
                   Physical Service
                 </button>
                 <button
-                  className={`rounded-2xl p-2 ${
-                    activeButtonIndex === 1
+                  className={`rounded-2xl p-2 ${activeButtonIndex === 1
                       ? "bg-status-purpleBase text-white"
                       : "bg-[#EBE9F4] hover:bg-status-purpleBase hover:text-white"
-                  } outline-none`}
+                    } outline-none`}
                   name="remote"
                   onClick={() => {
                     handleClick(1);
@@ -827,7 +834,7 @@ const AddTaskForm: React.FC = () => {
                       </Dropdown>
                     </div>
                   </div>
-                  <div className="grid space-y-4"> 
+                  <div className="grid space-y-4">
                     <label>State/Territory</label>
                     <input
                       value={
@@ -863,7 +870,7 @@ const AddTaskForm: React.FC = () => {
                   placeholder="500"
                   className={`appearance-none rounded-2xl bg-[#EBE9F4] p-3 pl-6 text-[13px] placeholder:font-bold ${error.customerBudget ? "border border-[#ff0000] outline-[#FF0000]" : "border-none outline-none"}`}
                 />
-                <p className="absolute left-3 top-8">$</p>
+                <p className="absolute left-3 top-8 md:top-8">$</p>
               </div>
               <div className="text-[#FF0000]">
                 {errors.city ||
@@ -904,25 +911,23 @@ const AddTaskForm: React.FC = () => {
   return (
     <div className="mt-24 flex min-h-screen items-center justify-center">
       <Head>
-        <title>TaskHub | Add Task</title>
+        <title>Oloja | Add Task</title>
       </Head>
       <div className="w-full">
         <div className="fixed hidden lg:block left-0 top-20 z-10 w-full border-t-2 bg-white shadow-md">
           <div className="mb-3 flex justify-center space-x-5 pt-4">
             <div
-              className={`${
-                currentPage === 1
+              className={`${currentPage === 1
                   ? "text-status-purpleBase"
                   : "text-status-purpleBase"
-              }`}
+                }`}
             >
               <p className="flex items-center gap-2 text-[12px] md:text-[16px] lg:gap-3">
                 <span
-                  className={`${
-                    currentPage === 1
+                  className={`${currentPage === 1
                       ? "bg-status-purpleBase text-white"
                       : "bg-status-purpleBase text-white"
-                  } flex h-[37px] w-[47px] items-center justify-center rounded-[22px] border-none p-3 font-satoshiBold`}
+                    } flex h-[37px] w-[47px] items-center justify-center rounded-[22px] border-none p-3 font-satoshiBold`}
                 >
                   01
                 </span>{" "}
@@ -933,17 +938,15 @@ const AddTaskForm: React.FC = () => {
               </p>
             </div>
             <div
-              className={`${
-                currentPage === 2 ? "text-status-purpleBase" : " text-[#716F78]"
-              }`}
+              className={`${currentPage === 2 ? "text-status-purpleBase" : " text-[#716F78]"
+                }`}
             >
               <p className="flex items-center gap-2 text-[12px] md:text-[16px] lg:gap-3">
                 <span
-                  className={`${
-                    currentPage === 2
+                  className={`${currentPage === 2
                       ? "bg-status-purpleBase text-white"
                       : "bg-[#EAE9EB] text-[#716F78]"
-                  } flex h-[37px] w-[47px] items-center justify-center rounded-[22px] border-none p-3 font-satoshiBold`}
+                    } flex h-[37px] w-[47px] items-center justify-center rounded-[22px] border-none p-3 font-satoshiBold`}
                 >
                   02
                 </span>{" "}
@@ -960,13 +963,12 @@ const AddTaskForm: React.FC = () => {
               {/* Progress bar */}
               <div className="h-1 w-2/3 overflow-hidden bg-[#EAE9EB]">
                 <div
-                  className={`h-full ${
-                    currentPage === 1
+                  className={`h-full ${currentPage === 1
                       ? "bg-status-purpleBase"
                       : currentPage === 2
                         ? "bg-status-purpleBase"
                         : "bg-status-purpleBase"
-                  }`}
+                    }`}
                   style={{ width: `${progress}%` }}
                 />
               </div>
@@ -1075,7 +1077,7 @@ const AddTaskForm: React.FC = () => {
                     Back
                   </button>
                 </Link>
-                <Link href="/marketplace">
+                <Link href="/customer/profile">
                   <button className="rounded-2xl bg-status-purpleBase p-2 text-[14px] text-white outline-none md:w-[100px]">
                     Go to profile
                   </button>

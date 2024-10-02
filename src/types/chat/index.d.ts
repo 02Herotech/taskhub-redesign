@@ -28,11 +28,12 @@ declare interface ChatMessageDisplayedType {
 declare interface Offer {
   id: string;
   taskId: number;
-  customerId: number;
+  userId: number;
   serviceProviderId: number;
   fullName: string;
   message: string;
   createdAt: number[];
+  service_provider_profile_Image: string;
   offerThreadList: {
     taskId: number;
     offerId: string;
@@ -40,5 +41,6 @@ declare interface Offer {
     fullName: string;
     userId: number;
     timeStamp: number[];
+    userProfileImage: string;
   }[];
 }

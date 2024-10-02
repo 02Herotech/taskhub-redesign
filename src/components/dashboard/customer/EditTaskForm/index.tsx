@@ -1,7 +1,6 @@
 import Button from '@/components/global/Button';
 import Dropdown from '@/components/global/Dropdown';
 import axios from 'axios';
-import { useSession } from 'next-auth/react';
 import React, { useEffect, useRef, useState } from 'react'
 import { FaSortDown } from 'react-icons/fa6';
 import DatePicker from "react-datepicker";
@@ -30,10 +29,8 @@ const EditTaskForm = ({ task, setShowEditModal }: TaskCardProps) => {
     const [activeEditModalLink, setActiveEditModalLink] = useState<string>("Task Details");
     const [categories, setCategories] = useState<{ id: number; categoryName: string }[]>([]);
     const [updatedPostCode, setUpdatedPostCode] = useState<any>(task.postCode);
-    const [updatedCustomerBudget, setUpdatedCustomerBudget] = useState<string>(task.customerBudget.toString());
     const [updatedDate, setUpdatedDate] = useState<Date | null>(null);
     const [updatedTime, setUpdatedTime] = useState<Date | null>(null);
-    const [error, setError] = useState("");
     const [taskImage, setTaskImage] = useState<File | null>(null);
     const taskImageRef = useRef<HTMLInputElement>(null);
     const [suburbList, setSuburbList] = useState([]);
@@ -45,16 +42,16 @@ const EditTaskForm = ({ task, setShowEditModal }: TaskCardProps) => {
     const taskSchema = z.object({
         taskBriefDescription: z
             .string(),
-            // .min(3, "Minimum of 3 characters")
-            // .refine((str) => str.split(" ").filter(Boolean).length > 0, {
-            //     message: `Title must have ${1} word or more`,
-            // }),
+        // .min(3, "Minimum of 3 characters")
+        // .refine((str) => str.split(" ").filter(Boolean).length > 0, {
+        //     message: `Title must have ${1} word or more`,
+        // }),
         taskDescription: z
             .string(),
-            // .min(10, "Minimum of 10 characters")
-            // .refine((str) => str.split(" ").filter(Boolean).length >= 5, {
-            //     message: `Description must have ${5} words or more`,
-            // }),
+        // .min(10, "Minimum of 10 characters")
+        // .refine((str) => str.split(" ").filter(Boolean).length >= 5, {
+        //     message: `Description must have ${5} words or more`,
+        // }),
         category: z.string(),
         taskType: z.string(),
         postCode: z.string().nullable().optional(),
@@ -76,10 +73,8 @@ const EditTaskForm = ({ task, setShowEditModal }: TaskCardProps) => {
         watch,
         setValue,
     } = useForm<taskZodType>({
-        resolver: zodResolver(taskSchema),
+        // resolver: zodResolver(taskSchema),
     });
-
-    console.log("errors", errors);
 
     useEffect(() => {
         if (task) {
@@ -93,7 +88,7 @@ const EditTaskForm = ({ task, setShowEditModal }: TaskCardProps) => {
                 state: task.state,
                 taskImage: task.taskImage,
                 taskDate: task.taskDate,
-                taskTime: task.taskTime,
+                taskTime: task.taskTime ? formatTimeToString(new Date(task.taskTime[0], task.taskTime[1])) : "Flexible",
                 customerBudget: task.customerBudget
             });
         }
@@ -178,42 +173,7 @@ const EditTaskForm = ({ task, setShowEditModal }: TaskCardProps) => {
 
     const [updateTask] = useUpdateTaskMutation();
 
-    // const handleUpdateTask: SubmitHandler<taskZodType> = async (data) => {
-    //     console.log("data sent ", data)
-    //     const body = Object.entries({
-    //         taskBriefDescription: data.taskBriefDescription,
-    //         taskDescription: data.taskDescription,
-    //         categoryId: categories.find(category => category.categoryName === data.category)?.id,
-    //         taskType: data.taskType,
-    //         postCode: data.postCode,
-    //         suburb: data.suburb,
-    //         state: data.state,
-    //         taskImage,
-    //         taskDate: dateString,
-    //         taskTime: timeString,
-    //         customerBudget: data.customerBudget,
-    //     }).reduce((acc, [key, value]) => {
-    //         if (
-    //             value !== null &&
-    //             value !== undefined &&
-    //             value !== "" &&
-    //             value !== 0
-    //         ) {
-    //             // @ts-expect-error "type of key not known"
-    //             acc[key] = value;
-    //         }
-    //         return acc;
-    //     }, {});
-    //     try {
-    //         await updateTask({ id: task.id, details: body }).unwrap();
-    //     } catch (error: any) {
-    //         console.log(error);
-    //         // setError(error.response.data.message);
-    //     }
-    // };
-
     const handleUpdateTask: SubmitHandler<taskZodType> = async (data) => {
-        console.log("data sent ", data);
         const formData = new FormData();
 
         const fields = {
@@ -249,26 +209,6 @@ const EditTaskForm = ({ task, setShowEditModal }: TaskCardProps) => {
         }
     };
 
-    // useEffect(() => {
-    //     const words = watchField?.taskBriefDescription?.trim().split(/\s+/);
-    //     const count = words?.filter((word) => word).length; // Filter out empty strings
-
-    //     if (count > 10) {
-    //         const trimmedValue = words.slice(0, 10).join(" ");
-    //         setValue("taskBriefDescription", trimmedValue);
-    //     }
-
-    //     const description = watchField?.taskDescription?.trim().split(/\s+/);
-    //     const descCount = description?.filter((word) => word).length; // Filter out empty strings
-
-    //     if (descCount > 50) {
-    //         const trimmedValue = description.slice(0, 50).join(" ");
-    //         setValue("taskDescription", trimmedValue);
-    //     }
-
-    //     // eslint-disable-next-line
-    // }, [watchField]);
-
     const handleDateChange = (date: Date | null) => {
         setUpdatedDate(date);
     };
@@ -277,7 +217,7 @@ const EditTaskForm = ({ task, setShowEditModal }: TaskCardProps) => {
         setUpdatedTime(time);
     };
 
-    const formatDateToLocalDateString = (date: Date | null ) => {
+    const formatDateToLocalDateString = (date: Date | null) => {
         if (date) {
             const year = date.getFullYear();
             const month = String(date.getMonth() + 1).padStart(2, "0");
@@ -357,14 +297,14 @@ const EditTaskForm = ({ task, setShowEditModal }: TaskCardProps) => {
                                 >
                                     Close
                                 </button>
-                                
+
                             </div>
                         </div>
                     </div>
                 </section>
             )}
             <div className="border-b-2 border-[#140B31] w-full" />
-            <div className="rounded-2xl max-h-[80vh] min-w-[80%] lg:w-[700px] font-satoshi overflow-y-auto small-scrollbar">
+            <div className="rounded-2xl max-h-[80vh] w-full lg:w-[800px] font-satoshi overflow-y-auto small-scrollbar">
                 <div className="lg:flex h-full lg:space-x-3 p-2">
                     <div className="hidden lg:block border-r-2 border-[#140B31] pr-8 pb-10 space-y-5 pt-5">
                         <div className={`cursor-pointer text-lg font-bold ${activeEditModalLink === "Task Details" ? "bg-tc-orange rounded-lg pl-2 pr-5 py-2 text-white" : "text-primary"}`} onClick={() => setActiveEditModalLink("Task Details")}>Task Details</div>
@@ -431,6 +371,7 @@ const EditTaskForm = ({ task, setShowEditModal }: TaskCardProps) => {
                                         // onClick={closeModal}
                                         type="button"
                                         className="rounded-full px-10"
+                                        size='sm'
                                     >
                                         Back
                                     </Button>
@@ -439,6 +380,8 @@ const EditTaskForm = ({ task, setShowEditModal }: TaskCardProps) => {
                                         type="button"
                                         onClick={() => setActiveEditModalLink("Location")}
                                         className="rounded-full px-10"
+                                        size='sm'
+
                                     >
                                         Next
                                     </Button>
@@ -490,62 +433,58 @@ const EditTaskForm = ({ task, setShowEditModal }: TaskCardProps) => {
                                     <label className="text-[13px] font-semibold text-status-darkpurple lg:text-[16px]">
                                         Set Day and Time
                                     </label>
-                                    <div className="flex items-center space-x-6">
-                                        <div className="flex items-center space-x-3">
-                                            <div className="relative">
-                                                <DatePicker
-                                                    value={updatedTime as unknown as string}
-                                                    selected={updatedTime}
-                                                    onChange={handleTimeChange}
-                                                    showTimeSelect
-                                                    showTimeSelectOnly
-                                                    timeFormat="HH:mm"
-                                                    timeIntervals={15}
-                                                    dateFormat="h:mm aa"
-                                                    placeholderText="Choose Time"
-                                                    disabled={isFlexible}
-                                                    id="taskTime"
-                                                    name="taskTime"
-                                                    // disabled={termAccepted}
-                                                    customInput={<CustomInputs />}
-                                                    className="w-full cursor-pointer rounded-2xl bg-[#EBE9F4] px-2 py-1 outline-none placeholder:text-[14px] placeholder:font-bold"
-                                                />
-                                            </div>
-                                            <div className="relative">
-                                                <DatePicker
-                                                    value={updatedDate as unknown as string}
-                                                    selected={updatedDate}
-                                                    onChange={handleDateChange}
-                                                    dateFormat="dd-MM-yyyy"
-                                                    minDate={new Date()}
-                                                    placeholderText="Choose Date"
-                                                    id="taskDate"
-                                                    name="taskDate"
-                                                    disabled={isFlexible}
-                                                    // disabled={termAccepted}
-                                                    customInput={<CustomInput />}
-                                                    className="w-full cursor-pointer rounded-2xl bg-[#EBE9F4] px-2 py-1 outline-none placeholder:text-[14px] placeholder:font-bold"
-                                                />
-                                            </div>
-                                            <div>
-                                                <div className="flex items-center">
-                                                    <input
-                                                        type="checkbox"
-                                                        name="check"
-                                                        checked={isFlexible}
-                                                        // disabled={!!dateString || !!timeString}
-                                                        onChange={() => {
-                                                            setIsFlexible(!isFlexible)
-                                                            setUpdatedDate(null)
-                                                            setUpdatedTime(null)
-                                                        }}
-                                                        className="mr-2"
-                                                    />
-                                                    <span className="text-[12px] text-status-darkpurple">
-                                                        I’m Flexible
-                                                    </span>
-                                                </div>
-                                            </div>
+                                    <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 w-full">
+                                        <div>
+                                            <DatePicker
+                                                value={updatedTime as unknown as string}
+                                                selected={updatedTime}
+                                                onChange={handleTimeChange}
+                                                showTimeSelect
+                                                showTimeSelectOnly
+                                                timeFormat="HH:mm"
+                                                timeIntervals={15}
+                                                dateFormat="h:mm aa"
+                                                placeholderText="Choose Time"
+                                                disabled={isFlexible}
+                                                id="taskTime"
+                                                name="taskTime"
+                                                // disabled={termAccepted}
+                                                customInput={<CustomInputs />}
+                                                className="w-full cursor-pointer rounded-2xl bg-[#EBE9F4] px-2 py-1 outline-none placeholder:text-[14px] placeholder:font-bold"
+                                            />
+                                        </div>
+                                        <div>
+                                            <DatePicker
+                                                value={updatedDate as unknown as string}
+                                                selected={updatedDate}
+                                                onChange={handleDateChange}
+                                                dateFormat="dd-MM-yyyy"
+                                                minDate={new Date()}
+                                                placeholderText="Choose Date"
+                                                id="taskDate"
+                                                name="taskDate"
+                                                disabled={isFlexible}
+                                                // disabled={termAccepted}
+                                                customInput={<CustomInput />}
+                                                className="w-full cursor-pointer rounded-2xl bg-[#EBE9F4] px-2 py-1 outline-none placeholder:text-[14px] placeholder:font-bold"
+                                            />
+                                        </div>
+                                        <div className="flex items-center">
+                                            <input
+                                                type="checkbox"
+                                                name="check"
+                                                checked={isFlexible}
+                                                // disabled={!!dateString || !!timeString}
+                                                onChange={() => {
+                                                    setIsFlexible(!isFlexible)
+                                                    setUpdatedDate(null)
+                                                    setUpdatedTime(null)
+                                                }}
+                                                className="mr-2"
+                                            />
+                                            <span className="text-[12px] text-status-darkpurple">
+                                                I’m Flexible
+                                            </span>
                                         </div>
                                     </div>
                                 </div>
@@ -556,6 +495,7 @@ const EditTaskForm = ({ task, setShowEditModal }: TaskCardProps) => {
                                         onClick={() => setActiveEditModalLink("Task Details")}
                                         className="rounded-full px-10"
                                         type="button"
+                                        size='sm'
                                     >
                                         Back
                                     </Button>
@@ -563,6 +503,7 @@ const EditTaskForm = ({ task, setShowEditModal }: TaskCardProps) => {
                                         type="button"
                                         onClick={() => setActiveEditModalLink("Budget")}
                                         className="rounded-full px-10"
+                                        size='sm'
                                     >
                                         Next
                                     </Button>
@@ -600,7 +541,7 @@ const EditTaskForm = ({ task, setShowEditModal }: TaskCardProps) => {
                                                         type="number"
                                                         className="rounded-2xl bg-violet-light p-3 text-[13px] outline-none w-full"
                                                         {...register("postCode")}
-                                                        />
+                                                    />
                                                 </div>
 
                                                 {/* suburb */}
@@ -679,6 +620,7 @@ const EditTaskForm = ({ task, setShowEditModal }: TaskCardProps) => {
                                             onClick={() => setActiveEditModalLink("Location")}
                                             className="rounded-full px-10"
                                             type="button"
+                                            size='sm'
                                         >
                                             Back
                                         </Button>
@@ -686,7 +628,8 @@ const EditTaskForm = ({ task, setShowEditModal }: TaskCardProps) => {
                                             theme="primary"
                                             loading={isSubmitting}
                                             type='submit'
-                                            className="rounded-full px-10"
+                                            className="rounded-full"
+                                            size='sm'
                                         >
                                             Save changes
                                         </Button>
@@ -696,8 +639,8 @@ const EditTaskForm = ({ task, setShowEditModal }: TaskCardProps) => {
                         )}
                     </form>
                 </div>
-            </div >
-        </div >
+            </div>
+        </div>
     );
 
 };

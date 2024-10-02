@@ -1,7 +1,6 @@
 "use client";
 
 import { useGetCustomerOngoingTasksQuery } from "@/services/tasks";
-import { useSession } from "next-auth/react";
 import Loading from "@/shared/loading";
 import Link from "next/link";
 import Button from "@/components/global/Button";
@@ -10,21 +9,18 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/store";
 
 const TaskList = () => {
-    const { data: sessionData, status: sessionStatus } = useSession();
     const userProfile = useSelector((state: RootState) => state.userProfile);
     const userId = userProfile.profile?.customerId
 
     // Make the query only when the userId is available
-    const { data: tasksData, isLoading, error } = useGetCustomerOngoingTasksQuery(userId!, {
+    const { data: tasksData, isLoading } = useGetCustomerOngoingTasksQuery(userId!, {
         skip: !userId,
     });
 
     // Return loading indicator while the session is loading or if the query is loading
-    if (sessionStatus === "loading" || !userId || isLoading) {
+    if (!userId || isLoading) {
         return <Loading />;
     }
-
-    console.log(tasksData)
 
     return (
         <>

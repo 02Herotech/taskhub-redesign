@@ -5,7 +5,7 @@ import ConfirmationModal from '@/components/dashboard/customer/InspectionConfirm
 import Button from '@/components/global/Button';
 import Popup from '@/components/global/Popup';
 import { CautionSvg, RevisionSvg } from '@/lib/svgIcons';
-import { clearLocalStorage, formatAmount, getFromLocalStorage, inspectionTimes, revisions, saveToLocalStorage } from '@/lib/utils';
+import { clearLocalStorage, formatAmount, getFromLocalStorage, inspectionTimes, revisions, saveToLocalStorage, formatTime24Hour } from '@/lib/utils';
 import { useAcceptServiceMutation, useGetJobByIdQuery, useInspectTaskMutation, useRequestRevisionMutation } from '@/services/bookings';
 import { useGetTaskByIdQuery } from '@/services/tasks';
 import Loading from '@/shared/loading';
@@ -31,10 +31,10 @@ const OnogoingTaskDetailsPage = ({ params }: { params: { id: string } }) => {
     const [paymentApproved, setPaymentApproved] = useState(false);
     const [paymentError, setPaymentError] = useState('');
 
-    const { data: task, isLoading } = useGetJobByIdQuery(id as unknown as number);
-    const [approvePayment] = useAcceptServiceMutation();
+    const { data: task, isLoading, error } = useGetJobByIdQuery(id as unknown as number);
+    const [approvePayment, { isLoading: isApproveLoading }] = useAcceptServiceMutation();
     const [inspectTask, { isLoading: inspectTaskLoading }] = useInspectTaskMutation();
-    const [requestRevision] = useRequestRevisionMutation();
+    const [requestRevision, { isLoading: isRevisionLoading }] = useRequestRevisionMutation();
 
     useEffect(() => {
         const storedData = getFromLocalStorage();
@@ -45,12 +45,23 @@ const OnogoingTaskDetailsPage = ({ params }: { params: { id: string } }) => {
         }
     }, [id]);
 
-    if (!task || isLoading) {
+    if (isLoading) {
         return (
             <div className="w-full flex items-center justify-center h-[full]">
                 <Loading />
             </div>
         )
+    }
+
+    if (!task || error) {
+        return (
+            <div className="flex h-[50vh] flex-col w-full items-center justify-center">
+                <h2 className="text-xl lg:text-3xl font-satoshiBold font-bold text-primary">Task not found!</h2>
+                <p className="text-lg lg:text-xl font-satoshiMedium text-[#140B31]">
+                    Something went wrong, please try again later.
+                </p>
+            </div>
+        );
     }
 
     const handleRevisionSubmission = async (e: any) => {
@@ -66,15 +77,9 @@ const OnogoingTaskDetailsPage = ({ params }: { params: { id: string } }) => {
         }
     }
 
-    const taskTime: number[] = task.taskTime;
-    const date = new Date();
-    date.setHours(taskTime[0], taskTime[1]);
+    const taskTime = formatTime24Hour(task.taskTime)
 
-    const humanReadableTime = date.toLocaleTimeString('en-US', {
-        hour: 'numeric',
-        minute: 'numeric',
-        hour12: true
-    });
+    const humanReadableTime = taskTime
 
     const handleTimeSelection = (time: string) => {
         setSelectedTime(time);
@@ -127,15 +132,22 @@ const OnogoingTaskDetailsPage = ({ params }: { params: { id: string } }) => {
     };
 
     const handleApprovePayment = async () => {
-        const response = await approvePayment({ jobId: task.id });
-        if (response.error) {
-            console.log(response.error);
-            setPaymentError('Job has not been completed by Service Provider');
-            return;
-        } else {
-            setPaymentApproved(true);
+        try {
+            setPaymentError("");
+            const response = await approvePayment({ jobId: task.id });
+
+            if (response.error) {
+                console.error("Payment approval failed:", response.error);
+                setPaymentError('Something went wrong, please try again');
+            } else {
+                setPaymentApproved(true);
+                router.push('/customer/tasks?tab=Completed%20tasks');
+            }
+        } catch (error) {
+            console.error("Payment approval failed:", error);
+            setPaymentError('Something went wrong, please try again');
         }
-    }
+    };
 
     return (
         <>
@@ -149,25 +161,28 @@ const OnogoingTaskDetailsPage = ({ params }: { params: { id: string } }) => {
             />
             {requestRevisionPopup && (
                 <Popup isOpen={requestRevisionPopup} onClose={() => setRequestRevisionPopup(false)}>
-                    <div className="relative bg-[#EBE9F4] rounded-2xl min-h-[200px] lg:w-[577px] font-satoshi overflow-y-auto">
+                    <div className="relative bg-white rounded-2xl min-h-[200px] lg:w-[577px] font-satoshi overflow-y-auto">
                         {revisionSent ? (
-                            <div className="flex items-center justify-center h-full font-satoshi py-10 px-20">
+                            <div className="flex items-center justify-center h-full font-satoshi p-10">
                                 <div className="flex flex-col items-center space-y-5">
-                                    <div className="bg-[#140B31] p-1 rounded-full size-14 flex items-center justify-center text-white"><svg width="34" height="32" viewBox="0 0 34 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M34 15.9924L30.2291 11.742L30.7545 6.11562L25.1755 4.86192L22.2545 0L17 2.2322L11.7455 0L8.82454 4.86192L3.24545 6.10033L3.77091 11.7267L0 15.9924L3.77091 20.2427L3.24545 25.8844L8.82454 27.1381L11.7455 32L17 29.7525L22.2545 31.9847L25.1755 27.1228L30.7545 25.8691L30.2291 20.2427L34 15.9924ZM13.9091 23.6369L7.72727 17.5213L9.90636 15.3655L13.9091 19.3101L24.0936 9.23459L26.2727 11.4056L13.9091 23.6369Z" fill="white" />
-                                    </svg></div>
+                                    <svg width="70" height="70" viewBox="0 0 70 70" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <circle cx="35" cy="35" r="35" fill="#C1F6C3" fillOpacity="0.6" />
+                                        <circle cx="34.5" cy="34.5" r="22.5" fill="#A6F8AA" />
+                                        <path d="M52 34.9924L48.2291 30.742L48.7545 25.1156L43.1755 23.8619L40.2545 19L35 21.2322L29.7455 19L26.8245 23.8619L21.2455 25.1003L21.7709 30.7267L18 34.9924L21.7709 39.2427L21.2455 44.8844L26.8245 46.1381L29.7455 51L35 48.7525L40.2545 50.9847L43.1755 46.1228L48.7545 44.8691L48.2291 39.2427L52 34.9924ZM31.9091 42.6369L25.7273 36.5213L27.9064 34.3655L31.9091 38.3101L42.0936 28.2346L44.2727 30.4056L31.9091 42.6369Z" fill="#4CAF50" />
+                                    </svg>
                                     <h1 className="font-black text-3xl text-[#2A1769]">
                                         Request Successful
                                     </h1>
                                     <p className="mb-8 font-satoshiMedium text-center text-lg font-medium text-[#140B31]">
-                                        Your request for revision has been sent, you will get a response shortly as to the date it’s starts and ends.
+                                        Your request for revision has been sent, in a short time you will get a response as to the date it starts and ends.
                                     </p>
                                     <Button
-                                        className="w-[151px] max-lg:text-sm rounded-full py-6"
+                                        className="w-[125px] bg-[#E1DDEE] border-none text-primary font-satoshiBold text-sm rounded-full py-3"
                                         onClick={() => {
                                             setRequestRevisionPopup(false)
                                             setRevisionSent(false)
                                         }}
+                                        size='sm'
                                     >
                                         Cancel
                                     </Button>
@@ -210,6 +225,7 @@ const OnogoingTaskDetailsPage = ({ params }: { params: { id: string } }) => {
                                             className="w-[151px] max-lg:text-sm rounded-full py-6"
                                             type="submit"
                                             disabled={revisionError != ""}
+                                            loading={isRevisionLoading}
                                         >
                                             Submit
                                         </Button>
@@ -223,61 +239,72 @@ const OnogoingTaskDetailsPage = ({ params }: { params: { id: string } }) => {
             )}
             {approvePaymentPopup && (
                 <Popup isOpen={approvePaymentPopup} onClose={() => setApprovePaymentPopup(false)}>
-                    <div className="relative bg-[#EBE9F4] rounded-2xl min-h-[200px] lg:w-[577px] font-satoshi overflow-y-auto">
+                    <div className="relative bg-white rounded-2xl min-h-[200px] w-full max-w-[600px] font-satoshi overflow-y-auto">
                         {paymentApproved ? (
-                            <div className="flex items-center justify-center h-full font-satoshi py-10 px-20">
+                            <div className="flex items-center justify-center h-full font-satoshi p-10">
                                 <div className="flex flex-col items-center space-y-5">
-                                    <div className="bg-[#140B31] p-1 rounded-full size-14 flex items-center justify-center text-white"><svg width="34" height="32" viewBox="0 0 34 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M34 15.9924L30.2291 11.742L30.7545 6.11562L25.1755 4.86192L22.2545 0L17 2.2322L11.7455 0L8.82454 4.86192L3.24545 6.10033L3.77091 11.7267L0 15.9924L3.77091 20.2427L3.24545 25.8844L8.82454 27.1381L11.7455 32L17 29.7525L22.2545 31.9847L25.1755 27.1228L30.7545 25.8691L30.2291 20.2427L34 15.9924ZM13.9091 23.6369L7.72727 17.5213L9.90636 15.3655L13.9091 19.3101L24.0936 9.23459L26.2727 11.4056L13.9091 23.6369Z" fill="white" />
-                                    </svg></div>
-                                    <h1 className="font-black text-3xl text-[#2A1769]">
-                                        Payment Successful
+                                    <svg width="70" height="70" viewBox="0 0 70 70" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <circle cx="35" cy="35" r="35" fill="#C1F6C3" fill-opacity="0.6" />
+                                        <circle cx="34.5" cy="34.5" r="22.5" fill="#A6F8AA" />
+                                        <path d="M52 34.9924L48.2291 30.742L48.7545 25.1156L43.1755 23.8619L40.2545 19L35 21.2322L29.7455 19L26.8245 23.8619L21.2455 25.1003L21.7709 30.7267L18 34.9924L21.7709 39.2427L21.2455 44.8844L26.8245 46.1381L29.7455 51L35 48.7525L40.2545 50.9847L43.1755 46.1228L48.7545 44.8691L48.2291 39.2427L52 34.9924ZM31.9091 42.6369L25.7273 36.5213L27.9064 34.3655L31.9091 38.3101L42.0936 28.2346L44.2727 30.4056L31.9091 42.6369Z" fill="#4CAF50" />
+                                    </svg>
+                                    <h1 className="font-black font-satoshiBold text-3xl text-[#2A1769] text-center">
+                                        Payment Approved!
                                     </h1>
                                     <p className="mb-8 font-satoshiMedium text-center text-lg font-medium text-[#140B31]">
-                                        Great! your payment to the service provider has been approved. Please leave a review below
+                                        Great! your payment to the service provider has been approved.
                                     </p>
-                                    <Button
-                                        className="w-[151px] max-lg:text-sm rounded-full py-6 bg-[#E1DDEE] border-none"
-                                        onClick={() => {
-                                            setApprovePaymentPopup(false)
-                                            setPaymentApproved(false)
-                                        }}
-                                    >
-                                        Cancel
-                                    </Button>
-                                    <Button
-                                        className="w-[151px] max-lg:text-sm rounded-full py-6"
-                                    >
-                                        Review
-                                    </Button>
-                                    {paymentError && <p className="text-red-600 text-sm mt-4 text-center">{paymentError}</p>}
+                                    <div className="lg:flex items-center justify-center">
+                                        <Button
+                                            className="max-lg:text-sm rounded-full"
+                                            onClick={() => {
+                                                setApprovePaymentPopup(false)
+                                                setPaymentApproved(false)
+                                            }}
+                                            size='sm'
+                                        >
+                                            Cancel
+                                        </Button>
+                                    </div>
+                                    {/* {paymentError && <p className="text-red-600 text-sm mt-4 text-center">{paymentError}</p>} */}
                                 </div>
                             </div>
                         ) : (
-                        <div className="flex items-center justify-center h-full font-satoshi py-10 px-20">
-                            <div className="flex flex-col items-center space-y-5">
-                                <div className="bg-[#140B31] p-1 rounded-full size-14 flex items-center justify-center text-white"><svg width="34" height="32" viewBox="0 0 34 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M34 15.9924L30.2291 11.742L30.7545 6.11562L25.1755 4.86192L22.2545 0L17 2.2322L11.7455 0L8.82454 4.86192L3.24545 6.10033L3.77091 11.7267L0 15.9924L3.77091 20.2427L3.24545 25.8844L8.82454 27.1381L11.7455 32L17 29.7525L22.2545 31.9847L25.1755 27.1228L30.7545 25.8691L30.2291 20.2427L34 15.9924ZM13.9091 23.6369L7.72727 17.5213L9.90636 15.3655L13.9091 19.3101L24.0936 9.23459L26.2727 11.4056L13.9091 23.6369Z" fill="white" />
-                                </svg></div>
-                                <h1 className="font-black text-4xl text-[#2A1769]">
-                                    Approve payment
-                                </h1>
-                                <p className="mb-8 font-satoshiMedium text-center text-xl font-medium text-[#140B31]">
-                                    Satisfied with the service? Great! Once you approve this payment, your service will be marked as complete. Any revision after this step may attract extra charges.
-                                </p>
-                                <div className="flex items-center justify-center space-x-4">
-                                    <Button
-                                        className="w-[151px] max-lg:text-sm rounded-full py-6"
-                                        theme='outline'
-                                    >
-                                        Cancel
-                                    </Button>
-                                    <Button className="w-[151px] max-lg:text-sm rounded-full py-6" onClick={handleApprovePayment}>
-                                        Approve
-                                    </Button>
+                            <div className="flex items-center justify-center h-full font-satoshi p-10">
+                                <div className="flex flex-col items-center space-y-5">
+                                    <svg width="70" height="70" viewBox="0 0 70 70" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <circle cx="35" cy="35" r="35" fill="#C1F6C3" fillOpacity="0.6" />
+                                        <circle cx="34.5" cy="34.5" r="22.5" fill="#A6F8AA" />
+                                        <path d="M52 34.9924L48.2291 30.742L48.7545 25.1156L43.1755 23.8619L40.2545 19L35 21.2322L29.7455 19L26.8245 23.8619L21.2455 25.1003L21.7709 30.7267L18 34.9924L21.7709 39.2427L21.2455 44.8844L26.8245 46.1381L29.7455 51L35 48.7525L40.2545 50.9847L43.1755 46.1228L48.7545 44.8691L48.2291 39.2427L52 34.9924ZM31.9091 42.6369L25.7273 36.5213L27.9064 34.3655L31.9091 38.3101L42.0936 28.2346L44.2727 30.4056L31.9091 42.6369Z" fill="#4CAF50" />
+                                    </svg>
+                                    <h1 className="font-extrabold text-2xl text-[#2A1769] font-satoshiBold">
+                                        Approve payment
+                                    </h1>
+                                    <p className="mb-8 font-satoshiMedium text-center text-lg font-medium text-[#140B31]">
+                                        Happy with the service? Great! Approve the payment to mark it as complete. Revision after this step may attract extra charges.
+                                    </p>
+                                    <div className="flex items-center justify-center space-x-4">
+                                        <Button
+                                            className="bg-[#E1DDEE] border-none text-primary font-satoshiBold text-sm rounded-full py-3"
+                                            theme='outline'
+                                            onClick={() => setApprovePaymentPopup(false)}
+                                            size='sm'
+                                        >
+                                            Cancel
+                                        </Button>
+                                        <Button
+                                            loading={isApproveLoading}
+                                            disabled={paymentError != ""}
+                                            className="text-sm rounded-full py-3"
+                                            size='sm'
+                                            onClick={handleApprovePayment}
+                                        >
+                                            Approve
+                                        </Button>
+                                    </div>
+                                    {paymentError && <h4 className='text-center text-sm text-red-500'>{paymentError}</h4>}
                                 </div>
                             </div>
-                        </div>
                         )}
                     </div>
                 </Popup>
@@ -293,7 +320,7 @@ const OnogoingTaskDetailsPage = ({ params }: { params: { id: string } }) => {
                     </Button>
                 </div>
                 <div className="font-satoshi">
-                    <div className="flex items-center space-x-4 text-tc-orange w-full rounded-3xl bg-[#FFF0DA] py-4 px-4 lg:px-8">
+                    <div className="flex items-center space-x-4 text-tc-orange w-full rounded-3xl bg-[#FFF0DA] p-4">
                         {CautionSvg}
                         <p className='text-base'>Please Note: Once a task is finished, you have 24 hrs to approve or request a revision, If no action is taken, the system would automatically approve payment and mark as completed.</p>
                     </div>
@@ -351,7 +378,15 @@ const OnogoingTaskDetailsPage = ({ params }: { params: { id: string } }) => {
                         </h2>
                         <div className="flex items-center lg:justify-end space-x-10 lg:text-lg">
                             <button className='text-tc-orange' onClick={() => setRequestRevisionPopup(true)}>Request Revision</button>
-                            <button className='text-[#34A853]' onClick={() => setApprovePaymentPopup(true)}>Approve payment</button>
+                            <button
+                                className='text-[#34A853]'
+                                onClick={() => {
+                                    setPaymentError('')
+                                    setApprovePaymentPopup(true)
+                                }}
+                            >
+                                Approve payment
+                            </button>
                         </div>
                     </div>
                 </div>

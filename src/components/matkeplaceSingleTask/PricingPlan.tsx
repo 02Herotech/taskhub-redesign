@@ -58,6 +58,11 @@ const PricingPlan = ({
     }));
   };
 
+  function abbreviateNumber(amount: number): string {
+    return amount.toLocaleString();
+  }
+
+
   const renderDescription = (description: string, index: number) => {
     const words = description.split(" ");
     const shouldShowEllipses = words.length > 4;
@@ -102,7 +107,7 @@ const PricingPlan = ({
         <div className="space-y-2 py-6">
           <div className="flex items-center justify-between">
             <h2 className="flex flex-col  text-3xl font-extrabold ">
-              A$ {planOnePrice}
+              A$ {abbreviateNumber(planOnePrice)}
             </h2>
             <button
               onClick={() =>

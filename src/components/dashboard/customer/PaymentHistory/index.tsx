@@ -10,11 +10,11 @@ import { RootState } from '@/store';
 import { useGetReceiptsByCustomerIdQuery } from '@/services/bookings';
 import { Receipt } from '@/types/services/invoice';
 import Loading from '@/components/global/loading/page';
-import html2canvas from 'html2canvas';
-import jsPDF from 'jspdf';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { LuCalendarDays } from "react-icons/lu";
+import PaymentReceipt from '../PaymentReceipt';
+import { PDFDownloadLink } from '@react-pdf/renderer';
 
 const PaymentHistory = () => {
     const [visibleTransactions, setVisibleTransactions] = useState(4);
@@ -57,30 +57,14 @@ const PaymentHistory = () => {
         );
     }
 
-    const downloadPdf = () => {
-        const input = pdfRef.current;
-        if (input) {
-            html2canvas(input).then((canvas) => {
-                const imgData = canvas.toDataURL('image/png');
-                const pdf = new jsPDF('p', 'mm', 'a4');
-                const imgProps = pdf.getImageProperties(imgData);
-                const pdfWidth = pdf.internal.pageSize.getWidth();
-                const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
-                pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
-                pdf.save('taskhub_receipt.pdf');
-            });
-        }
-        setIsModalOpen(false);
-    };
-
-    const formatCreatedAt = (dateArray: number[]): string => {
-        const [year, month, day] = dateArray;
-        return new Date(year, month - 1, day).toLocaleDateString('en-US', {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric'
-        });
-    };
+    // const formatCreatedAt = (dateArray: number[]): string => {
+    //     const [year, month, day] = dateArray;
+    //     return new Date(year, month - 1, day).toLocaleDateString('en-US', {
+    //         year: 'numeric',
+    //         month: 'long',
+    //         day: 'numeric'
+    //     });
+    // };
 
     const groupReceiptsByDate = (receipts: Receipt[], filterDate: Date | null) => {
         if (!receipts || !Array.isArray(receipts)) {
@@ -208,53 +192,58 @@ const PaymentHistory = () => {
 
             {isModalOpen && selectedPayment && (
                 <Popup isOpen={isModalOpen} onClose={closeModal}>
-                    <div className="bg-[#EBE9F4] rounded-2xl">
-                        <div ref={pdfRef} className="relative rounded-2xl min-h-[200px] lg:w-[577px] font-satoshi p-5 lg:p-7">
-                            <div className="flex items-center justify-center mb-3">
+                    <div className="bg-[#EBE9F4] rounded-2xl lg:w-[500px]">
+                        <div ref={pdfRef} className="relative rounded-2xl max-w-[500px] h-auto min-h-[60vh] max-h-[90vh] font-satoshi py-2 px-4">
+                            <div className="flex items-center justify-center mb-2">
                                 <svg width="70" height="70" viewBox="0 0 70 70" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <circle cx="35" cy="35" r="35" fill="#C1F6C3" fill-opacity="0.6" />
                                     <circle cx="34.5" cy="34.5" r="22.5" fill="#A6F8AA" />
                                     <path d="M52 34.9924L48.2291 30.742L48.7545 25.1156L43.1755 23.8619L40.2545 19L35 21.2322L29.7455 19L26.8245 23.8619L21.2455 25.1003L21.7709 30.7267L18 34.9924L21.7709 39.2427L21.2455 44.8844L26.8245 46.1381L29.7455 51L35 48.7525L40.2545 50.9847L43.1755 46.1228L48.7545 44.8691L48.2291 39.2427L52 34.9924ZM31.9091 42.6369L25.7273 36.5213L27.9064 34.3655L31.9091 38.3101L42.0936 28.2346L44.2727 30.4056L31.9091 42.6369Z" fill="#4CAF50" />
                                 </svg>
                             </div>
-                            <h3 className="text-3xl text-center font-bold text-primary mb-2">Success</h3>
-                            <h3 className="text-xl text-center font-bold text-[#55535A] mb-2">Your transaction was successful</h3>
+                            <h3 className="text-2xl sm:text-3xl text-center font-bold text-primary mb-2">Success</h3>
+                            <h3 className="text-lg sm:text-xl text-center font-bold text-[#55535A] mb-2">Your transaction was successful</h3>
                             <div className="flex items-center justify-center !mb-4">
-                                <div className="bg-[#C1BADB] p-3 w-60 rounded-3xl">
+                                <div className="bg-[#C1BADB] p-3 w-full max-w-[240px] rounded-3xl">
+                                    <h4 className='text-[#55535A] font-bold text-center my-2'>Amount</h4>
                                     <h2 className="text-xl font-bold text-center capitalize text-primary lg:text-[22px]">
                                         AUD{formatAmount(selectedPayment.total, "USD", false)}
                                     </h2>
-                                    <h4 className='text-[#55535A] font-bold text-center mt-2'>Amount</h4>
                                 </div>
                             </div>
-                            <div className="space-y-4">
-                                <div className="border-b border-[#C1BADB] flex items-center justify-between px-4">
+                            <div className="space-y-2">
+                                <div className="border-b border-[#C1BADB] flex flex-col sm:flex-row items-start sm:items-center justify-between px-2 py-1">
                                     <h2 className='text-[#333236] font-satoshiMedium'>Transaction ID:</h2>
-                                    <p className='text-primary font-bold text-xl'>#{selectedPayment.id}</p>
+                                    <p className='text-primary font-bold text-lg sm:text-xl'>#{selectedPayment.id}</p>
                                 </div>
-                                <div className="border-b border-[#C1BADB] flex items-center justify-between px-4">
+                                <div className="border-b border-[#C1BADB] flex flex-col sm:flex-row items-start sm:items-center justify-between px-2 py-1">
                                     <h2 className='text-[#333236] font-satoshiMedium'>Transaction title:</h2>
-                                    <p className='text-primary font-bold text-xl'>{selectedPayment.bookingTitle}</p>
+                                    <p className='text-primary font-bold text-lg sm:text-xl'>{selectedPayment.bookingTitle}</p>
                                 </div>
-                                <div className="border-b border-[#C1BADB] flex items-center justify-between px-4">
+                                <div className="border-b border-[#C1BADB] flex flex-col sm:flex-row items-start sm:items-center justify-between px-2 py-1">
                                     <h2 className='text-[#333236] font-satoshiMedium'>From:</h2>
-                                    <p className='text-primary font-bold text-xl'>{user?.firstName} {user?.lastName}</p>
+                                    <p className='text-primary font-bold text-lg sm:text-xl'>{user?.firstName} {user?.lastName}</p>
                                 </div>
-                                <div className="border-b border-[#C1BADB] flex items-center justify-between px-4">
+                                <div className="border-b border-[#C1BADB] flex flex-col sm:flex-row items-start sm:items-center justify-between px-2 py-1">
                                     <h2 className='text-[#333236] font-satoshiMedium'>To:</h2>
-                                    <p className='text-primary font-bold text-xl'>{selectedPayment.serviceProvider.user.fullName}</p>
+                                    <p className='text-primary font-bold text-lg sm:text-xl'>{selectedPayment.serviceProvider.user.fullName}</p>
                                 </div>
-                                <div className="border-b border-[#C1BADB] flex items-center justify-between px-4">
+                                <div className="border-b border-[#C1BADB] flex flex-col sm:flex-row items-start sm:items-center justify-between px-2 py-1">
                                     <h2 className='text-[#333236] font-satoshiMedium'>Date:</h2>
-                                    <p className='text-primary font-bold text-xl'>{formattedDate}</p>
+                                    <p className='text-primary font-bold text-lg sm:text-xl'>{formattedDate}</p>
                                 </div>
                             </div>
                         </div>
-                        <div className="flex items-center justify-center space-x-2 mb-4 cursor-pointer" onClick={downloadPdf}>
-                            <svg width="16" height="20" viewBox="0 0 16 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path fill-rule="evenodd" clip-rule="evenodd" d="M2 0C1.46957 0 0.960859 0.210714 0.585786 0.585786C0.210714 0.960859 0 1.46957 0 2V18C0 18.5304 0.210714 19.0391 0.585786 19.4142C0.960859 19.7893 1.46957 20 2 20H14C14.5304 20 15.0391 19.7893 15.4142 19.4142C15.7893 19.0391 16 18.5304 16 18V4.414C15.9999 3.88361 15.7891 3.37499 15.414 3L13 0.586C12.625 0.210901 12.1164 0.000113275 11.586 0H2ZM2 2H11.586L14 4.414V18H2V2ZM12.238 8.793C12.3335 8.70075 12.4097 8.59041 12.4621 8.4684C12.5145 8.3464 12.5421 8.21518 12.5433 8.0824C12.5444 7.94962 12.5191 7.81794 12.4688 7.69505C12.4185 7.57215 12.3443 7.4605 12.2504 7.3666C12.1565 7.27271 12.0449 7.19846 11.922 7.14818C11.7991 7.0979 11.6674 7.0726 11.5346 7.07375C11.4018 7.0749 11.2706 7.10249 11.1486 7.1549C11.0266 7.20731 10.9162 7.28349 10.824 7.379L6.582 11.622L5.167 10.207C4.9784 10.0248 4.7258 9.92405 4.4636 9.92633C4.2014 9.9286 3.95059 10.0338 3.76518 10.2192C3.57977 10.4046 3.4746 10.6554 3.47233 10.9176C3.47005 11.1798 3.57084 11.4324 3.753 11.621L5.803 13.672C5.90515 13.7742 6.02644 13.8553 6.15993 13.9106C6.29342 13.9659 6.4365 13.9944 6.581 13.9944C6.7255 13.9944 6.86858 13.9659 7.00207 13.9106C7.13556 13.8553 7.25685 13.7742 7.359 13.672L12.238 8.793Z" fill="#E58C06" />
-                            </svg>
-                            <h2 className='text-tc-orange font-bold text-lg cursor-pointer'>Download Receipt</h2>
+                        <div className="flex items-center justify-center w-full !mt-4 sm:!mt-3 pb-2 sm:pb-3">
+                            <PDFDownloadLink
+                                document={<PaymentReceipt selectedPayment={selectedPayment} user={user} formattedDate={formattedDate} />}
+                                fileName="oloja_receipt.pdf"
+                                className="text-center text-[#E58C06] font-bold underline hover:text-[#c77905] transition-colors duration-300"
+                            >
+                                {({ blob, url, loading, error }) =>
+                                    loading ? 'Loading document...' : 'Download Receipt'
+                                }
+                            </PDFDownloadLink>
                         </div>
                     </div>
                 </Popup>

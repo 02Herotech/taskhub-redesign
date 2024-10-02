@@ -11,6 +11,7 @@ import BlogSearch from "@/components/blog/Search";
 
 const AllBlogsPage = () => {
   const { data: blogPosts, isLoading, error } = useGetAllPostsQuery();
+  console.log("blog posts:", blogPosts)
 
   const featuredPost = blogPosts?.docs.find(post => post.featuredPost);
   

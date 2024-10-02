@@ -17,10 +17,11 @@ import ExploreCategoryLising from "../ExploreCategoryListing";
 import ExploreMobileFilterModal from "../MobileFIlter";
 
 const Tasks: React.FC = () => {
-    const dispatch = useDispatch();
+    const [isMobileFilterModalShown, setIsMobileFilterModalShown] = useState(false);
     const { categories, isFiltering, isFilteringLoading } = useSelector(
         (state: RootState) => state.explore,
     );
+    const dispatch = useDispatch();
     const [isMounted, setIsMounted] = useState(false);
     const [searchInputData, setSearchInputData] = useState("");
     const [isDropdownOpen, setIsDropdownOpen] = useState({
@@ -158,7 +159,6 @@ const Tasks: React.FC = () => {
         // eslint-disable-next-line
     }, [filterDataStructure]);
 
-    const [isMobileFilterModalShown, setIsMobileFilterModalShown] = useState(false);
 
     return (
         <section className="py-10 container">
@@ -445,7 +445,7 @@ const Tasks: React.FC = () => {
                 </div>
             </section>
 
-            <div className="relative flex justify-center md:hidden ">
+            <div className="relative flex justify-center md:hidden">
                 <ExploreMobileFilterModal
                     isMobileFilterModalShown={isMobileFilterModalShown}
                     setIsMobileFilterModalShown={setIsMobileFilterModalShown}

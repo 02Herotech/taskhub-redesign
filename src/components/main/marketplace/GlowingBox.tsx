@@ -1,10 +1,11 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import "../../../styles/glowingBorder.css";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
+import { BsExclamationTriangle } from "react-icons/bs";
 
 const GlowingBox = () => {
   const session = useSession();
@@ -12,15 +13,47 @@ const GlowingBox = () => {
   const isServiceProvider =
     session?.data?.user?.user?.roles[0] === "SERVICE_PROVIDER";
 
+  const [error, setError] = useState("");
+
   const router = useRouter();
   const handleNavigateUser = () => {
-    router.push("/provide-service");
+    if (!isAuthenticated) {
+      setError("You must be logged in to access this feature.");
+      return;
+    } else if (isServiceProvider) {
+      router.push("/provide-service");
+    } else {
+      setError("You cannot access this feature as a customer");
+    }
   };
 
   return (
     <div
       className={`absolute right-4 top-[calc(100%+5rem)] text-violet-normal max-lg:hidden lg:right-20 {${!isServiceProvider && "hidden"}} `}
     >
+      {error && (
+        <section className="fixed inset-0 z-[10000] flex h-screen w-screen items-center justify-center bg-black bg-opacity-70">
+          <div
+            className="absolute inset-0 h-screen w-screen"
+            onClick={() => setError("")}
+          />
+          <div className="relative z-10 flex w-[90vw] max-w-xl flex-col items-center justify-center gap-3 rounded-xl bg-white p-3 px-4 lg:space-y-4 lg:p-10">
+            <div className=" flex flex-col items-center justify-center gap-4">
+              <div className="flex size-20 items-center justify-center rounded-full bg-red-100 bg-opacity-60">
+                <div className=" flex size-14 items-center justify-center rounded-full bg-red-300 p-4">
+                  <BsExclamationTriangle className="size-10 text-red-500" />
+                </div>
+              </div>
+              <p className="text-center font-satoshiBold text-2xl font-extrabold text-red-500">
+                Sorry
+              </p>
+              <p className="text-center font-semibold text-violet-darker">
+                {error}
+              </p>
+            </div>
+          </div>
+        </section>
+      )}
       <div className=" glowing relative w-screen max-w-md space-y-2 rounded-2xl bg-violet-light p-4 ">
         <div className="flex items-center gap-6  ">
           <Image

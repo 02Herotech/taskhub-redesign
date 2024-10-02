@@ -2,12 +2,14 @@ import { FiLogOut } from "react-icons/fi";
 import {
   AboutUsSvg,
   BlogSvg,
+  BusinessHubSvg,
   ContactUsSvg,
   DashboardSvg,
   HomeSvg,
   LoginSvg,
   MarketPlaceSvg,
   MessagesSvg,
+  RentShopSvg,
 } from "./svgIcons";
 import React from "react";
 
@@ -42,19 +44,19 @@ export const homeMobileLinks: LinkRouteTypes[] = [
     icon: LoginSvg,
   },
   {
-    label: "Blog",
-    url: "/blog",
-    icon: BlogSvg,
-  },
-  {
     label: "About us",
     url: "/about",
     icon: AboutUsSvg,
   },
   {
-    label: "Contact Us",
-    url: "/contact",
-    icon: ContactUsSvg,
+    label: "Business Hub",
+    url: "/coming-soon",
+    icon: BusinessHubSvg,
+  },
+  {
+    label: "Rent a shop",
+    url: "/coming-soon",
+    icon: RentShopSvg,
   },
 ];
 
@@ -201,7 +203,7 @@ export const mobileCustomerLinks: LinkRouteTypes[] = [
       },
       {
         label: "Payment",
-        url: "/customer/payment/payment-history",
+        url: "/customer/payment?tab=paymentHistory",
       },
       {
         label: "Settings",
@@ -213,7 +215,7 @@ export const mobileCustomerLinks: LinkRouteTypes[] = [
           },
           {
             label: "Notification settings",
-            url: "/customer/notification",
+            url: "/customer/notification-settings",
           },
         ],
       },
