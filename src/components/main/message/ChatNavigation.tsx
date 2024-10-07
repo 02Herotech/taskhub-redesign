@@ -17,10 +17,9 @@ const ChatNavigation = () => {
     loading: boolean;
     isFiltering: boolean;
   }>({ contact: [], loading: false, isFiltering: false });
-  const [displayContacts, setDisplayContacts] = useState<ChatContactTypes[]>(
-    [],
-  );
+  const [displayContacts, setDisplayContacts] = useState<ChatContactTypes[]>([]);
   const [allContacts, setAllContacts] = useState<ChatContactTypes[]>([]);
+  const [currentChatId, setCurrentChatId] = useState<number | null>(null); // Track the currently active chat
   const { contacts } = useSelector((state: RootState) => state.chat);
 
   useEffect(() => {
@@ -45,6 +44,7 @@ const ChatNavigation = () => {
   }, [allContacts]);
 
   const { chatPartnerId } = useParams();
+
   const handleChangeCategory = (category: string) => {
     setCurrentCategory(category);
     if (category === "Unread") {
@@ -90,11 +90,14 @@ const ChatNavigation = () => {
   }, [filteredContact, contacts]);
 
   const handleOpenChat = (id: number) => {
-    setAllContacts((prev) => {
-      return prev.map((contact) =>
-        contact.id === id ? { ...contact, newMessages: 0 } : contact
-      );
-    });
+    if (currentChatId !== id) {
+      setAllContacts((prev) => {
+        return prev.map((contact) =>
+          contact.id === id ? { ...contact, newMessages: 0 } : contact
+        );
+      });
+      setCurrentChatId(id); 
+    }
   };
 
   return (
