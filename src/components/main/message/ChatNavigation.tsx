@@ -89,6 +89,14 @@ const ChatNavigation = () => {
     // eslint-disable-next-line
   }, [filteredContact, contacts]);
 
+  const handleOpenChat = (id: number) => {
+    setAllContacts((prev) => {
+      return prev.map((contact) =>
+        contact.id === id ? { ...contact, newMessages: 0 } : contact
+      );
+    });
+  };
+
   return (
     <section className=" col-span-5 mx-auto  space-y-9">
       <div className="flex flex-wrap items-center gap-4">
@@ -127,6 +135,7 @@ const ChatNavigation = () => {
               href={{
                 pathname: "/message/" + item.id,
               }}
+              onClick={() => handleOpenChat(item.id)}
               key={index}
               className={`flex cursor-pointer items-center gap-3 rounded-lg border border-slate-100 p-3 transition-all  duration-300 ${Number(chatPartnerId) === item.id ? "bg-violet-100 hover:bg-opacity-90" : "hover:bg-violet-50"}`}
             >

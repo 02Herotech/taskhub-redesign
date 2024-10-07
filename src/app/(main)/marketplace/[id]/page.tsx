@@ -36,7 +36,9 @@ const Page = () => {
       setDisplayData(content);
     }
   }, []);
-
+  console.log("marketplace", id)
+  console.log(currentListing)
+  console.log(displayData)
   useEffect(() => {
     const fetchListing = async () => {
       try {
@@ -148,7 +150,7 @@ const Page = () => {
                         {displayData?.serviceProvider?.user?.fullName}
                       </p>
                     <div>
-                      <Link href={`/marketplace/${displayData?.serviceProvider.id}/about`} className="cursor-pointer">
+                      <Link href={`/marketplace/${displayData?.id}/about`} className="cursor-pointer">
                           <p className="text-xl font-medium text-[#e58c06] underline cursor-pointer">View Profile</p>
                         </Link>
                         {/* <div className="flex items-center gap-2">
