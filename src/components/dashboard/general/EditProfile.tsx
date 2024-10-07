@@ -43,7 +43,7 @@ const idTypeObject = [
   { label: "Medicare Card", value: "MEDICARE_CARD" },
   { label: "International Passport", value: "INTERNATIONAL_PASSPORT" },
   { label: "Photo ID", value: "PHOTO_ID" },
-  { label: "Driver's Licence", value: "DRIVERS_LICENSE" },
+  { label: "Driver's License", value: "DRIVERS_LICENSE" },
 ];
 
 type UserDataType = z.infer<typeof userDataSchema>;
