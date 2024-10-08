@@ -35,7 +35,7 @@ const NotificationsSettings = () => {
     },
     {
       label: "When someone send me an offer",
-      value: "INVOICE",
+      value: "OFFER",
     },
     {
       label: `When a ${isServiceProvider ? "task" : "service"} is posted that matches your preferences`,
