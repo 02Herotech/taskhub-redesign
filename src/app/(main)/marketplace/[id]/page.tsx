@@ -36,9 +36,7 @@ const Page = () => {
       setDisplayData(content);
     }
   }, []);
-  console.log("marketplace", id)
-  console.log(currentListing)
-  console.log(displayData)
+ 
   useEffect(() => {
     const fetchListing = async () => {
       try {

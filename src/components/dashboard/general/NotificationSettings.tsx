@@ -39,7 +39,7 @@ const NotificationsSettings = () => {
     },
     {
       label: `When a ${isServiceProvider ? "task" : "service"} is posted that matches your preferences`,
-      value: `${isServiceProvider ? "TASK" : "LISTING"}`,
+      value: `${isServiceProvider ? "LISTING" : "TASK"}`,
     },
     {
       label: `When I have an ongoing job`,

@@ -187,7 +187,7 @@ const ServiceProviderChat = () => {
         if (!socket.connected) {
           localStorage.setItem("chatMessages", JSON.stringify(message));
         }
-        socket.emit("chat", message, () => {});
+        socket.emit("chat", message, () => { });
         const newMessage: ChatMessageDisplayedType = {
           content: msg,
           senderId: user.id,
@@ -334,18 +334,16 @@ const ServiceProviderChat = () => {
                         {messages.map((item, index) => (
                           <div
                             key={index}
-                            className={`my-2 flex w-full ${
-                              item.senderId === user.id
+                            className={`my-2 flex w-full ${item.senderId === user.id
                                 ? "flex-wrap justify-end"
                                 : "justify-start"
-                            }`}
+                              }`}
                           >
                             <div
-                              className={`flex w-fit max-w-xs flex-col gap-1 rounded-md p-2 text-sm ${
-                                item.senderId === user.id
+                              className={`flex w-fit max-w-xs flex-col gap-1 rounded-md p-2 text-sm ${item.senderId === user.id
                                   ? "bg-violet-normal text-white"
                                   : "bg-orange-light text-left text-violet-dark"
-                              }`}
+                                }`}
                             >
                               <p>{item.content}</p>
                               <div className="flex items-center justify-end gap-2 text-[0.7rem]">

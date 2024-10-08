@@ -43,8 +43,6 @@ const Page = () => {
         }
     }, []);
 
-    console.log("about", id);
-    console.log(currentListing)
     useEffect(() => {
         const fetchListing = async () => {
             try {
@@ -83,8 +81,6 @@ const Page = () => {
             fetchProviderListings();
         }
     }, [token, displayData, id]);
-
-    console.log(providerListings)
 
     const totalRatings = reviews.reduce((sum, review) => sum + review.rating, 0) || 0;
     const averageRating = Math.round(totalRatings / reviews.length)
