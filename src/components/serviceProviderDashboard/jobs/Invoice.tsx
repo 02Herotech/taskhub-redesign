@@ -71,7 +71,7 @@ const Invoice = ({
       const gstAmount = Number(price) * 0.10;
 
       // Calculate service charge deduction (2% of the price)
-      const serviceChargeAmount = Number(price) * 0.02;
+      const serviceChargeAmount = Number((Math.round((Number(price) * 0.02) * 100) / 100).toFixed(2));
 
       // Final amount the user earns after deductions
       const userEarnings = Number(price) - (gstAmount + serviceChargeAmount);

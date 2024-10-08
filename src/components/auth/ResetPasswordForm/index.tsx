@@ -72,7 +72,7 @@ const ResetPasswordForm = () => {
                 isVisible={isVisible}
                 onClose={() => setIsVisible(false)}
             />
-            <section className='w-full xl:w-[554px] h-[50vh] flex items-center justify-center mx-auto'>
+            <section className='w-full xl:w-[554px] h-screen flex items-center justify-center mx-auto'>
                 <div className='space-y-10'>
                     <div className="space-y-4">
                         <h1 className='text-2xl lg:text-4xl text-[#190E3F] font-clashSemiBold'>
