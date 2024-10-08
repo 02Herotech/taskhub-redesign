@@ -163,17 +163,17 @@ const OnogoingTaskDetailsPage = ({ params }: { params: { id: string } }) => {
                 <Popup isOpen={requestRevisionPopup} onClose={() => setRequestRevisionPopup(false)}>
                     <div className="relative bg-white rounded-2xl min-h-[200px] lg:w-[577px] font-satoshi overflow-y-auto">
                         {revisionSent ? (
-                            <div className="flex items-center justify-center h-full font-satoshi p-10">
+                            <div className="flex items-center justify-center h-full font-satoshi p-5 lg:p-10">
                                 <div className="flex flex-col items-center space-y-5">
                                     <svg width="70" height="70" viewBox="0 0 70 70" fill="none" xmlns="http://www.w3.org/2000/svg">
                                         <circle cx="35" cy="35" r="35" fill="#C1F6C3" fillOpacity="0.6" />
                                         <circle cx="34.5" cy="34.5" r="22.5" fill="#A6F8AA" />
                                         <path d="M52 34.9924L48.2291 30.742L48.7545 25.1156L43.1755 23.8619L40.2545 19L35 21.2322L29.7455 19L26.8245 23.8619L21.2455 25.1003L21.7709 30.7267L18 34.9924L21.7709 39.2427L21.2455 44.8844L26.8245 46.1381L29.7455 51L35 48.7525L40.2545 50.9847L43.1755 46.1228L48.7545 44.8691L48.2291 39.2427L52 34.9924ZM31.9091 42.6369L25.7273 36.5213L27.9064 34.3655L31.9091 38.3101L42.0936 28.2346L44.2727 30.4056L31.9091 42.6369Z" fill="#4CAF50" />
                                     </svg>
-                                    <h1 className="font-black text-3xl text-[#2A1769]">
+                                    <h1 className="font-black text-2xl text-center lg:text-3xl text-[#2A1769]">
                                         Request Successful
                                     </h1>
-                                    <p className="mb-8 font-satoshiMedium text-center text-lg font-medium text-[#140B31]">
+                                    <p className="mb-8 font-satoshiMedium text-center text-md lg:text-lg font-medium text-[#140B31]">
                                         Your request for revision has been sent, in a short time you will get a response as to the date it starts and ends.
                                     </p>
                                     <Button

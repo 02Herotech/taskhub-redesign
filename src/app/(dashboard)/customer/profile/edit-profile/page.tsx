@@ -2,9 +2,7 @@ import EditProfile from "@/components/dashboard/general/EditProfile";
 
 const page = () => {
   return (
-    <>
-      <EditProfile />
-    </>
+    <EditProfile />
   );
 };
 
