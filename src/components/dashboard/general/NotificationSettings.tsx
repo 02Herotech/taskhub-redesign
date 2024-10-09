@@ -134,15 +134,16 @@ const NotificationsSettings = () => {
                     type="checkbox"
                     value={option.value}
                     checked={notificationPreferences.includes(option.value)}
-                    onChange={(event) =>
+                    onChange={(event) => {
                       setNotificationPreferences((prev) =>
                         event.target.checked
-                          ? [...(prev as string[]), option.value]
-                          : (prev.filter(
-                            (item) => item !== option.value,
-                          ) as string[]),
-                      )
-                    }
+                          ? prev.includes(option.value)
+                            ? prev
+                            : [...prev, option.value]
+                          : prev.filter((item) => item !== option.value)
+                      );
+                    }}
+
                     className="h-4 w-4 cursor-pointer lg:h-5 lg:w-5"
                   />
                 </div>
