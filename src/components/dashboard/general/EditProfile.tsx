@@ -75,7 +75,6 @@ const EditProfile = () => {
     const newRedirectToProvideService = getCookie("redirectToProvideService");
     if (newRedirectToProvideService) {
       router.push(newRedirectToProvideService);
-      deleteCookie("redirectToProvideService");
     } else {
       router.push(from || "/marketplace");
     }
