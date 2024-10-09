@@ -5,7 +5,7 @@ export const locationData = [
   "Queensland",
   "New South Wales",
   "Victoria",
-  "Tasmania",
+  "Tasmania", 
   "Australian Capital Territory",
 ];
 
