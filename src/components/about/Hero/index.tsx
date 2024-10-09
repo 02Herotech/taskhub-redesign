@@ -5,7 +5,7 @@ const AboutHeroSection = () => {
     return (
         <section className='bg-gradient-to-b from-[#F8E9FE] via-[#FFFFFF] to-[#FBEAFF] h-full'>
             <div className="container">
-                <div className="py-5 md:flex md:justify-evenly gap-10">
+                <div className="py-5 md:flex md:justify-evenly gap-10"> 
                     <div className='flex items-center justify-center lg:w-1/2'>
                         <Image
                             src="/assets/images/about/about_hero.png"
