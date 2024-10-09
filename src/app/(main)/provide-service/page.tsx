@@ -1603,7 +1603,7 @@ const ProvideService: React.FC = () => {
                 <div className="flex justify-center text-[1px] text-white">
                   <Image src={imag} alt="image" />
                 </div>
-                <p className=" text-center font-clashBold text-[32px] font-extrabold text-[#2A1769] lg:text-[42px]">
+                <p className=" text-center font-clashBold text-[28px] font-extrabold text-[#2A1769] lg:text-[42px]">
                   Service created
                 </p>
                 <div className="text-center font-satoshiMedium lg:hidden lg:text-[20px]">
