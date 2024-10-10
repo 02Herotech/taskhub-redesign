@@ -4,7 +4,7 @@ import React from 'react'
 interface MissionItem {
     icon: React.ReactNode;
     title: string;
-    description: string;
+    description: string; 
 }
 
 const data: MissionItem[] = [
