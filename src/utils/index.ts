@@ -347,46 +347,63 @@ export function formatTime(timestamp: string) {
   return formattedTime;
 }
 
-export function formatTimestamp(timestamp: number[]): string {
-  const [year, month, day, hour, minute, second, nanosecond] = timestamp;
+export function formatTimestamp(unixTimestamp: number): string {
+  // Convert the Unix timestamp (in seconds) to milliseconds
+  const dateObject = new Date(unixTimestamp * 1000);
 
-  // Create a JavaScript Date object from the timestamp array
-  const dateObject = new Date(
-    year,
-    month - 1,
-    day,
-    hour + 1,
-    minute,
-    second,
-    Math.floor(nanosecond / 1e6),
-  ); // convert nanoseconds to milliseconds
+  // Check if the date is valid
+  if (isNaN(dateObject.getTime())) {
+    return "Invalid date";
+  }
 
-  // Create a Moment object from the date
-  const timestampMoment = moment(dateObject);
+  // Get the current time and calculate the difference
+  const now = new Date();
+  const differenceInMilliseconds = now.getTime() - dateObject.getTime();
+  const differenceInDays = Math.floor(
+    differenceInMilliseconds / (1000 * 60 * 60 * 24),
+  );
 
-  // Get the current time as a Moment object
-  const now = moment();
-
-  // Calculate the difference between now and the timestamp
-  const differenceInDays = now.diff(timestampMoment, "days");
-
+  // Handle cases for today, yesterday, this week, etc.
   if (differenceInDays === 0) {
     // Today
-    return timestampMoment.format("hh:mm A");
+    return dateObject.toLocaleTimeString(undefined, {
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: true,
+    });
   } else if (differenceInDays === 1) {
     // Yesterday
-    return `Yesterday at ${timestampMoment.format("hh:mm A")}`;
+    return `Yesterday at ${dateObject.toLocaleTimeString(undefined, { hour: "2-digit", minute: "2-digit", hour12: true })}`;
   } else if (differenceInDays < 7) {
     // This week
-    return timestampMoment.from(now);
+    return `${differenceInDays} days ago`;
   } else if (differenceInDays < 30) {
     // This month
-    return timestampMoment.format("MMM D [at] hh:mm A");
+    return (
+      dateObject.toLocaleDateString(undefined, {
+        month: "short",
+        day: "numeric",
+      }) +
+      ` at ${dateObject.toLocaleTimeString(undefined, { hour: "2-digit", minute: "2-digit", hour12: true })}`
+    );
   } else if (differenceInDays < 365) {
     // This year
-    return timestampMoment.format("MMM D [at] hh:mm A");
+    return (
+      dateObject.toLocaleDateString(undefined, {
+        month: "short",
+        day: "numeric",
+      }) +
+      ` at ${dateObject.toLocaleTimeString(undefined, { hour: "2-digit", minute: "2-digit", hour12: true })}`
+    );
   } else {
     // Earlier years
-    return timestampMoment.format("YYYY-MM-DD [at] hh:mm A");
+    return (
+      dateObject.toLocaleDateString(undefined, {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+      }) +
+      ` at ${dateObject.toLocaleTimeString(undefined, { hour: "2-digit", minute: "2-digit", hour12: true })}`
+    );
   }
 }

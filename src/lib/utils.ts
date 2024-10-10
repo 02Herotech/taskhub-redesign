@@ -212,48 +212,41 @@ export function debounce<F extends (...args: any[]) => any>(func: F, waitFor: nu
 	};
 }
 
-type Timestamp = number[];
 
-export const formatTimeAgo = (timestamp: Timestamp): string => {
-	// Ensure we have at least year, month, and day
-	if (timestamp.length < 3) {
-		return 'Invalid date';
-	}
+export const formatTimeAgo = (timestamp: number): string => {
+  // Convert the timestamp (in seconds) to milliseconds
+  const date = new Date(timestamp * 1000); // Multiply by 1000 to convert seconds to milliseconds
 
-	const date = new Date(
-		timestamp[0], // year
-		(timestamp[1] || 1) - 1, // month (0-indexed), default to January if not provided
-		timestamp[2] || 1, // day, default to 1 if not provided
-		timestamp[3] || 0, // hour, default to 0 if not provided
-		timestamp[4] || 0, // minute, default to 0 if not provided
-		timestamp[5] || 0, // second, default to 0 if not provided
-		(timestamp[6] || 0) / 1000000 // milliseconds, default to 0 if not provided
-	);
+  // Validate the date
+  if (isNaN(date.getTime())) {
+    return "Invalid date";
+  }
 
-	// Add 1 hour from the date
-	date.setHours(date.getHours() + 1);
+  const now = new Date();
+  const secondsAgo = Math.round((now.getTime() - date.getTime()) / 1000);
 
-	const now = new Date();
-	const secondsAgo = Math.round((now.getTime() - date.getTime()) / 1000);
+  if (secondsAgo < 30) return "Just now";
+  if (secondsAgo < 60) return `${secondsAgo} seconds ago`;
 
-	if (secondsAgo < 30) return 'Just now';
-	if (secondsAgo < 60) return `${secondsAgo} seconds ago`;
+  const minutesAgo = Math.round(secondsAgo / 60);
+  if (minutesAgo < 60)
+    return `${minutesAgo} ${minutesAgo === 1 ? "minute" : "minutes"} ago`;
 
-	const minutesAgo = Math.round(secondsAgo / 60);
-	if (minutesAgo < 60) return `${minutesAgo} ${minutesAgo === 1 ? 'minute' : 'minutes'} ago`;
+  const hoursAgo = Math.round(minutesAgo / 60);
+  if (hoursAgo < 24)
+    return `${hoursAgo} ${hoursAgo === 1 ? "hour" : "hours"} ago`;
 
-	const hoursAgo = Math.round(minutesAgo / 60);
-	if (hoursAgo < 24) return `${hoursAgo} ${hoursAgo === 1 ? 'hour' : 'hours'} ago`;
+  const daysAgo = Math.round(hoursAgo / 24);
+  if (daysAgo < 30) return `${daysAgo} ${daysAgo === 1 ? "day" : "days"} ago`;
 
-	const daysAgo = Math.round(hoursAgo / 24);
-	if (daysAgo < 30) return `${daysAgo} ${daysAgo === 1 ? 'day' : 'days'} ago`;
+  const monthsAgo = Math.round(daysAgo / 30);
+  if (monthsAgo < 12)
+    return `${monthsAgo} ${monthsAgo === 1 ? "month" : "months"} ago`;
 
-	const monthsAgo = Math.round(daysAgo / 30);
-	if (monthsAgo < 12) return `${monthsAgo} ${monthsAgo === 1 ? 'month' : 'months'} ago`;
-
-	const yearsAgo = Math.round(monthsAgo / 12);
-	return `${yearsAgo} ${yearsAgo === 1 ? 'year' : 'years'} ago`;
+  const yearsAgo = Math.round(monthsAgo / 12);
+  return `${yearsAgo} ${yearsAgo === 1 ? "year" : "years"} ago`;
 };
+
 
 
 export function formatTime24Hour(timeArray: [number, number] | null): string {

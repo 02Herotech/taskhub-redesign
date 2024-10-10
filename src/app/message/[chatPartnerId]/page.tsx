@@ -102,7 +102,7 @@ const ServiceProviderChat = () => {
           console.log("ss", displayMessages)
         })
         .catch((error: any) => {
-          console.log(error.response.data || error.message || error);
+          console.log(error.response|| error.message || error);
         });
     }
   }, [token, user, chatPartnerId]);
@@ -199,7 +199,7 @@ const ServiceProviderChat = () => {
         );
         setGroupedChatMessages(newGroupedMessages);
       } catch (error: any) {
-        console.log(error.response.data || error.message || error);
+        console.log(error.response|| error.message || error);
       }
     }
   };
@@ -247,7 +247,7 @@ const ServiceProviderChat = () => {
       dispatch(setTotalUnreadMessages(allUnreadMessages));
       dispatch(setContacts(contacts));
     } catch (error: any) {
-      console.error(error.response.data || error.message || error);
+      console.error(error.response|| error.message || error);
     }
   };
 
@@ -348,7 +348,7 @@ const ServiceProviderChat = () => {
                               <p>{item.content}</p>
                               <div className="flex items-center justify-end gap-2 text-[0.7rem]">
                                 <span className="">
-                                  {formatTimestamp(item.time as number[])}
+                                  {item.time as number[]}
                                 </span>
                                 {item.senderId === user.id && (
                                   <span className="block">
