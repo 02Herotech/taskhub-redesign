@@ -69,7 +69,7 @@ const SignUpForm = () => {
             setCookie('userType', userType);
 
             const timeoutPromise = new Promise((_, reject) =>
-                timeoutId = setTimeout(() => {
+                 timeoutId = setTimeout(() => {
                     reject(setError('Something went wrong, please try again'))
                     setIsLoading(false);
                 }, 30000)
@@ -81,7 +81,7 @@ const SignUpForm = () => {
 
             await Promise.race([signUpPromise, timeoutPromise]);
 
-            clearTimeout(timeoutId);
+         clearTimeout(timeoutId);
 
             setIsLoading(false);
             router.push(`/auth/verify-email?email=${payload.emailAddress}`);
