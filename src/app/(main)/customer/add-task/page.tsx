@@ -464,7 +464,7 @@ const AddTaskForm: React.FC = () => {
         }
 
         console.log(finalTask);
-        await Promise.race([
+        const response = await Promise.race([
           axios.post(
             "https://smp.jacinthsolutions.com.au/api/v1/task/post",
             finalTask,
@@ -478,6 +478,7 @@ const AddTaskForm: React.FC = () => {
           timeout(10000),
         ]);
 
+      console.log("hello", response)
         setTask({
           taskBriefDescription: "",
           taskImage: null,
@@ -493,7 +494,6 @@ const AddTaskForm: React.FC = () => {
           taskDescription: "",
         });
 
-        setIsSuccessPopupOpen(true);
       } catch (error: any) {
         if (error.response.status === 400 || error.response.status === 500 || error.response.status === 409) {
           setIsSuccessPopupOpen(false);

@@ -588,7 +588,7 @@ const ProvideService: React.FC = () => {
         finalTask = { ...finalTask, negotiable: negotiable };
 
         console.log(finalTask);
-        await Promise.race([
+       const response = await
           axios.post(
             `https://smp.jacinthsolutions.com.au/api/v1/listing/create-listing?userId=${id}`,
             finalTask,
@@ -597,9 +597,7 @@ const ProvideService: React.FC = () => {
                 "Content-Type": "multipart/form-data",
               },
             },
-          ),
-          timeout(10000), // 10 seconds timeout
-        ]);
+          )
         setTask({
           listingTitle: "",
           listingDescription: "",
@@ -622,7 +620,11 @@ const ProvideService: React.FC = () => {
           subCategoryId: null,
           negotiable: false,
         });
-        setIsSuccessPopupOpen(true);
+        if (response.status == 200) {
+          setIsSuccessPopupOpen(true);
+        } else {
+          setError(error.response.message)
+        }
       } catch (error) {
         console.error("Error submitting form:", error);
         setIsSuccessPopupOpen(true);

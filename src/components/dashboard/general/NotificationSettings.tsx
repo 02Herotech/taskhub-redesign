@@ -6,11 +6,16 @@ import { RootState } from "@/store";
 import axios from "axios";
 import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
-import { FormEvent, useEffect, useState } from "react";
+import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { IoIosNotificationsOutline } from "react-icons/io";
 import { PiSealCheckFill } from "react-icons/pi";
 import { useSelector } from "react-redux";
 import { BeatLoader } from "react-spinners";
+
+type NotificationOption = {
+  label: string;
+  value: string;
+};
 
 const NotificationsSettings = () => {
   const { userProfileAuth: auth, profile: user } = useSelector(
@@ -28,7 +33,7 @@ const NotificationsSettings = () => {
 
   const isServiceProvider = auth?.role?.[0] === "SERVICE_PROVIDER";
 
-  const NotificationOptions = [
+  const NotificationOptions: NotificationOption[] = [
     {
       label: `When someone books my ${isServiceProvider ? "Service" : "Task"}`,
       value: "BOOKING",
@@ -50,6 +55,25 @@ const NotificationsSettings = () => {
       value: "PAYMENT",
     },
   ];
+
+  // const handleCheckboxChange = (
+  //   event: ChangeEvent<HTMLInputElement>,
+  //   optionValue: string
+  // ) => {
+  //   const isChecked = event.target.checked;
+
+  //   setNotificationPreferences((prev) => {
+  //     if (isChecked) {
+  //       if (!prev.includes(optionValue)) {
+  //         return [...prev, optionValue];
+  //       }
+  //     } else {
+  //       return prev.filter((item) => item !== optionValue);
+  //     }
+  //     return prev;
+  //   });
+  // };
+
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -134,16 +158,14 @@ const NotificationsSettings = () => {
                     type="checkbox"
                     value={option.value}
                     checked={notificationPreferences.includes(option.value)}
-                    onChange={(event) => {
+                    onChange={(event) =>
                       setNotificationPreferences((prev) =>
                         event.target.checked
-                          ? prev.includes(option.value)
-                            ? prev
-                            : [...prev, option.value]
-                          : prev.filter((item) => item !== option.value)
-                      );
-                    }}
-
+                          ? [...(prev as string[]), option.value]
+                          : (prev.filter(
+                            (item) => item !== option.value,
+                          ) as string[]),
+                      )}
                     className="h-4 w-4 cursor-pointer lg:h-5 lg:w-5"
                   />
                 </div>

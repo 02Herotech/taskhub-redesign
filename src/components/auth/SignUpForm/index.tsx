@@ -48,6 +48,7 @@ const SignUpForm = () => {
     } = methods;
 
     const onSubmit: SubmitHandler<SignUpRequest> = async (payload) => {
+        let timeoutId: any;
         try {
             setIsLoading(true);
 
@@ -68,7 +69,7 @@ const SignUpForm = () => {
             setCookie('userType', userType);
 
             const timeoutPromise = new Promise((_, reject) =>
-                setTimeout(() => {
+                timeoutId = setTimeout(() => {
                     reject(setError('Something went wrong, please try again'))
                     setIsLoading(false);
                 }, 30000)
@@ -79,6 +80,8 @@ const SignUpForm = () => {
                 : customerSignUpApiCall(data).unwrap();
 
             await Promise.race([signUpPromise, timeoutPromise]);
+
+            clearTimeout(timeoutId);
 
             setIsLoading(false);
             router.push(`/auth/verify-email?email=${payload.emailAddress}`);
