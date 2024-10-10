@@ -128,7 +128,7 @@ const ProvideService: React.FC = () => {
   3;
 
   const handleProfile= () => {
-    setCookie("redirectToProvideService", "/provide-service", { maxAge: 360000 });
+    setCookie("redirectToProvideService", "/provide-service", { maxAge: 3600 });
     route.push(
       "/service-provider/profile/edit-profile?userType=Service+Provider?from=/provide-service",
     );
@@ -136,18 +136,18 @@ const ProvideService: React.FC = () => {
 
   useEffect(() => {
     setCookie("lisitingTitle", task.listingTitle, {
-      maxAge: 1200,
+      maxAge: 120,
     });
-    setCookie("listingDescription", task.listingDescription, { maxAge: 1200 });
-    setCookie("planOnePrice", task.planOnePrice, { maxAge: 1200 });
-    setCookie("planOneDescription", task.planOneDescription, { maxAge: 1200 });
-    setCookie("planTwoDescription", task.planTwoDescription, { maxAge: 1200 });
-    setCookie("planTwoPrice", task.planTwoPrice, { maxAge: 1200 });
-    setCookie("planThreeDescritpion", task.planThreeDescription, { maxAge: 1200 });
-    setCookie("taskType", task.taskType, { maxAge: 1200 });
-    setCookie("availableDays", task.availableDays, { maxAge: 1200 });
-    setCookie("categoryId", task.categoryId?.toString(), { maxAge: 1200 });
-    setCookie("postCode", task.postCode, { maxAge: 1200 });
+    setCookie("listingDescription", task.listingDescription, { maxAge: 120 });
+    setCookie("planOnePrice", task.planOnePrice, { maxAge: 120 });
+    setCookie("planOneDescription", task.planOneDescription, { maxAge: 120 });
+    setCookie("planTwoDescription", task.planTwoDescription, { maxAge: 120 });
+    setCookie("planTwoPrice", task.planTwoPrice, { maxAge: 120 });
+    setCookie("planThreeDescritpion", task.planThreeDescription, { maxAge: 120 });
+    setCookie("taskType", task.taskType, { maxAge: 120 });
+    setCookie("availableDays", task.availableDays, { maxAge: 120 });
+    setCookie("categoryId", task.categoryId?.toString(), { maxAge: 120 });
+    setCookie("postCode", task.postCode, { maxAge: 120 });
   }, [task]);
   const isServiceProvider = session?.data?.user?.user?.roles[0] === "SERVICE_PROVIDER";
   const [complete, setComplete] = useState(false);
