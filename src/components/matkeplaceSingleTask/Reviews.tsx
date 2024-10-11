@@ -45,12 +45,12 @@ const PrevArrow = (props: any) => {
 const Reviews = ({serviceProviderId}: any) => {
   const session = useSession();
   const [reviews, setReviews] = useState<Review[]>([]);
-  const token = session?.data?.user.refreshToken;
+  const token = session?.data?.user.accessToken ||session?.data?.user.refreshToken;
   const Auth = session.status === "authenticated";
 
   useEffect(() => {
     const fetchReviews = async () => {
-      if (!serviceProviderId) return;
+      if (!serviceProviderId || !token) return;
       try {
         const response = await axios.get(
           `https://smp.jacinthsolutions.com.au/api/v1/service_provider/get-profile/${serviceProviderId}`,
@@ -61,7 +61,7 @@ const Reviews = ({serviceProviderId}: any) => {
           }
         );
         setReviews(response.data.review);
-       
+       console.log(response.data.review)
       } catch (error) {
         console.error("Error fetching reviews:", error);
       }

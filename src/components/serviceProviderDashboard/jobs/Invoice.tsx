@@ -358,7 +358,7 @@ const Invoice = ({
                 </div>
                 <div>
                   <p className="font-extrabold text-violet-dark">
-                    ${invoiceState.serviceCharge}
+                    ${invoiceState.serviceCharge.toFixed(2)}
                   </p>
                   <p className="font-medium text-[#E10909]">
                     Service fee (2%)

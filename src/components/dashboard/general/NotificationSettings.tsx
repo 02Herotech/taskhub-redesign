@@ -145,31 +145,34 @@ const NotificationsSettings = () => {
             onSubmit={handleSubmit}
             className="mt-5 rounded-2xl bg-[#EBE9F4] px-6 py-3 lg:px-8 lg:py-4"
           >
-            {auth &&
-              NotificationOptions.map((option, index) => (
-                <div
-                  key={index}
-                  className="mb-5 flex items-center justify-between space-x-5 lg:space-x-8"
-                >
-                  <h5 className="font-satoshiMedium text-lg text-black">
-                    {option.label}
-                  </h5>
-                  <input
-                    type="checkbox"
-                    value={option.value}
-                    checked={notificationPreferences.includes(option.value)}
-                    onChange={(event) =>
-                      setNotificationPreferences((prev) =>
-                        event.target.checked
-                          ? [...(prev as string[]), option.value]
-                          : (prev.filter(
-                            (item) => item !== option.value,
-                          ) as string[]),
-                      )}
-                    className="h-4 w-4 cursor-pointer lg:h-5 lg:w-5"
-                  />
-                </div>
-              ))}
+              {auth &&
+                NotificationOptions.map((option, index) => (
+                  <div
+                    key={index}
+                    className="mb-5 flex items-center justify-between space-x-5 lg:space-x-8"
+                  >
+                    <h5 className="font-satoshiMedium text-lg text-black">
+                      {option.label}
+                    </h5>
+                    <input
+                      type="checkbox"
+                      value={option.value}
+                      checked={notificationPreferences.includes(option.value)}
+                      onChange={(event) => {
+                        const isChecked = event.target.checked;
+                        setNotificationPreferences((prev) => {
+                          if (isChecked) {
+                            return [...prev, option.value];
+                          } else {
+                            return prev.filter((item) => item !== option.value);
+                          }
+                        });
+                      }}
+                      className="h-4 w-4 cursor-pointer lg:h-5 lg:w-5"
+                    />
+                  </div>
+                ))}
+
             <div className="my-6 flex items-center justify-center lg:justify-end">
               <button
                 className="rounded-full bg-violet-normal px-4 py-2 font-bold text-white lg:w-48"
