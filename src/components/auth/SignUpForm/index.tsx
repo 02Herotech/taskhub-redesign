@@ -60,7 +60,6 @@ const SignUpForm = () => {
                 password: payload.password
             };
 
-            // Store form data in cookiesStore
             setCookie('firstName', payload.firstName, { maxAge: 60 * 2 });
             setCookie('lastName', payload.lastName, { maxAge: 60 * 2 });
             setCookie('phoneNumber', payload.phoneNumber, { maxAge: 60 * 2 });
@@ -87,6 +86,7 @@ const SignUpForm = () => {
             router.push(`/auth/verify-email?email=${payload.emailAddress}`);
 
         } catch (err: any) {
+            clearTimeout(timeoutId);
             console.log("Error:", err);
             setError(err.data.message || 'An unexpected error occurred');
             setIsLoading(false);

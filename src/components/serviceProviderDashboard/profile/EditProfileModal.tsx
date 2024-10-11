@@ -25,7 +25,8 @@ import Webcam from "react-webcam";
 
 type ModalPropsTypes = {
   setIsFormModalShown: Dispatch<SetStateAction<boolean>>;
-  setDocumentImage: Dispatch<SetStateAction<string | null>>;
+  setDocumentImageFront: Dispatch<SetStateAction<string | null>>;
+  setDocumentImageBack: Dispatch<SetStateAction<string | null>>;
   isFormModalShown: boolean;
   setisEditingProfilePicture: React.Dispatch<
     React.SetStateAction<{
@@ -37,7 +38,8 @@ type ModalPropsTypes = {
     isEditing: boolean;
     image: string | null;
   };
-  setSelectedDocument: React.Dispatch<React.SetStateAction<File | null>>;
+  setSelectedDocumentFront: React.Dispatch<React.SetStateAction<File | null>>;
+  setSelectedDocumentBack: React.Dispatch<React.SetStateAction<File | null>>;
   setIsProfileUpdatedSuccessfully: React.Dispatch<
     React.SetStateAction<boolean>
   >;
@@ -48,21 +50,28 @@ type ModalPropsTypes = {
 const EditProfileModal = ({
   setIsFormModalShown,
   isFormModalShown,
-  setDocumentImage,
+  setDocumentImageFront,
+  setDocumentImageBack,
   isEditingProfilePicture,
   setisEditingProfilePicture,
   isProfileUpdatedSuccessfully,
   setIsProfileUpdatedSuccessfully,
-  setSelectedDocument,
+  setSelectedDocumentFront,
+  setSelectedDocumentBack,
   handleRedirect
 }: ModalPropsTypes) => {
   // set initial state value
   const [isUploadInitiated, setIsUploadInitiated] = useState(false);
-  const [imageSrc, setImageSrc] = useState<string | null>(null);
-  const [cameraActive, setCameraActive] = useState(false);
-  const webcamRef = useRef<Webcam>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [imageSrcFront, setImageSrcFront] = useState<string | null>(null);
+  const [imageSrcBack, setImageSrcBack] = useState<string | null>(null);
+  const [cameraActiveFront, setCameraActiveFront] = useState(false);
+  const [cameraActiveBack, setCameraActiveBack] = useState(false);
+  const webcamRefFront = useRef<Webcam>(null);
+  const webcamRefBack = useRef<Webcam>(null);
+  const fileInputRefFront = useRef<HTMLInputElement>(null);
+  const fileInputRefBack = useRef<HTMLInputElement>(null);
+  const [selectedFileFront, setSelectedFileFront] = useState<File | null>(null);
+  const [selectedFileBack, setSelectedFileBack] = useState<File | null>(null);
   const [isUploadImageLoading, setIsUploadImageLoading] = useState(false);
 
   const session = useSession();
@@ -71,35 +80,70 @@ const EditProfileModal = ({
   const isServiceProvider = user?.roles[0] === "SERVICE_PROVIDER";
   const dispatch = useDispatch();
 
-  const capture = useCallback(() => {
-    if (webcamRef.current) {
-      const imageSrc = webcamRef.current.getScreenshot();
-      setImageSrc(imageSrc);
+  const captureFront = useCallback(() => {
+    if (webcamRefFront.current) {
+      const imageSrc = webcamRefFront.current.getScreenshot();
+      setImageSrcFront(imageSrc);
       if (imageSrc) {
         const file = dataURLtoFile(imageSrc, "captured_image.png");
-        setSelectedFile(file);
+        setSelectedFileFront(file);
         if (isEditingProfilePicture.isEditing) {
           setisEditingProfilePicture((prev) => ({ ...prev, image: imageSrc }));
         } else {
-          setDocumentImage(imageSrc);
+          setDocumentImageFront(imageSrc);
         }
-        setCameraActive(false);
+        setCameraActiveFront(false);
       }
     }
-  }, [isEditingProfilePicture, setDocumentImage, setisEditingProfilePicture]);
+  }, [isEditingProfilePicture, setDocumentImageFront, setisEditingProfilePicture]);
 
-  const handleFileInputChange = (event: ChangeEvent<HTMLInputElement>) => {
+  const captureBack = useCallback(() => {
+    if (webcamRefBack.current) {
+      const imageSrc = webcamRefBack.current.getScreenshot();
+      setImageSrcBack(imageSrc);
+      if (imageSrc) {
+        const file = dataURLtoFile(imageSrc, "captured_image.png");
+        setSelectedFileBack(file);
+        if (isEditingProfilePicture.isEditing) {
+          setisEditingProfilePicture((prev) => ({ ...prev, image: imageSrc }));
+        } else {
+          setDocumentImageBack(imageSrc);
+        }
+        setCameraActiveBack(false);
+      }
+    }
+  }, [isEditingProfilePicture, setDocumentImageBack, setisEditingProfilePicture]);
+
+  const handleFileInputChangeFront = (event: ChangeEvent<HTMLInputElement>) => {
     const uploadFile = event.target.files?.[0];
     if (uploadFile) {
-      setSelectedFile(uploadFile);
+      setSelectedFileFront(uploadFile);
       const reader = new FileReader();
       reader.onloadend = () => {
         const img = reader.result as string;
-        setImageSrc(img);
+        setImageSrcFront(img);
         if (isEditingProfilePicture.isEditing) {
           setisEditingProfilePicture((prev) => ({ ...prev, image: img }));
         } else {
-          setDocumentImage(img);
+          setDocumentImageFront(img);
+        }
+      };
+      reader.readAsDataURL(uploadFile);
+    }
+  };
+
+  const handleFileInputChangeBack = (event: ChangeEvent<HTMLInputElement>) => {
+    const uploadFile = event.target.files?.[0];
+    if (uploadFile) {
+      setSelectedFileBack(uploadFile);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const img = reader.result as string;
+        setImageSrcBack(img);
+        if (isEditingProfilePicture.isEditing) {
+          setisEditingProfilePicture((prev) => ({ ...prev, image: img }));
+        } else {
+          setDocumentImageBack(img);
         }
       };
       reader.readAsDataURL(uploadFile);
@@ -108,26 +152,35 @@ const EditProfileModal = ({
 
   const handleCloseModal = () => {
     setIsFormModalShown(false);
-    setImageSrc(null);
-    setCameraActive(false);
+    setImageSrcFront(null);
+    setImageSrcBack(null);
+    setCameraActiveFront(false);
+    setCameraActiveBack(false);
     const newTimeout = setTimeout(() => {
       setisEditingProfilePicture((prev) => ({ ...prev, isEditing: false }));
-      setSelectedFile(null);
+      setSelectedFileFront(null);
       setIsProfileUpdatedSuccessfully(false);
       setIsUploadInitiated(false);
     }, 400);
   };
 
-  const handleRemoveDocumentImage = () => {
-    setImageSrc(null);
-    setCameraActive(false);
-    setDocumentImage(null);
-    setSelectedFile(null);
+  const handleRemoveDocumentImageFront = () => {
+    setImageSrcFront(null);
+    setCameraActiveFront(false);
+    setDocumentImageFront(null);
+    setSelectedFileFront(null);
+  };
+
+  const handleRemoveDocumentImageBack = () => {
+    setImageSrcBack(null);
+    setCameraActiveBack(false);
+    setDocumentImageBack(null);
+    setSelectedFileBack(null);
   };
 
   const handleUploadAllDocument = async () => {
     try {
-      if (selectedFile && isEditingProfilePicture.isEditing) {
+      if (isEditingProfilePicture.isEditing) {
         setIsUploadImageLoading(true);
         let url;
         if (isServiceProvider) {
@@ -140,7 +193,7 @@ const EditProfileModal = ({
         try {
           await axios.post(
             url,
-            { image: selectedFile },
+            { image: selectedFileFront },
             {
               headers: {
                 Authorization: `Bearer ${token}`,
@@ -160,7 +213,8 @@ const EditProfileModal = ({
           dispatch(refreshUserProfile());
         }
       } else {
-        setSelectedDocument(selectedFile);
+        setSelectedDocumentFront(selectedFileFront);
+        setSelectedDocumentBack(selectedFileBack);
       }
       handleCloseModal();
     } catch (error: any) {
@@ -222,7 +276,7 @@ const EditProfileModal = ({
                 <button
                   className=" rounded-full bg-violet-light px-4 py-2 font-medium text-violet-normal transition-all duration-300 hover:bg-violet-200"
                   onClick={() => {
-                    setCameraActive(true);
+                    setCameraActiveFront(true);
                   }}
                 >
                   Take a Picture
@@ -230,65 +284,133 @@ const EditProfileModal = ({
                 <button
                   className=" rounded-full bg-violet-light px-4 py-2 font-medium text-violet-normal transition-all duration-300 hover:bg-violet-200"
                   onClick={() => {
-                    setCameraActive(false);
-                    fileInputRef.current?.click();
+                    setCameraActiveFront(false);
+                    fileInputRefFront.current?.click();
                   }}
                 >
                   Choose from Documents
                 </button>
                 {/* Handle a form request */}
-                <label className=" hidden h-48 w-1/2 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-slate-500 p-4">
+                <label className=" hidden h-24 w-1/2 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-slate-500 p-4">
                   <PiFileArrowDownDuotone className="text-xl text-tc-gray" />
                   <span className="text-center text-tc-gray">
                     Choose a File Upload supports: JPG, PDF, PNG.
                   </span>
                   <input
-                    ref={fileInputRef}
+                    ref={fileInputRefFront}
                     type="file"
                     accept=".png, .jpg, .jpeg, .gif"
                     className="hidden"
-                    onChange={handleFileInputChange}
+                    onChange={handleFileInputChangeFront}
                   />
                 </label>
               </div>
-              {cameraActive && !imageSrc && (
+              {cameraActiveFront && !imageSrcFront && (
                 <div>
                   <Webcam
                     audio={false}
-                    ref={webcamRef}
+                    ref={webcamRefFront}
                     screenshotFormat="image/jpeg"
                     className="mx-auto size-64 object-contain"
                   />
                   <button
-                    onClick={capture}
+                    onClick={captureFront}
                     className="my-2 rounded-md bg-violet-darkHover p-1 text-sm text-white"
                   >
                     Capture
                   </button>
                 </div>
               )}
-              {imageSrc && (
+              {imageSrcFront && (
                 <div>
                   <Image
-                    src={imageSrc}
+                    src={imageSrcFront}
                     alt="Captured or Selected"
                     width={400}
                     height={400}
                     className="mx-auto size-64 object-contain"
                   />
                   <button
-                    onClick={handleRemoveDocumentImage}
+                    onClick={handleRemoveDocumentImageFront}
                     className="my-2 rounded-md bg-violet-darkHover p-1 text-sm text-white"
                   >
                     Remove
                   </button>
                 </div>
               )}
-            </div>
+              </div>
+              <div className="space-y-4">
+                <div className="flex items-center gap-4">
+                  <button
+                    className=" rounded-full bg-violet-light px-4 py-2 font-medium text-violet-normal transition-all duration-300 hover:bg-violet-200"
+                    onClick={() => {
+                      setCameraActiveBack(true);
+                    }}
+                  >
+                    Take a Picture
+                  </button>
+                  <button
+                    className=" rounded-full bg-violet-light px-4 py-2 font-medium text-violet-normal transition-all duration-300 hover:bg-violet-200"
+                    onClick={() => {
+                      setCameraActiveBack(false);
+                      fileInputRefBack.current?.click();
+                    }}
+                  >
+                    Choose from Documents
+                  </button>
+                  {/* Handle a form request */}
+                  <label className=" hidden h-24 w-1/2 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-slate-500 p-4">
+                    <PiFileArrowDownDuotone className="text-xl text-tc-gray" />
+                    <span className="text-center text-tc-gray">
+                      Choose a File Upload supports: JPG, PDF, PNG.
+                    </span>
+                    <input
+                      ref={fileInputRefBack}
+                      type="file"
+                      accept=".png, .jpg, .jpeg, .gif"
+                      className="hidden"
+                      onChange={handleFileInputChangeBack}
+                    />
+                  </label>
+                </div>
+                {cameraActiveBack && !imageSrcBack && (
+                  <div>
+                    <Webcam
+                      audio={false}
+                      ref={webcamRefFront}
+                      screenshotFormat="image/jpeg"
+                      className="mx-auto size-64 object-contain"
+                    />
+                    <button
+                      onClick={captureBack}
+                      className="my-2 rounded-md bg-violet-darkHover p-1 text-sm text-white"
+                    >
+                      Capture
+                    </button>
+                  </div>
+                )}
+                {imageSrcBack && (
+                  <div>
+                    <Image
+                      src={imageSrcBack}
+                      alt="Captured or Selected"
+                      width={400}
+                      height={400}
+                      className="mx-auto size-64 object-contain"
+                    />
+                    <button
+                      onClick={handleRemoveDocumentImageBack}
+                      className="my-2 rounded-md bg-violet-darkHover p-1 text-sm text-white"
+                    >
+                      Remove
+                    </button>
+                  </div>
+                )}
+              </div>
             <button
               onClick={handleUploadAllDocument}
               className="my-3 flex min-w-32 items-center justify-center rounded-full bg-violet-normal px-4 py-2 text-center text-white transition-opacity duration-300 hover:opacity-90 "
-              disabled={!imageSrc}
+              disabled={!imageSrcBack || !imageSrcFront}
             >
               {isUploadImageLoading ? (
                 <BeatLoader
