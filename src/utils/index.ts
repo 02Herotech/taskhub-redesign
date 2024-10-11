@@ -347,6 +347,103 @@ export function formatTime(timestamp: string) {
   return formattedTime;
 }
 
+import { useState, useEffect } from "react";
+
+// Custom hook to format timestamp with a spinner during loading
+export const useTimestampWithSpinner = (unixTimestamp: number | null) => {
+  const [formattedDate, setFormattedDate] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+
+  useEffect(() => {
+    if (unixTimestamp === null) {
+      setFormattedDate(null);
+      setIsLoading(false);
+      return;
+    }
+
+    // Simulate spinner/loading state
+    const timer = setTimeout(() => {
+      const dateObject = new Date(unixTimestamp * 1000);
+
+      if (isNaN(dateObject.getTime())) {
+        setFormattedDate(null); 
+        setIsLoading(true);
+      } else {
+        setIsLoading(false);
+        const now = new Date();
+        const differenceInMilliseconds = now.getTime() - dateObject.getTime();
+        const differenceInDays = Math.floor(
+          differenceInMilliseconds / (1000 * 60 * 60 * 24),
+        );
+
+        let result = "";
+
+        if (differenceInDays === 0) {
+          // Today
+          result = dateObject.toLocaleTimeString(undefined, {
+            hour: "2-digit",
+            minute: "2-digit",
+            hour12: true,
+          });
+        } else if (differenceInDays === 1) {
+          // Yesterday
+          result = `Yesterday at ${dateObject.toLocaleTimeString(undefined, {
+            hour: "2-digit",
+            minute: "2-digit",
+            hour12: true,
+          })}`;
+        } else if (differenceInDays < 7) {
+          // This week
+          result = `${differenceInDays} days ago`;
+        } else if (differenceInDays < 30) {
+          // This month
+          result =
+            dateObject.toLocaleDateString(undefined, {
+              month: "short",
+              day: "numeric",
+            }) +
+            ` at ${dateObject.toLocaleTimeString(undefined, {
+              hour: "2-digit",
+              minute: "2-digit",
+              hour12: true,
+            })}`;
+        } else if (differenceInDays < 365) {
+          // This year
+          result =
+            dateObject.toLocaleDateString(undefined, {
+              month: "short",
+              day: "numeric",
+            }) +
+            ` at ${dateObject.toLocaleTimeString(undefined, {
+              hour: "2-digit",
+              minute: "2-digit",
+              hour12: true,
+            })}`;
+        } else {
+          // Earlier years
+          result =
+            dateObject.toLocaleDateString(undefined, {
+              year: "numeric",
+              month: "short",
+              day: "numeric",
+            }) +
+            ` at ${dateObject.toLocaleTimeString(undefined, {
+              hour: "2-digit",
+              minute: "2-digit",
+              hour12: true,
+            })}`;
+        }
+
+        setFormattedDate(result);
+      }
+    }, 100);
+
+    return () => clearTimeout(timer);
+  }, [unixTimestamp]);
+
+  return { formattedDate, isLoading };
+};
+
 export function formatTimestamp(unixTimestamp: number): string {
   // Convert the Unix timestamp (in seconds) to milliseconds
   const dateObject = new Date(unixTimestamp * 1000);
