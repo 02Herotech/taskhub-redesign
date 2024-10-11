@@ -17,9 +17,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setContacts, setTotalUnreadMessages } from "@/store/Features/chat";
 import ScrollToBottom from "react-scroll-to-bottom";
 import { connectSocket, getSocket } from "@/lib/socket";
-import { GiCheckMark } from "react-icons/gi";
-import { formatTime, formatTimestamp } from "@/utils";
-import { FaCheckDouble } from "react-icons/fa6";
+import ChatMessage from "../chatMessage";
 
 type ChatMessagesGroupedType = {
   [date: string]: ChatMessageDisplayedType[];
@@ -68,8 +66,9 @@ const ServiceProviderChat = () => {
     messages: ChatMessageDisplayedType[],
   ): ChatMessagesGroupedType => {
     return messages.reduce((acc: ChatMessagesGroupedType, message) => {
-      const [year, month, day] = message.time as number[];
-      const date = new Date(year, month - 1, day).toLocaleDateString();
+      const timestamp = message.time as number;
+      const date = new Date(timestamp * 1000).toLocaleDateString();
+
       if (!acc[date]) {
         acc[date] = [];
       }
@@ -93,16 +92,16 @@ const ServiceProviderChat = () => {
             (msg: ChatMessageRecievedType) => ({
               content: msg.content,
               senderId: msg.senderId,
-              time: msg.timestamp as number[],
+              time: msg.timestamp as number,
             }),
           );
           const groupedMessages = groupMessagesByDate(displayMessages);
           setGroupedChatMessages(groupedMessages);
 
-          console.log("ss", displayMessages)
+          console.log("Chat messages loaded:", displayMessages);
         })
         .catch((error: any) => {
-          console.log(error.response|| error.message || error);
+          console.error("Error fetching messages:", error.response || error.message || error);
         });
     }
   }, [token, user, chatPartnerId]);
@@ -132,7 +131,7 @@ const ServiceProviderChat = () => {
           const newMessage: ChatMessageDisplayedType = {
             content: message.content,
             senderId: message.senderId,
-            time: message.timestamp,
+            time: message.timestamp, 
           };
           const newGroupedMessages = addMessageToGroupedState(
             newMessage,
@@ -140,7 +139,7 @@ const ServiceProviderChat = () => {
           );
           setGroupedChatMessages(newGroupedMessages);
         })
-        .catch((error) => console.error(error));
+        .catch((error) => console.error("Error retrieving new message:", error));
       loadContacts().then(() => {
         localStorage.removeItem("tempUserChat");
       });
@@ -159,12 +158,12 @@ const ServiceProviderChat = () => {
   ): ChatMessagesGroupedType => {
     let date;
     if (typeof message.time === "string") {
-      date = message.time;
-      date = new Date(date).toLocaleDateString();
+      date = new Date(message.time).toLocaleDateString();
     } else {
-      const [year, month, day] = message.time as number[];
-      date = new Date(year, month - 1, day).toLocaleDateString();
+      const timestamp = message.time as number; // UNIX timestamp
+      date = new Date(timestamp * 1000).toLocaleDateString();
     }
+
     return {
       ...groupedMessages,
       [date]: groupedMessages[date]
@@ -172,6 +171,7 @@ const ServiceProviderChat = () => {
         : [message],
     };
   };
+
 
   const sendMessage = (msg: string) => {
     const socket = getSocket();
@@ -199,7 +199,7 @@ const ServiceProviderChat = () => {
         );
         setGroupedChatMessages(newGroupedMessages);
       } catch (error: any) {
-        console.log(error.response|| error.message || error);
+        console.log(error.response.data || error.message || error);
       }
     }
   };
@@ -247,7 +247,7 @@ const ServiceProviderChat = () => {
       dispatch(setTotalUnreadMessages(allUnreadMessages));
       dispatch(setContacts(contacts));
     } catch (error: any) {
-      console.error(error.response|| error.message || error);
+      console.error(error.response.data || error.message || error);
     }
   };
 
@@ -332,32 +332,33 @@ const ServiceProviderChat = () => {
                           {formatDateIntoReadableFormat(date)}
                         </div>
                         {messages.map((item, index) => (
-                          <div
-                            key={index}
-                            className={`my-2 flex w-full ${item.senderId === user.id
-                                ? "flex-wrap justify-end"
-                                : "justify-start"
-                              }`}
-                          >
-                            <div
-                              className={`flex w-fit max-w-xs flex-col gap-1 rounded-md p-2 text-sm ${item.senderId === user.id
-                                  ? "bg-violet-normal text-white"
-                                  : "bg-orange-light text-left text-violet-dark"
-                                }`}
-                            >
-                              <p>{item.content}</p>
-                              <div className="flex items-center justify-end gap-2 text-[0.7rem]">
-                                <span className="">
-                                  {item.time as number[]}
-                                </span>
-                                {item.senderId === user.id && (
-                                  <span className="block">
-                                    <FaCheckDouble className="text-green-500" />
-                                  </span>
-                                )}
-                              </div>
-                            </div>
-                          </div>
+                          <ChatMessage item={item} user={user} key={index }/>
+                          // <div
+                          //   key={index}
+                          //   className={`my-2 flex w-full ${item.senderId === user.id
+                          //       ? "flex-wrap justify-end"
+                          //       : "justify-start"
+                          //     }`}
+                          // >
+                          //   <div
+                          //     className={`flex w-fit max-w-xs flex-col gap-1 rounded-md p-2 text-sm ${item.senderId === user.id
+                          //         ? "bg-violet-normal text-white"
+                          //         : "bg-orange-light text-left text-violet-dark"
+                          //       }`}
+                          //   >
+                          //     <p>{item.content}</p>
+                          //     <div className="flex items-center justify-end gap-2 text-[0.7rem]">
+                          //       <span className="">
+                          //         {formatTimestamp(item.time as number)}
+                          //       </span>
+                          //       {item.senderId === user.id &&  (
+                          //         <span className="block">
+                          //           <FaCheckDouble className="text-green-500" />
+                          //         </span>
+                          //       )}
+                          //     </div>
+                          //   </div>
+                          // </div>
                         ))}
                       </div>
                     ),
