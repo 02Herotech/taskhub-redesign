@@ -97,8 +97,6 @@ const ServiceProviderChat = () => {
           );
           const groupedMessages = groupMessagesByDate(displayMessages);
           setGroupedChatMessages(groupedMessages);
-
-          console.log("Chat messages loaded:", displayMessages);
         })
         .catch((error: any) => {
           console.error("Error fetching messages:", error.response || error.message || error);
@@ -208,7 +206,6 @@ const ServiceProviderChat = () => {
     if (!user) return;
     const socket = connectSocket(user.id);
     const handleConnect = () => {
-      console.log("reconnected");
       const storedMessage = localStorage.getItem("chatMessages");
       if (storedMessage) {
         const message = JSON.parse(storedMessage);
