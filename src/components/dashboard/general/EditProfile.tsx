@@ -125,7 +125,7 @@ const EditProfile = () => {
           },
         });
         setUserDetails(data);
-        console.log(data)
+        console.log("profile:",data)
         reset({
           firstName: data.firstName || "",
           lastName: data.lastName || "",
@@ -524,7 +524,7 @@ const EditProfile = () => {
                   >
                     <PiFileArrowDownDuotone className="text-2xl text-tc-gray" />
                     <span className="text-center text-tc-gray">
-                          Choose a File <span className="text-[#381F8C]">Front View</span> Upload supports: JPG, PDF, PNG.
+                          Choose a File <span className="text-[#381F8C] font-clashSemiBold"><br/>Front View<br/></span> Upload supports: JPG, PDF, PNG.
                     </span>
                   </button>
                 )}
@@ -554,7 +554,7 @@ const EditProfile = () => {
                   >
                     <PiFileArrowDownDuotone className="text-2xl text-tc-gray" />
                     <span className="text-center text-tc-gray">
-                          Choose a File <span className="text-[#381F8C]">Back View</span> Upload supports: JPG, PDF, PNG.
+                          Choose a File <span className="text-[#381F8C] font-clashSemiBold"><br/>Back View<br/></span> Upload supports: JPG, PDF, PNG.
                     </span>
                   </button>
                 )}
