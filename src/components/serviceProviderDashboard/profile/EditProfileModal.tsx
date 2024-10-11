@@ -270,41 +270,43 @@ const EditProfileModal = ({
             </div>
           </div>
         ) : isEditingProfilePicture.isEditing || isUploadInitiated ? (
-          <div className=" z-50 flex flex-col items-center justify-center gap-5 space-y-3 bg-white">
+          <div className="z-50 flex flex-col items-center justify-center gap-5 space-y-3 bg-white">
             <div className="space-y-4">
-              <div className="flex items-center gap-4">
-                <button
-                  className=" rounded-full bg-violet-light px-4 py-2 font-medium text-violet-normal transition-all duration-300 hover:bg-violet-200"
-                  onClick={() => {
-                    setCameraActiveFront(true);
-                  }}
-                >
-                  Take a Picture
-                </button>
-                <button
-                  className=" rounded-full bg-violet-light px-4 py-2 font-medium text-violet-normal transition-all duration-300 hover:bg-violet-200"
-                  onClick={() => {
-                    setCameraActiveFront(false);
-                    fileInputRefFront.current?.click();
-                  }}
-                >
-                  Choose from Documents
-                </button>
-                {/* Handle a form request */}
-                <label className=" hidden h-24 w-1/2 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-slate-500 p-4">
-                  <PiFileArrowDownDuotone className="text-xl text-tc-gray" />
-                  <span className="text-center text-tc-gray">
-                    Choose a File Upload supports: JPG, PDF, PNG.
-                  </span>
-                  <input
-                    ref={fileInputRefFront}
-                    type="file"
-                    accept=".png, .jpg, .jpeg, .gif"
-                    className="hidden"
-                    onChange={handleFileInputChangeFront}
-                  />
-                </label>
-              </div>
+              {/* FRONT ACTIONS */}
+              {!cameraActiveBack && !imageSrcBack && (
+                <div className="flex items-center gap-4">
+                  <button
+                    className="rounded-full bg-violet-light px-4 py-2 font-medium text-violet-normal transition-all duration-300 hover:bg-violet-200"
+                    onClick={() => setCameraActiveFront(true)}
+                  >
+                    Take a Picture (Front)
+                  </button>
+                  <button
+                    className="rounded-full bg-violet-light px-4 py-2 font-medium text-violet-normal transition-all duration-300 hover:bg-violet-200"
+                    onClick={() => {
+                      setCameraActiveFront(false);
+                      fileInputRefFront.current?.click();
+                    }}
+                  >
+                    Choose from Documents (Front)
+                  </button>
+                  {/* Hidden File Input for Front */}
+                  <label className="hidden h-24 w-1/2 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-slate-500 p-4">
+                    <PiFileArrowDownDuotone className="text-xl text-tc-gray" />
+                    <span className="text-center text-tc-gray">
+                      Choose a File (Supports: JPG, PDF, PNG)
+                    </span>
+                    <input
+                      ref={fileInputRefFront}
+                      type="file"
+                      accept=".png, .jpg, .jpeg, .gif"
+                      className="hidden"
+                      onChange={handleFileInputChangeFront}
+                    />
+                  </label>
+                </div>
+              )}
+
               {cameraActiveFront && !imageSrcFront && (
                 <div>
                   <Webcam
@@ -317,10 +319,11 @@ const EditProfileModal = ({
                     onClick={captureFront}
                     className="my-2 rounded-md bg-violet-darkHover p-1 text-sm text-white"
                   >
-                    Capture
+                    Capture (Front)
                   </button>
                 </div>
               )}
+
               {imageSrcFront && (
                 <div>
                   <Image
@@ -334,35 +337,36 @@ const EditProfileModal = ({
                     onClick={handleRemoveDocumentImageFront}
                     className="my-2 rounded-md bg-violet-darkHover p-1 text-sm text-white"
                   >
-                    Remove
+                    Remove (Front)
                   </button>
                 </div>
               )}
-              </div>
-              <div className="space-y-4">
+            </div>
+
+            <div className="space-y-4">
+              {/* BACK ACTIONS */}
+              {!cameraActiveFront && !imageSrcFront && (
                 <div className="flex items-center gap-4">
                   <button
-                    className=" rounded-full bg-violet-light px-4 py-2 font-medium text-violet-normal transition-all duration-300 hover:bg-violet-200"
-                    onClick={() => {
-                      setCameraActiveBack(true);
-                    }}
+                    className="rounded-full bg-violet-light px-4 py-2 font-medium text-violet-normal transition-all duration-300 hover:bg-violet-200"
+                    onClick={() => setCameraActiveBack(true)}
                   >
-                    Take a Picture
+                    Take a Picture (Back)
                   </button>
                   <button
-                    className=" rounded-full bg-violet-light px-4 py-2 font-medium text-violet-normal transition-all duration-300 hover:bg-violet-200"
+                    className="rounded-full bg-violet-light px-4 py-2 font-medium text-violet-normal transition-all duration-300 hover:bg-violet-200"
                     onClick={() => {
                       setCameraActiveBack(false);
                       fileInputRefBack.current?.click();
                     }}
                   >
-                    Choose from Documents
+                    Choose from Documents (Back)
                   </button>
-                  {/* Handle a form request */}
-                  <label className=" hidden h-24 w-1/2 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-slate-500 p-4">
+                  {/* Hidden File Input for Back */}
+                  <label className="hidden h-24 w-1/2 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-slate-500 p-4">
                     <PiFileArrowDownDuotone className="text-xl text-tc-gray" />
                     <span className="text-center text-tc-gray">
-                      Choose a File Upload supports: JPG, PDF, PNG.
+                      Choose a File (Supports: JPG, PDF, PNG)
                     </span>
                     <input
                       ref={fileInputRefBack}
@@ -373,44 +377,46 @@ const EditProfileModal = ({
                     />
                   </label>
                 </div>
-                {cameraActiveBack && !imageSrcBack && (
-                  <div>
-                    <Webcam
-                      audio={false}
-                      ref={webcamRefFront}
-                      screenshotFormat="image/jpeg"
-                      className="mx-auto size-64 object-contain"
-                    />
-                    <button
-                      onClick={captureBack}
-                      className="my-2 rounded-md bg-violet-darkHover p-1 text-sm text-white"
-                    >
-                      Capture
-                    </button>
-                  </div>
-                )}
-                {imageSrcBack && (
-                  <div>
-                    <Image
-                      src={imageSrcBack}
-                      alt="Captured or Selected"
-                      width={400}
-                      height={400}
-                      className="mx-auto size-64 object-contain"
-                    />
-                    <button
-                      onClick={handleRemoveDocumentImageBack}
-                      className="my-2 rounded-md bg-violet-darkHover p-1 text-sm text-white"
-                    >
-                      Remove
-                    </button>
-                  </div>
-                )}
-              </div>
+              )}
+
+              {cameraActiveBack && !imageSrcBack && (
+                <div>
+                  <Webcam
+                    audio={false}
+                    ref={webcamRefBack}
+                    screenshotFormat="image/jpeg"
+                    className="mx-auto size-64 object-contain"
+                  />
+                  <button
+                    onClick={captureBack}
+                    className="my-2 rounded-md bg-violet-darkHover p-1 text-sm text-white"
+                  >
+                    Capture (Back)
+                  </button>
+                </div>
+              )}
+
+              {imageSrcBack && (
+                <div>
+                  <Image
+                    src={imageSrcBack}
+                    alt="Captured or Selected"
+                    width={400}
+                    height={400}
+                    className="mx-auto size-64 object-contain"
+                  />
+                  <button
+                    onClick={handleRemoveDocumentImageBack}
+                    className="my-2 rounded-md bg-violet-darkHover p-1 text-sm text-white"
+                  >
+                    Remove (Back)
+                  </button>
+                </div>
+              )}
+            </div>
             <button
               onClick={handleUploadAllDocument}
               className="my-3 flex min-w-32 items-center justify-center rounded-full bg-violet-normal px-4 py-2 text-center text-white transition-opacity duration-300 hover:opacity-90 "
-              disabled={!imageSrcBack || !imageSrcFront}
             >
               {isUploadImageLoading ? (
                 <BeatLoader
