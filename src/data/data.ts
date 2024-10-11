@@ -1,7 +1,8 @@
 export const defaultUserDetails: DefaultUserDetailsType = {
   dateOfBirth: "",
   firstName: "",
-  idImage: "",
+  idImageFront: "",
+  idImageBack: "",
   idNumber: "",
   idType: "",
   lastName: "",

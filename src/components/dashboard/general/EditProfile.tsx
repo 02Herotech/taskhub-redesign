@@ -36,7 +36,8 @@ const userDataSchema = z.object({
   idType: z.string().optional().nullable(),
   idNumber: z.string().optional(),
   bio: z.string().nullable().optional(),
-  idImage: z.string().nullable().optional(),
+  idImageFront: z.string().nullable().optional(),
+  idImageBack: z.string().nullable().optional(),
 });
 
 const idTypeObject = [
@@ -52,8 +53,12 @@ const EditProfile = () => {
   const [isEditingEnabled, setIsEditingEnabled] = useState(false);
   const [isFormModalShown, setIsFormModalShown] = useState(false);
   const [isEditingProfilePicture, setIsEditingProfilePicture] = useState({ isEditing: false, image: null as string | null });
-  const [documentImage, setDocumentImage] = useState<string | null>(null);
+  const [documentImageFront, setDocumentImageFront] = useState<string | null>(null);
+  const [documentImageBack, setDocumentImageBack] = useState<string | null>(null);
+  const [documentImage, setDocumentImagey] = useState<string | null>(null);
   const [suburbList, setSuburbList] = useState<string[]>([]);
+  const [selectedDocumentFront, setSelectedDocumentFront] = useState<File | null>(null);
+  const [selectedDocumentBack, setSelectedDocumentBack] = useState<File | null>(null);
   const [selectedDocument, setSelectedDocument] = useState<File | null>(null);
   const [isProfileUpdatedSuccessfully, setIsProfileUpdatedSuccessfully] = useState(false);
   const [error, setError] = useState("");
@@ -120,6 +125,7 @@ const EditProfile = () => {
           },
         });
         setUserDetails(data);
+        console.log(data)
         reset({
           firstName: data.firstName || "",
           lastName: data.lastName || "",
@@ -131,7 +137,8 @@ const EditProfile = () => {
           state: data.state || "",
           idType: idTypeObject.find((item) => item.value === data.idType)?.label || "",
           idNumber: data.idNumber || "",
-          idImage: data.idImage || "",
+          idImageFront: data.idImageFront || "",
+          idImageBack: data.idImageBack || "",
           bio: isServiceProvider ? data.bio || "" : "No Bio needed for customer",
         });
       } catch (error) {
@@ -197,7 +204,8 @@ const EditProfile = () => {
           suburb: data.suburb,
           state: data.state,
           postCode: data.postcode,
-          idImage: selectedDocument,
+          idImageFront: selectedDocumentFront,
+          idImageBack: selectedDocumentBack,
           idType: data.idType,
           idNumber: data.idNumber,
           bio: data.bio,
@@ -218,7 +226,8 @@ const EditProfile = () => {
           suburb: data.suburb,
           state: data.state,
           postCode: data.postcode,
-          idImage: selectedDocument,
+          idImagefront: selectedDocumentFront,
+          idImageBack: selectedDocumentBack,
           idType: data.idType,
           idNumber: data.idNumber,
         }).reduce((acc, [key, value]) => {
@@ -255,13 +264,15 @@ const EditProfile = () => {
     <main className="relative px-4 py-8 lg:grid lg:grid-cols-12 lg:items-start lg:gap-6 lg:py-16">
       <EditProfileModal
         setIsFormModalShown={setIsFormModalShown}
-        setDocumentImage={setDocumentImage}
+        setDocumentImageFront={setDocumentImageFront}
+        setDocumentImageBack={setDocumentImageBack}
         isFormModalShown={isFormModalShown}
         isEditingProfilePicture={isEditingProfilePicture}
         setisEditingProfilePicture={setIsEditingProfilePicture}
         isProfileUpdatedSuccessfully={isProfileUpdatedSuccessfully}
         setIsProfileUpdatedSuccessfully={setIsProfileUpdatedSuccessfully}
-        setSelectedDocument={setSelectedDocument}
+        setSelectedDocumentFront={setSelectedDocumentFront}
+        setSelectedDocumentBack={setSelectedDocumentBack}
         handleRedirect = {handleRedirect}
       />
 
@@ -480,15 +491,16 @@ const EditProfile = () => {
             </div>
 
             {/* Upload Identification Document */}
-            <div className="flex w-full flex-col gap-3 text-violet-normal lg:max-w-64">
+            <div className="flex w-full flex-col gap-3 text-violet-normal">
               <label className="flex items-center justify-between">
                 <span>Means of ID</span>
-                {(documentImage || watchField.idImage) && (
+                {(documentImageFront || watchField.idImageFront) && (
                   <BiCheck className="size-5 rounded-full bg-green-500 p-1 text-white" />
                 )}
               </label>
+              <div className="flex gap-5 w-full">
               <div>
-                {documentImage || watchField.idImage ? (
+                {documentImageFront || watchField.idImageFront ? (
                   <button
                     type="button"
                     className="flex items-end justify-center space-x-2"
@@ -496,7 +508,7 @@ const EditProfile = () => {
                     disabled={!isEditingEnabled}
                   >
                     <Image
-                      src={documentImage ?? watchField.idImage ?? ""}
+                      src={documentImageFront ?? watchField.idImageFront ?? ""}
                       alt="Captured or Selected"
                       width={300}
                       height={300}
@@ -510,12 +522,43 @@ const EditProfile = () => {
                     onClick={() => setIsFormModalShown(true)}
                     disabled={!isEditingEnabled}
                   >
-                    <PiFileArrowDownDuotone className="text-xl text-tc-gray" />
+                    <PiFileArrowDownDuotone className="text-2xl text-tc-gray" />
                     <span className="text-center text-tc-gray">
-                      Choose a File Upload supports: JPG, PDF, PNG.
+                          Choose a File <span className="text-[#381F8C]">Front View</span> Upload supports: JPG, PDF, PNG.
                     </span>
                   </button>
                 )}
+              </div>
+              <div>
+                {documentImageBack || watchField.idImageBack ? (
+                  <button
+                    type="button"
+                    className="flex items-end justify-center space-x-2"
+                    onClick={() => setIsFormModalShown(true)}
+                    disabled={!isEditingEnabled}
+                  >
+                    <Image
+                      src={documentImageBack ?? watchField.idImageBack ?? ""}
+                      alt="Captured or Selected"
+                      width={300}
+                      height={300}
+                      className="rounded-xl"
+                    />
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    className="flex h-48 w-48 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-slate-500 p-4"
+                    onClick={() => setIsFormModalShown(true)}
+                    disabled={!isEditingEnabled}
+                  >
+                    <PiFileArrowDownDuotone className="text-2xl text-tc-gray" />
+                    <span className="text-center text-tc-gray">
+                          Choose a File <span className="text-[#381F8C]">Back View</span> Upload supports: JPG, PDF, PNG.
+                    </span>
+                  </button>
+                )}
+                </div>
               </div>
             </div>
           </div>
