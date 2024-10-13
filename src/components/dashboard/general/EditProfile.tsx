@@ -53,9 +53,11 @@ const EditProfile = () => {
   const [isEditingEnabled, setIsEditingEnabled] = useState(false);
   const [isFormModalShown, setIsFormModalShown] = useState(false);
   const [isEditingProfilePicture, setIsEditingProfilePicture] = useState({ isEditing: false, image: null as string | null });
+  const [isEditingImageFront, setIsEditingImageFront] = useState({ isEditing: false, image: null as string | null });
+  const [isEditingImageBack, setIsEditingImageBack] = useState({ isEditing: false, image: null as string | null });
   const [documentImageFront, setDocumentImageFront] = useState<string | null>(null);
   const [documentImageBack, setDocumentImageBack] = useState<string | null>(null);
-  const [documentImage, setDocumentImagey] = useState<string | null>(null);
+  const [documentImage, setDocumentImage] = useState<string | null>(null);
   const [suburbList, setSuburbList] = useState<string[]>([]);
   const [selectedDocumentFront, setSelectedDocumentFront] = useState<File | null>(null);
   const [selectedDocumentBack, setSelectedDocumentBack] = useState<File | null>(null);
@@ -240,7 +242,7 @@ const EditProfile = () => {
         url = "https://smp.jacinthsolutions.com.au/api/v1/customer/update";
       }
 
-      console.log(submitData);
+      
       await axios.patch(url, submitData, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -250,6 +252,7 @@ const EditProfile = () => {
       setIsProfileUpdatedSuccessfully(true);
       setIsFormModalShown(true);
       setIsEditingEnabled(false);
+      console.log(submitData);
     } catch (error: any) {
       console.log(error);
     }
@@ -257,6 +260,16 @@ const EditProfile = () => {
 
   const handleChangeProfilePicture = () => {
     setIsEditingProfilePicture({ isEditing: true, image: null });
+    setIsFormModalShown(true);
+  };
+  const handleChangeFront = () => {
+    setIsEditingImageFront({ isEditing: true, image: null });
+    setIsEditingImageBack({ isEditing: false, image: null });
+    setIsFormModalShown(true);
+  };
+  const handleChangeBack = () => {
+    setIsEditingImageBack({ isEditing: true, image: null });
+    setIsEditingImageFront({ isEditing: false, image: null });
     setIsFormModalShown(true);
   };
 
@@ -269,10 +282,15 @@ const EditProfile = () => {
         isFormModalShown={isFormModalShown}
         isEditingProfilePicture={isEditingProfilePicture}
         setisEditingProfilePicture={setIsEditingProfilePicture}
+        isEditingImageFront={isEditingImageFront}
+        setisEditingImageFront={setIsEditingImageFront}
+        isEditingImageBack={isEditingImageBack}
+        setisEditingImageBack={setIsEditingImageBack}
         isProfileUpdatedSuccessfully={isProfileUpdatedSuccessfully}
         setIsProfileUpdatedSuccessfully={setIsProfileUpdatedSuccessfully}
         setSelectedDocumentFront={setSelectedDocumentFront}
         setSelectedDocumentBack={setSelectedDocumentBack}
+        setDocumentImage={setDocumentImage}
         handleRedirect = {handleRedirect}
       />
 
@@ -504,7 +522,7 @@ const EditProfile = () => {
                   <button
                     type="button"
                     className="flex items-end justify-center space-x-2"
-                    onClick={() => setIsFormModalShown(true)}
+                    onClick={handleChangeFront}
                     disabled={!isEditingEnabled}
                   >
                     <Image
@@ -519,7 +537,7 @@ const EditProfile = () => {
                   <button
                     type="button"
                     className="flex h-48 w-48 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-slate-500 p-4"
-                    onClick={() => setIsFormModalShown(true)}
+                        onClick={handleChangeFront}
                     disabled={!isEditingEnabled}
                   >
                     <PiFileArrowDownDuotone className="text-2xl text-tc-gray" />
@@ -534,7 +552,7 @@ const EditProfile = () => {
                   <button
                     type="button"
                     className="flex items-end justify-center space-x-2"
-                    onClick={() => setIsFormModalShown(true)}
+                    onClick={handleChangeBack}
                     disabled={!isEditingEnabled}
                   >
                     <Image
@@ -549,7 +567,7 @@ const EditProfile = () => {
                   <button
                     type="button"
                     className="flex h-48 w-48 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-slate-500 p-4"
-                    onClick={() => setIsFormModalShown(true)}
+                    onClick={handleChangeBack}
                     disabled={!isEditingEnabled}
                   >
                     <PiFileArrowDownDuotone className="text-2xl text-tc-gray" />
