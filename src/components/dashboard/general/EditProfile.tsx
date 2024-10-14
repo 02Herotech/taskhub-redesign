@@ -202,7 +202,7 @@ const EditProfile = () => {
         submitData = Object.entries({
           firstName: data.firstName,
           lastName: data.lastName,
-          dateOfBirth: formatDateAsYYYYMMDD(data.dateOfBirth as Date),
+          dateOfBirth: data.dateOfBirth ? formatDateAsYYYYMMDD(data.dateOfBirth as Date) : "",
           suburb: data.suburb,
           state: data.state,
           postCode: data.postcode,
@@ -211,20 +211,14 @@ const EditProfile = () => {
           idType: data.idType,
           idNumber: data.idNumber,
           bio: data.bio,
-        }).reduce((acc, [key, value]) => {
-          if (value !== null && value !== undefined && value !== "") {
-            // @ts-expect-error "type of key not know"
-            acc[key] = value;
-          }
-          return acc;
-        }, {});
+        })
         url =
           "https://smp.jacinthsolutions.com.au/api/v1/service_provider/update";
       } else {
         submitData = Object.entries({
           firstName: data.firstName,
           lastName: data.lastName,
-          dateOfBirth: formatDateAsYYYYMMDD(data.dateOfBirth as Date),
+          dateOfBirth: data.dateOfBirth ? formatDateAsYYYYMMDD(data.dateOfBirth as Date) : "",
           suburb: data.suburb,
           state: data.state,
           postCode: data.postcode,
@@ -232,13 +226,7 @@ const EditProfile = () => {
           idImageBack: selectedDocumentBack,
           idType: data.idType,
           idNumber: data.idNumber,
-        }).reduce((acc, [key, value]) => {
-          if (value !== null && value !== undefined && value !== "") {
-            // @ts-expect-error "type of key not know"
-            acc[key] = value;
-          }
-          return acc;
-        }, {});
+        })
         url = "https://smp.jacinthsolutions.com.au/api/v1/customer/update";
       }
 
@@ -363,8 +351,8 @@ const EditProfile = () => {
                   </label>
                   <DatePicker
                     id="dateOfBirth"
-                    selected={field.value}
-                    onChange={(date) => field.onChange(date)}
+                    selected={field.value || null} // Use null if there's no date
+                    onChange={(date) => field.onChange(date ? date : '')} 
                     disabled={!isEditingEnabled}
                     maxDate={new Date(new Date().setFullYear(new Date().getFullYear() - 18))}
                     className="w-full rounded-xl border border-slate-100 p-2 text-slate-700 shadow outline-none transition-shadow duration-300 hover:shadow-md lg:max-w-sm"
