@@ -25,6 +25,7 @@ import Webcam from "react-webcam";
 
 type ModalPropsTypes = {
   setIsFormModalShown: Dispatch<SetStateAction<boolean>>;
+  setDocumentImage: Dispatch<SetStateAction<string | null>>;
   setDocumentImageFront: Dispatch<SetStateAction<string | null>>;
   setDocumentImageBack: Dispatch<SetStateAction<string | null>>;
   isFormModalShown: boolean;
@@ -35,6 +36,26 @@ type ModalPropsTypes = {
     }>
   >;
   isEditingProfilePicture: {
+    isEditing: boolean;
+    image: string | null;
+  };
+  setisEditingImageFront: React.Dispatch<
+    React.SetStateAction<{
+      isEditing: boolean;
+      image: string | null;
+    }>
+  >;
+  isEditingImageFront: {
+    isEditing: boolean;
+    image: string | null;
+  };
+  setisEditingImageBack: React.Dispatch<
+    React.SetStateAction<{
+      isEditing: boolean;
+      image: string | null;
+    }>
+  >;
+  isEditingImageBack: {
     isEditing: boolean;
     image: string | null;
   };
@@ -52,7 +73,12 @@ const EditProfileModal = ({
   isFormModalShown,
   setDocumentImageFront,
   setDocumentImageBack,
+  setDocumentImage,
   isEditingProfilePicture,
+  isEditingImageBack,
+  isEditingImageFront,
+  setisEditingImageBack,
+  setisEditingImageFront,
   setisEditingProfilePicture,
   isProfileUpdatedSuccessfully,
   setIsProfileUpdatedSuccessfully,
@@ -62,16 +88,11 @@ const EditProfileModal = ({
 }: ModalPropsTypes) => {
   // set initial state value
   const [isUploadInitiated, setIsUploadInitiated] = useState(false);
-  const [imageSrcFront, setImageSrcFront] = useState<string | null>(null);
-  const [imageSrcBack, setImageSrcBack] = useState<string | null>(null);
-  const [cameraActiveFront, setCameraActiveFront] = useState(false);
-  const [cameraActiveBack, setCameraActiveBack] = useState(false);
-  const webcamRefFront = useRef<Webcam>(null);
-  const webcamRefBack = useRef<Webcam>(null);
-  const fileInputRefFront = useRef<HTMLInputElement>(null);
-  const fileInputRefBack = useRef<HTMLInputElement>(null);
-  const [selectedFileFront, setSelectedFileFront] = useState<File | null>(null);
-  const [selectedFileBack, setSelectedFileBack] = useState<File | null>(null);
+  const [imageSrc, setImageSrc] = useState<string | null>(null);
+  const [cameraActive, setCameraActive] = useState(false);
+  const webcamRef = useRef<Webcam>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [isUploadImageLoading, setIsUploadImageLoading] = useState(false);
 
   const session = useSession();
@@ -80,107 +101,73 @@ const EditProfileModal = ({
   const isServiceProvider = user?.roles[0] === "SERVICE_PROVIDER";
   const dispatch = useDispatch();
 
-  const captureFront = useCallback(() => {
-    if (webcamRefFront.current) {
-      const imageSrc = webcamRefFront.current.getScreenshot();
-      setImageSrcFront(imageSrc);
+
+  const capture = useCallback(() => {
+    if (webcamRef.current) {
+      const imageSrc = webcamRef.current.getScreenshot();
+      setImageSrc(imageSrc);
       if (imageSrc) {
         const file = dataURLtoFile(imageSrc, "captured_image.png");
-        setSelectedFileFront(file);
+        setSelectedFile(file);
         if (isEditingProfilePicture.isEditing) {
           setisEditingProfilePicture((prev) => ({ ...prev, image: imageSrc }));
-        } else {
+        } else if (isEditingImageFront.isEditing) {
+          setisEditingImageFront((prev) => ({ ...prev, image: imageSrc }));
           setDocumentImageFront(imageSrc);
+        } else if (isEditingImageBack.isEditing) {
+          setisEditingImageBack((prev) => ({ ...prev, image: imageSrc }));
+          setDocumentImageBack(imageSrc)
         }
-        setCameraActiveFront(false);
+        setCameraActive(false);
       }
     }
-  }, [isEditingProfilePicture, setDocumentImageFront, setisEditingProfilePicture]);
+  }, [isEditingProfilePicture, setDocumentImageFront, setDocumentImageBack, setisEditingProfilePicture, setisEditingImageBack, setisEditingImageFront, isEditingImageFront, isEditingImageBack]);
 
-  const captureBack = useCallback(() => {
-    if (webcamRefBack.current) {
-      const imageSrc = webcamRefBack.current.getScreenshot();
-      setImageSrcBack(imageSrc);
-      if (imageSrc) {
-        const file = dataURLtoFile(imageSrc, "captured_image.png");
-        setSelectedFileBack(file);
-        if (isEditingProfilePicture.isEditing) {
-          setisEditingProfilePicture((prev) => ({ ...prev, image: imageSrc }));
-        } else {
-          setDocumentImageBack(imageSrc);
-        }
-        setCameraActiveBack(false);
-      }
-    }
-  }, [isEditingProfilePicture, setDocumentImageBack, setisEditingProfilePicture]);
-
-  const handleFileInputChangeFront = (event: ChangeEvent<HTMLInputElement>) => {
+  const handleFileInputChange = (event: ChangeEvent<HTMLInputElement>) => {
     const uploadFile = event.target.files?.[0];
     if (uploadFile) {
-      setSelectedFileFront(uploadFile);
+      setSelectedFile(uploadFile);
       const reader = new FileReader();
       reader.onloadend = () => {
         const img = reader.result as string;
-        setImageSrcFront(img);
+        setImageSrc(img);
         if (isEditingProfilePicture.isEditing) {
           setisEditingProfilePicture((prev) => ({ ...prev, image: img }));
-        } else {
+        } else if (isEditingImageFront.isEditing) {
+          setisEditingImageFront((prev) => ({ ...prev, image: img }));
           setDocumentImageFront(img);
-        }
-      };
-      reader.readAsDataURL(uploadFile);
-    }
-  };
-
-  const handleFileInputChangeBack = (event: ChangeEvent<HTMLInputElement>) => {
-    const uploadFile = event.target.files?.[0];
-    if (uploadFile) {
-      setSelectedFileBack(uploadFile);
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        const img = reader.result as string;
-        setImageSrcBack(img);
-        if (isEditingProfilePicture.isEditing) {
-          setisEditingProfilePicture((prev) => ({ ...prev, image: img }));
-        } else {
+        } else if (isEditingImageBack.isEditing) {
+          setisEditingImageBack((prev) => ({ ...prev, image: img }));
           setDocumentImageBack(img);
         }
       };
+      console.log(isEditingImageFront.isEditing, isEditingImageBack.isEditing, isEditingProfilePicture.isEditing)
       reader.readAsDataURL(uploadFile);
     }
   };
 
   const handleCloseModal = () => {
     setIsFormModalShown(false);
-    setImageSrcFront(null);
-    setImageSrcBack(null);
-    setCameraActiveFront(false);
-    setCameraActiveBack(false);
+    setImageSrc(null);
+    setCameraActive(false);
     const newTimeout = setTimeout(() => {
       setisEditingProfilePicture((prev) => ({ ...prev, isEditing: false }));
-      setSelectedFileFront(null);
+      setSelectedFile(null);
       setIsProfileUpdatedSuccessfully(false);
       setIsUploadInitiated(false);
     }, 400);
   };
 
-  const handleRemoveDocumentImageFront = () => {
-    setImageSrcFront(null);
-    setCameraActiveFront(false);
-    setDocumentImageFront(null);
-    setSelectedFileFront(null);
-  };
-
-  const handleRemoveDocumentImageBack = () => {
-    setImageSrcBack(null);
-    setCameraActiveBack(false);
-    setDocumentImageBack(null);
-    setSelectedFileBack(null);
+  const handleRemoveDocumentImage = () => {
+    setImageSrc(null);
+    setCameraActive(false);
+    setDocumentImage(null);
+    setSelectedFile(null);
   };
 
   const handleUploadAllDocument = async () => {
     try {
-      if (isEditingProfilePicture.isEditing) {
+      if (selectedFile && isEditingProfilePicture.isEditing) {
         setIsUploadImageLoading(true);
         let url;
         if (isServiceProvider) {
@@ -193,7 +180,7 @@ const EditProfileModal = ({
         try {
           await axios.post(
             url,
-            { image: selectedFileFront },
+            { image: selectedFile },
             {
               headers: {
                 Authorization: `Bearer ${token}`,
@@ -212,9 +199,10 @@ const EditProfileModal = ({
         } finally {
           dispatch(refreshUserProfile());
         }
-      } else {
-        setSelectedDocumentFront(selectedFileFront);
-        setSelectedDocumentBack(selectedFileBack);
+      } else if(selectedFile && isEditingImageFront.isEditing) {
+        setSelectedDocumentFront(selectedFile);
+      } else if(selectedFile && isEditingImageBack.isEditing) {
+        setSelectedDocumentBack(selectedFile)
       }
       handleCloseModal();
     } catch (error: any) {
@@ -223,7 +211,7 @@ const EditProfileModal = ({
       setIsUploadImageLoading(false);
     }
   };
-
+ 
   return (
     <section
       className={`fixed left-0 top-0 z-50 flex h-screen w-screen items-center justify-center bg-black bg-opacity-60 transition-opacity duration-500 ${isFormModalShown ? "pointer-events-auto opacity-100 " : "pointer-events-none opacity-0"} `}
@@ -269,147 +257,72 @@ const EditProfileModal = ({
               </button>
             </div>
           </div>
-        ) : isEditingProfilePicture.isEditing || isUploadInitiated ? (
-          <div className="z-50 flex flex-col items-center justify-center gap-5 space-y-3 bg-white">
+        ) : isEditingProfilePicture.isEditing || isEditingImageFront.isEditing || isEditingImageBack.isEditing || isUploadInitiated ? (
+          <div className=" z-50 flex flex-col items-center justify-center gap-5 space-y-3 bg-white">
             <div className="space-y-4">
-              {/* FRONT ACTIONS */}
-              {!cameraActiveBack && !imageSrcBack && (
-                <div className="flex items-center gap-4">
-                  <button
-                    className="rounded-full bg-violet-light px-4 py-2 font-medium text-violet-normal transition-all duration-300 hover:bg-violet-200"
-                    onClick={() => setCameraActiveFront(true)}
-                  >
-                    Take a Picture (Front)
-                  </button>
-                  <button
-                    className="rounded-full bg-violet-light px-4 py-2 font-medium text-violet-normal transition-all duration-300 hover:bg-violet-200"
-                    onClick={() => {
-                      setCameraActiveFront(false);
-                      fileInputRefFront.current?.click();
-                    }}
-                  >
-                    Choose from Documents (Front)
-                  </button>
-                  {/* Hidden File Input for Front */}
-                  <label className="hidden h-24 w-1/2 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-slate-500 p-4">
-                    <PiFileArrowDownDuotone className="text-xl text-tc-gray" />
-                    <span className="text-center text-tc-gray">
-                      Choose a File (Supports: JPG, PDF, PNG)
-                    </span>
-                    <input
-                      ref={fileInputRefFront}
-                      type="file"
-                      accept=".png, .jpg, .jpeg, .gif"
-                      className="hidden"
-                      onChange={handleFileInputChangeFront}
-                    />
-                  </label>
-                </div>
-              )}
-
-              {cameraActiveFront && !imageSrcFront && (
+              <div className="flex items-center gap-4">
+                <button
+                  className=" rounded-full bg-violet-light px-4 py-2 font-medium text-violet-normal transition-all duration-300 hover:bg-violet-200"
+                  onClick={() => {
+                    setCameraActive(true);
+                  }}
+                >
+                  Take a Picture
+                </button>
+                <button
+                  className=" rounded-full bg-violet-light px-4 py-2 font-medium text-violet-normal transition-all duration-300 hover:bg-violet-200"
+                  onClick={() => {
+                    setCameraActive(false);
+                    fileInputRef.current?.click();
+                  }}
+                >
+                  Choose from Documents
+                </button>
+                {/* Handle a form request */}
+                <label className=" hidden h-48 w-1/2 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-slate-500 p-4">
+                  <PiFileArrowDownDuotone className="text-xl text-tc-gray" />
+                  <span className="text-center text-tc-gray">
+                    Choose a File Upload supports: JPG, PDF, PNG.
+                  </span>
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept=".png, .jpg, .jpeg, .gif"
+                    className="hidden"
+                    onChange={handleFileInputChange}
+                  />
+                </label>
+              </div>
+              {cameraActive && !imageSrc && (
                 <div>
                   <Webcam
                     audio={false}
-                    ref={webcamRefFront}
+                    ref={webcamRef}
                     screenshotFormat="image/jpeg"
                     className="mx-auto size-64 object-contain"
                   />
                   <button
-                    onClick={captureFront}
+                    onClick={capture}
                     className="my-2 rounded-md bg-violet-darkHover p-1 text-sm text-white"
                   >
-                    Capture (Front)
+                    Capture
                   </button>
                 </div>
               )}
-
-              {imageSrcFront && (
+              {imageSrc && (
                 <div>
                   <Image
-                    src={imageSrcFront}
+                    src={imageSrc}
                     alt="Captured or Selected"
                     width={400}
                     height={400}
                     className="mx-auto size-64 object-contain"
                   />
                   <button
-                    onClick={handleRemoveDocumentImageFront}
+                    onClick={handleRemoveDocumentImage}
                     className="my-2 rounded-md bg-violet-darkHover p-1 text-sm text-white"
                   >
-                    Remove (Front)
-                  </button>
-                </div>
-              )}
-            </div>
-
-            <div className="space-y-4">
-              {/* BACK ACTIONS */}
-              {!cameraActiveFront && !imageSrcFront && (
-                <div className="flex items-center gap-4">
-                  <button
-                    className="rounded-full bg-violet-light px-4 py-2 font-medium text-violet-normal transition-all duration-300 hover:bg-violet-200"
-                    onClick={() => setCameraActiveBack(true)}
-                  >
-                    Take a Picture (Back)
-                  </button>
-                  <button
-                    className="rounded-full bg-violet-light px-4 py-2 font-medium text-violet-normal transition-all duration-300 hover:bg-violet-200"
-                    onClick={() => {
-                      setCameraActiveBack(false);
-                      fileInputRefBack.current?.click();
-                    }}
-                  >
-                    Choose from Documents (Back)
-                  </button>
-                  {/* Hidden File Input for Back */}
-                  <label className="hidden h-24 w-1/2 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-slate-500 p-4">
-                    <PiFileArrowDownDuotone className="text-xl text-tc-gray" />
-                    <span className="text-center text-tc-gray">
-                      Choose a File (Supports: JPG, PDF, PNG)
-                    </span>
-                    <input
-                      ref={fileInputRefBack}
-                      type="file"
-                      accept=".png, .jpg, .jpeg, .gif"
-                      className="hidden"
-                      onChange={handleFileInputChangeBack}
-                    />
-                  </label>
-                </div>
-              )}
-
-              {cameraActiveBack && !imageSrcBack && (
-                <div>
-                  <Webcam
-                    audio={false}
-                    ref={webcamRefBack}
-                    screenshotFormat="image/jpeg"
-                    className="mx-auto size-64 object-contain"
-                  />
-                  <button
-                    onClick={captureBack}
-                    className="my-2 rounded-md bg-violet-darkHover p-1 text-sm text-white"
-                  >
-                    Capture (Back)
-                  </button>
-                </div>
-              )}
-
-              {imageSrcBack && (
-                <div>
-                  <Image
-                    src={imageSrcBack}
-                    alt="Captured or Selected"
-                    width={400}
-                    height={400}
-                    className="mx-auto size-64 object-contain"
-                  />
-                  <button
-                    onClick={handleRemoveDocumentImageBack}
-                    className="my-2 rounded-md bg-violet-darkHover p-1 text-sm text-white"
-                  >
-                    Remove (Back)
+                    Remove
                   </button>
                 </div>
               )}
@@ -417,6 +330,7 @@ const EditProfileModal = ({
             <button
               onClick={handleUploadAllDocument}
               className="my-3 flex min-w-32 items-center justify-center rounded-full bg-violet-normal px-4 py-2 text-center text-white transition-opacity duration-300 hover:opacity-90 "
+              disabled={!imageSrc}
             >
               {isUploadImageLoading ? (
                 <BeatLoader
@@ -429,68 +343,69 @@ const EditProfileModal = ({
               )}
             </button>
           </div>
-        ) : (
-          // display this when user sees the modal the first time and
-          <div className="space-y-4">
-            <h1 className="text-2xl font-bold text-violet-dark">
-              Upload a Selfie Image with ID
-            </h1>
-            <div className="space-y-2">
-              <h3 className="text-xl  font-bold text-violet-normal">
-                Quick Tips
-              </h3>
-              <p className="flex gap-4">
-                <span className="h-fit w-fit rounded-full bg-violet-light p-1 ">
-                  <BiCheck className="size-4 text-violet-normal" />
-                </span>
-                <span className="text-sm font-medium text-slate-500">
-                  Take a picture of yourself holding up your preferred document
-                  on the left side of your head showing a clear Id number.
-                </span>
-              </p>
-              <p className="flex gap-4">
-                <span className="h-fit w-fit rounded-full bg-violet-light p-1">
-                  <BiCheck className="size-4 text-violet-normal" />
-                </span>
-                <span className="text-sm font-medium text-slate-500">
-                  Selfie should be taken on your device.
-                </span>
-              </p>
-              <p className="flex gap-4">
-                <span className="h-fit w-fit rounded-full bg-violet-light p-1 ">
-                  <BiCheck className="size-4 text-violet-normal" />
-                </span>
-                <span className="text-sm font-medium text-slate-500">
-                  Selfie should be taken in a properly lit room.
-                </span>
-              </p>
-              <p className="flex gap-4">
-                <span className="h-fit w-fit rounded-full bg-violet-light p-1 ">
-                  <BiCheck className="size-4 text-violet-normal" />
-                </span>
-                <span className="text-sm font-medium text-slate-500">
-                  Note that, the more documents you input for verification, the
-                  higher your chances of visibility to potential customers.
-                </span>
-              </p>
+                
+          ):(
+            // display this when user sees the modal the first time and
+            <div className="space-y-4">
+              <h1 className="text-2xl font-bold text-violet-dark">
+                Upload a Selfie Image with ID
+              </h1>
+              <div className="space-y-2">
+                <h3 className="text-xl  font-bold text-violet-normal">
+                  Quick Tips
+                </h3>
+                <p className="flex gap-4">
+                  <span className="h-fit w-fit rounded-full bg-violet-light p-1 ">
+                    <BiCheck className="size-4 text-violet-normal" />
+                  </span>
+                  <span className="text-sm font-medium text-slate-500">
+                    Take a picture of yourself holding up your preferred document
+                    on the left side of your head showing a clear Id number.
+                  </span>
+                </p>
+                <p className="flex gap-4">
+                  <span className="h-fit w-fit rounded-full bg-violet-light p-1">
+                    <BiCheck className="size-4 text-violet-normal" />
+                  </span>
+                  <span className="text-sm font-medium text-slate-500">
+                    Selfie should be taken on your device.
+                  </span>
+                </p>
+                <p className="flex gap-4">
+                  <span className="h-fit w-fit rounded-full bg-violet-light p-1 ">
+                    <BiCheck className="size-4 text-violet-normal" />
+                  </span>
+                  <span className="text-sm font-medium text-slate-500">
+                    Selfie should be taken in a properly lit room.
+                  </span>
+                </p>
+                <p className="flex gap-4">
+                  <span className="h-fit w-fit rounded-full bg-violet-light p-1 ">
+                    <BiCheck className="size-4 text-violet-normal" />
+                  </span>
+                  <span className="text-sm font-medium text-slate-500">
+                    Note that, the more documents you input for verification, the
+                    higher your chances of visibility to potential customers.
+                  </span>
+                </p>
+              </div>
+              <div>
+                <button
+                  onClick={() => setIsUploadInitiated(true)}
+                  className="rounded-full bg-violet-normal px-6 py-3 text-white transition-opacity duration-300 hover:opacity-90 "
+                >
+                  Continue
+                </button>
+                <Link
+                  href={"/contact"}
+                  className="my-2 flex items-center gap-2 text-sm text-violet-normal"
+                >
+                  Need help?
+                  <span className="text-orange-normal underline">Contact us</span>
+                </Link>
+              </div>
             </div>
-            <div>
-              <button
-                onClick={() => setIsUploadInitiated(true)}
-                className="rounded-full bg-violet-normal px-6 py-3 text-white transition-opacity duration-300 hover:opacity-90 "
-              >
-                Continue
-              </button>
-              <Link
-                href={"/contact"}
-                className="my-2 flex items-center gap-2 text-sm text-violet-normal"
-              >
-                Need help?
-                <span className="text-orange-normal underline">Contact us</span>
-              </Link>
-            </div>
-          </div>
-        )}
+          )}
       </div>
     </section>
   );
