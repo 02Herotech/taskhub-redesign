@@ -258,7 +258,6 @@ const EditProfileModal = ({
             </div>
           </div>
         ) :( !isUploadInitiated &&
-            // display this when user sees the modal the first time and
             <div className="space-y-4">
               <h1 className="text-2xl font-bold text-violet-dark">
                 Upload a Selfie Image with ID

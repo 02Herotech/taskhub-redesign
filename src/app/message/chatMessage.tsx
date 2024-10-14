@@ -3,8 +3,8 @@ import { useTimestampWithSpinner } from '@/utils';
 import { FaCheckDouble } from 'react-icons/fa';
 
 const ChatMessage = ({ item, user }: any) => {
-    const { formattedDate, isLoading } = useTimestampWithSpinner(item.time);
-
+    const { formattedTime, isLoading } = useTimestampWithSpinner(item.time);
+console.log(item)
     return (
         <div
             className={`my-2 flex w-full ${item.senderId === user.id ? "flex-wrap justify-end" : "justify-start"
@@ -24,7 +24,7 @@ const ChatMessage = ({ item, user }: any) => {
                     </div>
                 ) : (
                     <div className="flex items-center justify-end gap-2 text-[0.7rem]">
-                        <span>{formattedDate}</span>
+                        <span>{formattedTime}</span>
                         {item.senderId === user.id && (
                             <span className="block">
                                 <FaCheckDouble className="text-green-500" />

@@ -349,100 +349,45 @@ export function formatTime(timestamp: string) {
 
 import { useState, useEffect } from "react";
 
-// Custom hook to format timestamp with a spinner during loading
-export const useTimestampWithSpinner = (unixTimestamp: number | null) => {
-  const [formattedDate, setFormattedDate] = useState<string | null>(null);
+// Custom hook to format ISO 8601 timestamp and show only the time
+export const useTimestampWithSpinner = (isoTimestamp: string | null) => {
+  const [formattedTime, setFormattedTime] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    if (unixTimestamp === null) {
-      setFormattedDate(null);
+    if (isoTimestamp === null) {
+      setFormattedTime(null);
       setIsLoading(false);
       return;
     }
 
     // Simulate spinner/loading state
     const timer = setTimeout(() => {
-      const dateObject = new Date(unixTimestamp * 1000);
+      const dateObject = new Date(isoTimestamp);
 
       if (isNaN(dateObject.getTime())) {
-        setFormattedDate(null); 
+        setFormattedTime(null);
         setIsLoading(true);
       } else {
         setIsLoading(false);
-        const now = new Date();
-        const differenceInMilliseconds = now.getTime() - dateObject.getTime();
-        const differenceInDays = Math.floor(
-          differenceInMilliseconds / (1000 * 60 * 60 * 24),
-        );
 
-        let result = "";
+        // Get the time in 12-hour format with AM/PM
+        const timeString = dateObject.toLocaleTimeString(undefined, {
+          hour: "2-digit",
+          minute: "2-digit",
+          hour12: true,
+        });
 
-        if (differenceInDays === 0) {
-          // Today
-          result = dateObject.toLocaleTimeString(undefined, {
-            hour: "2-digit",
-            minute: "2-digit",
-            hour12: true,
-          });
-        } else if (differenceInDays === 1) {
-          // Yesterday
-          result = `Yesterday at ${dateObject.toLocaleTimeString(undefined, {
-            hour: "2-digit",
-            minute: "2-digit",
-            hour12: true,
-          })}`;
-        } else if (differenceInDays < 7) {
-          // This week
-          result = `${differenceInDays} days ago`;
-        } else if (differenceInDays < 30) {
-          // This month
-          result =
-            dateObject.toLocaleDateString(undefined, {
-              month: "short",
-              day: "numeric",
-            }) +
-            ` at ${dateObject.toLocaleTimeString(undefined, {
-              hour: "2-digit",
-              minute: "2-digit",
-              hour12: true,
-            })}`;
-        } else if (differenceInDays < 365) {
-          // This year
-          result =
-            dateObject.toLocaleDateString(undefined, {
-              month: "short",
-              day: "numeric",
-            }) +
-            ` at ${dateObject.toLocaleTimeString(undefined, {
-              hour: "2-digit",
-              minute: "2-digit",
-              hour12: true,
-            })}`;
-        } else {
-          // Earlier years
-          result =
-            dateObject.toLocaleDateString(undefined, {
-              year: "numeric",
-              month: "short",
-              day: "numeric",
-            }) +
-            ` at ${dateObject.toLocaleTimeString(undefined, {
-              hour: "2-digit",
-              minute: "2-digit",
-              hour12: true,
-            })}`;
-        }
-
-        setFormattedDate(result);
+        setFormattedTime(timeString);
       }
     }, 100);
 
     return () => clearTimeout(timer);
-  }, [unixTimestamp]);
+  }, [isoTimestamp]);
 
-  return { formattedDate, isLoading };
+  return { formattedTime, isLoading };
 };
+
 
 export function formatTimestamp(unixTimestamp: number): string {
   // Convert the Unix timestamp (in seconds) to milliseconds
