@@ -15,10 +15,9 @@ import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { IoLocationOutline } from "react-icons/io5";
-import { useSelector } from "react-redux";
 import { BeatLoader } from "react-spinners";
-import { stompClient } from "@/lib/stompClient";
 import MessageButton from "@/components/global/MessageButton";
+
 const ViewJobs = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
