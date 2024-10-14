@@ -257,94 +257,7 @@ const EditProfileModal = ({
               </button>
             </div>
           </div>
-        ) : isEditingProfilePicture.isEditing || isEditingImageFront.isEditing || isEditingImageBack.isEditing || isUploadInitiated ? (
-          <div className=" z-50 flex flex-col items-center justify-center gap-5 space-y-3 bg-white">
-            <div className="space-y-4">
-              <div className="flex items-center gap-4">
-                <button
-                  className=" rounded-full bg-violet-light px-4 py-2 font-medium text-violet-normal transition-all duration-300 hover:bg-violet-200"
-                  onClick={() => {
-                    setCameraActive(true);
-                  }}
-                >
-                  Take a Picture
-                </button>
-                <button
-                  className=" rounded-full bg-violet-light px-4 py-2 font-medium text-violet-normal transition-all duration-300 hover:bg-violet-200"
-                  onClick={() => {
-                    setCameraActive(false);
-                    fileInputRef.current?.click();
-                  }}
-                >
-                  Choose from Documents
-                </button>
-                {/* Handle a form request */}
-                <label className=" hidden h-48 w-1/2 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-slate-500 p-4">
-                  <PiFileArrowDownDuotone className="text-xl text-tc-gray" />
-                  <span className="text-center text-tc-gray">
-                    Choose a File Upload supports: JPG, PDF, PNG.
-                  </span>
-                  <input
-                    ref={fileInputRef}
-                    type="file"
-                    accept=".png, .jpg, .jpeg, .gif"
-                    className="hidden"
-                    onChange={handleFileInputChange}
-                  />
-                </label>
-              </div>
-              {cameraActive && !imageSrc && (
-                <div>
-                  <Webcam
-                    audio={false}
-                    ref={webcamRef}
-                    screenshotFormat="image/jpeg"
-                    className="mx-auto size-64 object-contain"
-                  />
-                  <button
-                    onClick={capture}
-                    className="my-2 rounded-md bg-violet-darkHover p-1 text-sm text-white"
-                  >
-                    Capture
-                  </button>
-                </div>
-              )}
-              {imageSrc && (
-                <div>
-                  <Image
-                    src={imageSrc}
-                    alt="Captured or Selected"
-                    width={400}
-                    height={400}
-                    className="mx-auto size-64 object-contain"
-                  />
-                  <button
-                    onClick={handleRemoveDocumentImage}
-                    className="my-2 rounded-md bg-violet-darkHover p-1 text-sm text-white"
-                  >
-                    Remove
-                  </button>
-                </div>
-              )}
-            </div>
-            <button
-              onClick={handleUploadAllDocument}
-              className="my-3 flex min-w-32 items-center justify-center rounded-full bg-violet-normal px-4 py-2 text-center text-white transition-opacity duration-300 hover:opacity-90 "
-              disabled={!imageSrc}
-            >
-              {isUploadImageLoading ? (
-                <BeatLoader
-                  color={"white"}
-                  loading={isUploadImageLoading}
-                  size={14}
-                />
-              ) : (
-                "Upload Document"
-              )}
-            </button>
-          </div>
-                
-          ):(
+        ) :( !isUploadInitiated &&
             // display this when user sees the modal the first time and
             <div className="space-y-4">
               <h1 className="text-2xl font-bold text-violet-dark">
@@ -404,6 +317,94 @@ const EditProfileModal = ({
                   <span className="text-orange-normal underline">Contact us</span>
                 </Link>
               </div>
+            </div>
+        )}
+        {isUploadInitiated && 
+          (isEditingProfilePicture.isEditing || isEditingImageFront.isEditing || isEditingImageBack.isEditing) && (
+            <div className=" z-50 flex flex-col items-center justify-center gap-5 space-y-3 bg-white">
+              <div className="space-y-4">
+                <div className="flex items-center gap-4">
+                  <button
+                    className=" rounded-full bg-violet-light px-4 py-2 font-medium text-violet-normal transition-all duration-300 hover:bg-violet-200"
+                    onClick={() => {
+                      setCameraActive(true);
+                    }}
+                  >
+                    Take a Picture
+                  </button>
+                  <button
+                    className=" rounded-full bg-violet-light px-4 py-2 font-medium text-violet-normal transition-all duration-300 hover:bg-violet-200"
+                    onClick={() => {
+                      setCameraActive(false);
+                      fileInputRef.current?.click();
+                    }}
+                  >
+                    Choose from Documents
+                  </button>
+                  {/* Handle a form request */}
+                  <label className=" hidden h-48 w-1/2 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-slate-500 p-4">
+                    <PiFileArrowDownDuotone className="text-xl text-tc-gray" />
+                    <span className="text-center text-tc-gray">
+                      Choose a File Upload supports: JPG, PDF, PNG.
+                    </span>
+                    <input
+                      ref={fileInputRef}
+                      type="file"
+                      accept=".png, .jpg, .jpeg, .gif"
+                      className="hidden"
+                      onChange={handleFileInputChange}
+                    />
+                  </label>
+                </div>
+                {cameraActive && !imageSrc && (
+                  <div>
+                    <Webcam
+                      audio={false}
+                      ref={webcamRef}
+                      screenshotFormat="image/jpeg"
+                      className="mx-auto size-64 object-contain"
+                    />
+                    <button
+                      onClick={capture}
+                      className="my-2 rounded-md bg-violet-darkHover p-1 text-sm text-white"
+                    >
+                      Capture
+                    </button>
+                  </div>
+                )}
+                {imageSrc && (
+                  <div>
+                    <Image
+                      src={imageSrc}
+                      alt="Captured or Selected"
+                      width={400}
+                      height={400}
+                      className="mx-auto size-64 object-contain"
+                    />
+                    <button
+                      onClick={handleRemoveDocumentImage}
+                      className="my-2 rounded-md bg-violet-darkHover p-1 text-sm text-white"
+                    >
+                      Remove
+                    </button>
+                  </div>
+                )}
+              </div>
+              <button
+                onClick={handleUploadAllDocument}
+                className="my-3 flex min-w-32 items-center justify-center rounded-full bg-violet-normal px-4 py-2 text-center text-white transition-opacity duration-300 hover:opacity-90 "
+                disabled={!imageSrc}
+              >
+                {isUploadImageLoading ? (
+                  <BeatLoader
+                    color={"white"}
+                    loading={isUploadImageLoading}
+                    size={14}
+                  />
+                ) : (
+                  "Upload Document"
+                )}
+              </button>
             </div>
           )}
       </div>
