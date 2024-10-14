@@ -68,7 +68,7 @@ const Invoice = ({
       const price = invoiceDraft?.price || currentBooking?.price || 0;
 
       // Calculate GST deduction (10% of the price)
-      const gstAmount = Number(price) * 0.10;
+      const gstAmount = Number((Math.round((Number(price) * 0.10) * 100) / 100).toFixed(2));
 
       // Calculate service charge deduction (2% of the price)
       const serviceChargeAmount = Number((Math.round((Number(price) * 0.02) * 100) / 100).toFixed(2));
