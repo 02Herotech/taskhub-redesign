@@ -37,8 +37,12 @@ const ProfileCompletion = ({ fetchedUserData }: ProfileCompletionType) => {
       status: user?.phoneNumber,
     },
     {
-      title: "Identification Document",
-      status: fetchedUserData?.idImage,
+      title: "Identification Document Front",
+      status: fetchedUserData?.idImageFront,
+    },
+    {
+      title: "Identification Document Back",
+      status: fetchedUserData?.idImageBack,
     },
     {
       title: "Date of Birth",

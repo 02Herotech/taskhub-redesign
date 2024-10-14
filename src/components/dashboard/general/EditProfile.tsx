@@ -36,14 +36,15 @@ const userDataSchema = z.object({
   idType: z.string().optional().nullable(),
   idNumber: z.string().optional(),
   bio: z.string().nullable().optional(),
-  idImage: z.string().nullable().optional(),
+  idImageFront: z.string().nullable().optional(),
+  idImageBack: z.string().nullable().optional(),
 });
 
 const idTypeObject = [
   { label: "Medicare Card", value: "MEDICARE_CARD" },
   { label: "International Passport", value: "INTERNATIONAL_PASSPORT" },
   { label: "Photo ID", value: "PHOTO_ID" },
-  { label: "Driver's Licence", value: "DRIVERS_LICENSE" },
+  { label: "Driver's License", value: "DRIVERS_LICENSE" },
 ];
 
 type UserDataType = z.infer<typeof userDataSchema>;
@@ -52,8 +53,14 @@ const EditProfile = () => {
   const [isEditingEnabled, setIsEditingEnabled] = useState(false);
   const [isFormModalShown, setIsFormModalShown] = useState(false);
   const [isEditingProfilePicture, setIsEditingProfilePicture] = useState({ isEditing: false, image: null as string | null });
+  const [isEditingImageFront, setIsEditingImageFront] = useState({ isEditing: false, image: null as string | null });
+  const [isEditingImageBack, setIsEditingImageBack] = useState({ isEditing: false, image: null as string | null });
+  const [documentImageFront, setDocumentImageFront] = useState<string | null>(null);
+  const [documentImageBack, setDocumentImageBack] = useState<string | null>(null);
   const [documentImage, setDocumentImage] = useState<string | null>(null);
   const [suburbList, setSuburbList] = useState<string[]>([]);
+  const [selectedDocumentFront, setSelectedDocumentFront] = useState<File | null>(null);
+  const [selectedDocumentBack, setSelectedDocumentBack] = useState<File | null>(null);
   const [selectedDocument, setSelectedDocument] = useState<File | null>(null);
   const [isProfileUpdatedSuccessfully, setIsProfileUpdatedSuccessfully] = useState(false);
   const [error, setError] = useState("");
@@ -75,7 +82,6 @@ const EditProfile = () => {
     const newRedirectToProvideService = getCookie("redirectToProvideService");
     if (newRedirectToProvideService) {
       router.push(newRedirectToProvideService);
-      deleteCookie("redirectToProvideService");
     } else {
       router.push(from || "/marketplace");
     }
@@ -121,6 +127,7 @@ const EditProfile = () => {
           },
         });
         setUserDetails(data);
+        console.log("profile:",data)
         reset({
           firstName: data.firstName || "",
           lastName: data.lastName || "",
@@ -132,7 +139,8 @@ const EditProfile = () => {
           state: data.state || "",
           idType: idTypeObject.find((item) => item.value === data.idType)?.label || "",
           idNumber: data.idNumber || "",
-          idImage: data.idImage || "",
+          idImageFront: data.idImageFront || "",
+          idImageBack: data.idImageBack || "",
           bio: isServiceProvider ? data.bio || "" : "No Bio needed for customer",
         });
       } catch (error) {
@@ -198,7 +206,8 @@ const EditProfile = () => {
           suburb: data.suburb,
           state: data.state,
           postCode: data.postcode,
-          idImage: selectedDocument,
+          idImageFront: selectedDocumentFront,
+          idImageBack: selectedDocumentBack,
           idType: data.idType,
           idNumber: data.idNumber,
           bio: data.bio,
@@ -219,7 +228,8 @@ const EditProfile = () => {
           suburb: data.suburb,
           state: data.state,
           postCode: data.postcode,
-          idImage: selectedDocument,
+          idImagefront: selectedDocumentFront,
+          idImageBack: selectedDocumentBack,
           idType: data.idType,
           idNumber: data.idNumber,
         }).reduce((acc, [key, value]) => {
@@ -232,7 +242,7 @@ const EditProfile = () => {
         url = "https://smp.jacinthsolutions.com.au/api/v1/customer/update";
       }
 
-      console.log(submitData);
+      
       await axios.patch(url, submitData, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -242,6 +252,7 @@ const EditProfile = () => {
       setIsProfileUpdatedSuccessfully(true);
       setIsFormModalShown(true);
       setIsEditingEnabled(false);
+      console.log(submitData);
     } catch (error: any) {
       console.log(error);
     }
@@ -251,18 +262,35 @@ const EditProfile = () => {
     setIsEditingProfilePicture({ isEditing: true, image: null });
     setIsFormModalShown(true);
   };
+  const handleChangeFront = () => {
+    setIsEditingImageFront({ isEditing: true, image: null });
+    setIsEditingImageBack({ isEditing: false, image: null });
+    setIsFormModalShown(true);
+  };
+  const handleChangeBack = () => {
+    setIsEditingImageBack({ isEditing: true, image: null });
+    setIsEditingImageFront({ isEditing: false, image: null });
+    setIsFormModalShown(true);
+  };
 
   return (
     <main className="relative px-4 py-8 lg:grid lg:grid-cols-12 lg:items-start lg:gap-6 lg:py-16">
       <EditProfileModal
         setIsFormModalShown={setIsFormModalShown}
-        setDocumentImage={setDocumentImage}
+        setDocumentImageFront={setDocumentImageFront}
+        setDocumentImageBack={setDocumentImageBack}
         isFormModalShown={isFormModalShown}
         isEditingProfilePicture={isEditingProfilePicture}
         setisEditingProfilePicture={setIsEditingProfilePicture}
+        isEditingImageFront={isEditingImageFront}
+        setisEditingImageFront={setIsEditingImageFront}
+        isEditingImageBack={isEditingImageBack}
+        setisEditingImageBack={setIsEditingImageBack}
         isProfileUpdatedSuccessfully={isProfileUpdatedSuccessfully}
         setIsProfileUpdatedSuccessfully={setIsProfileUpdatedSuccessfully}
-        setSelectedDocument={setSelectedDocument}
+        setSelectedDocumentFront={setSelectedDocumentFront}
+        setSelectedDocumentBack={setSelectedDocumentBack}
+        setDocumentImage={setDocumentImage}
         handleRedirect = {handleRedirect}
       />
 
@@ -361,7 +389,7 @@ const EditProfile = () => {
               watchField={watchField}
               disabled={!isEditingEnabled}
               as="textarea"
-              className="min-h-32"
+              className="min-h-32 w-full rounded-xl border border-slate-100 p-2 text-slate-700 shadow outline-none transition-shadow duration-300 hover:shadow-md"
             />
           </section>
         )}
@@ -481,23 +509,24 @@ const EditProfile = () => {
             </div>
 
             {/* Upload Identification Document */}
-            <div className="flex w-full flex-col gap-3 text-violet-normal lg:max-w-64">
+            <div className="flex w-full flex-col gap-3 text-violet-normal">
               <label className="flex items-center justify-between">
                 <span>Means of ID</span>
-                {(documentImage || watchField.idImage) && (
+                {(documentImageFront || watchField.idImageFront) && (
                   <BiCheck className="size-5 rounded-full bg-green-500 p-1 text-white" />
                 )}
               </label>
+              <div className="flex gap-5 w-full">
               <div>
-                {documentImage || watchField.idImage ? (
+                {documentImageFront || watchField.idImageFront ? (
                   <button
                     type="button"
                     className="flex items-end justify-center space-x-2"
-                    onClick={() => setIsFormModalShown(true)}
+                    onClick={handleChangeFront}
                     disabled={!isEditingEnabled}
                   >
                     <Image
-                      src={documentImage ?? watchField.idImage ?? ""}
+                      src={documentImageFront ?? watchField.idImageFront ?? ""}
                       alt="Captured or Selected"
                       width={300}
                       height={300}
@@ -508,15 +537,46 @@ const EditProfile = () => {
                   <button
                     type="button"
                     className="flex h-48 w-48 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-slate-500 p-4"
-                    onClick={() => setIsFormModalShown(true)}
+                        onClick={handleChangeFront}
                     disabled={!isEditingEnabled}
                   >
-                    <PiFileArrowDownDuotone className="text-xl text-tc-gray" />
+                    <PiFileArrowDownDuotone className="text-2xl text-tc-gray" />
                     <span className="text-center text-tc-gray">
-                      Choose a File Upload supports: JPG, PDF, PNG.
+                          Choose a File <span className="text-[#381F8C] font-clashSemiBold"><br/>Front View<br/></span> Upload supports: JPG, PDF, PNG.
                     </span>
                   </button>
                 )}
+              </div>
+              <div>
+                {documentImageBack || watchField.idImageBack ? (
+                  <button
+                    type="button"
+                    className="flex items-end justify-center space-x-2"
+                    onClick={handleChangeBack}
+                    disabled={!isEditingEnabled}
+                  >
+                    <Image
+                      src={documentImageBack ?? watchField.idImageBack ?? ""}
+                      alt="Captured or Selected"
+                      width={300}
+                      height={300}
+                      className="rounded-xl"
+                    />
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    className="flex h-48 w-48 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-slate-500 p-4"
+                    onClick={handleChangeBack}
+                    disabled={!isEditingEnabled}
+                  >
+                    <PiFileArrowDownDuotone className="text-2xl text-tc-gray" />
+                    <span className="text-center text-tc-gray">
+                          Choose a File <span className="text-[#381F8C] font-clashSemiBold"><br/>Back View<br/></span> Upload supports: JPG, PDF, PNG.
+                    </span>
+                  </button>
+                )}
+                </div>
               </div>
             </div>
           </div>

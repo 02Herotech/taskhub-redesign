@@ -62,7 +62,7 @@ const Page = () => {
             try {
                 if (!id) return;
                 console.log(id)
-                const url = `https://smp.jacinthsolutions.com.au/api/v1/service_provider/get-profile/${id}`;
+                const url = `https://smp.jacinthsolutions.com.au/api/v1/service_provider/get-profile/${displayData?.serviceProvider?.id}`;
                 const response = await axios.get(url,
                     {
                         headers: {
@@ -260,7 +260,7 @@ const Page = () => {
                         ))}
                     </div>
                 </section>
-                <Reviews serviceProviderId={id} />
+                <Reviews serviceProviderId={displayData?.serviceProvider?.id} />
             </main>
         </>
     );
