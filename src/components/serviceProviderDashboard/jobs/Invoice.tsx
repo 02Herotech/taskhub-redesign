@@ -338,7 +338,7 @@ const Invoice = ({
                 </div>
                 <div>
                   <p className=" font-extrabold text-violet-dark  ">
-                    ${invoiceState.gst}
+                      ${invoiceState.gst.toFixed(2)}
                   </p>
                   <p className="font-medium  text-[#4E5158]">GST @10%</p>
                 </div>
