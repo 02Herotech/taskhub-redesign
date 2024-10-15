@@ -19,7 +19,7 @@ import imags from "../../../../../public/assets/images/tickk.png";
 import imgg from "../../../../../public/assets/images/girl.png";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter} from "next/navigation";
+import { useRouter } from "next/navigation";
 import { setCookie, getCookie } from "cookies-next";
 import { FaSortDown } from "react-icons/fa6";
 import Dropdown from "@/components/global/Dropdown";
@@ -32,7 +32,7 @@ interface FormData {
   taskTime: string;
   taskDate: string;
   taskType: string;
-  customerBudget: number ;
+  customerBudget: number | null;
   termAccepted: boolean;
   suburb: string;
   state: string;
@@ -81,7 +81,7 @@ const AddTaskForm: React.FC = () => {
     postCode: getCookie("postCode") || "",
     customerBudget: getCookie("categoryId")
       ? parseInt(getCookie("categoryId") as string)
-      : 0,
+      : null,
     termAccepted: false,
     categoryId: getCookie("categoryId")
       ? parseInt(getCookie("categoryId") as string)
@@ -126,7 +126,7 @@ const AddTaskForm: React.FC = () => {
   // End of getting description from the marketplace
 
   const handleLoginNavigation = () => {
-    setCookie("redirectToAddTask", "/customer/add-task", { maxAge: 36000 });
+    setCookie("redirectToAddTask", "/customer/add-task", { maxAge: 360000 });
     router.push(
       "/auth/sign-up?userType=Service+Provider?from=/customer/add-task",
     );
@@ -134,25 +134,25 @@ const AddTaskForm: React.FC = () => {
 
   useEffect(() => {
     setCookie("taskBriefDescription", task.taskBriefDescription, {
-      maxAge: 120,
+      maxAge: 1200,
     });
-    setCookie("taskTime", task.taskTime, { maxAge: 120 });
-    setCookie("taskDate", task.taskDate, { maxAge: 120 });
-    setCookie("taskType", task.taskType, { maxAge: 120 });
-    setCookie("suburb", task.suburb, { maxAge: 120 });
-    setCookie("postCode", task.postCode, { maxAge: 120 });
-    setCookie("state", task.state, { maxAge: 120 });
-    setCookie("customerBudget", task.customerBudget, { maxAge: 120 });
-    setCookie("hubTime", task.termAccepted, { maxAge: 120 });
-    setCookie("categoryId", task.categoryId?.toString(), { maxAge: 120 });
-    setCookie("taskDescription", task.taskDescription, { maxAge: 120 });
+    setCookie("taskTime", task.taskTime, { maxAge: 1200 });
+    setCookie("taskDate", task.taskDate, { maxAge: 1200 });
+    setCookie("taskType", task.taskType, { maxAge: 1200 });
+    setCookie("suburb", task.suburb, { maxAge: 1200 });
+    setCookie("postCode", task.postCode, { maxAge: 1200 });
+    setCookie("state", task.state, { maxAge: 1200 });
+    setCookie("customerBudget", task.customerBudget, { maxAge: 1200 });
+    setCookie("hubTime", task.termAccepted, { maxAge: 1200 });
+    setCookie("categoryId", task.categoryId?.toString(), { maxAge: 1200 });
+    setCookie("taskDescription", task.taskDescription, { maxAge: 1200 });
   }, [task]);
 
   useEffect(() => {
     const fetchPostalCodeData = async () => {
       try {
         const response = await axios.get(
-          `https://smp.jacinthsolutions.com.au/api/v1/util/locations/search?postcode=${selectedCode}`,
+          `https://api.oloja.com.au/api/v1/util/locations/search?postcode=${selectedCode}`,
         );
         console.log(response.data);
         setPostalCodeData(response.data as PostalCodeData[]);
@@ -170,7 +170,7 @@ const AddTaskForm: React.FC = () => {
     const fetchItems = async () => {
       try {
         const response = await axios.get(
-          "https://smp.jacinthsolutions.com.au/api/v1/util/all-categories",
+          "https://api.oloja.com.au/api/v1/util/all-categories",
         );
         const data: Item[] = response.data;
         setItems(data);
@@ -464,9 +464,9 @@ const AddTaskForm: React.FC = () => {
         }
 
         console.log(finalTask);
-        const response = await Promise.race([
+        await Promise.race([
           axios.post(
-            "https://smp.jacinthsolutions.com.au/api/v1/task/post",
+            "https://api.oloja.com.au/api/v1/task/post",
             finalTask,
             {
               headers: {
@@ -478,7 +478,6 @@ const AddTaskForm: React.FC = () => {
           timeout(10000),
         ]);
 
-      console.log("hello", response)
         setTask({
           taskBriefDescription: "",
           taskImage: null,
@@ -489,11 +488,12 @@ const AddTaskForm: React.FC = () => {
           suburb: "",
           state: "",
           postCode: "",
-          customerBudget: 0,
+          customerBudget: null,
           categoryId: null,
           taskDescription: "",
         });
 
+        setIsSuccessPopupOpen(true);
       } catch (error: any) {
         if (error.response.status === 400 || error.response.status === 500 || error.response.status === 409) {
           setIsSuccessPopupOpen(false);
@@ -737,8 +737,8 @@ const AddTaskForm: React.FC = () => {
               <div className="flex space-x-4 text-[13px] text-[#221354]">
                 <button
                   className={`rounded-2xl p-2 ${activeButtonIndex === 0
-                      ? "bg-status-purpleBase text-white"
-                      : "bg-[#EBE9F4] hover:bg-status-purpleBase hover:text-white"
+                    ? "bg-status-purpleBase text-white"
+                    : "bg-[#EBE9F4] hover:bg-status-purpleBase hover:text-white"
                     } outline-none`}
                   name="physical"
                   onClick={() => handleClick(0)}
@@ -747,8 +747,8 @@ const AddTaskForm: React.FC = () => {
                 </button>
                 <button
                   className={`rounded-2xl p-2 ${activeButtonIndex === 1
-                      ? "bg-status-purpleBase text-white"
-                      : "bg-[#EBE9F4] hover:bg-status-purpleBase hover:text-white"
+                    ? "bg-status-purpleBase text-white"
+                    : "bg-[#EBE9F4] hover:bg-status-purpleBase hover:text-white"
                     } outline-none`}
                   name="remote"
                   onClick={() => {
@@ -857,7 +857,7 @@ const AddTaskForm: React.FC = () => {
                     Budget{" "}
                     <span className="font-extrabold text-[#ff0000]">*</span>
                   </label>
-                  {task.customerBudget > 0 && (
+                  {task.customerBudget && (
                     <div className="h-[16px] w-[16px] rounded-3xl bg-[#4CAF50] text-[16px] font-extrabold text-white">
                       <GrFormCheckmark />
                     </div>
@@ -918,15 +918,15 @@ const AddTaskForm: React.FC = () => {
           <div className="mb-3 flex justify-center space-x-5 pt-4">
             <div
               className={`${currentPage === 1
-                  ? "text-status-purpleBase"
-                  : "text-status-purpleBase"
+                ? "text-status-purpleBase"
+                : "text-status-purpleBase"
                 }`}
             >
               <p className="flex items-center gap-2 text-[12px] md:text-[16px] lg:gap-3">
                 <span
                   className={`${currentPage === 1
-                      ? "bg-status-purpleBase text-white"
-                      : "bg-status-purpleBase text-white"
+                    ? "bg-status-purpleBase text-white"
+                    : "bg-status-purpleBase text-white"
                     } flex h-[37px] w-[47px] items-center justify-center rounded-[22px] border-none p-3 font-satoshiBold`}
                 >
                   01
@@ -944,8 +944,8 @@ const AddTaskForm: React.FC = () => {
               <p className="flex items-center gap-2 text-[12px] md:text-[16px] lg:gap-3">
                 <span
                   className={`${currentPage === 2
-                      ? "bg-status-purpleBase text-white"
-                      : "bg-[#EAE9EB] text-[#716F78]"
+                    ? "bg-status-purpleBase text-white"
+                    : "bg-[#EAE9EB] text-[#716F78]"
                     } flex h-[37px] w-[47px] items-center justify-center rounded-[22px] border-none p-3 font-satoshiBold`}
                 >
                   02
@@ -964,10 +964,10 @@ const AddTaskForm: React.FC = () => {
               <div className="h-1 w-2/3 overflow-hidden bg-[#EAE9EB]">
                 <div
                   className={`h-full ${currentPage === 1
+                    ? "bg-status-purpleBase"
+                    : currentPage === 2
                       ? "bg-status-purpleBase"
-                      : currentPage === 2
-                        ? "bg-status-purpleBase"
-                        : "bg-status-purpleBase"
+                      : "bg-status-purpleBase"
                     }`}
                   style={{ width: `${progress}%` }}
                 />
@@ -998,7 +998,7 @@ const AddTaskForm: React.FC = () => {
         <Popup
           isOpen={isSuccessPopup}
           onClose={() => {
-            setIsSuccessPopup(false);
+            setIsSuccessPopupOpen(false);
           }}
         >
           <div className="px-16 py-10 lg:px-24">

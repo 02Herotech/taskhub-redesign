@@ -46,7 +46,6 @@ const Reviews = ({serviceProviderId}: any) => {
   const session = useSession();
   const [reviews, setReviews] = useState<Review[]>([]);
   const token = session?.data?.user.accessToken ||session?.data?.user.refreshToken;
-  const Auth = session.status === "authenticated";
 
   useEffect(() => {
     const fetchReviews = async () => {

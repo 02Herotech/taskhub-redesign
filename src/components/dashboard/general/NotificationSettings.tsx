@@ -35,23 +35,23 @@ const NotificationsSettings = () => {
 
   const NotificationOptions: NotificationOption[] = [
     {
-      label: `When someone books my ${isServiceProvider ? "Service" : "Task"}`,
+      label: `Get updates on booking statuses and progress.`,
       value: "BOOKING",
     },
     {
-      label: "When someone send me an offer",
+      label: "Get notified when a new invoice is generated or an existing invoice is updated.",
       value: "INVOICE",
     },
     {
-      label: `When a ${isServiceProvider ? "task" : "service"} is posted that matches your preferences`,
-      value: `${isServiceProvider ? "LISTING" : "TASK"}`,
+      label: `${isServiceProvider ? "Get notified when someone leaves a review or feedback on your service." : "Be notified when someone sends a job offer for your task."}`,
+      value: `${isServiceProvider ? "REVIEW":"TASK"}`,
     },
     {
-      label: `When I have an ongoing job`,
+      label: `Stay informed about your ongoing jobs`,
       value: "JOB",
     },
     {
-      label: `When a payment is made`,
+      label: `Get updates on payments, including transactions and payment statuses.`,
       value: "PAYMENT",
     },
   ];
