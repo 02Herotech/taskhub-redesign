@@ -82,7 +82,6 @@ const Offers = () => {
 
       if (acceptInvoiceError) {
         setError(response.message);
-        return;
       } else {
         setInvoiceAccepted(true);
         setError("");
@@ -101,7 +100,6 @@ const Offers = () => {
 
       if (rejectInvoiceError) {
         setError(response.message);
-        return;
       } else {
         setError("");
         closeModal();
