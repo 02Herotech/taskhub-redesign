@@ -68,10 +68,10 @@ const Invoice = ({
       const price = invoiceDraft?.price || currentBooking?.price || 0;
 
       // Calculate GST deduction (10% of the price)
-      const gstAmount = Number(price) * 0.10;
+      const gstAmount = Number((Math.round((Number(price) * 0.10) * 100) / 100).toFixed(2));
 
       // Calculate service charge deduction (2% of the price)
-      const serviceChargeAmount = Number(price) * 0.02;
+      const serviceChargeAmount = Number((Math.round((Number(price) * 0.02) * 100) / 100).toFixed(2));
 
       // Final amount the user earns after deductions
       const userEarnings = Number(price) - (gstAmount + serviceChargeAmount);
@@ -248,7 +248,7 @@ const Invoice = ({
       ) : (
         <div
           ref={invoiceContainerRef}
-          className=" relative w-[90vw] max-w-xl  space-y-3 rounded-xl bg-white p-3 py-10 lg:p-6"
+          className=" relative max-lg:w-[90vw] space-y-3 rounded-xl bg-white p-3 py-10 lg:p-6"
         >
           <div>
             <h1 className="font-clashBold text-3xl font-extrabold leading-6 text-violet-dark">
@@ -338,7 +338,7 @@ const Invoice = ({
                 </div>
                 <div>
                   <p className=" font-extrabold text-violet-dark  ">
-                    ${invoiceState.gst}
+                      ${invoiceState.gst.toFixed(2)}
                   </p>
                   <p className="font-medium  text-[#4E5158]">GST @10%</p>
                 </div>
@@ -369,7 +369,7 @@ const Invoice = ({
             <div className="flex items-center justify-center">
               <div>
                 <p className="font-extrabold text-[#006F05] text-center font-satoshiBold text-xl lg:text-3xl">
-                  ${invoiceState.total}
+                  ${invoiceState.total.toFixed(2)}
                 </p>
                 <p className="font-medium text-[#4E5158]">
                   Total Amount Payable
