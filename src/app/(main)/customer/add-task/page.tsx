@@ -466,7 +466,7 @@ const AddTaskForm: React.FC = () => {
         console.log(finalTask);
         await Promise.race([
           axios.post(
-            "https://api.oloja.com.au/api/v1/task/post",
+            `${process.env.NEXT_PUBLIC_API_URL}/task/post`,
             finalTask,
             {
               headers: {
