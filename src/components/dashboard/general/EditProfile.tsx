@@ -119,7 +119,7 @@ const EditProfile = () => {
     const fetchUserData = async () => {
       if (!token) return;
       try {
-        const url = `https://smp.jacinthsolutions.com.au/api/v1/${isServiceProvider ? 'service_provider' : 'customer'}/profile`;
+        const url = `${process.env.NEXT_PUBLIC_API_URL}/${isServiceProvider ? 'service_provider' : 'customer'}/profile`;
         const { data } = await axios.get(url, {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -164,7 +164,7 @@ const EditProfile = () => {
       }
 
       try {
-        const url = `https://smp.jacinthsolutions.com.au/api/v1/util/locations/search?postcode=${watchPostcode}`;
+        const url = `${process.env.NEXT_PUBLIC_API_URL}/util/locations/search?postcode=${watchPostcode}`;
         const { data } = await axios.get(url);
         const suburbs = data.map((item: any) => item.name);
         setSuburbList(suburbs);
@@ -219,7 +219,7 @@ const EditProfile = () => {
           return acc;
         }, {});
         url =
-          "https://smp.jacinthsolutions.com.au/api/v1/service_provider/update";
+          `${process.env.NEXT_PUBLIC_API_URL}/service_provider/update`;
       } else {
         submitData = Object.entries({
           firstName: data.firstName,
@@ -239,7 +239,7 @@ const EditProfile = () => {
           }
           return acc;
         }, {});
-        url = "https://smp.jacinthsolutions.com.au/api/v1/customer/update";
+        url = `${process.env.NEXT_PUBLIC_API_URL}/customer/update`;
       }
       
       await axios.patch(url, submitData, {

@@ -172,10 +172,10 @@ const EditProfileModal = ({
         let url;
         if (isServiceProvider) {
           url =
-            "https://smp.jacinthsolutions.com.au/api/v1/service_provider/profile_picture";
+            `${process.env.NEXT_PUBLIC_API_URL}/service_provider/profile_picture`;
         } else {
           url =
-            "https://smp.jacinthsolutions.com.au/api/v1/customer/profile_picture";
+            `${process.env.NEXT_PUBLIC_API_URL}/customer/profile_picture`;
         }
         try {
           await axios.post(
@@ -189,7 +189,7 @@ const EditProfileModal = ({
             },
           );
           const profileUrl =
-            "https://smp.jacinthsolutions.com.au/api/v1/user/user-profile/" +
+            `${process.env.NEXT_PUBLIC_API_URL}/user/user-profile/` +
             user?.id;
           const { data } = await axios.get(profileUrl);
           dispatch(updateUserProfile(data));

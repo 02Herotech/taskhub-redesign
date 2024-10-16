@@ -37,7 +37,7 @@ const AllServices = () => {
         throw new Error("Authorization token is missing");
       }
       const url =
-        "https://smp.jacinthsolutions.com.au/api/v1/listing/service-provider/0";
+        `${process.env.NEXT_PUBLIC_API_URL}/listing/service-provider/0`;
       const response = await axios.get(url, {
         headers: {
           Authorization: "Bearer " + token,

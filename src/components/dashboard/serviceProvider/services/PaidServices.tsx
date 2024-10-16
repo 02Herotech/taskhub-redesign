@@ -34,7 +34,7 @@ const PaidServices = ({
     try {
       setStartJobState((prev) => ({ ...prev, loading: true, id }));
       const url =
-        "https://smp.jacinthsolutions.com.au/api/v1/booking/start-task?jobId=" +
+        `${process.env.NEXT_PUBLIC_API_URL}/booking/start-task?jobId=` +
         id;
       const body = { jobId: id };
       const { data } = await axios.post(url, body, {

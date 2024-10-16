@@ -191,7 +191,7 @@ const ProvideService: React.FC = () => {
     const fetchUserData = async () => {
       if (!token) return;
       try {
-        const url = isServiceProvider ? "https://smp.jacinthsolutions.com.au/api/v1/service_provider/profile" : "https://smp.jacinthsolutions.com.au/api/v1/customer/profile";
+        const url = isServiceProvider ? `${process.env.NEXT_PUBLIC_API_URL}/service_provider/profile` : `${process.env.NEXT_PUBLIC_API_URL}/customer/profile`;
         const { data } = await axios.get(url, {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -260,7 +260,7 @@ const ProvideService: React.FC = () => {
     const fetchPostalCodeData = async () => {
       try {
         const response = await axios.get(
-          `https://smp.jacinthsolutions.com.au/api/v1/util/locations/search?postcode=${selectedCode}`,
+          `${process.env.NEXT_PUBLIC_API_URL}/util/locations/search?postcode=${selectedCode}`,
         );
         setPostalCodeData(response.data as PostalCodeData[]);
       } catch (error) {
@@ -278,7 +278,7 @@ const ProvideService: React.FC = () => {
     const fetchItems = async () => {
       try {
         const response = await axios.get(
-          "https://smp.jacinthsolutions.com.au/api/v1/util/all-categories",
+          `${process.env.NEXT_PUBLIC_API_URL}/util/all-categories`,
         );
         const data: Item[] = response.data;
         console.log(data);
@@ -296,7 +296,7 @@ const ProvideService: React.FC = () => {
       const fetchSubcategories = async () => {
         try {
           const response = await axios.get(
-            `https://smp.jacinthsolutions.com.au/api/v1/util/all-sub-categories-by-categoryId/${selectedCategory}`,
+            `${process.env.NEXT_PUBLIC_API_URL}/util/all-sub-categories-by-categoryId/${selectedCategory}`,
           );
           const data: Subcategory[] = response.data;
           console.log(data);
@@ -591,10 +591,9 @@ const ProvideService: React.FC = () => {
 
         finalTask = { ...finalTask, negotiable: negotiable };
 
-        console.log(finalTask);
        const response = await
           axios.post(
-            `https://smp.jacinthsolutions.com.au/api/v1/listing/create-listing?userId=${id}`,
+            `${process.env.NEXT_PUBLIC_API_URL}/listing/create-listing?userId=${id}`,
             finalTask,
             {
               headers: {

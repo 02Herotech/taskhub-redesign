@@ -127,7 +127,7 @@ const Invoice = ({
     try {
       setInvoiceState((prev) => ({ ...prev, loading: true }));
       const url =
-        "https://smp.jacinthsolutions.com.au/api/v1/booking/generate-invoice";
+        `${process.env.NEXT_PUBLIC_API_URL}/booking/generate-invoice`;
       await axios.post(url, invoiceData, {
         headers: {
           Authorization: `Bearer ${token}`,

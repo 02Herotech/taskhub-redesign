@@ -105,7 +105,7 @@ const PricingModal = ({
         bookingDescription: formState.description,
         bookingTitle: modalData.title,
       };
-      const url = "https://smp.jacinthsolutions.com.au/api/v1/booking";
+      const url = `${process.env.NEXT_PUBLIC_API_URL}/booking`;
       const { data } = await axios.post(url, uploadData, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -143,7 +143,7 @@ const PricingModal = ({
   const handleFectchLocationByPostcode = async () => {
     try {
       const url =
-        "https://smp.jacinthsolutions.com.au/api/v1/util/locations/search?postcode=" +
+        `${process.env.NEXT_PUBLIC_API_URL}/util/locations/search?postcode=` +
         formState.postcode;
       const { data } = await axios.get(url);
       const suburb = data.map((item: any) => item.name);

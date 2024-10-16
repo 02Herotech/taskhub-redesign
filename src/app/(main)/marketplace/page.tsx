@@ -55,7 +55,7 @@ const MareketPlace = () => {
     const fetchUserData = async () => {
       if (!token) return;
       try {
-        const url = isServiceProvider ? "https://smp.jacinthsolutions.com.au/api/v1/service_provider/profile" : "https://smp.jacinthsolutions.com.au/api/v1/customer/profile";
+        const url = isServiceProvider ? `${process.env.NEXT_PUBLIC_API_URL}/service_provider/profile` : `${process.env.NEXT_PUBLIC_API_URL}/customer/profile`;
         const { data } = await axios.get(url, {
           headers: {
             Authorization: `Bearer ${token}`,

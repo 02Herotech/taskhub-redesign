@@ -41,7 +41,7 @@ const ViewJobs = () => {
     if (!token) return;
     try {
       setLoading(true);
-      const url = "https://smp.jacinthsolutions.com.au/api/v1/booking/" + id;
+      const url = `${process.env.NEXT_PUBLIC_API_URL}/booking/` + id;
       const response = await axios.get(url, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -65,7 +65,7 @@ const ViewJobs = () => {
     try {
       setRequestStatus((prev) => ({ ...prev, isAcceptRequesting: true }));
       const url =
-        "https://smp.jacinthsolutions.com.au/api/v1/booking/accept-proposal?bookingId=" +
+        `${process.env.NEXT_PUBLIC_API_URL}/booking/accept-proposal?bookingId=` +
         currentBooking?.id;
       const response = await axios.post(
         url,
@@ -93,7 +93,7 @@ const ViewJobs = () => {
     try {
       setRequestStatus((prev) => ({ ...prev, isRejectRequesting: true }));
       const url =
-        "https://smp.jacinthsolutions.com.au/api/v1/booking/reject-proposal?bookingId=" +
+        `${process.env.NEXT_PUBLIC_API_URL}/booking/reject-proposal?bookingId=` +
         currentBooking?.id;
       const response = await axios.post(
         url,
