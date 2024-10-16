@@ -182,3 +182,19 @@ body {
 .slick-list {
   margin: 0 0px; 
 }
+
+
+.spinner {
+  border: 2px solid lightgray;
+  border-top: 2px solid #22c55e;
+  border-radius: 50%;
+  width: 12px;
+  height: 12px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+

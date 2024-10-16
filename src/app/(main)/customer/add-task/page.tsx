@@ -19,7 +19,7 @@ import imags from "../../../../../public/assets/images/tickk.png";
 import imgg from "../../../../../public/assets/images/girl.png";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter} from "next/navigation";
+import { useRouter } from "next/navigation";
 import { setCookie, getCookie } from "cookies-next";
 import { FaSortDown } from "react-icons/fa6";
 import Dropdown from "@/components/global/Dropdown";
@@ -152,7 +152,7 @@ const AddTaskForm: React.FC = () => {
     const fetchPostalCodeData = async () => {
       try {
         const response = await axios.get(
-          `https://smp.jacinthsolutions.com.au/api/v1/util/locations/search?postcode=${selectedCode}`,
+          `https://api.oloja.com.au/api/v1/util/locations/search?postcode=${selectedCode}`,
         );
         console.log(response.data);
         setPostalCodeData(response.data as PostalCodeData[]);
@@ -170,7 +170,7 @@ const AddTaskForm: React.FC = () => {
     const fetchItems = async () => {
       try {
         const response = await axios.get(
-          "https://smp.jacinthsolutions.com.au/api/v1/util/all-categories",
+          "https://api.oloja.com.au/api/v1/util/all-categories",
         );
         const data: Item[] = response.data;
         setItems(data);
@@ -466,7 +466,7 @@ const AddTaskForm: React.FC = () => {
         console.log(finalTask);
         await Promise.race([
           axios.post(
-            "https://smp.jacinthsolutions.com.au/api/v1/task/post",
+            `${process.env.NEXT_PUBLIC_API_URL}/task/post`,
             finalTask,
             {
               headers: {
@@ -737,8 +737,8 @@ const AddTaskForm: React.FC = () => {
               <div className="flex space-x-4 text-[13px] text-[#221354]">
                 <button
                   className={`rounded-2xl p-2 ${activeButtonIndex === 0
-                      ? "bg-status-purpleBase text-white"
-                      : "bg-[#EBE9F4] hover:bg-status-purpleBase hover:text-white"
+                    ? "bg-status-purpleBase text-white"
+                    : "bg-[#EBE9F4] hover:bg-status-purpleBase hover:text-white"
                     } outline-none`}
                   name="physical"
                   onClick={() => handleClick(0)}
@@ -747,8 +747,8 @@ const AddTaskForm: React.FC = () => {
                 </button>
                 <button
                   className={`rounded-2xl p-2 ${activeButtonIndex === 1
-                      ? "bg-status-purpleBase text-white"
-                      : "bg-[#EBE9F4] hover:bg-status-purpleBase hover:text-white"
+                    ? "bg-status-purpleBase text-white"
+                    : "bg-[#EBE9F4] hover:bg-status-purpleBase hover:text-white"
                     } outline-none`}
                   name="remote"
                   onClick={() => {
@@ -918,15 +918,15 @@ const AddTaskForm: React.FC = () => {
           <div className="mb-3 flex justify-center space-x-5 pt-4">
             <div
               className={`${currentPage === 1
-                  ? "text-status-purpleBase"
-                  : "text-status-purpleBase"
+                ? "text-status-purpleBase"
+                : "text-status-purpleBase"
                 }`}
             >
               <p className="flex items-center gap-2 text-[12px] md:text-[16px] lg:gap-3">
                 <span
                   className={`${currentPage === 1
-                      ? "bg-status-purpleBase text-white"
-                      : "bg-status-purpleBase text-white"
+                    ? "bg-status-purpleBase text-white"
+                    : "bg-status-purpleBase text-white"
                     } flex h-[37px] w-[47px] items-center justify-center rounded-[22px] border-none p-3 font-satoshiBold`}
                 >
                   01
@@ -944,8 +944,8 @@ const AddTaskForm: React.FC = () => {
               <p className="flex items-center gap-2 text-[12px] md:text-[16px] lg:gap-3">
                 <span
                   className={`${currentPage === 2
-                      ? "bg-status-purpleBase text-white"
-                      : "bg-[#EAE9EB] text-[#716F78]"
+                    ? "bg-status-purpleBase text-white"
+                    : "bg-[#EAE9EB] text-[#716F78]"
                     } flex h-[37px] w-[47px] items-center justify-center rounded-[22px] border-none p-3 font-satoshiBold`}
                 >
                   02
@@ -964,10 +964,10 @@ const AddTaskForm: React.FC = () => {
               <div className="h-1 w-2/3 overflow-hidden bg-[#EAE9EB]">
                 <div
                   className={`h-full ${currentPage === 1
+                    ? "bg-status-purpleBase"
+                    : currentPage === 2
                       ? "bg-status-purpleBase"
-                      : currentPage === 2
-                        ? "bg-status-purpleBase"
-                        : "bg-status-purpleBase"
+                      : "bg-status-purpleBase"
                     }`}
                   style={{ width: `${progress}%` }}
                 />

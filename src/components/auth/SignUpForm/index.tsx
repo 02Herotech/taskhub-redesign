@@ -48,6 +48,7 @@ const SignUpForm = () => {
     } = methods;
 
     const onSubmit: SubmitHandler<SignUpRequest> = async (payload) => {
+        let timeoutId: any;
         try {
             setIsLoading(true);
 
@@ -59,7 +60,6 @@ const SignUpForm = () => {
                 password: payload.password
             };
 
-            // Store form data in cookiesStore
             setCookie('firstName', payload.firstName, { maxAge: 60 * 2 });
             setCookie('lastName', payload.lastName, { maxAge: 60 * 2 });
             setCookie('phoneNumber', payload.phoneNumber, { maxAge: 60 * 2 });
@@ -68,7 +68,10 @@ const SignUpForm = () => {
             setCookie('userType', userType);
 
             const timeoutPromise = new Promise((_, reject) =>
-                setTimeout(() => reject(setError('Something went wrong, please try again')), 30000)
+                 timeoutId = setTimeout(() => {
+                    reject(setError('Something went wrong, please try again'))
+                    setIsLoading(false);
+                }, 30000)
             );
 
             const signUpPromise = userType === 'Service Provider'
@@ -77,10 +80,13 @@ const SignUpForm = () => {
 
             await Promise.race([signUpPromise, timeoutPromise]);
 
+         clearTimeout(timeoutId);
+
             setIsLoading(false);
             router.push(`/auth/verify-email?email=${payload.emailAddress}`);
 
         } catch (err: any) {
+            clearTimeout(timeoutId);
             console.log("Error:", err);
             setError(err.data.message || 'An unexpected error occurred');
             setIsLoading(false);
