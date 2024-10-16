@@ -4,7 +4,8 @@ import { FaCheckDouble } from 'react-icons/fa';
 
 const ChatMessage = ({ item, user }: any) => {
     const { formattedTime, isLoading } = useTimestampWithSpinner(item.time);
-console.log(item)
+    
+    console.log(item)
     return (
         <div
             className={`my-2 flex w-full ${item.senderId === user.id ? "flex-wrap justify-end" : "justify-start"
