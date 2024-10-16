@@ -26,7 +26,6 @@ type ChatMessagesGroupedType = {
 const ServiceProviderChat = () => {
   const [message, setMessage] = useState("");
   const [contact, setContact] = useState<ChatContactTypes | null>();
-  const router = useRouter()
 
   const [groupedChatMessages, setGroupedChatMessages] =
     useState<ChatMessagesGroupedType | null>(null);
@@ -50,17 +49,6 @@ const ServiceProviderChat = () => {
     loadContacts();
     // eslint-disable-next-line
   }, []);
-
-  // const handleFocus = () => {
-  //   document.body.style.overflow = "auto";
-  //   setTimeout(() => {
-  //     inputRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
-  //   }, 300); // Delay to account for keyboard animation
-  // };
-
-  // const handleBlur = () => {
-  //   document.body.style.overflow = "hidden";
-  // };
 
   const groupMessagesByDate = (
     messages: ChatMessageDisplayedType[],
@@ -271,6 +259,8 @@ const ServiceProviderChat = () => {
 
     return `${day}${ordinalSuffix(day)} ${month} ${year}`;
   };
+
+  console.log("messages", groupedChatMessages)
 
   return (
     <main className="h-[calc(100cqh-5rem)] space-y-5 overflow-hidden p-4 lg:p-8 ">

@@ -52,7 +52,7 @@ const WithdrawalPage: React.FC = () => {
     if (!auth.token) return;
 
     try {
-      const url = "https://smp.jacinthsolutions.com.au/api/v1/stripe/payout";
+      const url = `${process.env.NEXT_PUBLIC_API_URL}/stripe/payout`;
       await axios.post(url, data, {
         headers: { Authorization: `Bearer ${auth.token}` },
       });

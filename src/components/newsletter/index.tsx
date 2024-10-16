@@ -28,7 +28,7 @@ const NewsLetter = () => {
         setMessage('');
 
         try {
-            const response = await fetch('https://smp.jacinthsolutions.com.au/api/v1/util/blog/subscribe-to-newsletter', {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/util/blog/subscribe-to-newsletter`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

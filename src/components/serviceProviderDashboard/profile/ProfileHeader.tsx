@@ -28,7 +28,7 @@ const ProfileHeader = () => {
       if (!token) return;
       try {
         const url =
-          "https://smp.jacinthsolutions.com.au/api/v1/service_provider/profile";
+          `${process.env.NEXT_PUBLIC_API_URL}/service_provider/profile`;
         const { data } = await axios.get(url, {
           headers: {
             Authorization: `Bearer ${token}`,

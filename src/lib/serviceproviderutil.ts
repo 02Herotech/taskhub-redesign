@@ -3,7 +3,7 @@ import axios from "axios";
 export const fetchListingById = async (id: string, token: string) => {
   try {
     // const url = process.env.NEXTAUTH_URL + "/api/v1/listing/by-id/" + id;
-    const url = "https://smp.jacinthsolutions.com.au/api/v1/listing/1";
+    const url = `${process.env.NEXT_PUBLIC_API_URL}/listing/1`;
     const response = await axios.get(url, {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -24,7 +24,7 @@ export const handleFetchNotifications = async ({
 }) => {
   try {
     const url =
-      "https://smp.jacinthsolutions.com.au/api/v1/notification?userId=" +
+      `${process.env.NEXT_PUBLIC_API_URL}/notification?userId=` +
       userId;
     const { data } = await axios.get(url, {
       headers: {

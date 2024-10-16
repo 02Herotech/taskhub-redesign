@@ -80,7 +80,7 @@ const NotificationsSettings = () => {
     if (!auth || !user) return;
     try {
       setLoading(true);
-      const url = `https://smp.jacinthsolutions.com.au/api/v1/notification/preference?userId=${user.id}`;
+      const url = `${process.env.NEXT_PUBLIC_API_URL}/notification/preference?userId=${user.id}`;
       await axios.post(url, notificationPreferences, {
         headers: {
           Authorization: `Bearer ${auth.token}`,
@@ -99,7 +99,7 @@ const NotificationsSettings = () => {
   const handleGetPreferences = async () => {
     if (!auth || !user) return;
     setPageLoading(true);
-    const url = `https://smp.jacinthsolutions.com.au/api/v1/notification/preference?userId=${user.id}`;
+    const url = `${process.env.NEXT_PUBLIC_API_URL}/notification/preference?userId=${user.id}`;
     try {
       const { data } = await axios.get(url, {
         headers: {
