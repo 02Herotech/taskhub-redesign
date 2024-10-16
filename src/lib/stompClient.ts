@@ -1,7 +1,7 @@
 const Stomp = require("stompjs");
 var SockJS = require("sockjs-client");
-const URL_LINK = `https://smp.jacinthsolutions.com.au/ws`;
-SockJS = new SockJS(URL_LINK , null, {
+const URL_LINK = `https://api.oloja.com.au/ws`;
+SockJS = new SockJS(URL_LINK, null, {
   reconnectDelay: 5000,
   maxReconnectAttempts: 5,
 });

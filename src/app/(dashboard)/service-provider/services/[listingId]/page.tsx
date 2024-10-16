@@ -20,7 +20,7 @@ const daysData: string[] = [
   "MONDAY",
   "TUESDAY",
   "WEDNESDAY",
-  "THURSDAY", 
+  "THURSDAY",
   "FRIDAY",
   "SATURDAY",
   "SUNDAY",
@@ -432,8 +432,8 @@ const EditListing = () => {
                   String(
                     watchField?.listingTitle?.split(" ").filter(Boolean).length,
                   ) +
-                    " /" +
-                    " 10"}
+                  " /" +
+                  " 10"}
               </p>
             </div>
           </label>
@@ -498,8 +498,8 @@ const EditListing = () => {
                     watchField?.listingDescription?.split(" ").filter(Boolean)
                       .length,
                   ) +
-                    " /" +
-                    " 50"}
+                  " /" +
+                  " 50"}
               </p>
             </div>
           </div>

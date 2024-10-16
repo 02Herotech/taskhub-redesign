@@ -32,10 +32,10 @@ interface FormData {
   planOneDescription: string;
   planTwoDescription: string;
   planThreeDescription: string;
-  image1: File | null ;
-  image2?: File | null ;
-  image3?: File | null ;
-  image4?: File | null ;
+  image1: File | null;
+  image2?: File | null;
+  image3?: File | null;
+  image4?: File | null;
   taskType: string;
   planOnePrice: number | null;
   planTwoPrice: number | null;
@@ -78,21 +78,21 @@ const ProvideService: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [task, setTask] = useState<FormData>({
     listingTitle: getCookie("listingTitle") || "",
-    listingDescription: getCookie("listingDescription")|| "",
-    planOneDescription: getCookie("planOneDescription") ||"",
-    planTwoDescription: getCookie("planTwoDescription") ||"",
-    planThreeDescription: getCookie("planThreeDescription") ||"",
+    listingDescription: getCookie("listingDescription") || "",
+    planOneDescription: getCookie("planOneDescription") || "",
+    planTwoDescription: getCookie("planTwoDescription") || "",
+    planThreeDescription: getCookie("planThreeDescription") || "",
     image1: null,
     image2: null,
     image3: null,
     image4: null,
-    taskType: getCookie("taskType") ||"",
+    taskType: getCookie("taskType") || "",
     planOnePrice: null,
     planTwoPrice: null,
     planThreePrice: null,
     availableDays: [],
     suburb: "",
-    postCode: getCookie("postCode") ||"",
+    postCode: getCookie("postCode") || "",
     state: "",
     categoryId: null,
     subCategoryId: null,
@@ -829,11 +829,10 @@ const ProvideService: React.FC = () => {
                   </div>
                   <div className="relative grid space-y-4 text-[13px] text-[#221354]">
                     <input
-                      className={`rounded-2xl ${
-                        activePlanIndex === 0
-                          ? " disabled bg-transparent p-1 text-lg font-bold text-status-darkViolet"
-                          : "bg-[#EBE9F4] p-4 hover:bg-status-darkViolet hover:text-white "
-                      } cursor-pointer text-left outline-none placeholder:font-satoshiMedium placeholder:font-medium placeholder:text-[#2A1769] hover:placeholder:text-white `}
+                      className={`rounded-2xl ${activePlanIndex === 0
+                        ? " disabled bg-transparent p-1 text-lg font-bold text-status-darkViolet"
+                        : "bg-[#EBE9F4] p-4 hover:bg-status-darkViolet hover:text-white "
+                        } cursor-pointer text-left outline-none placeholder:font-satoshiMedium placeholder:font-medium placeholder:text-[#2A1769] hover:placeholder:text-white `}
                       name="physical"
                       onClick={() => handlePlan(0)}
                       placeholder="Plan 1"
@@ -879,11 +878,10 @@ const ProvideService: React.FC = () => {
                       </div>
                     )}
                     <input
-                      className={`rounded-2xl ${
-                        activePlanIndex === 1
-                          ? " disabled bg-transparent p-1 text-lg font-bold text-status-darkViolet"
-                          : "bg-[#EBE9F4] p-4 hover:bg-status-darkViolet hover:text-white"
-                      } cursor-pointer text-left outline-none placeholder:font-satoshiMedium placeholder:font-medium placeholder:text-[#2A1769] hover:placeholder:text-white`}
+                      className={`rounded-2xl ${activePlanIndex === 1
+                        ? " disabled bg-transparent p-1 text-lg font-bold text-status-darkViolet"
+                        : "bg-[#EBE9F4] p-4 hover:bg-status-darkViolet hover:text-white"
+                        } cursor-pointer text-left outline-none placeholder:font-satoshiMedium placeholder:font-medium placeholder:text-[#2A1769] hover:placeholder:text-white`}
                       name="physical"
                       onClick={() => handlePlan(1)}
                       placeholder="Plan 2  (Optional)"
@@ -927,11 +925,10 @@ const ProvideService: React.FC = () => {
                       </div>
                     )}
                     <input
-                      className={`rounded-2xl ${
-                        activePlanIndex === 2
-                          ? " disabled bg-transparent p-1 text-lg font-bold text-status-darkViolet"
-                          : "bg-[#EBE9F4] p-4 hover:bg-status-darkViolet hover:text-white"
-                      } cursor-pointer text-left outline-none placeholder:font-satoshiMedium placeholder:font-medium placeholder:text-[#2A1769] hover:placeholder:text-white`}
+                      className={`rounded-2xl ${activePlanIndex === 2
+                        ? " disabled bg-transparent p-1 text-lg font-bold text-status-darkViolet"
+                        : "bg-[#EBE9F4] p-4 hover:bg-status-darkViolet hover:text-white"
+                        } cursor-pointer text-left outline-none placeholder:font-satoshiMedium placeholder:font-medium placeholder:text-[#2A1769] hover:placeholder:text-white`}
                       name="physical"
                       onClick={() => handlePlan(2)}
                       placeholder="Plan 3  (Optional)"
@@ -983,11 +980,10 @@ const ProvideService: React.FC = () => {
                   </h2>
                   <div className="flex space-x-4 text-[13px] text-[#221354]">
                     <input
-                      className={`w-[150px] rounded-2xl p-2 lg:w-full ${
-                        activeButtonIndex === 0
-                          ? "bg-status-purpleBase text-white"
-                          : "bg-[#EBE9F4] placeholder:text-white hover:bg-status-purpleBase hover:text-white"
-                      } cursor-pointer text-center font-satoshiBold text-status-darkpurple outline-none`}
+                      className={`w-[150px] rounded-2xl p-2 lg:w-full ${activeButtonIndex === 0
+                        ? "bg-status-purpleBase text-white"
+                        : "bg-[#EBE9F4] placeholder:text-white hover:bg-status-purpleBase hover:text-white"
+                        } cursor-pointer text-center font-satoshiBold text-status-darkpurple outline-none`}
                       name="physical"
                       onClick={() => handleClick(0)}
                       placeholder="Physical Services"
@@ -995,11 +991,10 @@ const ProvideService: React.FC = () => {
                       readOnly
                     />
                     <input
-                      className={`w-[150px] rounded-2xl p-2 lg:w-full ${
-                        activeButtonIndex === 1
-                          ? "bg-status-purpleBase text-white"
-                          : "bg-[#EBE9F4] placeholder:text-white hover:bg-status-purpleBase hover:text-white "
-                      } cursor-pointer text-center font-satoshiBold text-status-darkpurple outline-none`}
+                      className={`w-[150px] rounded-2xl p-2 lg:w-full ${activeButtonIndex === 1
+                        ? "bg-status-purpleBase text-white"
+                        : "bg-[#EBE9F4] placeholder:text-white hover:bg-status-purpleBase hover:text-white "
+                        } cursor-pointer text-center font-satoshiBold text-status-darkpurple outline-none`}
                       name="remote"
                       onClick={() => {
                         handleClick(1);
@@ -1411,19 +1406,17 @@ const ProvideService: React.FC = () => {
         <div className="fixed left-0 top-20 z-10 hidden w-full border-t-2 bg-white shadow-md lg:block">
           <div className="mb-3 flex justify-center pt-4 font-bold md:space-x-5">
             <div
-              className={`${
-                currentPage === 1
-                  ? "text-status-purpleBase"
-                  : "text-status-purpleBase"
-              }`}
+              className={`${currentPage === 1
+                ? "text-status-purpleBase"
+                : "text-status-purpleBase"
+                }`}
             >
               <p className="flex items-center gap-1 text-[9px] md:text-[16px] lg:gap-3">
                 <span
-                  className={`${
-                    currentPage === 1
-                      ? "bg-status-purpleBase text-white"
-                      : "bg-status-purpleBase text-white"
-                  } rounded-2xl border-none px-2 py-1 lg:px-3 lg:py-2`}
+                  className={`${currentPage === 1
+                    ? "bg-status-purpleBase text-white"
+                    : "bg-status-purpleBase text-white"
+                    } rounded-2xl border-none px-2 py-1 lg:px-3 lg:py-2`}
                 >
                   01
                 </span>{" "}
@@ -1434,19 +1427,17 @@ const ProvideService: React.FC = () => {
               </p>
             </div>
             <div
-              className={`${
-                currentPage === 2 || currentPage === 3
-                  ? "text-status-purpleBase"
-                  : " text-[#716F78]"
-              }`}
+              className={`${currentPage === 2 || currentPage === 3
+                ? "text-status-purpleBase"
+                : " text-[#716F78]"
+                }`}
             >
               <p className="flex items-center gap-1 text-[9px] md:text-[16px] lg:gap-3">
                 <span
-                  className={`${
-                    currentPage === 2 || currentPage === 3
-                      ? "bg-status-purpleBase text-white"
-                      : "bg-[#EAE9EB] text-[#716F78]"
-                  } rounded-2xl border-none px-2 py-1 lg:px-3 lg:py-2`}
+                  className={`${currentPage === 2 || currentPage === 3
+                    ? "bg-status-purpleBase text-white"
+                    : "bg-[#EAE9EB] text-[#716F78]"
+                    } rounded-2xl border-none px-2 py-1 lg:px-3 lg:py-2`}
                 >
                   02
                 </span>{" "}
@@ -1457,17 +1448,15 @@ const ProvideService: React.FC = () => {
               </p>
             </div>
             <div
-              className={`${
-                currentPage === 3 ? "text-status-purpleBase" : " text-[#716F78]"
-              }`}
+              className={`${currentPage === 3 ? "text-status-purpleBase" : " text-[#716F78]"
+                }`}
             >
               <p className="flex items-center gap-1 text-[9px] md:text-[16px] lg:gap-3">
                 <span
-                  className={`${
-                    currentPage === 3
-                      ? "bg-status-purpleBase text-white"
-                      : "bg-[#EAE9EB] text-[#716F78]"
-                  } rounded-2xl border-none px-2 py-1 lg:px-3 lg:py-2`}
+                  className={`${currentPage === 3
+                    ? "bg-status-purpleBase text-white"
+                    : "bg-[#EAE9EB] text-[#716F78]"
+                    } rounded-2xl border-none px-2 py-1 lg:px-3 lg:py-2`}
                 >
                   03
                 </span>{" "}
@@ -1488,13 +1477,12 @@ const ProvideService: React.FC = () => {
                 {/* Progress bar */}
                 <div className="h-1 w-2/3 overflow-hidden bg-[#EAE9EB]">
                   <div
-                    className={`h-full ${
-                      currentPage === 1
+                    className={`h-full ${currentPage === 1
+                      ? "bg-status-purpleBase"
+                      : currentPage === 2
                         ? "bg-status-purpleBase"
-                        : currentPage === 2
-                          ? "bg-status-purpleBase"
-                          : "bg-status-purpleBase"
-                    }`}
+                        : "bg-status-purpleBase"
+                      }`}
                     style={{ width: `${progress}%` }}
                   />
                 </div>
@@ -1587,10 +1575,10 @@ const ProvideService: React.FC = () => {
                       Back
                     </button>
                   </Link>
-                  
-                    <button onClick={handleProfile} className="rounded-2xl bg-status-purpleBase p-2 text-[14px] text-white outline-none md:w-[100px]">
-                      Go to profile
-                    </button>
+
+                  <button onClick={handleProfile} className="rounded-2xl bg-status-purpleBase p-2 text-[14px] text-white outline-none md:w-[100px]">
+                    Go to profile
+                  </button>
                 </div>
               </div>
             </div>

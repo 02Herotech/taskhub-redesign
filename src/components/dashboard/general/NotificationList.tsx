@@ -247,7 +247,7 @@ const NotificationList = ({
             </p>
           </div>
         );
-      })} 
+      })}
     </div>
   );
 };

@@ -218,7 +218,7 @@ const ContactUsPage = () => {
                             </svg>
                             <div className="">
                                 <h4 className="font-bold text-base lg:text-xl text-primary">Send us an Email</h4>
-                                <a href="mailto:operations@jacinthsolutions.com.au" className="text-[#190E3F] hover:underline text-xs lg:text-base font-medium">operations@jacinthsolutions.com.au</a>
+                                <a href="mailto:olojahub@jacinthsolutions.com.au" className="text-[#190E3F] hover:underline text-xs lg:text-base font-medium">olojahub@jacinthsolutions.com.au</a>
                             </div>
                         </div>
                     </div>

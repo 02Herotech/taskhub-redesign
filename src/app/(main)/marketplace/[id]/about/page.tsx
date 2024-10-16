@@ -68,7 +68,7 @@ const Page = () => {
                             Authorization: `Bearer ${token}`,
                         },
                     }
-                 );
+                );
                 setProviderListings(response.data?.serviceProviderListing);
                 setReviews(response.data.review);
                 console.log(response.data)
@@ -136,7 +136,7 @@ const Page = () => {
                                                 recipientName={
                                                     currentListing?.serviceProvider.user.fullName
                                                 }
-                                            className="h-[50px]"
+                                                className="h-[50px]"
                                             />
                                         )}
                                 </div>
@@ -254,7 +254,7 @@ const Page = () => {
                                         </div>
                                     </div>
                                 </div>
-                                </motion.div>
+                            </motion.div>
                             //</Link>
                         ))}
                     </div>

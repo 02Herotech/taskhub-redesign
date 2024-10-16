@@ -108,7 +108,7 @@ const CompletedTasksCard = ({ task }: TaskCardProps) => {
     };
 
     const handleReviewSubmission = async (e: React.FormEvent) => {
-        e.preventDefault(); 
+        e.preventDefault();
         console.log(comment, rating, serviceProviderId, categoryId)
         try {
             const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/service_provider/review/${serviceProviderId}/${categoryId}`,
@@ -117,15 +117,15 @@ const CompletedTasksCard = ({ task }: TaskCardProps) => {
                     comment
                 },
                 {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            })
-            setReviewSent(true)           
-        } catch(error: any) {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                })
+            setReviewSent(true)
+        } catch (error: any) {
             console.log(error.response)
             setReviewSent(false)
-        } 
+        }
     }
 
     return (
@@ -224,13 +224,13 @@ const CompletedTasksCard = ({ task }: TaskCardProps) => {
                                                 placeholder="Write your review..."
                                                 value={review}
                                                 onChange={handleChange}
-                                                    required
-                                                />
-                                                <div className="text-right text-sm text-status-darkpurple">
-                                                    {wordCount}/60 words
-                                                </div>
+                                                required
+                                            />
+                                            <div className="text-right text-sm text-status-darkpurple">
+                                                {wordCount}/60 words
                                             </div>
-                                            
+                                        </div>
+
                                         <div className="flex justify-center">
                                             <Button
                                                 className="w-[151px] max-lg:text-sm rounded-full py-6"

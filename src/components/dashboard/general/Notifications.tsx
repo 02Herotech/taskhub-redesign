@@ -141,11 +141,11 @@ const NotificationComponent = () => {
           </div>
           <div className="space-y-2">
             {/* {categorizeNotifications(notifications).today.length > 0 && ( */}
-              <NotificationList
-                heading="Today"
-                notifications={notifications}
-                setRefresh={setRefresh}
-              />
+            <NotificationList
+              heading="Today"
+              notifications={notifications}
+              setRefresh={setRefresh}
+            />
             {/* )} */}
             {/* {categorizeNotifications(notifications).thisWeek.length > 0 && (
               <NotificationList
