@@ -200,7 +200,7 @@ const ViewJobs = () => {
                     <p className="font-bold capitalize">
                       {/* {dateFromNumberArray(currentBooking.startDate)} */}
                       {currentBooking.startDate
-                            ? dateFromArrays(currentBooking.startDate, currentBooking.startTime)
+                        ? dateFromArrays(currentBooking.startDate, currentBooking.startTime)
                         : "Flexible"}
                     </p>
                   </div>

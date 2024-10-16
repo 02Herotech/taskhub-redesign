@@ -5,7 +5,7 @@ export const defaultUserDetails: DefaultUserDetailsType = {
   idImageBack: "",
   idNumber: "",
   idType: "",
-  lastName: "",
+  lastName: "", 
   postalCode: "",
   profileImage: "",
   state: "",

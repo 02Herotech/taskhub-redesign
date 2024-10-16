@@ -48,7 +48,7 @@ const MareketPlace = () => {
   const isServiceProvider = session?.data?.user?.user?.roles[0] === "SERVICE_PROVIDER";
   const [showPopup, setShowPopup] = useState(false);
   const [fetchedUserData, setFetchedUserData] = useState(defaultUserDetails);
-  const [loadingProfile, setLoadingProfile] = useState(true); 
+  const [loadingProfile, setLoadingProfile] = useState(true);
   const [hasClosedPopup, setHasClosedPopup] = useState(false);
 
   useEffect(() => {
@@ -113,7 +113,7 @@ const MareketPlace = () => {
         (item) => item.status !== "" && item.status !== null && item.status !== undefined
       );
 
-        if (isAuth && !isProfileComplete) {
+      if (isAuth && !isProfileComplete) {
         setShowPopup(true);
       }
     }
@@ -122,10 +122,10 @@ const MareketPlace = () => {
   return (
     <main className="mx-auto max-w-screen-2xl">
       {showPopup && (
-        <Popup isOpen={showPopup} onClose={() =>{
+        <Popup isOpen={showPopup} onClose={() => {
           setShowPopup(false)
           setHasClosedPopup(true);
-        } }>
+        }}>
           <div className="relative h-[312px] max-lg:mx-2 w-full lg:w-[577px]">
             <div className="flex h-full flex-col items-center justify-center space-y-7 text-center">
               <h1 className="font-clashDisplay text-4xl font-semibold text-[#2A1769]">

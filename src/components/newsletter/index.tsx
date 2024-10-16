@@ -15,7 +15,7 @@ const NewsLetter = () => {
     }
 
     useEffect(() => {
-      const timer =  setTimeout(() => {
+        const timer = setTimeout(() => {
             setResOk(false)
         }, 4000)
 

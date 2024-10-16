@@ -31,7 +31,7 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
   const [buttonNumbers, setButtonNumbers] = useState<number[]>([]);
   const dispatch = useDispatch();
   const handleFetchCategory = async (currentPage: number) => {
-    const categoryId = categories.find( 
+    const categoryId = categories.find(
       (item) => item.categoryName === category,
     );
     setIsLoading(true);
@@ -159,22 +159,22 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
           {(isFiltering
             ? filteredData.length > 3
             : displayListing.length > 3) && (
-            <button
-              className="flex items-center gap-2 border-b-2 border-violet-normal text-sm font-bold  text-violet-normal"
-              onClick={() =>
-                setIsViewMore((prev) => ({ ...prev, state: !prev.state }))
-              }
-            >
-              <span className="whitespace-nowrap">
-                {isViewMore.state ? "View Less" : "View More"}
-              </span>
-              <span>
-                <FaArrowUp
-                  className={`size-3  ${isViewMore.state ? "rotate-90" : "rotate-45"} `}
-                />
-              </span>
-            </button>
-          )}
+              <button
+                className="flex items-center gap-2 border-b-2 border-violet-normal text-sm font-bold  text-violet-normal"
+                onClick={() =>
+                  setIsViewMore((prev) => ({ ...prev, state: !prev.state }))
+                }
+              >
+                <span className="whitespace-nowrap">
+                  {isViewMore.state ? "View Less" : "View More"}
+                </span>
+                <span>
+                  <FaArrowUp
+                    className={`size-3  ${isViewMore.state ? "rotate-90" : "rotate-45"} `}
+                  />
+                </span>
+              </button>
+            )}
         </div>
       </div>
 
