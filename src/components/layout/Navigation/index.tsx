@@ -152,14 +152,14 @@ const Navigation = () => {
       try {
         dispatch(setWalletLoading(true));
         const url =
-          "https://api.oloja.com.au/api/v1/user/user-profile/" +
+          `${process.env.NEXT_PUBLIC_API_URL}/user/user-profile/` +
           user.id;
         const { data } = await axios.get(url);
         const userData: UserProfileTypes = data;
         dispatch(updateUserProfile(data));
         if (isServiceProvider) {
           const walleturl =
-            "https://api.oloja.com.au/api/v1/booking/wallet/provider/" +
+            `${process.env.NEXT_PUBLIC_API_URL}/booking/wallet/provider/` +
             userData.serviceProviderId;
           const response = await axios.get(walleturl, {
             headers: { Authorization: `Bearer ${token}` },

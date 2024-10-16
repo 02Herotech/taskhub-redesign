@@ -76,7 +76,7 @@ const MarketPlaceFilter = () => {
     try {
       dispatch(setFilterLoadingState(true));
       const url =
-        "https://api.oloja.com.au/api/v1/listing/text/0?text=" +
+        `${process.env.NEXT_PUBLIC_API_URL}/listing/text/0?text=` +
         searchInputData;
       const { data } = await axios.get(url);
       dispatch(setFilterParams(`?text=${searchInputData}`));
@@ -96,7 +96,7 @@ const MarketPlaceFilter = () => {
       const { category, location, typeOfService, minPrice, maxPrice } =
         filterDataStructure;
       let url =
-        "https://api.oloja.com.au/api/v1/listing/filter-listings/0?";
+        `${process.env.NEXT_PUBLIC_API_URL}/listing/filter-listings/0?`;
       const params = [];
 
       if (category) {

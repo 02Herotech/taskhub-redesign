@@ -10,7 +10,7 @@ const OfferMessage: FC<{ message: Offer | Offer['offerThreadList'][0]; isThread:
     const timestamp = isThread ? (message as Offer['offerThreadList'][0]).timeStamp : (message as Offer).createdAt;
     const profileImageUrl = isThread ? (message as Offer['offerThreadList'][0]).userProfileImage : (message as Offer).service_provider_profile_Image;
     const isPoster = posterId === (message as Offer).userId
-
+ 
     return (
         <div className={`flex ${isThread ? 'justify-end' : 'justify-start'} `}>
             <div className={`${isThread ? 'w-[80%]' : 'w-full'}`}>

@@ -115,7 +115,7 @@ const EditListing = () => {
     const fetchCurentListing = async () => {
       try {
         const url =
-          "https://api.oloja.com.au/api/v1/listing/" + listingId;
+          `${process.env.NEXT_PUBLIC_API_URL}/listing/` + listingId;
         const { data } = await axios.get(url);
         setCurrentListing(data);
       } catch (error: any) {
@@ -196,7 +196,7 @@ const EditListing = () => {
   const handleFectchLocationByPostcode = async () => {
     try {
       const url =
-        "https://api.oloja.com.au/api/v1/util/locations/search?postcode=" +
+        `${process.env.NEXT_PUBLIC_API_URL}/util/locations/search?postcode=` +
         watchField.postcode;
       const { data } = await axios.get(url);
       const suburb = data.map((item: any) => item.name);
@@ -286,7 +286,7 @@ const EditListing = () => {
     }, {});
     try {
       const url =
-        "https://api.oloja.com.au/api/v1/listing/update-listing/" +
+        `${process.env.NEXT_PUBLIC_API_URL}/listing/update-listing/` +
         listingId;
       await axios.patch(url, body, {
         headers: {

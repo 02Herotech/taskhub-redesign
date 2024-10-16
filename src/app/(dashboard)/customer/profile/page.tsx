@@ -20,7 +20,7 @@ const CustomerProfilePage = () => {
       if (!token) return;
       try {
         const url =
-          "https://api.oloja.com.au/api/v1/customer/profile";
+          `${process.env.NEXT_PUBLIC_API_URL}/customer/profile`;
         const { data } = await axios.get(url, {
           headers: {
             Authorization: `Bearer ${token}`,

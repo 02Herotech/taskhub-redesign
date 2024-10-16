@@ -47,7 +47,7 @@ const Page = () => {
         const fetchListing = async () => {
             try {
                 if (!id) return;
-                const url = `https://api.oloja.com.au/api/v1/listing/${id}`;
+                const url = `${process.env.NEXT_PUBLIC_API_URL}/listing/${id}`;
                 const { data } = await axios.get(url);
                 setCurrentListing(data);
             } catch (error: any) {
@@ -61,8 +61,7 @@ const Page = () => {
         const fetchProviderListings = async () => {
             try {
                 if (!id) return;
-                console.log(id)
-                const url = `https://api.oloja.com.au/api/v1/service_provider/get-profile/${id}`;
+                const url = `${process.env.NEXT_PUBLIC_API_URL}/service_provider/get-profile/${displayData?.serviceProvider?.id}`;
                 const response = await axios.get(url,
                     {
                         headers: {
@@ -260,7 +259,7 @@ const Page = () => {
                         ))}
                     </div>
                 </section>
-                <Reviews serviceProviderId={id} />
+                <Reviews serviceProviderId={displayData?.serviceProvider?.id} />
             </main>
         </>
     );

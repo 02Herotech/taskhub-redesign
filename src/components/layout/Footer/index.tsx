@@ -80,7 +80,7 @@ const Footer = () => {
         dispatch(setFilterLoadingState(true));
         try {
             const url =
-                "https://api.oloja.com.au/api/v1/listing/filter-listings/0?category=" +
+                `${process.env.NEXT_PUBLIC_API_URL}/listing/filter-listings/0?category=` +
                 category;
             const { data } = await axios.get(url);
             dispatch(

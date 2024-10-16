@@ -15,10 +15,9 @@ import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { IoLocationOutline } from "react-icons/io5";
-import { useSelector } from "react-redux";
 import { BeatLoader } from "react-spinners";
-import { stompClient } from "@/lib/stompClient";
 import MessageButton from "@/components/global/MessageButton";
+
 const ViewJobs = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -42,7 +41,7 @@ const ViewJobs = () => {
     if (!token) return;
     try {
       setLoading(true);
-      const url = "https://api.oloja.com.au/api/v1/booking/" + id;
+      const url = `${process.env.NEXT_PUBLIC_API_URL}/booking/` + id;
       const response = await axios.get(url, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -66,7 +65,7 @@ const ViewJobs = () => {
     try {
       setRequestStatus((prev) => ({ ...prev, isAcceptRequesting: true }));
       const url =
-        "https://api.oloja.com.au/api/v1/booking/accept-proposal?bookingId=" +
+        `${process.env.NEXT_PUBLIC_API_URL}/booking/accept-proposal?bookingId=` +
         currentBooking?.id;
       const response = await axios.post(
         url,
@@ -94,7 +93,7 @@ const ViewJobs = () => {
     try {
       setRequestStatus((prev) => ({ ...prev, isRejectRequesting: true }));
       const url =
-        "https://api.oloja.com.au/api/v1/booking/reject-proposal?bookingId=" +
+        `${process.env.NEXT_PUBLIC_API_URL}/booking/reject-proposal?bookingId=` +
         currentBooking?.id;
       const response = await axios.post(
         url,

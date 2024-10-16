@@ -67,7 +67,7 @@ const OngoingServiceModal = ({
     try {
       setCompleteJobState({ ...completeJobState, loading: true });
       const url =
-        "https://api.oloja.com.au/api/v1/booking/complete-task?jobId=" +
+        `${process.env.NEXT_PUBLIC_API_URL}/booking/complete-task?jobId=` +
         modalData.message;
       const body = { jobId: modalData.message };
       const { data } = await axios.post(url, body, {
@@ -118,7 +118,7 @@ const OngoingServiceModal = ({
         description: formState.message,
       };
       const url =
-        "https://api.oloja.com.au/api/v1/booking/job/report/" +
+        `${process.env.NEXT_PUBLIC_API_URL}/booking/job/report/` +
         modalData.message;
       const { data } = await axios.post(url, body, {
         headers: {

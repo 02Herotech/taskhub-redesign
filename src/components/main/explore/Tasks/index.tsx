@@ -71,7 +71,7 @@ const Tasks: React.FC = () => {
         try {
             dispatch(setFilterLoadingState(true));
             const url =
-                "https://api.oloja.com.au/api/v1/task/text/0?text=" +
+                `${process.env.NEXT_PUBLIC_API_URL}/task/text/0?text=` +
                 searchInputData;
             const { data } = await axios.get(url);
             dispatch(setFilterParams(`?text=${searchInputData}`));
@@ -91,7 +91,7 @@ const Tasks: React.FC = () => {
             const { category, location, typeOfService, minPrice, maxPrice } =
                 filterDataStructure;
             let url =
-                "https://api.oloja.com.au/api/v1/task/filter-tasks/0?";
+                `${process.env.NEXT_PUBLIC_API_URL}/task/filter-tasks/0?`;
             const params = [];
 
             if (category) {

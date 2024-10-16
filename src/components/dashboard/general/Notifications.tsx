@@ -28,7 +28,7 @@ const NotificationComponent = () => {
     try {
       setLoading(true);
       const url =
-        "https://api.oloja.com.au/api/v1/notification?userId=" +
+        `${process.env.NEXT_PUBLIC_API_URL}/notification?userId=` +
         userId;
       const { data } = await axios.get(url, {
         headers: {

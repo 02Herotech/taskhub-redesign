@@ -36,12 +36,12 @@ const Page = () => {
       setDisplayData(content);
     }
   }, []);
-
+ 
   useEffect(() => {
     const fetchListing = async () => {
       try {
         if (!displayData) return;
-        const url = "https://api.oloja.com.au/api/v1/listing/" + id;
+        const url = `${process.env.NEXT_PUBLIC_API_URL}/listing/` + id;
         const { data } = await axios.get(url);
         setCurrentListing(data);
       } catch (error: any) {
@@ -148,7 +148,7 @@ const Page = () => {
                         {displayData?.serviceProvider?.user?.fullName}
                       </p>
                     <div>
-                      <Link href={`/marketplace/${displayData?.serviceProvider.id}/about`} className="cursor-pointer">
+                      <Link href={`/marketplace/${displayData?.id}/about`} className="cursor-pointer">
                           <p className="text-xl font-medium text-[#e58c06] underline cursor-pointer">View Profile</p>
                         </Link>
                         {/* <div className="flex items-center gap-2">

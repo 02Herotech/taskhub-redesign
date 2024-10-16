@@ -111,7 +111,7 @@ const CompletedTasksCard = ({ task }: TaskCardProps) => {
         e.preventDefault();
         console.log(comment, rating, serviceProviderId, categoryId)
         try {
-            const response = await axios.post(`https://api.oloja.com.au/api/v1/service_provider/review/${serviceProviderId}/${categoryId}`,
+            const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/service_provider/review/${serviceProviderId}/${categoryId}`,
                 {
                     rating,
                     comment

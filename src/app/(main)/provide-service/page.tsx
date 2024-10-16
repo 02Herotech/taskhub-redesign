@@ -127,8 +127,8 @@ const ProvideService: React.FC = () => {
   const maxSize = 5 * 1024 * 1024;
   3;
 
-  const handleProfile = () => {
-    setCookie("redirectToProvideService", "/provide-service", { maxAge: 360000 });
+  const handleProfile= () => {
+    setCookie("redirectToProvideService", "/provide-service", { maxAge: 3600 });
     route.push(
       "/service-provider/profile/edit-profile?userType=Service+Provider?from=/provide-service",
     );
@@ -136,18 +136,18 @@ const ProvideService: React.FC = () => {
 
   useEffect(() => {
     setCookie("lisitingTitle", task.listingTitle, {
-      maxAge: 1200,
+      maxAge: 120,
     });
-    setCookie("listingDescription", task.listingDescription, { maxAge: 1200 });
-    setCookie("planOnePrice", task.planOnePrice, { maxAge: 1200 });
-    setCookie("planOneDescription", task.planOneDescription, { maxAge: 1200 });
-    setCookie("planTwoDescription", task.planTwoDescription, { maxAge: 1200 });
-    setCookie("planTwoPrice", task.planTwoPrice, { maxAge: 1200 });
-    setCookie("planThreeDescritpion", task.planThreeDescription, { maxAge: 1200 });
-    setCookie("taskType", task.taskType, { maxAge: 1200 });
-    setCookie("availableDays", task.availableDays, { maxAge: 1200 });
-    setCookie("categoryId", task.categoryId?.toString(), { maxAge: 1200 });
-    setCookie("postCode", task.postCode, { maxAge: 1200 });
+    setCookie("listingDescription", task.listingDescription, { maxAge: 120 });
+    setCookie("planOnePrice", task.planOnePrice, { maxAge: 120 });
+    setCookie("planOneDescription", task.planOneDescription, { maxAge: 120 });
+    setCookie("planTwoDescription", task.planTwoDescription, { maxAge: 120 });
+    setCookie("planTwoPrice", task.planTwoPrice, { maxAge: 120 });
+    setCookie("planThreeDescritpion", task.planThreeDescription, { maxAge: 120 });
+    setCookie("taskType", task.taskType, { maxAge: 120 });
+    setCookie("availableDays", task.availableDays, { maxAge: 120 });
+    setCookie("categoryId", task.categoryId?.toString(), { maxAge: 120 });
+    setCookie("postCode", task.postCode, { maxAge: 120 });
   }, [task]);
   const isServiceProvider = session?.data?.user?.user?.roles[0] === "SERVICE_PROVIDER";
   const [complete, setComplete] = useState(false);
@@ -191,7 +191,7 @@ const ProvideService: React.FC = () => {
     const fetchUserData = async () => {
       if (!token) return;
       try {
-        const url = isServiceProvider ? "https://api.oloja.com.au/api/v1/service_provider/profile" : "https://api.oloja.com.au/api/v1/customer/profile";
+        const url = isServiceProvider ? `${process.env.NEXT_PUBLIC_API_URL}/service_provider/profile` : `${process.env.NEXT_PUBLIC_API_URL}/customer/profile`;
         const { data } = await axios.get(url, {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -230,7 +230,11 @@ const ProvideService: React.FC = () => {
     },
     {
       title: "Identification Document",
-      status: fetchedUserData.idImage,
+      status: fetchedUserData.idImageFront,
+    },
+    {
+      title: "Identification Document",
+      status: fetchedUserData.idImageBack,
     },
     {
       title: "Date of Birth",
@@ -256,7 +260,7 @@ const ProvideService: React.FC = () => {
     const fetchPostalCodeData = async () => {
       try {
         const response = await axios.get(
-          `https://api.oloja.com.au/api/v1/util/locations/search?postcode=${selectedCode}`,
+          `${process.env.NEXT_PUBLIC_API_URL}/util/locations/search?postcode=${selectedCode}`,
         );
         setPostalCodeData(response.data as PostalCodeData[]);
       } catch (error) {
@@ -274,7 +278,7 @@ const ProvideService: React.FC = () => {
     const fetchItems = async () => {
       try {
         const response = await axios.get(
-          "https://api.oloja.com.au/api/v1/util/all-categories",
+          `${process.env.NEXT_PUBLIC_API_URL}/util/all-categories`,
         );
         const data: Item[] = response.data;
         console.log(data);
@@ -292,7 +296,7 @@ const ProvideService: React.FC = () => {
       const fetchSubcategories = async () => {
         try {
           const response = await axios.get(
-            `https://api.oloja.com.au/api/v1/util/all-sub-categories-by-categoryId/${selectedCategory}`,
+            `${process.env.NEXT_PUBLIC_API_URL}/util/all-sub-categories-by-categoryId/${selectedCategory}`,
           );
           const data: Subcategory[] = response.data;
           console.log(data);
@@ -587,19 +591,16 @@ const ProvideService: React.FC = () => {
 
         finalTask = { ...finalTask, negotiable: negotiable };
 
-        console.log(finalTask);
-        await Promise.race([
+       const response = await
           axios.post(
-            `https://api.oloja.com.au/api/v1/listing/create-listing?userId=${id}`,
+            `${process.env.NEXT_PUBLIC_API_URL}/listing/create-listing?userId=${id}`,
             finalTask,
             {
               headers: {
                 "Content-Type": "multipart/form-data",
               },
             },
-          ),
-          timeout(10000), // 10 seconds timeout
-        ]);
+          )
         setTask({
           listingTitle: "",
           listingDescription: "",
@@ -622,7 +623,11 @@ const ProvideService: React.FC = () => {
           subCategoryId: null,
           negotiable: false,
         });
-        setIsSuccessPopupOpen(true);
+        if (response.status == 200) {
+          setIsSuccessPopupOpen(true);
+        } else {
+          setError(error.response.message)
+        }
       } catch (error) {
         console.error("Error submitting form:", error);
         setIsSuccessPopupOpen(true);
@@ -1591,7 +1596,7 @@ const ProvideService: React.FC = () => {
                 <div className="flex justify-center text-[1px] text-white">
                   <Image src={imag} alt="image" />
                 </div>
-                <p className=" text-center font-clashBold text-[32px] font-extrabold text-[#2A1769] lg:text-[42px]">
+                <p className=" text-center font-clashBold text-[28px] font-extrabold text-[#2A1769] lg:text-[42px]">
                   Service created
                 </p>
                 <div className="text-center font-satoshiMedium lg:hidden lg:text-[20px]">

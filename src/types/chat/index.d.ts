@@ -3,7 +3,7 @@ declare interface ChatContactTypes {
   name: string;
   profilePicture: string | null;
   newMessages: number | null;
-  lastChatTimestamp: number[] | null;
+  lastChatTimestamp: number| null;
   lastMessage: string | null;
 }
 
@@ -15,13 +15,13 @@ declare interface ChatMessageRecievedType {
   senderName: string;
   recipientName: string;
   content: string;
-  timestamp: number[];
+  timestamp: number;
   status: string;
 }
 
 declare interface ChatMessageDisplayedType {
   content: string;
-  time: string | number[];
+  time: string | number;
   senderId: number;
 }
 
@@ -32,7 +32,7 @@ declare interface Offer {
   serviceProviderId: number;
   fullName: string;
   message: string;
-  createdAt: number[];
+  createdAt: number;
   service_provider_profile_Image: string;
   offerThreadList: {
     taskId: number;
@@ -40,7 +40,7 @@ declare interface Offer {
     message: string;
     fullName: string;
     userId: number;
-    timeStamp: number[];
+    timeStamp: number;
     userProfileImage: string;
   }[];
 }

@@ -26,7 +26,7 @@ const WaitlistJoin = () => {
         fullName: waitlistData.fullName,
         email: waitlistData.email,
       };
-      const url = "https://api.oloja.com.au/api/v1/util/waitlist";
+      const url = `${process.env.NEXT_PUBLIC_API_URL}/util/waitlist`;
       setWaitlistData((prev) => ({ ...prev, loading: true, error: "" }));
       const response = await axios.post(url, payload);
       setWaitlistData((prev) => ({

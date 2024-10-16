@@ -110,7 +110,7 @@ const EditTaskForm = ({ task, setShowEditModal }: TaskCardProps) => {
         const fetchPostalCodeData = async () => {
             try {
                 const { data } = await axios.get(
-                    `https://api.oloja.com.au/api/v1/util/locations/search?postcode=${watchField.postCode}`,
+                    `${process.env.NEXT_PUBLIC_API_URL}/util/locations/search?postcode=${watchField.postCode}`,
                 );
                 const suburb = data.map((item: any) => item.name);
                 setSuburbList(suburb);
@@ -128,7 +128,7 @@ const EditTaskForm = ({ task, setShowEditModal }: TaskCardProps) => {
         const fetchAllCategories = async () => {
             try {
                 const response = await axios.get(
-                    "https://api.oloja.com.au/api/v1/util/all-categories",
+                    `${process.env.NEXT_PUBLIC_API_URL}/util/all-categories`,
                 );
                 setCategories(response.data);
             } catch (error) {

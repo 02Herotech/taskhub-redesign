@@ -42,11 +42,11 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
       let url, content;
       if (category === "All") {
         url =
-          "https://api.oloja.com.au/api/v1/listing/all-active-listings/" +
+          `${process.env.NEXT_PUBLIC_API_URL}/listing/all-active-listings/` +
           currentPage;
       } else if (categoryId) {
         url =
-          "https://api.oloja.com.au/api/v1/listing/filter-listings/" +
+          `${process.env.NEXT_PUBLIC_API_URL}/listing/filter-listings/` +
           currentPage +
           "?category=" +
           categoryId.categoryName;
@@ -72,12 +72,12 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
       let url = "";
       if (filterParams.includes("?text=")) {
         url =
-          "https://api.oloja.com.au/api/v1/listing/text/" +
+          `${process.env.NEXT_PUBLIC_API_URL}/listing/text/` +
           page.currentPage +
           filterParams;
       } else {
         url =
-          "https://api.oloja.com.au/api/v1/listing/filter-listings/" +
+          `${process.env.NEXT_PUBLIC_API_URL}/listing/filter-listings/` +
           page.currentPage +
           filterParams;
       }

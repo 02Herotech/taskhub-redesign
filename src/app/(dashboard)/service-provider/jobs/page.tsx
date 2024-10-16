@@ -19,7 +19,7 @@ const Jobs = () => {
     try {
       setLoading(true);
       const url =
-        "https://api.oloja.com.au/api/v1/booking/service-provider";
+        `${process.env.NEXT_PUBLIC_API_URL}/booking/service-provider`;
       const response = await axios.get(url, {
         headers: {
           Authorization: `Bearer ${token}`,

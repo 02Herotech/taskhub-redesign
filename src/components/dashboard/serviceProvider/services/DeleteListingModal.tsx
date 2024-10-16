@@ -38,7 +38,7 @@ const DeleteListingModal = ({
     try {
       setLoading(true);
       const url =
-        "https://api.oloja.com.au/api/v1/listing/delete-listing/" +
+        `${process.env.NEXT_PUBLIC_API_URL}/listing/delete-listing/` +
         isDeleteModalShown.id;
       const { data } = await axios.delete(url, {
         headers: {

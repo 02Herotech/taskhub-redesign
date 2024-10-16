@@ -1,7 +1,8 @@
 declare interface DefaultUserDetailsType {
   dateOfBirth: Date | null | string;
   firstName: string;
-  idImage: string;
+  idImageFront: string;
+  idImageBack: string;
   idNumber: string;
   idType: string;
   lastName: string;

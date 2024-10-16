@@ -44,11 +44,11 @@ const ExploreCategoryLising: React.FC<ExploreCategoryLisingProps> = ({ category 
             let url, content;
             if (category === "All") {
                 url =
-                    "https://api.oloja.com.au/api/v1/task/all-active-tasks/" +
+                    `${process.env.NEXT_PUBLIC_API_URL}/task/all-active-tasks/` +
                     currentPage;
             } else if (categoryId) {
                 url =
-                    "https://api.oloja.com.au/api/v1/task/filter-tasks/" +
+                    `${process.env.NEXT_PUBLIC_API_URL}/task/filter-tasks/` +
                     currentPage +
                     "?category=" +
                     categoryId.categoryName;
@@ -74,12 +74,12 @@ const ExploreCategoryLising: React.FC<ExploreCategoryLisingProps> = ({ category 
             let url = "";
             if (filterParams.includes("?text=")) {
                 url =
-                    "https://api.oloja.com.au/api/v1/task/text/" +
+                    `${process.env.NEXT_PUBLIC_API_URL}/task/text/` +
                     page.currentPage +
                     filterParams;
             } else {
                 url =
-                    "https://api.oloja.com.au/api/v1/task/filter-tasks/" +
+                    `${process.env.NEXT_PUBLIC_API_URL}/task/filter-tasks/` +
                     page.currentPage +
                     filterParams;
             }
