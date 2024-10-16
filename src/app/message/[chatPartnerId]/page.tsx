@@ -11,13 +11,15 @@ import {
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setContacts, setTotalUnreadMessages } from "@/store/Features/chat";
 import ScrollToBottom from "react-scroll-to-bottom";
 import { connectSocket, getSocket } from "@/lib/socket";
 import ChatMessage from "../chatMessage";
+import { formatTimestamp } from "@/utils";
+import { FaCheckDouble } from "react-icons/fa6";
 
 type ChatMessagesGroupedType = {
   [date: string]: ChatMessageDisplayedType[];
@@ -26,12 +28,10 @@ type ChatMessagesGroupedType = {
 const ServiceProviderChat = () => {
   const [message, setMessage] = useState("");
   const [contact, setContact] = useState<ChatContactTypes | null>();
-
-  const [groupedChatMessages, setGroupedChatMessages] =
-    useState<ChatMessagesGroupedType | null>(null);
-
   const session = useSession();
   const dispatch = useDispatch();
+
+  const [groupedChatMessages, setGroupedChatMessages] = useState<ChatMessagesGroupedType | null>(null);
   const { chatPartnerId } = useParams();
 
   const { profile: user, userProfileAuth: auth } = useSelector(
@@ -40,8 +40,8 @@ const ServiceProviderChat = () => {
   const { contacts, newMessage } = useSelector(
     (state: RootState) => state.chat,
   );
-  const inputRef = useRef<HTMLTextAreaElement>(null);
 
+  const inputRef = useRef<HTMLTextAreaElement>(null);
   const token = session?.data?.user?.accessToken;
   const isServiceProvider = auth?.role?.[0] === "SERVICE_PROVIDER";
 
@@ -158,7 +158,6 @@ const ServiceProviderChat = () => {
     };
   };
 
-
   const sendMessage = (msg: string) => {
     const socket = getSocket();
     if (msg.trim() !== "" && user && contact) {
@@ -260,7 +259,7 @@ const ServiceProviderChat = () => {
     return `${day}${ordinalSuffix(day)} ${month} ${year}`;
   };
 
-  console.log("messages", groupedChatMessages)
+  console.log("Message:", groupedChatMessages)
 
   return (
     <main className="h-[calc(100cqh-5rem)] space-y-5 overflow-hidden p-4 lg:p-8 ">
@@ -271,8 +270,8 @@ const ServiceProviderChat = () => {
 
         {/* Organize this */}
         <section className="flex h-[calc(100cqh-6rem)] w-full flex-col justify-between space-y-4  lg:col-span-7  lg:h-[calc(100cqh-9rem)] lg:px-4">
-          <article className="flex-shrink-0 space-y-4 ">
-            <div className="flex cursor-pointer gap-3 ">
+          <article className="flex-shrink-0 space-y-4">
+            <div className="flex cursor-pointer gap-3">
               <Image
                 src={
                   contact?.profilePicture ??
@@ -319,33 +318,33 @@ const ServiceProviderChat = () => {
                           {formatDateIntoReadableFormat(date)}
                         </div>
                         {messages.map((item, index) => (
-                          <ChatMessage item={item} user={user} key={index }/>
-                          // <div
-                          //   key={index}
-                          //   className={`my-2 flex w-full ${item.senderId === user.id
-                          //       ? "flex-wrap justify-end"
-                          //       : "justify-start"
-                          //     }`}
-                          // >
-                          //   <div
-                          //     className={`flex w-fit max-w-xs flex-col gap-1 rounded-md p-2 text-sm ${item.senderId === user.id
-                          //         ? "bg-violet-normal text-white"
-                          //         : "bg-orange-light text-left text-violet-dark"
-                          //       }`}
-                          //   >
-                          //     <p>{item.content}</p>
-                          //     <div className="flex items-center justify-end gap-2 text-[0.7rem]">
-                          //       <span className="">
-                          //         {formatTimestamp(item.time as number)}
-                          //       </span>
-                          //       {item.senderId === user.id &&  (
-                          //         <span className="block">
-                          //           <FaCheckDouble className="text-green-500" />
-                          //         </span>
-                          //       )}
-                          //     </div>
-                          //   </div>
-                          // </div>
+                          // <ChatMessage item={item} user={user} key={index }/>
+                          <div
+                            key={index}
+                            className={`my-2 flex w-full ${item.senderId === user.id
+                                ? "flex-wrap justify-end"
+                                : "justify-start"
+                              }`}
+                          >
+                            <div
+                              className={`flex w-fit max-w-xs flex-col gap-1 rounded-md p-2 text-sm ${item.senderId === user.id
+                                  ? "bg-violet-normal text-white"
+                                  : "bg-orange-light text-left text-violet-dark"
+                                }`}
+                            >
+                              <p>{item.content}</p>
+                              <div className="flex items-center justify-end gap-2 text-[0.7rem]">
+                                <span className="">
+                                  {formatTimestamp(item.time)}
+                                </span>
+                                {item.senderId === user.id &&  (
+                                  <span className="block">
+                                    <FaCheckDouble className="text-green-500" />
+                                  </span>
+                                )}
+                              </div>
+                            </div>
+                          </div>
                         ))}
                       </div>
                     ),
