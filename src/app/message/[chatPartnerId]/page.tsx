@@ -235,14 +235,9 @@ const ServiceProviderChat = () => {
     }
   };
 
-  const formatDateIntoReadableFormat = (dateString: string): string => {
-    const date = new Date(dateString);
-    const day = date.getDate();
-    const month = date.toLocaleString("default", { month: "long" });
-    const year = date.getFullYear();
-
-    // Determine the ordinal suffix
-    const ordinalSuffix = (day: number) => {
+  function formatDateIntoReadableFormat(input: string | number | Date): string {
+    // Helper function to get ordinal suffix
+    const getOrdinalSuffix = (day: number): string => {
       if (day > 3 && day < 21) return "th";
       switch (day % 10) {
         case 1:
@@ -256,10 +251,64 @@ const ServiceProviderChat = () => {
       }
     };
 
-    return `${day}${ordinalSuffix(day)} ${month} ${year}`;
-  };
+    try {
+      // Normalize the input to a Date object
+      let date: Date;
 
-  console.log("Message:", groupedChatMessages)
+      if (input instanceof Date) {
+        date = input;
+      } else if (typeof input === 'number') {
+        // Handle Unix timestamp (both seconds and milliseconds)
+        date = new Date(input > 9999999999 ? input : input * 1000);
+      } else {
+        // Handle various string formats including "10/14/2024"
+        if (input.includes('/')) {
+          const [month, day, year] = input.split('/').map(Number);
+          date = new Date(year, month - 1, day); // Month is 0-based in Date constructor
+        } else {
+          date = new Date(input);
+        }
+      }
+
+      // Validate date
+      if (isNaN(date.getTime())) {
+        throw new Error('Invalid date');
+      }
+
+      // Get date components
+      const day = date.getUTCDate(); // Use UTC to ensure consistency across timezones
+      const year = date.getUTCFullYear();
+
+      // Get month name using Intl.DateTimeFormat for better localization support
+      const month = new Intl.DateTimeFormat('en-US', {
+        month: 'long',
+        timeZone: 'UTC'
+      }).format(date);
+
+      // Construct the final string
+      return `${day}${getOrdinalSuffix(day)} ${month} ${year}`;
+    } catch (error) {
+      console.error('Error formatting date:', error);
+      return 'Invalid date';
+    }
+  }
+
+  // Test cases
+  // function runTests() {
+  //   const testCases = [
+  //     '10/14/2024',                    // MM/DD/YYYY
+  //     '2024-10-14',                    // YYYY-MM-DD
+  //     '2024-10-14T12:00:00Z',         // ISO string
+  //     1729120446,                      // Unix timestamp (seconds)
+  //     1729120446000,                   // Unix timestamp (milliseconds)
+  //     new Date('2024-10-14'),         // Date object
+  //   ];
+
+  //   testCases.forEach(testCase => {
+  //     console.log(`Input: ${testCase}`);
+  //     console.log(`Output: ${formatDateIntoReadableFormat(testCase)}\n`);
+  //   });
+  // }
 
   return (
     <main className="h-[calc(100cqh-5rem)] space-y-5 overflow-hidden p-4 lg:p-8 ">
