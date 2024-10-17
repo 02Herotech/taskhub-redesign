@@ -109,7 +109,6 @@ const CompletedTasksCard = ({ task }: TaskCardProps) => {
 
     const handleReviewSubmission = async (e: React.FormEvent) => {
         e.preventDefault();
-        console.log(comment, rating, serviceProviderId, categoryId)
         try {
             const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/service_provider/review/${serviceProviderId}/${categoryId}`,
                 {

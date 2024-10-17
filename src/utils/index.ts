@@ -389,9 +389,18 @@ export const useTimestampWithSpinner = (isoTimestamp: string | null) => {
 };
 
 
-export function formatTimestamp(unixTimestamp: number): string {
-  // Convert the Unix timestamp (in seconds) to milliseconds
-  const dateObject = new Date(unixTimestamp * 1000);
+export function formatTimestamp(timestamp: number | string): string {
+  let dateObject: Date;
+
+  // Handle different timestamp formats
+  if (typeof timestamp === 'number') {
+    // Check if the timestamp is in seconds (Unix timestamp) or milliseconds
+    dateObject = new Date(timestamp > 9999999999 ? timestamp : timestamp * 1000);
+  } else if (typeof timestamp === 'string') {
+    dateObject = new Date(timestamp);
+  } else {
+    return "Invalid date";
+  }
 
   // Check if the date is valid
   if (isNaN(dateObject.getTime())) {
@@ -405,47 +414,35 @@ export function formatTimestamp(unixTimestamp: number): string {
     differenceInMilliseconds / (1000 * 60 * 60 * 24),
   );
 
+  // Format time string
+  const timeString = dateObject.toLocaleTimeString(undefined, {
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: true
+  });
+
   // Handle cases for today, yesterday, this week, etc.
   if (differenceInDays === 0) {
     // Today
-    return dateObject.toLocaleTimeString(undefined, {
-      hour: "2-digit",
-      minute: "2-digit",
-      hour12: true,
-    });
+    return timeString;
   } else if (differenceInDays === 1) {
     // Yesterday
-    return `Yesterday at ${dateObject.toLocaleTimeString(undefined, { hour: "2-digit", minute: "2-digit", hour12: true })}`;
+    return `Yesterday at ${timeString}`;
   } else if (differenceInDays < 7) {
     // This week
     return `${differenceInDays} days ago`;
-  } else if (differenceInDays < 30) {
-    // This month
-    return (
-      dateObject.toLocaleDateString(undefined, {
-        month: "short",
-        day: "numeric",
-      }) +
-      ` at ${dateObject.toLocaleTimeString(undefined, { hour: "2-digit", minute: "2-digit", hour12: true })}`
-    );
-  } else if (differenceInDays < 365) {
-    // This year
-    return (
-      dateObject.toLocaleDateString(undefined, {
-        month: "short",
-        day: "numeric",
-      }) +
-      ` at ${dateObject.toLocaleTimeString(undefined, { hour: "2-digit", minute: "2-digit", hour12: true })}`
-    );
+  } else if (differenceInDays < 30 || differenceInDays < 365) {
+    // This month or this year
+    return dateObject.toLocaleDateString(undefined, {
+      month: "short",
+      day: "numeric",
+    }) + ` at ${timeString}`;
   } else {
     // Earlier years
-    return (
-      dateObject.toLocaleDateString(undefined, {
-        year: "numeric",
-        month: "short",
-        day: "numeric",
-      }) +
-      ` at ${dateObject.toLocaleTimeString(undefined, { hour: "2-digit", minute: "2-digit", hour12: true })}`
-    );
+    return dateObject.toLocaleDateString(undefined, {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+    }) + ` at ${timeString}`;
   }
 }
