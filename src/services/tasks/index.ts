@@ -123,7 +123,7 @@ export const task = createApi({
       providesTags: ["Task"],
     }),
     deleteTask: builder.mutation<void, number>({
-      query: (id) => postRequest(`/task/delete-task/${id}`, {}),
+      query: (id) => postRequest(`/booking/deleteCompletedJob/${id}`, {}),
       invalidatesTags: ["Task"],
     }),
     searchTaskByText: builder.query<GetTasksResponse, GetTaskByTextRequest>({
