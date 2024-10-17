@@ -252,38 +252,48 @@ const ServiceProviderChat = () => {
     };
 
     try {
-      // Normalize the input to a Date object
-      let date: Date;
+      // Normalize the input to a Date object with explicit timezone handling
+      let dateObj: Date;
 
       if (input instanceof Date) {
-        date = input;
+        dateObj = input;
       } else if (typeof input === 'number') {
         // Handle Unix timestamp (both seconds and milliseconds)
-        date = new Date(input > 9999999999 ? input : input * 1000);
+        dateObj = new Date(input > 9999999999 ? input : input * 1000);
       } else {
-        // Handle various string formats including "10/14/2024"
+        // Handle string format "MM/DD/YYYY"
         if (input.includes('/')) {
           const [month, day, year] = input.split('/').map(Number);
-          date = new Date(year, month - 1, day); // Month is 0-based in Date constructor
+          // Create date in UTC to avoid timezone issues
+          dateObj = new Date(Date.UTC(year, month - 1, day));
         } else {
-          date = new Date(input);
+          // For ISO strings and other formats
+          dateObj = new Date(input);
         }
       }
 
       // Validate date
-      if (isNaN(date.getTime())) {
+      if (isNaN(dateObj.getTime())) {
         throw new Error('Invalid date');
       }
 
-      // Get date components
-      const day = date.getUTCDate(); // Use UTC to ensure consistency across timezones
-      const year = date.getUTCFullYear();
+      // Create a consistent UTC midnight timestamp for the date
+      const utcDate = new Date(Date.UTC(
+        dateObj.getUTCFullYear(),
+        dateObj.getUTCMonth(),
+        dateObj.getUTCDate(),
+        0, 0, 0, 0
+      ));
 
-      // Get month name using Intl.DateTimeFormat for better localization support
+      // Get date components using UTC methods
+      const day = utcDate.getUTCDate();
+      const year = utcDate.getUTCFullYear();
+
+      // Format month using UTC-specific formatting
       const month = new Intl.DateTimeFormat('en-US', {
         month: 'long',
         timeZone: 'UTC'
-      }).format(date);
+      }).format(utcDate);
 
       // Construct the final string
       return `${day}${getOrdinalSuffix(day)} ${month} ${year}`;
@@ -292,7 +302,6 @@ const ServiceProviderChat = () => {
       return 'Invalid date';
     }
   }
-
   // Test cases
   // function runTests() {
   //   const testCases = [
