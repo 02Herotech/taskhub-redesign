@@ -211,13 +211,14 @@ const EditProfile = () => {
           idType: data.idType,
           idNumber: data.idNumber,
           bio: data.bio,
-        }).reduce((acc, [key, value]) => {
-          if (value !== null && value !== undefined && value !== "") {
-            // @ts-expect-error "type of key not know"
-            acc[key] = value;
-          }
-          return acc;
-        }, {});
+        })
+        //   .reduce((acc, [key, value]) => {
+        //   if (value !== null && value !== undefined && value !== "") {
+        //     // @ts-expect-error "type of key not know"
+        //     acc[key] = value;
+        //   }
+        //   return acc;
+        // }, {});
         url =
           `${process.env.NEXT_PUBLIC_API_URL}/service_provider/update`;
       } else {
@@ -232,13 +233,14 @@ const EditProfile = () => {
           idImageBack: selectedDocumentBack,
           idType: data.idType,
           idNumber: data.idNumber,
-        }).reduce((acc, [key, value]) => {
-          if (value !== null && value !== undefined && value !== "") {
-            // @ts-expect-error "type of key not know"
-            acc[key] = value;
-          }
-          return acc;
-        }, {});
+        })
+        //   .reduce((acc, [key, value]) => {
+        //   if (value !== null && value !== undefined && value !== "") {
+        //     // @ts-expect-error "type of key not know"
+        //     acc[key] = value;
+        //   }
+        //   return acc;
+        // }, {});
         url = `${process.env.NEXT_PUBLIC_API_URL}/customer/update`;
       }
       
