@@ -241,8 +241,7 @@ const EditProfile = () => {
           }
           return acc;
         }, {});
-        // url = `${process.env.NEXT_PUBLIC_API_URL}/customer/update`;
-        url = `https://smp.jacinthsolutions.com.au/api/v1/customer/update`
+        url = `${process.env.NEXT_PUBLIC_API_URL}/customer/update`;
       }
       
       await axios.patch(url, submitData, {
