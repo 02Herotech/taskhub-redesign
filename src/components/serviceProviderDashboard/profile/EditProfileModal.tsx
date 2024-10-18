@@ -36,29 +36,13 @@ type ModalPropsTypes = {
     }>
   >;
   isEditingProfilePicture: {
-    isEditing: boolean;
-    image: string | null;
-  };
-  setisEditingImageFront: React.Dispatch<
-    React.SetStateAction<{
       isEditing: boolean;
       image: string | null;
-    }>
-  >;
-  isEditingImageFront: {
-    isEditing: boolean;
-    image: string | null;
-  };
-  setisEditingImageBack: React.Dispatch<
-    React.SetStateAction<{
-      isEditing: boolean;
-      image: string | null;
-    }>
-  >;
-  isEditingImageBack: {
-    isEditing: boolean;
-    image: string | null;
-  };
+    }
+  setisEditingImageFront: Dispatch<SetStateAction<boolean>>;
+  isEditingImageFront: boolean;
+  setisEditingImageBack: Dispatch<SetStateAction<boolean>>;
+  isEditingImageBack: boolean;
   setSelectedDocumentFront: React.Dispatch<React.SetStateAction<File | null>>;
   setSelectedDocumentBack: React.Dispatch<React.SetStateAction<File | null>>;
   setIsProfileUpdatedSuccessfully: React.Dispatch<
@@ -111,17 +95,15 @@ const EditProfileModal = ({
         setSelectedFile(file);
         if (isEditingProfilePicture.isEditing) {
           setisEditingProfilePicture((prev) => ({ ...prev, image: imageSrc }));
-        } else if (isEditingImageFront.isEditing) {
-          setisEditingImageFront((prev) => ({ ...prev, image: imageSrc }));
+        } else if (isEditingImageFront) {
           setDocumentImageFront(imageSrc);
-        } else if (isEditingImageBack.isEditing) {
-          setisEditingImageBack((prev) => ({ ...prev, image: imageSrc }));
+        } else if (isEditingImageBack) {
           setDocumentImageBack(imageSrc)
         }
         setCameraActive(false);
       }
     }
-  }, [isEditingProfilePicture, setDocumentImageFront, setDocumentImageBack, setisEditingProfilePicture, setisEditingImageBack, setisEditingImageFront, isEditingImageFront, isEditingImageBack]);
+  }, [isEditingProfilePicture, setDocumentImageFront, setDocumentImageBack, setisEditingProfilePicture, isEditingImageFront, isEditingImageBack]);
 
   const handleFileInputChange = (event: ChangeEvent<HTMLInputElement>) => {
     const uploadFile = event.target.files?.[0];
@@ -133,15 +115,15 @@ const EditProfileModal = ({
         setImageSrc(img);
         if (isEditingProfilePicture.isEditing) {
           setisEditingProfilePicture((prev) => ({ ...prev, image: img }));
-        } else if (isEditingImageFront.isEditing) {
-          setisEditingImageFront((prev) => ({ ...prev, image: img }));
+        } else if (isEditingImageFront) {
           setDocumentImageFront(img);
-        } else if (isEditingImageBack.isEditing) {
-          setisEditingImageBack((prev) => ({ ...prev, image: img }));
+        } else if (isEditingImageBack) {
           setDocumentImageBack(img);
         }
+        
       };
-      console.log(isEditingImageFront.isEditing, isEditingImageBack.isEditing, isEditingProfilePicture.isEditing)
+      
+      console.log(isEditingImageFront, isEditingImageBack, isEditingProfilePicture.isEditing)
       reader.readAsDataURL(uploadFile);
     }
   };
@@ -199,9 +181,9 @@ const EditProfileModal = ({
         } finally {
           dispatch(refreshUserProfile());
         }
-      } else if(selectedFile && isEditingImageFront.isEditing) {
+      } else if(selectedFile && isEditingImageFront) {
         setSelectedDocumentFront(selectedFile);
-      } else if(selectedFile && isEditingImageBack.isEditing) {
+      } else if(selectedFile && isEditingImageBack) {
         setSelectedDocumentBack(selectedFile)
       }
       handleCloseModal();
@@ -319,7 +301,7 @@ const EditProfileModal = ({
             </div>
         )}
         {isUploadInitiated && 
-          (isEditingProfilePicture.isEditing || isEditingImageFront.isEditing || isEditingImageBack.isEditing) && (
+          (isEditingProfilePicture.isEditing || isEditingImageFront || isEditingImageBack) && (
             <div className=" z-50 flex flex-col items-center justify-center gap-5 space-y-3 bg-white">
               <div className="space-y-4">
                 <div className="flex items-center gap-4">

@@ -11,13 +11,15 @@ import {
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setContacts, setTotalUnreadMessages } from "@/store/Features/chat";
 import ScrollToBottom from "react-scroll-to-bottom";
 import { connectSocket, getSocket } from "@/lib/socket";
 import ChatMessage from "../chatMessage";
+import { formatTimestamp } from "@/utils";
+import { FaCheckDouble } from "react-icons/fa6";
 
 type ChatMessagesGroupedType = {
   [date: string]: ChatMessageDisplayedType[];
@@ -26,12 +28,10 @@ type ChatMessagesGroupedType = {
 const ServiceProviderChat = () => {
   const [message, setMessage] = useState("");
   const [contact, setContact] = useState<ChatContactTypes | null>();
-
-  const [groupedChatMessages, setGroupedChatMessages] =
-    useState<ChatMessagesGroupedType | null>(null);
-
   const session = useSession();
   const dispatch = useDispatch();
+
+  const [groupedChatMessages, setGroupedChatMessages] = useState<ChatMessagesGroupedType | null>(null);
   const { chatPartnerId } = useParams();
 
   const { profile: user, userProfileAuth: auth } = useSelector(
@@ -40,8 +40,8 @@ const ServiceProviderChat = () => {
   const { contacts, newMessage } = useSelector(
     (state: RootState) => state.chat,
   );
-  const inputRef = useRef<HTMLTextAreaElement>(null);
 
+  const inputRef = useRef<HTMLTextAreaElement>(null);
   const token = session?.data?.user?.accessToken;
   const isServiceProvider = auth?.role?.[0] === "SERVICE_PROVIDER";
 
@@ -158,7 +158,6 @@ const ServiceProviderChat = () => {
     };
   };
 
-
   const sendMessage = (msg: string) => {
     const socket = getSocket();
     if (msg.trim() !== "" && user && contact) {
@@ -236,14 +235,9 @@ const ServiceProviderChat = () => {
     }
   };
 
-  const formatDateIntoReadableFormat = (dateString: string): string => {
-    const date = new Date(dateString);
-    const day = date.getDate();
-    const month = date.toLocaleString("default", { month: "long" });
-    const year = date.getFullYear();
-
-    // Determine the ordinal suffix
-    const ordinalSuffix = (day: number) => {
+  function formatDateIntoReadableFormat(input: string | number | Date): string {
+    // Helper function to get ordinal suffix
+    const getOrdinalSuffix = (day: number): string => {
       if (day > 3 && day < 21) return "th";
       switch (day % 10) {
         case 1:
@@ -257,10 +251,73 @@ const ServiceProviderChat = () => {
       }
     };
 
-    return `${day}${ordinalSuffix(day)} ${month} ${year}`;
-  };
+    try {
+      // Normalize the input to a Date object with explicit timezone handling
+      let dateObj: Date;
 
-  console.log("messages", groupedChatMessages)
+      if (input instanceof Date) {
+        dateObj = input;
+      } else if (typeof input === 'number') {
+        // Handle Unix timestamp (both seconds and milliseconds)
+        dateObj = new Date(input > 9999999999 ? input : input * 1000);
+      } else {
+        // Handle string format "MM/DD/YYYY"
+        if (input.includes('/')) {
+          const [month, day, year] = input.split('/').map(Number);
+          // Create date in UTC to avoid timezone issues
+          dateObj = new Date(Date.UTC(year, month - 1, day));
+        } else {
+          // For ISO strings and other formats
+          dateObj = new Date(input);
+        }
+      }
+
+      // Validate date
+      if (isNaN(dateObj.getTime())) {
+        throw new Error('Invalid date');
+      }
+
+      // Create a consistent UTC midnight timestamp for the date
+      const utcDate = new Date(Date.UTC(
+        dateObj.getUTCFullYear(),
+        dateObj.getUTCMonth(),
+        dateObj.getUTCDate(),
+        0, 0, 0, 0
+      ));
+
+      // Get date components using UTC methods
+      const day = utcDate.getUTCDate();
+      const year = utcDate.getUTCFullYear();
+
+      // Format month using UTC-specific formatting
+      const month = new Intl.DateTimeFormat('en-US', {
+        month: 'long',
+        timeZone: 'UTC'
+      }).format(utcDate);
+
+      // Construct the final string
+      return `${day}${getOrdinalSuffix(day)} ${month} ${year}`;
+    } catch (error) {
+      console.error('Error formatting date:', error);
+      return 'Invalid date';
+    }
+  }
+  // Test cases
+  // function runTests() {
+  //   const testCases = [
+  //     '10/14/2024',                    // MM/DD/YYYY
+  //     '2024-10-14',                    // YYYY-MM-DD
+  //     '2024-10-14T12:00:00Z',         // ISO string
+  //     1729120446,                      // Unix timestamp (seconds)
+  //     1729120446000,                   // Unix timestamp (milliseconds)
+  //     new Date('2024-10-14'),         // Date object
+  //   ];
+
+  //   testCases.forEach(testCase => {
+  //     console.log(`Input: ${testCase}`);
+  //     console.log(`Output: ${formatDateIntoReadableFormat(testCase)}\n`);
+  //   });
+  // }
 
   return (
     <main className="h-[calc(100cqh-5rem)] space-y-5 overflow-hidden p-4 lg:p-8 ">
@@ -271,8 +328,8 @@ const ServiceProviderChat = () => {
 
         {/* Organize this */}
         <section className="flex h-[calc(100cqh-6rem)] w-full flex-col justify-between space-y-4  lg:col-span-7  lg:h-[calc(100cqh-9rem)] lg:px-4">
-          <article className="flex-shrink-0 space-y-4 ">
-            <div className="flex cursor-pointer gap-3 ">
+          <article className="flex-shrink-0 space-y-4">
+            <div className="flex cursor-pointer gap-3">
               <Image
                 src={
                   contact?.profilePicture ??
@@ -319,33 +376,33 @@ const ServiceProviderChat = () => {
                           {formatDateIntoReadableFormat(date)}
                         </div>
                         {messages.map((item, index) => (
-                          <ChatMessage item={item} user={user} key={index }/>
-                          // <div
-                          //   key={index}
-                          //   className={`my-2 flex w-full ${item.senderId === user.id
-                          //       ? "flex-wrap justify-end"
-                          //       : "justify-start"
-                          //     }`}
-                          // >
-                          //   <div
-                          //     className={`flex w-fit max-w-xs flex-col gap-1 rounded-md p-2 text-sm ${item.senderId === user.id
-                          //         ? "bg-violet-normal text-white"
-                          //         : "bg-orange-light text-left text-violet-dark"
-                          //       }`}
-                          //   >
-                          //     <p>{item.content}</p>
-                          //     <div className="flex items-center justify-end gap-2 text-[0.7rem]">
-                          //       <span className="">
-                          //         {formatTimestamp(item.time as number)}
-                          //       </span>
-                          //       {item.senderId === user.id &&  (
-                          //         <span className="block">
-                          //           <FaCheckDouble className="text-green-500" />
-                          //         </span>
-                          //       )}
-                          //     </div>
-                          //   </div>
-                          // </div>
+                          // <ChatMessage item={item} user={user} key={index }/>
+                          <div
+                            key={index}
+                            className={`my-2 flex w-full ${item.senderId === user.id
+                                ? "flex-wrap justify-end"
+                                : "justify-start"
+                              }`}
+                          >
+                            <div
+                              className={`flex w-fit max-w-xs flex-col gap-1 rounded-md p-2 text-sm ${item.senderId === user.id
+                                  ? "bg-violet-normal text-white"
+                                  : "bg-orange-light text-left text-violet-dark"
+                                }`}
+                            >
+                              <p>{item.content}</p>
+                              <div className="flex items-center justify-end gap-2 text-[0.7rem]">
+                                <span className="">
+                                  {formatTimestamp(item.time)}
+                                </span>
+                                {item.senderId === user.id &&  (
+                                  <span className="block">
+                                    <FaCheckDouble className="text-green-500" />
+                                  </span>
+                                )}
+                              </div>
+                            </div>
+                          </div>
                         ))}
                       </div>
                     ),
