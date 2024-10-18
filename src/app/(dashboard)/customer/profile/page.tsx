@@ -19,8 +19,9 @@ const CustomerProfilePage = () => {
     const fetchUserData = async () => {
       if (!token) return;
       try {
-        const url =
-          `${process.env.NEXT_PUBLIC_API_URL}/customer/profile`;
+        // const url =
+        //   `${process.env.NEXT_PUBLIC_API_URL}/customer/profile`;
+        const url = `https://smp.jacinthsolutions.com.au/api/v1/customer/profile`
         const { data } = await axios.get(url, {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -28,6 +29,7 @@ const CustomerProfilePage = () => {
           },
         });
         setFetchedUserData(data);
+        console.log(data);
       } catch (error) {
         console.error(error);
       }

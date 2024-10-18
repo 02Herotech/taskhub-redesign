@@ -53,8 +53,8 @@ const EditProfile = () => {
   const [isEditingEnabled, setIsEditingEnabled] = useState(false);
   const [isFormModalShown, setIsFormModalShown] = useState(false);
   const [isEditingProfilePicture, setIsEditingProfilePicture] = useState({ isEditing: false, image: null as string | null });
-  const [isEditingImageFront, setIsEditingImageFront] = useState({ isEditing: false, image: null as string | null });
-  const [isEditingImageBack, setIsEditingImageBack] = useState({ isEditing: false, image: null as string | null });
+  const [isEditingImageFront, setIsEditingImageFront] = useState<boolean>(false);
+  const [isEditingImageBack, setIsEditingImageBack] = useState<boolean>(false);
   const [documentImageFront, setDocumentImageFront] = useState<string | null>(null);
   const [documentImageBack, setDocumentImageBack] = useState<string | null>(null);
   const [documentImage, setDocumentImage] = useState<string | null>(null);
@@ -212,13 +212,13 @@ const EditProfile = () => {
           idNumber: data.idNumber,
           bio: data.bio,
         })
-        //   .reduce((acc, [key, value]) => {
-        //   if (value !== null && value !== undefined && value !== "") {
-        //     // @ts-expect-error "type of key not know"
-        //     acc[key] = value;
-        //   }
-        //   return acc;
-        // }, {});
+          .reduce((acc, [key, value]) => {
+          if (value !== null && value !== undefined && value !== "") {
+            // @ts-expect-error "type of key not know"
+            acc[key] = value;
+          }
+          return acc;
+        }, {});
         url =
           `${process.env.NEXT_PUBLIC_API_URL}/service_provider/update`;
       } else {
@@ -229,19 +229,20 @@ const EditProfile = () => {
           suburb: data.suburb,
           state: data.state,
           postCode: data.postcode,
-          idImagefront: selectedDocumentFront,
+          idImageFront: selectedDocumentFront,
           idImageBack: selectedDocumentBack,
           idType: data.idType,
           idNumber: data.idNumber,
         })
-        //   .reduce((acc, [key, value]) => {
-        //   if (value !== null && value !== undefined && value !== "") {
-        //     // @ts-expect-error "type of key not know"
-        //     acc[key] = value;
-        //   }
-        //   return acc;
-        // }, {});
-        url = `${process.env.NEXT_PUBLIC_API_URL}/customer/update`;
+          .reduce((acc, [key, value]) => {
+          if (value !== null && value !== undefined && value !== "") {
+            // @ts-expect-error "type of key not know"
+            acc[key] = value;
+          }
+          return acc;
+        }, {});
+        // url = `${process.env.NEXT_PUBLIC_API_URL}/customer/update`;
+        url = `https://smp.jacinthsolutions.com.au/api/v1/customer/update`
       }
       
       await axios.patch(url, submitData, {
@@ -264,13 +265,13 @@ const EditProfile = () => {
     setIsFormModalShown(true);
   };
   const handleChangeFront = () => {
-    setIsEditingImageFront({ isEditing: true, image: null });
-    setIsEditingImageBack({ isEditing: false, image: null });
+    setIsEditingImageFront(true);
+    setIsEditingImageBack(false);
     setIsFormModalShown(true);
   };
   const handleChangeBack = () => {
-    setIsEditingImageBack({ isEditing: true, image: null });
-    setIsEditingImageFront({ isEditing: false, image: null });
+    setIsEditingImageBack(true);
+    setIsEditingImageFront(false);
     setIsFormModalShown(true);
   };
 
