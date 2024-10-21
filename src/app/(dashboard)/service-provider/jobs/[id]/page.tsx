@@ -127,8 +127,6 @@ const ViewJobs = () => {
     }
   }, [currentBooking]);
 
-  console.log(currentBooking);
-
   return (
     <>
       <Congratulations
