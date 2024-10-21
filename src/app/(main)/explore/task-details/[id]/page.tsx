@@ -56,7 +56,6 @@ const TaskDetailsPage = ({ params }: { params: { id: string } }) => {
   }, []);
 
   useEffect(() => {
-
     const intervalId = setInterval(() => {
       refetch();
     }, 3000);
