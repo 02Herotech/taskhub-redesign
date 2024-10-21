@@ -150,7 +150,7 @@ const AddTaskForm: React.FC = () => {
     const fetchPostalCodeData = async () => {
       try {
         const response = await axios.get(
-          `https://api.oloja.com.au/api/v1/util/locations/search?postcode=${selectedCode}`,
+          `${process.env.NEXT_PUBLIC_API_URL}/util/locations/search?postcode=${selectedCode}`,
         );
         console.log(response.data);
         setPostalCodeData(response.data as PostalCodeData[]);
@@ -164,11 +164,12 @@ const AddTaskForm: React.FC = () => {
       fetchPostalCodeData();
     }
   }, [selectedCode]);
+  
   useEffect(() => {
     const fetchItems = async () => {
       try {
         const response = await axios.get(
-          "https://api.oloja.com.au/api/v1/util/all-categories",
+          `${process.env.NEXT_PUBLIC_API_URL}/util/all-categories`,
         );
         const data: Item[] = response.data;
         setItems(data);

@@ -5,10 +5,12 @@ let socket: Socket | null = null;
 
 export const connectSocket = (userId: number) => {
   if (!socket) {
-    socket = io(`${process.env.NEXT_BASE_URL}`, {
+    socket = io(process.env.NEXT_PUBLIC_BASE_URL, {
       query: { userId },
     });
   }
+
+  console.log("ENV", process.env.NEXT_PUBLIC_BASE_URL)
   return socket;
 };
 
