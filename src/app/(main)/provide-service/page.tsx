@@ -111,8 +111,7 @@ const ProvideService: React.FC = () => {
     null,
   );
   const [selectedCategoryName, setSelectedCategoryName] = useState("Category");
-  const [selectedSubCategoryName, setSelectedSubCategoryName] =
-    useState("Subcategory");
+  const [selectedSubCategoryName, setSelectedSubCategoryName] = useState("Subcategory");
   const [activePlanIndex, setActivePlanIndex] = useState<number | null>(null);
   const [errors, setErrors] = useState<any>({});
   const [error, setError] = useState<any>({});
@@ -171,8 +170,6 @@ const ProvideService: React.FC = () => {
     { value: "SATURDAY", label: "Saturday" },
     { value: "SUNDAY", label: "Sunday" },
   ];
-
-
 
   // Handling getting the description from the marketplace when i user navigates from the marketplace
   useEffect(() => {
@@ -1546,7 +1543,7 @@ const ProvideService: React.FC = () => {
               setIsSuccessPopupOpen(false);
             }}
           >
-            <div className="px-16 py-10 lg:px-24">
+            <div className="px-14 py-10 lg:px-24">
               <div className="relative grid items-center justify-center space-y-5">
                 <p className="font-clashDisplay text-center text-[20px] font-extrabold text-[#2A1769] md:text-[36px] lg:text-[37px] ">
                   You are almost done!!!
@@ -1562,7 +1559,7 @@ const ProvideService: React.FC = () => {
                 <Image
                   src={image}
                   alt="image"
-                  className="absolute -right-12 top-28 w-24 lg:-right-12 lg:top-2/3 lg:w-24 "
+                  className="absolute -right-14 top-28 w-24 lg:-right-12 lg:top-2/3 lg:w-24 "
                 />
                 <Image
                   src={img}
