@@ -856,7 +856,7 @@ const AddTaskForm: React.FC = () => {
                     Budget{" "}
                     <span className="font-extrabold text-[#ff0000]">*</span>
                   </label>
-                  {task.customerBudget != null && (
+                  {task.customerBudget && (
                     <div className="h-[16px] w-[16px] rounded-3xl bg-[#4CAF50] text-[16px] font-extrabold text-white">
                       <GrFormCheckmark />
                     </div>
