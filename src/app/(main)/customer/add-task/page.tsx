@@ -68,8 +68,6 @@ const AddTaskForm: React.FC = () => {
   const isAuthenticated = session.status === "authenticated";
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(false);
-  const defaultImageSrc =
-    "https://static.wixstatic.com/media/7d1889_ab302adc66e943f9b6be9de260cbc40f~mv2.png";
   const [task, setTask] = useState<FormData>({
     taskBriefDescription: getCookie("taskBriefDescription") || "",
     taskImage: null,
@@ -152,7 +150,7 @@ const AddTaskForm: React.FC = () => {
     const fetchPostalCodeData = async () => {
       try {
         const response = await axios.get(
-          `https://api.oloja.com.au/api/v1/util/locations/search?postcode=${selectedCode}`,
+          `${process.env.NEXT_PUBLIC_API_URL}/util/locations/search?postcode=${selectedCode}`,
         );
         console.log(response.data);
         setPostalCodeData(response.data as PostalCodeData[]);
@@ -166,11 +164,12 @@ const AddTaskForm: React.FC = () => {
       fetchPostalCodeData();
     }
   }, [selectedCode]);
+  
   useEffect(() => {
     const fetchItems = async () => {
       try {
         const response = await axios.get(
-          "https://api.oloja.com.au/api/v1/util/all-categories",
+          `${process.env.NEXT_PUBLIC_API_URL}/util/all-categories`,
         );
         const data: Item[] = response.data;
         setItems(data);
@@ -1048,9 +1047,9 @@ const AddTaskForm: React.FC = () => {
             setIsSuccessPopupOpen(false);
           }}
         >
-          <div className="px-16 py-10 lg:px-24">
+          <div className="py-10 lg:px-24">
             <div className="relative grid items-center justify-center space-y-5">
-              <p className="font-clashDisplay text-center text-[20px] font-extrabold text-[#2A1769] md:text-[36px] lg:text-[37px] ">
+              <p className="font-clashDisplay text-center text-[20px] font-extrabold text-[#2A1769] md:text-[36px] lg:text-[37px]">
                 You are almost done!!!
               </p>
               <div>
@@ -1064,7 +1063,7 @@ const AddTaskForm: React.FC = () => {
               <Image
                 src={image}
                 alt="image"
-                className="absolute -right-12 top-28 w-24 lg:-right-12 lg:top-2/3 lg:w-24 "
+                className="absolute -right-12 top-28 w-24 lg:-right-12 lg:top-2/3 lg:w-24"
               />
               <Image
                 src={img}
