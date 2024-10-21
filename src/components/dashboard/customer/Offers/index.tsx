@@ -9,12 +9,7 @@ import { loadStripe } from "@stripe/stripe-js";
 import { Elements } from "@stripe/react-stripe-js";
 import { useSession } from "next-auth/react";
 import CheckoutForm from "../CheckoutForm";
-import {
-  useAcceptInvoiceMutation,
-  useGeneratePaymentIntentMutation,
-  useGetInvoiceByCustomerIdQuery,
-  useRejectInvoiceMutation
-} from "@/services/bookings";
+import { useAcceptInvoiceMutation, useGeneratePaymentIntentMutation, useGetInvoiceByCustomerIdQuery, useRejectInvoiceMutation } from "@/services/bookings";
 import Loading from "@/shared/loading";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
@@ -32,11 +27,12 @@ const Offers = () => {
   const [initiatePayment, setInitiatePayment] = useState(false);
   const [error, setError] = useState("");
   const [clientSecret, setClientSecret] = useState("");
+  const [acceptInvoiceError, setAcceptInvoiceError] = useState("");
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
   const [invoiceAccepted, setInvoiceAccepted] = useState(false);
   const [generatePaymentIntent, { isLoading: paymentIntentLoading, error: paymentIntentError }] = useGeneratePaymentIntentMutation();
-  const [acceptInvoice, { isLoading: acceptInvoiceLoading, error: acceptInvoiceError }] = useAcceptInvoiceMutation();
+  const [acceptInvoice, { isLoading: acceptInvoiceLoading, error: acceptInvoiceErrors }] = useAcceptInvoiceMutation();
   const [rejectInvoice, { isLoading: rejectInvoiceLoading, error: rejectInvoiceError }] = useRejectInvoiceMutation();
 
   const { data: session } = useSession();
@@ -80,8 +76,8 @@ const Offers = () => {
     try {
       const response = await acceptInvoice({ invoiceId: selectedInvoice.id }).unwrap();
 
-      if (acceptInvoiceError) {
-        setError(response.message);
+      if (acceptInvoiceErrors) {
+        setAcceptInvoiceError("Error accepting offer, please try again");
       } else {
         setInvoiceAccepted(true);
         setError("");
@@ -99,7 +95,7 @@ const Offers = () => {
       const response = await rejectInvoice({ invoiceId: selectedInvoice.id }).unwrap();
 
       if (rejectInvoiceError) {
-        setError(response.message);
+        setError("Error rejecting offer, please try again");
       } else {
         setError("");
         closeModal();
@@ -110,46 +106,75 @@ const Offers = () => {
   };
 
   const handleInitiatePayment = async () => {
-    if (!selectedInvoice || !invoiceAccepted) return;
+    if (!selectedInvoice) return;
 
     try {
       const response = await generatePaymentIntent({ invoiceId: selectedInvoice.id }).unwrap();
       setClientSecret(response.clientSecret);
       setInitiatePayment(true);
+      setInvoiceAccepted(false)
       setError("");
     } catch (err) {
       setError("Failed to generate payment intent. Please try again.");
     }
   };
 
-  // useEffect(() => {
-  //   if (isModalOpen && userToken) {
-  //     fetchPaymentIntent();
-  //   }
-  // }, [isModalOpen, userToken]);
-
-  const groupOffersByDate = (offers: Invoice[], filterDate: Date | null) => {
-    if (!offers || !Array.isArray(offers)) {
+  const groupOffersByDate = (offers: Invoice | Invoice[] | undefined | null, filterDate: Date | null) => {
+    // Early return if offers is null/undefined
+    if (!offers) {
+      console.log("No offers data received");
       return [];
     }
 
-    const grouped = offers.reduce((acc, offer) => {
-      const date = new Date(offer.createdAt).toLocaleDateString("en-US", {
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-      });
-      if (filterDate) {
-        const offerDate = new Date(offer.createdAt);
-        if (offerDate.toDateString() !== filterDate.toDateString()) {
+    // Convert single object to array if necessary and filter out any undefined/null values
+    const offersArray = (Array.isArray(offers) ? offers : [offers]).filter(offer =>
+      offer && typeof offer === 'object' && 'createdAt' in offer
+    );
+
+    // Skip if no valid offers
+    if (!offersArray.length) {
+      console.log("No valid offers to process");
+      return [];
+    }
+
+    const grouped = offersArray.reduce((acc, offer) => {
+      try {
+        if (!offer.createdAt) {
+          console.log("Offer missing createdAt:", offer);
           return acc;
         }
+
+        // Handle the array format of createdAt
+        const dateObj = Array.isArray(offer.createdAt)
+          ? new Date(offer.createdAt[0], offer.createdAt[1] - 1, offer.createdAt[2])
+          : new Date(offer.createdAt);
+
+        if (isNaN(dateObj.getTime())) {
+          console.log("Invalid date for offer:", offer);
+          return acc;
+        }
+
+        const date = dateObj.toLocaleDateString("en-US", {
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+        });
+
+        if (filterDate) {
+          if (dateObj.toDateString() !== filterDate.toDateString()) {
+            return acc;
+          }
+        }
+
+        if (!acc[date]) {
+          acc[date] = [];
+        }
+        acc[date].push(offer);
+        return acc;
+      } catch (error) {
+        console.error("Error processing offer:", error, offer);
+        return acc;
       }
-      if (!acc[date]) {
-        acc[date] = [];
-      }
-      acc[date].push(offer);
-      return acc;
     }, {} as Record<string, Invoice[]>);
 
     return Object.entries(grouped).sort((a, b) =>
@@ -157,7 +182,7 @@ const Offers = () => {
     );
   };
 
-  const groupedOffers = groupOffersByDate(offers!, selectedDate);
+  const groupedOffers = offers ? groupOffersByDate(offers, selectedDate) : [];
 
   if (!offers || isLoading) {
     return (
@@ -178,7 +203,7 @@ const Offers = () => {
         {/* <h3 className="mb-5 font-satoshiBold text-base font-bold text-[#140B31]">
           {todayDate}
         </h3> */}
-        {offers.length === 0 && (
+        {groupedOffers.length === 0 && (
           <div className="flex h-[50vh] flex-col items-center justify-center space-y-5">
             <h2 className="text-center text-2xl font-bold text-primary">
               No offer found
@@ -186,18 +211,18 @@ const Offers = () => {
           </div>
         )}
         <div className="flex items-center justify-end mb-4">
-          <div className="relative flex items-center">
+          <div className={`relative flex items-center`}>
             {selectedDate && (
               <Button
                 onClick={() => setSelectedDate(null)}
-                className="font-bold rounded-full mr-3"
+                className={`font-bold rounded-full mr-3`}
                 theme="outline"
                 size="sm"
               >
                 View all
               </Button>
             )}
-            <div className="bg-primary absolute top-0 right-0 text-white p-[6px] rounded-full cursor-pointer flex items-center justify-center hover:scale-105 transition-all" onClick={() => setIsDatePickerOpen(!isDatePickerOpen)}>
+            <div className={`bg-primary absolute top-0 right-0 text-white p-[6px] rounded-full cursor-pointer flex items-center justify-center hover:scale-105 transition-all ${groupedOffers.length === 0 && `hidden`}`} onClick={() => setIsDatePickerOpen(!isDatePickerOpen)}>
               <LuCalendarDays
                 size={20}
               />
@@ -361,21 +386,29 @@ const Offers = () => {
                           <h5 className="text-[#716F78]">Bill to</h5>
                         </div>
                       </div>
-                      <div className="mb-6 flex items-center justify-between max-lg:space-x-3">
-                        {/* <div>
-                                                    <h2 className="text-xl text-[#001433] font-bold">
-                                                        {selectedInvoice.}
-                                                    </h2>
-                                                    <h5 className="text-[#716F78]">Service duration</h5>
-                                                </div> */}
-                      </div>
                       {error && (
                         <div className="my-1 text-base font-semibold text-status-error-100">
                           {error}
                         </div>
                       )}
+                      {acceptInvoiceError && (
+                        <div className="my-1 text-base font-semibold text-status-error-100">
+                          {acceptInvoiceError}
+                        </div>
+                      )}
                       <div className="!mt-6 flex items-center space-x-4">
-                        {!invoiceAccepted ? (
+                          {selectedInvoice.invoiceStatus === "ACCEPTED" || invoiceAccepted ? (
+                          <div className="flex justify-center w-full">
+                            <Button
+                              loading={paymentIntentLoading}
+                              className="rounded-full w-full max-lg:text-xs"
+                              onClick={handleInitiatePayment}
+                              size="sm"
+                            >
+                              Proceed to Payment
+                            </Button>
+                          </div>
+                        ) : (
                           <div className="flex items-center space-x-4">
                             <Button
                               loading={acceptInvoiceLoading}
@@ -395,18 +428,7 @@ const Offers = () => {
                               Reject Offer
                             </Button>
                           </div>
-                        ) : (
-                          <div className="flex justify-center w-full">
-                            <Button
-                              loading={paymentIntentLoading}
-                              className="rounded-full w-full"
-                              onClick={handleInitiatePayment}
-                            >
-                              Proceed to Payment
-                            </Button>
-                          </div>
                         )}
-
                       </div>
                     </div>
                   </div>

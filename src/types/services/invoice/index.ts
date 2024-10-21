@@ -33,6 +33,7 @@ export type Invoice = {
     serviceStartOn: string;
     gst: number;
     platformCharge: number;
+    invoiceStatus: string;
     subTotal: number;
     createdAt: any;
     invoiceNumber: string;

@@ -153,7 +153,7 @@ const TransactionHistory = () => {
 
   const tabs = [
     { title: "Payment history", link: "/customer/payment?tab=paymentHistory" },
-    { title: "My invoices", link: "/customer/payment?tab=myInvoices" }
+    { title: "My offers", link: "/customer/payment?tab=myInvoices" }
   ];
 
   return (

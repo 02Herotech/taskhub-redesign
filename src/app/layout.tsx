@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import Provider from "@/store/Provider";
+import { TokenExpirationCheck } from "@/components/auth/TokenExpirationCheck";
 
 export const metadata: Metadata = {
   title: "Olojà",
@@ -16,9 +17,11 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <Provider>
-          <main className=''>
-            {children}
-          </main>
+          <TokenExpirationCheck>
+            <main className=''>
+              {children}
+            </main>
+          </TokenExpirationCheck>
         </Provider>
       </body>
     </html>
