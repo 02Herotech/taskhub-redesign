@@ -555,7 +555,7 @@ const AddTaskForm: React.FC = () => {
                 <Dropdown
                   trigger={() => (
                     <div
-                      className={`flex h-full w-full cursor-pointer appearance-none justify-between rounded-2xl bg-[#EBE9F4] p-3 text-[13px] text-status-darkpurple  ${error.subCategory ? "border border-[#ff0000] outline-[#FF0000]" : "border-none outline-none"}`}
+                      className={`flex h-full w-full cursor-pointer appearance-none justify-between rounded-2xl bg-[#EBE9F4] p-3 text-[13px] text-status-darkpurple  ${error.category ? "border border-[#ff0000] outline-[#FF0000]" : "border-none outline-none"}`}
                     >
                       <h2>{selectedCategoryName}</h2>
                       <FaSortDown className="text-status-darkpurple" />
