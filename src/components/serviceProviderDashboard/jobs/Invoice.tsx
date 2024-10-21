@@ -32,11 +32,17 @@ const Invoice = ({
   currentBooking,
   invoiceDraft,
 }: ModalPropType) => {
-  // setting invoice state
+  // Helper function to convert [year, month, day] to a Date object
+  const arrayToDate = (dateArray: number[] | undefined): Date | undefined => {
+    if (!dateArray) return undefined;
+    const [year, month, day] = dateArray;
+    return new Date(year, month - 1, day); // Month is 0-indexed in JS Date
+  };
 
+  // setting invoice state
   const [invoiceState, setInvoiceState] = useState<{
     price: string | number;
-    date: Date | null | string;
+    date: Date | null;
     gst: number;
     total: number;
     serviceCharge: number;
@@ -44,7 +50,9 @@ const Invoice = ({
     loading: boolean;
   }>({
     price: "",
-    date: null,
+    date: currentBooking?.startDate
+      ? new Date(currentBooking.startDate[0], currentBooking.startDate[1] - 1, currentBooking.startDate[2])
+      : null,
     gst: 0,
     serviceCharge: 0,
     total: 0,
@@ -89,25 +97,16 @@ const Invoice = ({
     calculateUserEarnings();
   }, [currentBooking, invoiceDraft]);
 
-  function convertToDateInputFormat(dateArray: number[]) {
-    if (!dateArray) {
-      return "Flexible"
-    }
-
-    const [year, month, day] = dateArray;
-
-    // Ensure month and day are two digits
-    const formattedMonth = month.toString().padStart(2, "0");
-    const formattedDay = day.toString().padStart(2, "0");
-
-    // Return the formatted date string
-    return `${year}-${formattedMonth}-${formattedDay}`;
-  }
-
   const todayDate = new Date();
   const tomorrowDate = new Date();
-
   tomorrowDate.setDate(tomorrowDate.getDate() + 1);
+
+  const handleDateChange = (date: Date | null) => {
+    setInvoiceState((prev) => ({
+      ...prev,
+      date: date, // Ensure null becomes undefined
+    }));
+  };
 
   const generateInvoice = async () => {
     if (!currentBooking) return;
@@ -301,12 +300,7 @@ const Invoice = ({
                     minDate={new Date()}
                     required
                     disabled={currentBooking?.invoiceSent}
-                    onChange={(date: Date) =>
-                      setInvoiceState((prev) => ({
-                        ...prev,
-                        date: date,
-                      }))
-                    }
+                    onChange={handleDateChange}
                     className="w-full bg-transparent text-[#716F78] outline-none"
                     dateFormat="dd/MM/yyyy"
                   />
@@ -323,7 +317,7 @@ const Invoice = ({
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-3">
                 <div>
-                  <p className="font-black text-violet-dark  ">
+                  <p className="font-black text-violet-dark">
                     {formatDateAsYYYYMMDD(todayDate)}
                   </p>
                   <p className="font-medium  text-[#4E5158]">Issued On</p>
@@ -338,7 +332,7 @@ const Invoice = ({
                 </div>
                 <div>
                   <p className=" font-extrabold text-violet-dark  ">
-                      ${invoiceState.gst.toFixed(2)}
+                    ${invoiceState.gst.toFixed(2)}
                   </p>
                   <p className="font-medium  text-[#4E5158]">GST @10%</p>
                 </div>
@@ -372,7 +366,7 @@ const Invoice = ({
                   ${invoiceState.total.toFixed(2)}
                 </p>
                 <p className="font-medium text-[#4E5158]">
-                  Total Amount Payable
+                  Total Receivable Amount
                 </p>
               </div>
             </div>
