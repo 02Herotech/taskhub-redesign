@@ -191,7 +191,7 @@ const AddTaskForm: React.FC = () => {
     const errors: any = {};
     if (activeButtonIndex === 0) {
       // Validation for physical service
-      if (!selectedCode) {
+      if (!selectedCode || selectedCode.length < 4) {
         errors.postalCode = "Please fill out all required fields";
       } else if (!selectedCity) {
         errors.city = "Please fill out all required fields";
