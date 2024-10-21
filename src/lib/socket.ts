@@ -5,7 +5,7 @@ let socket: Socket | null = null;
 
 export const connectSocket = (userId: number) => {
   if (!socket) {
-    socket = io("https://api.oloja.com.au", {
+    socket = io(`${process.env.NEXT_BASE_URL}`, {
       query: { userId },
     });
   }
