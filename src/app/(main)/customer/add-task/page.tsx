@@ -74,12 +74,10 @@ const AddTaskForm: React.FC = () => {
     taskTime: getCookie("taskTime") || "",
     taskDate: getCookie("taskDate") || "",
     taskType: getCookie("taskType") || "",
-    suburb: getCookie("suburb") || "",
+    suburb: "",
     state: getCookie("state") || "",
     postCode: getCookie("postCode") || "",
-    customerBudget: getCookie("categoryId")
-      ? parseInt(getCookie("categoryId") as string)
-      : null,
+    customerBudget: null,
     termAccepted: false,
     categoryId: getCookie("categoryId")
       ? parseInt(getCookie("categoryId") as string)
@@ -89,7 +87,7 @@ const AddTaskForm: React.FC = () => {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [selectedTime, setSelectedTime] = useState<Date | null>(null);
   const [selectedCode, setSelectedCode] = useState("");
-  const [selectedCity, setSelectedCity] = useState("Suburb");
+  const [selectedCity, setSelectedCity] = useState("");
   const [termAccepted, settermAccepted] = useState(false);
   const [accepted, setAccepted] = useState(false);
   const [isRemote, setIsRemote] = useState("");
@@ -191,11 +189,13 @@ const AddTaskForm: React.FC = () => {
     const errors: any = {};
     if (activeButtonIndex === 0) {
       // Validation for physical service
-      if (!selectedCode || selectedCode.length < 4) {
+      if (!selectedCode) {
         errors.postalCode = "Please fill out all required fields";
-      } else if (!selectedCity) {
+      }
+      if (!selectedCity) {
         errors.city = "Please fill out all required fields";
       }
+      
     } else if (!isRemote) {
       error.service = "Please fill out all required fields";
     }
@@ -714,7 +714,7 @@ const AddTaskForm: React.FC = () => {
                 {error.message ||
                   error.taskBriefDescription ||
                   error.taskDescription ||
-                  error.selectedCategory}
+                  error.category}
               </div>
               <Button
                 type="submit"
@@ -790,7 +790,7 @@ const AddTaskForm: React.FC = () => {
                         value={selectedCode}
                         onChange={handleCode}
                         name="postCode"
-                        className={`w-[155px] cursor-pointer  rounded-2xl bg-[#EBE9F4] p-3 text-[13px] placeholder:font-bold ${error.postalCode ? "border border-[#ff0000] outline-[#FF0000]" : "border-none outline-none"}`}
+                        className={`w-[155px] cursor-pointer  rounded-2xl bg-[#EBE9F4] p-3 text-[13px] placeholder:font-bold ${errors.postalCode ? "border border-[#ff0000] outline-[#FF0000]" : "border-none outline-none"}`}
                       />
                     </div>
 
@@ -811,7 +811,7 @@ const AddTaskForm: React.FC = () => {
                       <Dropdown
                         trigger={() => (
                           <div
-                            className={`flex h-full w-[150px] cursor-pointer appearance-none justify-between rounded-2xl bg-[#EBE9F4] p-3 font-satoshi text-[13px] font-light ${error.city ? "border border-[#ff0000] outline-[#FF0000]" : "border-none outline-none"}`}
+                            className={`flex h-full w-[150px] cursor-pointer appearance-none justify-between rounded-2xl bg-[#EBE9F4] p-3 font-satoshi text-[13px] font-light ${errors.city ? "border border-[#ff0000] outline-[#FF0000]" : "border-none outline-none"}`}
                           >
                             <h2>{selectedCity}</h2>
                             <FaSortDown />
@@ -867,7 +867,7 @@ const AddTaskForm: React.FC = () => {
                   name="customerBudget"
                   onChange={handlePrice}
                   placeholder="500"
-                  className={`appearance-none rounded-2xl bg-[#EBE9F4] p-3 pl-6 text-[13px] placeholder:font-bold ${error.customerBudget ? "border border-[#ff0000] outline-[#FF0000]" : "border-none outline-none"}`}
+                  className={`appearance-none rounded-2xl bg-[#EBE9F4] p-3 pl-6 text-[13px] placeholder:font-bold ${errors.customerBudget ? "border border-[#ff0000] outline-[#FF0000]" : "border-none outline-none"}`}
                 />
                 <p className="absolute left-3 top-8 md:top-8">$</p>
               </div>
