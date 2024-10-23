@@ -41,20 +41,17 @@ const ExploreCategoryLising: React.FC<ExploreCategoryLisingProps> = ({ category 
             if (!category) {
                 return;
             }
-            let url, content;
+            let url;
+            // Add 1 to currentPage for API calls if your API expects one-based indexing
+            const apiPageNumber = currentPage + 1;
+
             if (category === "All") {
-                url =
-                    `${process.env.NEXT_PUBLIC_API_URL}/task/all-active-tasks/` +
-                    currentPage;
+                url = `${process.env.NEXT_PUBLIC_API_URL}/task/all-active-tasks/${apiPageNumber}`;
             } else if (categoryId) {
-                url =
-                    `${process.env.NEXT_PUBLIC_API_URL}/task/filter-tasks/` +
-                    currentPage +
-                    "?category=" +
-                    categoryId.categoryName;
+                url = `${process.env.NEXT_PUBLIC_API_URL}/task/filter-tasks/${apiPageNumber}?category=${categoryId.categoryName}`;
             }
             const { data } = await axios.get(url as string);
-            content = data.content;
+            const content = data.content;
             setPage((prev) => ({ ...prev, totalPages: data.totalPages }));
             if (url) {
                 setAllTasks(content);

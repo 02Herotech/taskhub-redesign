@@ -11,7 +11,7 @@ export function TokenExpirationCheck({ children }: { children: React.ReactNode }
     useEffect(() => {
         const checkAuth = async () => {
             // Skip token check for public routes
-            const publicPaths = ['/auth/login', '/auth/signup', '/forgot-password']
+            const publicPaths = ['/auth/login', '/auth/signup', '/forgot-password', '/home', '/marketplace']
             if (publicPaths.includes(pathname)) return
 
             // Check token on initial load

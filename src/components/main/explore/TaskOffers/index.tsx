@@ -92,11 +92,6 @@ const TaskOffers: FC<OffersProps> = ({ currentUserId, taskId, posterId }) => {
                 {offers?.map((offer) => (
                     <div key={offer.id} className="space-y-8 border-b border-[#716F78] mb-5">
                         <OfferMessage message={offer} isThread={false} posterId={posterId} />
-                        {offer.serviceProviderId === currentUserId && (
-                            <div className="mt-2">
-                                <h2 onClick={() => setOpenReplyModal((prev) => ({ ...prev, [offer.id]: true }))} className='text-primary cursor-pointer font-semibold'>Reply</h2>
-                            </div>
-                        )}
                         <div className="pl-4">
                             {offer.offerThreadList.map((thread) => (
                                 <div className="mb-4" key={thread.message}>
@@ -104,7 +99,11 @@ const TaskOffers: FC<OffersProps> = ({ currentUserId, taskId, posterId }) => {
                                 </div>
                             ))}
                         </div>
-
+                        {offer.serviceProviderId === currentUserId && (
+                            <div className="mt-2">
+                                <h2 onClick={() => setOpenReplyModal((prev) => ({ ...prev, [offer.id]: true }))} className='text-primary cursor-pointer font-semibold'>Reply</h2>
+                            </div>
+                        )}
                         {openReplyModal[offer.id] && (
                             <div ref={modalRef} className="fixed inset-0 z-50 bg-black h-screen bg-opacity-20 flex items-end sm:items-center justify-center">
                                 <div className="bg-white w-full sm:w-[500px] rounded-t-3xl lg:rounded-2xl max-sm:pb-20 px-5 pb-8 pt-2 transition-all duration-300">
