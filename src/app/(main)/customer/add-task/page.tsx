@@ -68,6 +68,7 @@ const AddTaskForm: React.FC = () => {
   const isAuthenticated = session.status === "authenticated";
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(false);
+  const [code, setCode]= useState<boolean>(false)
   const [task, setTask] = useState<FormData>({
     taskBriefDescription: getCookie("taskBriefDescription") || "",
     taskImage: null,
@@ -150,11 +151,18 @@ const AddTaskForm: React.FC = () => {
         const response = await axios.get(
           `${process.env.NEXT_PUBLIC_API_URL}/util/locations/search?postcode=${selectedCode}`,
         );
-        console.log(response.data);
-        setPostalCodeData(response.data as PostalCodeData[]);
+        if (Array.isArray(response.data) && response.data.length === 0) {
+          console.log('Array is empty');
+          setCode(true);
+        } else {
+          console.log(response.data);
+          setCode(false);
+          setPostalCodeData(response.data as PostalCodeData[]);
+        }
+        
       } catch (error) {
         console.error("Error fetching postal code data:", error);
-        setPostalCodeData([]);
+        setCode(true);
       }
     };
 
@@ -790,7 +798,8 @@ const AddTaskForm: React.FC = () => {
                         value={selectedCode}
                         onChange={handleCode}
                         name="postCode"
-                        className={`w-[155px] cursor-pointer  rounded-2xl bg-[#EBE9F4] p-3 text-[13px] placeholder:font-bold ${errors.postalCode ? "border border-[#ff0000] outline-[#FF0000]" : "border-none outline-none"}`}
+                        type="number"
+                        className={`w-[155px] cursor-pointer  rounded-2xl bg-[#EBE9F4] p-3 text-[13px] placeholder:font-bold ${(errors.postalCode || code == true )? "border border-[#ff0000] outline-[#FF0000]" : "border-none outline-none"}`}
                       />
                     </div>
 
