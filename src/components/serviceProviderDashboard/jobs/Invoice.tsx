@@ -32,12 +32,12 @@ const Invoice = ({
   currentBooking,
   invoiceDraft,
 }: ModalPropType) => {
-  // Helper function to convert [year, month, day] to a Date object
-  const arrayToDate = (dateArray: number[] | undefined): Date | undefined => {
-    if (!dateArray) return undefined;
-    const [year, month, day] = dateArray;
-    return new Date(year, month - 1, day); // Month is 0-indexed in JS Date
-  };
+  // // Helper function to convert [year, month, day] to a Date object
+  // const arrayToDate = (dateArray: number[] | undefined): Date | undefined => {
+  //   if (!dateArray) return undefined;
+  //   const [year, month, day] = dateArray;
+  //   return new Date(year, month - 1, day); // Month is 0-indexed in JS Date
+  // };
 
   // setting invoice state
   const [invoiceState, setInvoiceState] = useState<{
@@ -70,6 +70,7 @@ const Invoice = ({
   const session = useSession();
   const token = session?.data?.user?.accessToken;
   const user = session?.data?.user?.user;
+  const [isOpen, setIsOpen] = useState(false)
 
   useEffect(() => {
     const calculateUserEarnings = () => {
@@ -104,8 +105,9 @@ const Invoice = ({
   const handleDateChange = (date: Date | null) => {
     setInvoiceState((prev) => ({
       ...prev,
-      date: date, // Ensure null becomes undefined
+      date: date,
     }));
+    setIsOpen(false);
   };
 
   const generateInvoice = async () => {
@@ -303,6 +305,10 @@ const Invoice = ({
                     onChange={handleDateChange}
                     className="w-full bg-transparent text-[#716F78] outline-none"
                     dateFormat="dd/MM/yyyy"
+                    open={isOpen}
+                    onCalendarOpen={() => setIsOpen(true)}
+                    onCalendarClose={() => setIsOpen(false)}
+                    shouldCloseOnSelect
                   />
                 )
               ) : (
