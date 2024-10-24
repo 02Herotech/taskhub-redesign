@@ -53,6 +53,7 @@ export type OngoingTask = {
     customerId: number;
     taskTime: [number, number];
     jobTitle: string;
+    jobStatus: "IN_PROGRESS" | "PENDING" | "INSPECTION" | "COMPLETED"
     jobDescription: string;
     id: number
 };
