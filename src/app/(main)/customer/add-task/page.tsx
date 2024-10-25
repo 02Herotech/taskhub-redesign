@@ -672,6 +672,20 @@ const AddTaskForm: React.FC = () => {
                 <div className="flex items-center space-x-3">
                   <div className="relative">
                     <DatePicker
+                      selected={selectedDate}
+                      onChange={handleDateChange}
+                      dateFormat="dd-MM-yyyy"
+                      minDate={new Date()}
+                      placeholderText="Choose Date"
+                      id="taskDate"
+                      name="taskDate"
+                      disabled={termAccepted}
+                      customInput={<CustomInput />}
+                      className="w-full cursor-pointer rounded-2xl bg-[#EBE9F4] px-2 py-1 outline-none placeholder:text-[14px] placeholder:font-bold "
+                    />
+                  </div>
+                  <div className="relative">
+                    <DatePicker
                       selected={selectedTime}
                       onChange={handleTimeChange}
                       showTimeSelect
@@ -686,20 +700,7 @@ const AddTaskForm: React.FC = () => {
                       customInput={<CustomInputs />}
                       className="w-full cursor-pointer rounded-2xl  bg-[#EBE9F4] px-2 py-1 outline-none placeholder:text-[14px] placeholder:font-bold"
                     />
-                  </div>
-                  <div className="relative">
-                    <DatePicker
-                      selected={selectedDate}
-                      onChange={handleDateChange}
-                      dateFormat="dd-MM-yyyy"
-                      minDate={new Date()}
-                      placeholderText="Choose Date"
-                      id="taskDate"
-                      name="taskDate"
-                      disabled={termAccepted}
-                      customInput={<CustomInput />}
-                      className="w-full cursor-pointer rounded-2xl bg-[#EBE9F4] px-2 py-1 outline-none placeholder:text-[14px] placeholder:font-bold "
-                    />
+                    
                   </div>
                   <div>
                     <div className="flex items-center">
