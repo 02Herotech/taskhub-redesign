@@ -142,15 +142,25 @@ const ServiceProviderChat = () => {
     message: ChatMessageDisplayedType,
     groupedMessages: ChatMessagesGroupedType,
   ): ChatMessagesGroupedType => {
-    // let date;
-    // if (typeof message.time === "string") {
-    //   date = new Date(message.time).toLocaleDateString();
-    // } else {
-    //   const timestamp = message.time as number; // UNIX timestamp
-    //   date = new Date(timestamp * 1000).toLocaleDateString();
-    // }
-
-    const date = new Date().toLocaleDateString();
+    let date;
+    if (typeof message.time === "string") {
+      // Create date object and format it consistently
+      const dateObj = new Date(message.time);
+      date = dateObj.toLocaleDateString(undefined, {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit'
+      });
+    } else {
+      // Handle UNIX timestamp
+      const timestamp = message.time as number;
+      const dateObj = new Date(timestamp * 1000);
+      date = dateObj.toLocaleDateString(undefined, {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit'
+      });
+    }
 
     return {
       ...groupedMessages,
