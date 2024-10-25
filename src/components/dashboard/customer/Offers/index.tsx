@@ -329,7 +329,7 @@ const Offers = () => {
 
         {isModalOpen && selectedInvoice && (
           <Popup isOpen={isModalOpen} onClose={closeModal}>
-            <div className="relative min-h-[200px] rounded-2xl bg-[#EBE9F4] p-5 font-satoshi lg:w-[600px] lg:px-7 lg:py-10">
+            <div className="relative min-h-[200px] rounded-2xl bg-[#EBE9F4] p-5 font-satoshi lg:w-[600px] max-sm:w-[70vw] lg:px-7 lg:py-10">
               {clientSecret && initiatePayment ? (
                 <Elements stripe={stripePromise} options={stripeOptions}>
                   <CheckoutForm
@@ -386,6 +386,14 @@ const Offers = () => {
                           <h5 className="text-[#716F78]">Bill to</h5>
                         </div>
                       </div>
+                        <div className="mb-6 flex items-center justify-between max-lg:space-x-3">
+                          <div>
+                            <h2 className="text-xl font-bold text-[#001433]">
+                              {formatDate(selectedInvoice.serviceStartOn)}
+                            </h2>
+                            <h5 className="text-[#716F78]">Start Date</h5>
+                          </div>
+                        </div>
                       {error && (
                         <div className="my-1 text-base font-semibold text-status-error-100">
                           {error}
