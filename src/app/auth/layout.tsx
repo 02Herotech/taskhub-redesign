@@ -1,4 +1,5 @@
 import Logo from "@/components/layout/Logo";
+import SmallLogo from "@/components/layout/SmallLogo";
 import Link from "next/link";
 import { Suspense } from "react";
 
@@ -13,8 +14,11 @@ const AuthLayout = ({
         <>
             <header className='w-full bg-white fixed top-0 left-0 z-40'>
                 <div className='w-full container py-5 lg:py-8 lg:px-10 px-4 flex items-center justify-between'>
-                    <Link href='/'>
+                    <Link href="/" className="max-sm:hidden">
                         <Logo />
+                    </Link>
+                    <Link href="/" className="lg:hidden">
+                        <SmallLogo />
                     </Link>
                 </div>
             </header>

@@ -143,22 +143,23 @@ const ServiceProviderChat = () => {
     groupedMessages: ChatMessagesGroupedType,
   ): ChatMessagesGroupedType => {
     let date;
-    if (typeof message.time === "string") {
-      // Create date object and format it consistently
-      const dateObj = new Date(message.time);
-      date = dateObj.toLocaleDateString(undefined, {
-        year: 'numeric',
+
+    if (typeof message.time === "string" && message.time.includes('T')) {
+      // Handle ISO string (from new messages)
+      date = new Date(message.time).toLocaleDateString(undefined, {
         month: '2-digit',
-        day: '2-digit'
+        day: '2-digit',
+        year: 'numeric'
       });
     } else {
-      // Handle UNIX timestamp
-      const timestamp = message.time as number;
-      const dateObj = new Date(timestamp * 1000);
-      date = dateObj.toLocaleDateString(undefined, {
-        year: 'numeric',
+      // Handle Unix timestamp (from existing messages)
+      const timestamp = typeof message.time === "string"
+        ? parseFloat(message.time)
+        : message.time;
+      date = new Date(timestamp * 1000).toLocaleDateString(undefined, {
         month: '2-digit',
-        day: '2-digit'
+        day: '2-digit',
+        year: 'numeric'
       });
     }
 
