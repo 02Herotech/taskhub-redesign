@@ -89,10 +89,10 @@ const AssignOfferForm: React.FC<AssignOfferFormProps> = ({ onClose, onAssign, of
                     </div>
                 ) : (
                     <div className="space-y-4">
-                        <h3 className="font-semibold">Are you sure you want to assign this task? click on confirm to continue</h3>
+                        <h3 className="font-semibold">You are about to assign this task to {offers.find(o => o.id === selectedOffer)?.fullName}</h3>
                         {selectedOffer && (
                             <div>
-                                <p>You are about to assign this task to {offers.find(o => o.id === selectedOffer)?.fullName}.</p>
+                                <p>Are you sure you want to assign this task?</p>
                             </div>
                         )}
                         <div className="flex justify-end space-x-3">
@@ -100,7 +100,7 @@ const AssignOfferForm: React.FC<AssignOfferFormProps> = ({ onClose, onAssign, of
                                 Cancel
                             </Button>
                             <Button size='sm' loading={isLoading} onClick={handleConfirmAssign} className="rounded-full">
-                                Confirm
+                                Assign
                             </Button>
                         </div>
                         {errorMessage || error && <h4 className='text-center text-sm text-red-500'>{`${errorMessage}. Please try again`}</h4>}
