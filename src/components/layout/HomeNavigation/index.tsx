@@ -9,6 +9,7 @@ import { RiMenu3Fill } from "react-icons/ri";
 import HomeMobileNavigation from "../HomeMobileNavigation";
 import Button from "@/components/global/Button";
 import Logo from "../Logo";
+import SmallLogo from "../SmallLogo";
 
 const HomeNavigation = () => {
   const [showMobileNav, setShowMobileNav] = useState(false);
@@ -48,8 +49,11 @@ const HomeNavigation = () => {
     <>
       <nav className="fixed left-0 right-0 top-0 z-50 w-full bg-[#EBE9F4]">
         <div className="container flex items-center justify-between px-7 py-4 lg:px-12 lg:py-5">
-          <Link href="/">
+          <Link href="/" className="max-sm:hidden">
             <Logo />
+          </Link>
+          <Link href="/" className="lg:hidden">
+            <SmallLogo />
           </Link>
           <ul className="hidden items-center space-x-8 lg:flex">
             {links.map((link) => {
