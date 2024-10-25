@@ -186,15 +186,15 @@ const EditTaskForm = ({ task, setShowEditModal }: TaskCardProps) => {
             postCode: data.postCode ?? "",
             suburb: data.suburb ?? "",
             state: data.state ?? "",
-            taskDate: isFlexible ? null : dateString,
-            taskTime: isFlexible ? null : timeString,
+            taskDate: isFlexible ? "" : dateString,
+            taskTime: isFlexible ? "" : timeString,
             customerBudget: data.customerBudget ?? 0,
         };
 
         Object.entries(fields).forEach(([key, value]) => {
             // Append taskDate and taskTime, even if they are null
             if (key === 'taskDate' || key === 'taskTime') {
-                formData.append(key, value !== null ? value.toString() : "null");
+                formData.append(key, value !== null ? value.toString() : "");
             }
             // For other fields, append only if they have valid values
             else if (
@@ -288,7 +288,7 @@ const EditTaskForm = ({ task, setShowEditModal }: TaskCardProps) => {
                         }}
                         className="absolute h-screen w-screen"
                     />
-                    <div className=" relative z-10 flex w-[90vw] max-w-md  flex-col items-center justify-center gap-4 rounded-lg bg-white p-5 ">
+                    <div className=" relative z-10 flex lg:w-[600px] max-sm:w-[70vw] flex-col items-center justify-center gap-4 rounded-lg bg-white p-5 ">
                         <div className=" flex w-full max-w-lg flex-col items-center justify-center gap-4">
                             <div className="flex size-20 items-center justify-center rounded-full bg-[#C1F6C3] bg-opacity-60">
                                 <div className=" flex size-14 items-center justify-center rounded-full bg-[#A6F8AA] p-2">
