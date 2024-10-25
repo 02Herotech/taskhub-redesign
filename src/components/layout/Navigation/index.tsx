@@ -70,7 +70,7 @@ const Navigation = () => {
       await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/logout`);
       setAuth(initialAuthState);
       dispatch(removeUserProfile());
-      await signOut({ callbackUrl: "https://taskhub.com.au/home" });
+      await signOut({ callbackUrl: "https://oloja.com.au/home" });
       router.push("/home");
     } catch (error: any) {
       console.log(error);
