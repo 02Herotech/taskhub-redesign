@@ -36,7 +36,7 @@ const Page = () => {
       setDisplayData(content);
     }
   }, []);
- 
+
   useEffect(() => {
     const fetchListing = async () => {
       try {
@@ -81,117 +81,122 @@ const Page = () => {
               </div>
             </header>
 
-            {/* content */}
-            <div className="container space-y-4 ">
-              {/* <p className="font-medium">Recently Added</p> */}
-              <h3 className="lgtext-4xl font-satoshiMedium text-3xl font-bold first-letter:uppercase ">
-                {displayData?.listingTitle}
-              </h3>
-              <p className="font-satoshiMedium text-xl font-medium">
-                Service Purpose
-              </p>
-              <p className="font-satoshiMedium">
-                {displayData?.listingDescription}
-              </p>
-              {displayData?.suburb && (
-                <div>
-                  <h4 className="text-3xl font-extrabold">Location</h4>
-                  <p className="flex items-center gap-2 text-slate-500 ">
-                    <span>
-                      <BiLocationPlus />
-                    </span>
-                    <span>{displayData?.suburb}</span>
-                  </p>
+            <div className="space-y-8 p-6">
+              {/* Main Service Information */}
+              <div className="p-6">
+                <div className="pb-4 mb-6">
+                  <h3 className="text-2xl lg:text-3xl font-satoshiBold font-bold first-letter:uppercase">
+                    {displayData?.listingTitle}
+                  </h3>
                 </div>
-              )}
-              {/* <p className="flex items-center gap-2 text-sm underline ">
-                View Maps <BsArrowUp className="rotate-45" />
-              </p> */}
-              <h4 className="text-3xl font-extrabold">Date and Days</h4>
-              <p className="flex items-center gap-2 text-slate-500 ">
-                <span>
-                  <BiCalendar />
-                </span>
-                <span>
-                  {displayData?.createdAt &&
-                    formatDateFromNumberArray(displayData.createdAt)}
-                </span>
-              </p>
-              <p className="flex items-center gap-2 text-slate-500 ">
-                <span>
-                  <BiCalendarCheck />
-                </span>
-                <span>
-                  {displayData?.availableDays.map((item) => `${item}, `)}
-                </span>
-              </p>
-              <div className="space-y-6 py-4">
-                <h1 className="font-satoshiBold text-3xl font-bold">
-                  About the provider
-                </h1>
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-4">
-                    
-                    <Image
-                      src={
-                        displayData?.serviceProvider?.user.profileImage ??
-                        "/assets/images/serviceProvider/user.jpg"
-                      }
-                      alt="User"
-                      width={80}
-                      height={80}
-                      quality={100}
-                      className="size-20 rounded-full object-cover "
-                      />
-                    <div className="space-y-2">
-                      <p className="text-xl font-medium">
-                        {displayData?.serviceProvider?.user?.fullName}
-                      </p>
-                    <div>
-                      <Link href={`/marketplace/${displayData?.id}/about`} className="cursor-pointer">
-                          <p className="text-xl font-medium text-[#e58c06] underline cursor-pointer">View Profile</p>
-                        </Link>
-                        {/* <div className="flex items-center gap-2">
-                          <FaStar
-                            fill="rgb(203 213 225)"
-                            color="rgb(203 213 225)"
-                          />
-                          <FaStar
-                            fill="rgb(203 213 225)"
-                            color="rgb(203 213 225)"
-                          />
-                          <FaStar
-                            fill="rgb(203 213 225)"
-                            color="rgb(203 213 225)"
-                          />
-                          <FaStar
-                            fill="rgb(203 213 225)"
-                            color="rgb(203 213 225)"
-                          />
-                          <FaStar
-                            fill="rgb(203 213 225)"
-                            color="rgb(203 213 225)"
-                          />
-                        </div> */}
+
+                <div className="space-y-6">
+                  {/* Service Description */}
+                  <div className="space-y-3">
+                    <h4 className="font-satoshiMedium text-lg font-semibold underline underline-offset-4">
+                      Service Description
+                    </h4>
+                    <p className="font-satoshiMedium text-gray-700 leading-relaxed">
+                      {displayData?.listingDescription}
+                    </p>
+                  </div>
+
+                  {/* Location Section */}
+                  {displayData?.suburb && (
+                    <div className="space-y-2  pt-4">
+                      <h4 className="text-xl lg:text-2xl font-satoshiBold font-semibold">
+                        Location
+                      </h4>
+                      <div className="flex items-center gap-x-2 text-slate-600">
+                        <BiLocationPlus className="text-xl" />
+                        <span>{displayData.suburb}</span>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Date and Availability */}
+                  <div className="space-y-4  pt-4">
+                    <h4 className="text-xl lg:text-2xl font-satoshiBold font-semibold">
+                      Date and Availability
+                    </h4>
+                    <div className="space-y-3">
+                      <div className="flex items-center gap-x-2 text-slate-600">
+                        <BiCalendar className="text-xl" />
+                        <span>
+                          {displayData?.createdAt &&
+                            formatDateFromNumberArray(displayData.createdAt)}
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-x-2 text-slate-600">
+                        <BiCalendarCheck className="text-xl" />
+                        <span>
+                          {displayData?.availableDays?.join(', ')}
+                        </span>
                       </div>
                     </div>
                   </div>
-                  {currentListing &&
-                    auth.token &&
-                    auth.role?.[0] === "CUSTOMER" && (
-                      <MessageButton
-                        recipientId={currentListing.serviceProvider.user.id.toString()}
-                        recipientName={
-                          currentListing?.serviceProvider.user.fullName
-                        }
-                      
-                      />
-                    )}
                 </div>
-                <p className="font-medium">
+              </div>
+
+              {/* Provider Information */}
+              <div className="p-6">
+                <div className="pb-4 mb-6">
+                  <h2 className="text-2xl lg:text-3xl font-satoshiBold font-bold">
+                    About the Provider
+                  </h2>
+                </div>
+
+                <div className="space-y-6">
+                  <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+                    <div className="flex items-center gap-4">
+                      <div className="relative">
+                        <Image
+                          src={
+                            displayData?.serviceProvider?.user.profileImage ??
+                            "/assets/images/serviceProvider/user.jpg"
+                          }
+                          alt="Provider Profile"
+                          width={80}
+                          height={80}
+                          quality={100}
+                          className="size-20 rounded-full object-cover ring-2 ring-gray-100"
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <p className="text-xl font-satoshiBold">
+                          {displayData?.serviceProvider?.user?.fullName}
+                        </p>
+                        <Link
+                          href={`/marketplace/${displayData?.id}/about`}
+                          className="inline-block text-[#e58c06] hover:text-[#cc7c05] underline font-medium transition-colors"
+                        >
+                          View Profile
+                        </Link>
+                      </div>
+                    </div>
+
+                    {currentListing &&
+                      auth?.token &&
+                      auth?.role?.[0] === "CUSTOMER" && (
+                        <div className="md:self-start">
+                          <MessageButton
+                            recipientId={currentListing.serviceProvider.user.id.toString()}
+                            recipientName={currentListing?.serviceProvider.user.fullName}
+                          />
+                        </div>
+                      )}
+                  </div>
+
                   {/* @ts-ignore */}
-                  {currentListing?.serviceProvider.bio}
-                </p>
+                  {currentListing?.serviceProvider?.bio && (
+                    <div className=" pt-4">
+                      <p className="font-medium text-gray-700 leading-relaxed">
+                        {/* @ts-ignore */}
+                        {currentListing?.serviceProvider.bio}
+                      </p>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
           </article>
