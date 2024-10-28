@@ -639,11 +639,11 @@ const EditProfile = () => {
           </div>
         </section>
 
-        {error && (
+        {/* {error && (
           <div className="my-1 text-base text-end lg:px-24 font-semibold text-status-error-100">
             {error}
           </div>
-        )}
+        )} */}
 
         {/* Submit Button */}
         <div className="flex lg:items-end lg:justify-end lg:px-24">
