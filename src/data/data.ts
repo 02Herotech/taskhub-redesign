@@ -11,4 +11,5 @@ export const defaultUserDetails: DefaultUserDetailsType = {
   state: "",
   suburbs: "",
   bio: "",
+abn: ""
 };

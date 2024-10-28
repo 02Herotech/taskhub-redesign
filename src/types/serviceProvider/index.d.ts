@@ -11,6 +11,7 @@ declare interface DefaultUserDetailsType {
   state: string;
   suburbs: string;
   bio: string | null;
+  abn: string | null;
 }
 
 declare interface ModalDataType {
