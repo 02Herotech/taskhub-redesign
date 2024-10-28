@@ -34,6 +34,7 @@ const userDataSchema = z.object({
   suburb: z.string().optional(),
   state: z.string().optional(),
   idType: z.string().optional().nullable(),
+  abn: z.string().nullable().optional(),
   idNumber: z.string().optional(),
   bio: z.string().nullable().optional(),
   idImageFront: z.string().nullable().optional(),
@@ -76,7 +77,7 @@ const EditProfile = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const from = searchParams.get("from");
-
+  const [isABNValid, setIsABNValid] = useState<boolean>(false);
 
   const handleRedirect = () => {
     const newRedirectToProvideService = getCookie("redirectToProvideService");
@@ -109,11 +110,45 @@ const EditProfile = () => {
       state: "",
       idType: "",
       idNumber: "",
+    abn: null,
       bio: "",
     },
   });
 
   const watchField = watch();
+  const watchABN = watch("abn");
+
+  useEffect(() => {
+    const validateABN = async () => {
+      if (watchABN) {
+        try {
+          const url = `${process.env.NEXT_PUBLIC_API_URL}/service_provider/abn/validate/${watchABN}`;
+          const response = await axios.get(url, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+          });
+          if (response.data) {
+            setIsABNValid(true);
+          }
+          console.log(response.data)
+        } catch (error) {
+          console.error("Error validating ABN:", error);
+          setIsABNValid(false);
+          setError('invalid Abn number')
+        }
+      } else {
+        setIsABNValid(false);
+        
+      }
+    };
+    const debounceValidation = setTimeout(() => {
+      validateABN();
+    }, 500);
+
+    return () => clearTimeout(debounceValidation);
+  }, [watchABN, token]);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -142,6 +177,7 @@ const EditProfile = () => {
           idImageFront: data.idImageFront || "",
           idImageBack: data.idImageBack || "",
           bio: isServiceProvider ? data.bio || "" : "No Bio needed for customer",
+          abn: isServiceProvider ? data.abn || "" : "No ABN needed for customer",
         });
       } catch (error) {
         console.error("Error fetching user data:", error);
@@ -198,7 +234,7 @@ const EditProfile = () => {
       let submitData: any;
 
       let url;
-      if (isServiceProvider) {
+      if (isServiceProvider && isABNValid) {
         submitData = Object.entries({
           firstName: data.firstName,
           lastName: data.lastName,
@@ -211,6 +247,7 @@ const EditProfile = () => {
           idType: data.idType,
           idNumber: data.idNumber,
           bio: data.bio,
+          abn: data.abn,
         })
           .reduce((acc, [key, value]) => {
           if (value !== null && value !== undefined && value !== "") {
@@ -472,6 +509,25 @@ const EditProfile = () => {
             />
           </div>
         </section>
+
+        {/* Bio Section (for Service Providers) */}
+        {isServiceProvider && (
+          <section className="space-y-3">
+            <h3 className="text-lg font-bold text-primary mb-5">Verification Information</h3>
+            <div className="flex flex-wrap gap-6 lg:col-span-8 lg:grid lg:grid-cols-2">
+            <FormField
+              label="ABN Number"
+              name="abn"
+              register={register}
+              errors={errors}
+              watch={watch}
+              disabled={!isEditingEnabled}
+              minLength={11}
+              />
+            </div>
+            {!isABNValid && error && <div className="text-red-500 ">Invalid ABN Number</div>}
+          </section>
+        )}
 
         {/* Identification Document */}
         <section className="flex flex-col gap-4">
