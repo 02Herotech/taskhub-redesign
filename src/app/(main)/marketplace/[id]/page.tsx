@@ -2,28 +2,90 @@
 "use client";
 
 import Image from "next/image";
-import React, { useEffect, useState } from "react";
+import React, { FormEvent, useEffect, useRef, useState } from "react";
 import { BiCalendar, BiCalendarCheck, BiLocationPlus } from "react-icons/bi";
 import PricingPlan from "@/components/matkeplaceSingleTask/PricingPlan";
 import Reviews from "@/components/matkeplaceSingleTask/Reviews";
 import { formatDateFromNumberArray } from "@/utils";
 import axios from "axios";
 import ImageModal from "@/components/main/marketplace/ImageModal";
-import { useParams, useRouter } from "next/navigation";
+import { useParams, usePathname, useRouter } from "next/navigation";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
 import MessageButton from "@/components/global/MessageButton";
 import Link from "next/link";
+import ShareComponent from "@/components/blog/SharePost";
+import { IoIosCloseCircleOutline, IoIosShareAlt } from "react-icons/io";
+import ShareTask from "@/components/dashboard/general/ShareTask";
+import Button from "@/components/global/Button";
+import { ShareModal } from "@/components/dashboard/general/ShareModal";
 
 const Page = () => {
   const [displayData, setDisplayData] = useState<ListingDataType>();
   const [currentListing, setCurrentListing] = useState<ListingDataType>();
+  const [email, setEmail] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [showImageModal, setShowImageModal] = useState({
     state: false,
     image: "",
   });
   const route = useRouter();
   const { id } = useParams();
+  const pathname = usePathname()
+
+  const [shareDropdownOpen, setShareDropdownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setShareDropdownOpen(false);
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setError(null);
+
+    // Email validation
+    if (!email) {
+      setError('Please enter an email address');
+      return;
+    }
+
+    if (!email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
+      setError('Please enter a valid email address');
+      return;
+    }
+
+    try {
+      setIsLoading(true);
+      setError('');
+
+      // Create mailto link with subject and body
+      const subject = encodeURIComponent('Check out this service on Oloja');
+      const body = encodeURIComponent(`I thought you might be interested in this: ${pathname}`);
+      const mailtoLink = `mailto:${email}?subject=${subject}&body=${body}`;
+
+      // Open the mailto link
+      window.location.href = mailtoLink;
+
+      // Clear form on success
+      setEmail('');
+      setShareDropdownOpen(false);
+    } catch (err) {
+      setError('Failed to open email client. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const { userProfileAuth: auth } = useSelector(
     (state: RootState) => state.userProfile,
@@ -54,7 +116,7 @@ const Page = () => {
 
   return (
     <>
-      <main className=" relative  py-16 font-satoshiMedium text-[#221354] ">
+      <main className="relative py-16 font-satoshiMedium text-[#221354] ">
         <ImageModal
           showImageModal={showImageModal}
           setShowImageModal={setShowImageModal}
@@ -81,7 +143,7 @@ const Page = () => {
               </div>
             </header>
 
-            <div className="space-y-8 p-6">
+            <div className="space-y-8 lg:p-6">
               {/* Main Service Information */}
               <div className="p-6">
                 <div className="pb-4 mb-6">
@@ -99,6 +161,64 @@ const Page = () => {
                     <p className="font-satoshiMedium text-gray-700 leading-relaxed">
                       {displayData?.listingDescription}
                     </p>
+                  </div>
+
+                  {/* Share Service */}
+                  <div className="bg-[#F8F7FA] px-5 py-3 rounded-xl lg:flex items-center justify-between w-full">
+                    <ShareTask pathname={pathname} title={displayData?.listingTitle || ""} description={displayData?.listingDescription || ""} image={displayData?.businessPictures[0] || ""} />
+                    <div className="relative max-sm:my-4" ref={dropdownRef}>
+                      <Button
+                        theme="secondary"
+                        className="w-[152px] font-satoshiMedium text-white rounded-full"
+                        onClick={() => setShareDropdownOpen(true)}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter' || e.key === ' ') {
+                            setShareDropdownOpen(!shareDropdownOpen);
+                          }
+                        }}
+                        aria-expanded={shareDropdownOpen}
+                        aria-haspopup="true"
+                      >
+                        Send Invite
+                      </Button>
+
+                      <ShareModal
+                        isOpen={shareDropdownOpen}
+                        onClose={() => setShareDropdownOpen(false)}
+                        pathname="/current-path"
+                      >
+                        <h5 className="text-start">Invite more friends to join</h5>
+                        <form action="" onSubmit={handleSubmit}>
+                          <input
+                            type="email"
+                            placeholder="Enter e-mail address"
+                            className="mt-4 px-4 py-2 w-full bg-[#EEEEEF] outline-none rounded-lg"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            disabled={isLoading}
+                            aria-label="Email address"
+                            aria-describedby={error ? "email-error" : undefined}
+                          />
+                          {error && (
+                            <p id="email-error" className="text-sm text-red-500 mt-1">
+                              {error}
+                            </p>
+                          )}
+                          <div className="flex items-center justify-center mt-5 mb-3">
+                            <Button
+                              theme="secondary"
+                              className="font-satoshiMedium text-white rounded-full"
+                              size="sm"
+                              type="submit"
+                              disabled={isLoading}
+                              loading={isLoading}
+                            >
+                              Send Invite
+                            </Button>
+                          </div>
+                        </form>
+                      </ShareModal>
+                    </div>
                   </div>
 
                   {/* Location Section */}
@@ -214,7 +334,7 @@ const Page = () => {
               negotiable={currentListing.negotiable}
             />
           )}
-        </section>
+        </section >
 
         {/* Portfolio
         <section className="mx-auto w-full space-y-4 p-4  py-8 lg:p-16 ">
@@ -256,7 +376,7 @@ const Page = () => {
             </div>
           </div>
         </section> */}
-      </main>
+      </main >
     </>
   );
 };

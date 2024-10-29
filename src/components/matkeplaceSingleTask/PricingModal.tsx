@@ -3,7 +3,7 @@
 import axios from "axios";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -12,6 +12,8 @@ import { formatDate, formatTimeFromDate } from "@/utils";
 import Image from "next/image";
 import { PiSealCheckFill } from "react-icons/pi";
 import "../../styles/datePickOverflowHandle.css";
+import { setCookie } from "cookies-next";
+import Button from "../global/Button";
 
 interface ModalProps {
   setIsModalShown: Dispatch<SetStateAction<boolean>>;
@@ -62,7 +64,7 @@ const PricingModal = ({
 
   const session = useSession();
   const token = session?.data?.user?.accessToken;
-
+  const pathname = usePathname()
   const wordLimit = 50;
 
   useEffect(() => {
@@ -178,6 +180,13 @@ const PricingModal = ({
     }
   };
 
+  const handleSignUpNavigation = () => {
+    setCookie("redirectToMarketplaceDetail", pathname, { maxAge: 40000 });
+    router.push(
+      `/auth/sign-up?from=${pathname}`,
+    );
+  };
+
   return (
     <section
       className={`fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-70 transition-opacity duration-300 ${isModalShown ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-0"} `}
@@ -198,14 +207,25 @@ const PricingModal = ({
               className="size-14 object-contain"
             />
             <p className="text-center text-xl font-bold text-violet-normal">
-              Sorry! you are not logged in as a customer
+              Sorry! you are not logged in. Please login or create an account to continue
             </p>
-            <Link
-              href={"/auth/login"}
-              className="rounded-full bg-violet-normal px-6 py-3 font-bold text-white"
-            >
-              Login
-            </Link>
+            <div className="flex items-center gap-4 !mt-5">
+              <Button
+                onClick={() => router.push(`/auth/login?from=${pathname}`)}
+                className="rounded-full"
+                theme="outline"
+                size="sm"
+              >
+                Login
+              </Button>
+              <Button
+                onClick={handleSignUpNavigation}
+                className="rounded-full"
+                size="sm"
+              >
+                Sign up
+              </Button>
+            </div>
           </div>
         </div>
       ) : modalData.isServiceProvider ? (
@@ -226,8 +246,7 @@ const PricingModal = ({
               Kindly login to continue
             </p>
             <Link
-              // href={`/auth/sign-up?${serviceProviderParams.toString()}`}
-              href={`/auth/login`}
+              href={`/auth/login?from=${pathname}`}
               className="rounded-full bg-violet-normal px-6 py-3 font-bold text-white"
             >
               Login
