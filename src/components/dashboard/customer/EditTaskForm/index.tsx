@@ -446,10 +446,25 @@ const EditTaskForm = ({ task, setShowEditModal }: TaskCardProps) => {
 
                                 <div className="space-y-5">
                                     <label className="text-[13px] font-semibold text-status-darkpurple lg:text-[16px]">
-                                        Set Day and Time
+                                        Set Date and Time
                                     </label>
                                     <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 w-full">
                                         <div>
+                                            <DatePicker
+                                                value={isFlexible ? undefined : (updatedDate ?? initialDate) as unknown as string}
+                                                selected={isFlexible ? undefined : updatedDate ?? initialDate}
+                                                onChange={handleDateChange}
+                                                dateFormat="dd-MM-yyyy"
+                                                minDate={new Date()}
+                                                placeholderText="Choose Date"
+                                                id="taskDate"
+                                                name="taskDate"
+                                                disabled={isFlexible}
+                                                customInput={<CustomInput />}
+                                                className="w-full cursor-pointer rounded-2xl bg-[#EBE9F4] px-2 py-1 outline-none placeholder:text-[14px] placeholder:font-bold"
+                                            />
+                                        </div>
+                                         <div>
                                             <DatePicker
                                                 value={isFlexible ? undefined : (updatedTime ?? initialTime) as unknown as string}
                                                 selected={isFlexible ? undefined : updatedTime ?? initialTime}
@@ -464,21 +479,6 @@ const EditTaskForm = ({ task, setShowEditModal }: TaskCardProps) => {
                                                 id="taskTime"
                                                 name="taskTime"
                                                 customInput={<CustomInputs />}
-                                                className="w-full cursor-pointer rounded-2xl bg-[#EBE9F4] px-2 py-1 outline-none placeholder:text-[14px] placeholder:font-bold"
-                                            />
-                                        </div>
-                                        <div>
-                                            <DatePicker
-                                                value={isFlexible ? undefined : (updatedDate ?? initialDate) as unknown as string}
-                                                selected={isFlexible ? undefined : updatedDate ?? initialDate}
-                                                onChange={handleDateChange}
-                                                dateFormat="dd-MM-yyyy"
-                                                minDate={new Date()}
-                                                placeholderText="Choose Date"
-                                                id="taskDate"
-                                                name="taskDate"
-                                                disabled={isFlexible}
-                                                customInput={<CustomInput />}
                                                 className="w-full cursor-pointer rounded-2xl bg-[#EBE9F4] px-2 py-1 outline-none placeholder:text-[14px] placeholder:font-bold"
                                             />
                                         </div>

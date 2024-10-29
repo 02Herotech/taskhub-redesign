@@ -19,7 +19,7 @@ const LoginForm = () => {
   const router = useRouter();
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  
+
   const searchParams = useSearchParams();
   const from = searchParams.get("from");
 
@@ -57,14 +57,29 @@ const LoginForm = () => {
 
   const handleRedirect = () => {
     const newRedirectToAddTask = getCookie("redirectToAddTask");
+    const redirectToServiceDetail = getCookie("redirectToMarketplaceDetail")
+    const redirectToExploreDetail = getCookie("redirectToExploreDetail")
+
     if (newRedirectToAddTask) {
       router.push(newRedirectToAddTask);
       deleteCookie("redirectToAddTask");
+
+    } else if (redirectToServiceDetail) {
+      router.push(redirectToServiceDetail);
+      deleteCookie("redirectToMarketplaceDetail");
+
+    } else if (redirectToExploreDetail) {
+      router.push(redirectToExploreDetail);
+      deleteCookie("redirectToExploreDetail");
+
     } else {
       router.push(from || "/marketplace");
+      deleteCookie("redirectToAddTask");
+      deleteCookie("redirectToMarketplaceDetail");
+      deleteCookie("redirectToExploreDetail");
     }
   };
-  
+
   const onSubmit: SubmitHandler<SignInRequest> = async (payload) => {
     setIsLoading(true);
     setError(null);
