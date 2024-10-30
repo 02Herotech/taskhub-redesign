@@ -48,11 +48,11 @@ const ProfileCompletion = ({ fetchedUserData }: ProfileCompletionType) => {
       title: "ABN number",
       status: fetchedUserData.abn,
     },
-    ...(fetchedUserData.idType !== "international passport"
+    ...(fetchedUserData.idType !== "INTERNATIONAL_PASSPORT"
       ? [
         {
           title: "Identification Document Back",
-          status: fetchedUserData.idImageBack,
+          status: fetchedUserData?.idImageBack,
         },
       ]
       : []),
