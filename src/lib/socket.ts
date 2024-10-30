@@ -10,7 +10,6 @@ export const connectSocket = (userId: number) => {
     });
   }
 
-  console.log("ENV", process.env.NEXT_PUBLIC_BASE_URL)
   return socket;
 };
 

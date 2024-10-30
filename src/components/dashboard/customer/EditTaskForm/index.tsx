@@ -36,22 +36,12 @@ const EditTaskForm = ({ task, setShowEditModal }: TaskCardProps) => {
     const [suburbList, setSuburbList] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState<string>(task.category.categoryName);
     const [showSuccessModal, setShowSuccessModal] = useState(false);
-    const [isFlexible, setIsFlexible] = useState(false);
+    const [isFlexible, setIsFlexible] = useState(task.taskDate === null && task.taskTime === null);
     const router = useRouter();
 
     const taskSchema = z.object({
-        taskBriefDescription: z
-            .string(),
-        // .min(3, "Minimum of 3 characters")
-        // .refine((str) => str.split(" ").filter(Boolean).length > 0, {
-        //     message: `Title must have ${1} word or more`,
-        // }),
-        taskDescription: z
-            .string(),
-        // .min(10, "Minimum of 10 characters")
-        // .refine((str) => str.split(" ").filter(Boolean).length >= 5, {
-        //     message: `Description must have ${5} words or more`,
-        // }),
+        taskBriefDescription: z.string(),
+        taskDescription: z.string(),
         category: z.string(),
         taskType: z.string(),
         postCode: z.string().nullable().optional(),
@@ -64,6 +54,18 @@ const EditTaskForm = ({ task, setShowEditModal }: TaskCardProps) => {
     });
 
     type taskZodType = z.infer<typeof taskSchema>;
+
+    const initialDate = task.taskDate
+        ? new Date(task.taskDate[0], task.taskDate[1] - 1, task.taskDate[2])
+        : null;
+
+    const initialTime = task.taskTime
+        ? (() => {
+            const date = new Date();
+            date.setHours(task.taskTime[0], task.taskTime[1]);
+            return date;
+        })()
+        : new Date();
 
     const {
         register,
@@ -87,8 +89,8 @@ const EditTaskForm = ({ task, setShowEditModal }: TaskCardProps) => {
                 suburb: task.suburb,
                 state: task.state,
                 taskImage: task.taskImage,
-                taskDate: task.taskDate,
-                taskTime: task.taskTime ? formatTimeToString(new Date(task.taskTime[0], task.taskTime[1])) : "Flexible",
+                taskDate: isFlexible ? null : task.taskDate,
+                taskTime: isFlexible ? null : (task.taskTime ? formatTimeToString(new Date(task.taskTime[0], task.taskTime[1])) : null),
                 customerBudget: task.customerBudget
             });
         }
@@ -176,45 +178,59 @@ const EditTaskForm = ({ task, setShowEditModal }: TaskCardProps) => {
     const handleUpdateTask: SubmitHandler<taskZodType> = async (data) => {
         const formData = new FormData();
 
-        const fields = {
-            taskBriefDescription: data.taskBriefDescription,
-            taskDescription: data.taskDescription,
-            categoryId: categories.find(category => category.categoryName === data.category)?.id,
-            taskType: data.taskType,
-            postCode: data.postCode,
-            suburb: data.suburb,
-            state: data.state,
-            taskDate: dateString,
-            taskTime: timeString,
-            customerBudget: data.customerBudget,
+        const fields: Record<string, string | number | null> = {
+            taskBriefDescription: data.taskBriefDescription ?? "",
+            taskDescription: data.taskDescription ?? "",
+            categoryId: categories.find(category => category.categoryName === data.category)?.id ?? "",
+            taskType: data.taskType ?? "",
+            postCode: data.postCode ?? "",
+            suburb: data.suburb ?? "",
+            state: data.state ?? "",
+            taskDate: isFlexible ? "" : dateString,
+            taskTime: isFlexible ? "" : timeString,
+            customerBudget: data.customerBudget ?? 0,
         };
 
         Object.entries(fields).forEach(([key, value]) => {
-            if (value !== null && value !== undefined && value !== "" && value !== 0) {
+            // Append taskDate and taskTime, even if they are null
+            if (key === 'taskDate' || key === 'taskTime') {
+                formData.append(key, value !== null ? value.toString() : "");
+            }
+            // For other fields, append only if they have valid values
+            else if (
+                value !== null &&
+                value !== undefined &&
+                value !== "" &&
+                value !== 0
+            ) {
                 formData.append(key, value.toString());
             }
         });
 
-        // Handle taskImage separately
         if (taskImage) {
             formData.append('taskImage', taskImage);
         }
 
         try {
             await updateTask({ id: task.id, details: formData }).unwrap();
-            setShowSuccessModal(true)
+            setShowSuccessModal(true);
         } catch (error: any) {
             console.log(error);
-            // setError(error.response.data.message);
         }
     };
 
     const handleDateChange = (date: Date | null) => {
         setUpdatedDate(date);
+        if (date === null) {
+            setValue('taskDate', null);
+        }
     };
 
     const handleTimeChange = (time: Date | null) => {
         setUpdatedTime(time);
+        if (time === null) {
+            setValue('taskTime', null);
+        }
     };
 
     const formatDateToLocalDateString = (date: Date | null) => {
@@ -260,7 +276,6 @@ const EditTaskForm = ({ task, setShowEditModal }: TaskCardProps) => {
         </button>
     );
 
-
     return (
         <div className='pt-14 lg:px-5'>
             {showSuccessModal && (
@@ -273,7 +288,7 @@ const EditTaskForm = ({ task, setShowEditModal }: TaskCardProps) => {
                         }}
                         className="absolute h-screen w-screen"
                     />
-                    <div className=" relative z-10 flex w-[90vw] max-w-md  flex-col items-center justify-center gap-4 rounded-lg bg-white p-5 ">
+                    <div className=" relative z-10 flex lg:w-[600px] max-sm:w-[70vw] flex-col items-center justify-center gap-4 rounded-lg bg-white p-5 ">
                         <div className=" flex w-full max-w-lg flex-col items-center justify-center gap-4">
                             <div className="flex size-20 items-center justify-center rounded-full bg-[#C1F6C3] bg-opacity-60">
                                 <div className=" flex size-14 items-center justify-center rounded-full bg-[#A6F8AA] p-2">
@@ -431,13 +446,28 @@ const EditTaskForm = ({ task, setShowEditModal }: TaskCardProps) => {
 
                                 <div className="space-y-5">
                                     <label className="text-[13px] font-semibold text-status-darkpurple lg:text-[16px]">
-                                        Set Day and Time
+                                        Set Date and Time
                                     </label>
                                     <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 w-full">
                                         <div>
                                             <DatePicker
-                                                value={updatedTime as unknown as string}
-                                                selected={updatedTime}
+                                                value={isFlexible ? undefined : (updatedDate ?? initialDate) as unknown as string}
+                                                selected={isFlexible ? undefined : updatedDate ?? initialDate}
+                                                onChange={handleDateChange}
+                                                dateFormat="dd-MM-yyyy"
+                                                minDate={new Date()}
+                                                placeholderText="Choose Date"
+                                                id="taskDate"
+                                                name="taskDate"
+                                                disabled={isFlexible}
+                                                customInput={<CustomInput />}
+                                                className="w-full cursor-pointer rounded-2xl bg-[#EBE9F4] px-2 py-1 outline-none placeholder:text-[14px] placeholder:font-bold"
+                                            />
+                                        </div>
+                                         <div>
+                                            <DatePicker
+                                                value={isFlexible ? undefined : (updatedTime ?? initialTime) as unknown as string}
+                                                selected={isFlexible ? undefined : updatedTime ?? initialTime}
                                                 onChange={handleTimeChange}
                                                 showTimeSelect
                                                 showTimeSelectOnly
@@ -448,24 +478,7 @@ const EditTaskForm = ({ task, setShowEditModal }: TaskCardProps) => {
                                                 disabled={isFlexible}
                                                 id="taskTime"
                                                 name="taskTime"
-                                                // disabled={termAccepted}
                                                 customInput={<CustomInputs />}
-                                                className="w-full cursor-pointer rounded-2xl bg-[#EBE9F4] px-2 py-1 outline-none placeholder:text-[14px] placeholder:font-bold"
-                                            />
-                                        </div>
-                                        <div>
-                                            <DatePicker
-                                                value={updatedDate as unknown as string}
-                                                selected={updatedDate}
-                                                onChange={handleDateChange}
-                                                dateFormat="dd-MM-yyyy"
-                                                minDate={new Date()}
-                                                placeholderText="Choose Date"
-                                                id="taskDate"
-                                                name="taskDate"
-                                                disabled={isFlexible}
-                                                // disabled={termAccepted}
-                                                customInput={<CustomInput />}
                                                 className="w-full cursor-pointer rounded-2xl bg-[#EBE9F4] px-2 py-1 outline-none placeholder:text-[14px] placeholder:font-bold"
                                             />
                                         </div>

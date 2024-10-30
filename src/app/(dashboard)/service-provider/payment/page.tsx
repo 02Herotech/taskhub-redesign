@@ -20,10 +20,47 @@ const ServicePayment: React.FC = () => {
       return [];
     }
 
+    const getOrdinalSuffix = (day: number): string => {
+      // Handle 11, 12, 13 as special cases - they all use 'th'
+      if (day >= 11 && day <= 13) {
+        return 'th';
+      }
+
+      // For all other numbers, check the last digit
+      const lastDigit = day % 10;
+      switch (lastDigit) {
+        case 1:
+          return 'st';
+        case 2:
+          return 'nd';
+        case 3:
+          return 'rd';
+        default:
+          return 'th';
+      }
+    };
+
     const formatDate = (dateArray: [number, number, number, number, number, number, number]): string => {
-      const [year, month, day] = dateArray;
-      const suffix = day === 1 ? 'st' : day === 2 ? 'nd' : day === 3 ? 'rd' : 'th';
-      return `${monthNames[month - 1]} ${day}${suffix} ${year}`;
+      try {
+        const [year, month, day] = dateArray;
+
+        // Input validation
+        if (month < 1 || month > 12) {
+          throw new Error('Invalid month');
+        }
+        if (day < 1 || day > 31) {
+          throw new Error('Invalid day');
+        }
+        if (year < 0) {
+          throw new Error('Invalid year');
+        }
+
+        const suffix = getOrdinalSuffix(day);
+        return `${monthNames[month - 1]} ${day}${suffix} ${year}`;
+      } catch (error) {
+        console.error('Error formatting date:', error);
+        return 'Invalid date';
+      }
     };
 
     return paymentHistoryData.map(transaction => ({

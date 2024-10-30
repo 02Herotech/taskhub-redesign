@@ -14,21 +14,81 @@ import {
 } from "@/lib/utils";
 import Loading from "@/shared/loading";
 import TaskOffers from "@/components/main/explore/TaskOffers";
-import { useEffect, useRef, useState } from "react";
+import { FormEvent, useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
 import { connectSocket } from "@/lib/socket";
 import { AnimatePresence, motion } from "framer-motion";
 import { IoIosCloseCircleOutline } from "react-icons/io";
 import { FaCheck } from "react-icons/fa6";
+import { ShareModal } from "@/components/dashboard/general/ShareModal";
+import ShareTask from "@/components/dashboard/general/ShareTask";
+import { usePathname } from "next/navigation";
+import { ShareSvg } from "@/lib/svgIcons";
 
 const TaskDetailsPage = ({ params }: { params: { id: string } }) => {
   const [offerAmount, setOfferAmount] = useState('');
   const [showOfferForm, setShowOfferForm] = useState(false);
   const [showSuccessMessage, setShowSuccessMessage] = useState<boolean>(false);
+  const [email, setEmail] = useState('');
+  const [isInviteLoading, setIsInviteLoading] = useState(false);
+  const [inviteError, setInviteError] = useState<string | null>(null);
   const offerButtonRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const modalRef = useRef<HTMLDivElement>(null);
+  const pathname = usePathname()
+
+  const [shareDropdownOpen, setShareDropdownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setShareDropdownOpen(false);
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setInviteError(null);
+
+    if (!email) {
+      setInviteError('Please enter an email address');
+      return;
+    }
+
+    if (!email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
+      setInviteError('Please enter a valid email address');
+      return;
+    }
+
+    try {
+      setInviteError('')
+      setIsInviteLoading(true);
+
+      // Create mailto link with subject and body
+      const subject = encodeURIComponent('Check out this task on Oloja');
+      const body = encodeURIComponent(`I thought you might be interested in this: ${pathname}`);
+      const mailtoLink = `mailto:${email}?subject=${subject}&body=${body}`;
+
+      // Open the mailto link
+      window.location.href = mailtoLink;
+
+      setEmail(''); // Clear form on success
+      setShareDropdownOpen(false)
+    } catch (err) {
+      setInviteError('Failed to send invite. Please try again.');
+    } finally {
+      setIsInviteLoading(false);
+    }
+  };
+
   const id = params.id;
   const { data: task, isLoading, error } = useGetTaskByIdQuery(
     id as unknown as number,
@@ -166,6 +226,76 @@ const TaskDetailsPage = ({ params }: { params: { id: string } }) => {
                   {task?.taskDescription}
                 </p>
               </div>
+
+              {/* Share Service */}
+              <div className="bg-[#F8F7FA] px-5 py-3 rounded-xl lg:flex items-center justify-between w-full">
+                <ShareTask title={task.taskBriefDescription} description={task.taskDescription} image={task.taskImage} pathname={`/guest/${id}`} />
+                <div className="relative max-sm:my-4" ref={dropdownRef}>
+                  {/* <Button
+                    theme="secondary"
+                    className="w-[152px] font-satoshiMedium text-white rounded-full"
+                    onClick={() => setShareDropdownOpen(true)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        setShareDropdownOpen(!shareDropdownOpen);
+                      }
+                    }}
+                    aria-expanded={shareDropdownOpen}
+                    aria-haspopup="true"
+                  >
+                    Send Invite
+                  </Button> */}
+                    <div
+                      onClick={() => setShareDropdownOpen(true)}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                          setShareDropdownOpen(!shareDropdownOpen);
+                        }
+                      }}
+                      className="cursor-pointer transform transition-transform duration-300 group-hover:scale-110"
+                    >
+                      {ShareSvg}
+                    </div>
+
+                  <ShareModal
+                    isOpen={shareDropdownOpen}
+                    onClose={() => setShareDropdownOpen(false)}
+                    pathname={pathname}
+                  >
+                    <h5 className="text-start">Invite more friends to join</h5>
+                    <form action="" onSubmit={handleSubmit}>
+                      <input
+                        type="email"
+                        placeholder="Enter e-mail address"
+                        className="mt-4 px-4 py-2 w-full bg-[#EEEEEF] outline-none rounded-lg"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        disabled={isInviteLoading}
+                        aria-label="Email address"
+                        aria-describedby={inviteError ? "email-error" : undefined}
+                      />
+                      {inviteError && (
+                        <p id="email-error" className="text-sm text-red-500 mt-1">
+                          {inviteError}
+                        </p>
+                      )}
+                      <div className="flex items-center justify-center mt-5 mb-3">
+                        <Button
+                          theme="secondary"
+                          className="font-satoshiMedium text-white rounded-full"
+                          size="sm"
+                          type="submit"
+                          disabled={isInviteLoading}
+                          loading={isInviteLoading}
+                        >
+                          Send Invite
+                        </Button>
+                      </div>
+                    </form>
+                  </ShareModal>
+                </div>
+              </div>
+
               <div className="space-y-5">
                 <h4 className="font-satoshiMedium font-bold text-primary lg:text-2xl">
                   Location

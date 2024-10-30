@@ -68,18 +68,17 @@ const AddTaskForm: React.FC = () => {
   const isAuthenticated = session.status === "authenticated";
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(false);
+  const [code, setCode]= useState<boolean>(false)
   const [task, setTask] = useState<FormData>({
     taskBriefDescription: getCookie("taskBriefDescription") || "",
     taskImage: null,
     taskTime: getCookie("taskTime") || "",
     taskDate: getCookie("taskDate") || "",
     taskType: getCookie("taskType") || "",
-    suburb: getCookie("suburb") || "",
+    suburb: "",
     state: getCookie("state") || "",
     postCode: getCookie("postCode") || "",
-    customerBudget: getCookie("categoryId")
-      ? parseInt(getCookie("categoryId") as string)
-      : null,
+    customerBudget: null,
     termAccepted: false,
     categoryId: getCookie("categoryId")
       ? parseInt(getCookie("categoryId") as string)
@@ -89,7 +88,7 @@ const AddTaskForm: React.FC = () => {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [selectedTime, setSelectedTime] = useState<Date | null>(null);
   const [selectedCode, setSelectedCode] = useState("");
-  const [selectedCity, setSelectedCity] = useState("Suburb");
+  const [selectedCity, setSelectedCity] = useState("");
   const [termAccepted, settermAccepted] = useState(false);
   const [accepted, setAccepted] = useState(false);
   const [isRemote, setIsRemote] = useState("");
@@ -152,11 +151,18 @@ const AddTaskForm: React.FC = () => {
         const response = await axios.get(
           `${process.env.NEXT_PUBLIC_API_URL}/util/locations/search?postcode=${selectedCode}`,
         );
-        console.log(response.data);
-        setPostalCodeData(response.data as PostalCodeData[]);
+        if (Array.isArray(response.data) && response.data.length === 0) {
+          console.log('Array is empty');
+          setCode(true);
+        } else {
+          console.log(response.data);
+          setCode(false);
+          setPostalCodeData(response.data as PostalCodeData[]);
+        }
+        
       } catch (error) {
         console.error("Error fetching postal code data:", error);
-        setPostalCodeData([]);
+        setCode(true);
       }
     };
 
@@ -193,9 +199,11 @@ const AddTaskForm: React.FC = () => {
       // Validation for physical service
       if (!selectedCode) {
         errors.postalCode = "Please fill out all required fields";
-      } else if (!selectedCity) {
+      }
+      if (!selectedCity) {
         errors.city = "Please fill out all required fields";
       }
+      
     } else if (!isRemote) {
       error.service = "Please fill out all required fields";
     }
@@ -555,7 +563,7 @@ const AddTaskForm: React.FC = () => {
                 <Dropdown
                   trigger={() => (
                     <div
-                      className={`flex h-full w-full cursor-pointer appearance-none justify-between rounded-2xl bg-[#EBE9F4] p-3 text-[13px] text-status-darkpurple  ${error.subCategory ? "border border-[#ff0000] outline-[#FF0000]" : "border-none outline-none"}`}
+                      className={`flex h-full w-full cursor-pointer appearance-none justify-between rounded-2xl bg-[#EBE9F4] p-3 text-[13px] text-status-darkpurple  ${error.category ? "border border-[#ff0000] outline-[#FF0000]" : "border-none outline-none"}`}
                     >
                       <h2>{selectedCategoryName}</h2>
                       <FaSortDown className="text-status-darkpurple" />
@@ -664,6 +672,20 @@ const AddTaskForm: React.FC = () => {
                 <div className="flex items-center space-x-3">
                   <div className="relative">
                     <DatePicker
+                      selected={selectedDate}
+                      onChange={handleDateChange}
+                      dateFormat="dd-MM-yyyy"
+                      minDate={new Date()}
+                      placeholderText="Choose Date"
+                      id="taskDate"
+                      name="taskDate"
+                      disabled={termAccepted}
+                      customInput={<CustomInput />}
+                      className="w-full cursor-pointer rounded-2xl bg-[#EBE9F4] px-2 py-1 outline-none placeholder:text-[14px] placeholder:font-bold "
+                    />
+                  </div>
+                  <div className="relative">
+                    <DatePicker
                       selected={selectedTime}
                       onChange={handleTimeChange}
                       showTimeSelect
@@ -678,20 +700,7 @@ const AddTaskForm: React.FC = () => {
                       customInput={<CustomInputs />}
                       className="w-full cursor-pointer rounded-2xl  bg-[#EBE9F4] px-2 py-1 outline-none placeholder:text-[14px] placeholder:font-bold"
                     />
-                  </div>
-                  <div className="relative">
-                    <DatePicker
-                      selected={selectedDate}
-                      onChange={handleDateChange}
-                      dateFormat="dd-MM-yyyy"
-                      minDate={new Date()}
-                      placeholderText="Choose Date"
-                      id="taskDate"
-                      name="taskDate"
-                      disabled={termAccepted}
-                      customInput={<CustomInput />}
-                      className="w-full cursor-pointer rounded-2xl bg-[#EBE9F4] px-2 py-1 outline-none placeholder:text-[14px] placeholder:font-bold "
-                    />
+                    
                   </div>
                   <div>
                     <div className="flex items-center">
@@ -714,7 +723,7 @@ const AddTaskForm: React.FC = () => {
                 {error.message ||
                   error.taskBriefDescription ||
                   error.taskDescription ||
-                  error.selectedCategory}
+                  error.category}
               </div>
               <Button
                 type="submit"
@@ -790,7 +799,8 @@ const AddTaskForm: React.FC = () => {
                         value={selectedCode}
                         onChange={handleCode}
                         name="postCode"
-                        className={`w-[155px] cursor-pointer  rounded-2xl bg-[#EBE9F4] p-3 text-[13px] placeholder:font-bold ${error.postalCode ? "border border-[#ff0000] outline-[#FF0000]" : "border-none outline-none"}`}
+                        type="number"
+                        className={`w-[155px] cursor-pointer  rounded-2xl bg-[#EBE9F4] p-3 text-[13px] placeholder:font-bold ${(errors.postalCode || code == true )? "border border-[#ff0000] outline-[#FF0000]" : "border-none outline-none"}`}
                       />
                     </div>
 
@@ -811,7 +821,7 @@ const AddTaskForm: React.FC = () => {
                       <Dropdown
                         trigger={() => (
                           <div
-                            className={`flex h-full w-[150px] cursor-pointer appearance-none justify-between rounded-2xl bg-[#EBE9F4] p-3 font-satoshi text-[13px] font-light ${error.city ? "border border-[#ff0000] outline-[#FF0000]" : "border-none outline-none"}`}
+                            className={`flex h-full w-[150px] cursor-pointer appearance-none justify-between rounded-2xl bg-[#EBE9F4] p-3 font-satoshi text-[13px] font-light ${errors.city ? "border border-[#ff0000] outline-[#FF0000]" : "border-none outline-none"}`}
                           >
                             <h2>{selectedCity}</h2>
                             <FaSortDown />
@@ -867,7 +877,7 @@ const AddTaskForm: React.FC = () => {
                   name="customerBudget"
                   onChange={handlePrice}
                   placeholder="500"
-                  className={`appearance-none rounded-2xl bg-[#EBE9F4] p-3 pl-6 text-[13px] placeholder:font-bold ${error.customerBudget ? "border border-[#ff0000] outline-[#FF0000]" : "border-none outline-none"}`}
+                  className={`appearance-none rounded-2xl bg-[#EBE9F4] p-3 pl-6 text-[13px] placeholder:font-bold ${errors.customerBudget ? "border border-[#ff0000] outline-[#FF0000]" : "border-none outline-none"}`}
                 />
                 <p className="absolute left-3 top-8 md:top-8">$</p>
               </div>

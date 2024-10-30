@@ -37,6 +37,7 @@ import {
 import ChatSocket from "@/components/main/message/ChatSocket";
 import HomeMobileNavigation from "../HomeMobileNavigation";
 import { HamburgerIcon } from "@/lib/svgIcons";
+import SmallLogo from "../SmallLogo";
 
 const initialAuthState = {
   token: null,
@@ -190,8 +191,11 @@ const Navigation = () => {
           <div className="container flex min-h-20 items-center justify-between px-7 py-4 lg:py-5 " />
         ) : (
           <div className="container flex items-center justify-between px-7 py-4 lg:py-5">
-            <Link href="/">
+            <Link href="/" className="max-sm:hidden">
               <Logo />
+            </Link>
+            <Link href="/" className="lg:hidden">
+              <SmallLogo />
             </Link>
             <div className="flex items-center gap-3 lg:hidden">
               <Link href="/message" className="relative cursor-pointer">

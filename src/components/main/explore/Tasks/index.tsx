@@ -39,7 +39,6 @@ const Tasks: React.FC = () => {
             maxPrice: 1000,
         });
 
-    // done and working
     useEffect(() => {
         const fetchData = async () => {
             const categoryData: CategoryType[] =
@@ -360,6 +359,7 @@ const Tasks: React.FC = () => {
                                 ))}
                             </div>
                         </div>
+                        
                         {/* ----------------------------------------- */}
                         {/* Pricing */}
                         <div className="relative z-20">

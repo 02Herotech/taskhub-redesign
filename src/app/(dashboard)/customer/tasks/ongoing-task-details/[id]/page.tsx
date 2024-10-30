@@ -64,6 +64,8 @@ const OnogoingTaskDetailsPage = ({ params }: { params: { id: string } }) => {
         );
     }
 
+    console.log("task", task)
+
     const handleRevisionSubmission = async (e: any) => {
         e.preventDefault();
         setRevisionError("")
@@ -329,86 +331,93 @@ const OnogoingTaskDetailsPage = ({ params }: { params: { id: string } }) => {
                     <div className="space-y-5 lg:flex-1">
                         <h1 className='text-primary font-bold text-2xl'>{task.jobTitle}</h1>
                         <h5 className='text-black font-satoshiMedium'>{task.jobDescription}</h5>
-                        <div className="relative">
-                            <button
-                                className="w-[190px] flex items-center justify-center gap-x-4 rounded-3xl bg-[#F1F1F2] px-4 py-2 text-base font-bold text-[#140B31] transition-colors duration-300"
-                                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                            >
-                                <div
-                                    className={`fixed left-0 top-0 h-screen w-screen ${isDropdownOpen ? "block" : "hidden"} `}
-                                    onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                                ></div>
-                                {selectedTime ? (
-                                    <span>{selectedTime}</span>
-                                ) : (
-                                    <span>Inspect Task</span>
-                                )}
-                                <span>
-                                    <BsTriangleFill
-                                        fill="#140B31"
-                                        className="size-2 rotate-[60deg] text-[#140B31]"
-                                    />
-                                </span>
-                            </button>
-                            <div
-                                className={`small-scrollbar absolute top-[calc(100%+0.2rem)] flex max-h-0 w-[190px] flex-col rounded-md bg-[#F1F1F2] transition-all duration-300 ${isDropdownOpen ? "max-h-64 overflow-y-auto" : "max-h-0  overflow-hidden"} `}
-                            >
-                                <div className="p-5 space-y-3 w-full">
-                                    {inspectionTimes.map((time, index) => (
-                                        <label key={index} className="flex items-center space-x-3">
-                                            <input
-                                                type="radio"
-                                                name="inspectionTime"
-                                                value={time}
-                                                checked={selectedTime === time}
-                                                onChange={() => handleTimeSelection(time)}
-                                                className="form-radio"
+                        {
+                            task.jobStatus === "INSPECTION" && (
+                                <div className="relative">
+                                    <button
+                                        className="w-[190px] flex items-center justify-center gap-x-4 rounded-3xl bg-[#F1F1F2] px-4 py-2 text-base font-bold text-[#140B31] transition-colors duration-300"
+                                        onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                                    >
+                                        <div
+                                            className={`fixed left-0 top-0 h-screen w-screen ${isDropdownOpen ? "block" : "hidden"} `}
+                                            onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                                        ></div>
+                                        {selectedTime ? (
+                                            <span>{selectedTime}</span>
+                                        ) : (
+                                            <span>Inspect Task</span>
+                                        )}
+                                        <span>
+                                            <BsTriangleFill
+                                                fill="#140B31"
+                                                className="size-2 rotate-[60deg] text-[#140B31]"
                                             />
-                                            <span className='lg:text-xl text-primary font-satoshiMedium'>{time}</span>
-                                        </label>
-                                    ))}
+                                        </span>
+                                    </button>
+                                    <div
+                                        className={`small-scrollbar absolute top-[calc(100%+0.2rem)] flex max-h-0 w-[190px] flex-col rounded-md bg-[#F1F1F2] transition-all duration-300 ${isDropdownOpen ? "max-h-64 overflow-y-auto" : "max-h-0  overflow-hidden"} `}
+                                    >
+                                        <div className="p-5 space-y-3 w-full">
+                                            {inspectionTimes.map((time, index) => (
+                                                <label key={index} className="flex items-center space-x-3">
+                                                    <input
+                                                        type="radio"
+                                                        name="inspectionTime"
+                                                        value={time}
+                                                        checked={selectedTime === time}
+                                                        onChange={() => handleTimeSelection(time)}
+                                                        className="form-radio"
+                                                    />
+                                                    <span className='lg:text-xl text-primary font-satoshiMedium'>{time}</span>
+                                                </label>
+                                            ))}
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                        </div>
+                            )}
                     </div>
                     <div className="lg:flex flex-col justify-between items-end max-sm:mt-5 max-sm:space-y-4">
                         <h4 className='text-lg text-[#716F78]'>{humanReadableTime}</h4>
                         <h2 className="text-xl font-bold capitalize text-primary">
                             {formatAmount(task.total, "USD", false)}
                         </h2>
-                        <div className="flex items-center lg:justify-end space-x-10 lg:text-lg">
-                            <button className='text-tc-orange' onClick={() => setRequestRevisionPopup(true)}>Request Revision</button>
-                            <button
-                                className='text-[#34A853]'
-                                onClick={() => {
-                                    setPaymentError('')
-                                    setApprovePaymentPopup(true)
-                                }}
-                            >
-                                Approve payment
-                            </button>
-                        </div>
+                        {task.jobStatus === "INSPECTION" && (
+                            <div className="flex items-center lg:justify-end space-x-10 lg:text-lg">
+                                <button className='text-tc-orange' onClick={() => setRequestRevisionPopup(true)}>Request Revision</button>
+                                <button
+                                    className='text-[#34A853]'
+                                    onClick={() => {
+                                        setPaymentError('')
+                                        setApprovePaymentPopup(true)
+                                    }}
+                                >
+                                    Approve payment
+                                </button>
+                            </div>
+                        )}
                     </div>
                 </div>
-                <div className="py-7">
-                    {inspectionStarted ? (
-                        <div className='lg:flex items-center justify-between max-sm:space-y-5'>
-                            <h2 className="text-lg font-semibold mb-4 text-primary">
-                                Inspection requested for {selectedTime}
-                            </h2>
-                            <div className="flex space-x-4 items-center justify-between">
-                                <div className="lg:flex items-center justify-end space-x-4">
-                                    {inspectionEndTime && <CountdownTimer endTime={inspectionEndTime} />}
+                {task.jobStatus === "INSPECTION" && (
+                    <div className="py-7">
+                        {inspectionStarted ? (
+                            <div className='lg:flex items-center justify-between max-sm:space-y-5'>
+                                <h2 className="text-lg font-semibold mb-4 text-primary">
+                                    Inspection requested for {selectedTime}
+                                </h2>
+                                <div className="flex space-x-4 items-center justify-between">
+                                    <div className="lg:flex items-center justify-end space-x-4">
+                                        {inspectionEndTime && <CountdownTimer endTime={inspectionEndTime} />}
+                                    </div>
+                                    <Button className=' bg-red-300 text-red-800 border-red-800 text-xs' size='sm' onClick={endInspection}>End Inspection</Button>
                                 </div>
-                                <Button className=' bg-red-300 text-red-800 border-red-800 text-xs' size='sm' onClick={endInspection}>End Inspection</Button>
                             </div>
-                        </div>
-                    ) : (
-                        <h2 className="text-lg text-primary">
-                            {selectedTime ? `Inspection time selected: ${selectedTime}` : 'No inspection time selected'}
-                        </h2>
-                    )}
-                </div>
+                        ) : (
+                            <h2 className="text-lg text-primary">
+                                {selectedTime ? `Inspection time selected: ${selectedTime}` : 'No inspection time selected'}
+                            </h2>
+                        )}
+                    </div>
+                )}
             </div>
         </>
     )
