@@ -115,7 +115,7 @@ const ShareTask: React.FC<ShareProps> = ({
                 url={fullUrl}
             />
             <div className="gap-4">
-                <span className="text-sm font-medium">Share:</span>
+                <span className="text-sm font-medium">Share via:</span>
                 <div className="flex gap-2">
                     {shareLinks.map((link) => (
                         <button
