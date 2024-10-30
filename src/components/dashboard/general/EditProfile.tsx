@@ -137,7 +137,7 @@ const EditProfile = () => {
         } catch (error) {
           console.error("Error validating ABN:", error);
           setIsABNValid(false);
-          setError('Please enter a valid 11-digit ABN.')
+          setErr('Please enter a valid 11-digit ABN.')
         }
       } else {
         setIsABNValid(false);
@@ -190,6 +190,7 @@ const EditProfile = () => {
   }, [token, isServiceProvider, dispatch, reset]);
 
   const watchPostcode = watch("postcode");
+  const watchIdType = watch("idType");
 
   useEffect(() => {
     const fetchLocationByPostcode = async () => {
@@ -379,7 +380,7 @@ const EditProfile = () => {
               register={register}
               errors={errors}
               watch={watch}
-              disabled={!isEditingEnabled}
+              disabled
             />
             <FormField
               label="Last Name"
@@ -387,7 +388,7 @@ const EditProfile = () => {
               register={register}
               errors={errors}
               watch={watch}
-              disabled={!isEditingEnabled}
+              disabled
             />
             <Controller
               control={control}
@@ -403,8 +404,8 @@ const EditProfile = () => {
                   <DatePicker
                     id="dateOfBirth"
                     selected={field.value || null} // Use null if there's no date
-                    onChange={(date) => field.onChange(date ? date : '')} 
-                    disabled={!isEditingEnabled}
+                    onChange={(date) => field.onChange(date ? date : '')}
+                    disabled={!isEditingEnabled || !!userDetails.dateOfBirth} // Disable if date exists and not in editing mode
                     maxDate={new Date(new Date().setFullYear(new Date().getFullYear() - 18))}
                     className="w-full rounded-xl border border-slate-100 p-2 text-slate-700 shadow outline-none transition-shadow duration-300 hover:shadow-md lg:max-w-sm"
                     dateFormat="dd/MM/yyyy"
@@ -472,7 +473,7 @@ const EditProfile = () => {
               register={register}
               errors={errors}
               watchField={watchField}
-              disabled={!isEditingEnabled}
+              disabled={!isEditingEnabled || !!userDetails.postalCode}
             />
             <Controller
               name="suburb"
@@ -488,7 +489,7 @@ const EditProfile = () => {
                   <select
                     {...field}
                     className="rounded-xl border border-slate-100 p-2 py-2.5 text-slate-700 shadow outline-none transition-shadow duration-300 hover:shadow-md"
-                    disabled={!isEditingEnabled || suburbList.length === 0}
+                    disabled={!isEditingEnabled || suburbList.length === 0 || !!userDetails.suburbs }
                   >
                     {suburbList.map((item) => (
                       <option value={item} key={item}>
@@ -521,12 +522,13 @@ const EditProfile = () => {
               name="abn"
               register={register}
               errors={errors}
-              watch={watch}
-              disabled={!isEditingEnabled}
+                watch={watch}
+                watchField = {watchField}
+              disabled={!isEditingEnabled || !!userDetails.abn}
               minLength={11}
               />
             </div>
-            {!isABNValid && err && <div className="text-red-500 ">Invalid ABN Number</div>}
+            {!isABNValid && !userDetails.abn && err && <div className="text-red-500 ">Please enter a valid 11-digit ABN.</div>}
           </section>
         )}
 
@@ -535,6 +537,8 @@ const EditProfile = () => {
           <h3 className="text-lg font-bold text-primary">Identification Document</h3>
           <div className="flex flex-col gap-6 lg:col-span-8 lg:gap-8">
             <div className="flex flex-wrap gap-6 lg:grid lg:grid-cols-2 lg:gap-8">
+
+              {/* ID Type Select */}
               <div className="flex w-full flex-col gap-2.5">
                 <label htmlFor="idType" className="flex w-full items-center justify-between">
                   <span>Choose a valid means of ID</span>
@@ -545,7 +549,7 @@ const EditProfile = () => {
                 <select
                   {...register("idType")}
                   className="w-full rounded-xl border border-slate-100 px-2 py-2.5 text-slate-700 shadow outline-none transition-shadow duration-300 hover:shadow-md lg:max-w-sm"
-                  disabled={!isEditingEnabled}
+                  disabled={!isEditingEnabled || !!userDetails.idType}
                 >
                   {idTypeObject.map((item) => (
                     <option key={item.label} value={item.label}>
@@ -554,6 +558,8 @@ const EditProfile = () => {
                   ))}
                 </select>
               </div>
+
+              {/* ID Number Field */}
               <FormField
                 label={watchField.idType ? `${watchField.idType} Number` : "Select ID Type"}
                 name="idNumber"
@@ -561,7 +567,7 @@ const EditProfile = () => {
                 register={register}
                 errors={errors}
                 watchField={watchField}
-                disabled={!isEditingEnabled || !watchField.idType}
+                disabled={!isEditingEnabled || !!userDetails.idNumber}
                 maxLength={12}
               />
             </div>
@@ -575,70 +581,76 @@ const EditProfile = () => {
                 )}
               </label>
               <div className="flex gap-5 w-full">
-              <div>
-                {documentImageFront || watchField.idImageFront ? (
-                  <button
-                    type="button"
-                    className="flex items-end justify-center space-x-2"
-                    onClick={handleChangeFront}
-                    disabled={!isEditingEnabled}
-                  >
-                    <Image
-                      src={documentImageFront ?? watchField.idImageFront ?? ""}
-                      alt="Captured or Selected"
-                      width={300}
-                      height={300}
-                      className="rounded-xl"
-                    />
-                  </button>
-                ) : (
-                  <button
-                    type="button"
-                    className="flex h-48 w-48 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-slate-500 p-4"
-                        onClick={handleChangeFront}
-                    disabled={!isEditingEnabled}
-                  >
-                    <PiFileArrowDownDuotone className="text-2xl text-tc-gray" />
-                    <span className="text-center text-tc-gray">
-                          Choose a File <span className="text-[#381F8C] font-clashSemiBold"><br/>Front View<br/></span> Upload supports: JPG, PDF, PNG.
-                    </span>
-                  </button>
-                )}
-              </div>
-              <div>
-                {documentImageBack || watchField.idImageBack ? (
-                  <button
-                    type="button"
-                    className="flex items-end justify-center space-x-2"
-                    onClick={handleChangeBack}
-                    disabled={!isEditingEnabled}
-                  >
-                    <Image
-                      src={documentImageBack ?? watchField.idImageBack ?? ""}
-                      alt="Captured or Selected"
-                      width={300}
-                      height={300}
-                      className="rounded-xl"
-                    />
-                  </button>
-                ) : (
-                  <button
-                    type="button"
-                    className="flex h-48 w-48 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-slate-500 p-4"
-                    onClick={handleChangeBack}
-                    disabled={!isEditingEnabled}
-                  >
-                    <PiFileArrowDownDuotone className="text-2xl text-tc-gray" />
-                    <span className="text-center text-tc-gray">
-                          Choose a File <span className="text-[#381F8C] font-clashSemiBold"><br/>Back View<br/></span> Upload supports: JPG, PDF, PNG.
-                    </span>
-                  </button>
-                )}
+                {/* Front View */}
+                <div>
+                  {documentImageFront || watchField.idImageFront ? (
+                    <button
+                      type="button"
+                      className="flex items-end justify-center space-x-2"
+                      onClick={handleChangeFront}
+                      disabled={!isEditingEnabled || !!userDetails.idImageFront}
+                    >
+                      <Image
+                        src={documentImageFront ?? watchField.idImageFront ?? userDetails.idImageFront ?? ""}
+                        alt="Captured or Selected"
+                        width={300}
+                        height={300}
+                        className="rounded-xl"
+                      />
+                    </button>
+                  ) : (
+                    <button
+                      type="button"
+                      className="flex h-48 w-48 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-slate-500 p-4"
+                      onClick={handleChangeFront}
+                      disabled={!isEditingEnabled}
+                    >
+                      <PiFileArrowDownDuotone className="text-2xl text-tc-gray" />
+                      <span className="text-center text-tc-gray">
+                        Choose a File <span className="text-[#381F8C] font-clashSemiBold"><br />Front View<br /></span> Upload supports: JPG, PDF, PNG.
+                      </span>
+                    </button>
+                  )}
                 </div>
+
+                {/* Back View */}
+                {watchField.idType !== 'International Passport' && (
+                  <div>
+                    {documentImageBack || watchField.idImageBack ? (
+                      <button
+                        type="button"
+                        className="flex items-end justify-center space-x-2"
+                        onClick={handleChangeBack}
+                        disabled={!isEditingEnabled || !!userDetails.idImageBack}
+                      >
+                        <Image
+                          src={documentImageBack ?? watchField.idImageBack ?? ""}
+                          alt="Captured or Selected"
+                          width={300}
+                          height={300}
+                          className="rounded-xl"
+                        />
+                      </button>
+                    ) : (
+                      <button
+                        type="button"
+                        className="flex h-48 w-48 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-slate-500 p-4"
+                        onClick={handleChangeBack}
+                        disabled={!isEditingEnabled}
+                      >
+                        <PiFileArrowDownDuotone className="text-2xl text-tc-gray" />
+                        <span className="text-center text-tc-gray">
+                          Choose a File <span className="text-[#381F8C] font-clashSemiBold"><br />Back View<br /></span> Upload supports: JPG, PDF, PNG.
+                        </span>
+                      </button>
+                    )}
+                  </div>
+                )}
               </div>
             </div>
           </div>
         </section>
+
 
         {error && (
           <div className="my-1 text-base text-end lg:px-24 font-semibold text-status-error-100">
