@@ -65,6 +65,7 @@ const EditProfile = () => {
   const [selectedDocument, setSelectedDocument] = useState<File | null>(null);
   const [isProfileUpdatedSuccessfully, setIsProfileUpdatedSuccessfully] = useState(false);
   const [error, setError] = useState("");
+  const [err, setErr] = useState("");
   const [userDetails, setUserDetails] = useState(defaultUserDetails);
 
   const userProfile = useSelector((state: RootState) => state.userProfile);
@@ -136,7 +137,7 @@ const EditProfile = () => {
         } catch (error) {
           console.error("Error validating ABN:", error);
           setIsABNValid(false);
-          setError('invalid Abn number')
+          setError('Please enter a valid 11-digit ABN.')
         }
       } else {
         setIsABNValid(false);
@@ -181,7 +182,7 @@ const EditProfile = () => {
         });
       } catch (error) {
         console.error("Error fetching user data:", error);
-        setError("Failed to load user data. Please try again.");
+        setErr("Failed to load user data. Please try again.");
       }
     };
 
@@ -525,7 +526,7 @@ const EditProfile = () => {
               minLength={11}
               />
             </div>
-            {!isABNValid && error && <div className="text-red-500 ">Invalid ABN Number</div>}
+            {!isABNValid && err && <div className="text-red-500 ">Invalid ABN Number</div>}
           </section>
         )}
 
@@ -639,11 +640,11 @@ const EditProfile = () => {
           </div>
         </section>
 
-        {/* {error && (
+        {error && (
           <div className="my-1 text-base text-end lg:px-24 font-semibold text-status-error-100">
             {error}
           </div>
-        )} */}
+        )}
 
         {/* Submit Button */}
         <div className="flex lg:items-end lg:justify-end lg:px-24">
