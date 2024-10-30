@@ -17,6 +17,7 @@ import {
     suffixes,
 } from "@/lib/utils";
 import { setCookie } from "cookies-next";
+import { ShareSvg } from "@/lib/svgIcons";
 
 // Types
 interface Category {
@@ -186,7 +187,7 @@ const TaskDetailsPage = ({ params }: TaskDetailsPageProps) => {
                         <div className="bg-[#F8F7FA] px-5 py-3 rounded-xl lg:flex items-center justify-between w-full">
                             <ShareTask pathname={pathname} title={task.taskBriefDescription} description={task.taskDescription} image={task.taskImage} />
                             <div className="relative max-sm:my-3">
-                                <Button
+                                {/* <Button
                                     theme="secondary"
                                     className="w-[152px] font-satoshiMedium text-white rounded-full"
                                     onClick={() => setShareDropdownOpen(true)}
@@ -199,7 +200,18 @@ const TaskDetailsPage = ({ params }: TaskDetailsPageProps) => {
                                     aria-haspopup="true"
                                 >
                                     Send Invite
-                                </Button>
+                                </Button> */}
+                                <div
+                                    onClick={() => setShareDropdownOpen(true)}
+                                    onKeyDown={(e) => {
+                                        if (e.key === 'Enter' || e.key === ' ') {
+                                            setShareDropdownOpen(!shareDropdownOpen);
+                                        }
+                                    }}
+                                    className="cursor-pointer transform transition-transform duration-300 group-hover:scale-110"
+                                >
+                                    {ShareSvg}
+                                </div>
 
                                 <ShareModal
                                     isOpen={shareDropdownOpen}

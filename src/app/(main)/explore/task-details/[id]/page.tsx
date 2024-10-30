@@ -24,6 +24,7 @@ import { FaCheck } from "react-icons/fa6";
 import { ShareModal } from "@/components/dashboard/general/ShareModal";
 import ShareTask from "@/components/dashboard/general/ShareTask";
 import { usePathname } from "next/navigation";
+import { ShareSvg } from "@/lib/svgIcons";
 
 const TaskDetailsPage = ({ params }: { params: { id: string } }) => {
   const [offerAmount, setOfferAmount] = useState('');
@@ -230,7 +231,7 @@ const TaskDetailsPage = ({ params }: { params: { id: string } }) => {
               <div className="bg-[#F8F7FA] px-5 py-3 rounded-xl lg:flex items-center justify-between w-full">
                 <ShareTask title={task.taskBriefDescription} description={task.taskDescription} image={task.taskImage} pathname={`/guest/${id}`} />
                 <div className="relative max-sm:my-4" ref={dropdownRef}>
-                  <Button
+                  {/* <Button
                     theme="secondary"
                     className="w-[152px] font-satoshiMedium text-white rounded-full"
                     onClick={() => setShareDropdownOpen(true)}
@@ -243,7 +244,18 @@ const TaskDetailsPage = ({ params }: { params: { id: string } }) => {
                     aria-haspopup="true"
                   >
                     Send Invite
-                  </Button>
+                  </Button> */}
+                    <div
+                      onClick={() => setShareDropdownOpen(true)}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                          setShareDropdownOpen(!shareDropdownOpen);
+                        }
+                      }}
+                      className="cursor-pointer transform transition-transform duration-300 group-hover:scale-110"
+                    >
+                      {ShareSvg}
+                    </div>
 
                   <ShareModal
                     isOpen={shareDropdownOpen}
