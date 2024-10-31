@@ -66,7 +66,7 @@ const ShareTask: React.FC<ShareProps> = ({
     description,
     image
 }) => {
-    const fullUrl = `https://www.taskhub.com.au${pathname}`;
+    const fullUrl = `${process.env.NEXT_PUBLIC_URL}${pathname}`;
 
     // For WhatsApp, we'll only include the URL since the meta tags will handle the preview
     const shareLinks: ShareLinkProps[] = [

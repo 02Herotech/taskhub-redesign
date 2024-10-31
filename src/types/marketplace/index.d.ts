@@ -28,6 +28,7 @@ declare interface SubCategoryType {
 interface Review {
   rating: number;
 };
+
 declare interface ListingDataType {
   id: number;
   state: string;

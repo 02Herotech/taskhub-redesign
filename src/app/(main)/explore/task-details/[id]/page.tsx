@@ -74,7 +74,7 @@ const TaskDetailsPage = ({ params }: { params: { id: string } }) => {
 
       // Create mailto link with subject and body
       const subject = encodeURIComponent('Check out this task on Oloja');
-      const body = encodeURIComponent(`I thought you might be interested in this: https://oloja.com.au${pathname}`);
+      const body = encodeURIComponent(`I thought you might be interested in this: ${process.env.NEXT_PUBLIC_URL}${pathname}`);
       const mailtoLink = `mailto:${email}?subject=${subject}&body=${body}`;
 
       // Open the mailto link

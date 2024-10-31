@@ -3,10 +3,8 @@
 
 import Image from "next/image";
 import React, { FormEvent, useEffect, useRef, useState } from "react";
-import { BiCalendar, BiCalendarCheck, BiLocationPlus } from "react-icons/bi";
+import { BiCalendarCheck, BiLocationPlus } from "react-icons/bi";
 import PricingPlan from "@/components/matkeplaceSingleTask/PricingPlan";
-import { formatDateFromNumberArray } from "@/utils";
-import axios from "axios";
 import ImageModal from "@/components/main/marketplace/ImageModal";
 import { useParams, usePathname } from "next/navigation";
 import { useSelector } from "react-redux";
@@ -17,13 +15,13 @@ import ShareTask from "@/components/dashboard/general/ShareTask";
 import Button from "@/components/global/Button";
 import { ShareModal } from "@/components/dashboard/general/ShareModal";
 import { ShareSvg } from "@/lib/svgIcons";
+import { useGetServiceByIdQuery } from "@/services/tasks";
+import Loading from "@/shared/loading";
 
 const Page = () => {
-  const [displayData, setDisplayData] = useState<ListingDataType>();
-  const [currentListing, setCurrentListing] = useState<ListingDataType>();
   const [email, setEmail] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [isInviteLoading, setIsInviteLoading] = useState(false);
+  const [inviteError, setInviteError] = useState<string | null>(null);
   const [showImageModal, setShowImageModal] = useState({
     state: false,
     image: "",
@@ -31,6 +29,7 @@ const Page = () => {
   const { id } = useParams();
   const pathname = usePathname()
 
+  const { data: displayData, isLoading, error } = useGetServiceByIdQuery(id as unknown as number);
   const [shareDropdownOpen, setShareDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -49,38 +48,37 @@ const Page = () => {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setError(null);
+    setInviteError(null);
 
     // Email validation
     if (!email) {
-      setError('Please enter an email address');
+      setInviteError('Please enter an email address');
       return;
     }
 
     if (!email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
-      setError('Please enter a valid email address');
+      setInviteError('Please enter a valid email address');
       return;
     }
 
     try {
-      setIsLoading(true);
-      setError('');
+      setIsInviteLoading(true);
+      setInviteError('');
 
       // Create mailto link with subject and body
       const subject = encodeURIComponent('Check out this task on Oloja');
-      const body = encodeURIComponent(`I thought you might be interested in this: https://oloja.com.au${pathname}`);
+      const body = encodeURIComponent(`I thought you might be interested in this: ${process.env.NEXT_PUBLIC_URL}${pathname}`);
       const mailtoLink = `mailto:${email}?subject=${subject}&body=${body}`;
 
       // Open the mailto link
       window.location.href = mailtoLink;
 
-      // Clear form on success
       setEmail('');
       setShareDropdownOpen(false);
     } catch (err) {
-      setError('Failed to open email client. Please try again.');
+      setInviteError('Failed to open email client. Please try again.');
     } finally {
-      setIsLoading(false);
+      setIsInviteLoading(false);
     }
   };
 
@@ -88,28 +86,26 @@ const Page = () => {
     (state: RootState) => state.userProfile,
   );
 
-  useEffect(() => {
-    const tempList = localStorage.getItem("content");
-    if (tempList) {
-      const content: ListingDataType = JSON.parse(tempList);
-      setDisplayData(content);
-    }
-  }, []);
+  if (isLoading) {
+    return (
+      <div className="w-full flex flex-col items-center justify-center h-[full]">
+        <Loading />
+      </div>
+    )
+  }
 
-  useEffect(() => {
-    const fetchListing = async () => {
-      try {
-        if (!displayData) return;
-        const url = `${process.env.NEXT_PUBLIC_API_URL}/listing/` + id;
-        const { data } = await axios.get(url);
-        setCurrentListing(data);
-      } catch (error: any) {
-        console.log(error.response.data);
-      }
-    };
-    fetchListing();
-  }, [displayData]);
-
+  if (error) {
+    return (
+      <div className="flex h-[50vh] w-full items-center justify-center">
+        <div className="space-y-4">
+          <h2 className="text-xl lg:text-3xl  font-satoshiBold font-bold text-primary">Listing not found!</h2>
+          <p className="text-lg lg:text-xl font-satoshiMedium text-[#140B31]">
+            Something went wrong, please try again later.
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <>
@@ -118,7 +114,7 @@ const Page = () => {
           showImageModal={showImageModal}
           setShowImageModal={setShowImageModal}
         />
-        <section className=" grid gap-4 lg:grid-cols-12 lg:gap-4">
+        <section className="grid gap-4 lg:grid-cols-12 lg:gap-4">
           {/* left handside */}
           <article className="space-y-4 lg:col-span-7">
             <header className=" mx-auto bg-slate-200  p-4 lg:rounded-br-[2rem] lg:rounded-tr-[2rem] lg:px-10 lg:py-10 ">
@@ -164,20 +160,6 @@ const Page = () => {
                   <div className="bg-[#F8F7FA] px-5 py-3 rounded-xl lg:flex items-center justify-between w-full">
                     <ShareTask pathname={pathname} title={displayData?.listingTitle || ""} description={displayData?.listingDescription || ""} image={displayData?.businessPictures[0] || ""} />
                     <div className="relative max-sm:my-4" ref={dropdownRef}>
-                      {/* <Button
-                        theme="secondary"
-                        className="w-[152px] font-satoshiMedium text-white rounded-full"
-                        onClick={() => setShareDropdownOpen(true)}
-                        onKeyDown={(e) => {
-                          if (e.key === 'Enter' || e.key === ' ') {
-                            setShareDropdownOpen(!shareDropdownOpen);
-                          }
-                        }}
-                        aria-expanded={shareDropdownOpen}
-                        aria-haspopup="true"
-                      >
-                        Send Invite
-                      </Button> */}
                       <div
                         onClick={() => setShareDropdownOpen(true)}
                         onKeyDown={(e) => {
@@ -203,13 +185,13 @@ const Page = () => {
                             className="mt-4 px-4 py-2 w-full bg-[#EEEEEF] outline-none rounded-lg"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
-                            disabled={isLoading}
+                            disabled={isInviteLoading}
                             aria-label="Email address"
-                            aria-describedby={error ? "email-error" : undefined}
+                            aria-describedby={inviteError ? "email-error" : undefined}
                           />
-                          {error && (
+                          {inviteError && (
                             <p id="email-error" className="text-sm text-red-500 mt-1">
-                              {error}
+                              {inviteError}
                             </p>
                           )}
                           <div className="flex items-center justify-center mt-5 mb-3">
@@ -218,8 +200,8 @@ const Page = () => {
                               className="font-satoshiMedium text-white rounded-full"
                               size="sm"
                               type="submit"
-                              disabled={isLoading}
-                              loading={isLoading}
+                              disabled={isInviteLoading}
+                              loading={isInviteLoading}
                             >
                               Send Invite
                             </Button>
@@ -242,19 +224,12 @@ const Page = () => {
                     </div>
                   )}
 
-                  {/* Date and Availability */}
-                  <div className="space-y-4  pt-4">
+                  {/* Availability */}
+                  <div className="space-y-4 pt-4">
                     <h4 className="text-xl lg:text-2xl font-satoshiBold font-semibold">
-                      Date and Availability
+                      Available days
                     </h4>
                     <div className="space-y-3">
-                      <div className="flex items-center gap-x-2 text-slate-600">
-                        <BiCalendar className="text-xl" />
-                        <span>
-                          {displayData?.createdAt &&
-                            formatDateFromNumberArray(displayData.createdAt)}
-                        </span>
-                      </div>
                       <div className="flex items-center gap-x-2 text-slate-600">
                         <BiCalendarCheck className="text-xl" />
                         <span>
@@ -303,24 +278,24 @@ const Page = () => {
                       </div>
                     </div>
 
-                    {currentListing &&
+                    {displayData &&
                       auth?.token &&
                       auth?.role?.[0] === "CUSTOMER" && (
                         <div className="md:self-start">
                           <MessageButton
-                            recipientId={currentListing.serviceProvider.user.id.toString()}
-                            recipientName={currentListing?.serviceProvider.user.fullName}
+                            recipientId={displayData.serviceProvider.user.id.toString()}
+                            recipientName={displayData?.serviceProvider.user.fullName}
                           />
                         </div>
                       )}
                   </div>
 
                   {/* @ts-ignore */}
-                  {currentListing?.serviceProvider?.bio && (
+                  {displayData?.serviceProvider?.bio && (
                     <div className=" pt-4">
                       <p className="font-medium text-gray-700 leading-relaxed">
                         {/* @ts-ignore */}
-                        {currentListing?.serviceProvider.bio}
+                        {displayData?.serviceProvider.bio}
                       </p>
                     </div>
                   )}
@@ -329,7 +304,7 @@ const Page = () => {
             </div>
           </article>
           {/* ----------------- pricing plan ---------------- */}
-          {currentListing && displayData && (
+          {displayData && displayData && (
             <PricingPlan
               planOnePrice={displayData.planOnePrice}
               planTwoPrice={displayData.planTwoPrice}
@@ -339,7 +314,7 @@ const Page = () => {
               planThreeDescription={displayData.planThreeDescription}
               listingId={displayData.id}
               listingTitle={displayData.listingTitle}
-              negotiable={currentListing.negotiable}
+              negotiable={displayData.negotiable}
             />
           )}
         </section >
