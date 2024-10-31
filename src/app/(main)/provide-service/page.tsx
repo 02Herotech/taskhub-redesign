@@ -226,17 +226,25 @@ const ProvideService: React.FC = () => {
       status: user?.phoneNumber,
     },
     {
-      title: "Identification Document",
-      status: fetchedUserData.idImageFront,
-    },
-    {
-      title: "Identification Document",
-      status: fetchedUserData.idImageBack,
+      title: "Identification Document Front",
+      status: fetchedUserData?.idImageFront,
     },
     {
       title: "Date of Birth",
       status: fetchedUserData.dateOfBirth,
     },
+    {
+      title: "ABN number",
+      status: fetchedUserData.abn,
+    },
+    ...(fetchedUserData.idType !== "INTERNATIONAL_PASSPORT"
+      ? [
+        {
+          title: "Identification Document Back",
+          status: fetchedUserData?.idImageBack,
+        },
+      ]
+      : []),
   ];
 
   // Popup logic to show after profile data is fully loaded

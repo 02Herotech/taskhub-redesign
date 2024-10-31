@@ -41,14 +41,23 @@ const ProfileCompletion = ({ fetchedUserData }: ProfileCompletionType) => {
       status: fetchedUserData?.idImageFront,
     },
     {
-      title: "Identification Document Back",
-      status: fetchedUserData?.idImageBack,
-    },
-    {
       title: "Date of Birth",
       status: fetchedUserData.dateOfBirth,
     },
+    {
+      title: "ABN number",
+      status: fetchedUserData.abn,
+    },
+    ...(fetchedUserData.idType !== "INTERNATIONAL_PASSPORT"
+      ? [
+        {
+          title: "Identification Document Back",
+          status: fetchedUserData?.idImageBack,
+        },
+      ]
+      : []),
   ];
+
 
   useEffect(() => {
     setChartData((prev) => ({

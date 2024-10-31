@@ -97,6 +97,12 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
   };
 
   useEffect(() => {
+    if (!isViewMore.state) {
+      setPage((prev) => ({ ...prev, currentPage: 0 }));
+    }
+  }, [isViewMore]);
+
+  useEffect(() => {
     if (isFiltering) {
       handlePaginateFiltering();
     } else {
