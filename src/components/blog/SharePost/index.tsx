@@ -1,8 +1,5 @@
 import { FacebookSvg, InstagramSvg, LinkedinSvg, TikTokSvg, TwitterSvg, WhatsappSvg } from '@/lib/svgIcons';
 import React, { useState } from 'react';
-import { IconType } from 'react-icons';
-import { FaFacebook, FaWhatsapp, FaTelegram, FaSnapchatGhost, FaInstagram } from 'react-icons/fa';
-import { FaXTwitter } from 'react-icons/fa6';
 import { IoCopy } from 'react-icons/io5';
 
 interface ShareProps {
