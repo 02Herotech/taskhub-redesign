@@ -7,7 +7,6 @@ import Popup from '@/components/global/Popup';
 import { CautionSvg, RevisionSvg } from '@/lib/svgIcons';
 import { clearLocalStorage, formatAmount, getFromLocalStorage, inspectionTimes, revisions, saveToLocalStorage, formatTime24Hour } from '@/lib/utils';
 import { useAcceptServiceMutation, useGetJobByIdQuery, useInspectTaskMutation, useRequestRevisionMutation } from '@/services/bookings';
-import { useGetTaskByIdQuery } from '@/services/tasks';
 import Loading from '@/shared/loading';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -63,8 +62,6 @@ const OnogoingTaskDetailsPage = ({ params }: { params: { id: string } }) => {
             </div>
         );
     }
-
-    console.log("task", task)
 
     const handleRevisionSubmission = async (e: any) => {
         e.preventDefault();

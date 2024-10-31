@@ -5,17 +5,14 @@ import Image from "next/image";
 import React, { FormEvent, useEffect, useRef, useState } from "react";
 import { BiCalendar, BiCalendarCheck, BiLocationPlus } from "react-icons/bi";
 import PricingPlan from "@/components/matkeplaceSingleTask/PricingPlan";
-import Reviews from "@/components/matkeplaceSingleTask/Reviews";
 import { formatDateFromNumberArray } from "@/utils";
 import axios from "axios";
 import ImageModal from "@/components/main/marketplace/ImageModal";
-import { useParams, usePathname, useRouter } from "next/navigation";
+import { useParams, usePathname } from "next/navigation";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
 import MessageButton from "@/components/global/MessageButton";
 import Link from "next/link";
-import ShareComponent from "@/components/blog/SharePost";
-import { IoIosCloseCircleOutline, IoIosShareAlt } from "react-icons/io";
 import ShareTask from "@/components/dashboard/general/ShareTask";
 import Button from "@/components/global/Button";
 import { ShareModal } from "@/components/dashboard/general/ShareModal";
@@ -31,7 +28,6 @@ const Page = () => {
     state: false,
     image: "",
   });
-  const route = useRouter();
   const { id } = useParams();
   const pathname = usePathname()
 
@@ -71,8 +67,8 @@ const Page = () => {
       setError('');
 
       // Create mailto link with subject and body
-      const subject = encodeURIComponent('Check out this service on Oloja');
-      const body = encodeURIComponent(`I thought you might be interested in this: ${pathname}`);
+      const subject = encodeURIComponent('Check out this task on Oloja');
+      const body = encodeURIComponent(`I thought you might be interested in this: https://oloja.com.au${pathname}`);
       const mailtoLink = `mailto:${email}?subject=${subject}&body=${body}`;
 
       // Open the mailto link
