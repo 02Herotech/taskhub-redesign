@@ -18,7 +18,7 @@ interface ShareLinkProps {
 }
 
 const ShareComponent: React.FC<ShareProps> = ({ pathname }) => {
-    const [copied, setCopied] = useState(false);
+    const [copied, setCopied] = useState(false)
     const fullUrl = `${process.env.NEXT_PUBLIC_URL}${pathname}`;
 
     const shareLinks: ShareLinkProps[] = [
