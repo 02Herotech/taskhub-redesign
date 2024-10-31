@@ -9,6 +9,7 @@ import chatReducer from "./Features/chat";
 import exploreReducer from "./Features/explore";
 import { stripe } from "@/services/stripe";
 import profileProgressReducer from "@/services/profile"
+import { listing } from "@/services/listings";
 
 export const store = configureStore({
   reducer: {
@@ -16,6 +17,7 @@ export const store = configureStore({
     [task.reducerPath]: task.reducer,
     [booking.reducerPath]: booking.reducer,
     [blog.reducerPath]: blog.reducer,
+    [listing.reducerPath]: listing.reducer,
     [stripe.reducerPath]: stripe.reducer,
     market: marketReducer,
     userProfile: userProfileReducer,
@@ -29,7 +31,8 @@ export const store = configureStore({
       task.middleware,
       booking.middleware,
       blog.middleware, 
-      stripe.middleware
+      stripe.middleware,
+      listing.middleware
     ),
 });
 

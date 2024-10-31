@@ -15,7 +15,7 @@ import ShareTask from "@/components/dashboard/general/ShareTask";
 import Button from "@/components/global/Button";
 import { ShareModal } from "@/components/dashboard/general/ShareModal";
 import { ShareSvg } from "@/lib/svgIcons";
-import { useGetServiceByIdQuery } from "@/services/tasks";
+import { useGetServiceByIdQuery } from "@/services/listings";
 import Loading from "@/shared/loading";
 
 const Page = () => {
