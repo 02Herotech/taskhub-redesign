@@ -146,10 +146,6 @@ export const task = createApi({
       query: (credentials) => putRequest(`/task/assign-task/${credentials.taskId}/${credentials.serviceProviderId}`, {}),
       invalidatesTags: ["Task"],
     }),
-    getServiceById: builder.query<ListingDataType, number>({
-      query: (serviceId) => getRequest(`/listing/${serviceId}`),
-      providesTags: ["Task"],
-    })
   }),
 });
 
@@ -169,5 +165,4 @@ export const {
   useUpdateTaskMutation,
   useGetTasksOffersQuery,
   useAssignTaskMutation,
-  useGetServiceByIdQuery
 } = task;

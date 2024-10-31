@@ -88,7 +88,7 @@ const ShareTask: React.FC<ShareProps> = ({
         {
             name: 'TikTok',
             icon: TikTokSvg,
-            url: `https://www.tiktok.com/share?url=${encodeURIComponent(fullUrl)}&text=${encodeURIComponent(title)}`
+            url: `https://www.tiktok.com/@username/video/share?url=${encodeURIComponent(fullUrl)}`
         },
         {
             name: 'LinkedIn',
