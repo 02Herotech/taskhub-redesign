@@ -107,7 +107,7 @@ const TaskDetailsPage = ({ params }: TaskDetailsPageProps) => {
             setIsInviteLoading(true);
 
             const subject = encodeURIComponent('Check out this task on Oloja');
-            const body = encodeURIComponent(`I thought you might be interested in this: https://oloja.com.au${pathname}`);
+            const body = encodeURIComponent(`I thought you might be interested in this: ${process.env.NEXT_PUBLIC_URL}${pathname}`);
             const mailtoLink = `mailto:${email}?subject=${subject}&body=${body}`;
 
             window.location.href = mailtoLink;
