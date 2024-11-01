@@ -86,7 +86,7 @@ const TaskDetailsPage = ({ params }: TaskDetailsPageProps) => {
         };
 
         fetchTaskDetails();
-    }, [id]);
+    }, []);
 
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
