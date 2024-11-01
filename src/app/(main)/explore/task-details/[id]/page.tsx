@@ -164,7 +164,7 @@ const TaskDetailsPage = ({ params }: { params: { id: string } }) => {
     );
   }
 
-  if (!task || error) {
+  if (error) {
     return (
       <div className="flex h-[50vh] flex-col w-full items-center justify-center">
         <h2 className="text-xl lg:text-3xl font-satoshiBold font-bold text-primary">Task not found!</h2>
