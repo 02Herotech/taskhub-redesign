@@ -74,7 +74,7 @@ const Offers = () => {
     if (!selectedInvoice) return;
 
     try {
-      const response = await acceptInvoice({ invoiceId: selectedInvoice.id }).unwrap();
+    await acceptInvoice({ invoiceId: selectedInvoice.id }).unwrap();
 
       if (acceptInvoiceErrors) {
         setAcceptInvoiceError("Error accepting offer, please try again");
@@ -92,7 +92,7 @@ const Offers = () => {
     if (!selectedInvoice) return;
 
     try {
-      const response = await rejectInvoice({ invoiceId: selectedInvoice.id }).unwrap();
+      await rejectInvoice({ invoiceId: selectedInvoice.id }).unwrap();
 
       if (rejectInvoiceError) {
         setError("Error rejecting offer, please try again");
@@ -389,7 +389,7 @@ const Offers = () => {
                         <div className="mb-6 flex items-center justify-between max-lg:space-x-3">
                           <div>
                             <h2 className="text-xl font-bold text-[#001433]">
-                              {formatDate(selectedInvoice.serviceStartOn)}
+                              {formatDate(selectedInvoice.serviceStartOn) || "Flexible"}
                             </h2>
                             <h5 className="text-[#716F78]">Start Date</h5>
                           </div>
