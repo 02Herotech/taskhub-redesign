@@ -175,7 +175,13 @@ const Invoice = ({ isModalOpen, setIsModalOpen, currentBooking, invoiceDraft }: 
     }
   }
 
-  console.log("current", currentBooking)
+  function getFormattedDate(dateArray: number[]): string {
+    if (dateArray[0] === 1970 && dateArray[1] === 1 && dateArray[2] === 1) {
+      return "Flexible";
+    }
+
+    return formatDate(dateArray);
+  }
 
   return (
     <section
@@ -240,7 +246,7 @@ const Invoice = ({ isModalOpen, setIsModalOpen, currentBooking, invoiceDraft }: 
                 <span className="flex items-center justify-between gap-2 text-[#716F78]">
                 <span>Start Date</span>
               </span>
-                <span>{formatDate(currentBooking?.startDate!)}</span>
+                <span>{getFormattedDate(currentBooking?.startDate!)}</span>
             </div>
           </div>
 

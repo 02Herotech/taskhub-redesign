@@ -30,7 +30,7 @@ export type Invoice = {
     bookingId: number;
     customer: Customer;
     total: number;
-    serviceStartOn: [number, number, number];
+    serviceStartOn: number[];
     gst: number;
     platformCharge: number;
     invoiceStatus: string;
