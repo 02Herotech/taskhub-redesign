@@ -90,7 +90,7 @@ const TaskDetailsPage = ({ params }: { params: { id: string } }) => {
   };
 
   const id = params.id;
-  const { data: task, isLoading, error } = useGetTaskByIdQuery(
+  const { data: task, isLoading, error, isUninitialized } = useGetTaskByIdQuery(
     id as unknown as number,
   );
   const { data: offers, refetch } = useGetTasksOffersQuery(
@@ -156,7 +156,8 @@ const TaskDetailsPage = ({ params }: { params: { id: string } }) => {
     }
   };
 
-  if (isLoading) {
+  // Show loading state only during initial load
+  if (isUninitialized || isLoading) {
     return (
       <div className="flex h-[50vh] w-full items-center justify-center">
         <Loading />
@@ -164,13 +165,22 @@ const TaskDetailsPage = ({ params }: { params: { id: string } }) => {
     );
   }
 
-  if (!task || error) {
+  // Show error state only if we have an error and no data
+  if (error || (!isLoading && !task)) {
     return (
       <div className="flex h-[50vh] flex-col w-full items-center justify-center">
-        <h2 className="text-xl lg:text-3xl font-satoshiBold font-bold text-primary">Task not found!</h2>
+        <h2 className="text-xl lg:text-3xl font-satoshiBold font-bold text-primary">
+          {error ? 'Error loading task' : 'Task not found!'}
+        </h2>
         <p className="text-lg lg:text-xl font-satoshiMedium text-[#140B31]">
-          Something went wrong, please try again later.
+          {error ? 'An error occurred while loading the task.' : 'The requested task could not be found.'}
         </p>
+        <Button
+          onClick={() => window.location.reload()}
+          className="mt-4 rounded-full"
+        >
+          Retry
+        </Button>
       </div>
     );
   }
