@@ -47,7 +47,7 @@ const TaskDetailsPage = ({ params }: TaskDetailsPageProps) => {
     const [task, setTask] = useState<Task | null>(null);
     const [email, setEmail] = useState('');
     const [isInviteLoading, setIsInviteLoading] = useState(false);
-    const [isLoading, setIsLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [inviteError, setInviteError] = useState<string | null>(null);
     const [shareDropdownOpen, setShareDropdownOpen] = useState(false);
