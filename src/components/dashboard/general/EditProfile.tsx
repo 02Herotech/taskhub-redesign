@@ -133,7 +133,6 @@ const EditProfile = () => {
           if (response.data) {
             setIsABNValid(true);
           }
-          console.log(response.data)
         } catch (error) {
           console.error("Error validating ABN:", error);
           setIsABNValid(false);
@@ -190,7 +189,6 @@ const EditProfile = () => {
   }, [token, isServiceProvider, dispatch, reset]);
 
   const watchPostcode = watch("postcode");
-  const watchIdType = watch("idType");
 
   useEffect(() => {
     const fetchLocationByPostcode = async () => {
