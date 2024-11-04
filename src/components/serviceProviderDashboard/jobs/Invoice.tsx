@@ -12,7 +12,7 @@ import { BeatLoader } from 'react-spinners'
 import { toPng } from 'html-to-image'
 import 'react-datepicker/dist/react-datepicker.css'
 import { formatDateAsYYYYMMDD } from '@/utils'
-import { formatAmount } from '@/lib/utils'
+import { formatAmount, formatDate } from '@/lib/utils'
 
 interface ModalPropType {
   isModalOpen: boolean
@@ -175,6 +175,8 @@ const Invoice = ({ isModalOpen, setIsModalOpen, currentBooking, invoiceDraft }: 
     }
   }
 
+  console.log("current", currentBooking)
+
   return (
     <section
       className={`fixed left-0 top-0 z-50 flex h-screen w-screen items-center justify-center bg-black bg-opacity-70 transition-opacity duration-300 ${isModalOpen ? 'pointer-events-auto opacity-100' : 'pointer-events-none opacity-0'
@@ -237,25 +239,8 @@ const Invoice = ({ isModalOpen, setIsModalOpen, currentBooking, invoiceDraft }: 
             <div className="flex-grow h-20 rounded-lg bg-violet-light flex flex-col px-4 justify-center font-bold">
                 <span className="flex items-center justify-between gap-2 text-[#716F78]">
                 <span>Start Date</span>
-                {!currentBooking?.invoiceSent && <BsPencilSquare className="text-violet-normal" />}
               </span>
-              {currentBooking?.startDate ? (
-                <DatePicker
-                  selected={invoiceState.date}
-                  onChange={handleDateChange}
-                  minDate={new Date()}
-                  required
-                  disabled={currentBooking?.invoiceSent}
-                  className="w-full bg-transparent text-[#716F78] outline-none"
-                  dateFormat="dd/MM/yyyy"
-                  open={isDatePickerOpen}
-                  onInputClick={() => setIsDatePickerOpen(true)}
-                  onClickOutside={() => setIsDatePickerOpen(false)}
-                  ref={datePickerRef}
-                />
-              ) : (
-                <span>Flexible</span>
-              )}
+                <span>{formatDate(currentBooking?.startDate!)}</span>
             </div>
           </div>
 

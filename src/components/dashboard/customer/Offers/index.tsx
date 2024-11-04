@@ -389,7 +389,7 @@ const Offers = () => {
                         <div className="mb-6 flex items-center justify-between max-lg:space-x-3">
                           <div>
                             <h2 className="text-xl font-bold text-[#001433]">
-                              {formatDate(selectedInvoice.serviceStartOn) || "Flexible"}
+                              {formatDate(selectedInvoice.serviceStartOn)}
                             </h2>
                             <h5 className="text-[#716F78]">Start Date</h5>
                           </div>
