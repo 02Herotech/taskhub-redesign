@@ -74,7 +74,7 @@ const Offers = () => {
     if (!selectedInvoice) return;
 
     try {
-      const response = await acceptInvoice({ invoiceId: selectedInvoice.id }).unwrap();
+    await acceptInvoice({ invoiceId: selectedInvoice.id }).unwrap();
 
       if (acceptInvoiceErrors) {
         setAcceptInvoiceError("Error accepting offer, please try again");
@@ -92,7 +92,7 @@ const Offers = () => {
     if (!selectedInvoice) return;
 
     try {
-      const response = await rejectInvoice({ invoiceId: selectedInvoice.id }).unwrap();
+      await rejectInvoice({ invoiceId: selectedInvoice.id }).unwrap();
 
       if (rejectInvoiceError) {
         setError("Error rejecting offer, please try again");
