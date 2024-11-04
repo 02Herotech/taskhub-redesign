@@ -196,7 +196,7 @@ const Offers = () => {
     clientSecret,
   };
 
-  function getFormattedDate(dateArray: [number, number, number]): string {
+  function getFormattedDate(dateArray: number[]): string {
     if (dateArray[0] === 1970 && dateArray[1] === 1 && dateArray[2] === 1) {
       return "Flexible";
     }
