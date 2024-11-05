@@ -6,6 +6,7 @@ import { HiOutlineLocationMarker } from "react-icons/hi";
 import { FiCalendar, FiClock } from "react-icons/fi";
 import { useGetTaskByIdQuery, useGetTasksOffersQuery } from "@/services/tasks";
 import {
+  createSlug,
   dayOfWeekNames,
   formatAmount,
   formatTime24Hour,
@@ -23,7 +24,7 @@ import { IoIosCloseCircleOutline } from "react-icons/io";
 import { FaCheck } from "react-icons/fa6";
 import { ShareModal } from "@/components/dashboard/general/ShareModal";
 import ShareTask from "@/components/dashboard/general/ShareTask";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { ShareSvg } from "@/lib/svgIcons";
 
 const TaskDetailsPage = ({ params }: { params: { id: string } }) => {
@@ -37,6 +38,7 @@ const TaskDetailsPage = ({ params }: { params: { id: string } }) => {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const modalRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname()
+  const router = useRouter()
 
   const [shareDropdownOpen, setShareDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -89,7 +91,8 @@ const TaskDetailsPage = ({ params }: { params: { id: string } }) => {
     }
   };
 
-  const id = params.id;
+  const id = params.id.split('-')[0];
+
   const { data: task, isLoading, error, isUninitialized } = useGetTaskByIdQuery(
     id as unknown as number,
   );
@@ -124,6 +127,18 @@ const TaskDetailsPage = ({ params }: { params: { id: string } }) => {
       clearInterval(intervalId);
     };
   }, []);
+
+  useEffect(() => {
+    if (task && !isLoading) {
+      // Create the correct slug format: id-task-description
+      const correctSlug = `${id}-${createSlug(task.taskBriefDescription)}`;
+
+      // If current URL doesn't match the correct slug, redirect
+      if (params.id !== correctSlug) {
+        router.replace(`/task-details/${correctSlug}`);
+      }
+    }
+  }, [task, isLoading, id, params.id, router]);
 
   const handleSubmitOffer = async (message: string) => {
     const socket = connectSocket(id as unknown as number);
@@ -239,7 +254,7 @@ const TaskDetailsPage = ({ params }: { params: { id: string } }) => {
 
               {/* Share Service */}
               <div className="bg-[#F8F7FA] px-5 py-3 rounded-xl lg:flex items-center justify-between w-full">
-                <ShareTask title={task.taskBriefDescription} description={task.taskDescription} image={task.taskImage} pathname={`/guest/${id}`} />
+                  <ShareTask title={task.taskBriefDescription} description={task.taskDescription} image={task.taskImage} pathname={`/guest/${id}-${createSlug(task.taskBriefDescription)}`} />
                 <div className="relative max-sm:my-4" ref={dropdownRef}>
                   {/* <Button
                     theme="secondary"

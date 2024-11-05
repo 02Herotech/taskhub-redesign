@@ -1,6 +1,6 @@
 "use client";
 
-import { dayOfWeekNames, formatAmount, formatTime24Hour, monthNames, suffixes } from "@/lib/utils";
+import { createSlug, dayOfWeekNames, formatAmount, formatTime24Hour, monthNames, suffixes } from "@/lib/utils";
 import { Task } from "@/types/services/tasks";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
@@ -52,7 +52,7 @@ const TaskCard = ({ task }: TaskCardProps) => {
         scale: 1.02,
         transition: { duration: 0.2 },
       }}
-      onClick={() => router.push(`/explore/task-details/${task.id}`)}
+      onClick={() => router.push(`/explore/task-details/${task.id}-${createSlug(task.taskBriefDescription)}`)}
     >
       <div className="flex w-full items-center justify-between space-x-4">
         <h2 className="overflow-hidden truncate text-ellipsis whitespace-nowrap py-4 text-2xl font-bold text-primary lg:text-[30px]">

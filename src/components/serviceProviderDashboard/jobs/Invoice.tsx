@@ -176,12 +176,16 @@ const Invoice = ({ isModalOpen, setIsModalOpen, currentBooking, invoiceDraft }: 
   }
 
   function getFormattedDate(dateArray: number[]): string {
+    if (!dateArray) return "Flexible" 
+
     if (dateArray[0] === 1970 && dateArray[1] === 1 && dateArray[2] === 1) {
       return "Flexible";
     }
 
     return formatDate(dateArray);
   }
+
+  console.log("tss", currentBooking?.startDate)
 
   return (
     <section
