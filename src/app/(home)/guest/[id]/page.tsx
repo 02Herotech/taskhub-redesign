@@ -54,7 +54,7 @@ const TaskDetailsPage = ({ params }: TaskDetailsPageProps) => {
     const [authModal, setAuthModal] = useState(false)
     const router = useRouter()
     const pathname = usePathname();
-    const id = params.id;
+    const id = params.id.split('-')[0];
 
     useEffect(() => {
         let isMounted = true; // Add mounted flag

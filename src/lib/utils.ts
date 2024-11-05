@@ -267,3 +267,23 @@ export function formatTime24Hour(timeArray: [number, number] | null): string {
 
 	return formattedTime;
 }
+
+// Utility function to create a URL-friendly slug
+export const createSlug = (text: string): string => {
+	return text
+		.toLowerCase() // Convert to lowercase
+		.trim() // Remove leading and trailing whitespace
+		.replace(/[^\w\s-]/g, '') // Remove special characters
+		.replace(/\s+/g, '-') // Replace spaces with hyphens
+		.replace(/-+/g, '-') // Replace multiple hyphens with single hyphen
+		.substring(0, 60); // Limit length to 60 characters
+};
+
+// Function to parse slug back into id and description
+export const parseSlug = (slug: string): { id: string; description: string } => {
+	const [id, ...descriptionParts] = slug.split('-');
+	return {
+		id,
+		description: descriptionParts.join('-')
+	};
+};
