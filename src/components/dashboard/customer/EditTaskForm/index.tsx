@@ -28,12 +28,14 @@ interface CustomInputProps {
 const EditTaskForm = ({ task, setShowEditModal }: TaskCardProps) => {
     const [activeEditModalLink, setActiveEditModalLink] = useState<string>("Task Details");
     const [categories, setCategories] = useState<{ id: number; categoryName: string }[]>([]);
-    const [updatedPostCode, setUpdatedPostCode] = useState<any>(task.postCode);
+    const [updatedPostCode, setUpdatedPostCode] = useState<string | null>(
+        task.postCode ? task.postCode.toString() : null
+    );
     const [updatedDate, setUpdatedDate] = useState<Date | null>(null);
     const [updatedTime, setUpdatedTime] = useState<Date | null>(null);
     const [taskImage, setTaskImage] = useState<File | null>(null);
     const taskImageRef = useRef<HTMLInputElement>(null);
-    const [suburbList, setSuburbList] = useState([]);
+    const [suburbList, setSuburbList] = useState([] as string[]);
     const [selectedCategory, setSelectedCategory] = useState<string>(task.category.categoryName);
     const [showSuccessModal, setShowSuccessModal] = useState(false);
     const [isFlexible, setIsFlexible] = useState(task.taskDate === null && task.taskTime === null);
@@ -85,14 +87,18 @@ const EditTaskForm = ({ task, setShowEditModal }: TaskCardProps) => {
                 taskDescription: task.taskDescription,
                 category: selectedCategory,
                 taskType: task.taskType,
-                postCode: updatedPostCode,
+                postCode: task.postCode ? task.postCode.toString() : null, // Ensure string conversion
                 suburb: task.suburb,
                 state: task.state,
                 taskImage: task.taskImage,
                 taskDate: isFlexible ? null : task.taskDate,
                 taskTime: isFlexible ? null : (task.taskTime ? formatTimeToString(new Date(task.taskTime[0], task.taskTime[1])) : null),
-                customerBudget: task.customerBudget
+                customerBudget: task.customerBudget // Convert to string for the form
             });
+
+            if (task.postCode) {
+                setUpdatedPostCode(task.postCode.toString());
+            }
         }
         // eslint-disable-next-line
     }, [task]);
@@ -111,42 +117,32 @@ const EditTaskForm = ({ task, setShowEditModal }: TaskCardProps) => {
     useEffect(() => {
         const fetchPostalCodeData = async () => {
             try {
-                const url = `${process.env.NEXT_PUBLIC_API_URL}/util/locations/search?postcode=${watchField.postCode}`;
-                const { data } = await axios.get(url);
+                const postcodeValue = watchField.postCode;
+                if (postcodeValue && postcodeValue.toString().length > 0) {
+                    const url = `${process.env.NEXT_PUBLIC_API_URL}/util/locations/search?postcode=${postcodeValue}`;
+                    const { data } = await axios.get(url);
 
-                // Map suburbs from the Name field
-                const suburbs = data.map((item: { Name: string }) => item.Name);
-                setSuburbList(suburbs);
+                    if (Array.isArray(data) && data.length > 0) {
+                        const suburbs = data.map((item: { Name: string }) => item.Name);
+                        setSuburbList(suburbs);
 
-                // Set the first suburb as the default if available
-                if (suburbs.length > 0) {
-                    setValue("suburb", suburbs[0]);
-                } else {
-                    setValue("suburb", "");
+                        if (suburbs.length > 0) {
+                            setValue("suburb", suburbs[0]);
+                        } else {
+                            setValue("suburb", "");
+                        }
+
+                        if (data[0]?.State) {
+                            setValue("state", data[0].State);
+                        } else {
+                            setValue("state", "");
+                        }
+                    } else {
+                        setSuburbList([]);
+                        setValue("suburb", "");
+                        setValue("state", "");
+                    }
                 }
-
-                // Set the state if available using the State field
-                if (data[0]?.State) {
-                    setValue("state", data[0].State);
-                } else {
-                    setValue("state", "");
-                }
-
-                // Define the type for the location data
-                interface LocationData {
-                    Name: string;
-                    Postcode: string;
-                    State: string;
-                    StateShort: string;
-                    Type: string;
-                }
-
-                // You might also want to store the full location data for reference
-                const locationData: LocationData = data[0];
-
-                // If you need to store the state abbreviation somewhere
-                const stateShort = locationData.StateShort;
-
             } catch (error) {
                 console.error("Error fetching location data:", error);
                 setSuburbList([]);
@@ -156,7 +152,7 @@ const EditTaskForm = ({ task, setShowEditModal }: TaskCardProps) => {
         };
 
         fetchPostalCodeData();
-    }, [watchField.postCode, updatedPostCode]);
+    }, [watchField.postCode, setValue]);
 
     useEffect(() => {
         const fetchAllCategories = async () => {
@@ -583,9 +579,15 @@ const EditTaskForm = ({ task, setShowEditModal }: TaskCardProps) => {
                                                 <div className="space-y-4 w-full">
                                                     <label className="text-[13px] font-semibold text-status-darkpurple lg:text-[16px]">Post Code</label>
                                                     <input
-                                                        type="number"
+                                                        type="text"
                                                         className="rounded-2xl bg-violet-light p-3 text-[13px] outline-none w-full"
                                                         {...register("postCode")}
+                                                        onChange={(e) => {
+                                                            const value = e.target.value;
+                                                            setValue("postCode", value ? value.toString() : null);
+                                                            setUpdatedPostCode(value ? value.toString() : null);
+                                                        }}
+                                                        value={watchField.postCode || ""}
                                                     />
                                                 </div>
 

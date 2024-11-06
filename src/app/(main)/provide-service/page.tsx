@@ -50,13 +50,11 @@ interface FormData {
 }
 
 interface PostalCodeData {
-  name: string;
-  postcode: string;
-  state: {
-    name: string;
-    abbreviation: string;
-  };
-  locality: string;
+  Name: string;
+  Postcode: string;
+  State: string;
+  StateShort: string;
+  Type: string;
 }
 
 interface Item {
@@ -586,7 +584,7 @@ const ProvideService: React.FC = () => {
             taskType: "PHYSICAL_SERVICE",
             suburb: selectedCity,
             postCode: selectedCode,
-            state: postalCodeData[0].state.name,
+            state: postalCodeData[0].Name,
           };
         }
 
@@ -1061,10 +1059,10 @@ const ProvideService: React.FC = () => {
                               type="button"
                               className="block p-2 text-[12px] text-[#221354]"
                               key={index}
-                              value={data.name}
-                              onClick={() => handleCity(data.name)}
+                              value={data.Name}
+                              onClick={() => handleCity(data.Name)}
                             >
-                              {data.name}
+                              {data.Name}
                             </button>
                           ))}
                         </Dropdown>
@@ -1075,7 +1073,7 @@ const ProvideService: React.FC = () => {
                       <input
                         value={
                           postalCodeData.length > 0
-                            ? postalCodeData[0].state.name
+                            ? postalCodeData[0].State
                             : ""
                         }
                         onChange={handleChange}
