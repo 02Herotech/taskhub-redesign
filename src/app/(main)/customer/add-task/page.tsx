@@ -869,7 +869,7 @@ const AddTaskForm: React.FC = () => {
                     <input
                       value={
                         postalCodeData.length > 0
-                          ? postalCodeData[0].Name
+                          ? postalCodeData[0].State
                           : ""
                       }
                       onChange={handleChange}
