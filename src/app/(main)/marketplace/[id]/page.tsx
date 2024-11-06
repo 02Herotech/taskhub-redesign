@@ -18,7 +18,7 @@ import { ShareSvg } from "@/lib/svgIcons";
 import { useGetServiceByIdQuery } from "@/services/listings";
 import Loading from "@/shared/loading";
 
-const Page = () => {
+const Page = ({ params }: { params: { id: string } }) => {
   const [email, setEmail] = useState('');
   const [isInviteLoading, setIsInviteLoading] = useState(false);
   const [inviteError, setInviteError] = useState<string | null>(null);
@@ -26,7 +26,7 @@ const Page = () => {
     state: false,
     image: "",
   });
-  const { id } = useParams();
+  const id = params.id.split('-')[0];;
   const pathname = usePathname()
 
   const { data: displayData, isLoading, error } = useGetServiceByIdQuery(id as unknown as number);

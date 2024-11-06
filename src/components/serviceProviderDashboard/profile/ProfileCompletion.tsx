@@ -58,19 +58,20 @@ const ProfileCompletion = ({ fetchedUserData }: ProfileCompletionType) => {
       : []),
   ];
 
-
   useEffect(() => {
     setChartData((prev) => ({
       ...prev,
       total: profileProgressData.length,
-      completed: profileProgressData.filter(
-        (item) =>
-          item.status !== "" &&
+      completed: profileProgressData.filter((item) => {
+        // Check for various falsy values and empty strings
+        return item.status !== "" &&
           item.status !== null &&
-          item.status !== undefined,
-      ).length,
+          item.status !== undefined &&
+          item.status !== "null" &&  // Check for "null" string
+          item.status !== "undefined" && // Check for "undefined" string
+          !(typeof item.status === "string" && item.status.trim() === ""); // Check for whitespace-only strings
+      }).length,
     }));
-    // eslint-disable-next-line
   }, [fetchedUserData, user]);
 
   return (
