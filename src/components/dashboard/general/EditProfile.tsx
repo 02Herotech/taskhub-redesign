@@ -202,7 +202,9 @@ const EditProfile = () => {
       try {
         const url = `${process.env.NEXT_PUBLIC_API_URL}/util/locations/search?postcode=${watchPostcode}`;
         const { data } = await axios.get(url);
-        const suburbs = data.map((item: any) => item.name);
+
+        // Map suburbs from the Name field
+        const suburbs = data.map((item: { Name: string }) => item.Name);
         setSuburbList(suburbs);
 
         // Set the first suburb as the default if available
@@ -212,12 +214,28 @@ const EditProfile = () => {
           setValue("suburb", "");
         }
 
-        // Set the state if available
-        if (data[0]?.state?.name) {
-          setValue("state", data[0].state.name);
+        // Set the state if available using the State field
+        if (data[0]?.State) {
+          setValue("state", data[0].State);
         } else {
           setValue("state", "");
         }
+
+        // Define the type for the location data
+        interface LocationData {
+          Name: string;
+          Postcode: string;
+          State: string;
+          StateShort: string;
+          Type: string;
+        }
+
+        // You might also want to store the full location data for reference
+        const locationData: LocationData = data[0];
+
+        // If you need to store the state abbreviation somewhere
+        const stateShort = locationData.StateShort;
+
       } catch (error) {
         console.error("Error fetching location data:", error);
         setSuburbList([]);
