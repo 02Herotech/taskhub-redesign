@@ -47,13 +47,11 @@ interface Item {
 }
 
 interface PostalCodeData {
-  name: string;
-  postcode: string;
-  state: {
-    name: string;
-    abbreviation: string;
-  };
-  locality: string;
+  Name: string;
+  Postcode: string;
+  State: string;
+  StateShort: string;
+  Type: string;
 }
 
 interface CustomInputProps {
@@ -146,23 +144,46 @@ const AddTaskForm: React.FC = () => {
   }, [task]);
 
   useEffect(() => {
+
     const fetchPostalCodeData = async () => {
       try {
-        const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_URL}/util/locations/search?postcode=${selectedCode}`,
+        const response = await axios.get<PostalCodeData[]>(
+          `${process.env.NEXT_PUBLIC_API_URL}/util/locations/search?postcode=${selectedCode}`
         );
-        if (Array.isArray(response.data) && response.data.length === 0) {
-          console.log('Array is empty');
+
+        // Check if response data is an array and has entries
+        if (!Array.isArray(response.data) || response.data.length === 0) {
+          console.log('No postal code data found');
           setCode(true);
-        } else {
-          console.log(response.data);
-          setCode(false);
-          setPostalCodeData(response.data as PostalCodeData[]);
+          setPostalCodeData([]); // Reset postal code data
+          return;
         }
-        
+
+        // Validate that the response matches our expected structure
+        const isValidData = response.data.every(item =>
+          'Name' in item &&
+          'Postcode' in item &&
+          'State' in item &&
+          'StateShort' in item &&
+          'Type' in item
+        );
+
+        if (!isValidData) {
+          console.error('Invalid data structure received');
+          setCode(true);
+          setPostalCodeData([]);
+          return;
+        }
+
+        // If data is valid, update state
+        console.log('Postal code data:', response.data);
+        setCode(false);
+        setPostalCodeData(response.data);
+
       } catch (error) {
         console.error("Error fetching postal code data:", error);
         setCode(true);
+        setPostalCodeData([]);
       }
     };
 
@@ -462,7 +483,7 @@ const AddTaskForm: React.FC = () => {
             taskType: "PHYSICAL_SERVICE",
             suburb: selectedCity,
             postCode: selectedCode,
-            state: postalCodeData[0].state.name
+            state: postalCodeData[0].Name
           };
         }
 
@@ -834,10 +855,10 @@ const AddTaskForm: React.FC = () => {
                             type="button"
                             className="block p-2 text-[12px] text-[#221354]"
                             key={index}
-                            value={data.name}
-                            onClick={() => handleCity(data.name)}
+                            value={data.Name}
+                            onClick={() => handleCity(data.Name)}
                           >
-                            {data.name}
+                            {data.Name}
                           </button>
                         ))}
                       </Dropdown>
@@ -848,7 +869,7 @@ const AddTaskForm: React.FC = () => {
                     <input
                       value={
                         postalCodeData.length > 0
-                          ? postalCodeData[0].state.name
+                          ? postalCodeData[0].State
                           : ""
                       }
                       onChange={handleChange}

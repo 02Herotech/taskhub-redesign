@@ -1,8 +1,5 @@
 import { FacebookSvg, InstagramSvg, LinkedinSvg, TikTokSvg, TwitterSvg, WhatsappSvg } from '@/lib/svgIcons';
 import React, { useState } from 'react';
-import { IconType } from 'react-icons';
-import { FaFacebook, FaWhatsapp, FaTelegram, FaSnapchatGhost, FaInstagram } from 'react-icons/fa';
-import { FaXTwitter } from 'react-icons/fa6';
 import { IoCopy } from 'react-icons/io5';
 
 interface ShareProps {
@@ -18,8 +15,8 @@ interface ShareLinkProps {
 }
 
 const ShareComponent: React.FC<ShareProps> = ({ pathname }) => {
-    const [copied, setCopied] = useState(false);
-    const fullUrl = `https://www.taskhub.com.au${pathname}`;
+    const [copied, setCopied] = useState(false)
+    const fullUrl = `${process.env.NEXT_PUBLIC_URL}${pathname}`;
 
     const shareLinks: ShareLinkProps[] = [
         {
@@ -47,11 +44,6 @@ const ShareComponent: React.FC<ShareProps> = ({ pathname }) => {
             icon: LinkedinSvg,
             url: `https://t.me/share/url?url=${encodeURIComponent(fullUrl)}`
         },
-        {
-            name: 'Instagram',
-            icon: InstagramSvg,
-            url: `https://www.instagram.com/`
-        }, // Note: Instagram doesn't support direct sharing via URL
     ];
 
     const copyToClipboard = () => {

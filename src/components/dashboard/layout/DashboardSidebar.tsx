@@ -43,7 +43,7 @@ const DashboardSidebar = () => {
       await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/logout`);
       setAuth(initialAuthState);
       dispatch(removeUserProfile());
-      await signOut({ callbackUrl: "https://taskhub.com.au/home" });
+      await signOut({ callbackUrl: `${ process.env.NEXT_PUBLIC_URL}/home` });
       router.push("/home");
     } catch (error: any) {
       console.log(error);

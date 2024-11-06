@@ -144,15 +144,46 @@ const PricingModal = ({
 
   const handleFectchLocationByPostcode = async () => {
     try {
-      const url =
-        `${process.env.NEXT_PUBLIC_API_URL}/util/locations/search?postcode=` +
-        formState.postcode;
+      const url = `${process.env.NEXT_PUBLIC_API_URL}/util/locations/search?postcode=${formState.postcode}`;
       const { data } = await axios.get(url);
-      const suburb = data.map((item: any) => item.name);
-      setStateLists(suburb);
-      setFormState((prev) => ({ ...prev, suburb: suburb[0] }));
+
+      // Define type for the location data
+      interface LocationData {
+        Name: string;
+        Postcode: string;
+        State: string;
+        StateShort: string;
+        Type: string;
+      }
+
+      // Map suburbs from the Name field
+      const suburbs = data.map((item: LocationData) => item.Name);
+      setStateLists(suburbs);
+
+      // Update form state with first suburb and state if available
+      if (data.length > 0) {
+        setFormState((prev) => ({
+          ...prev,
+          suburb: suburbs[0],
+          state: data[0].State // Add state if you need it in the form
+        }));
+      } else {
+        setFormState((prev) => ({
+          ...prev,
+          suburb: "",
+          state: ""
+        }));
+      }
+
     } catch (error) {
       console.log(error);
+      // Clear the lists and form state on error
+      setStateLists([]);
+      setFormState((prev) => ({
+        ...prev,
+        suburb: "",
+        state: ""
+      }));
     }
   };
 

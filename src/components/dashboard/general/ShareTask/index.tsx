@@ -66,7 +66,7 @@ const ShareTask: React.FC<ShareProps> = ({
     description,
     image
 }) => {
-    const fullUrl = `https://www.taskhub.com.au${pathname}`;
+    const fullUrl = `${process.env.NEXT_PUBLIC_URL}${pathname}`;
 
     // For WhatsApp, we'll only include the URL since the meta tags will handle the preview
     const shareLinks: ShareLinkProps[] = [
@@ -85,11 +85,11 @@ const ShareTask: React.FC<ShareProps> = ({
             icon: TwitterSvg,
             url: `https://twitter.com/intent/tweet?url=${encodeURIComponent(fullUrl)}&text=${encodeURIComponent(`${title} - ${description}`)}`
         },
-        {
-            name: 'TikTok',
-            icon: TikTokSvg,
-            url: `https://www.tiktok.com/share?url=${encodeURIComponent(fullUrl)}&text=${encodeURIComponent(title)}`
-        },
+        // {
+        //     name: 'TikTok',
+        //     icon: TikTokSvg,
+        //     url: `https://www.tiktok.com/@username/video/share?url=${encodeURIComponent(fullUrl)}`
+        // },
         {
             name: 'LinkedIn',
             icon: LinkedinSvg,

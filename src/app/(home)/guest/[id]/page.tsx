@@ -47,45 +47,55 @@ const TaskDetailsPage = ({ params }: TaskDetailsPageProps) => {
     const [task, setTask] = useState<Task | null>(null);
     const [email, setEmail] = useState('');
     const [isInviteLoading, setIsInviteLoading] = useState(false);
-    const [isLoading, setIsLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [inviteError, setInviteError] = useState<string | null>(null);
     const [shareDropdownOpen, setShareDropdownOpen] = useState(false);
     const [authModal, setAuthModal] = useState(false)
     const router = useRouter()
     const pathname = usePathname();
-    const id = params.id;
+    const id = params.id.split('-')[0];
 
     useEffect(() => {
+        let isMounted = true; // Add mounted flag
+
         const fetchTaskDetails = async () => {
             if (!id) return;
 
             try {
                 setIsLoading(true);
-                setError(null);
-
                 const response = await axios.get<Task>(
                     `${process.env.NEXT_PUBLIC_API_URL}/task/fetch/no-auth/${id}`
                 );
 
-                setTask(response.data);
+                if (isMounted) {
+                    setTask(response.data);
+                    setError(null);
+                }
             } catch (err) {
                 const error = err as AxiosError;
                 console.error('Error fetching task details:', error);
 
-                setError(
-                    error.response?.status === 404
-                        ? 'Task not found'
-                        : 'Failed to load task details. Please try again later.'
-                );
-
-                setTask(null);
+                if (isMounted) {
+                    setError(
+                        error.response?.status === 404
+                            ? 'Task not found'
+                            : 'Failed to load task details. Please try again later.'
+                    );
+                    setTask(null);
+                }
             } finally {
-                setIsLoading(false);
+                if (isMounted) {
+                    setIsLoading(false);
+                }
             }
         };
 
         fetchTaskDetails();
+
+        return () => {
+            isMounted = false; // Cleanup
+        };
     }, [id]);
 
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -107,7 +117,7 @@ const TaskDetailsPage = ({ params }: TaskDetailsPageProps) => {
             setIsInviteLoading(true);
 
             const subject = encodeURIComponent('Check out this task on Oloja');
-            const body = encodeURIComponent(`I thought you might be interested in this: ${pathname}`);
+            const body = encodeURIComponent(`I thought you might be interested in this: ${process.env.NEXT_PUBLIC_URL}${pathname}`);
             const mailtoLink = `mailto:${email}?subject=${subject}&body=${body}`;
 
             window.location.href = mailtoLink;
@@ -143,11 +153,11 @@ const TaskDetailsPage = ({ params }: TaskDetailsPageProps) => {
         );
     }
 
-    if (!task) {
+    if (error || !task) {
         return (
             <div className="flex h-[50vh] flex-col w-full items-center justify-center">
                 <h2 className="text-xl lg:text-3xl font-satoshiBold font-bold text-primary">
-                    Task not found!
+                    {error || 'Task not found!'}
                 </h2>
                 <p className="text-lg lg:text-xl font-satoshiMedium text-[#140B31]">
                     Something went wrong, please try again later.

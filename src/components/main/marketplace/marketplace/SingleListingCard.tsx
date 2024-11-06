@@ -1,5 +1,6 @@
 "use client";
 
+import { createSlug } from "@/lib/utils";
 import { truncateText } from "@/utils/marketplace";
 import axios from "axios";
 import Image from "next/image";
@@ -53,7 +54,7 @@ const SingleListingCard = ({
 
   return (
     <Link
-      href={`/marketplace/${listingId}`}
+      href={`/marketplace/${listingId}-${createSlug(businessName)}`}
       onClick={() => handlestoreListingId(listingId, posterId)}
       className="group transition-transform duration-300 hover:-translate-y-2 "
     >

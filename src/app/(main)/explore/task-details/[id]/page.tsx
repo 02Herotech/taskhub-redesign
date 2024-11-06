@@ -6,6 +6,7 @@ import { HiOutlineLocationMarker } from "react-icons/hi";
 import { FiCalendar, FiClock } from "react-icons/fi";
 import { useGetTaskByIdQuery, useGetTasksOffersQuery } from "@/services/tasks";
 import {
+  createSlug,
   dayOfWeekNames,
   formatAmount,
   formatTime24Hour,
@@ -23,7 +24,7 @@ import { IoIosCloseCircleOutline } from "react-icons/io";
 import { FaCheck } from "react-icons/fa6";
 import { ShareModal } from "@/components/dashboard/general/ShareModal";
 import ShareTask from "@/components/dashboard/general/ShareTask";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { ShareSvg } from "@/lib/svgIcons";
 
 const TaskDetailsPage = ({ params }: { params: { id: string } }) => {
@@ -37,6 +38,7 @@ const TaskDetailsPage = ({ params }: { params: { id: string } }) => {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const modalRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname()
+  const router = useRouter()
 
   const [shareDropdownOpen, setShareDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -74,7 +76,7 @@ const TaskDetailsPage = ({ params }: { params: { id: string } }) => {
 
       // Create mailto link with subject and body
       const subject = encodeURIComponent('Check out this task on Oloja');
-      const body = encodeURIComponent(`I thought you might be interested in this: ${pathname}`);
+      const body = encodeURIComponent(`I thought you might be interested in this: ${process.env.NEXT_PUBLIC_URL}${pathname}`);
       const mailtoLink = `mailto:${email}?subject=${subject}&body=${body}`;
 
       // Open the mailto link
@@ -89,8 +91,9 @@ const TaskDetailsPage = ({ params }: { params: { id: string } }) => {
     }
   };
 
-  const id = params.id;
-  const { data: task, isLoading, error } = useGetTaskByIdQuery(
+  const id = params.id.split('-')[0];
+
+  const { data: task, isLoading, error, isUninitialized } = useGetTaskByIdQuery(
     id as unknown as number,
   );
   const { data: offers, refetch } = useGetTasksOffersQuery(
@@ -125,6 +128,18 @@ const TaskDetailsPage = ({ params }: { params: { id: string } }) => {
     };
   }, []);
 
+  useEffect(() => {
+    if (task && !isLoading) {
+      // Create the correct slug format: id-task-description
+      const correctSlug = `${id}-${createSlug(task.taskBriefDescription)}`;
+
+      // If current URL doesn't match the correct slug, redirect
+      if (params.id !== correctSlug) {
+        router.replace(`/task-details/${correctSlug}`);
+      }
+    }
+  }, [task, isLoading, id, params.id, router]);
+
   const handleSubmitOffer = async (message: string) => {
     const socket = connectSocket(id as unknown as number);
 
@@ -156,7 +171,8 @@ const TaskDetailsPage = ({ params }: { params: { id: string } }) => {
     }
   };
 
-  if (isLoading) {
+  // Show loading state only during initial load
+  if (isUninitialized || isLoading) {
     return (
       <div className="flex h-[50vh] w-full items-center justify-center">
         <Loading />
@@ -164,13 +180,22 @@ const TaskDetailsPage = ({ params }: { params: { id: string } }) => {
     );
   }
 
-  if (!task || error) {
+  // Show error state only if we have an error and no data
+  if (error || (!isLoading && !task)) {
     return (
       <div className="flex h-[50vh] flex-col w-full items-center justify-center">
-        <h2 className="text-xl lg:text-3xl font-satoshiBold font-bold text-primary">Task not found!</h2>
+        <h2 className="text-xl lg:text-3xl font-satoshiBold font-bold text-primary">
+          {error ? 'Error loading task' : 'Task not found!'}
+        </h2>
         <p className="text-lg lg:text-xl font-satoshiMedium text-[#140B31]">
-          Something went wrong, please try again later.
+          {error ? 'An error occurred while loading the task.' : 'The requested task could not be found.'}
         </p>
+        <Button
+          onClick={() => window.location.reload()}
+          className="mt-4 rounded-full"
+        >
+          Retry
+        </Button>
       </div>
     );
   }
@@ -229,7 +254,7 @@ const TaskDetailsPage = ({ params }: { params: { id: string } }) => {
 
               {/* Share Service */}
               <div className="bg-[#F8F7FA] px-5 py-3 rounded-xl lg:flex items-center justify-between w-full">
-                <ShareTask title={task.taskBriefDescription} description={task.taskDescription} image={task.taskImage} pathname={`/guest/${id}`} />
+                  <ShareTask title={task.taskBriefDescription} description={task.taskDescription} image={task.taskImage} pathname={`/guest/${id}-${createSlug(task.taskBriefDescription)}`} />
                 <div className="relative max-sm:my-4" ref={dropdownRef}>
                   {/* <Button
                     theme="secondary"
