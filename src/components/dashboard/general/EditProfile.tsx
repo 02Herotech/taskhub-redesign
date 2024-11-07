@@ -162,7 +162,6 @@ const EditProfile = () => {
           },
         });
         setUserDetails(data);
-        console.log("profile:",data)
         reset({
           firstName: data.firstName || "",
           lastName: data.lastName || "",
@@ -258,6 +257,7 @@ const EditProfile = () => {
           lastName: data.lastName,
           dateOfBirth: data.dateOfBirth ? formatDateAsYYYYMMDD(data.dateOfBirth as Date) : "",
           suburb: data.suburb,
+          // phoneNumber: data.phoneNumber,
           state: data.state,
           postCode: data.postcode,
           idImageFront: selectedDocumentFront,
@@ -282,6 +282,7 @@ const EditProfile = () => {
           lastName: data.lastName,
           dateOfBirth: data.dateOfBirth ? formatDateAsYYYYMMDD(data.dateOfBirth as Date) : "",
           suburb: data.suburb,
+          // phoneNumber: data.phoneNumber,
           state: data.state,
           postCode: data.postcode,
           idImageFront: selectedDocumentFront,
@@ -455,26 +456,33 @@ const EditProfile = () => {
           <h3 className="text-lg font-bold text-primary">Contact Information</h3>
           <div className="flex flex-wrap gap-6 lg:col-span-8 lg:grid lg:grid-cols-2">
             {/* Phone number */}
-            <FormField
-              label="Phone Number"
-              name="phoneNumber"
-              register={register}
-              errors={errors}
-              watch={watch}
-              disabled={!isEditingEnabled}
-              value={user?.phoneNumber || ''}
-            />
+            <label className="flex w-full flex-col gap-3 text-violet-normal">
+              <span className="flex items-center justify-between">
+                <span>Phone Number</span>
+                <BiCheck className="size-5 rounded-full bg-green-500 p-1 text-white" />
+              </span>
+              <input
+                type="text"
+                className="rounded-xl border border-slate-100 p-2 text-slate-700 shadow outline-none transition-shadow duration-300 hover:shadow-md lg:max-w-sm"
+                value={user?.phoneNumber}
+                readOnly
+                disabled
+              />
+            </label>
             {/* Email Address */}
-            <FormField
-              label="Email Address"
-              name="emailAddress"
-              register={register}
-              errors={errors}
-              watch={watch}
-              disabled={true}
-              value={user?.emailAddress || ''}
-              readonly={true}
+            <label className="flex w-full flex-col gap-3 text-violet-normal">
+              <span className="flex items-center justify-between">
+                <span>Email Address</span>
+                  <BiCheck className="size-5 rounded-full bg-green-500 p-1 text-white" />
+              </span>
+            <input 
+            type="text" 
+            className="rounded-xl border border-slate-100 p-2 text-slate-700 shadow outline-none transition-shadow duration-300 hover:shadow-md lg:max-w-sm"
+            value={user?.emailAddress}
+            readOnly
+            disabled
             />
+            </label>
           </div>
         </section>
 
@@ -699,7 +707,7 @@ interface FormFieldProps {
   disabled: boolean;
   readonly?: boolean;
   as?: 'input' | 'textarea';
-  value?: string;
+  defaultValue?: string
   [key: string]: any;
 }
 
@@ -712,21 +720,16 @@ const FormField: React.FC<FormFieldProps> = ({
   disabled,
   readonly = false,
   as = "input",
-  value,
+  defaultValue,
   ...props
 }) => {
   const watchedValue = watch(name);
-  const displayValue = value !== undefined ? value : watchedValue;
-
-  const stringValue = displayValue instanceof Date
-    ? displayValue.toISOString().split('T')[0]
-    : displayValue || '';
 
   return (
     <label className="flex w-full flex-col gap-3 text-violet-normal">
       <span className="flex items-center justify-between">
         <span>{label}</span>
-        {!errors[name] && displayValue && String(displayValue).length >= 2 && (
+        {!errors[name] && watchedValue && String(watchedValue).length >= 2 && (
           <BiCheck className="size-5 rounded-full bg-green-500 p-1 text-white" />
         )}
       </span>
@@ -737,7 +740,7 @@ const FormField: React.FC<FormFieldProps> = ({
           readOnly={readonly}
           className="rounded-xl border border-slate-100 p-2 text-slate-700 shadow outline-none transition-shadow duration-300 hover:shadow-md lg:max-w-sm"
           {...register(name)}
-          value={stringValue}
+          defaultValue={defaultValue}
           {...props}
         />
       ) : (

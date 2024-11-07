@@ -88,29 +88,38 @@ const MareketPlace = () => {
       title: "Address Information",
       status: user?.address?.postCode,
     },
-    {
-      title: "Mobile Number",
-      status: user?.phoneNumber,
-    },
+    // {
+    //   title: "Mobile Number",
+    //   status: user?.phoneNumber,
+    // },
     {
       title: "Identification Document",
       status: fetchedUserData.idImageFront,
     },
     {
-      title: "Identification Document",
-      status: fetchedUserData.idImageBack,
-    },
-    {
       title: "Date of Birth",
       status: fetchedUserData.dateOfBirth,
     },
+    ...(fetchedUserData.idType !== "INTERNATIONAL_PASSPORT"
+      ? [
+        {
+          title: "Identification Document Back",
+          status: fetchedUserData?.idImageBack,
+        },
+      ]
+      : []),
   ];
 
   // Popup logic to show after profile data is fully loaded
   useLayoutEffect(() => {
     if (!loadingProfile && user && !hasClosedPopup) {
       const isProfileComplete = profileProgressData.every(
-        (item) => item.status !== "" && item.status !== null && item.status !== undefined
+        (item) => item.status !== "" &&
+          item.status !== null &&
+          item.status !== undefined &&
+          item.status !== "null" &&  // Check for "null" string
+          item.status !== "undefined" && // Check for "undefined" string
+          !(typeof item.status === "string" && item.status.trim() === "")
       );
 
       if (isAuth && !isProfileComplete) {
