@@ -219,10 +219,10 @@ const ProvideService: React.FC = () => {
       title: "Address Information",
       status: user?.address?.postCode,
     },
-    {
-      title: "Mobile Number",
-      status: user?.phoneNumber,
-    },
+    // {
+    //   title: "Mobile Number",
+    //   status: user?.phoneNumber,
+    // },
     {
       title: "Identification Document Front",
       status: fetchedUserData?.idImageFront,

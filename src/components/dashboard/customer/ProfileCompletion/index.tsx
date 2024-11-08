@@ -32,10 +32,10 @@ const ProfileCompletion = ({ fetchedUserData }: ProfileCompletionType) => {
       title: "Address Information",
       status: user?.address?.postCode,
     },
-    {
-      title: "Mobile Number",
-      status: user?.phoneNumber,
-    },
+    // {
+    //   title: "Mobile Number",
+    //   status: user?.phoneNumber,
+    // },
     {
       title: "Identification Document",
       status: fetchedUserData.idImageFront,

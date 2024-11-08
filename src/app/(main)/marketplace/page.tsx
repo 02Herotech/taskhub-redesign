@@ -13,7 +13,6 @@ import { FaImage } from "react-icons/fa";
 import MarketPlaceFilter from "@/components/main/marketplace/MarketPlaceFilter";
 import MarketPlaceHeader from "@/components/main/marketplace/MarketPlaceHeader";
 import CategoryListing from "@/components/main/marketplace/CategoryListing";
-import BoxFilter from "@/components/main/marketplace/BoxFilter";
 import { useSession } from "next-auth/react";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
@@ -24,6 +23,7 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import axios from "axios";
 import { defaultUserDetails } from "@/data/data";
+import BoxFilter from "@/components/main/marketplace/BoxFilter";
 
 const categoryIcons = [
   FaHome,
@@ -88,29 +88,38 @@ const MareketPlace = () => {
       title: "Address Information",
       status: user?.address?.postCode,
     },
-    {
-      title: "Mobile Number",
-      status: user?.phoneNumber,
-    },
+    // {
+    //   title: "Mobile Number",
+    //   status: user?.phoneNumber,
+    // },
     {
       title: "Identification Document",
       status: fetchedUserData.idImageFront,
     },
     {
-      title: "Identification Document",
-      status: fetchedUserData.idImageBack,
-    },
-    {
       title: "Date of Birth",
       status: fetchedUserData.dateOfBirth,
     },
+    ...(fetchedUserData.idType !== "INTERNATIONAL_PASSPORT"
+      ? [
+        {
+          title: "Identification Document Back",
+          status: fetchedUserData?.idImageBack,
+        },
+      ]
+      : []),
   ];
 
   // Popup logic to show after profile data is fully loaded
   useLayoutEffect(() => {
     if (!loadingProfile && user && !hasClosedPopup) {
       const isProfileComplete = profileProgressData.every(
-        (item) => item.status !== "" && item.status !== null && item.status !== undefined
+        (item) => item.status !== "" &&
+          item.status !== null &&
+          item.status !== undefined &&
+          item.status !== "null" &&  // Check for "null" string
+          item.status !== "undefined" && // Check for "undefined" string
+          !(typeof item.status === "string" && item.status.trim() === "")
       );
 
       if (isAuth && !isProfileComplete) {
@@ -118,6 +127,8 @@ const MareketPlace = () => {
       }
     }
   }, [loadingProfile, user, fetchedUserData, isAuth, profileProgressData]);
+
+  const categoriesSlice = categories.slice(0, 8);
 
   return (
     <main className="mx-auto max-w-screen-2xl">
@@ -197,12 +208,12 @@ const MareketPlace = () => {
                   Browse by category
                 </h1>
                 <div className="my-5 flex flex-wrap gap-3 max-sm:grid max-sm:grid-cols-2 ">
-                  {categories.map((item, index) => (
+                  {categoriesSlice.map((item, index) => (
                     <BoxFilter
                       key={item.id}
                       id={item.id}
                       category={item.categoryName}
-                      Icon={categoryIcons[index]}
+                      Icon={categoryIcons[index % categoryIcons.length]}
                     />
                   ))}
                 </div>
