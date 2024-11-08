@@ -584,7 +584,7 @@ const ProvideService: React.FC = () => {
             taskType: "PHYSICAL_SERVICE",
             suburb: selectedCity,
             postCode: selectedCode,
-            state: postalCodeData[0].Name,
+            state: postalCodeData[0].State,
           };
         }
 
