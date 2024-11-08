@@ -219,7 +219,7 @@ const Page = ({ params }: { params: { id: string } }) => {
                       </h4>
                       <div className="flex items-center gap-x-2 text-slate-600">
                         <BiLocationPlus className="text-xl" />
-                        <span>{displayData.suburb}</span>
+                        <span>{displayData.suburb}, {displayData.state}</span>
                       </div>
                     </div>
                   )}
