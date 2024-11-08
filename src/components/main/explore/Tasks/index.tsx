@@ -15,6 +15,7 @@ import { truncateText } from "@/utils/marketplace";
 import { GiSettingsKnobs } from "react-icons/gi";
 import ExploreCategoryLising from "../ExploreCategoryListing";
 import ExploreMobileFilterModal from "../MobileFIlter";
+import { FiSearch } from "react-icons/fi";
 
 const Tasks: React.FC = () => {
     const [isMobileFilterModalShown, setIsMobileFilterModalShown] = useState(false);
@@ -28,6 +29,8 @@ const Tasks: React.FC = () => {
         isOpened: false,
         category: "",
     });
+    const [categorySearchQuery, setCategorySearchQuery] = useState("");
+    const [filteredCategories, setFilteredCategories] = useState(categories);
 
     const [filterDataStructure, setfilterDataStructure] =
         useState<FilterDataStructureTypes>({
@@ -158,6 +161,15 @@ const Tasks: React.FC = () => {
         // eslint-disable-next-line
     }, [filterDataStructure]);
 
+    useEffect(() => {
+        if (categories.length > 0) {
+            const filtered = categories.filter(category =>
+                category.categoryName.toLowerCase().includes(categorySearchQuery.toLowerCase())
+            );
+            setFilteredCategories(filtered);
+        }
+    }, [categorySearchQuery, categories]);
+
 
     return (
         <section className="py-10 container">
@@ -197,7 +209,7 @@ const Tasks: React.FC = () => {
                         <div className="relative">
                             {filterDataStructure.category !== "" && (
                                 <button
-                                    className="pointer-events-auto absolute -right-1 -top-1 flex size-6 items-center justify-center rounded-full bg-violet-normal text-white "
+                                    className="pointer-events-auto absolute -right-1 -top-1 flex size-6 items-center justify-center rounded-full bg-violet-normal text-white"
                                     onClick={() => {
                                         setfilterDataStructure((prev) => ({
                                             ...prev,
@@ -205,18 +217,18 @@ const Tasks: React.FC = () => {
                                         }));
                                     }}
                                 >
-                                    <span></span>
                                     <BsX />
                                 </button>
                             )}
                             <button
-                                className="flex items-center gap-2 rounded-3xl border border-violet-normal bg-violet-light px-4 py-2 text-base font-bold text-violet-normal transition-colors duration-300 hover:bg-violet-200 "
+                                className="flex items-center gap-2 rounded-3xl border border-violet-normal bg-violet-light px-4 py-2 text-base font-bold text-violet-normal transition-colors duration-300 hover:bg-violet-200"
                                 onClick={() => handleShowDropdown("category")}
                             >
                                 <div
-                                    className={`fixed left-0 top-0 h-screen w-screen ${isDropdownOpen.isOpened && isDropdownOpen.category === "category" ? "block" : "hidden"} `}
+                                    className={`fixed left-0 top-0 h-screen w-screen ${isDropdownOpen.isOpened && isDropdownOpen.category === "category" ? "block" : "hidden"
+                                        }`}
                                     onClick={() => handleShowDropdown("category")}
-                                ></div>
+                                />
                                 {filterDataStructure.category === ""
                                     ? "Category"
                                     : truncateText(filterDataStructure.category, 12)}
@@ -228,23 +240,51 @@ const Tasks: React.FC = () => {
                                 </span>
                             </button>
                             <div
-                                className={`small-scrollbar absolute top-[calc(100%+1rem)] flex max-h-0 min-w-full flex-col rounded-md bg-violet-50 transition-all duration-300 ${isDropdownOpen.category === "category" && isDropdownOpen.isOpened ? "max-h-64 overflow-y-auto border border-slate-200 " : "max-h-0  overflow-hidden "} `}
+                                className={`small-scrollbar absolute top-[calc(100%+1rem)] flex max-h-0 min-w-[700px] flex-col rounded-md bg-violet-50 transition-all duration-300 ${isDropdownOpen.category === "category" && isDropdownOpen.isOpened
+                                    ? "max-h-[500px] overflow-y-auto border border-slate-200"
+                                    : "max-h-0 overflow-hidden"
+                                    }`}
                             >
-                                {categories.map((item) => (
-                                    <button
-                                        className=" relative whitespace-nowrap px-8 py-3 text-left text-base text-violet-normal transition-colors duration-300 hover:bg-violet-100 "
-                                        key={item.id}
-                                        onClick={() => {
-                                            handleShowDropdown("category");
-                                            setfilterDataStructure((prev) => ({
-                                                ...prev,
-                                                category: item.categoryName,
-                                            }));
-                                        }}
-                                    >
-                                        {item.categoryName}
-                                    </button>
-                                ))}
+                                {/* Category Search Input */}
+                                <div className="sticky top-0 z-10 bg-violet-50 p-2">
+                                    <div className="relative mb-2">
+                                        <input
+                                            type="text"
+                                            value={categorySearchQuery}
+                                            onChange={(e) => setCategorySearchQuery(e.target.value)}
+                                            placeholder="Search categories..."
+                                            className="w-full rounded-md border border-violet-200 p-4 text-violet-normal placeholder-violet-300 placeholder:text-lg focus:border-violet-normal focus:outline-none"
+                                        />
+                                        <FiSearch className="absolute right-3 top-1/2 -translate-y-1/2 text-violet-300 size-6" />
+                                    </div>
+                                </div>
+
+                                {/* Filtered Categories */}
+                                <div className="grid grid-cols-2 gap-2 py-4">
+                                    {filteredCategories.map((item) => (
+                                        <button
+                                            className="relative whitespace-nowrap font-medium rounded-md px-6 py-3 text-left text-base text-violet-normal transition-colors duration-300 hover:text-tc-orange"
+                                            key={item.id}
+                                            onClick={() => {
+                                                handleShowDropdown("category")
+                                                setfilterDataStructure((prev) => ({
+                                                    ...prev,
+                                                    category: item.categoryName,
+                                                }));
+                                                setCategorySearchQuery("");
+                                            }}
+                                        >
+                                            {item.categoryName}
+                                        </button>
+                                    ))}
+                                </div>
+
+                                {/* No Results Message */}
+                                {filteredCategories.length === 0 && (
+                                    <div className="px-8 py-4 text-center text-violet-normal">
+                                        No categories found
+                                    </div>
+                                )}
                             </div>
                         </div>
                         {/* -------------------------------- */}
