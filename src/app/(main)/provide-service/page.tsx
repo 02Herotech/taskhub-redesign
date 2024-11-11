@@ -1057,7 +1057,7 @@ const ProvideService: React.FC = () => {
                           {postalCodeData.map((data, index) => (
                             <button
                               type="button"
-                              className="block p-2 text-[12px] text-[#221354]"
+                              className="block p-2 text-[12px] text-[#221354] capitalize"
                               key={index}
                               value={data.Name}
                               onClick={() => handleCity(data.Name)}
@@ -1080,7 +1080,7 @@ const ProvideService: React.FC = () => {
                         name="state"
                         id="state"
                         disabled
-                        className=" cursor-pointer rounded-2xl bg-[#EBE9F4] p-3 text-sm outline-none lg:w-[145px]"
+                        className="cursor-pointer rounded-2xl bg-[#EBE9F4] p-3 text-sm outline-none lg:w-[145px]"
                       />
                     </div>
                   </div>
