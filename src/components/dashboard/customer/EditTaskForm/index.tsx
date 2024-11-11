@@ -1,7 +1,7 @@
 import Button from '@/components/global/Button';
 import Dropdown from '@/components/global/Dropdown';
 import axios from 'axios';
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { FaSortDown } from 'react-icons/fa6';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -39,6 +39,7 @@ const EditTaskForm = ({ task, setShowEditModal }: TaskCardProps) => {
     const [selectedCategory, setSelectedCategory] = useState<string>(task.category.categoryName);
     const [showSuccessModal, setShowSuccessModal] = useState(false);
     const [isFlexible, setIsFlexible] = useState(task.taskDate === null && task.taskTime === null);
+    const [selectedSuburb, setSelectedSuburb] = useState<string>(task.suburb || "");
     const router = useRouter();
 
     const taskSchema = z.object({
@@ -57,17 +58,21 @@ const EditTaskForm = ({ task, setShowEditModal }: TaskCardProps) => {
 
     type taskZodType = z.infer<typeof taskSchema>;
 
-    const initialDate = task.taskDate
-        ? new Date(task.taskDate[0], task.taskDate[1] - 1, task.taskDate[2])
-        : null;
+    const initialDate = useMemo(() => {
+        return task.taskDate
+            ? new Date(task.taskDate[0], task.taskDate[1] - 1, task.taskDate[2])
+            : null;
+    }, [task.taskDate]);
 
-    const initialTime = task.taskTime
-        ? (() => {
-            const date = new Date();
-            date.setHours(task.taskTime[0], task.taskTime[1]);
-            return date;
-        })()
-        : new Date();
+    const initialTime = useMemo(() => {
+        return task.taskTime
+            ? (() => {
+                const date = new Date();
+                date.setHours(task.taskTime[0], task.taskTime[1]);
+                return date;
+            })()
+            : null;
+    }, [task.taskTime]);
 
     const {
         register,
@@ -93,15 +98,37 @@ const EditTaskForm = ({ task, setShowEditModal }: TaskCardProps) => {
                 taskImage: task.taskImage,
                 taskDate: isFlexible ? null : task.taskDate,
                 taskTime: isFlexible ? null : (task.taskTime ? formatTimeToString(new Date(task.taskTime[0], task.taskTime[1])) : null),
-                customerBudget: task.customerBudget // Convert to string for the form
+                customerBudget: task.customerBudget
             });
+
+            setUpdatedDate(initialDate);
+            setUpdatedTime(initialTime);
 
             if (task.postCode) {
                 setUpdatedPostCode(task.postCode.toString());
             }
         }
         // eslint-disable-next-line
-    }, [task]);
+    }, [task, isFlexible, selectedCategory, initialDate, initialTime, reset]);
+
+    const handleDateChange = useCallback((date: Date | null) => {
+        setUpdatedDate(date);
+        if (date === null) {
+            setValue('taskDate', null);
+        } else {
+            setValue('taskDate', [date.getFullYear(), date.getMonth() + 1, date.getDate()]);
+        }
+    }, [setValue]);
+
+    const handleTimeChange = useCallback((time: Date | null) => {
+        setUpdatedTime(time);
+        if (time === null) {
+            setValue('taskTime', null);
+        } else {
+            const timeString = formatTimeToString(time);
+            setValue('taskTime', timeString);
+        }
+    }, [setValue]);
 
     const watchField = watch();
 
@@ -115,7 +142,7 @@ const EditTaskForm = ({ task, setShowEditModal }: TaskCardProps) => {
     }, [watchField.taskType]);
 
     useEffect(() => {
-        const fetchPostalCodeData = async () => {
+        const fetchSuburbData = async () => {
             try {
                 const postcodeValue = watchField.postCode;
                 if (postcodeValue && postcodeValue.toString().length > 0) {
@@ -127,31 +154,31 @@ const EditTaskForm = ({ task, setShowEditModal }: TaskCardProps) => {
                         setSuburbList(suburbs);
 
                         if (suburbs.length > 0) {
+                            setSelectedSuburb(suburbs[0]);
                             setValue("suburb", suburbs[0]);
                         } else {
+                            setSelectedSuburb("");
                             setValue("suburb", "");
-                        }
-
-                        if (data[0]?.State) {
-                            setValue("state", data[0].State);
-                        } else {
-                            setValue("state", "");
                         }
                     } else {
                         setSuburbList([]);
+                        setSelectedSuburb("");
                         setValue("suburb", "");
-                        setValue("state", "");
                     }
+                } else {
+                    setSuburbList([]);
+                    setSelectedSuburb("");
+                    setValue("suburb", "");
                 }
             } catch (error) {
                 console.error("Error fetching location data:", error);
                 setSuburbList([]);
+                setSelectedSuburb("");
                 setValue("suburb", "");
-                setValue("state", "");
             }
         };
 
-        fetchPostalCodeData();
+        fetchSuburbData();
     }, [watchField.postCode, setValue]);
 
     useEffect(() => {
@@ -169,7 +196,28 @@ const EditTaskForm = ({ task, setShowEditModal }: TaskCardProps) => {
         fetchAllCategories();
     }, []);
 
-    const watchImage = watch("taskImage");
+    const formatDateToLocalDateString = (date: Date | null) => {
+        if (date) {
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, "0");
+            const day = String(date.getDate()).padStart(2, "0");
+            return `${year}-${month}-${day}`;
+        }
+        return "";
+    };
+
+    const formatTimeToString = (time: Date | null) => {
+        if (time) {
+            const timeDate = new Date(time);
+            const hours = String(timeDate.getHours()).padStart(2, "0");
+            const minutes = String(timeDate.getMinutes()).padStart(2, "0");
+            return `${hours}:${minutes}`;
+        }
+        return "";
+    };
+
+    const dateString = formatDateToLocalDateString(updatedDate);
+    const timeString = formatTimeToString(updatedTime);
 
     const handleOnImageInputChange = ({
         event,
@@ -246,43 +294,6 @@ const EditTaskForm = ({ task, setShowEditModal }: TaskCardProps) => {
             console.log(error);
         }
     };
-
-    const handleDateChange = (date: Date | null) => {
-        setUpdatedDate(date);
-        if (date === null) {
-            setValue('taskDate', null);
-        }
-    };
-
-    const handleTimeChange = (time: Date | null) => {
-        setUpdatedTime(time);
-        if (time === null) {
-            setValue('taskTime', null);
-        }
-    };
-
-    const formatDateToLocalDateString = (date: Date | null) => {
-        if (date) {
-            const year = date.getFullYear();
-            const month = String(date.getMonth() + 1).padStart(2, "0");
-            const day = String(date.getDate()).padStart(2, "0");
-            return `${year}-${month}-${day}`;
-        }
-        return "";
-    };
-
-    const formatTimeToString = (time: Date | null) => {
-        if (time) {
-            // Formatting the time as "HH:mm"
-            const hours = String(time.getHours()).padStart(2, "0");
-            const minutes = String(time.getMinutes()).padStart(2, "0");
-            return `${hours}:${minutes}`;
-        }
-        return "";
-    };
-
-    const dateString = formatDateToLocalDateString(updatedDate);
-    const timeString = formatTimeToString(updatedTime);
 
     const CustomInput: React.FC<CustomInputProps> = ({ value, onClick }) => (
         <button
@@ -479,8 +490,7 @@ const EditTaskForm = ({ task, setShowEditModal }: TaskCardProps) => {
                                     <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 w-full">
                                         <div>
                                             <DatePicker
-                                                value={isFlexible ? undefined : (updatedDate ?? initialDate) as unknown as string}
-                                                selected={isFlexible ? undefined : updatedDate ?? initialDate}
+                                                selected={isFlexible ? null : (updatedDate ?? initialDate)}
                                                 onChange={handleDateChange}
                                                 dateFormat="dd-MM-yyyy"
                                                 minDate={new Date()}
@@ -492,15 +502,14 @@ const EditTaskForm = ({ task, setShowEditModal }: TaskCardProps) => {
                                                 className="w-full cursor-pointer rounded-2xl bg-[#EBE9F4] px-2 py-1 outline-none placeholder:text-[14px] placeholder:font-bold"
                                             />
                                         </div>
-                                         <div>
+                                        <div>
                                             <DatePicker
-                                                value={isFlexible ? undefined : (updatedTime ?? initialTime) as unknown as string}
-                                                selected={isFlexible ? undefined : updatedTime ?? initialTime}
+                                                selected={isFlexible ? null : (updatedTime ?? initialTime)}
                                                 onChange={handleTimeChange}
                                                 showTimeSelect
                                                 showTimeSelectOnly
-                                                timeFormat="HH:mm"
                                                 timeIntervals={15}
+                                                timeFormat="HH:mm"
                                                 dateFormat="h:mm aa"
                                                 placeholderText="Choose Time"
                                                 disabled={isFlexible}
@@ -603,7 +612,7 @@ const EditTaskForm = ({ task, setShowEditModal }: TaskCardProps) => {
                                                             <div
                                                                 className={`flex h-full w-full cursor-pointer appearance-none justify-between rounded-2xl bg-[#EBE9F4] p-3 font-satoshi text-[13px] font-light border-none outline-none"}`}
                                                             >
-                                                                <h2>{watchField.suburb}</h2>
+                                                                <h2>{selectedSuburb || "Choose Suburb"}</h2>
                                                                 <FaSortDown />
                                                             </div>
                                                         )}
@@ -612,10 +621,13 @@ const EditTaskForm = ({ task, setShowEditModal }: TaskCardProps) => {
                                                         {suburbList.map((data, index) => (
                                                             <button
                                                                 type="button"
-                                                                className="block p-2 text-[12px] font-semibold text-primary hover:text-tc-orange"
+                                                                className="block p-2 text-[12px] font-semibold text-primary hover:text-tc-orange text-start capitalize"
                                                                 key={index}
                                                                 value={data}
-                                                                onClick={() => setValue("suburb", data)}
+                                                                onClick={() => {
+                                                                    setSelectedSuburb(data);
+                                                                    setValue("suburb", data)
+                                                                }}
                                                             >
                                                                 {data}
                                                             </button>
