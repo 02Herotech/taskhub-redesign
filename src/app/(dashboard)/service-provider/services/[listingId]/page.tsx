@@ -746,25 +746,29 @@ const EditListing = () => {
                       onClick={() => expandDropdown("suburb")}
                       className=" h-12 min-w-48 rounded-lg bg-violet-light p-3 pl-4 text-left outline-none"
                     >
-                      {watchField.suburb}
+                      {watchField.suburb || "Select suburb"}
                     </button>
                   </div>
                   <div
-                    className={`absolute left-0 top-[calc(100%+0.5rem)] z-10 w-full overflow-hidden  rounded-md bg-violet-light transition-all duration-300 ${showDropdown.name === "suburb" && showDropdown.isShown ? "max-h-96" : "max-h-0"} `}
+                    className={`absolute left-0 top-[calc(100%+0.5rem)] z-10 w-full overflow-hidden rounded-md bg-violet-light transition-all duration-300 ${showDropdown.name === "suburb" && showDropdown.isShown ? "max-h-96" : "max-h-0"
+                      }`}
                   >
-                    {suburbList.map((item) => (
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setValue("suburb", item);
-                          expandDropdown("suburb");
-                        }}
-                        key={item}
-                        className="w-full p-3 text-left hover:bg-violet-200"
-                      >
-                        {item}
-                      </button>
-                    ))}
+                    <div className="small-scrollbar max-h-64 overflow-y-auto">
+                      {suburbList.map((item) => (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setValue("suburb", item);
+                            expandDropdown("suburb");
+                          }}
+                          key={item}
+                          className={`w-full p-3 text-left transition-colors hover:bg-violet-200 ${watchField.suburb === item ? "bg-violet-normal text-white hover:bg-violet-normal" : ""
+                            }`}
+                        >
+                          {item}
+                        </button>
+                      ))}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -924,6 +928,7 @@ const EditListing = () => {
         <button
           className="rounded-full border border-violet-normal bg-violet-normal px-4 py-2 font-satoshi text-sm font-normal text-white transition-opacity duration-300 hover:opacity-90 "
           disabled={isSubmitting}
+          type="submit"
         >
           {isSubmitting ? (
             <BeatLoader color="white" loading={isSubmitting} />

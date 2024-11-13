@@ -153,8 +153,8 @@ const SignUpForm = () => {
                                     label='Password'
                                     name='password'
                                     type='password'
-                                    placeholder="**********"
                                     className=" placeholder:text-dark"
+                                    placeholder="**********"
                                     rules={["required", "password"]}
                                 />
                                 <Input
