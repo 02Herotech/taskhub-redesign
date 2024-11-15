@@ -162,7 +162,6 @@ const WithdrawalForm: React.FC<{
       <InputField
         label="Account name"
         type="text"
-        value={`${user.lastName} ${user.firstName}`}
         register={register("accountName")}
         error={errors.accountName}
       />
