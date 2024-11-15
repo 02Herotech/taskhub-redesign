@@ -28,14 +28,12 @@ const handler = NextAuth({
                 };
 
                 try {
-
                     const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/login`, {
                         emailAddress: email,
                         password,
                     });
 
                     const { data, status } = response;
-                    console.log(response)
 
                     if (status === 200) {
                         return {
