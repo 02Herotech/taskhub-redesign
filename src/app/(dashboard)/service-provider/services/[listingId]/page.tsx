@@ -374,6 +374,7 @@ const EditListing = () => {
     // eslint-disable-next-line
   }, [watchField]);
 
+
   return (
     <main className="relative space-y-8 p-4 lg:p-8">
       {showModal && (
@@ -731,22 +732,23 @@ const EditListing = () => {
                     {...register("state")}
                   />
                 </label>
+
                 {/* suburb */}
                 <div className="relative flex flex-col gap-2">
                   <span className="font-bold text-violet-darker">Suburb</span>
-                  <div className="relative ">
+                  <div className="relative">
                     <span className="absolute right-4 top-1/2 -translate-y-1/2">
                       <BsTriangleFill
-                        className=" size-3 rotate-[60deg] text-violet-normal"
+                        className="size-3 rotate-[60deg] text-violet-normal"
                         fill="rgb(56 31 140)"
                       />
                     </span>
                     <button
                       type="button"
                       onClick={() => expandDropdown("suburb")}
-                      className=" h-12 min-w-48 rounded-lg bg-violet-light p-3 pl-4 text-left outline-none"
+                      className="h-12 min-w-48 rounded-lg bg-violet-light p-3 pl-4 text-left outline-none"
                     >
-                      {watchField.suburb || "Select suburb"}
+                      {watchField.suburb || currentListing?.suburb || "Select suburb"}
                     </button>
                   </div>
                   <div
@@ -762,7 +764,9 @@ const EditListing = () => {
                             expandDropdown("suburb");
                           }}
                           key={item}
-                          className={`w-full p-3 text-left transition-colors hover:bg-violet-200 ${watchField.suburb === item ? "bg-violet-normal text-white hover:bg-violet-normal" : ""
+                          className={`w-full p-3 text-left transition-colors hover:bg-violet-200 ${(watchField.suburb || currentListing?.suburb) === item
+                              ? "bg-violet-normal text-white hover:bg-violet-normal"
+                              : ""
                             }`}
                         >
                           {item}
