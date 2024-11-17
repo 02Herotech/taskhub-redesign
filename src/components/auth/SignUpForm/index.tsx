@@ -16,7 +16,7 @@ type SignUpRequest = {
     password: string;
     firstName: string;
     lastName: string;
-    phoneNumber: string;
+    // phoneNumber: string;
 };
 
 const SignUpForm = () => {
@@ -37,7 +37,7 @@ const SignUpForm = () => {
             lastName: getCookie('lastName') || "",
             emailAddress: "",
             password: getCookie('password') || "",
-            phoneNumber: getCookie('phoneNumber') || "",
+            // phoneNumber: getCookie('phoneNumber') || "",
             confirmPassword: getCookie('password') || "",
         },
     });
@@ -56,13 +56,13 @@ const SignUpForm = () => {
                 firstName: payload.firstName,
                 lastName: payload.lastName,
                 emailAddress: payload.emailAddress,
-                phoneNumber: payload.phoneNumber,
+                // phoneNumber: payload.phoneNumber,
                 password: payload.password
             };
 
             setCookie('firstName', payload.firstName, { maxAge: 60 * 2 });
             setCookie('lastName', payload.lastName, { maxAge: 60 * 2 });
-            setCookie('phoneNumber', payload.phoneNumber, { maxAge: 60 * 2 });
+            // setCookie('phoneNumber', payload.phoneNumber, { maxAge: 60 * 2 });
             setCookie('emailAddress', payload.emailAddress, { maxAge: 60 * 2 });
             setCookie('password', payload.password, { maxAge: 60 * 2 });
             setCookie('userType', userType);
@@ -133,7 +133,7 @@ const SignUpForm = () => {
                                 placeholder='user@example.com'
                                 rules={["required", "email"]}
                             />
-                            <div>
+                            {/* <div>
                                 <span className='w-full flex items-center space-x-2 text-sm text-left leading-5 mb-2'>
                                     <label htmlFor="" className='capitalize text-[#5B5B66]'>Phone number</label>
                                 </span>
@@ -147,7 +147,7 @@ const SignUpForm = () => {
                                     // minLength={7}
                                     className="w-full phone-input px-3 border border-[#5b5b66] active:border-primary text-dark h-12 overflow-hidden font-normal rounded-[10px] outline-none"
                                 />
-                            </div>
+                            </div> */}
                             <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
                                 <Input
                                     label='Password'
