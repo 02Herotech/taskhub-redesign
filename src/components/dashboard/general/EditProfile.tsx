@@ -28,7 +28,7 @@ const userDataSchema = z.object({
   firstName: z.string().min(2).optional(),
   lastName: z.string().min(2).optional(),
   dateOfBirth: z.date().nullable().optional(),
-  phoneNumber: z.string().optional(),
+  // phoneNumber: z.string().optional(),
   emailAddress: z.string().email().optional(),
   postcode: z.string().optional(),
   suburb: z.string().optional(),
@@ -104,7 +104,7 @@ const EditProfile = () => {
       firstName: "",
       lastName: "",
       dateOfBirth: null,
-      phoneNumber: "",
+      // phoneNumber: "",
       emailAddress: "",
       postcode: "",
       suburb: "",
@@ -166,7 +166,7 @@ const EditProfile = () => {
           firstName: data.firstName || "",
           lastName: data.lastName || "",
           dateOfBirth: data.dateOfBirth ? new Date(data.dateOfBirth) : null,
-          phoneNumber: data.phoneNumber || "",
+          // phoneNumber: data.phoneNumber || "",
           emailAddress: data.emailAddress || "",
           postcode: data.postalCode || "",
           suburb: data.suburbs || "",
@@ -456,7 +456,7 @@ const EditProfile = () => {
           <h3 className="text-lg font-bold text-primary">Contact Information</h3>
           <div className="flex flex-wrap gap-6 lg:col-span-8 lg:grid lg:grid-cols-2">
             {/* Phone number */}
-            <label className="flex w-full flex-col gap-3 text-violet-normal">
+            {/* <label className="flex w-full flex-col gap-3 text-violet-normal">
               <span className="flex items-center justify-between">
                 <span>Phone Number</span>
                 <BiCheck className="size-5 rounded-full bg-green-500 p-1 text-white" />
@@ -468,7 +468,7 @@ const EditProfile = () => {
                 readOnly
                 disabled
               />
-            </label>
+            </label> */}
             {/* Email Address */}
             <label className="flex w-full flex-col gap-3 text-violet-normal">
               <span className="flex items-center justify-between">
