@@ -193,7 +193,7 @@ const Navigation = () => {
           <div className="container flex min-h-20 items-center justify-between px-7 py-4 lg:py-5 " />
         ) : (
           <div className="container flex items-center justify-between px-7 py-4 lg:py-5">
-            <Link href="/" className="max-sm:hidden">
+            <Link href="/" className="max-lg:hidden">
               <Logo />
             </Link>
             <Link href="/" className="lg:hidden">

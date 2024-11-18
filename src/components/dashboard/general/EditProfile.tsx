@@ -251,19 +251,9 @@ const EditProfile = () => {
       let submitData: any;
 
       let url;
-      if (isServiceProvider && isABNValid) {
+      if (isServiceProvider ) {
         submitData = Object.entries({
-          firstName: data.firstName,
-          lastName: data.lastName,
-          dateOfBirth: data.dateOfBirth ? formatDateAsYYYYMMDD(data.dateOfBirth as Date) : "",
-          suburb: data.suburb,
           // phoneNumber: data.phoneNumber,
-          state: data.state,
-          postCode: data.postcode,
-          idImageFront: selectedDocumentFront,
-          idImageBack: selectedDocumentBack,
-          idType: data.idType,
-          idNumber: data.idNumber,
           bio: data.bio,
           abn: data.abn,
         })
@@ -278,15 +268,7 @@ const EditProfile = () => {
           `${process.env.NEXT_PUBLIC_API_URL}/service_provider/update`;
       } else {
         submitData = Object.entries({
-          firstName: data.firstName,
-          lastName: data.lastName,
-          dateOfBirth: data.dateOfBirth ? formatDateAsYYYYMMDD(data.dateOfBirth as Date) : "",
-          suburb: data.suburb,
           // phoneNumber: data.phoneNumber,
-          state: data.state,
-          postCode: data.postcode,
-          idImageFront: selectedDocumentFront,
-          idImageBack: selectedDocumentBack,
           idType: data.idType,
           idNumber: data.idNumber,
         })
@@ -436,18 +418,19 @@ const EditProfile = () => {
         {/* Bio Section (for Service Providers) */}
         {isServiceProvider && (
           <section>
-            <h3 className="text-lg font-bold text-primary">Bio</h3>
-            <FormField
-              label="Bio Description"
-              name="bio"
-              register={register}
-              watch={watch}
-              errors={errors}
-              watchField={watchField}
-              disabled={!isEditingEnabled}
-              as="textarea"
-              className="min-h-32 w-full rounded-xl border border-slate-100 p-2 text-slate-700 shadow outline-none transition-shadow duration-300 hover:shadow-md"
-            />
+            <label className="flex w-full flex-col gap-3 text-violet-normal">
+              <span className="flex items-center justify-between">
+                <span>Bio Description</span>
+                {!errors.bio && watchField.bio && (
+                  <BiCheck className="size-5 rounded-full bg-green-500 p-1 text-white" />
+                )}
+              </span>
+              <textarea
+                {...register("bio")}
+                disabled={!isEditingEnabled}
+                className="min-h-32 w-full rounded-xl border border-slate-100 p-2 text-slate-700 shadow outline-none transition-shadow duration-300 hover:shadow-md"
+              />
+            </label>
           </section>
         )}
 
