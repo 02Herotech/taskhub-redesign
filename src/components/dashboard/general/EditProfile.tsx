@@ -28,7 +28,7 @@ const userDataSchema = z.object({
   firstName: z.string().min(2).optional(),
   lastName: z.string().min(2).optional(),
   dateOfBirth: z.date().nullable().optional(),
-  phoneNumber: z.string().optional(),
+  // phoneNumber: z.string().optional(),
   emailAddress: z.string().email().optional(),
   postcode: z.string().optional(),
   suburb: z.string().optional(),
@@ -104,7 +104,7 @@ const EditProfile = () => {
       firstName: "",
       lastName: "",
       dateOfBirth: null,
-      phoneNumber: "",
+      // phoneNumber: "",
       emailAddress: "",
       postcode: "",
       suburb: "",
@@ -166,7 +166,7 @@ const EditProfile = () => {
           firstName: data.firstName || "",
           lastName: data.lastName || "",
           dateOfBirth: data.dateOfBirth ? new Date(data.dateOfBirth) : null,
-          phoneNumber: data.phoneNumber || "",
+          // phoneNumber: data.phoneNumber || "",
           emailAddress: data.emailAddress || "",
           postcode: data.postalCode || "",
           suburb: data.suburbs || "",
@@ -251,7 +251,7 @@ const EditProfile = () => {
       let submitData: any;
 
       let url;
-      if (isServiceProvider && isABNValid) {
+      if (isServiceProvider) {
         submitData = Object.entries({
           firstName: data.firstName,
           lastName: data.lastName,
@@ -268,12 +268,12 @@ const EditProfile = () => {
           abn: data.abn,
         })
           .reduce((acc, [key, value]) => {
-          if (value !== null && value !== undefined && value !== "") {
-            // @ts-expect-error "type of key not know"
-            acc[key] = value;
-          }
-          return acc;
-        }, {});
+            if (value !== null && value !== undefined && value !== "") {
+              // @ts-expect-error "type of key not know"
+              acc[key] = value;
+            }
+            return acc;
+          }, {});
         url =
           `${process.env.NEXT_PUBLIC_API_URL}/service_provider/update`;
       } else {
@@ -291,15 +291,15 @@ const EditProfile = () => {
           idNumber: data.idNumber,
         })
           .reduce((acc, [key, value]) => {
-          if (value !== null && value !== undefined && value !== "") {
-            // @ts-expect-error "type of key not know"
-            acc[key] = value;
-          }
-          return acc;
-        }, {});
+            if (value !== null && value !== undefined && value !== "") {
+              // @ts-expect-error "type of key not know"
+              acc[key] = value;
+            }
+            return acc;
+          }, {});
         url = `${process.env.NEXT_PUBLIC_API_URL}/customer/update`;
       }
-      
+
       await axios.patch(url, submitData, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -436,18 +436,19 @@ const EditProfile = () => {
         {/* Bio Section (for Service Providers) */}
         {isServiceProvider && (
           <section>
-            <h3 className="text-lg font-bold text-primary">Bio</h3>
-            <FormField
-              label="Bio Description"
-              name="bio"
-              register={register}
-              watch={watch}
-              errors={errors}
-              watchField={watchField}
-              disabled={!isEditingEnabled}
-              as="textarea"
-              className="min-h-32 w-full rounded-xl border border-slate-100 p-2 text-slate-700 shadow outline-none transition-shadow duration-300 hover:shadow-md"
-            />
+            <label className="flex w-full flex-col gap-3 text-violet-normal">
+              <span className="flex items-center justify-between">
+                <span>Bio Description</span>
+                {!errors.bio && watchField.bio && (
+                  <BiCheck className="size-5 rounded-full bg-green-500 p-1 text-white" />
+                )}
+              </span>
+              <textarea
+                {...register("bio")}
+                disabled={!isEditingEnabled}
+                className="min-h-32 w-full rounded-xl border border-slate-100 p-2 text-slate-700 shadow outline-none transition-shadow duration-300 hover:shadow-md"
+              />
+            </label>
           </section>
         )}
 
@@ -456,7 +457,7 @@ const EditProfile = () => {
           <h3 className="text-lg font-bold text-primary">Contact Information</h3>
           <div className="flex flex-wrap gap-6 lg:col-span-8 lg:grid lg:grid-cols-2">
             {/* Phone number */}
-            <label className="flex w-full flex-col gap-3 text-violet-normal">
+            {/* <label className="flex w-full flex-col gap-3 text-violet-normal">
               <span className="flex items-center justify-between">
                 <span>Phone Number</span>
                 <BiCheck className="size-5 rounded-full bg-green-500 p-1 text-white" />
@@ -468,7 +469,7 @@ const EditProfile = () => {
                 readOnly
                 disabled
               />
-            </label>
+            </label> */}
             {/* Email Address */}
             <label className="flex w-full flex-col gap-3 text-violet-normal">
               <span className="flex items-center justify-between">

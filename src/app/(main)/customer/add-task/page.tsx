@@ -144,7 +144,6 @@ const AddTaskForm: React.FC = () => {
   }, [task]);
 
   useEffect(() => {
-
     const fetchPostalCodeData = async () => {
       try {
         const response = await axios.get<PostalCodeData[]>(

@@ -136,7 +136,7 @@ const LoginForm = () => {
               name="password"
               label="Password"
               placeholder="**********"
-              className=" shadow-sm placeholder:text-dark"
+              className="shadow-sm placeholder:text-dark"
               rules={["required", "password"]}
               type="password"
             />

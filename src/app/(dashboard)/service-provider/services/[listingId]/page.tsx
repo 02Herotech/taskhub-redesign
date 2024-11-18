@@ -202,11 +202,11 @@ const EditListing = () => {
       const suburbs = data.map((item: { Name: string }) => item.Name);
       setSuburbList(suburbs);
 
-      // Set the first suburb as the default if available
-      if (suburbs.length > 0) {
+      // Only set the suburb if there isn't already a current suburb value
+      // This preserves the existing suburb when editing
+      if (!watchField.suburb && suburbs.length > 0) {
+        // If no current suburb exists, then default to first in list
         setValue("suburb", suburbs[0]);
-      } else {
-        setValue("suburb", "");
       }
 
       // Set the state if available using the State field
@@ -373,6 +373,7 @@ const EditListing = () => {
     }
     // eslint-disable-next-line
   }, [watchField]);
+
 
   return (
     <main className="relative space-y-8 p-4 lg:p-8">
@@ -731,40 +732,47 @@ const EditListing = () => {
                     {...register("state")}
                   />
                 </label>
+
                 {/* suburb */}
                 <div className="relative flex flex-col gap-2">
                   <span className="font-bold text-violet-darker">Suburb</span>
-                  <div className="relative ">
+                  <div className="relative">
                     <span className="absolute right-4 top-1/2 -translate-y-1/2">
                       <BsTriangleFill
-                        className=" size-3 rotate-[60deg] text-violet-normal"
+                        className="size-3 rotate-[60deg] text-violet-normal"
                         fill="rgb(56 31 140)"
                       />
                     </span>
                     <button
                       type="button"
                       onClick={() => expandDropdown("suburb")}
-                      className=" h-12 min-w-48 rounded-lg bg-violet-light p-3 pl-4 text-left outline-none"
+                      className="h-12 min-w-48 rounded-lg bg-violet-light p-3 pl-4 text-left outline-none"
                     >
-                      {watchField.suburb}
+                      {watchField.suburb || currentListing?.suburb || "Select suburb"}
                     </button>
                   </div>
                   <div
-                    className={`absolute left-0 top-[calc(100%+0.5rem)] z-10 w-full overflow-hidden  rounded-md bg-violet-light transition-all duration-300 ${showDropdown.name === "suburb" && showDropdown.isShown ? "max-h-96" : "max-h-0"} `}
+                    className={`absolute left-0 top-[calc(100%+0.5rem)] z-10 w-full overflow-hidden rounded-md bg-violet-light transition-all duration-300 ${showDropdown.name === "suburb" && showDropdown.isShown ? "max-h-96" : "max-h-0"
+                      }`}
                   >
-                    {suburbList.map((item) => (
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setValue("suburb", item);
-                          expandDropdown("suburb");
-                        }}
-                        key={item}
-                        className="w-full p-3 text-left hover:bg-violet-200"
-                      >
-                        {item}
-                      </button>
-                    ))}
+                    <div className="small-scrollbar max-h-64 overflow-y-auto">
+                      {suburbList.map((item) => (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setValue("suburb", item);
+                            expandDropdown("suburb");
+                          }}
+                          key={item}
+                          className={`w-full p-3 text-left transition-colors hover:bg-violet-200 ${(watchField.suburb || currentListing?.suburb) === item
+                              ? "bg-violet-normal text-white hover:bg-violet-normal"
+                              : ""
+                            }`}
+                        >
+                          {item}
+                        </button>
+                      ))}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -924,6 +932,7 @@ const EditListing = () => {
         <button
           className="rounded-full border border-violet-normal bg-violet-normal px-4 py-2 font-satoshi text-sm font-normal text-white transition-opacity duration-300 hover:opacity-90 "
           disabled={isSubmitting}
+          type="submit"
         >
           {isSubmitting ? (
             <BeatLoader color="white" loading={isSubmitting} />
