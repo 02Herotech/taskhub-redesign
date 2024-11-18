@@ -251,37 +251,55 @@ const EditProfile = () => {
       let submitData: any;
 
       let url;
-      if (isServiceProvider ) {
+      if (isServiceProvider && isABNValid) {
         submitData = Object.entries({
+          firstName: data.firstName,
+          lastName: data.lastName,
+          dateOfBirth: data.dateOfBirth ? formatDateAsYYYYMMDD(data.dateOfBirth as Date) : "",
+          suburb: data.suburb,
           // phoneNumber: data.phoneNumber,
+          state: data.state,
+          postCode: data.postcode,
+          idImageFront: selectedDocumentFront,
+          idImageBack: selectedDocumentBack,
+          idType: data.idType,
+          idNumber: data.idNumber,
           bio: data.bio,
           abn: data.abn,
         })
           .reduce((acc, [key, value]) => {
-          if (value !== null && value !== undefined && value !== "") {
-            // @ts-expect-error "type of key not know"
-            acc[key] = value;
-          }
-          return acc;
-        }, {});
+            if (value !== null && value !== undefined && value !== "") {
+              // @ts-expect-error "type of key not know"
+              acc[key] = value;
+            }
+            return acc;
+          }, {});
         url =
           `${process.env.NEXT_PUBLIC_API_URL}/service_provider/update`;
       } else {
         submitData = Object.entries({
+          firstName: data.firstName,
+          lastName: data.lastName,
+          dateOfBirth: data.dateOfBirth ? formatDateAsYYYYMMDD(data.dateOfBirth as Date) : "",
+          suburb: data.suburb,
           // phoneNumber: data.phoneNumber,
+          state: data.state,
+          postCode: data.postcode,
+          idImageFront: selectedDocumentFront,
+          idImageBack: selectedDocumentBack,
           idType: data.idType,
           idNumber: data.idNumber,
         })
           .reduce((acc, [key, value]) => {
-          if (value !== null && value !== undefined && value !== "") {
-            // @ts-expect-error "type of key not know"
-            acc[key] = value;
-          }
-          return acc;
-        }, {});
+            if (value !== null && value !== undefined && value !== "") {
+              // @ts-expect-error "type of key not know"
+              acc[key] = value;
+            }
+            return acc;
+          }, {});
         url = `${process.env.NEXT_PUBLIC_API_URL}/customer/update`;
       }
-      
+
       await axios.patch(url, submitData, {
         headers: {
           Authorization: `Bearer ${token}`,
