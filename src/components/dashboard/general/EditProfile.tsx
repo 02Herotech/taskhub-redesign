@@ -251,7 +251,7 @@ const EditProfile = () => {
       let submitData: any;
 
       let url;
-      if (isServiceProvider && isABNValid) {
+      if (isServiceProvider) {
         submitData = Object.entries({
           firstName: data.firstName,
           lastName: data.lastName,
