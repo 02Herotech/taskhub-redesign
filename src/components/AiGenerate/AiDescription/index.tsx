@@ -336,7 +336,7 @@ const AiDesciption: React.FC<AiGenerateProps> = ({
                   Hello, {userName}
                 </h2>
                 <p className="pb-3 font-clashMedium text-[16px] text-[#716F78]">
-                  Here are some suggested questions you can ask me?
+                  Here are some suggested questions you can ask me
                 </p>
               </div>
             </div>

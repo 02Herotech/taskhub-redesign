@@ -277,27 +277,29 @@ export function dateFromArrays(startDate: DateInput, startTime: TimeInput) {
 }
 
 export function formatRelativeDate(timestampArray: number[]): string {
-  const [year, month, day, hour = 0, minute = 0, second = 0] = timestampArray;
+  const [year, month, day, hour = 0, minute = 0, second = 0, nanoseconds = 0] = timestampArray;
+
+  // Create timestamp in local time, converting from UTC
+  const timestamp = new Date(Date.UTC(year, month - 1, day, hour, minute, second, Math.floor(nanoseconds / 1000000)));
+
   const now = new Date();
-  const timestamp = new Date(year, month - 1, day, hour, minute, second);
 
   const elapsedMilliseconds = now.getTime() - timestamp.getTime();
-  const elapsedSeconds = Math.floor(elapsedMilliseconds / 1000 - 3600);
+  const elapsedMinutes = Math.floor(elapsedMilliseconds / (1000 * 60));
 
-  if (elapsedSeconds < 60) {
+  if (elapsedMinutes < 1) {
     return "now";
-  } else if (elapsedSeconds < 3600) {
-    const minutesAgo = Math.floor(elapsedSeconds / 60);
-    return `${minutesAgo} minute${minutesAgo === 1 ? "" : "s"} ago`;
-  } else if (elapsedSeconds < 86400) {
-    const hoursAgo = Math.floor(elapsedSeconds / 3600);
-    return `${hoursAgo} hour${hoursAgo === 1 ? "" : "s"} ago`;
-  } else if (elapsedSeconds < 2592000) {
-    const daysAgo = Math.floor(elapsedSeconds / 86400);
-    return `${daysAgo} day${daysAgo === 1 ? "" : "s"} ago`;
+  } else if (elapsedMinutes < 60) {
+    return `${elapsedMinutes} minute${elapsedMinutes === 1 ? "" : "s"} ago`;
+  } else if (elapsedMinutes < 1440) {
+    const elapsedHours = Math.floor(elapsedMinutes / 60);
+    return `${elapsedHours} hour${elapsedHours === 1 ? "" : "s"} ago`;
+  } else if (elapsedMinutes < 43200) {
+    const elapsedDays = Math.floor(elapsedMinutes / 1440);
+    return `${elapsedDays} day${elapsedDays === 1 ? "" : "s"} ago`;
   } else {
-    const monthsAgo = Math.floor(elapsedSeconds / 2592000);
-    return `${monthsAgo} month${monthsAgo === 1 ? "" : "s"} ago`;
+    const elapsedMonths = Math.floor(elapsedMinutes / 43200);
+    return `${elapsedMonths} month${elapsedMonths === 1 ? "" : "s"} ago`;
   }
 }
 
