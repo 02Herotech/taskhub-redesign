@@ -202,11 +202,11 @@ const EditListing = () => {
       const suburbs = data.map((item: { Name: string }) => item.Name);
       setSuburbList(suburbs);
 
-      // Set the first suburb as the default if available
-      if (suburbs.length > 0) {
+      // Only set the suburb if there isn't already a current suburb value
+      // This preserves the existing suburb when editing
+      if (!watchField.suburb && suburbs.length > 0) {
+        // If no current suburb exists, then default to first in list
         setValue("suburb", suburbs[0]);
-      } else {
-        setValue("suburb", "");
       }
 
       // Set the state if available using the State field
