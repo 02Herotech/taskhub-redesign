@@ -861,7 +861,7 @@ const ProvideService: React.FC = () => {
                           <div className="relative flex items-center space-x-2 pl-2">
                             <input
                               type="number"
-                              min="25"
+                              min="5"
                               name="planOnePrice"
                               value={
                                 task.planOnePrice !== null
@@ -874,7 +874,7 @@ const ProvideService: React.FC = () => {
                             />
                             <p className="absolute left-3 top-3">$</p>
                             <p className="font-extraBold text-xs text-[#140B31]">
-                              Minimum AUD$25 + 10% GST inclusive
+                              Minimum AUD$5 + 10% GST inclusive
                             </p>
                           </div>
                         </div>
@@ -909,7 +909,7 @@ const ProvideService: React.FC = () => {
                             <input
                               type="number"
                               name="planTwoPrice"
-                              min="25"
+                              min="5"
                               value={
                                 task.planTwoPrice !== null
                                   ? task.planTwoPrice
@@ -921,7 +921,7 @@ const ProvideService: React.FC = () => {
                             />
                             <p className="absolute left-3 top-3">$</p>
                             <p className="font-extraBold text-xs text-[#140B31]">
-                              Minimum AUD$25 + 10% GST inclusive
+                              Minimum AUD$5 + 10% GST inclusive
                             </p>
                           </div>
                         </div>
@@ -955,7 +955,7 @@ const ProvideService: React.FC = () => {
                           <div className="relative flex items-center space-x-2 pl-2">
                             <input
                               type="number"
-                              min="25"
+                              min="5"
                               name="planThreePrice"
                               value={
                                 task.planThreePrice !== null
@@ -968,7 +968,7 @@ const ProvideService: React.FC = () => {
                             />
                             <p className="absolute left-3 top-3">$</p>
                             <p className="font-extraBold text-xs text-[#140B31]">
-                              Minimum AUD$25 + 10% GST inclusive
+                              Minimum AUD$5 + 10% GST inclusive
                             </p>
                           </div>
                         </div>
