@@ -665,6 +665,7 @@ const EditTaskForm = ({ task, setShowEditModal }: TaskCardProps) => {
                                             <span>$</span>
                                             <input
                                                 type="number"
+                                                min="5"
                                                 value={watchField.customerBudget}
                                                 {...register("customerBudget")}
                                                 className={`appearance-none w-full no-input-default-style placeholder:font-bold border-none"}`}
