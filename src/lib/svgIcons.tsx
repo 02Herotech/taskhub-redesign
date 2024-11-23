@@ -150,7 +150,7 @@ export const PaymentSvg = (
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
   >
-    <g clip-path="url(#clip0_1168_10532)">
+    <g clipPath="url(#clip0_1168_10532)">
       <path
         d="M6.11864 96.0479C7.07511 86.2851 12.8561 76.5397 22.0542 73.1309C18.6553 83.2425 18.9426 94.2305 22.8652 104.151C24.3919 107.971 26.4877 112.061 25.2476 115.984C24.4761 118.425 22.4826 120.329 20.2304 121.546C17.9782 122.763 15.4595 123.38 12.9723 123.986L12.4906 124.406C8.28599 115.543 5.16217 105.811 6.11864 96.0479Z"
         fill="#F0F0F0"
@@ -689,7 +689,7 @@ export const RentShopSvg = (
 
 export const InstagramSvg = (
   <svg width="42" height="42" viewBox="0 0 42 42" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <g clip-path="url(#clip0_5279_3615)">
+    <g clipPath="url(#clip0_5279_3615)">
       <rect width="42" height="42" rx="21" fill="white" />
       <path d="M32.1562 0H9.84375C4.4072 0 0 4.4072 0 9.84375V32.1562C0 37.5928 4.4072 42 9.84375 42H32.1562C37.5928 42 42 37.5928 42 32.1562V9.84375C42 4.4072 37.5928 0 32.1562 0Z" fill="url(#paint0_radial_5279_3615)" />
       <path d="M32.1562 0H9.84375C4.4072 0 0 4.4072 0 9.84375V32.1562C0 37.5928 4.4072 42 9.84375 42H32.1562C37.5928 42 42 37.5928 42 32.1562V9.84375C42 4.4072 37.5928 0 32.1562 0Z" fill="url(#paint1_radial_5279_3615)" />
@@ -744,7 +744,7 @@ export const LinkedinSvg = (
 
 export const TwitterSvg = (
   <svg width="42" height="42" viewBox="0 0 42 42" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <g clip-path="url(#clip0_5279_3620)">
+    <g clipPath="url(#clip0_5279_3620)">
       <rect width="42" height="42" rx="21" transform="matrix(-1 0 0 1 42 0)" fill="white" />
       <path d="M9.84375 0H32.1562C37.5928 0 42 4.4072 42 9.84375V32.1562C42 37.5928 37.5928 42 32.1562 42H9.84375C4.4072 42 0 37.5928 0 32.1562V9.84375C0 4.4072 4.4072 0 9.84375 0Z" fill="url(#paint0_radial_5279_3620)" />
       <path d="M9.84375 0H32.1562C37.5928 0 42 4.4072 42 9.84375V32.1562C42 37.5928 37.5928 42 32.1562 42H9.84375C4.4072 42 0 37.5928 0 32.1562V9.84375C0 4.4072 4.4072 0 9.84375 0Z" fill="black" />

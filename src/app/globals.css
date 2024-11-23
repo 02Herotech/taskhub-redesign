@@ -6,7 +6,6 @@
 @import "~slick-carousel/slick/slick.css";
 @import "~slick-carousel/slick/slick-theme.css";
 
-
 html {
   scroll-behavior: smooth;
 }
@@ -146,7 +145,6 @@ body {
   overflow: hidden;
 }
 
-
 /* General slider container styles */
 .slider-container {
   width: 80%;
@@ -180,9 +178,8 @@ body {
 }
 
 .slick-list {
-  margin: 0 0px; 
+  margin: 0 0px;
 }
-
 
 .spinner {
   border: 2px solid lightgray;
@@ -194,7 +191,22 @@ body {
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
+/* Embla  Carousel CSS  */
+.embla {
+  overflow: hidden;
+}
+.embla__container {
+  display: flex;
+}
+.embla__slide {
+  flex: 0 0 100%;
+  min-width: 0;
+}
