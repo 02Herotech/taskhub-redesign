@@ -50,7 +50,7 @@ export const homeMobileLinks: LinkRouteTypes[] = [
   },
   {
     label: "Business Hub",
-    url: "/coming-soon",
+    url: "/business-hub",
     icon: BusinessHubSvg,
   },
   {

@@ -28,7 +28,7 @@ const HomeNavigation = () => {
     },
     {
       label: "Business Hub",
-      url: "/coming-soon#business",
+      url: "/business-hub",
     },
     {
       label: "About Us",

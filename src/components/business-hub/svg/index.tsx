@@ -1,8 +1,8 @@
 export function Exit() {
   return (
     <svg
-      width="20"
-      height="20"
+      width="18"
+      height="18"
       viewBox="0 0 26 29"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
@@ -26,8 +26,8 @@ export function Exit() {
 export function Finance() {
   return (
     <svg
-      width="20"
-      height="20"
+      width="18"
+      height="18"
       viewBox="0 0 31 31"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
@@ -43,8 +43,8 @@ export function Finance() {
 export function Immigrant() {
   return (
     <svg
-      width="20"
-      height="20"
+      width="18"
+      height="18"
       viewBox="0 0 30 26"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
@@ -60,8 +60,8 @@ export function Immigrant() {
 export function Legal() {
   return (
     <svg
-      width="20"
-      height="20"
+      width="18"
+      height="18"
       viewBox="0 0 24 22"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
@@ -77,8 +77,8 @@ export function Legal() {
 export function Marketing() {
   return (
     <svg
-      width="20"
-      height="20"
+      width="18"
+      height="18"
       viewBox="0 0 24 27"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
@@ -94,8 +94,8 @@ export function Marketing() {
 export function Online() {
   return (
     <svg
-      width="20"
-      height="20"
+      width="18"
+      height="18"
       viewBox="0 0 28 26"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
@@ -111,8 +111,8 @@ export function Online() {
 export function Planning() {
   return (
     <svg
-      width="20"
-      height="20"
+      width="18"
+      height="18"
       viewBox="0 0 29 29"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
@@ -135,8 +135,8 @@ export function Planning() {
 export function Product() {
   return (
     <svg
-      width="20"
-      height="20"
+      width="18"
+      height="18"
       viewBox="0 0 32 32"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
@@ -152,8 +152,8 @@ export function Product() {
 export function Register() {
   return (
     <svg
-      width="20"
-      height="20"
+      width="18"
+      height="18"
       viewBox="0 0 29 29"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
@@ -169,8 +169,8 @@ export function Register() {
 export function Risk() {
   return (
     <svg
-      width="20"
-      height="20"
+      width="18"
+      height="18"
       viewBox="0 0 29 24"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"

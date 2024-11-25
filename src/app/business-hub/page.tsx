@@ -9,7 +9,7 @@ function Page() {
   return (
     <div className="">
       {/* Hero section  */}
-      <div className="bg-[#F8E9FE]">
+      <div className="bg-[#F8E9FE] pt-8">
         <section className="mx-auto flex h-screen max-h-[1200px] min-h-[500px] max-w-7xl flex-col items-center justify-center gap-10 px-5 sm:px-20 lg:max-h-[700px] lg:flex-row lg:justify-between">
           <div className="flex max-w-[550px] flex-col justify-center">
             <h2 className="mb-5 font-clashSemiBold text-4xl text-[#381F8C] sm:font-clashBold sm:text-[#140B31] lg:text-5xl xl:text-5xl">
