@@ -3,211 +3,144 @@ import NewsLetter from '@/components/newsletter'
 import Logo from '../Logo'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { useDispatch } from "react-redux";
+import { useDispatch } from "react-redux"
 import { usePathname } from 'next/navigation'
 import {
     filterMarketPlace,
     setFilterLoadingState,
     setFilterParams,
-} from "@/store/Features/marketplace";
-import axios from "axios";
-import mobileFooter from "../../../../public/assets/images/homepage/mobileFooter.png"
+} from "@/store/Features/marketplace"
+import axios from "axios"
+import SmallLogo from '../SmallLogo'
 
 const Footer = () => {
     const router = useRouter()
     const pathname = usePathname()
+    const dispatch = useDispatch()
 
     const link_1 = [
-        {
-            label: "About Us",
-            url: "/about",
-        },
-
-        {
-            label: "Marketplace",
-            url: "/marketplace",
-        },
-        {
-            label: "Business Hub",
-            url: "/coming-soon",
-
-        }
+        { label: "About Us", url: "/about" },
+        { label: "Marketplace", url: "/marketplace" },
+        { label: "Business Hub", url: "/coming-soon" }
     ]
 
     const category_link_2 = [
         { id: 1, categoryName: 'Home Service' },
-
         { id: 2, categoryName: 'Beauty' },
-
         { id: 3, categoryName: 'Information and Technology' },
-
         { id: 4, categoryName: 'Events' },
-
         { id: 5, categoryName: 'Art and Craft' },
-
         { id: 6, categoryName: 'Petcare' },
-
         { id: 7, categoryName: 'Custodian' },
-        { id: 8, categoryName: 'Grocery' },
-
+        { id: 8, categoryName: 'Grocery' }
     ]
 
     const link_3 = [
-        {
-            label: "FAQs",
-            url: "/home#FAQSection",
-        },
-
-        {
-            label: "Contact us",
-            url: "/contact",
-        },
-        {
-            label: "Terms and Condition",
-            url: "/",
-
-        },
-        {
-            label: "Privacy",
-            url: "/",
-        },
-
+        { label: "FAQs", url: "/home#FAQSection" },
+        { label: "Contact us", url: "/contact" },
+        { label: "Terms and Condition", url: "/" },
+        { label: "Privacy", url: "/" }
     ]
 
-    const dispatch = useDispatch();
-
     const handleFilterByCategory = async (category: string) => {
-        dispatch(setFilterLoadingState(true));
+        dispatch(setFilterLoadingState(true))
         try {
-            const url =
-                `${process.env.NEXT_PUBLIC_API_URL}/listing/filter-listings/0?category=` +
-                category;
-            const { data } = await axios.get(url);
-            dispatch(
-                filterMarketPlace({ data: data.content, totalPages: data.totalPages }),
-            );
-            dispatch(setFilterParams(`?category=${category}`));
+            const url = `${process.env.NEXT_PUBLIC_API_URL}/listing/filter-listings/0?category=${category}`
+            const { data } = await axios.get(url)
+            dispatch(filterMarketPlace({
+                data: data.content,
+                totalPages: data.totalPages
+            }))
+            dispatch(setFilterParams(`?category=${category}`))
         } catch (error: any) {
-            console.log(error.response.message || error);
+            console.log(error.response?.message || error)
         } finally {
-            dispatch(setFilterLoadingState(false));
+            dispatch(setFilterLoadingState(false))
         }
-    };
+    }
 
-    const currentYear = new Date().getFullYear();
+    const currentYear = new Date().getFullYear()
 
     return (
-        <footer className=' relative '>
-            <div className='lg:h-[650px] h-[900px] bg-[#895404] '>
-
-                <div className='hidden lg:flex justify-between overflow-hidden'>
-                    <div
-                        style={{
-                            position: 'relative',
-                            height: '650px',
-                            width: '250px',
-                            float: 'left',
-                            top: '300px',
-                            zIndex: '2'
-
-                        }}
-                    >
-                        <div
-                            style={{
-                                height: '650px',
-                                width: '500px',
-                                borderRadius: '50%',
-                                backgroundImage: 'radial-gradient(circle, #aa7933, transparent)',
-                                filter: 'blur(30px)',
-                                position: 'absolute',
-                                left: '-250px',
-                            }}
-                        ></div>
-                    </div>
-
-                    <div
-                        style={{
-                            position: 'relative',
-                            height: '500px',
-                            width: '250px',
-                            float: 'right',
-                            // top: '-160px'
-                        }}
-                    >
-                        <div
-                            style={{
-                                height: '500px',
-                                width: '500px',
-                                borderRadius: '50%',
-                                backgroundImage: 'radial-gradient(circle, #aa7933, transparent)',
-                                filter: 'blur(70px)',
-                                position: 'absolute',
-                                right: '-200px',
-                            }}
-                        ></div>
-                    </div>
-
+        <footer className="relative w-full mt-auto bg-[#895404]">
+            <div className="relative w-full overflow-hidden">
+                {/* Gradient overlays */}
+                <div className="absolute inset-0 pointer-events-none">
+                    <div className="hidden lg:block absolute left-0 top-1/2 w-96 h-96 bg-gradient-radial from-[#aa7933] to-transparent rounded-full blur-3xl -translate-x-1/2"></div>
+                    <div className="hidden lg:block absolute right-0 top-0 w-96 h-96 bg-gradient-radial from-[#aa7933] to-transparent rounded-full blur-3xl translate-x-1/4"></div>
                 </div>
 
-                <div className="lg:hidden block h-full w-full -z-1 bg-cover bg-no-repeat" style={{ backgroundImage: `url(${mobileFooter.src})` }}>
-                </div>
+                {/* Main content container */}
+                <div className="relative w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
+                    <div className="flex flex-col items-center space-y-8 lg:space-y-12">
+                        {/* Logo */}
+                        <div className="w-full flex justify-center z-50">
+                            <Link href="/" className="block">
+                                {/* <div className="relative">
+                                    <SmallLogo />
+                                </div> */}
+                                <div className="relative">
+                                    <Logo />
+                                </div>
+                            </Link>
+                        </div>
 
-                <div className=' mx-auto max-w-7xl lg:mt-[-500px] mt-[-680px]  z-50'>
-                    <div className='w-[85%] mx-auto flex flex-col items-center space-y-8 mt-12 lg:mt-0' >
-
-                        <Link href="/">
-                            <Logo />
-                        </Link>
-
-                        <p className='font-satoshi lg:text-[16px] text-[13px] text-[#EBE9F4] font-[500] text-center lg:w-[50%]'>
+                        {/* Description */}
+                        <p className="text-[#EBE9F4] text-sm lg:text-base text-center max-w-2xl px-4">
                             This platform aims to help immigrants succeed in the
                             Australian economy by providing resources and opportunities.
                         </p>
 
-                        <div className='flex flex-col items-center lg:space-y-8 space-y-5'>
-                            <ul className='flex lg:space-x-5 space-x-2 justify-center '>
-                                {link_1.map((eachLink, index) => (
-                                    <li key={index} className='flex space-x-2 items-center'>
-                                        <span className='h-1 w-1 rounded-full bg-[#EBE9F4]'>
-
-                                        </span>
-                                        <Link href={eachLink.url} className='text-[#EBE9F4] font-satoshi font-[500] lg:text-[15px] text-[12px]'>{eachLink.label}</Link>
-                                    </li>
-
+                        {/* Navigation Links */}
+                        <div className="w-full flex flex-col items-center space-y-8">
+                            {/* Primary Links */}
+                            <nav className="flex flex-wrap justify-center gap-4 px-4">
+                                {link_1.map((link, index) => (
+                                    <div key={index} className="flex items-center">
+                                        <span className="h-1 w-1 rounded-full bg-[#EBE9F4] mr-2"></span>
+                                        <Link
+                                            href={link.url}
+                                            className="text-[#EBE9F4] hover:text-white text-sm lg:text-base transition-colors whitespace-nowrap"
+                                        >
+                                            {link.label}
+                                        </Link>
+                                    </div>
                                 ))}
-                            </ul>
+                            </nav>
 
-                            <ul className='flex lg:space-x-5 space-x-3 flex-wrap justify-center '>
-                                {category_link_2.map((eachLink, index) => (
-                                    <li key={index}
+                            {/* Category Links */}
+                            <nav className="flex flex-wrap justify-center gap-3 px-4 max-w-full">
+                                {category_link_2.map((category) => (
+                                    <button
+                                        key={category.id}
                                         onClick={() => {
-                                            router.push('/marketplace');
-                                            handleFilterByCategory(eachLink.categoryName)
+                                            router.push('/marketplace')
+                                            handleFilterByCategory(category.categoryName)
                                         }}
-                                        className='flex space-x-2 items-center mb-5 '>
-
-                                        <span className='h-1 w-1 rounded-full bg-[#EBE9F4]'>
-
+                                        className="flex items-center group"
+                                    >
+                                        <span className="h-1 w-1 rounded-full bg-[#EBE9F4] mr-2 flex-shrink-0"></span>
+                                        <span className="text-[#EBE9F4] hover:text-white text-sm lg:text-base transition-colors">
+                                            {category.categoryName}
                                         </span>
-                                        <span className='text-[#EBE9F4] font-satoshi font-[500] lg:text-[15px] text-[12px] hover:cursor-pointer'>
-                                            {eachLink.categoryName}
-                                        </span>
-                                    </li>
-
+                                    </button>
                                 ))}
-                            </ul>
+                            </nav>
 
-                            <ul className='flex lg:space-x-5 space-x-2 flex-wrap justify-center -mt-3'>
-                                {link_3.map((eachLink, index) => (
-                                    <li key={index} className='flex space-x-2 items-center mb-5'>
-                                        <span className='h-1 w-1 rounded-full bg-[#EBE9F4]'>
-
-                                        </span>
-                                        <Link href={eachLink.url} className='text-[#EBE9F4] font-satoshi font-[500] lg:text-[15px] text-[12px]'>{eachLink.label}</Link>
-                                    </li>
-
+                            {/* Secondary Links */}
+                            <nav className="flex flex-wrap justify-center gap-4 px-4">
+                                {link_3.map((link, index) => (
+                                    <div key={index} className="flex items-center">
+                                        <span className="h-1 w-1 rounded-full bg-[#EBE9F4] mr-2"></span>
+                                        <Link
+                                            href={link.url}
+                                            className="text-[#EBE9F4] hover:text-white text-sm lg:text-base transition-colors whitespace-nowrap"
+                                        >
+                                            {link.label}
+                                        </Link>
+                                    </div>
                                 ))}
-                            </ul>
+                            </nav>
 
                             <div className='flex space-x-3'>
                                 <Link href={'https://www.instagram.com/oloja_au?igsh=dzRuYW52MjZ4bjJq'}
@@ -229,77 +162,27 @@ const Footer = () => {
 
                                 </Link>
 
-                                {/* <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <rect x="0.5" y="0.5" width="47" height="47" rx="23.5" fill="#C1BADB" />
-                                    <rect x="0.5" y="0.5" width="47" height="47" rx="23.5" stroke="#C6C6C6" />
-                                    <g clipPath="url(#clip0_3535_8219)">
-                                        <g clipPath="url(#clip1_3535_8219)">
-                                            <path d="M33.75 12.5626H14.25C13.8076 12.5581 13.3814 12.7293 13.065 13.0386C12.7487 13.348 12.5679 13.7702 12.5625 14.2126V33.7913C12.5689 34.2331 12.7501 34.6544 13.0663 34.9629C13.3826 35.2714 13.8082 35.4421 14.25 35.4376H33.75C34.1925 35.4411 34.6183 35.2693 34.9345 34.9598C35.2507 34.6503 35.4316 34.2282 35.4375 33.7857V14.207C35.4296 13.7658 35.2479 13.3456 34.9319 13.0377C34.6159 12.7298 34.1912 12.5591 33.75 12.5626Z" fill="#381F8C" />
-                                            <path fill-rule="evenodd" clip-rule="evenodd" d="M32 32L25.743 22.6749L25.7537 22.6836L31.3953 16H29.51L24.9142 21.44L21.2645 16H16.3201L22.1617 24.7062L22.161 24.7055L16 32H17.8853L22.9948 25.9476L27.0556 32H32ZM20.5176 17.4545L29.2966 30.5455H27.8026L19.0165 17.4545H20.5176Z" fill="white" />
-                                        </g>
-                                    </g>
-                                    <defs>
-                                        <clipPath id="clip0_3535_8219">
-                                            <rect width="24" height="24" fill="white" transform="translate(12 12)" />
-                                        </clipPath>
-                                        <clipPath id="clip1_3535_8219">
-                                            <rect width="24" height="24" fill="white" transform="translate(12 12)" />
-                                        </clipPath>
-                                    </defs>
-                                </svg>
-
-                                <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <rect x="0.5" y="0.5" width="47" height="47" rx="23.5" fill="#C1BADB" />
-                                    <rect x="0.5" y="0.5" width="47" height="47" rx="23.5" stroke="#EEEEEF" />
-                                    <g clipPath="url(#clip0_3535_8224)">
-                                        <path d="M30.375 12H17.625C14.5184 12 12 14.5184 12 17.625V30.375C12 33.4816 14.5184 36 17.625 36H30.375C33.4816 36 36 33.4816 36 30.375V17.625C36 14.5184 33.4816 12 30.375 12Z" fill="white" />
-                                        <path d="M30.375 12H17.625C14.5184 12 12 14.5184 12 17.625V30.375C12 33.4816 14.5184 36 17.625 36H30.375C33.4816 36 36 33.4816 36 30.375V17.625C36 14.5184 33.4816 12 30.375 12Z" fill="#381F8C" />
-                                        <path d="M30.7054 20.3482C31.0268 21.4732 31.0268 23.8839 31.0268 23.8839C31.0268 23.8839 31.0268 26.2679 30.7054 27.4196C30.5446 28.0625 30.0357 28.5446 29.4196 28.7054C28.2679 29 23.7143 29 23.7143 29C23.7143 29 19.1339 29 17.9821 28.7054C17.3661 28.5446 16.8571 28.0625 16.6964 27.4196C16.375 26.2679 16.375 23.8839 16.375 23.8839C16.375 23.8839 16.375 21.4732 16.6964 20.3482C16.8571 19.7054 17.3661 19.1964 17.9821 19.0357C19.1339 18.7143 23.7143 18.7143 23.7143 18.7143C23.7143 18.7143 28.2679 18.7143 29.4196 19.0357C30.0357 19.1964 30.5446 19.7054 30.7054 20.3482ZM22.2143 26.0536L26.0179 23.8839L22.2143 21.7143V26.0536Z" fill="white" />
-                                    </g>
-                                    <defs>
-                                        <clipPath id="clip0_3535_8224">
-                                            <rect width="24" height="24" fill="white" transform="translate(12 12)" />
-                                        </clipPath>
-                                    </defs>
-                                </svg>
-
-                                <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <rect x="0.5" y="0.5" width="47" height="47" rx="23.5" fill="#C1BADB" />
-                                    <rect x="0.5" y="0.5" width="47" height="47" rx="23.5" stroke="#C6C6C6" />
-                                    <g clipPath="url(#clip0_3535_8230)">
-                                        <path d="M30.375 12H17.625C14.5184 12 12 14.5184 12 17.625V30.375C12 33.4816 14.5184 36 17.625 36H30.375C33.4816 36 36 33.4816 36 30.375V17.625C36 14.5184 33.4816 12 30.375 12Z" fill="white" />
-                                        <path d="M30.375 12H17.625C14.5184 12 12 14.5184 12 17.625V30.375C12 33.4816 14.5184 36 17.625 36H30.375C33.4816 36 36 33.4816 36 30.375V17.625C36 14.5184 33.4816 12 30.375 12Z" fill="#381F8C" />
-                                        <path d="M34 24C34 18.48 29.52 14 24 14C18.48 14 14 18.48 14 24C14 28.84 17.44 32.87 22 33.8V27H20V24H22V21.5C22 19.57 23.57 18 25.5 18H28V21H26C25.45 21 25 21.45 25 22V24H28V27H25V33.95C30.05 33.45 34 29.19 34 24Z" fill="white" />
-                                    </g>
-                                    <defs>
-                                        <clipPath id="clip0_3535_8230">
-                                            <rect width="24" height="24" fill="white" transform="translate(12 12)" />
-                                        </clipPath>
-                                    </defs>
-                                </svg> */}
-
                             </div>
-                            <p className='
-                            flex space-x-2 items-center font-satoshi font-[500] lg:text-[15px] text-[12px] text-[#EBE9F4]'>
 
-                                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M7 0C3.134 0 0 3.134 0 7C0 10.866 3.134 14 7 14C10.866 14 14 10.866 14 7C14 3.134 10.866 0 7 0ZM10.3062 9.78738C10.2613 9.84008 9.18349 11.0782 7.20557 11.0782C4.81507 11.0782 3.12739 9.29261 3.12739 6.96943C3.12739 4.67459 4.8775 2.92182 7.18519 2.92182C9.0751 2.92182 10.0632 3.97507 10.1044 4.01992C10.155 4.07515 10.186 4.14564 10.1923 4.22033C10.1986 4.29502 10.18 4.3697 10.1393 4.43267L9.50761 5.41083C9.39332 5.58772 9.14705 5.61832 8.99294 5.47561C8.98636 5.46957 8.24414 4.80158 7.24633 4.80158C5.94466 4.80158 5.15999 5.74926 5.15999 6.94905C5.15999 8.06685 5.88014 9.19842 7.25652 9.19842C8.34877 9.19842 9.0991 8.39856 9.10655 8.39046C9.2514 8.23338 9.50338 8.2484 9.62895 8.42018L10.3218 9.36778C10.3668 9.42928 10.3897 9.50415 10.3869 9.58029C10.384 9.65643 10.3556 9.72939 10.3062 9.78738Z" fill="white" />
-                                </svg>
-
-                                <span>
-                                    {currentYear} Olójà, a trading name of Jacinth Solutions. ABN 48672884472. All Rights Reserved.
-                                </span>
-                            </p>
+                            {/* Copyright */}
+                            <div className="text-[#EBE9F4] text-xs lg:text-sm text-center pt-8 border-t border-[#EBE9F4]/20 w-full">
+                                <p className="px-4">
+                                    © {currentYear} Olójà, a trading name of Jacinth Solutions.
+                                    <br className="sm:hidden" />
+                                    ABN 48672884472. All Rights Reserved.
+                                </p>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
+
+            {/* Newsletter Section */}
             {(pathname === '/home' || pathname === '/about') && (
-                <div className='absolute lg:-top-24 -top-44 w-full   overflow-hidden z-20'>
+                <div className="absolute lg:-top-24 -top-44 w-full overflow-hidden z-20">
                     <NewsLetter />
                 </div>
             )}
-
         </footer>
     )
 }
