@@ -22,6 +22,7 @@ import { defaultUserDetails } from "@/data/data";
 import Button from "@/components/global/Button";
 import { useRouter, useSearchParams } from "next/navigation";
 import { getCookie, deleteCookie } from "cookies-next";
+import { MdOutlineErrorOutline } from "react-icons/md";
 
 
 const userDataSchema = z.object({
@@ -67,6 +68,7 @@ const EditProfile = () => {
   const [error, setError] = useState("");
   const [err, setErr] = useState("");
   const [userDetails, setUserDetails] = useState(defaultUserDetails);
+  const [editProfileError, setEditProfileError] = useState("");
 
   const userProfile = useSelector((state: RootState) => state.userProfile);
   const dispatch = useDispatch();
@@ -111,7 +113,7 @@ const EditProfile = () => {
       state: "",
       idType: "",
       idNumber: "",
-    abn: null,
+      abn: null,
       bio: "",
     },
   });
@@ -140,7 +142,7 @@ const EditProfile = () => {
         }
       } else {
         setIsABNValid(false);
-        
+
       }
     };
     const debounceValidation = setTimeout(() => {
@@ -312,6 +314,7 @@ const EditProfile = () => {
       console.log(submitData);
     } catch (error: any) {
       console.log(error);
+      setEditProfileError("Something went wrong, please try again");
     }
   };
 
@@ -331,133 +334,138 @@ const EditProfile = () => {
   };
 
   return (
-    <main className="relative px-4 py-8 lg:grid lg:grid-cols-12 lg:items-start lg:gap-6 lg:py-16">
-      <EditProfileModal
-        setIsFormModalShown={setIsFormModalShown}
-        setDocumentImageFront={setDocumentImageFront}
-        setDocumentImageBack={setDocumentImageBack}
-        isFormModalShown={isFormModalShown}
-        isEditingProfilePicture={isEditingProfilePicture}
-        setisEditingProfilePicture={setIsEditingProfilePicture}
-        isEditingImageFront={isEditingImageFront}
-        setisEditingImageFront={setIsEditingImageFront}
-        isEditingImageBack={isEditingImageBack}
-        setisEditingImageBack={setIsEditingImageBack}
-        isProfileUpdatedSuccessfully={isProfileUpdatedSuccessfully}
-        setIsProfileUpdatedSuccessfully={setIsProfileUpdatedSuccessfully}
-        setSelectedDocumentFront={setSelectedDocumentFront}
-        setSelectedDocumentBack={setSelectedDocumentBack}
-        setDocumentImage={setDocumentImage}
-        handleRedirect = {handleRedirect}
-      />
+    <main className="py-8 lg:py-16 container">
+      <div className="p-3 rounded-lg bg-[#F8E9FE] mb-5 flex items-center space-x-3 text-[#D72828]">
+        <MdOutlineErrorOutline className="size-5" />
+        <h4 className="text-sm font-satoshiMedium">Note: Please provide accurate information below, as some fields ( address, date of birth, and ID documents) cannot be edited after submission.</h4>
+      </div>
+      <section className="relative lg:grid lg:grid-cols-12 lg:items-start lg:gap-6">
+        <EditProfileModal
+          setIsFormModalShown={setIsFormModalShown}
+          setDocumentImageFront={setDocumentImageFront}
+          setDocumentImageBack={setDocumentImageBack}
+          isFormModalShown={isFormModalShown}
+          isEditingProfilePicture={isEditingProfilePicture}
+          setisEditingProfilePicture={setIsEditingProfilePicture}
+          isEditingImageFront={isEditingImageFront}
+          setisEditingImageFront={setIsEditingImageFront}
+          isEditingImageBack={isEditingImageBack}
+          setisEditingImageBack={setIsEditingImageBack}
+          isProfileUpdatedSuccessfully={isProfileUpdatedSuccessfully}
+          setIsProfileUpdatedSuccessfully={setIsProfileUpdatedSuccessfully}
+          setSelectedDocumentFront={setSelectedDocumentFront}
+          setSelectedDocumentBack={setSelectedDocumentBack}
+          setDocumentImage={setDocumentImage}
+          handleRedirect={handleRedirect}
+        />
 
-      {/* Profile Image Section */}
-      <section className="col-span-3 flex flex-col items-center justify-center gap-1 pb-8">
-        <button
-          className="relative mx-auto size-32 rounded-full hover:shadow-md"
-          onClick={handleChangeProfilePicture}
-        >
-          <span className="absolute right-3 top-[80%] z-20 rounded-full bg-[#EBE9F4] p-1 text-violet-normal">
-            <BiCamera className="size-5" />
-          </span>
-          <Image
-            src={userProfile.profile?.profileImage ?? "/assets/images/serviceProvider/user.jpg"}
-            alt=""
-            width={100}
-            height={100}
-            className="size-32 h-full w-full rounded-full object-cover"
-          />
-        </button>
-        <h2 className="text-xl font-bold text-slate-900">
-          {user?.firstName} {user?.lastName}
-        </h2>
-        <p className="font-medium text-slate-500">
-          {user?.address?.state} Australia
-        </p>
-        <button
-          onClick={() => setIsEditingEnabled((prev) => !prev)}
-          className="rounded-full bg-violet-normal px-4 py-2 text-sm text-white transition-all duration-300 hover:opacity-90"
-        >
-          {isEditingEnabled ? "Editing ..." : "Edit Profile"}
-        </button>
-      </section>
-
-      {/* Form Section */}
-      <form
-        onSubmit={handleSubmit(handleSubmitUserData)}
-        className="col-span-9 space-y-10 lg:space-y-12"
-      >
-        {/* Personal Information */}
-        <section className="flex flex-col gap-8">
-          <h3 className="text-lg font-bold text-primary">Personal Information</h3>
-          <div className="flex flex-wrap justify-between gap-6 lg:col-span-8 lg:grid lg:grid-cols-2">
-            <FormField
-              label="First Name"
-              name="firstName"
-              register={register}
-              errors={errors}
-              watch={watch}
-              disabled
+        {/* Profile Image Section */}
+        <section className="col-span-3 flex flex-col items-center justify-center gap-1 pb-8">
+          <button
+            className="relative mx-auto size-32 rounded-full hover:shadow-md"
+            onClick={handleChangeProfilePicture}
+          >
+            <span className="absolute right-3 top-[80%] z-20 rounded-full bg-[#EBE9F4] p-1 text-violet-normal">
+              <BiCamera className="size-5" />
+            </span>
+            <Image
+              src={userProfile.profile?.profileImage ?? "/assets/images/serviceProvider/user.jpg"}
+              alt=""
+              width={100}
+              height={100}
+              className="size-32 h-full w-full rounded-full object-cover"
             />
-            <FormField
-              label="Last Name"
-              name="lastName"
-              register={register}
-              errors={errors}
-              watch={watch}
-              disabled
-            />
-            <Controller
-              control={control}
-              name="dateOfBirth"
-              render={({ field }) => (
-                <div className="flex w-full flex-col gap-3 text-violet-normal">
-                  <label htmlFor="dateOfBirth" className="flex items-center justify-between">
-                    <span>Date of Birth</span>
-                    {!errors.dateOfBirth && field.value && (
-                      <BiCheck className="size-5 rounded-full bg-green-500 p-1 text-white" />
-                    )}
-                  </label>
-                  <DatePicker
-                    id="dateOfBirth"
-                    selected={field.value || null} // Use null if there's no date
-                    onChange={(date) => field.onChange(date ? date : '')}
-                    disabled={!isEditingEnabled || !!userDetails.dateOfBirth} // Disable if date exists and not in editing mode
-                    maxDate={new Date(new Date().setFullYear(new Date().getFullYear() - 18))}
-                    className="w-full rounded-xl border border-slate-100 p-2 text-slate-700 shadow outline-none transition-shadow duration-300 hover:shadow-md lg:max-w-sm"
-                    dateFormat="dd/MM/yyyy"
-                  />
-                </div>
-              )}
-            />
-          </div>
+          </button>
+          <h2 className="text-xl font-bold text-slate-900">
+            {user?.firstName} {user?.lastName}
+          </h2>
+          <p className="font-medium text-slate-500">
+            {user?.address?.state} Australia
+          </p>
+          <button
+            onClick={() => setIsEditingEnabled((prev) => !prev)}
+            className="rounded-full bg-violet-normal px-4 py-2 text-sm text-white transition-all duration-300 hover:opacity-90"
+          >
+            {isEditingEnabled ? "Editing ..." : "Edit Profile"}
+          </button>
         </section>
 
-        {/* Bio Section (for Service Providers) */}
-        {isServiceProvider && (
-          <section>
-            <label className="flex w-full flex-col gap-3 text-violet-normal">
-              <span className="flex items-center justify-between">
-                <span>Bio Description</span>
-                {!errors.bio && watchField.bio && (
-                  <BiCheck className="size-5 rounded-full bg-green-500 p-1 text-white" />
-                )}
-              </span>
-              <textarea
-                {...register("bio")}
-                disabled={!isEditingEnabled}
-                className="min-h-32 w-full rounded-xl border border-slate-100 p-2 text-slate-700 shadow outline-none transition-shadow duration-300 hover:shadow-md"
+        {/* Form Section */}
+        <form
+          onSubmit={handleSubmit(handleSubmitUserData)}
+          className="col-span-9 space-y-10 lg:space-y-12"
+        >
+          {/* Personal Information */}
+          <section className="flex flex-col gap-8">
+            <h3 className="text-lg font-bold text-primary">Personal Information</h3>
+            <div className="flex flex-wrap justify-between gap-6 lg:col-span-8 lg:grid lg:grid-cols-2">
+              <FormField
+                label="First Name"
+                name="firstName"
+                register={register}
+                errors={errors}
+                watch={watch}
+                disabled
               />
-            </label>
+              <FormField
+                label="Last Name"
+                name="lastName"
+                register={register}
+                errors={errors}
+                watch={watch}
+                disabled
+              />
+              <Controller
+                control={control}
+                name="dateOfBirth"
+                render={({ field }) => (
+                  <div className="flex w-full flex-col gap-3 text-violet-normal">
+                    <label htmlFor="dateOfBirth" className="flex items-center justify-between">
+                      <span>Date of Birth</span>
+                      {!errors.dateOfBirth && field.value && (
+                        <BiCheck className="size-5 rounded-full bg-green-500 p-1 text-white" />
+                      )}
+                    </label>
+                    <DatePicker
+                      id="dateOfBirth"
+                      selected={field.value || null} // Use null if there's no date
+                      onChange={(date) => field.onChange(date ? date : '')}
+                      disabled={!isEditingEnabled || !!userDetails.dateOfBirth} // Disable if date exists and not in editing mode
+                      maxDate={new Date(new Date().setFullYear(new Date().getFullYear() - 18))}
+                      className="w-full rounded-xl border border-slate-100 p-2 text-slate-700 shadow outline-none transition-shadow duration-300 hover:shadow-md lg:max-w-sm"
+                      dateFormat="dd/MM/yyyy"
+                    />
+                  </div>
+                )}
+              />
+            </div>
           </section>
-        )}
 
-        {/* Contact Information */}
-        <section className="flex flex-col gap-4">
-          <h3 className="text-lg font-bold text-primary">Contact Information</h3>
-          <div className="flex flex-wrap gap-6 lg:col-span-8 lg:grid lg:grid-cols-2">
-            {/* Phone number */}
-            {/* <label className="flex w-full flex-col gap-3 text-violet-normal">
+          {/* Bio Section (for Service Providers) */}
+          {isServiceProvider && (
+            <section>
+              <label className="flex w-full flex-col gap-3 text-violet-normal">
+                <span className="flex items-center justify-between">
+                  <span>Bio Description</span>
+                  {!errors.bio && watchField.bio && (
+                    <BiCheck className="size-5 rounded-full bg-green-500 p-1 text-white" />
+                  )}
+                </span>
+                <textarea
+                  {...register("bio")}
+                  disabled={!isEditingEnabled}
+                  className="min-h-32 w-full rounded-xl border border-slate-100 p-2 text-slate-700 shadow outline-none transition-shadow duration-300 hover:shadow-md"
+                />
+              </label>
+            </section>
+          )}
+
+          {/* Contact Information */}
+          <section className="flex flex-col gap-4">
+            <h3 className="text-lg font-bold text-primary">Contact Information</h3>
+            <div className="flex flex-wrap gap-6 lg:col-span-8 lg:grid lg:grid-cols-2">
+              {/* Phone number */}
+              {/* <label className="flex w-full flex-col gap-3 text-violet-normal">
               <span className="flex items-center justify-between">
                 <span>Phone Number</span>
                 <BiCheck className="size-5 rounded-full bg-green-500 p-1 text-white" />
@@ -470,186 +478,153 @@ const EditProfile = () => {
                 disabled
               />
             </label> */}
-            {/* Email Address */}
-            <label className="flex w-full flex-col gap-3 text-violet-normal">
-              <span className="flex items-center justify-between">
-                <span>Email Address</span>
+              {/* Email Address */}
+              <label className="flex w-full flex-col gap-3 text-violet-normal">
+                <span className="flex items-center justify-between">
+                  <span>Email Address</span>
                   <BiCheck className="size-5 rounded-full bg-green-500 p-1 text-white" />
-              </span>
-            <input 
-            type="text" 
-            className="rounded-xl border border-slate-100 p-2 text-slate-700 shadow outline-none transition-shadow duration-300 hover:shadow-md lg:max-w-sm"
-            value={user?.emailAddress}
-            readOnly
-            disabled
-            />
-            </label>
-          </div>
-        </section>
-
-        {/* Address Information */}
-        <section className="flex flex-col gap-4">
-          <h3 className="text-lg font-bold text-primary">Address Information</h3>
-          <div className="flex flex-wrap gap-6 lg:col-span-8 lg:grid lg:grid-cols-2">
-            <FormField
-              label="Postal Code"
-              name="postcode"
-              watch={watch}
-              register={register}
-              errors={errors}
-              watchField={watchField}
-              disabled={!isEditingEnabled || !!userDetails.postalCode}
-            />
-            <Controller
-              name="suburb"
-              control={control}
-              render={({ field }) => (
-                <div className="flex w-full flex-col gap-3 text-violet-normal">
-                  <label htmlFor="suburb" className="flex items-center justify-between">
-                    <span>Suburb</span>
-                    {!errors.suburb && field.value && (
-                      <BiCheck className="size-5 rounded-full bg-green-500 p-1 text-white" />
-                    )}
-                  </label>
-                  <select
-                    {...field}
-                    className="rounded-xl border border-slate-100 p-2 py-2.5 text-slate-700 shadow outline-none transition-shadow duration-300 hover:shadow-md"
-                    disabled={!isEditingEnabled || suburbList.length === 0 || !!userDetails.suburbs }
-                  >
-                    {suburbList.map((item) => (
-                      <option value={item} key={item}>
-                        {item}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              )}
-            />
-            <FormField
-              label="State"
-              name="state"
-              watch={watch}
-              register={register}
-              errors={errors}
-              watchField={watchField}
-              disabled={true}
-            />
-          </div>
-        </section>
-
-        {/* Bio Section (for Service Providers) */}
-        {isServiceProvider && (
-          <section className="space-y-3">
-            <h3 className="text-lg font-bold text-primary mb-5">Verification Information</h3>
-            <div className="flex flex-wrap gap-6 lg:col-span-8 lg:grid lg:grid-cols-2">
-            <FormField
-              label="ABN Number"
-              name="abn"
-              register={register}
-              errors={errors}
-                watch={watch}
-                watchField = {watchField}
-              disabled={!isEditingEnabled || !!userDetails.abn}
-              minLength={11}
-              />
+                </span>
+                <input
+                  type="text"
+                  className="rounded-xl border border-slate-100 p-2 text-slate-700 shadow outline-none transition-shadow duration-300 hover:shadow-md lg:max-w-sm"
+                  value={user?.emailAddress}
+                  readOnly
+                  disabled
+                />
+              </label>
             </div>
-            {!isABNValid && !userDetails.abn && err && <div className="text-red-500 ">Please enter a valid 11-digit ABN.</div>}
           </section>
-        )}
 
-        {/* Identification Document */}
-        <section className="flex flex-col gap-4">
-          <h3 className="text-lg font-bold text-primary">Identification Document</h3>
-          <div className="flex flex-col gap-6 lg:col-span-8 lg:gap-8">
-            <div className="flex flex-wrap gap-6 lg:grid lg:grid-cols-2 lg:gap-8">
-
-              {/* ID Type Select */}
-              <div className="flex w-full flex-col gap-2.5">
-                <label htmlFor="idType" className="flex w-full items-center justify-between">
-                  <span>Choose a valid means of ID</span>
-                  {!errors.idType && watchField.idType && (
-                    <BiCheck className="size-5 rounded-full bg-green-500 p-1 text-white" />
-                  )}
-                </label>
-                <select
-                  {...register("idType")}
-                  className="w-full rounded-xl border border-slate-100 px-2 py-2.5 text-slate-700 shadow outline-none transition-shadow duration-300 hover:shadow-md lg:max-w-sm"
-                  disabled={!isEditingEnabled || !!userDetails.idType}
-                >
-                  {idTypeObject.map((item) => (
-                    <option key={item.label} value={item.label}>
-                      {item.label}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              {/* ID Number Field */}
+          {/* Address Information */}
+          <section className="flex flex-col gap-4">
+            <h3 className="text-lg font-bold text-primary">Address Information</h3>
+            <div className="flex flex-wrap gap-6 lg:col-span-8 lg:grid lg:grid-cols-2">
               <FormField
-                label={watchField.idType ? `${watchField.idType} Number` : "Select ID Type"}
-                name="idNumber"
+                label="Postal Code"
+                name="postcode"
                 watch={watch}
                 register={register}
                 errors={errors}
                 watchField={watchField}
-                disabled={!isEditingEnabled || !!userDetails.idNumber}
-                maxLength={12}
+                disabled={!isEditingEnabled || !!userDetails.postalCode}
+              />
+              <Controller
+                name="suburb"
+                control={control}
+                render={({ field }) => (
+                  <div className="flex w-full flex-col gap-3 text-violet-normal">
+                    <label htmlFor="suburb" className="flex items-center justify-between">
+                      <span>Suburb</span>
+                      {!errors.suburb && field.value && (
+                        <BiCheck className="size-5 rounded-full bg-green-500 p-1 text-white" />
+                      )}
+                    </label>
+                    <select
+                      {...field}
+                      className="rounded-xl border border-slate-100 p-2 py-2.5 text-slate-700 shadow outline-none transition-shadow duration-300 hover:shadow-md"
+                      disabled={!isEditingEnabled || suburbList.length === 0 || !!userDetails.suburbs}
+                    >
+                      {suburbList.map((item) => (
+                        <option value={item} key={item}>
+                          {item}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                )}
+              />
+              <FormField
+                label="State"
+                name="state"
+                watch={watch}
+                register={register}
+                errors={errors}
+                watchField={watchField}
+                disabled={true}
               />
             </div>
+          </section>
 
-            {/* Upload Identification Document */}
-            <div className="flex w-full flex-col gap-3 text-violet-normal">
-              <label className="flex items-center justify-between">
-                <span>Means of ID</span>
-                {(documentImageFront || watchField.idImageFront) && (
-                  <BiCheck className="size-5 rounded-full bg-green-500 p-1 text-white" />
-                )}
-              </label>
-              <div className="flex gap-5 w-full">
-                {/* Front View */}
-                <div>
-                  {documentImageFront || watchField.idImageFront ? (
-                    <button
-                      type="button"
-                      className="flex items-end justify-center space-x-2"
-                      onClick={handleChangeFront}
-                      disabled={!isEditingEnabled || !!userDetails.idImageFront}
-                    >
-                      <Image
-                        src={documentImageFront ?? watchField.idImageFront ?? userDetails.idImageFront ?? ""}
-                        alt="Captured or Selected"
-                        width={300}
-                        height={300}
-                        className="rounded-xl"
-                      />
-                    </button>
-                  ) : (
-                    <button
-                      type="button"
-                      className="flex h-48 w-48 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-slate-500 p-4"
-                      onClick={handleChangeFront}
-                      disabled={!isEditingEnabled}
-                    >
-                      <PiFileArrowDownDuotone className="text-2xl text-tc-gray" />
-                      <span className="text-center text-tc-gray">
-                        Choose a File <span className="text-[#381F8C] font-clashSemiBold"><br />Front View<br /></span> Upload supports: JPG, PDF, PNG.
-                      </span>
-                    </button>
-                  )}
+          {/* Bio Section (for Service Providers) */}
+          {isServiceProvider && (
+            <section className="space-y-3">
+              <h3 className="text-lg font-bold text-primary mb-5">Verification Information</h3>
+              <div className="flex flex-wrap gap-6 lg:col-span-8 lg:grid lg:grid-cols-2">
+                <FormField
+                  label="ABN Number"
+                  name="abn"
+                  register={register}
+                  errors={errors}
+                  watch={watch}
+                  watchField={watchField}
+                  disabled={!isEditingEnabled || !!userDetails.abn}
+                  minLength={11}
+                />
+              </div>
+              {!isABNValid && !userDetails.abn && err && <div className="text-red-500 ">Please enter a valid 11-digit ABN.</div>}
+            </section>
+          )}
+
+          {/* Identification Document */}
+          <section className="flex flex-col gap-4">
+            <h3 className="text-lg font-bold text-primary">Identification Document</h3>
+            <div className="flex flex-col gap-6 lg:col-span-8 lg:gap-8">
+              <div className="flex flex-wrap gap-6 lg:grid lg:grid-cols-2 lg:gap-8">
+
+                {/* ID Type Select */}
+                <div className="flex w-full flex-col gap-2.5">
+                  <label htmlFor="idType" className="flex w-full items-center justify-between">
+                    <span>Choose a valid means of ID</span>
+                    {!errors.idType && watchField.idType && (
+                      <BiCheck className="size-5 rounded-full bg-green-500 p-1 text-white" />
+                    )}
+                  </label>
+                  <select
+                    {...register("idType")}
+                    className="w-full rounded-xl border border-slate-100 px-2 py-2.5 text-slate-700 shadow outline-none transition-shadow duration-300 hover:shadow-md lg:max-w-sm"
+                    disabled={!isEditingEnabled || !!userDetails.idType}
+                  >
+                    {idTypeObject.map((item) => (
+                      <option key={item.label} value={item.label}>
+                        {item.label}
+                      </option>
+                    ))}
+                  </select>
                 </div>
 
-                {/* Back View */}
-                {watchField.idType !== 'International Passport' && (
+                {/* ID Number Field */}
+                <FormField
+                  label={watchField.idType ? `${watchField.idType} Number` : "Select ID Type"}
+                  name="idNumber"
+                  watch={watch}
+                  register={register}
+                  errors={errors}
+                  watchField={watchField}
+                  disabled={!isEditingEnabled || !!userDetails.idNumber}
+                  maxLength={12}
+                />
+              </div>
+
+              {/* Upload Identification Document */}
+              <div className="flex w-full flex-col gap-3 text-violet-normal">
+                <label className="flex items-center justify-between">
+                  <span>Means of ID</span>
+                  {(documentImageFront || watchField.idImageFront) && (
+                    <BiCheck className="size-5 rounded-full bg-green-500 p-1 text-white" />
+                  )}
+                </label>
+                <div className="flex gap-5 w-full">
+                  {/* Front View */}
                   <div>
-                    {documentImageBack || watchField.idImageBack ? (
+                    {documentImageFront || watchField.idImageFront ? (
                       <button
                         type="button"
                         className="flex items-end justify-center space-x-2"
-                        onClick={handleChangeBack}
-                        disabled={!isEditingEnabled || !!userDetails.idImageBack}
+                        onClick={handleChangeFront}
+                        disabled={!isEditingEnabled || !!userDetails.idImageFront}
                       >
                         <Image
-                          src={documentImageBack ?? watchField.idImageBack ?? ""}
+                          src={documentImageFront ?? watchField.idImageFront ?? userDetails.idImageFront ?? ""}
                           alt="Captured or Selected"
                           width={300}
                           height={300}
@@ -660,41 +635,81 @@ const EditProfile = () => {
                       <button
                         type="button"
                         className="flex h-48 w-48 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-slate-500 p-4"
-                        onClick={handleChangeBack}
+                        onClick={handleChangeFront}
                         disabled={!isEditingEnabled}
                       >
                         <PiFileArrowDownDuotone className="text-2xl text-tc-gray" />
                         <span className="text-center text-tc-gray">
-                          Choose a File <span className="text-[#381F8C] font-clashSemiBold"><br />Back View<br /></span> Upload supports: JPG, PDF, PNG.
+                          Choose a File <span className="text-[#381F8C] font-clashSemiBold"><br />Front View<br /></span> Upload supports: JPG, PDF, PNG.
                         </span>
                       </button>
                     )}
                   </div>
-                )}
+
+                  {/* Back View */}
+                  {watchField.idType !== 'International Passport' && (
+                    <div>
+                      {documentImageBack || watchField.idImageBack ? (
+                        <button
+                          type="button"
+                          className="flex items-end justify-center space-x-2"
+                          onClick={handleChangeBack}
+                          disabled={!isEditingEnabled || !!userDetails.idImageBack}
+                        >
+                          <Image
+                            src={documentImageBack ?? watchField.idImageBack ?? ""}
+                            alt="Captured or Selected"
+                            width={300}
+                            height={300}
+                            className="rounded-xl"
+                          />
+                        </button>
+                      ) : (
+                        <button
+                          type="button"
+                          className="flex h-48 w-48 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-slate-500 p-4"
+                          onClick={handleChangeBack}
+                          disabled={!isEditingEnabled}
+                        >
+                          <PiFileArrowDownDuotone className="text-2xl text-tc-gray" />
+                          <span className="text-center text-tc-gray">
+                            Choose a File <span className="text-[#381F8C] font-clashSemiBold"><br />Back View<br /></span> Upload supports: JPG, PDF, PNG.
+                          </span>
+                        </button>
+                      )}
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
+          </section>
+
+
+          {error && (
+            <div className="my-1 text-base text-end lg:px-24 font-semibold text-status-error-100">
+              {error}
+            </div>
+          )}
+
+          {editProfileError && (
+            <div className="my-1 text-base text-end lg:px-24 font-semibold text-status-error-100">
+              {editProfileError}
+            </div>
+          )}
+
+          {/* Submit Button */}
+          <div className="flex lg:items-end lg:justify-end lg:px-24">
+            <Button
+              type="submit"
+              className="w-fit rounded-full border border-violet-normal bg-violet-light px-6 py-3 font-satoshiBold font-bold text-violet-normal transition-all duration-300 hover:bg-violet-200 hover:shadow-md"
+              disabled={!isEditingEnabled}
+              loading={isSubmitting}
+            >
+              Save and Continue
+            </Button>
           </div>
-        </section>
-
-
-        {error && (
-          <div className="my-1 text-base text-end lg:px-24 font-semibold text-status-error-100">
-            {error}
-          </div>
-        )}
-
-        {/* Submit Button */}
-        <div className="flex lg:items-end lg:justify-end lg:px-24">
-          <Button
-            type="submit"
-            className="w-fit rounded-full border border-violet-normal bg-violet-light px-6 py-3 font-satoshiBold font-bold text-violet-normal transition-all duration-300 hover:bg-violet-200 hover:shadow-md"
-            disabled={!isEditingEnabled}
-            loading={isSubmitting}
-          >
-            Save and Continue
-          </Button>
-        </div>
-      </form>
+        </form>
+      </section>
     </main>
   );
 };
