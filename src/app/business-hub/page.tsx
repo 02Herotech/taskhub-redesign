@@ -16,7 +16,7 @@ function Page() {
               Your Financial GPS for{" "}
               <strong className="text-[#E58C06]">Business</strong> Success
             </h2>
-            <p className="mb-5 text-2xl font-satoshiMedium text-[#381F8C]">
+            <p className="mb-5 text-xl sm:text-2xl font-satoshiMedium text-[#381F8C]">
               Our mission is to provide you with the financial literacy as an
               immigrant business owner and integration support you need to
               thrive in Australia.
