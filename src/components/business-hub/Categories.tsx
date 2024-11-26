@@ -36,7 +36,7 @@ function Categories() {
                 <div className="w-max rounded-lg bg-[#381F8C] p-2">
                   <link.icon />
                 </div>
-                <span className="font-clashSemiBold text-primary ">
+                <span className="font-clashMedium text-primary ">
                   {link.text}
                 </span>
               </Link>
