@@ -134,7 +134,7 @@ const Input = ({
 		confirmPassword: (value, label = "") => {
 			return value === watch("password") || value === watch("new_password")
 				? true
-				: `The ${label} field must be equal to the Password field`;
+				: `Passwords do not match`;
 		},
 		noSpaces: (value, label = "") => {
 			return !value.includes(" ")
