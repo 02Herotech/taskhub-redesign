@@ -401,12 +401,12 @@ export function formatTimestamp(timestamp: number | string): string {
   } else if (typeof timestamp === 'string') {
     dateObject = new Date(timestamp);
   } else {
-    return "Invalid date";
+    return "Flexible";
   }
 
   // Check if the date is valid
   if (isNaN(dateObject.getTime())) {
-    return "Invalid date";
+    return "Flexible";
   }
 
   // Get the current time and calculate the difference
