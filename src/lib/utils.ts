@@ -219,7 +219,7 @@ export const formatTimeAgo = (timestamp: number): string => {
 
   // Validate the date
   if (isNaN(date.getTime())) {
-    return "Invalid date";
+    return "Flexible";
   }
 
   const now = new Date();
