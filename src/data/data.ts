@@ -5,11 +5,12 @@ export const defaultUserDetails: DefaultUserDetailsType = {
   idImageBack: "",
   idNumber: "",
   idType: "",
-  lastName: "", 
+  lastName: "",
   postalCode: "",
   profileImage: "",
   state: "",
   suburbs: "",
   bio: "",
-abn: ""
+  abn: "",
+  isVerified: false,
 };

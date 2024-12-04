@@ -66,7 +66,7 @@ const AddTaskForm: React.FC = () => {
   const isAuthenticated = session.status === "authenticated";
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(false);
-  const [code, setCode]= useState<boolean>(false)
+  const [code, setCode] = useState<boolean>(false)
   const [task, setTask] = useState<FormData>({
     taskBriefDescription: getCookie("taskBriefDescription") || "",
     taskImage: null,
@@ -106,6 +106,9 @@ const AddTaskForm: React.FC = () => {
   const [isSuccessPopup, setIsSuccessPopup] = useState(false);
   const maxSize = 5 * 1024 * 1024; // 5MB in bytes
   const [errs, setErrs] = useState("");
+  const isEnabled = session.data?.user.user.enabled;
+  const [isEnabledPopup, setIsEnabledPopup] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   // Handling getting the description from the marketplace when i user navigates from the marketplace
   useEffect(() => {
@@ -190,7 +193,7 @@ const AddTaskForm: React.FC = () => {
       fetchPostalCodeData();
     }
   }, [selectedCode]);
-  
+
   useEffect(() => {
     const fetchItems = async () => {
       try {
@@ -223,7 +226,7 @@ const AddTaskForm: React.FC = () => {
       if (!selectedCity) {
         errors.city = "Please fill out all required fields";
       }
-      
+
     } else if (!isRemote) {
       error.service = "Please fill out all required fields";
     }
@@ -458,76 +461,77 @@ const AddTaskForm: React.FC = () => {
     event.preventDefault();
     setLoading(true);
     if (validateFields() && validateField1()) {
-      try {
-        let finalTask = { ...task };
+      if (isEnabled) {
+        try {
+          let finalTask = { ...task };
 
-        if (termAccepted) {
-          finalTask = { ...finalTask };
-        }
+          if (termAccepted) {
+            finalTask = { ...finalTask };
+          }
 
-        if (selectedDate && selectedTime) {
-          const date = dateString;
-          const time = timeString;
-          finalTask = { ...finalTask, taskDate: date, taskTime: time };
-        } else if (termAccepted) {
-          finalTask = { ...finalTask, termAccepted: true };
-        }
+          if (selectedDate && selectedTime) {
+            const date = dateString;
+            const time = timeString;
+            finalTask = { ...finalTask, taskDate: date, taskTime: time };
+          } else if (termAccepted) {
+            finalTask = { ...finalTask, termAccepted: true };
+          }
 
-        if (isOpen && activeButtonIndex === 1) {
-          const type = "REMOTE_SERVICE";
-          finalTask = { ...finalTask, taskType: type };
-        } else {
-          finalTask = {
-            ...finalTask,
-            taskType: "PHYSICAL_SERVICE",
-            suburb: selectedCity,
-            postCode: selectedCode,
-            state: postalCodeData[0].State
-          };
-        }
+          if (isOpen && activeButtonIndex === 1) {
+            const type = "REMOTE_SERVICE";
+            finalTask = { ...finalTask, taskType: type };
+          } else {
+            finalTask = {
+              ...finalTask,
+              taskType: "PHYSICAL_SERVICE",
+              suburb: selectedCity,
+              postCode: selectedCode,
+              state: postalCodeData[0].State
+            };
+          }
 
-        if (!task.taskImage) {
-          finalTask = { ...finalTask, taskImage: null };
-        }
+          if (!task.taskImage) {
+            finalTask = { ...finalTask, taskImage: null };
+          }
 
-        console.log(finalTask);
-        await Promise.race([
-          axios.post(
-            `${process.env.NEXT_PUBLIC_API_URL}/task/post`,
-            finalTask,
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-                "Content-Type": "multipart/form-data",
+          await Promise.race([
+            axios.post(
+              `${process.env.NEXT_PUBLIC_API_URL}/task/post`,
+              finalTask,
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                  "Content-Type": "multipart/form-data",
+                },
               },
-            },
-          ),
-          timeout(10000),
-        ]);
+            ),
+            timeout(10000),
+          ]);
 
-        setTask({
-          taskBriefDescription: "",
-          taskImage: null,
-          taskTime: "",
-          taskDate: "",
-          taskType: "",
-          termAccepted: false,
-          suburb: "",
-          state: "",
-          postCode: "",
-          customerBudget: null,
-          categoryId: null,
-          taskDescription: "",
-        });
+          setTask({
+            taskBriefDescription: "",
+            taskImage: null,
+            taskTime: "",
+            taskDate: "",
+            taskType: "",
+            termAccepted: false,
+            suburb: "",
+            state: "",
+            postCode: "",
+            customerBudget: null,
+            categoryId: null,
+            taskDescription: "",
+          });
 
-        setIsSuccessPopupOpen(true);
-      } catch (error: any) {
-        if (error.response.status === 400 || error.response.status === 500 || error.response.status === 409) {
-          setIsSuccessPopupOpen(false);
-        } else {
           setIsSuccessPopupOpen(true);
+        } catch (error: any) {
+          console.error("Error submitting form:", error);
+          setErrorMessage(error.response.data.message || "An error occurred, please try again");
+        } finally {
+          setLoading(false);
         }
-      } finally {
+      } else {
+        setIsEnabledPopup(true);
         setLoading(false);
       }
     } else {
@@ -720,7 +724,7 @@ const AddTaskForm: React.FC = () => {
                       customInput={<CustomInputs />}
                       className="w-full cursor-pointer rounded-2xl  bg-[#EBE9F4] px-2 py-1 outline-none placeholder:text-[14px] placeholder:font-bold"
                     />
-                    
+
                   </div>
                   <div>
                     <div className="flex items-center">
@@ -820,7 +824,7 @@ const AddTaskForm: React.FC = () => {
                         onChange={handleCode}
                         name="postCode"
                         type="number"
-                        className={`w-[155px] cursor-pointer  rounded-2xl bg-[#EBE9F4] p-3 text-[13px] placeholder:font-bold ${(errors.postalCode || code == true )? "border border-[#ff0000] outline-[#FF0000]" : "border-none outline-none"}`}
+                        className={`w-[155px] cursor-pointer  rounded-2xl bg-[#EBE9F4] p-3 text-[13px] placeholder:font-bold ${(errors.postalCode || code == true) ? "border border-[#ff0000] outline-[#FF0000]" : "border-none outline-none"}`}
                       />
                     </div>
 
@@ -930,6 +934,9 @@ const AddTaskForm: React.FC = () => {
                   Back
                 </button>
               </div>
+              {errorMessage && (
+                <div className="text-red-500">{errorMessage}</div>
+              )}
             </form>
           </div>
         );
@@ -938,224 +945,269 @@ const AddTaskForm: React.FC = () => {
     }
   };
   return (
-    <div className="mt-24 flex min-h-screen items-center justify-center">
-      <Head>
-        <title>Oloja | Add Task</title>
-      </Head>
-      <div className="w-full">
-        <div className="fixed hidden lg:block left-0 top-20 z-10 w-full border-t-2 bg-white shadow-md">
-          <div className="mb-3 flex justify-center space-x-5 pt-4">
-            <div
-              className={`${currentPage === 1
-                ? "text-status-purpleBase"
-                : "text-status-purpleBase"
-                }`}
-            >
-              <p className="flex items-center gap-2 text-[12px] md:text-[16px] lg:gap-3">
-                <span
-                  className={`${currentPage === 1
-                    ? "bg-status-purpleBase text-white"
-                    : "bg-status-purpleBase text-white"
-                    } flex h-[37px] w-[47px] items-center justify-center rounded-[22px] border-none p-3 font-satoshiBold`}
-                >
-                  01
-                </span>{" "}
-                Services Details
-                <span>
-                  <IoIosArrowForward />
-                </span>
-              </p>
+    <>
+      <div className="mt-24 flex min-h-screen items-center justify-center">
+        <Head>
+          <title>Oloja | Add Task</title>
+        </Head>
+        <div className="w-full">
+          <div className="fixed hidden lg:block left-0 top-20 z-10 w-full border-t-2 bg-white shadow-md">
+            <div className="mb-3 flex justify-center space-x-5 pt-4">
+              <div
+                className={`${currentPage === 1
+                  ? "text-status-purpleBase"
+                  : "text-status-purpleBase"
+                  }`}
+              >
+                <p className="flex items-center gap-2 text-[12px] md:text-[16px] lg:gap-3">
+                  <span
+                    className={`${currentPage === 1
+                      ? "bg-status-purpleBase text-white"
+                      : "bg-status-purpleBase text-white"
+                      } flex h-[37px] w-[47px] items-center justify-center rounded-[22px] border-none p-3 font-satoshiBold`}
+                  >
+                    01
+                  </span>{" "}
+                  Services Details
+                  <span>
+                    <IoIosArrowForward />
+                  </span>
+                </p>
+              </div>
+              <div
+                className={`${currentPage === 2 ? "text-status-purpleBase" : " text-[#716F78]"
+                  }`}
+              >
+                <p className="flex items-center gap-2 text-[12px] md:text-[16px] lg:gap-3">
+                  <span
+                    className={`${currentPage === 2
+                      ? "bg-status-purpleBase text-white"
+                      : "bg-[#EAE9EB] text-[#716F78]"
+                      } flex h-[37px] w-[47px] items-center justify-center rounded-[22px] border-none p-3 font-satoshiBold`}
+                  >
+                    02
+                  </span>{" "}
+                  Location and Budget
+                </p>
+              </div>
             </div>
-            <div
-              className={`${currentPage === 2 ? "text-status-purpleBase" : " text-[#716F78]"
-                }`}
-            >
-              <p className="flex items-center gap-2 text-[12px] md:text-[16px] lg:gap-3">
-                <span
-                  className={`${currentPage === 2
-                    ? "bg-status-purpleBase text-white"
-                    : "bg-[#EAE9EB] text-[#716F78]"
-                    } flex h-[37px] w-[47px] items-center justify-center rounded-[22px] border-none p-3 font-satoshiBold`}
-                >
-                  02
-                </span>{" "}
-                Location and Budget
-              </p>
-            </div>
-          </div>
-          <hr className="h-[2px] w-full bg-[#EAE9EB] text-[#EAE9EB]" />
-          <div className="flex justify-center pb-4">
-            <div
-              className="container flex w-80 items-center justify-center space-x-5 border border-[#EAE9EB] p-3 lg:w-2/3"
-              style={{ borderRadius: "0px 0px 20px 20px ", borderTop: "none" }}
-            >
-              {/* Progress bar */}
-              <div className="h-1 w-2/3 overflow-hidden bg-[#EAE9EB]">
-                <div
-                  className={`h-full ${currentPage === 1
-                    ? "bg-status-purpleBase"
-                    : currentPage === 2
+            <hr className="h-[2px] w-full bg-[#EAE9EB] text-[#EAE9EB]" />
+            <div className="flex justify-center pb-4">
+              <div
+                className="container flex w-80 items-center justify-center space-x-5 border border-[#EAE9EB] p-3 lg:w-2/3"
+                style={{ borderRadius: "0px 0px 20px 20px ", borderTop: "none" }}
+              >
+                {/* Progress bar */}
+                <div className="h-1 w-2/3 overflow-hidden bg-[#EAE9EB]">
+                  <div
+                    className={`h-full ${currentPage === 1
                       ? "bg-status-purpleBase"
-                      : "bg-status-purpleBase"
-                    }`}
-                  style={{ width: `${progress}%` }}
+                      : currentPage === 2
+                        ? "bg-status-purpleBase"
+                        : "bg-status-purpleBase"
+                      }`}
+                    style={{ width: `${progress}%` }}
+                  />
+                </div>
+                <p className="text-xs text-status-darkpurple">
+                  {`${progress}% complete`}
+                </p>
+              </div>
+            </div>
+          </div>
+          <Progress currentPage={currentPage} progress={progress} setCurrentPage={setCurrentPage} />
+          <div className="pt-28">
+            <div className="mt-8 flex items-center justify-center p-4 font-medium lg:p-0">
+              <div>
+                <div className="space-y-2">
+                  <h2 className="text-4xl text-status-darkpurple">Add a Task</h2>
+                  <p className="text-[12px] text-[#716F78]">
+                    Please fill out the information below to add a new task.
+                  </p>
+                </div>
+                {loading && <Loading />}
+                <div className="mt-8">{renderPage()}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        {
+          <Popup
+            isOpen={isSuccessPopup}
+            onClose={() => {
+              setIsSuccessPopupOpen(false);
+            }}
+          >
+            <div className="px-16 py-10 lg:px-24">
+              <div className="relative grid items-center justify-center space-y-5">
+                <p className="text-center font-clashBold text-[20px] font-extrabold text-[#2A1769] md:text-[36px] lg:text-[37px] ">
+                  You are almost done!!!
+                </p>
+                <div>
+                  <p className="text-center text-[14px] lg:text-[20px] ">
+                    Please sign up to finish adding your first{" "}
+                  </p>
+                  <p className="text-center text-[14px] lg:text-[20px] ">
+                    task and manage all your tasks.
+                  </p>
+                </div>
+                <Image
+                  src={imag}
+                  alt="image"
+                  className="absolute -right-16 top-20 w-24 lg:-right-24 lg:top-1/3 lg:w-36 "
                 />
+                <Image
+                  src={imgg}
+                  alt="image"
+                  className="absolute -left-12 top-0 w-16 lg:-left-[100px] lg:-top-12 lg:w-28"
+                />
+                <div className="flex justify-center space-x-3">
+                  <button
+                    onClick={handleLoginNavigation}
+                    className="rounded-2xl border border-status-purpleBase p-2 text-[14px] font-semibold text-status-purpleBase outline-none md:w-[100px]"
+                  >
+                    Sign Up
+                  </button>
+                  <Link href="/">
+                    <button className="rounded-2xl bg-status-purpleBase p-2 text-[14px] text-white outline-none md:w-[100px]">
+                      Cancel
+                    </button>
+                  </Link>
+                </div>
               </div>
-              <p className="text-xs text-status-darkpurple">
-                {`${progress}% complete`}
-              </p>
             </div>
-          </div>
-        </div>
-        <Progress currentPage={currentPage} progress={progress} setCurrentPage={setCurrentPage} />
-        <div className="pt-28">
-          <div className="mt-8 flex items-center justify-center p-4 font-medium lg:p-0">
-            <div>
-              <div className="space-y-2">
-                <h2 className="text-4xl text-status-darkpurple">Add a Task</h2>
-                <p className="text-[12px] text-[#716F78]">
-                  Please fill out the information below to add a new task.
+          </Popup>
+        }
+        {!isAuthenticated ? (
+          <Popup
+            isOpen={isSuccessPopupOpen}
+            onClose={() => {
+              setIsSuccessPopupOpen(false);
+            }}
+          >
+            <div className="py-10 lg:px-24">
+              <div className="relative grid items-center justify-center space-y-5">
+                <p className="font-clashDisplay text-center text-[20px] font-extrabold text-[#2A1769] md:text-[36px] lg:text-[37px]">
+                  You are almost done!!!
                 </p>
+                <div>
+                  <p className="text-center text-[14px] lg:text-[20px]">
+                    Please proceed to update your profile
+                  </p>
+                  <p className="text-center text-[14px] lg:text-[20px]">
+                    before your Task can be posted
+                  </p>
+                </div>
+                <Image
+                  src={image}
+                  alt="image"
+                  className="absolute -right-12 top-28 w-24 lg:-right-12 lg:top-2/3 lg:w-24"
+                />
+                <Image
+                  src={img}
+                  alt="image"
+                  className="absolute -left-12 top-12 w-12 lg:-left-[53px] lg:top-8 lg:w-16"
+                />
+                <div className="flex justify-center space-x-3 md:justify-around">
+                  <Link href="/marketplace">
+                    <button className="rounded-2xl border border-status-purpleBase p-2 text-[14px] font-semibold text-status-purpleBase outline-none md:w-[100px]">
+                      Back
+                    </button>
+                  </Link>
+                  <Link href="/customer/profile">
+                    <button className="rounded-2xl bg-status-purpleBase p-2 text-[14px] text-white outline-none md:w-[100px]">
+                      Go to profile
+                    </button>
+                  </Link>
+                </div>
               </div>
-              {loading && <Loading />}
-              <div className="mt-8">{renderPage()}</div>
             </div>
-          </div>
-        </div>
+          </Popup>
+        ) : (
+          <Popup
+            isOpen={isSuccessPopupOpen}
+            onClose={() => {
+              router.push("/marketplace");
+              setIsSuccessPopupOpen(false);
+            }}
+          >
+            <div className="px-12 py-10 lg:px-24">
+              <div className="relative grid items-center justify-center space-y-5">
+                <div className="flex justify-center text-[1px] text-white">
+                  <Image src={imags} alt="image" />
+                </div>
+                <p className="font-clashDisplay text-center text-[25px] font-extrabold text-[#2A1769] lg:text-[37px] ">
+                  Congratulations
+                </p>
+                <div>
+                  <p className="text-center lg:text-[20px]">
+                    Your task has been posted!
+                  </p>
+                  <p className="text-center lg:text-[20px]">
+                    please click on the button to proceed to marketplace
+                  </p>
+                </div>
+                <Image
+                  src={image}
+                  alt="image"
+                  className="absolute -right-24 top-36  w-32 font-satoshiMedium lg:-right-20 lg:top-2/3"
+                />
+                <div className="flex justify-center">
+                  <Link href="/marketplace">
+                    <button className="w-[100px] rounded-2xl bg-status-purpleBase p-2 text-[14px] text-white outline-none">
+                      Go Home
+                    </button>
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </Popup>
+        )}
       </div>
-      {
-        <Popup
-          isOpen={isSuccessPopup}
-          onClose={() => {
-            setIsSuccessPopupOpen(false);
-          }}
-        >
-          <div className="px-16 py-10 lg:px-24">
-            <div className="relative grid items-center justify-center space-y-5">
-              <p className="text-center font-clashBold text-[20px] font-extrabold text-[#2A1769] md:text-[36px] lg:text-[37px] ">
-                You are almost done!!!
+      <Popup
+        isOpen={isEnabledPopup}
+        onClose={() => {
+          setIsEnabledPopup(false);
+        }}
+      >
+        <div className="px-14 py-10 lg:px-24">
+          <div className="relative grid items-center justify-center space-y-5">
+            <p className="font-clashDisplay text-center text-[20px] font-extrabold text-[#2A1769] md:text-[36px] lg:text-[37px] ">
+              Your profile is not updated/enabled
+            </p>
+            <div>
+              <p className="text-center text-[14px] lg:text-[20px]">
+                Please proceed to update your profile
               </p>
-              <div>
-                <p className="text-center text-[14px] lg:text-[20px] ">
-                  Please sign up to finish adding your first{" "}
-                </p>
-                <p className="text-center text-[14px] lg:text-[20px] ">
-                  task and manage all your tasks.
-                </p>
-              </div>
-              <Image
-                src={imag}
-                alt="image"
-                className="absolute -right-16 top-20 w-24 lg:-right-24 lg:top-1/3 lg:w-36 "
-              />
-              <Image
-                src={imgg}
-                alt="image"
-                className="absolute -left-12 top-0 w-16 lg:-left-[100px] lg:-top-12 lg:w-28"
-              />
-              <div className="flex justify-center space-x-3">
-                <button
-                  onClick={handleLoginNavigation}
-                  className="rounded-2xl border border-status-purpleBase p-2 text-[14px] font-semibold text-status-purpleBase outline-none md:w-[100px]"
-                >
-                  Sign Up
+              <p className="text-center text-[14px] lg:text-[20px]">
+                before your Task can be posted
+              </p>
+            </div>
+            <Image
+              src={image}
+              alt="image"
+              className="absolute -right-14 top-28 w-24 lg:-right-12 lg:top-2/3 lg:w-24 "
+            />
+            <Image
+              src={img}
+              alt="image"
+              className="absolute -left-12 top-12 w-12 lg:-left-[53px] lg:top-8 lg:w-16"
+            />
+            <div className="flex justify-center space-x-3 md:justify-around">
+              <Link href="/marketplace?">
+                <button className="rounded-2xl border-2 border-status-purpleBase p-2 text-[14px] font-semibold text-status-purpleBase outline-none md:w-[100px]">
+                  Back
                 </button>
-                <Link href="/">
-                  <button className="rounded-2xl bg-status-purpleBase p-2 text-[14px] text-white outline-none md:w-[100px]">
-                    Cancel
-                  </button>
-                </Link>
-              </div>
+              </Link>
+
+              <button onClick={() => router.push("/customer/profile/edit-profile")} className="rounded-2xl bg-status-purpleBase p-2 text-[14px] text-white outline-none md:w-[100px]">
+                Go to profile
+              </button>
             </div>
           </div>
-        </Popup>
-      }
-      {!isAuthenticated ? (
-        <Popup
-          isOpen={isSuccessPopupOpen}
-          onClose={() => {
-            setIsSuccessPopupOpen(false);
-          }}
-        >
-          <div className="py-10 lg:px-24">
-            <div className="relative grid items-center justify-center space-y-5">
-              <p className="font-clashDisplay text-center text-[20px] font-extrabold text-[#2A1769] md:text-[36px] lg:text-[37px]">
-                You are almost done!!!
-              </p>
-              <div>
-                <p className="text-center text-[14px] lg:text-[20px]">
-                  Please proceed to update your profile
-                </p>
-                <p className="text-center text-[14px] lg:text-[20px]">
-                  before your Task can be posted
-                </p>
-              </div>
-              <Image
-                src={image}
-                alt="image"
-                className="absolute -right-12 top-28 w-24 lg:-right-12 lg:top-2/3 lg:w-24"
-              />
-              <Image
-                src={img}
-                alt="image"
-                className="absolute -left-12 top-12 w-12 lg:-left-[53px] lg:top-8 lg:w-16"
-              />
-              <div className="flex justify-center space-x-3 md:justify-around">
-                <Link href="/marketplace">
-                  <button className="rounded-2xl border border-status-purpleBase p-2 text-[14px] font-semibold text-status-purpleBase outline-none md:w-[100px]">
-                    Back
-                  </button>
-                </Link>
-                <Link href="/customer/profile">
-                  <button className="rounded-2xl bg-status-purpleBase p-2 text-[14px] text-white outline-none md:w-[100px]">
-                    Go to profile
-                  </button>
-                </Link>
-              </div>
-            </div>
-          </div>
-        </Popup>
-      ) : (
-        <Popup
-          isOpen={isSuccessPopupOpen}
-          onClose={() => {
-            router.push("/marketplace");
-            setIsSuccessPopupOpen(false);
-          }}
-        >
-          <div className="px-12 py-10 lg:px-24">
-            <div className="relative grid items-center justify-center space-y-5">
-              <div className="flex justify-center text-[1px] text-white">
-                <Image src={imags} alt="image" />
-              </div>
-              <p className="font-clashDisplay text-center text-[25px] font-extrabold text-[#2A1769] lg:text-[37px] ">
-                Congratulations
-              </p>
-              <div>
-                <p className="text-center lg:text-[20px]">
-                  Your task has been posted!
-                </p>
-                <p className="text-center lg:text-[20px]">
-                  please click on the button to proceed to marketplace
-                </p>
-              </div>
-              <Image
-                src={image}
-                alt="image"
-                className="absolute -right-24 top-36  w-32 font-satoshiMedium lg:-right-20 lg:top-2/3"
-              />
-              <div className="flex justify-center">
-                <Link href="/marketplace">
-                  <button className="w-[100px] rounded-2xl bg-status-purpleBase p-2 text-[14px] text-white outline-none">
-                    Go Home
-                  </button>
-                </Link>
-              </div>
-            </div>
-          </div>
-        </Popup>
-      )}
-    </div>
+        </div>
+      </Popup>
+    </>
   );
 };
 

@@ -124,7 +124,7 @@ const ProvideService: React.FC = () => {
   const maxSize = 5 * 1024 * 1024;
   3;
 
-  const handleProfile= () => {
+  const handleProfile = () => {
     setCookie("redirectToProvideService", "/provide-service", { maxAge: 3600 });
     route.push(
       "/service-provider/profile/edit-profile?userType=Service+Provider?from=/provide-service",
@@ -152,6 +152,9 @@ const ProvideService: React.FC = () => {
   const [loadingProfile, setLoadingProfile] = useState(true);
   const [hasClosedPopup, setHasClosedPopup] = useState(false);
   const isAuth = session.status === "authenticated";
+  const isEnabled = session.data?.user.user.enabled;
+  const [isEnabledPopup, setIsEnabledPopup] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const [errs, setErrs] = useState({
     image1: "",
@@ -572,69 +575,70 @@ const ProvideService: React.FC = () => {
     event.preventDefault();
     setLoading(true);
     if (validateField2()) {
-      try {
-        let finalTask = { ...task };
+      if (isEnabled) {
+        try {
+          let finalTask = { ...task };
 
-        if (isOpen && activeButtonIndex === 1) {
-          const type = "REMOTE_SERVICE";
-          finalTask = { ...finalTask, taskType: type };
-        } else {
-          finalTask = {
-            ...finalTask,
-            taskType: "PHYSICAL_SERVICE",
-            suburb: selectedCity,
-            postCode: selectedCode,
-            state: postalCodeData[0].State,
-          };
-        }
+          if (isOpen && activeButtonIndex === 1) {
+            const type = "REMOTE_SERVICE";
+            finalTask = { ...finalTask, taskType: type };
+          } else {
+            finalTask = {
+              ...finalTask,
+              taskType: "PHYSICAL_SERVICE",
+              suburb: selectedCity,
+              postCode: selectedCode,
+              state: postalCodeData[0].State,
+            };
+          }
 
-        if (selectedDays) {
-          finalTask = { ...finalTask, availableDays: selectedDays };
-        }
+          if (selectedDays) {
+            finalTask = { ...finalTask, availableDays: selectedDays };
+          }
 
-        finalTask = { ...finalTask, negotiable: negotiable };
+          finalTask = { ...finalTask, negotiable: negotiable };
 
-       const response = await
-          axios.post(
-            `${process.env.NEXT_PUBLIC_API_URL}/listing/create-listing?userId=${id}`,
-            finalTask,
-            {
-              headers: {
-                "Content-Type": "multipart/form-data",
+          const response = await
+            axios.post(
+              `${process.env.NEXT_PUBLIC_API_URL}/listing/create-listing?userId=${id}`,
+              finalTask,
+              {
+                headers: {
+                  "Content-Type": "multipart/form-data",
+                },
               },
-            },
-          )
-        setTask({
-          listingTitle: "",
-          listingDescription: "",
-          planOneDescription: "",
-          planTwoDescription: "",
-          planThreeDescription: "",
-          image1: null,
-          image2: null,
-          image3: null,
-          image4: null,
-          taskType: "",
-          planOnePrice: null,
-          planTwoPrice: null,
-          planThreePrice: null,
-          availableDays: [],
-          suburb: "",
-          postCode: "",
-          state: "",
-          categoryId: null,
-          subCategoryId: null,
-          negotiable: false,
-        });
-        if (response.status == 200) {
+            )
+          setTask({
+            listingTitle: "",
+            listingDescription: "",
+            planOneDescription: "",
+            planTwoDescription: "",
+            planThreeDescription: "",
+            image1: null,
+            image2: null,
+            image3: null,
+            image4: null,
+            taskType: "",
+            planOnePrice: null,
+            planTwoPrice: null,
+            planThreePrice: null,
+            availableDays: [],
+            suburb: "",
+            postCode: "",
+            state: "",
+            categoryId: null,
+            subCategoryId: null,
+            negotiable: false,
+          });
           setIsSuccessPopupOpen(true);
-        } else {
-          setError(error.response.message)
+        } catch (error: any) {
+          console.error("Error submitting form:", error);
+          setErrorMessage(error.response.data.message || "An error occurred, please try again");
+        } finally {
+          setLoading(false);
         }
-      } catch (error) {
-        console.error("Error submitting form:", error);
-        setIsSuccessPopupOpen(true);
-      } finally {
+      } else {
+        setIsEnabledPopup(true);
         setLoading(false);
       }
     } else {
@@ -1392,6 +1396,9 @@ const ProvideService: React.FC = () => {
                   Post Listing
                 </Button>
               </div>
+              {errorMessage && (
+                <div className="text-red-500">{errorMessage}</div>
+              )}
             </form>
           </div>
         );
@@ -1401,233 +1408,278 @@ const ProvideService: React.FC = () => {
   };
 
   return (
-    <div className="mt-24 flex min-h-screen flex-col items-center justify-center">
-      <Head>
-        <title>TaskHub | Provide Service</title>
-      </Head>
-      <div className="w-full">
-        <div className="fixed left-0 top-20 z-10 hidden w-full border-t-2 bg-white shadow-md lg:block">
-          <div className="mb-3 flex justify-center pt-4 font-bold md:space-x-5">
-            <div
-              className={`${currentPage === 1
-                ? "text-status-purpleBase"
-                : "text-status-purpleBase"
-                }`}
-            >
-              <p className="flex items-center gap-1 text-[9px] md:text-[16px] lg:gap-3">
-                <span
-                  className={`${currentPage === 1
-                    ? "bg-status-purpleBase text-white"
-                    : "bg-status-purpleBase text-white"
-                    } rounded-2xl border-none px-2 py-1 lg:px-3 lg:py-2`}
-                >
-                  01
-                </span>{" "}
-                Services Description
-                <span>
-                  <IoIosArrowForward />
-                </span>
-              </p>
+    <>
+      <div className="mt-24 flex min-h-screen flex-col items-center justify-center">
+        <Head>
+          <title>TaskHub | Provide Service</title>
+        </Head>
+        <div className="w-full">
+          <div className="fixed left-0 top-20 z-10 hidden w-full border-t-2 bg-white shadow-md lg:block">
+            <div className="mb-3 flex justify-center pt-4 font-bold md:space-x-5">
+              <div
+                className={`${currentPage === 1
+                  ? "text-status-purpleBase"
+                  : "text-status-purpleBase"
+                  }`}
+              >
+                <p className="flex items-center gap-1 text-[9px] md:text-[16px] lg:gap-3">
+                  <span
+                    className={`${currentPage === 1
+                      ? "bg-status-purpleBase text-white"
+                      : "bg-status-purpleBase text-white"
+                      } rounded-2xl border-none px-2 py-1 lg:px-3 lg:py-2`}
+                  >
+                    01
+                  </span>{" "}
+                  Services Description
+                  <span>
+                    <IoIosArrowForward />
+                  </span>
+                </p>
+              </div>
+              <div
+                className={`${currentPage === 2 || currentPage === 3
+                  ? "text-status-purpleBase"
+                  : " text-[#716F78]"
+                  }`}
+              >
+                <p className="flex items-center gap-1 text-[9px] md:text-[16px] lg:gap-3">
+                  <span
+                    className={`${currentPage === 2 || currentPage === 3
+                      ? "bg-status-purpleBase text-white"
+                      : "bg-[#EAE9EB] text-[#716F78]"
+                      } rounded-2xl border-none px-2 py-1 lg:px-3 lg:py-2`}
+                  >
+                    02
+                  </span>{" "}
+                  Services Details
+                  <span>
+                    <IoIosArrowForward />
+                  </span>
+                </p>
+              </div>
+              <div
+                className={`${currentPage === 3 ? "text-status-purpleBase" : " text-[#716F78]"
+                  }`}
+              >
+                <p className="flex items-center gap-1 text-[9px] md:text-[16px] lg:gap-3">
+                  <span
+                    className={`${currentPage === 3
+                      ? "bg-status-purpleBase text-white"
+                      : "bg-[#EAE9EB] text-[#716F78]"
+                      } rounded-2xl border-none px-2 py-1 lg:px-3 lg:py-2`}
+                  >
+                    03
+                  </span>{" "}
+                  Image Upload
+                </p>
+              </div>
             </div>
-            <div
-              className={`${currentPage === 2 || currentPage === 3
-                ? "text-status-purpleBase"
-                : " text-[#716F78]"
-                }`}
-            >
-              <p className="flex items-center gap-1 text-[9px] md:text-[16px] lg:gap-3">
-                <span
-                  className={`${currentPage === 2 || currentPage === 3
-                    ? "bg-status-purpleBase text-white"
-                    : "bg-[#EAE9EB] text-[#716F78]"
-                    } rounded-2xl border-none px-2 py-1 lg:px-3 lg:py-2`}
+            <hr className="h-[2px] w-full bg-[#EAE9EB] text-[#EAE9EB]" />
+            <div>
+              <div className="flex justify-center pb-4">
+                <div
+                  className="container flex items-center justify-center space-x-5 border-2 border-[#EAE9EB] p-3 lg:w-2/3"
+                  style={{
+                    borderRadius: "0px 0px 20px 20px ",
+                    borderTop: "none",
+                  }}
                 >
-                  02
-                </span>{" "}
-                Services Details
-                <span>
-                  <IoIosArrowForward />
-                </span>
-              </p>
-            </div>
-            <div
-              className={`${currentPage === 3 ? "text-status-purpleBase" : " text-[#716F78]"
-                }`}
-            >
-              <p className="flex items-center gap-1 text-[9px] md:text-[16px] lg:gap-3">
-                <span
-                  className={`${currentPage === 3
-                    ? "bg-status-purpleBase text-white"
-                    : "bg-[#EAE9EB] text-[#716F78]"
-                    } rounded-2xl border-none px-2 py-1 lg:px-3 lg:py-2`}
-                >
-                  03
-                </span>{" "}
-                Image Upload
-              </p>
+                  {/* Progress bar */}
+                  <div className="h-1 w-2/3 overflow-hidden bg-[#EAE9EB]">
+                    <div
+                      className={`h-full ${currentPage === 1
+                        ? "bg-status-purpleBase"
+                        : currentPage === 2
+                          ? "bg-status-purpleBase"
+                          : "bg-status-purpleBase"
+                        }`}
+                      style={{ width: `${progress}%` }}
+                    />
+                  </div>
+                  <p className="text-xs text-status-darkpurple">
+                    {`${progress}% complete`}
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
-          <hr className="h-[2px] w-full bg-[#EAE9EB] text-[#EAE9EB]" />
-          <div>
-            <div className="flex justify-center pb-4">
-              <div
-                className="container flex items-center justify-center space-x-5 border-2 border-[#EAE9EB] p-3 lg:w-2/3"
-                style={{
-                  borderRadius: "0px 0px 20px 20px ",
-                  borderTop: "none",
-                }}
-              >
-                {/* Progress bar */}
-                <div className="h-1 w-2/3 overflow-hidden bg-[#EAE9EB]">
-                  <div
-                    className={`h-full ${currentPage === 1
-                      ? "bg-status-purpleBase"
-                      : currentPage === 2
-                        ? "bg-status-purpleBase"
-                        : "bg-status-purpleBase"
-                      }`}
-                    style={{ width: `${progress}%` }}
+          <ProgressBar
+            currentPage={currentPage}
+            progress={progress}
+            setCurrentPage={setCurrentPage}
+          />
+          <div className="pt-24">
+            <div className="mt-8 lg:flex">
+              {currentPage === 1 && (
+                <div className="mr-[50px] hidden lg:ml-[10%] lg:block lg:w-[390px] xl:ml-[15%] ">
+                  {/* @ts-ignore */}
+                  <AiDesciption
+                    setTask={setTask}
+                    task={task}
+                    displayType={"card"}
                   />
                 </div>
-                <p className="text-xs text-status-darkpurple">
-                  {`${progress}% complete`}
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-        <ProgressBar
-          currentPage={currentPage}
-          progress={progress}
-          setCurrentPage={setCurrentPage}
-        />
-        <div className="pt-24">
-          <div className="mt-8 lg:flex">
-            {currentPage === 1 && (
-              <div className="mr-[50px] hidden lg:ml-[10%] lg:block lg:w-[390px] xl:ml-[15%] ">
-                {/* @ts-ignore */}
-                <AiDesciption
-                  setTask={setTask}
-                  task={task}
-                  displayType={"card"}
-                />
-              </div>
-            )}
+              )}
 
-            <div
-              className={
-                currentPage !== 1
-                  ? "flex w-full items-center justify-center"
-                  : ""
-              }
-            >
-              <div>
-                <div
-                  className={
-                    currentPage >= 1 ? " mx-auto w-[90%] lg:w-full " : ""
-                  }
-                >
-                  <h2 className="text-4xl font-medium text-status-darkpurple">
-                    Provide a Service
-                  </h2>
-                  <p className="text-[12px] font-medium text-[#716F78]">
-                    Please fill out the information below to add a new listing.
-                  </p>
-                </div>
-                {loading && <Loading />}
-                <div className="mt-8">{renderPage()}</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div>
-        {complete ? (
-          <Popup
-            isOpen={isSuccessPopupOpen}
-            onClose={() => {
-              setIsSuccessPopupOpen(false);
-            }}
-          >
-            <div className="px-14 py-10 lg:px-24">
-              <div className="relative grid items-center justify-center space-y-5">
-                <p className="font-clashDisplay text-center text-[20px] font-extrabold text-[#2A1769] md:text-[36px] lg:text-[37px] ">
-                  You are almost done!!!
-                </p>
+              <div
+                className={
+                  currentPage !== 1
+                    ? "flex w-full items-center justify-center"
+                    : ""
+                }
+              >
                 <div>
-                  <p className="text-center text-[14px] lg:text-[20px]">
-                    Please proceed to update your profile
-                  </p>
-                  <p className="text-center text-[14px] lg:text-[20px]">
-                    before your Task can be posted
-                  </p>
+                  <div
+                    className={
+                      currentPage >= 1 ? " mx-auto w-[90%] lg:w-full " : ""
+                    }
+                  >
+                    <h2 className="text-4xl font-medium text-status-darkpurple">
+                      Provide a Service
+                    </h2>
+                    <p className="text-[12px] font-medium text-[#716F78]">
+                      Please fill out the information below to add a new listing.
+                    </p>
+                  </div>
+                  {loading && <Loading />}
+                  <div className="mt-8">{renderPage()}</div>
                 </div>
-                <Image
-                  src={image}
-                  alt="image"
-                  className="absolute -right-14 top-28 w-24 lg:-right-12 lg:top-2/3 lg:w-24 "
-                />
-                <Image
-                  src={img}
-                  alt="image"
-                  className="absolute -left-12 top-12 w-12 lg:-left-[53px] lg:top-8 lg:w-16"
-                />
-                <div className="flex justify-center space-x-3 md:justify-around">
-                  <Link href="/marketplace?">
-                    <button className="rounded-2xl border-2 border-status-purpleBase p-2 text-[14px] font-semibold text-status-purpleBase outline-none md:w-[100px]">
-                      Back
-                    </button>
-                  </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div>
+          {complete ? (
+            <Popup
+              isOpen={isSuccessPopupOpen}
+              onClose={() => {
+                setIsSuccessPopupOpen(false);
+              }}
+            >
+              <div className="px-14 py-10 lg:px-24">
+                <div className="relative grid items-center justify-center space-y-5">
+                  <p className="font-clashDisplay text-center text-[20px] font-extrabold text-[#2A1769] md:text-[36px] lg:text-[37px] ">
+                    You are almost done!!!
+                  </p>
+                  <div>
+                    <p className="text-center text-[14px] lg:text-[20px]">
+                      Please proceed to update your profile
+                    </p>
+                    <p className="text-center text-[14px] lg:text-[20px]">
+                      before your Task can be posted
+                    </p>
+                  </div>
+                  <Image
+                    src={image}
+                    alt="image"
+                    className="absolute -right-14 top-28 w-24 lg:-right-12 lg:top-2/3 lg:w-24 "
+                  />
+                  <Image
+                    src={img}
+                    alt="image"
+                    className="absolute -left-12 top-12 w-12 lg:-left-[53px] lg:top-8 lg:w-16"
+                  />
+                  <div className="flex justify-center space-x-3 md:justify-around">
+                    <Link href="/marketplace?">
+                      <button className="rounded-2xl border-2 border-status-purpleBase p-2 text-[14px] font-semibold text-status-purpleBase outline-none md:w-[100px]">
+                        Back
+                      </button>
+                    </Link>
 
-                  <button onClick={handleProfile} className="rounded-2xl bg-status-purpleBase p-2 text-[14px] text-white outline-none md:w-[100px]">
-                    Go to profile
-                  </button>
-                </div>
-              </div>
-            </div>
-          </Popup>
-        ) : (
-          <Popup
-            isOpen={isSuccessPopupOpen}
-            onClose={() => {
-              route.push("/marketplace");
-              setIsSuccessPopupOpen(false);
-            }}
-          >
-            <div className="px-5 py-10 lg:px-24">
-              <div className="relative grid items-center justify-center space-y-3">
-                <div className="flex justify-center text-[1px] text-white">
-                  <Image src={imag} alt="image" />
-                </div>
-                <p className=" text-center font-clashBold text-[28px] font-extrabold text-[#2A1769] lg:text-[42px]">
-                  Service created
-                </p>
-                <div className="text-center font-satoshiMedium lg:hidden lg:text-[20px]">
-                  Your Service Listing has been created! please click on the
-                  button to proceed to marketplace
-                </div>
-                <div className="hidden text-center font-satoshiMedium lg:block lg:text-[20px]">
-                  Your Service Listing has been created!
-                  <p>please click on the button to proceed to marketplace</p>
-                </div>
-                <Image
-                  src={image}
-                  alt="image"
-                  className="lg:top-54 absolute -right-5 top-56  lg:top-44 lg:w-28 w-20 font-satoshiMedium lg:-right-24"
-                />
-                <div className="flex justify-center">
-                  <Link href="/marketplace">
-                    <button className="w-[100px] rounded-2xl bg-status-purpleBase p-2 text-[14px] text-white outline-none">
-                      Go Home
+                    <button onClick={handleProfile} className="rounded-2xl bg-status-purpleBase p-2 text-[14px] text-white outline-none md:w-[100px]">
+                      Go to profile
                     </button>
-                  </Link>
+                  </div>
                 </div>
               </div>
-            </div>
-          </Popup>
-        )}
+            </Popup>
+          ) : (
+            <Popup
+              isOpen={isSuccessPopupOpen}
+              onClose={() => {
+                route.push("/marketplace");
+                setIsSuccessPopupOpen(false);
+              }}
+            >
+              <div className="px-5 py-10 lg:px-24">
+                <div className="relative grid items-center justify-center space-y-3">
+                  <div className="flex justify-center text-[1px] text-white">
+                    <Image src={imag} alt="image" />
+                  </div>
+                  <p className=" text-center font-clashBold text-[28px] font-extrabold text-[#2A1769] lg:text-[42px]">
+                    Service created
+                  </p>
+                  <div className="text-center font-satoshiMedium lg:hidden lg:text-[20px]">
+                    Your Service Listing has been created! please click on the
+                    button to proceed to marketplace
+                  </div>
+                  <div className="hidden text-center font-satoshiMedium lg:block lg:text-[20px]">
+                    Your Service Listing has been created!
+                    <p>please click on the button to proceed to marketplace</p>
+                  </div>
+                  <Image
+                    src={image}
+                    alt="image"
+                    className="lg:top-54 absolute -right-5 top-56  lg:top-44 lg:w-28 w-20 font-satoshiMedium lg:-right-24"
+                  />
+                  <div className="flex justify-center">
+                    <Link href="/marketplace">
+                      <button className="w-[100px] rounded-2xl bg-status-purpleBase p-2 text-[14px] text-white outline-none">
+                        Go Home
+                      </button>
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            </Popup>
+          )}
+        </div>
       </div>
-    </div>
+      <Popup
+        isOpen={isEnabledPopup}
+        onClose={() => {
+          setIsEnabledPopup(false);
+        }}
+      >
+        <div className="px-14 py-10 lg:px-24">
+          <div className="relative grid items-center justify-center space-y-5">
+            <p className="font-clashDisplay text-center text-[20px] font-extrabold text-[#2A1769] md:text-[36px] lg:text-[37px] ">
+              Your profile is not updated/enabled
+            </p>
+            <div>
+              <p className="text-center text-[14px] lg:text-[20px]">
+                Please proceed to update your profile
+              </p>
+              <p className="text-center text-[14px] lg:text-[20px]">
+                before your Task can be posted
+              </p>
+            </div>
+            <Image
+              src={image}
+              alt="image"
+              className="absolute -right-14 top-28 w-24 lg:-right-12 lg:top-2/3 lg:w-24 "
+            />
+            <Image
+              src={img}
+              alt="image"
+              className="absolute -left-12 top-12 w-12 lg:-left-[53px] lg:top-8 lg:w-16"
+            />
+            <div className="flex justify-center space-x-3 md:justify-around">
+              <Link href="/marketplace?">
+                <button className="rounded-2xl border-2 border-status-purpleBase p-2 text-[14px] font-semibold text-status-purpleBase outline-none md:w-[100px]">
+                  Back
+                </button>
+              </Link>
+
+              <button onClick={handleProfile} className="rounded-2xl bg-status-purpleBase p-2 text-[14px] text-white outline-none md:w-[100px]">
+                Go to profile
+              </button>
+            </div>
+          </div>
+        </div>
+      </Popup>
+    </>
   );
 };
 

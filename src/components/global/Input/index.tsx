@@ -82,7 +82,7 @@ const Input = ({
 				.match(
 					/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
 				);
-			return match ? true : `The ${label} field has to be a valid email`;
+			return match ? true : `Please enter a valid email`;
 		},
 		password: (value, label = "") => {
 			const messages: string[] = [];
@@ -134,7 +134,7 @@ const Input = ({
 		confirmPassword: (value, label = "") => {
 			return value === watch("password") || value === watch("new_password")
 				? true
-				: `The ${label} field must be equal to the Password field`;
+				: `Passwords do not match`;
 		},
 		noSpaces: (value, label = "") => {
 			return !value.includes(" ")

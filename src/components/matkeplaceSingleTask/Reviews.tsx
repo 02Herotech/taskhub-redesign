@@ -125,7 +125,7 @@ const Reviews = ({ serviceProviderId }: any) => {
 
   const formatDate = (createdAtArray: any) => {
     if (!createdAtArray || createdAtArray.length < 3) {
-      return 'Invalid Date';
+      return 'Flexible';
     }
 
     const year = createdAtArray[0];
