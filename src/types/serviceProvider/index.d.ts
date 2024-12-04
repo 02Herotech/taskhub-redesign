@@ -12,6 +12,7 @@ declare interface DefaultUserDetailsType {
   suburbs: string;
   bio: string | null;
   abn: string | null;
+  isVerified: boolean;
 }
 
 declare interface ModalDataType {

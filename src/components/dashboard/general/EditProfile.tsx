@@ -38,6 +38,7 @@ const userDataSchema = z.object({
   abn: z.string().nullable().optional(),
   idNumber: z.string().optional(),
   bio: z.string().nullable().optional(),
+  isVerified: z.boolean().optional(),
   idImageFront: z.string().nullable().optional(),
   idImageBack: z.string().nullable().optional(),
 });
@@ -69,6 +70,7 @@ const EditProfile = () => {
   const [err, setErr] = useState("");
   const [userDetails, setUserDetails] = useState(defaultUserDetails);
   const [editProfileError, setEditProfileError] = useState("");
+  const [isDocumentEditable, setIsDocumentEditable] = useState(false);
 
   const userProfile = useSelector((state: RootState) => state.userProfile);
   const dispatch = useDispatch();
@@ -115,6 +117,7 @@ const EditProfile = () => {
       idNumber: "",
       abn: null,
       bio: "",
+      isVerified: false,
     },
   });
 
@@ -164,6 +167,7 @@ const EditProfile = () => {
           },
         });
         setUserDetails(data);
+        setIsDocumentEditable(data.isVerified || false);
         reset({
           firstName: data.firstName || "",
           lastName: data.lastName || "",
@@ -175,6 +179,7 @@ const EditProfile = () => {
           state: data.state || "",
           idType: idTypeObject.find((item) => item.value === data.idType)?.label || "",
           idNumber: data.idNumber || "",
+          isVerified: data.isVerified || false,
           idImageFront: data.idImageFront || "",
           idImageBack: data.idImageBack || "",
           bio: isServiceProvider ? data.bio || "" : "No Bio needed for customer",
@@ -188,6 +193,8 @@ const EditProfile = () => {
 
     fetchUserData();
   }, [token, isServiceProvider, dispatch, reset]);
+
+  console.log("user", userDetails)
 
   const watchPostcode = watch("postcode");
 
@@ -322,12 +329,20 @@ const EditProfile = () => {
     setIsEditingProfilePicture({ isEditing: true, image: null });
     setIsFormModalShown(true);
   };
+
   const handleChangeFront = () => {
+    if (!isDocumentEditable && userDetails.idImageFront) {
+      return; // Prevent changes if not editable and document exists
+    }
     setIsEditingImageFront(true);
     setIsEditingImageBack(false);
     setIsFormModalShown(true);
   };
+
   const handleChangeBack = () => {
+    if (!isDocumentEditable && userDetails.idImageBack) {
+      return; // Prevent changes if not editable and document exists
+    }
     setIsEditingImageBack(true);
     setIsEditingImageFront(false);
     setIsFormModalShown(true);
@@ -568,6 +583,20 @@ const EditProfile = () => {
           {/* Identification Document */}
           <section className="flex flex-col gap-4">
             <h3 className="text-lg font-bold text-primary">Identification Document</h3>
+            {isServiceProvider && (
+              <div className="flex items-center gap-2 mb-4">
+                <input
+                  type="checkbox"
+                  id="isVerified"
+                  {...register("isVerified")}
+                  checked={userDetails.isVerified}
+                  className="rounded border-gray-300"
+                />
+                <label htmlFor="isVerified" className="text-sm text-gray-700">
+                  Allow document updates
+                </label>
+              </div>
+            )}
             <div className="flex flex-col gap-6 lg:col-span-8 lg:gap-8">
               <div className="flex flex-wrap gap-6 lg:grid lg:grid-cols-2 lg:gap-8">
 
@@ -621,7 +650,7 @@ const EditProfile = () => {
                         type="button"
                         className="flex items-end justify-center space-x-2"
                         onClick={handleChangeFront}
-                        disabled={!isEditingEnabled || !!userDetails.idImageFront}
+                        disabled={!isDocumentEditable && !!userDetails.idImageFront}
                       >
                         <Image
                           src={documentImageFront ?? watchField.idImageFront ?? userDetails.idImageFront ?? ""}
@@ -636,7 +665,7 @@ const EditProfile = () => {
                         type="button"
                         className="flex h-48 w-48 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-slate-500 p-4"
                         onClick={handleChangeFront}
-                        disabled={!isEditingEnabled}
+                        disabled={!isDocumentEditable && !!userDetails.idImageFront}
                       >
                         <PiFileArrowDownDuotone className="text-2xl text-tc-gray" />
                         <span className="text-center text-tc-gray">
@@ -654,7 +683,7 @@ const EditProfile = () => {
                           type="button"
                           className="flex items-end justify-center space-x-2"
                           onClick={handleChangeBack}
-                          disabled={!isEditingEnabled || !!userDetails.idImageBack}
+                          disabled={!isDocumentEditable && !!userDetails.idImageBack}
                         >
                           <Image
                             src={documentImageBack ?? watchField.idImageBack ?? ""}
@@ -669,7 +698,7 @@ const EditProfile = () => {
                           type="button"
                           className="flex h-48 w-48 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-slate-500 p-4"
                           onClick={handleChangeBack}
-                          disabled={!isEditingEnabled}
+                          disabled={!isDocumentEditable && !!userDetails.idImageBack}
                         >
                           <PiFileArrowDownDuotone className="text-2xl text-tc-gray" />
                           <span className="text-center text-tc-gray">
