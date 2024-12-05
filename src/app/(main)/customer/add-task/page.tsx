@@ -462,6 +462,7 @@ const AddTaskForm: React.FC = () => {
     event.preventDefault();
     setLoading(true);
     if (validateFields() && validateField1()) {
+      console.log("isEnabled state: ", isEnabled)
       if (isEnabled) {
         try {
           let finalTask = { ...task };
