@@ -458,6 +458,7 @@ const AddTaskForm: React.FC = () => {
   };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    console.log("In submit function")
     event.preventDefault();
     setLoading(true);
     if (validateFields() && validateField1()) {
@@ -531,6 +532,7 @@ const AddTaskForm: React.FC = () => {
           setLoading(false);
         }
       } else {
+        console.log("In else block")
         setIsEnabledPopup(true);
         setLoading(false);
       }
