@@ -109,8 +109,8 @@ const AddTaskForm: React.FC = () => {
   const [testEnabled, setTestEnabled] = useState(false);
   console.log("Test enabled initial: ", testEnabled);
   useEffect(() => {
-    console.log("Test enabled final: ", testEnabled);
     setTestEnabled(session.data?.user.user.enabled as boolean);
+    console.log("Test enabled final: ", testEnabled);
   }, [session]);
   const isEnabled = session.data?.user.user.enabled;
   const [isEnabledPopup, setIsEnabledPopup] = useState(false);
