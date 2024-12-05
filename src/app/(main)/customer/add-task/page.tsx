@@ -107,10 +107,8 @@ const AddTaskForm: React.FC = () => {
   const maxSize = 5 * 1024 * 1024; // 5MB in bytes
   const [errs, setErrs] = useState("");
   const [testEnabled, setTestEnabled] = useState(false);
-  console.log("Test enabled initial: ", testEnabled);
   useEffect(() => {
-    setTestEnabled(session.data?.user.user.enabled as boolean);
-    console.log("Test enabled final: ", testEnabled);
+    console.log(session);
   }, [session]);
   const isEnabled = session.data?.user.user.enabled;
   const [isEnabledPopup, setIsEnabledPopup] = useState(false);
@@ -460,7 +458,6 @@ const AddTaskForm: React.FC = () => {
   };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    console.log("In submit function");
     event.preventDefault();
     setLoading(true);
     if (validateFields() && validateField1()) {
@@ -538,7 +535,6 @@ const AddTaskForm: React.FC = () => {
           setLoading(false);
         }
       } else {
-        console.log("In else block");
         setIsEnabledPopup(true);
         setLoading(false);
       }
