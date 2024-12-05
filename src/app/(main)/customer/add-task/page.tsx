@@ -106,10 +106,6 @@ const AddTaskForm: React.FC = () => {
   const [isSuccessPopup, setIsSuccessPopup] = useState(false);
   const maxSize = 5 * 1024 * 1024; // 5MB in bytes
   const [errs, setErrs] = useState("");
-  const [testEnabled, setTestEnabled] = useState(false);
-  useEffect(() => {
-    console.log(session);
-  }, [session]);
   const isEnabled = session.data?.user.user.enabled;
   const [isEnabledPopup, setIsEnabledPopup] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
