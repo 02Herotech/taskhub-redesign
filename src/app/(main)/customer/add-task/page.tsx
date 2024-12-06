@@ -61,6 +61,7 @@ interface CustomInputProps {
 
 const AddTaskForm: React.FC = () => {
   const session = useSession();
+  const { update } = useSession();
   const router = useRouter();
   const token = session?.data?.user.accessToken;
   const isAuthenticated = session.status === "authenticated";
@@ -122,6 +123,45 @@ const AddTaskForm: React.FC = () => {
     }
   }, []);
   // End of getting description from the marketplace
+
+  //Check if user is verified and update session
+  useEffect(() => {
+    const updateUserData = async () => {
+      if (!token) return;
+      if (isEnabled) return;
+      try {
+        console.log("Hit api req");
+        const url = `${process.env.NEXT_PUBLIC_API_URL}/customer/profile`;
+        const { data } = await axios.get(url, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "multipart/form-data",
+          },
+        });
+        console.log(data);
+        if (!data.isEnabled) {
+          console.log('Is enabled false on server')
+          return;
+        }
+        console.log("User is enabled on server but not on client");
+        //Todo Rest of the logic to update session
+        const user = session.data?.user;
+        if (!user) return;
+        const { user: userInfo } = user;
+        // userInfo.enabled = data.isEnabled;
+        userInfo.enabled = data.isEnabled;
+        await update({ user: userInfo });
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    updateUserData();
+  }, [token]);
+
+  useEffect(() => {
+    console.log("session in add task component: ", session);
+    console.log("isEnabled: ", isEnabled);
+  }, [session]);
 
   const handleLoginNavigation = () => {
     setCookie("redirectToAddTask", "/customer/add-task", { maxAge: 360000 });

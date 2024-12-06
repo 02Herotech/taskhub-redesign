@@ -29,20 +29,13 @@ const handler = NextAuth({
         try {
           const response = await axios.post(
             `${process.env.NEXT_PUBLIC_API_URL}/auth/login`,
-            {
-              emailAddress: email,
-              password,
-            },
+            { emailAddress: email, password },
           );
 
           const { data, status } = response;
-
           if (status === 200) {
-            return {
-              ...data,
-              // jwtToken: data.token,
-              jwtt: data.token,
-            };
+            //! BAD
+            return { ...data, jwtt: data.token };
           } else {
             // throw new Error(`Unexpected status error:, ${status}`);
             console.log("Unexpected status error: ", status);
@@ -61,9 +54,11 @@ const handler = NextAuth({
   callbacks: {
     async jwt({ token, user, trigger, session }) {
       if (trigger === "update") {
+        token.user = session.user;
         return { ...token, ...session.user };
       }
       return { ...token, ...user };
+      // return token;
     },
     async session({ session, token, user }) {
       session.user = token as any;
