@@ -130,7 +130,6 @@ const AddTaskForm: React.FC = () => {
       if (!token) return;
       if (isEnabled) return;
       try {
-        console.log("Hit api req");
         const url = `${process.env.NEXT_PUBLIC_API_URL}/customer/profile`;
         const { data } = await axios.get(url, {
           headers: {
@@ -138,17 +137,11 @@ const AddTaskForm: React.FC = () => {
             "Content-Type": "multipart/form-data",
           },
         });
-        console.log(data);
-        if (!data.isEnabled) {
-          console.log('Is enabled false on server')
-          return;
-        }
-        console.log("User is enabled on server but not on client");
-        //Todo Rest of the logic to update session
+        if (!data.isEnabled) return;
+        //Update session
         const user = session.data?.user;
         if (!user) return;
         const { user: userInfo } = user;
-        // userInfo.enabled = data.isEnabled;
         userInfo.enabled = data.isEnabled;
         await update({ user: userInfo });
       } catch (error) {
@@ -157,11 +150,6 @@ const AddTaskForm: React.FC = () => {
     };
     updateUserData();
   }, [token]);
-
-  useEffect(() => {
-    console.log("session in add task component: ", session);
-    console.log("isEnabled: ", isEnabled);
-  }, [session]);
 
   const handleLoginNavigation = () => {
     setCookie("redirectToAddTask", "/customer/add-task", { maxAge: 360000 });
@@ -219,7 +207,6 @@ const AddTaskForm: React.FC = () => {
         }
 
         // If data is valid, update state
-        console.log("Postal code data:", response.data);
         setCode(false);
         setPostalCodeData(response.data);
       } catch (error) {
@@ -497,7 +484,6 @@ const AddTaskForm: React.FC = () => {
     event.preventDefault();
     setLoading(true);
     if (validateFields() && validateField1()) {
-      console.log("isEnabled state: ", isEnabled);
       if (isEnabled) {
         try {
           let finalTask = { ...task };
