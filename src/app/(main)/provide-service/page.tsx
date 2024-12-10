@@ -72,6 +72,7 @@ const ProvideService: React.FC = () => {
   const route = useRouter();
   const id = session?.data?.user.user.id;
   const token = session?.data?.user?.accessToken;
+  console.log(session.data);
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const [task, setTask] = useState<FormData>({
@@ -109,7 +110,8 @@ const ProvideService: React.FC = () => {
     null,
   );
   const [selectedCategoryName, setSelectedCategoryName] = useState("Category");
-  const [selectedSubCategoryName, setSelectedSubCategoryName] = useState("Subcategory");
+  const [selectedSubCategoryName, setSelectedSubCategoryName] =
+    useState("Subcategory");
   const [activePlanIndex, setActivePlanIndex] = useState<number | null>(null);
   const [errors, setErrors] = useState<any>({});
   const [error, setError] = useState<any>({});
@@ -140,13 +142,16 @@ const ProvideService: React.FC = () => {
     setCookie("planOneDescription", task.planOneDescription, { maxAge: 120 });
     setCookie("planTwoDescription", task.planTwoDescription, { maxAge: 120 });
     setCookie("planTwoPrice", task.planTwoPrice, { maxAge: 120 });
-    setCookie("planThreeDescritpion", task.planThreeDescription, { maxAge: 120 });
+    setCookie("planThreeDescritpion", task.planThreeDescription, {
+      maxAge: 120,
+    });
     setCookie("taskType", task.taskType, { maxAge: 120 });
     setCookie("availableDays", task.availableDays, { maxAge: 120 });
     setCookie("categoryId", task.categoryId?.toString(), { maxAge: 120 });
     setCookie("postCode", task.postCode, { maxAge: 120 });
   }, [task]);
-  const isServiceProvider = session?.data?.user?.user?.roles[0] === "SERVICE_PROVIDER";
+  const isServiceProvider =
+    session?.data?.user?.user?.roles[0] === "SERVICE_PROVIDER";
   const [complete, setComplete] = useState(false);
   const [fetchedUserData, setFetchedUserData] = useState(defaultUserDetails);
   const [loadingProfile, setLoadingProfile] = useState(true);
@@ -189,7 +194,9 @@ const ProvideService: React.FC = () => {
     const fetchUserData = async () => {
       if (!token) return;
       try {
-        const url = isServiceProvider ? `${process.env.NEXT_PUBLIC_API_URL}/service_provider/profile` : `${process.env.NEXT_PUBLIC_API_URL}/customer/profile`;
+        const url = isServiceProvider
+          ? `${process.env.NEXT_PUBLIC_API_URL}/service_provider/profile`
+          : `${process.env.NEXT_PUBLIC_API_URL}/customer/profile`;
         const { data } = await axios.get(url, {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -197,16 +204,24 @@ const ProvideService: React.FC = () => {
           },
         });
         setFetchedUserData(data);
+        const user = session.data?.user;
+        if (!user || !data.isEnabled) return;
+        const { user: userInfo } = user;
+        if (userInfo.enabled) return;
+        userInfo.enabled = data.isEnabled;
+        await session.update({ user: userInfo });
       } catch (error) {
         console.error(error);
       } finally {
-        setLoadingProfile(false)
+        setLoadingProfile(false);
       }
     };
     fetchUserData();
   }, [token, isServiceProvider]);
 
-  const { profile: user } = useSelector((state: RootState) => state.userProfile);
+  const { profile: user } = useSelector(
+    (state: RootState) => state.userProfile,
+  );
 
   /* eslint-disable react-hooks/exhaustive-deps */
   const profileProgressData = [
@@ -240,11 +255,11 @@ const ProvideService: React.FC = () => {
     },
     ...(fetchedUserData.idType !== "INTERNATIONAL_PASSPORT"
       ? [
-        {
-          title: "Identification Document Back",
-          status: fetchedUserData?.idImageBack,
-        },
-      ]
+          {
+            title: "Identification Document Back",
+            status: fetchedUserData?.idImageBack,
+          },
+        ]
       : []),
   ];
 
@@ -252,15 +267,17 @@ const ProvideService: React.FC = () => {
   useLayoutEffect(() => {
     if (!loadingProfile && user && !hasClosedPopup) {
       const isProfileComplete = profileProgressData.every(
-        (item) => item.status !== "" && item.status !== null && item.status !== undefined
+        (item) =>
+          item.status !== "" &&
+          item.status !== null &&
+          item.status !== undefined,
       );
 
       if (isAuth && !isProfileComplete) {
-        setComplete(true)
+        setComplete(true);
       }
     }
   }, [loadingProfile, user, fetchedUserData, isAuth, profileProgressData]);
-
 
   useEffect(() => {
     const fetchPostalCodeData = async () => {
@@ -598,16 +615,15 @@ const ProvideService: React.FC = () => {
 
           finalTask = { ...finalTask, negotiable: negotiable };
 
-          const response = await
-            axios.post(
-              `${process.env.NEXT_PUBLIC_API_URL}/listing/create-listing?userId=${id}`,
-              finalTask,
-              {
-                headers: {
-                  "Content-Type": "multipart/form-data",
-                },
+          const response = await axios.post(
+            `${process.env.NEXT_PUBLIC_API_URL}/listing/create-listing?userId=${id}`,
+            finalTask,
+            {
+              headers: {
+                "Content-Type": "multipart/form-data",
               },
-            )
+            },
+          );
           setTask({
             listingTitle: "",
             listingDescription: "",
@@ -633,7 +649,10 @@ const ProvideService: React.FC = () => {
           setIsSuccessPopupOpen(true);
         } catch (error: any) {
           console.error("Error submitting form:", error);
-          setErrorMessage(error.response.data.message || "An error occurred, please try again");
+          setErrorMessage(
+            error.response.data.message ||
+              "An error occurred, please try again",
+          );
         } finally {
           setLoading(false);
         }
@@ -836,10 +855,11 @@ const ProvideService: React.FC = () => {
                   </div>
                   <div className="relative grid space-y-4 text-[13px] text-[#221354]">
                     <input
-                      className={`rounded-2xl ${activePlanIndex === 0
-                        ? " disabled bg-transparent p-1 text-lg font-bold text-status-darkViolet"
-                        : "bg-[#EBE9F4] p-4 hover:bg-status-darkViolet hover:text-white "
-                        } cursor-pointer text-left outline-none placeholder:font-satoshiMedium placeholder:font-medium placeholder:text-[#2A1769] hover:placeholder:text-white `}
+                      className={`rounded-2xl ${
+                        activePlanIndex === 0
+                          ? " disabled bg-transparent p-1 text-lg font-bold text-status-darkViolet"
+                          : "bg-[#EBE9F4] p-4 hover:bg-status-darkViolet hover:text-white "
+                      } cursor-pointer text-left outline-none placeholder:font-satoshiMedium placeholder:font-medium placeholder:text-[#2A1769] hover:placeholder:text-white `}
                       name="physical"
                       onClick={() => handlePlan(0)}
                       placeholder="Plan 1"
@@ -885,10 +905,11 @@ const ProvideService: React.FC = () => {
                       </div>
                     )}
                     <input
-                      className={`rounded-2xl ${activePlanIndex === 1
-                        ? " disabled bg-transparent p-1 text-lg font-bold text-status-darkViolet"
-                        : "bg-[#EBE9F4] p-4 hover:bg-status-darkViolet hover:text-white"
-                        } cursor-pointer text-left outline-none placeholder:font-satoshiMedium placeholder:font-medium placeholder:text-[#2A1769] hover:placeholder:text-white`}
+                      className={`rounded-2xl ${
+                        activePlanIndex === 1
+                          ? " disabled bg-transparent p-1 text-lg font-bold text-status-darkViolet"
+                          : "bg-[#EBE9F4] p-4 hover:bg-status-darkViolet hover:text-white"
+                      } cursor-pointer text-left outline-none placeholder:font-satoshiMedium placeholder:font-medium placeholder:text-[#2A1769] hover:placeholder:text-white`}
                       name="physical"
                       onClick={() => handlePlan(1)}
                       placeholder="Plan 2  (Optional)"
@@ -932,10 +953,11 @@ const ProvideService: React.FC = () => {
                       </div>
                     )}
                     <input
-                      className={`rounded-2xl ${activePlanIndex === 2
-                        ? " disabled bg-transparent p-1 text-lg font-bold text-status-darkViolet"
-                        : "bg-[#EBE9F4] p-4 hover:bg-status-darkViolet hover:text-white"
-                        } cursor-pointer text-left outline-none placeholder:font-satoshiMedium placeholder:font-medium placeholder:text-[#2A1769] hover:placeholder:text-white`}
+                      className={`rounded-2xl ${
+                        activePlanIndex === 2
+                          ? " disabled bg-transparent p-1 text-lg font-bold text-status-darkViolet"
+                          : "bg-[#EBE9F4] p-4 hover:bg-status-darkViolet hover:text-white"
+                      } cursor-pointer text-left outline-none placeholder:font-satoshiMedium placeholder:font-medium placeholder:text-[#2A1769] hover:placeholder:text-white`}
                       name="physical"
                       onClick={() => handlePlan(2)}
                       placeholder="Plan 3  (Optional)"
@@ -987,10 +1009,11 @@ const ProvideService: React.FC = () => {
                   </h2>
                   <div className="flex space-x-4 text-[13px] text-[#221354]">
                     <input
-                      className={`w-[150px] rounded-2xl p-2 lg:w-full ${activeButtonIndex === 0
-                        ? "bg-status-purpleBase text-white"
-                        : "bg-[#EBE9F4] placeholder:text-white hover:bg-status-purpleBase hover:text-white"
-                        } cursor-pointer text-center font-satoshiBold text-status-darkpurple outline-none`}
+                      className={`w-[150px] rounded-2xl p-2 lg:w-full ${
+                        activeButtonIndex === 0
+                          ? "bg-status-purpleBase text-white"
+                          : "bg-[#EBE9F4] placeholder:text-white hover:bg-status-purpleBase hover:text-white"
+                      } cursor-pointer text-center font-satoshiBold text-status-darkpurple outline-none`}
                       name="physical"
                       onClick={() => handleClick(0)}
                       placeholder="Physical Services"
@@ -998,10 +1021,11 @@ const ProvideService: React.FC = () => {
                       readOnly
                     />
                     <input
-                      className={`w-[150px] rounded-2xl p-2 lg:w-full ${activeButtonIndex === 1
-                        ? "bg-status-purpleBase text-white"
-                        : "bg-[#EBE9F4] placeholder:text-white hover:bg-status-purpleBase hover:text-white "
-                        } cursor-pointer text-center font-satoshiBold text-status-darkpurple outline-none`}
+                      className={`w-[150px] rounded-2xl p-2 lg:w-full ${
+                        activeButtonIndex === 1
+                          ? "bg-status-purpleBase text-white"
+                          : "bg-[#EBE9F4] placeholder:text-white hover:bg-status-purpleBase hover:text-white "
+                      } cursor-pointer text-center font-satoshiBold text-status-darkpurple outline-none`}
                       name="remote"
                       onClick={() => {
                         handleClick(1);
@@ -1061,7 +1085,7 @@ const ProvideService: React.FC = () => {
                           {postalCodeData.map((data, index) => (
                             <button
                               type="button"
-                              className="block p-2 text-[12px] text-[#221354] capitalize"
+                              className="block p-2 text-[12px] capitalize text-[#221354]"
                               key={index}
                               value={data.Name}
                               onClick={() => handleCity(data.Name)}
@@ -1417,17 +1441,19 @@ const ProvideService: React.FC = () => {
           <div className="fixed left-0 top-20 z-10 hidden w-full border-t-2 bg-white shadow-md lg:block">
             <div className="mb-3 flex justify-center pt-4 font-bold md:space-x-5">
               <div
-                className={`${currentPage === 1
-                  ? "text-status-purpleBase"
-                  : "text-status-purpleBase"
-                  }`}
+                className={`${
+                  currentPage === 1
+                    ? "text-status-purpleBase"
+                    : "text-status-purpleBase"
+                }`}
               >
                 <p className="flex items-center gap-1 text-[9px] md:text-[16px] lg:gap-3">
                   <span
-                    className={`${currentPage === 1
-                      ? "bg-status-purpleBase text-white"
-                      : "bg-status-purpleBase text-white"
-                      } rounded-2xl border-none px-2 py-1 lg:px-3 lg:py-2`}
+                    className={`${
+                      currentPage === 1
+                        ? "bg-status-purpleBase text-white"
+                        : "bg-status-purpleBase text-white"
+                    } rounded-2xl border-none px-2 py-1 lg:px-3 lg:py-2`}
                   >
                     01
                   </span>{" "}
@@ -1438,17 +1464,19 @@ const ProvideService: React.FC = () => {
                 </p>
               </div>
               <div
-                className={`${currentPage === 2 || currentPage === 3
-                  ? "text-status-purpleBase"
-                  : " text-[#716F78]"
-                  }`}
+                className={`${
+                  currentPage === 2 || currentPage === 3
+                    ? "text-status-purpleBase"
+                    : " text-[#716F78]"
+                }`}
               >
                 <p className="flex items-center gap-1 text-[9px] md:text-[16px] lg:gap-3">
                   <span
-                    className={`${currentPage === 2 || currentPage === 3
-                      ? "bg-status-purpleBase text-white"
-                      : "bg-[#EAE9EB] text-[#716F78]"
-                      } rounded-2xl border-none px-2 py-1 lg:px-3 lg:py-2`}
+                    className={`${
+                      currentPage === 2 || currentPage === 3
+                        ? "bg-status-purpleBase text-white"
+                        : "bg-[#EAE9EB] text-[#716F78]"
+                    } rounded-2xl border-none px-2 py-1 lg:px-3 lg:py-2`}
                   >
                     02
                   </span>{" "}
@@ -1459,15 +1487,19 @@ const ProvideService: React.FC = () => {
                 </p>
               </div>
               <div
-                className={`${currentPage === 3 ? "text-status-purpleBase" : " text-[#716F78]"
-                  }`}
+                className={`${
+                  currentPage === 3
+                    ? "text-status-purpleBase"
+                    : " text-[#716F78]"
+                }`}
               >
                 <p className="flex items-center gap-1 text-[9px] md:text-[16px] lg:gap-3">
                   <span
-                    className={`${currentPage === 3
-                      ? "bg-status-purpleBase text-white"
-                      : "bg-[#EAE9EB] text-[#716F78]"
-                      } rounded-2xl border-none px-2 py-1 lg:px-3 lg:py-2`}
+                    className={`${
+                      currentPage === 3
+                        ? "bg-status-purpleBase text-white"
+                        : "bg-[#EAE9EB] text-[#716F78]"
+                    } rounded-2xl border-none px-2 py-1 lg:px-3 lg:py-2`}
                   >
                     03
                   </span>{" "}
@@ -1488,12 +1520,13 @@ const ProvideService: React.FC = () => {
                   {/* Progress bar */}
                   <div className="h-1 w-2/3 overflow-hidden bg-[#EAE9EB]">
                     <div
-                      className={`h-full ${currentPage === 1
-                        ? "bg-status-purpleBase"
-                        : currentPage === 2
+                      className={`h-full ${
+                        currentPage === 1
                           ? "bg-status-purpleBase"
-                          : "bg-status-purpleBase"
-                        }`}
+                          : currentPage === 2
+                            ? "bg-status-purpleBase"
+                            : "bg-status-purpleBase"
+                      }`}
                       style={{ width: `${progress}%` }}
                     />
                   </div>
@@ -1539,7 +1572,8 @@ const ProvideService: React.FC = () => {
                       Provide a Service
                     </h2>
                     <p className="text-[12px] font-medium text-[#716F78]">
-                      Please fill out the information below to add a new listing.
+                      Please fill out the information below to add a new
+                      listing.
                     </p>
                   </div>
                   {loading && <Loading />}
@@ -1587,7 +1621,10 @@ const ProvideService: React.FC = () => {
                       </button>
                     </Link>
 
-                    <button onClick={handleProfile} className="rounded-2xl bg-status-purpleBase p-2 text-[14px] text-white outline-none md:w-[100px]">
+                    <button
+                      onClick={handleProfile}
+                      className="rounded-2xl bg-status-purpleBase p-2 text-[14px] text-white outline-none md:w-[100px]"
+                    >
                       Go to profile
                     </button>
                   </div>
@@ -1621,7 +1658,7 @@ const ProvideService: React.FC = () => {
                   <Image
                     src={image}
                     alt="image"
-                    className="lg:top-54 absolute -right-5 top-56  lg:top-44 lg:w-28 w-20 font-satoshiMedium lg:-right-24"
+                    className="lg:top-54 absolute -right-5 top-56  w-20 font-satoshiMedium lg:-right-24 lg:top-44 lg:w-28"
                   />
                   <div className="flex justify-center">
                     <Link href="/marketplace">
@@ -1672,7 +1709,10 @@ const ProvideService: React.FC = () => {
                 </button>
               </Link>
 
-              <button onClick={handleProfile} className="rounded-2xl bg-status-purpleBase p-2 text-[14px] text-white outline-none md:w-[100px]">
+              <button
+                onClick={handleProfile}
+                className="rounded-2xl bg-status-purpleBase p-2 text-[14px] text-white outline-none md:w-[100px]"
+              >
                 Go to profile
               </button>
             </div>

@@ -19,8 +19,7 @@ const CustomerProfilePage = () => {
     const fetchUserData = async () => {
       if (!token) return;
       try {
-        const url =
-          `${process.env.NEXT_PUBLIC_API_URL}/customer/profile`;
+        const url = `${process.env.NEXT_PUBLIC_API_URL}/customer/profile`;
         const { data } = await axios.get(url, {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -37,7 +36,7 @@ const CustomerProfilePage = () => {
   }, [token]);
 
   return (
-    <main className="space-y-8 p-4 lg:p-8 mt-[5rem]">
+    <main className="mt-[5rem] space-y-8 p-4 lg:p-8">
       <ProfileHeader />
       <section className="flex flex-col flex-wrap gap-6 lg:grid lg:grid-cols-12">
         <motion.div
