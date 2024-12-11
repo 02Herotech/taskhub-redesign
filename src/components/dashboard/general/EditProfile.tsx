@@ -194,7 +194,7 @@ const EditProfile = () => {
     fetchUserData();
   }, [token, isServiceProvider, dispatch, reset]);
 
-  console.log("user", userDetails)
+  // console.log("user", userDetails)
 
   const watchPostcode = watch("postcode");
 
@@ -352,7 +352,7 @@ const EditProfile = () => {
     <main className="py-8 lg:py-16 container">
       <div className="p-3 rounded-lg bg-[#F8E9FE] mb-5 flex items-center space-x-3 text-[#D72828]">
         <MdOutlineErrorOutline className="size-5" />
-        <h4 className="text-sm font-satoshiMedium">Note: Please provide accurate information below, as some fields ( address, date of birth, and ID documents) cannot be edited after submission.</h4>
+        <h4 className="text-sm font-satoshiMedium">Note: Please provide accurate information below, as some fields ( address and date of birth) cannot be edited after submission.</h4>
       </div>
       <section className="relative lg:grid lg:grid-cols-12 lg:items-start lg:gap-6">
         <EditProfileModal
@@ -589,8 +589,9 @@ const EditProfile = () => {
                   type="checkbox"
                   id="isVerified"
                   {...register("isVerified")}
-                  checked={userDetails.isVerified}
+                  checked={!userDetails.isVerified}
                   className="rounded border-gray-300"
+                  disabled
                 />
                 <label htmlFor="isVerified" className="text-sm text-gray-700">
                   Allow document updates
