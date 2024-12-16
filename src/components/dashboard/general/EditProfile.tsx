@@ -110,8 +110,6 @@ const EditProfile = () => {
   const watchField = watch();
   const watchABN = watch("abn");
 
-  console.log(userDetails);
-
   const isABNValid = useValidateABN(watchABN, token, setErr);
 
   useEffect(() => {
@@ -229,7 +227,6 @@ const EditProfile = () => {
   }, [watchPostcode, setValue]);
 
   const handleSubmitUserData: SubmitHandler<UserDataType> = async (data) => {
-    if (!isABNValid) return;
     try {
       let submitData: any;
       let url;
