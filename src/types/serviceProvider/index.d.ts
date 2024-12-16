@@ -13,6 +13,7 @@ declare interface DefaultUserDetailsType {
   bio: string | null;
   abn: string | null;
   isVerified: boolean;
+  verificationStatus?: null | "notVerified" | "verified" | "pending";
 }
 
 declare interface ModalDataType {

@@ -1,47 +1,25 @@
 "use client";
-
 import { useEffect, useState } from "react";
-import { useForm, Controller, UseFormRegister, FieldErrors, UseFormWatch, SubmitHandler } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
+import { useForm, Controller, SubmitHandler } from "react-hook-form";
 import { useSession } from "next-auth/react";
 import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";
 import Image from "next/image";
 import DatePicker from "react-datepicker";
-import { BeatLoader } from "react-spinners";
 import { BiCamera, BiCheck } from "react-icons/bi";
 import { PiFileArrowDownDuotone } from "react-icons/pi";
-
 import EditProfileModal from "@/components/serviceProviderDashboard/profile/EditProfileModal";
 import { formatDateAsYYYYMMDD } from "@/utils";
 import { RootState } from "@/store";
-
 import "react-datepicker/dist/react-datepicker.css";
 import { defaultUserDetails } from "@/data/data";
 import Button from "@/components/global/Button";
 import { useRouter, useSearchParams } from "next/navigation";
 import { getCookie, deleteCookie } from "cookies-next";
-import { MdOutlineErrorOutline } from "react-icons/md";
-
-
-const userDataSchema = z.object({
-  firstName: z.string().min(2).optional(),
-  lastName: z.string().min(2).optional(),
-  dateOfBirth: z.date().nullable().optional(),
-  // phoneNumber: z.string().optional(),
-  emailAddress: z.string().email().optional(),
-  postcode: z.string().optional(),
-  suburb: z.string().optional(),
-  state: z.string().optional(),
-  idType: z.string().optional().nullable(),
-  abn: z.string().nullable().optional(),
-  idNumber: z.string().optional(),
-  bio: z.string().nullable().optional(),
-  isVerified: z.boolean().optional(),
-  idImageFront: z.string().nullable().optional(),
-  idImageBack: z.string().nullable().optional(),
-});
+import { UserDataType } from "@/lib/validation/userData.schema";
+import FormField from "./FormField";
+import useValidateABN from "@/hooks/useValidateABN";
+import Notice from "./Notice";
 
 const idTypeObject = [
   { label: "Medicare Card", value: "MEDICARE_CARD" },
@@ -50,22 +28,31 @@ const idTypeObject = [
   { label: "Driver's License", value: "DRIVERS_LICENSE" },
 ];
 
-type UserDataType = z.infer<typeof userDataSchema>;
-
 const EditProfile = () => {
   const [isEditingEnabled, setIsEditingEnabled] = useState(false);
   const [isFormModalShown, setIsFormModalShown] = useState(false);
-  const [isEditingProfilePicture, setIsEditingProfilePicture] = useState({ isEditing: false, image: null as string | null });
-  const [isEditingImageFront, setIsEditingImageFront] = useState<boolean>(false);
+  const [isEditingProfilePicture, setIsEditingProfilePicture] = useState({
+    isEditing: false,
+    image: null as string | null,
+  });
+  const [isEditingImageFront, setIsEditingImageFront] =
+    useState<boolean>(false);
   const [isEditingImageBack, setIsEditingImageBack] = useState<boolean>(false);
-  const [documentImageFront, setDocumentImageFront] = useState<string | null>(null);
-  const [documentImageBack, setDocumentImageBack] = useState<string | null>(null);
+  const [documentImageFront, setDocumentImageFront] = useState<string | null>(
+    null,
+  );
+  const [documentImageBack, setDocumentImageBack] = useState<string | null>(
+    null,
+  );
   const [documentImage, setDocumentImage] = useState<string | null>(null);
   const [suburbList, setSuburbList] = useState<string[]>([]);
-  const [selectedDocumentFront, setSelectedDocumentFront] = useState<File | null>(null);
-  const [selectedDocumentBack, setSelectedDocumentBack] = useState<File | null>(null);
-  const [selectedDocument, setSelectedDocument] = useState<File | null>(null);
-  const [isProfileUpdatedSuccessfully, setIsProfileUpdatedSuccessfully] = useState(false);
+  const [selectedDocumentFront, setSelectedDocumentFront] =
+    useState<File | null>(null);
+  const [selectedDocumentBack, setSelectedDocumentBack] = useState<File | null>(
+    null,
+  );
+  const [isProfileUpdatedSuccessfully, setIsProfileUpdatedSuccessfully] =
+    useState(false);
   const [error, setError] = useState("");
   const [err, setErr] = useState("");
   const [userDetails, setUserDetails] = useState(defaultUserDetails);
@@ -82,7 +69,6 @@ const EditProfile = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const from = searchParams.get("from");
-  const [isABNValid, setIsABNValid] = useState<boolean>(false);
 
   const handleRedirect = () => {
     const newRedirectToProvideService = getCookie("redirectToProvideService");
@@ -124,42 +110,13 @@ const EditProfile = () => {
   const watchField = watch();
   const watchABN = watch("abn");
 
-  useEffect(() => {
-    const validateABN = async () => {
-      if (watchABN) {
-        try {
-          const url = `${process.env.NEXT_PUBLIC_API_URL}/service_provider/abn/validate/${watchABN}`;
-          const response = await axios.get(url, {
-            headers: {
-              Authorization: `Bearer ${token}`,
-              "Content-Type": "application/json",
-            },
-          });
-          if (response.data) {
-            setIsABNValid(true);
-          }
-        } catch (error) {
-          console.error("Error validating ABN:", error);
-          setIsABNValid(false);
-          setErr('Please enter a valid 11-digit ABN.')
-        }
-      } else {
-        setIsABNValid(false);
-
-      }
-    };
-    const debounceValidation = setTimeout(() => {
-      validateABN();
-    }, 500);
-
-    return () => clearTimeout(debounceValidation);
-  }, [watchABN, token]);
+  const isABNValid = useValidateABN(watchABN, token, setErr);
 
   useEffect(() => {
     const fetchUserData = async () => {
       if (!token) return;
       try {
-        const url = `${process.env.NEXT_PUBLIC_API_URL}/${isServiceProvider ? 'service_provider' : 'customer'}/profile`;
+        const url = `${process.env.NEXT_PUBLIC_API_URL}/${isServiceProvider ? "service_provider" : "customer"}/profile`;
         const { data } = await axios.get(url, {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -167,7 +124,10 @@ const EditProfile = () => {
           },
         });
         setUserDetails(data);
-        setIsDocumentEditable(data.isVerified || false);
+        setIsDocumentEditable(
+          data.verificationStatus === null ||
+            data.verificationStatus === "notVerified",
+        );
         reset({
           firstName: data.firstName || "",
           lastName: data.lastName || "",
@@ -177,13 +137,19 @@ const EditProfile = () => {
           postcode: data.postalCode || "",
           suburb: data.suburbs || "",
           state: data.state || "",
-          idType: idTypeObject.find((item) => item.value === data.idType)?.label || "",
+          idType:
+            idTypeObject.find((item) => item.value === data.idType)?.label ||
+            "",
           idNumber: data.idNumber || "",
           isVerified: data.isVerified || false,
           idImageFront: data.idImageFront || "",
           idImageBack: data.idImageBack || "",
-          bio: isServiceProvider ? data.bio || "" : "No Bio needed for customer",
-          abn: isServiceProvider ? data.abn || "" : "No ABN needed for customer",
+          bio: isServiceProvider
+            ? data.bio || ""
+            : "No Bio needed for customer",
+          abn: isServiceProvider
+            ? data.abn || ""
+            : "No ABN needed for customer",
         });
       } catch (error) {
         console.error("Error fetching user data:", error);
@@ -192,9 +158,7 @@ const EditProfile = () => {
     };
 
     fetchUserData();
-  }, [token, isServiceProvider, dispatch, reset]);
-
-  // console.log("user", userDetails)
+  }, [token, isServiceProvider, dispatch, reset, isEditingEnabled]);
 
   const watchPostcode = watch("postcode");
 
@@ -243,7 +207,6 @@ const EditProfile = () => {
 
         // If you need to store the state abbreviation somewhere
         const stateShort = locationData.StateShort;
-
       } catch (error) {
         console.error("Error fetching location data:", error);
         setSuburbList([]);
@@ -256,15 +219,17 @@ const EditProfile = () => {
   }, [watchPostcode, setValue]);
 
   const handleSubmitUserData: SubmitHandler<UserDataType> = async (data) => {
+    if (!isABNValid) return;
     try {
       let submitData: any;
-
       let url;
       if (isServiceProvider) {
         submitData = Object.entries({
           firstName: data.firstName,
           lastName: data.lastName,
-          dateOfBirth: data.dateOfBirth ? formatDateAsYYYYMMDD(data.dateOfBirth as Date) : "",
+          dateOfBirth: data.dateOfBirth
+            ? formatDateAsYYYYMMDD(data.dateOfBirth as Date)
+            : "",
           suburb: data.suburb,
           // phoneNumber: data.phoneNumber,
           state: data.state,
@@ -275,21 +240,21 @@ const EditProfile = () => {
           idNumber: data.idNumber,
           bio: data.bio,
           abn: data.abn,
-        })
-          .reduce((acc, [key, value]) => {
-            if (value !== null && value !== undefined && value !== "") {
-              // @ts-expect-error "type of key not know"
-              acc[key] = value;
-            }
-            return acc;
-          }, {});
-        url =
-          `${process.env.NEXT_PUBLIC_API_URL}/service_provider/update`;
+        }).reduce((acc, [key, value]) => {
+          if (value !== null && value !== undefined && value !== "") {
+            // @ts-expect-error "type of key not know"
+            acc[key] = value;
+          }
+          return acc;
+        }, {});
+        url = `${process.env.NEXT_PUBLIC_API_URL}/service_provider/update`;
       } else {
         submitData = Object.entries({
           firstName: data.firstName,
           lastName: data.lastName,
-          dateOfBirth: data.dateOfBirth ? formatDateAsYYYYMMDD(data.dateOfBirth as Date) : "",
+          dateOfBirth: data.dateOfBirth
+            ? formatDateAsYYYYMMDD(data.dateOfBirth as Date)
+            : "",
           suburb: data.suburb,
           // phoneNumber: data.phoneNumber,
           state: data.state,
@@ -298,14 +263,13 @@ const EditProfile = () => {
           idImageBack: selectedDocumentBack,
           idType: data.idType,
           idNumber: data.idNumber,
-        })
-          .reduce((acc, [key, value]) => {
-            if (value !== null && value !== undefined && value !== "") {
-              // @ts-expect-error "type of key not know"
-              acc[key] = value;
-            }
-            return acc;
-          }, {});
+        }).reduce((acc, [key, value]) => {
+          if (value !== null && value !== undefined && value !== "") {
+            // @ts-expect-error "type of key not know"
+            acc[key] = value;
+          }
+          return acc;
+        }, {});
         url = `${process.env.NEXT_PUBLIC_API_URL}/customer/update`;
       }
 
@@ -318,7 +282,6 @@ const EditProfile = () => {
       setIsProfileUpdatedSuccessfully(true);
       setIsFormModalShown(true);
       setIsEditingEnabled(false);
-      console.log(submitData);
     } catch (error: any) {
       console.log(error);
       setEditProfileError("Something went wrong, please try again");
@@ -349,11 +312,13 @@ const EditProfile = () => {
   };
 
   return (
-    <main className="py-8 lg:py-16 container">
-      <div className="p-3 rounded-lg bg-[#F8E9FE] mb-5 flex items-center space-x-3 text-[#D72828]">
-        <MdOutlineErrorOutline className="size-5" />
-        <h4 className="text-sm font-satoshiMedium">Note: Please provide accurate information below, as some fields ( address and date of birth) cannot be edited after submission.</h4>
-      </div>
+    <main className="container py-8 lg:py-16">
+      {userDetails && (
+        <Notice
+          role={isServiceProvider ? "SERVICE_PROVIDER" : "USER"}
+          verificationStatus={userDetails.verificationStatus}
+        />
+      )}
       <section className="relative lg:grid lg:grid-cols-12 lg:items-start lg:gap-6">
         <EditProfileModal
           setIsFormModalShown={setIsFormModalShown}
@@ -384,7 +349,10 @@ const EditProfile = () => {
               <BiCamera className="size-5" />
             </span>
             <Image
-              src={userProfile.profile?.profileImage ?? "/assets/images/serviceProvider/user.jpg"}
+              src={
+                userProfile.profile?.profileImage ??
+                "/assets/images/serviceProvider/user.jpg"
+              }
               alt=""
               width={100}
               height={100}
@@ -412,7 +380,9 @@ const EditProfile = () => {
         >
           {/* Personal Information */}
           <section className="flex flex-col gap-8">
-            <h3 className="text-lg font-bold text-primary">Personal Information</h3>
+            <h3 className="text-lg font-bold text-primary">
+              Personal Information
+            </h3>
             <div className="flex flex-wrap justify-between gap-6 lg:col-span-8 lg:grid lg:grid-cols-2">
               <FormField
                 label="First Name"
@@ -435,7 +405,10 @@ const EditProfile = () => {
                 name="dateOfBirth"
                 render={({ field }) => (
                   <div className="flex w-full flex-col gap-3 text-violet-normal">
-                    <label htmlFor="dateOfBirth" className="flex items-center justify-between">
+                    <label
+                      htmlFor="dateOfBirth"
+                      className="flex items-center justify-between"
+                    >
                       <span>Date of Birth</span>
                       {!errors.dateOfBirth && field.value && (
                         <BiCheck className="size-5 rounded-full bg-green-500 p-1 text-white" />
@@ -444,9 +417,13 @@ const EditProfile = () => {
                     <DatePicker
                       id="dateOfBirth"
                       selected={field.value || null} // Use null if there's no date
-                      onChange={(date) => field.onChange(date ? date : '')}
+                      onChange={(date) => field.onChange(date ? date : "")}
                       disabled={!isEditingEnabled || !!userDetails.dateOfBirth} // Disable if date exists and not in editing mode
-                      maxDate={new Date(new Date().setFullYear(new Date().getFullYear() - 18))}
+                      maxDate={
+                        new Date(
+                          new Date().setFullYear(new Date().getFullYear() - 18),
+                        )
+                      }
                       className="w-full rounded-xl border border-slate-100 p-2 text-slate-700 shadow outline-none transition-shadow duration-300 hover:shadow-md lg:max-w-sm"
                       dateFormat="dd/MM/yyyy"
                     />
@@ -477,7 +454,9 @@ const EditProfile = () => {
 
           {/* Contact Information */}
           <section className="flex flex-col gap-4">
-            <h3 className="text-lg font-bold text-primary">Contact Information</h3>
+            <h3 className="text-lg font-bold text-primary">
+              Contact Information
+            </h3>
             <div className="flex flex-wrap gap-6 lg:col-span-8 lg:grid lg:grid-cols-2">
               {/* Phone number */}
               {/* <label className="flex w-full flex-col gap-3 text-violet-normal">
@@ -512,7 +491,9 @@ const EditProfile = () => {
 
           {/* Address Information */}
           <section className="flex flex-col gap-4">
-            <h3 className="text-lg font-bold text-primary">Address Information</h3>
+            <h3 className="text-lg font-bold text-primary">
+              Address Information
+            </h3>
             <div className="flex flex-wrap gap-6 lg:col-span-8 lg:grid lg:grid-cols-2">
               <FormField
                 label="Postal Code"
@@ -528,7 +509,10 @@ const EditProfile = () => {
                 control={control}
                 render={({ field }) => (
                   <div className="flex w-full flex-col gap-3 text-violet-normal">
-                    <label htmlFor="suburb" className="flex items-center justify-between">
+                    <label
+                      htmlFor="suburb"
+                      className="flex items-center justify-between"
+                    >
                       <span>Suburb</span>
                       {!errors.suburb && field.value && (
                         <BiCheck className="size-5 rounded-full bg-green-500 p-1 text-white" />
@@ -537,7 +521,11 @@ const EditProfile = () => {
                     <select
                       {...field}
                       className="rounded-xl border border-slate-100 p-2 py-2.5 text-slate-700 shadow outline-none transition-shadow duration-300 hover:shadow-md"
-                      disabled={!isEditingEnabled || suburbList.length === 0 || !!userDetails.suburbs}
+                      disabled={
+                        !isEditingEnabled ||
+                        suburbList.length === 0 ||
+                        !!userDetails.suburbs
+                      }
                     >
                       {suburbList.map((item) => (
                         <option value={item} key={item}>
@@ -563,7 +551,9 @@ const EditProfile = () => {
           {/* Bio Section (for Service Providers) */}
           {isServiceProvider && (
             <section className="space-y-3">
-              <h3 className="text-lg font-bold text-primary mb-5">Verification Information</h3>
+              <h3 className="mb-5 text-lg font-bold text-primary">
+                Verification Information
+              </h3>
               <div className="flex flex-wrap gap-6 lg:col-span-8 lg:grid lg:grid-cols-2">
                 <FormField
                   label="ABN Number"
@@ -576,34 +566,26 @@ const EditProfile = () => {
                   minLength={11}
                 />
               </div>
-              {!isABNValid && !userDetails.abn && err && <div className="text-red-500 ">Please enter a valid 11-digit ABN.</div>}
+              {!isABNValid && !userDetails.abn && err && (
+                <div className="text-red-500 ">{err}</div>
+              )}
             </section>
           )}
 
           {/* Identification Document */}
           <section className="flex flex-col gap-4">
-            <h3 className="text-lg font-bold text-primary">Identification Document</h3>
-            {isServiceProvider && (
-              <div className="flex items-center gap-2 mb-4">
-                <input
-                  type="checkbox"
-                  id="isVerified"
-                  {...register("isVerified")}
-                  checked={!userDetails.isVerified}
-                  className="rounded border-gray-300"
-                  disabled
-                />
-                <label htmlFor="isVerified" className="text-sm text-gray-700">
-                  Allow document updates
-                </label>
-              </div>
-            )}
+            <h3 className="text-lg font-bold text-primary">
+              Identification Document
+            </h3>
+
             <div className="flex flex-col gap-6 lg:col-span-8 lg:gap-8">
               <div className="flex flex-wrap gap-6 lg:grid lg:grid-cols-2 lg:gap-8">
-
                 {/* ID Type Select */}
                 <div className="flex w-full flex-col gap-2.5">
-                  <label htmlFor="idType" className="flex w-full items-center justify-between">
+                  <label
+                    htmlFor="idType"
+                    className="flex w-full items-center justify-between"
+                  >
                     <span>Choose a valid means of ID</span>
                     {!errors.idType && watchField.idType && (
                       <BiCheck className="size-5 rounded-full bg-green-500 p-1 text-white" />
@@ -612,7 +594,7 @@ const EditProfile = () => {
                   <select
                     {...register("idType")}
                     className="w-full rounded-xl border border-slate-100 px-2 py-2.5 text-slate-700 shadow outline-none transition-shadow duration-300 hover:shadow-md lg:max-w-sm"
-                    disabled={!isEditingEnabled || !!userDetails.idType}
+                    disabled={!isEditingEnabled || !isDocumentEditable}
                   >
                     {idTypeObject.map((item) => (
                       <option key={item.label} value={item.label}>
@@ -624,13 +606,17 @@ const EditProfile = () => {
 
                 {/* ID Number Field */}
                 <FormField
-                  label={watchField.idType ? `${watchField.idType} Number` : "Select ID Type"}
+                  label={
+                    watchField.idType
+                      ? `${watchField.idType} Number`
+                      : "Select ID Type"
+                  }
                   name="idNumber"
                   watch={watch}
                   register={register}
                   errors={errors}
                   watchField={watchField}
-                  disabled={!isEditingEnabled || !!userDetails.idNumber}
+                  disabled={!isEditingEnabled || !isDocumentEditable}
                   maxLength={12}
                 />
               </div>
@@ -643,18 +629,25 @@ const EditProfile = () => {
                     <BiCheck className="size-5 rounded-full bg-green-500 p-1 text-white" />
                   )}
                 </label>
-                <div className="flex gap-5 w-full">
+                <div className="flex w-full gap-5">
                   {/* Front View */}
                   <div>
-                    {documentImageFront || watchField.idImageFront ? (
+                    {(documentImageFront || watchField.idImageFront) &&
+                    (userDetails.verificationStatus === "pending" ||
+                      userDetails.verificationStatus === "verified") ? (
                       <button
                         type="button"
                         className="flex items-end justify-center space-x-2"
                         onClick={handleChangeFront}
-                        disabled={!isDocumentEditable && !!userDetails.idImageFront}
+                        disabled
                       >
                         <Image
-                          src={documentImageFront ?? watchField.idImageFront ?? userDetails.idImageFront ?? ""}
+                          src={
+                            documentImageFront ??
+                            watchField.idImageFront ??
+                            userDetails.idImageFront ??
+                            ""
+                          }
                           alt="Captured or Selected"
                           width={300}
                           height={300}
@@ -664,30 +657,45 @@ const EditProfile = () => {
                     ) : (
                       <button
                         type="button"
-                        className="flex h-48 w-48 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-slate-500 p-4"
+                        className={
+                          "flex h-48 w-48 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-slate-500 p-4 " +
+                          (userDetails.verificationStatus === "notVerified"
+                            ? "border-[#F45757]"
+                            : "border-slate-500")
+                        }
                         onClick={handleChangeFront}
-                        disabled={!isDocumentEditable && !!userDetails.idImageFront}
+                        disabled={!isDocumentEditable}
                       >
                         <PiFileArrowDownDuotone className="text-2xl text-tc-gray" />
                         <span className="text-center text-tc-gray">
-                          Choose a File <span className="text-[#381F8C] font-clashSemiBold"><br />Front View<br /></span> Upload supports: JPG, PDF, PNG.
+                          Choose a File{" "}
+                          <span className="font-clashSemiBold text-[#381F8C]">
+                            <br />
+                            Front View
+                            <br />
+                          </span>{" "}
+                          Upload supports: JPG, PDF, PNG.
                         </span>
                       </button>
                     )}
                   </div>
 
                   {/* Back View */}
-                  {watchField.idType !== 'International Passport' && (
+                  {watchField.idType !== "International Passport" && (
                     <div>
-                      {documentImageBack || watchField.idImageBack ? (
+                      {(documentImageBack || watchField.idImageBack) &&
+                      (userDetails.verificationStatus === "pending" ||
+                        userDetails.verificationStatus === "verified") ? (
                         <button
                           type="button"
                           className="flex items-end justify-center space-x-2"
                           onClick={handleChangeBack}
-                          disabled={!isDocumentEditable && !!userDetails.idImageBack}
+                          disabled
                         >
                           <Image
-                            src={documentImageBack ?? watchField.idImageBack ?? ""}
+                            src={
+                              documentImageBack ?? watchField.idImageBack ?? ""
+                            }
                             alt="Captured or Selected"
                             width={300}
                             height={300}
@@ -697,13 +705,24 @@ const EditProfile = () => {
                       ) : (
                         <button
                           type="button"
-                          className="flex h-48 w-48 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-slate-500 p-4"
+                          className={
+                            "flex h-48 w-48 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed p-4 " +
+                            (userDetails.verificationStatus === "notVerified"
+                              ? "border-[#F45757]"
+                              : "border-slate-500")
+                          }
                           onClick={handleChangeBack}
-                          disabled={!isDocumentEditable && !!userDetails.idImageBack}
+                          disabled={!isDocumentEditable}
                         >
                           <PiFileArrowDownDuotone className="text-2xl text-tc-gray" />
                           <span className="text-center text-tc-gray">
-                            Choose a File <span className="text-[#381F8C] font-clashSemiBold"><br />Back View<br /></span> Upload supports: JPG, PDF, PNG.
+                            Choose a File{" "}
+                            <span className="font-clashSemiBold text-[#381F8C]">
+                              <br />
+                              Back View
+                              <br />
+                            </span>{" "}
+                            Upload supports: JPG, PDF, PNG.
                           </span>
                         </button>
                       )}
@@ -714,15 +733,14 @@ const EditProfile = () => {
             </div>
           </section>
 
-
           {error && (
-            <div className="my-1 text-base text-end lg:px-24 font-semibold text-status-error-100">
+            <div className="my-1 text-end text-base font-semibold text-status-error-100 lg:px-24">
               {error}
             </div>
           )}
 
           {editProfileError && (
-            <div className="my-1 text-base text-end lg:px-24 font-semibold text-status-error-100">
+            <div className="my-1 text-end text-base font-semibold text-status-error-100 lg:px-24">
               {editProfileError}
             </div>
           )}
@@ -741,63 +759,6 @@ const EditProfile = () => {
         </form>
       </section>
     </main>
-  );
-};
-
-interface FormFieldProps {
-  label: string;
-  name: keyof UserDataType;
-  register: UseFormRegister<UserDataType>;
-  errors: FieldErrors<UserDataType>;
-  watch: UseFormWatch<UserDataType>;
-  disabled: boolean;
-  readonly?: boolean;
-  as?: 'input' | 'textarea';
-  defaultValue?: string
-  [key: string]: any;
-}
-
-const FormField: React.FC<FormFieldProps> = ({
-  label,
-  name,
-  register,
-  errors,
-  watch,
-  disabled,
-  readonly = false,
-  as = "input",
-  defaultValue,
-  ...props
-}) => {
-  const watchedValue = watch(name);
-
-  return (
-    <label className="flex w-full flex-col gap-3 text-violet-normal">
-      <span className="flex items-center justify-between">
-        <span>{label}</span>
-        {!errors[name] && watchedValue && String(watchedValue).length >= 2 && (
-          <BiCheck className="size-5 rounded-full bg-green-500 p-1 text-white" />
-        )}
-      </span>
-      {as === "input" ? (
-        <input
-          type="text"
-          disabled={disabled}
-          readOnly={readonly}
-          className="rounded-xl border border-slate-100 p-2 text-slate-700 shadow outline-none transition-shadow duration-300 hover:shadow-md lg:max-w-sm"
-          {...register(name)}
-          defaultValue={defaultValue}
-          {...props}
-        />
-      ) : (
-        <textarea
-          disabled={disabled}
-          className="rounded-xl border border-slate-100 p-2 text-slate-700 shadow outline-none transition-shadow duration-300 hover:shadow-md lg:max-w-sm"
-          {...register(name)}
-          {...props}
-        />
-      )}
-    </label>
   );
 };
 

@@ -12,6 +12,7 @@ interface ProfileCompletionType {
 }
 
 const ProfileCompletion = ({ fetchedUserData }: ProfileCompletionType) => {
+ 
   // const user = session?.data?.user?.user;
   const { profile: user } = useSelector(
     (state: RootState) => state.userProfile,
