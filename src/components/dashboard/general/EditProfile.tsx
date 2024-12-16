@@ -632,14 +632,12 @@ const EditProfile = () => {
                 <div className="flex w-full gap-5">
                   {/* Front View */}
                   <div>
-                    {(documentImageFront || watchField.idImageFront) &&
-                    (userDetails.verificationStatus === "pending" ||
-                      userDetails.verificationStatus === "verified") ? (
+                    {documentImageFront ||  watchField.idImageFront || !isDocumentEditable ? (
                       <button
                         type="button"
                         className="flex items-end justify-center space-x-2"
                         onClick={handleChangeFront}
-                        disabled
+                        disabled={!isDocumentEditable}
                       >
                         <Image
                           src={
@@ -683,14 +681,12 @@ const EditProfile = () => {
                   {/* Back View */}
                   {watchField.idType !== "International Passport" && (
                     <div>
-                      {(documentImageBack || watchField.idImageBack) &&
-                      (userDetails.verificationStatus === "pending" ||
-                        userDetails.verificationStatus === "verified") ? (
+                      {documentImageBack || watchField.idImageBack || !isDocumentEditable ? (
                         <button
                           type="button"
                           className="flex items-end justify-center space-x-2"
                           onClick={handleChangeBack}
-                          disabled
+                          disabled={!isDocumentEditable}
                         >
                           <Image
                             src={
