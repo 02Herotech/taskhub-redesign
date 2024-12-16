@@ -126,7 +126,7 @@ const EditProfile = () => {
         setUserDetails(data);
         setIsDocumentEditable(
           data.verificationStatus === null ||
-            data.verificationStatus === "notVerified",
+            data.verificationStatus === "NOT_VERIFIED",
         );
         reset({
           firstName: data.firstName || "",
@@ -657,7 +657,7 @@ const EditProfile = () => {
                         type="button"
                         className={
                           "flex h-48 w-48 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-slate-500 p-4 " +
-                          (userDetails.verificationStatus === "notVerified"
+                          (userDetails.verificationStatus === "NOT_VERIFIED"
                             ? "border-[#F45757]"
                             : "border-slate-500")
                         }
@@ -703,7 +703,7 @@ const EditProfile = () => {
                           type="button"
                           className={
                             "flex h-48 w-48 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed p-4 " +
-                            (userDetails.verificationStatus === "notVerified"
+                            (userDetails.verificationStatus === "NOT_VERIFIED"
                               ? "border-[#F45757]"
                               : "border-slate-500")
                           }

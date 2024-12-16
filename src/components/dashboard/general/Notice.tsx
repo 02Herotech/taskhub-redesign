@@ -3,7 +3,7 @@ import { MdOutlineErrorOutline } from "react-icons/md";
 
 type Props = {
   role: "USER" | "SERVICE_PROVIDER";
-  verificationStatus?: null | "notVerified" | "verified" | "pending";
+  verificationStatus?: null | "NOT_VERIFIED" | "VERIFIED" | "PENDING";
 };
 
 function Notice({ role, verificationStatus }: Props) {
@@ -17,8 +17,8 @@ function Notice({ role, verificationStatus }: Props) {
       <MdOutlineErrorOutline className="size-5" />
       <h4 className="font-satoshiMedium text-sm">
         {verificationStatus == null ||
-        verificationStatus == "verified" ||
-        verificationStatus == "pending"
+        verificationStatus == "VERIFIED" ||
+        verificationStatus == "PENDING"
           ? verifiedMessage
           : notVerifiedMessage}
       </h4>
