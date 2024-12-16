@@ -110,6 +110,8 @@ const EditProfile = () => {
   const watchField = watch();
   const watchABN = watch("abn");
 
+  console.log(userDetails);
+
   const isABNValid = useValidateABN(watchABN, token, setErr);
 
   useEffect(() => {
@@ -142,8 +144,16 @@ const EditProfile = () => {
             "",
           idNumber: data.idNumber || "",
           isVerified: data.isVerified || false,
-          idImageFront: data.idImageFront || "",
-          idImageBack: data.idImageBack || "",
+          idImageFront:
+            data.verificationStatus === "VERIFIED" ||
+            data.verificationStatus === "PENDING"
+              ? data.idImageFront || ""
+              : "",
+          idImageBack:
+            data.verificationStatus === "VERIFIED" ||
+            data.verificationStatus === "PENDING"
+              ? data.idImageBack || ""
+              : "",
           bio: isServiceProvider
             ? data.bio || ""
             : "No Bio needed for customer",
@@ -632,7 +642,9 @@ const EditProfile = () => {
                 <div className="flex w-full gap-5">
                   {/* Front View */}
                   <div>
-                    {documentImageFront ||  watchField.idImageFront || !isDocumentEditable ? (
+                    {documentImageFront ||
+                    watchField.idImageFront ||
+                    !isDocumentEditable ? (
                       <button
                         type="button"
                         className="flex items-end justify-center space-x-2"
@@ -655,12 +667,13 @@ const EditProfile = () => {
                     ) : (
                       <button
                         type="button"
-                        className={
-                          "flex h-48 w-48 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-slate-500 p-4 " +
-                          (userDetails.verificationStatus === "NOT_VERIFIED"
-                            ? "border-[#F45757]"
-                            : "border-slate-500")
-                        }
+                        style={{
+                          borderColor:
+                            userDetails.verificationStatus === "NOT_VERIFIED"
+                              ? "#F45757"
+                              : "#64748b",
+                        }}
+                        className="flex h-48 w-48 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed p-4"
                         onClick={handleChangeFront}
                         disabled={!isDocumentEditable}
                       >
@@ -681,7 +694,9 @@ const EditProfile = () => {
                   {/* Back View */}
                   {watchField.idType !== "International Passport" && (
                     <div>
-                      {documentImageBack || watchField.idImageBack || !isDocumentEditable ? (
+                      {documentImageBack ||
+                      watchField.idImageBack ||
+                      !isDocumentEditable ? (
                         <button
                           type="button"
                           className="flex items-end justify-center space-x-2"
@@ -701,12 +716,13 @@ const EditProfile = () => {
                       ) : (
                         <button
                           type="button"
-                          className={
-                            "flex h-48 w-48 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed p-4 " +
-                            (userDetails.verificationStatus === "NOT_VERIFIED"
-                              ? "border-[#F45757]"
-                              : "border-slate-500")
-                          }
+                          style={{
+                            borderColor:
+                              userDetails.verificationStatus === "NOT_VERIFIED"
+                                ? "#F45757"
+                                : "#64748b",
+                          }}
+                          className="flex h-48 w-48 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed p-4"
                           onClick={handleChangeBack}
                           disabled={!isDocumentEditable}
                         >
