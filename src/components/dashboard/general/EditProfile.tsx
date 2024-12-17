@@ -125,7 +125,6 @@ const EditProfile = () => {
             "Content-Type": "application/json",
           },
         });
-        console.log(data);
         setUserDetails(data);
         setIsDocumentEditable(
           data.verificationStatus === null ||
@@ -230,7 +229,7 @@ const EditProfile = () => {
   }, [watchPostcode, setValue]);
 
   const handleSubmitUserData: SubmitHandler<UserDataType> = async (data) => {
-    if (!isABNValid) {
+    if (isServiceProvider && !isABNValid) {
       if (ABNInputRef.current) {
         ABNInputRef.current.scrollIntoView({
           behavior: "smooth",
