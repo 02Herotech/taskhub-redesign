@@ -697,7 +697,7 @@ const EditProfile = () => {
                             Front View
                             <br />
                           </span>{" "}
-                          Upload supports: JPG, PDF, PNG.
+                          Upload supports: JPG, PNG.
                         </span>
                       </button>
                     )}
@@ -746,7 +746,7 @@ const EditProfile = () => {
                               Back View
                               <br />
                             </span>{" "}
-                            Upload supports: JPG, PDF, PNG.
+                            Upload supports: JPG, PNG.
                           </span>
                         </button>
                       )}

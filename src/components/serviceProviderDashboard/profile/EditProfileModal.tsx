@@ -326,7 +326,7 @@ const EditProfileModal = ({
                   <label className=" hidden h-48 w-1/2 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-slate-500 p-4">
                     <PiFileArrowDownDuotone className="text-xl text-tc-gray" />
                     <span className="text-center text-tc-gray">
-                      Choose a File Upload supports: JPG, PDF, PNG.
+                      Choose a File Upload supports: JPG, PNG.
                     </span>
                     <input
                       ref={fileInputRef}
