@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useForm, Controller, SubmitHandler } from "react-hook-form";
 import { useSession } from "next-auth/react";
 import { useSelector, useDispatch } from "react-redux";
@@ -110,7 +110,9 @@ const EditProfile = () => {
   const watchField = watch();
   const watchABN = watch("abn");
 
-  const isABNValid = useValidateABN(watchABN, token, setErr);
+  const isABNValid = useValidateABN(watchABN, token, userDetails, setErr);
+
+  const ABNInputRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -123,6 +125,7 @@ const EditProfile = () => {
             "Content-Type": "application/json",
           },
         });
+        console.log(data);
         setUserDetails(data);
         setIsDocumentEditable(
           data.verificationStatus === null ||
@@ -227,6 +230,16 @@ const EditProfile = () => {
   }, [watchPostcode, setValue]);
 
   const handleSubmitUserData: SubmitHandler<UserDataType> = async (data) => {
+    if (!isABNValid) {
+      if (ABNInputRef.current) {
+        ABNInputRef.current.scrollIntoView({
+          behavior: "smooth",
+          block: "center",
+        });
+        ABNInputRef.current.focus(); // Optionally focus the input after scrolling
+      }
+      return;
+    }
     try {
       let submitData: any;
       let url;
@@ -561,7 +574,10 @@ const EditProfile = () => {
               <h3 className="mb-5 text-lg font-bold text-primary">
                 Verification Information
               </h3>
-              <div className="flex flex-wrap gap-6 lg:col-span-8 lg:grid lg:grid-cols-2">
+              <div
+                className="flex flex-wrap gap-6 lg:col-span-8 lg:grid lg:grid-cols-2"
+                ref={ABNInputRef}
+              >
                 <FormField
                   label="ABN Number"
                   name="abn"
@@ -759,7 +775,11 @@ const EditProfile = () => {
             <Button
               type="submit"
               className="w-fit rounded-full border border-violet-normal bg-violet-light px-6 py-3 font-satoshiBold font-bold text-violet-normal transition-all duration-300 hover:bg-violet-200 hover:shadow-md"
-              disabled={!isEditingEnabled}
+              disabled={
+                !isEditingEnabled ||
+                userDetails.verificationStatus === "VERIFIED" ||
+                userDetails.verificationStatus === "PENDING"
+              }
               loading={isSubmitting}
             >
               Save and Continue

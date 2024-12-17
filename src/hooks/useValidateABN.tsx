@@ -1,9 +1,17 @@
 import { useState, useEffect, SetStateAction } from "react";
 import axios from "axios";
 
+type Props = {
+  watchABN: string | null | undefined;
+  token: string | undefined;
+  userDetails: any;
+  setErr: (value: SetStateAction<string>) => void;
+};
+
 function useValidateABN(
   watchABN: string | null | undefined,
   token: string | undefined,
+  userDetails: DefaultUserDetailsType,
   setErr: (value: SetStateAction<string>) => void,
 ) {
   const [isValidABN, setIsValidABN] = useState<boolean>(false);
@@ -11,6 +19,10 @@ function useValidateABN(
   useEffect(() => {
     const validateABN = async () => {
       if (!token) return;
+      if (userDetails.abn) {
+        setIsValidABN(true);
+        return;
+      }
       if (watchABN) {
         try {
           const url = `${process.env.NEXT_PUBLIC_API_URL}/service_provider/abn/validate/${watchABN}`;
@@ -44,7 +56,7 @@ function useValidateABN(
     }, 500);
 
     return () => clearTimeout(debounceValidation);
-  }, [watchABN, token]);
+  }, [watchABN, token, userDetails]);
 
   return isValidABN;
 }
