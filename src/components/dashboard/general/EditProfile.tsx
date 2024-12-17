@@ -775,11 +775,7 @@ const EditProfile = () => {
             <Button
               type="submit"
               className="w-fit rounded-full border border-violet-normal bg-violet-light px-6 py-3 font-satoshiBold font-bold text-violet-normal transition-all duration-300 hover:bg-violet-200 hover:shadow-md"
-              disabled={
-                !isEditingEnabled ||
-                userDetails.verificationStatus === "VERIFIED" ||
-                userDetails.verificationStatus === "PENDING"
-              }
+              disabled={!isEditingEnabled}
               loading={isSubmitting}
             >
               Save and Continue
