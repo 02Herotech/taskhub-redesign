@@ -123,7 +123,7 @@ const EditProfileModal = ({
         
       };
       
-      console.log(isEditingImageFront, isEditingImageBack, isEditingProfilePicture.isEditing)
+      // console.log(isEditingImageFront, isEditingImageBack, isEditingProfilePicture.isEditing)
       reader.readAsDataURL(uploadFile);
     }
   };
