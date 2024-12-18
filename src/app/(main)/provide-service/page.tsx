@@ -1232,7 +1232,7 @@ const ProvideService: React.FC = () => {
                   >
                     <PiFileArrowDownDuotone className="text-xl text-[#a3a1ac]" />
                     <span className="text-center font-bold text-[#a3a1ac]">
-                      File Upload supports: JPG, PDF, PNG.
+                      File Upload supports: JPG, PNG.
                     </span>
                     <input
                       id="file-upload-main"
@@ -1288,7 +1288,7 @@ const ProvideService: React.FC = () => {
                       >
                         <PiFileArrowDownDuotone className="text-xl text-[#a3a1ac]" />
                         <span className="text-center font-bold text-[#a3a1ac]">
-                          File Upload supports: JPG, PDF, PNG.
+                          File Upload supports: JPG, PNG.
                         </span>
                         <input
                           id="file-upload-1"
@@ -1338,7 +1338,7 @@ const ProvideService: React.FC = () => {
                       >
                         <PiFileArrowDownDuotone className="text-xl text-[#a3a1ac]" />
                         <span className="text-center font-bold text-[#a3a1ac]">
-                          File Upload supports: JPG, PDF, PNG.
+                          File Upload supports: JPG, PNG.
                         </span>
                         <input
                           id="file-upload-2"
@@ -1388,7 +1388,7 @@ const ProvideService: React.FC = () => {
                       >
                         <PiFileArrowDownDuotone className="text-xl text-[#a3a1ac]" />
                         <span className="text-center font-bold text-[#a3a1ac]">
-                          File Upload supports: JPG, PDF, PNG.
+                          File Upload supports: JPG, PNG.
                         </span>
                         <input
                           id="file-upload-3"
