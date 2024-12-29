@@ -59,7 +59,8 @@ declare interface JobsType {
   jobTitle: string;
   jobAddress: string;
   bookingId: number;
-  taskTime: number[];
+  taskDate: number[] | null;
+  taskTime: number[] | null;
   jobDescription: string;
   createdAt: number[];
   jobStart: number[];

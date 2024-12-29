@@ -9,7 +9,7 @@ interface CardPropsTypes {
   imageUrl: string | null | undefined;
   fullName: string;
   title: string;
-  startDate: number[] | string;
+  startDate: number[] | null;
   price: number;
   itemId: number;
   viewJob?: boolean;
@@ -69,11 +69,8 @@ const JobCard = ({
           </div>
           <div className="flex flex-col justify-between gap-2 space-y-2">
             <div>
-              <p className="text-sm font-bold text-orange-normal first-letter:uppercase">
-                {startDate &&
-                  (typeof startDate === "string"
-                    ? startDate
-                    : dateFromNumberArray(startDate))}
+              <p className="text-sm text-right font-bold text-orange-normal first-letter:uppercase">
+                {startDate ? dateFromNumberArray(startDate) : 'Flexible'}
               </p>
               <p className=" font-bold text-[#28272A]">Total Cost ${price}</p>
             </div>
