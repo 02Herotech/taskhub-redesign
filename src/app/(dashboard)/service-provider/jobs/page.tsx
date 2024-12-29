@@ -67,7 +67,7 @@ const Jobs = () => {
                     itemId={item.id}
                     viewJob={true}
                     title={item.bookingTitle}
-                    startDate={item.startDate ? item.startDate : "Flexible"}
+                    startDate={item.startDate}
                     price={item.price}
                     sendMessage={{
                       recipientId: item.customer.user.id.toString(),
