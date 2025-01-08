@@ -6,11 +6,11 @@ function NotFound() {
   return (
     <div className="">
       <HomeNavigation />
-      <section className="relative mx-auto flex h-screen max-h-[1200px] min-h-[700px] max-w-[1700px] flex-col-reverse gap-10 overflow-hidden px-5 py-20 sm:px-10 md:flex-row md:gap-0">
-        <div className="absolute inset-0 -z-10 hidden h-full w-full bg-404-not-found bg-cover bg-center bg-no-repeat opacity-5 sm:block" />
-        <div className="absolute inset-0 -z-10 block h-full w-full bg-[#EBE9F4] opacity-5 sm:hidden" />
+      <section className="relative mx-auto flex h-screen max-h-[1200px] min-h-[700px] max-w-[1700px] flex-col-reverse gap-10 overflow-hidden bg-[#EBE9F4] px-5 py-20 sm:px-10 md:flex-row md:gap-0">
+        <div className="absolute inset-0 z-0 hidden h-full w-full bg-404-not-found bg-cover bg-center bg-no-repeat opacity-5 sm:block" />
+        <div className="absolute inset-0 z-0 block h-full w-full sm:hidden" />
         {/* Texts and CTA  */}
-        <div className="flex h-full w-full flex-col justify-center md:w-1/2">
+        <div className="flex h-full w-full flex-col justify-center md:w-1/2 z-10">
           <h2 className="mb-4 text-4xl font-semibold text-[#381F8C]">
             Hi there! <span className="text-5xl">👋</span>
           </h2>
@@ -30,12 +30,12 @@ function NotFound() {
         </div>
 
         {/* Images  */}
-        <div className="relative flex flex-grow items-center justify-center">
+        <div className="relative flex flex-grow items-center justify-center z-10">
           {/* Dimension width={399} height={503}  */}
           <img
             src="/assets/images/404-guy.png"
             alt="#"
-            className="w-9/12 max-w-[350px] md:w-full"
+            className="w-9/12 max-w-[350px] md:w-full z-30"
           />
           <div className="absolute w-11/12">
             <svg
@@ -44,7 +44,7 @@ function NotFound() {
               viewBox="0 0 649 254"
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
-              className="absolute -z-10 w-full"
+              className="absolute z-20 w-full"
             >
               <path
                 d="M452.234 32.7815C672.113 -13.039 616.811 62.0113 555.178 102.711C592.658 93.165 695.6 115.587 624.639 147.777C553.678 179.966 577.167 182.186 613.646 205.496C650.126 228.806 597.654 251.45 478.22 250.34C358.786 249.23 462.73 172.196 315.311 215.486C167.892 258.776 133.41 274.316 120.917 215.486C-4.0141 224.366 55.8845 168.877 52.4556 147.777C50.7761 137.441 144.604 123.532 67.4473 90.7227C-46.5876 42.2321 -7.51215 38.1094 120.917 25.8996C169.39 -36.704 194.451 35.9149 290.824 20.1272C343.735 11.4595 427.613 -22.0671 452.234 32.7815Z"
@@ -71,7 +71,7 @@ function NotFound() {
               viewBox="0 0 649 254"
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
-              className="absolute -z-20 w-full translate-y-10"
+              className="absolute z-10 w-full translate-y-10"
             >
               <path
                 d="M452.234 32.7815C672.113 -13.039 616.811 62.0113 555.178 102.711C592.658 93.165 695.6 115.587 624.639 147.777C553.678 179.966 577.167 182.186 613.646 205.496C650.126 228.806 597.654 251.45 478.22 250.34C358.786 249.23 462.73 172.196 315.311 215.486C167.892 258.776 133.41 274.316 120.917 215.486C-4.0141 224.366 55.8845 168.877 52.4556 147.777C50.7761 137.441 144.604 123.532 67.4473 90.7227C-46.5876 42.2321 -7.51215 38.1094 120.917 25.8996C169.39 -36.704 194.451 35.9149 290.824 20.1272C343.735 11.4595 427.613 -22.0671 452.234 32.7815Z"
