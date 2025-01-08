@@ -4,16 +4,11 @@ import HomeNavigation from "@/components/layout/HomeNavigation";
 
 function NotFound() {
   return (
-    <div>
+    <div className="">
       <HomeNavigation />
-      <section className="relative mx-auto flex h-screen max-h-[1200px] min-h-[700px] max-w-[1700px] flex-col-reverse gap-10 overflow-x-hidden px-5 py-20 sm:px-10 md:flex-row md:gap-0">
-        <div className="bg-404-not-found absolute inset-0 -z-10 hidden h-full w-full bg-cover bg-center bg-no-repeat opacity-5 sm:block" />
-        <div className="bg-404-not-found absolute inset-0 -z-10 block h-full w-full -rotate-[60deg] bg-contain bg-center bg-no-repeat opacity-5 outline-dotted sm:hidden" />
-        {/* <img
-          src='/not-found-404.png'
-          alt='#'
-          className='opacity-5 absolute right-0 top-10 w-full scale-[2] -rotate-[60deg] object-contain block sm:hidden'
-        /> */}
+      <section className="relative mx-auto flex h-screen max-h-[1200px] min-h-[700px] max-w-[1700px] flex-col-reverse gap-10 overflow-hidden px-5 py-20 sm:px-10 md:flex-row md:gap-0">
+        <div className="absolute inset-0 -z-10 hidden h-full w-full bg-404-not-found bg-cover bg-center bg-no-repeat opacity-5 sm:block" />
+        <div className="absolute inset-0 -z-10 block h-full w-full bg-[#EBE9F4] opacity-5 sm:hidden" />
         {/* Texts and CTA  */}
         <div className="flex h-full w-full flex-col justify-center md:w-1/2">
           <h2 className="mb-4 text-4xl font-semibold text-[#381F8C]">

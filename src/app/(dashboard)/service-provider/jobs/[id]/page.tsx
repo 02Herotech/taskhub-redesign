@@ -280,7 +280,7 @@ const ViewJobs = () => {
                       onClick={() => setIsModalOpen(true)}
                       className="rounded-full bg-violet-normal px-6 py-3 text-sm font-medium text-white transition-opacity duration-300 hover:opacity-90 max-md:w-full max-md:px-4 max-md:py-2 max-md:text-sm"
                     >
-                      Make An Offer
+                      Generate Quote
                     </button>
                   )
                 ) : (

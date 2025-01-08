@@ -50,7 +50,7 @@ const Congratulations = ({
             onClick={handleShowInvoice}
             className="rounded-full bg-violet-normal px-4 py-2 font-semibold text-white transition-opacity duration-300 hover:opacity-90"
           >
-            Make an offer
+            Generate Quote
           </button>
         </div>
       </div>
