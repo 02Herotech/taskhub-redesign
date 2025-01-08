@@ -78,10 +78,8 @@ const Input = ({
 		},
 		email: (value, label = "") => {
 			const match = value
-				.toString()
-				.match(
-					/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-				);
+        .toString()
+        .match(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/);
 			return match ? true : `Please enter a valid email`;
 		},
 		password: (value, label = "") => {

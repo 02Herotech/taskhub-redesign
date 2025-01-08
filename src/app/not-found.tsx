@@ -6,21 +6,21 @@ function NotFound() {
   return (
     <div className="">
       <HomeNavigation />
-      <section className="relative mx-auto flex h-screen max-h-[1200px] min-h-[700px] max-w-[1700px] flex-col-reverse gap-10 overflow-hidden bg-[#EBE9F4] px-5 py-20 sm:px-10 md:flex-row md:gap-0">
+      <section className="relative mx-auto flex h-screen max-h-[1200px] min-h-[700px] max-w-[1700px] flex-col-reverse gap-14 overflow-hidden bg-[#EBE9F4] px-5 py-20 sm:px-10 md:flex-row md:gap-0">
         <div className="absolute inset-0 z-0 hidden h-full w-full bg-404-not-found bg-cover bg-center bg-no-repeat opacity-5 sm:block" />
         <div className="absolute inset-0 z-0 block h-full w-full sm:hidden" />
         {/* Texts and CTA  */}
-        <div className="flex h-full w-full flex-col justify-center md:w-1/2 z-10">
-          <h2 className="mb-4 text-4xl font-semibold text-[#381F8C]">
-            Hi there! <span className="text-5xl">👋</span>
+        <div className="z-10 flex h-full w-full flex-col justify-center md:w-1/2">
+          <h2 className="mb-4 font-clashSemiBold text-3xl text-[#381F8C] sm:text-6xl">
+            Hi there! <span className="text-6xl sm:text-7xl">👋</span>
           </h2>
-          <p className="mb-6 text-xl font-medium text-[#140B31] sm:text-3xl">
+          <p className="mb-6 font-satoshiMedium text-xl text-[#55535A] sm:text-3xl sm:text-[#140B31]">
             Thank you for your patience while we put this in the best shape for
             you.
           </p>
           <Link
             href="/"
-            className="flex w-max gap-2 rounded-full bg-[#E58C06] px-4 py-3"
+            className="flex w-max gap-2 rounded-full bg-[#E58C06] px-4 py-3 font-satoshiBold"
           >
             <div className="rounded-full bg-white p-1">
               <FaArrowLeft className="rotate-45 text-[#E58C06]" />
@@ -30,12 +30,12 @@ function NotFound() {
         </div>
 
         {/* Images  */}
-        <div className="relative flex flex-grow items-center justify-center z-10">
+        <div className="relative z-10 flex flex-grow items-center justify-center">
           {/* Dimension width={399} height={503}  */}
           <img
             src="/assets/images/404-guy.png"
             alt="#"
-            className="w-9/12 max-w-[350px] md:w-full z-30"
+            className="z-30 w-9/12 max-w-[350px] md:w-full"
           />
           <div className="absolute w-11/12">
             <svg
@@ -99,7 +99,7 @@ function NotFound() {
             </svg>
           </div>
         </div>
-        <p className="absolute bottom-0 left-1/2 mt-5 -translate-x-1/2 pb-5 text-base font-bold sm:text-xl">
+        <p className="absolute bottom-0 left-1/2 mt-5 -translate-x-1/2 pb-5 font-satoshiBold text-base sm:text-xl">
           Need help?{" "}
           <Link href="/contact" className="text-[#E58C06] underline">
             Contact us

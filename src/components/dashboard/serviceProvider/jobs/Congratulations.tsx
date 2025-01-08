@@ -36,7 +36,7 @@ const Congratulations = ({
           Task Accepted
         </h2>
         <p className="text-center">
-          Great! You have accepted this customer’s task. Make an offer which
+          Great! You have accepted this customer’s task. Generate a quote which
           would be sent to the customer.
         </p>
         <div className="flex  items-center justify-center gap-10">
