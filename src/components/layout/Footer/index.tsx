@@ -37,8 +37,8 @@ const Footer = () => {
   const link_3 = [
     { label: "FAQs", url: "/home#FAQSection" },
     { label: "Contact us", url: "/contact" },
-    { label: "Terms and Condition", url: "/" },
-    { label: "Privacy", url: "/" },
+    { label: "Terms and Condition", url: "/terms-and-condition" },
+    { label: "Privacy", url: "/privacy" },
   ];
 
   const handleFilterByCategory = async (category: string) => {
