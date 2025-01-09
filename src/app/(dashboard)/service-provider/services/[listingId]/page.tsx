@@ -590,13 +590,13 @@ const EditListing = () => {
                       </p>
                       <input
                         type="number"
-                        min={25}
+                        min={5}
                         {...register("planOnePrice", { valueAsNumber: true })}
                         className="w-28 rounded-lg bg-violet-light p-3 pl-6 outline-none"
                       />
                     </div>
                     <p className="basis-2/3 text-sm text-violet-darker">
-                      Minimum AUD$25 + 10% GST inclusive
+                      Minimum AUD$5 + 10% GST inclusive
                     </p>
                   </div>
                 </div>
@@ -632,13 +632,13 @@ const EditListing = () => {
                       </p>
                       <input
                         type="number"
-                        min={25}
+                        min={5}
                         {...register("planTwoPrice")}
                         className={`w-28 rounded-lg bg-violet-light p-3 pl-6 outline-none ${errors.planTwoPrice && "border border-red-500"} `}
                       />
                     </div>
                     <p className="basis-2/3 text-sm text-violet-darker">
-                      Minimum AUD$25 + 10% GST inclusive
+                      Minimum AUD$5 + 10% GST inclusive
                     </p>
                   </div>
                   {errors.planTwoPrice && (
@@ -680,13 +680,13 @@ const EditListing = () => {
                       </p>
                       <input
                         type="number"
-                        min={25}
+                        min={5}
                         {...register("planThreePrice")}
                         className={`w-28 rounded-lg bg-violet-light p-3 pl-6 outline-none ${errors.planThreePrice && "border border-red-500"} `}
                       />
                     </div>
                     <p className="basis-2/3 text-sm text-violet-darker">
-                      Minimum AUD$25 + 10% GST inclusive
+                      Minimum AUD$5 + 10% GST inclusive
                     </p>
                   </div>
                 </div>

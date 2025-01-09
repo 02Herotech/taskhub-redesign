@@ -12,6 +12,7 @@ const InspectionServices = ({
   handleReportservice,
   allBookings,
 }: AcceptedServicesPropsType) => {
+  console.log(jobs.filter((job) => job.jobStatus === "INSPECTION"));
   return (
     <div className="flex flex-col gap-8  pb-4">
       {jobs
@@ -29,7 +30,7 @@ const InspectionServices = ({
               fullName={customer?.customer.user.fullName as string}
               itemId={item.id}
               title={item.jobTitle}
-              startDate={item.jobEnd}
+              startDate={item.taskDate}
               price={item.total}
               reportJob={() => handleReportservice(item.id)}
             />
