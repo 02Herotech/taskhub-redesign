@@ -578,7 +578,7 @@ const EditProfile = () => {
                 ref={ABNInputRef}
               >
                 <FormField
-                  label="ABN Number"
+                  label="ABN"
                   name="abn"
                   register={register}
                   errors={errors}

@@ -639,14 +639,14 @@ export const MarketPlaceSvg = (
 
 export const MessagesSvg = (
   <svg width="18" height="14" viewBox="0 0 18 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M15 1H3C1.89543 1 1 1.89543 1 3V11C1 12.1046 1.89543 13 3 13H15C16.1046 13 17 12.1046 17 11V3C17 1.89543 16.1046 1 15 1Z" stroke="#381F8C" stroke-width="2" />
-    <path d="M1 4L8.106 7.553C8.3836 7.69172 8.68967 7.76393 9 7.76393C9.31033 7.76393 9.6164 7.69172 9.894 7.553L17 4" stroke="#381F8C" stroke-width="2" />
+    <path d="M15 1H3C1.89543 1 1 1.89543 1 3V11C1 12.1046 1.89543 13 3 13H15C16.1046 13 17 12.1046 17 11V3C17 1.89543 16.1046 1 15 1Z" stroke="#381F8C" strokeWidth="2" />
+    <path d="M1 4L8.106 7.553C8.3836 7.69172 8.68967 7.76393 9 7.76393C9.31033 7.76393 9.6164 7.69172 9.894 7.553L17 4" stroke="#381F8C" strokeWidth="2" />
   </svg>
 )
 
 export const ContactUsSvg = (
   <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M3 9C3 5.229 3 3.343 4.172 2.172C5.344 1.001 7.229 1 11 1H12.5C16.271 1 18.157 1 19.328 2.172C20.499 3.344 20.5 5.229 20.5 9V13C20.5 16.771 20.5 18.657 19.328 19.828C18.156 20.999 16.271 21 12.5 21H11C7.229 21 5.343 21 4.172 19.828C3.001 18.656 3 16.771 3 13V9Z" stroke="#381F8C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+    <path d="M3 9C3 5.229 3 3.343 4.172 2.172C5.344 1.001 7.229 1 11 1H12.5C16.271 1 18.157 1 19.328 2.172C20.499 3.344 20.5 5.229 20.5 9V13C20.5 16.771 20.5 18.657 19.328 19.828C18.156 20.999 16.271 21 12.5 21H11C7.229 21 5.343 21 4.172 19.828C3.001 18.656 3 16.771 3 13V9Z" stroke="#381F8C" strokeWidth="1.5" strokeLinecap="round" stroke-linejoin="round" />
     <path d="M8.8 10.974C8.373 10.23 8.167 9.623 8.043 9.007C7.859 8.097 8.28 7.207 8.976 6.639C9.271 6.399 9.608 6.481 9.782 6.794L10.175 7.499C10.486 8.057 10.642 8.337 10.611 8.633C10.581 8.929 10.371 9.17 9.951 9.653L8.8 10.974ZM8.8 10.974C9.70011 12.5164 10.9836 13.7999 12.526 14.7M12.526 14.7C13.27 15.127 13.877 15.333 14.493 15.457C15.403 15.641 16.293 15.22 16.861 14.524C17.101 14.229 17.019 13.892 16.706 13.718L16.002 13.325C15.442 13.014 15.163 12.858 14.867 12.889C14.571 12.919 14.33 13.129 13.847 13.549L12.526 14.7ZM4 5H1.5M4 11H1.5M4 17H1.5" stroke="#381F8C" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
   </svg>
 )
@@ -697,15 +697,15 @@ export const InstagramSvg = (
     </g>
     <defs>
       <radialGradient id="paint0_radial_5279_3615" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(11.1562 45.2348) rotate(-90) scale(41.6251 38.7146)">
-        <stop stop-color="#FFDD55" />
-        <stop offset="0.1" stop-color="#FFDD55" />
-        <stop offset="0.5" stop-color="#FF543E" />
-        <stop offset="1" stop-color="#C837AB" />
+        <stop stopColor="#FFDD55" />
+        <stop offset="0.1" stopColor="#FFDD55" />
+        <stop offset="0.5" stopColor="#FF543E" />
+        <stop offset="1" stopColor="#C837AB" />
       </radialGradient>
       <radialGradient id="paint1_radial_5279_3615" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(-7.03516 3.02548) rotate(78.681) scale(18.6067 76.6972)">
-        <stop stop-color="#3771C8" />
-        <stop offset="0.128" stop-color="#3771C8" />
-        <stop offset="1" stop-color="#6600FF" stop-opacity="0" />
+        <stop stopColor="#3771C8" />
+        <stop offset="0.128" stopColor="#3771C8" />
+        <stop offset="1" stopColor="#6600FF" stop-opacity="0" />
       </radialGradient>
       <clipPath id="clip0_5279_3615">
         <rect width="42" height="42" rx="21" fill="white" />
@@ -728,8 +728,8 @@ export const WhatsappSvg = (
     <path d="M19.2197 17.3362C19.056 16.9794 18.8836 16.9722 18.7279 16.9659C18.6004 16.9605 18.4546 16.9609 18.3089 16.9609C18.1632 16.9609 17.9263 17.0147 17.7261 17.229C17.5257 17.4435 16.9609 17.9618 16.9609 19.0159C16.9609 20.0702 17.7443 21.089 17.8535 21.2321C17.9628 21.3749 19.3657 23.6074 21.5876 24.4663C23.4341 25.1801 23.8099 25.0381 24.2107 25.0023C24.6115 24.9666 25.504 24.4841 25.6861 23.9838C25.8684 23.4835 25.8684 23.0547 25.8137 22.9651C25.7591 22.8758 25.6133 22.8222 25.3947 22.7151C25.176 22.6079 24.1013 22.0895 23.901 22.018C23.7006 21.9466 23.5549 21.9109 23.4091 22.1254C23.2633 22.3397 22.8447 22.8222 22.7171 22.9651C22.5897 23.1083 22.4621 23.1261 22.2435 23.019C22.0248 22.9115 21.3208 22.6855 20.4856 21.9556C19.8357 21.3876 19.397 20.6862 19.2695 20.4717C19.142 20.2575 19.2558 20.1414 19.3654 20.0346C19.4637 19.9386 19.5841 19.7844 19.6935 19.6593C19.8025 19.5342 19.8389 19.4449 19.9118 19.302C19.9847 19.159 19.9482 19.0338 19.8937 18.9267C19.8389 18.8195 19.4141 17.7598 19.2197 17.3362Z" fill="white" />
     <defs>
       <linearGradient id="paint0_linear_5279_3628" x1="900.579" y1="1789.04" x2="900.579" y2="12.1152" gradientUnits="userSpaceOnUse">
-        <stop stop-color="#F9F9F9" />
-        <stop offset="1" stop-color="white" />
+        <stop stopColor="#F9F9F9" />
+        <stop offset="1" stopColor="white" />
       </linearGradient>
     </defs>
   </svg>
@@ -749,15 +749,15 @@ export const TwitterSvg = (
       <path d="M9.84375 0H32.1562C37.5928 0 42 4.4072 42 9.84375V32.1562C42 37.5928 37.5928 42 32.1562 42H9.84375C4.4072 42 0 37.5928 0 32.1562V9.84375C0 4.4072 4.4072 0 9.84375 0Z" fill="url(#paint0_radial_5279_3620)" />
       <path d="M9.84375 0H32.1562C37.5928 0 42 4.4072 42 9.84375V32.1562C42 37.5928 37.5928 42 32.1562 42H9.84375C4.4072 42 0 37.5928 0 32.1562V9.84375C0 4.4072 4.4072 0 9.84375 0Z" fill="black" />
       <path d="M15.825 12H13.0643L19.0942 19.6246L12 30H17.5541L21.9045 23.7062L26.8826 30H29.6445L23.1949 21.8441L30 12H24.3041L20.3723 17.7513L15.825 12ZM16.7925 28.1727H15.2625L25.1366 13.7317H26.7769L16.7925 28.1727Z" fill="white" />
-      <path d="M41.0385 8.18723C39.8185 34.6576 21.0266 41.8153 9.32506 43.3964" stroke="white" stroke-width="0.5" stroke-dasharray="1 1" />
-      <path d="M39.1283 9.25363C37.9083 35.724 19.1165 42.8817 7.4149 44.4628" stroke="white" stroke-width="0.5" stroke-dasharray="1 1" />
+      <path d="M41.0385 8.18723C39.8185 34.6576 21.0266 41.8153 9.32506 43.3964" stroke="white" strokeWidth="0.5" strokeDasharray="1 1" />
+      <path d="M39.1283 9.25363C37.9083 35.724 19.1165 42.8817 7.4149 44.4628" stroke="white" strokeWidth="0.5" strokeDasharray="1 1" />
     </g>
     <defs>
       <radialGradient id="paint0_radial_5279_3620" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(30.8438 45.2348) rotate(-90) scale(41.6251 38.7146)">
-        <stop stop-color="#FFDD55" />
-        <stop offset="0.1" stop-color="#FFDD55" />
-        <stop offset="0.5" stop-color="#FF543E" />
-        <stop offset="1" stop-color="#C837AB" />
+        <stop stopColor="#FFDD55" />
+        <stop offset="0.1" stopColor="#FFDD55" />
+        <stop offset="0.5" stopColor="#FF543E" />
+        <stop offset="1" stopColor="#C837AB" />
       </radialGradient>
       <clipPath id="clip0_5279_3620">
         <rect width="42" height="42" rx="21" transform="matrix(-1 0 0 1 42 0)" fill="white" />
