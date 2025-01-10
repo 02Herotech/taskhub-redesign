@@ -31,10 +31,10 @@ const HomeNavigation = () => {
       url: "/business-hub",
     },
     {
-      label: "About Us",
-      url: "/about",
+      label: "How Olója Works",
+      url: "/",
     },
-  
+
     // {
     //   label: "Blog",
     //   url: "/blog",
@@ -61,7 +61,7 @@ const HomeNavigation = () => {
                 <li key={link.url} className="relative">
                   <Link
                     href={link.url as string}
-                    className={cn("text-[#140B31] text-md font-clashMedium", {
+                    className={cn("text-md font-clashMedium text-[#140B31]", {
                       "font-semibold text-primary":
                         link.url === "/" && pathname === "/"
                           ? true
@@ -79,7 +79,9 @@ const HomeNavigation = () => {
 
           <div className="hidden items-center space-x-5 lg:flex">
             <Link href="/auth">
-              <Button theme="outline" className="rounded-full bg-transparent">Sign Up</Button>
+              <Button theme="outline" className="rounded-full bg-transparent">
+                Sign Up
+              </Button>
             </Link>
             <Link href="/auth/login">
               <Button theme="outline" className="rounded-full bg-transparent">
@@ -87,8 +89,10 @@ const HomeNavigation = () => {
               </Button>
             </Link>
 
-            <Link href="/coming-soon">
-              <Button className="rounded-full">Rent a shop</Button>
+            <Link href="/">
+              <Button theme="secondary" className="rounded-full">
+                Monetize your skills
+              </Button>
             </Link>
           </div>
           <button

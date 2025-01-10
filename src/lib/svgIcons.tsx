@@ -646,7 +646,7 @@ export const MessagesSvg = (
 
 export const ContactUsSvg = (
   <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M3 9C3 5.229 3 3.343 4.172 2.172C5.344 1.001 7.229 1 11 1H12.5C16.271 1 18.157 1 19.328 2.172C20.499 3.344 20.5 5.229 20.5 9V13C20.5 16.771 20.5 18.657 19.328 19.828C18.156 20.999 16.271 21 12.5 21H11C7.229 21 5.343 21 4.172 19.828C3.001 18.656 3 16.771 3 13V9Z" stroke="#381F8C" strokeWidth="1.5" strokeLinecap="round" stroke-linejoin="round" />
+    <path d="M3 9C3 5.229 3 3.343 4.172 2.172C5.344 1.001 7.229 1 11 1H12.5C16.271 1 18.157 1 19.328 2.172C20.499 3.344 20.5 5.229 20.5 9V13C20.5 16.771 20.5 18.657 19.328 19.828C18.156 20.999 16.271 21 12.5 21H11C7.229 21 5.343 21 4.172 19.828C3.001 18.656 3 16.771 3 13V9Z" stroke="#381F8C" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
     <path d="M8.8 10.974C8.373 10.23 8.167 9.623 8.043 9.007C7.859 8.097 8.28 7.207 8.976 6.639C9.271 6.399 9.608 6.481 9.782 6.794L10.175 7.499C10.486 8.057 10.642 8.337 10.611 8.633C10.581 8.929 10.371 9.17 9.951 9.653L8.8 10.974ZM8.8 10.974C9.70011 12.5164 10.9836 13.7999 12.526 14.7M12.526 14.7C13.27 15.127 13.877 15.333 14.493 15.457C15.403 15.641 16.293 15.22 16.861 14.524C17.101 14.229 17.019 13.892 16.706 13.718L16.002 13.325C15.442 13.014 15.163 12.858 14.867 12.889C14.571 12.919 14.33 13.129 13.847 13.549L12.526 14.7ZM4 5H1.5M4 11H1.5M4 17H1.5" stroke="#381F8C" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
   </svg>
 )
@@ -686,6 +686,95 @@ export const RentShopSvg = (
     <path d="M18.36 9L18.96 12H5.04L5.64 9H18.36ZM20 4H4V6H20V4ZM20 7H4L3 12V14H4V20H14V14H18V20H20V14H21V12L20 7ZM6 18V14H12V18H6Z" fill="#381F8C" />
   </svg>
 )
+
+export const MonetizeSVG = (
+  <svg
+    width="24px"
+    height="24px"
+    viewBox="0 0 24 24"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
+    <g
+      id="SVGRepo_tracerCarrier"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    ></g>
+    <g id="SVGRepo_iconCarrier">
+      {" "}
+      <g clipPath="url(#clip0_443_3628)">
+        {" "}
+        <rect
+          x="2"
+          y="6"
+          width="20"
+          height="12"
+          stroke="#381F8C"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        ></rect>{" "}
+        <path
+          d="M22 10C21.4747 10 20.9546 9.89654 20.4693 9.69552C19.984 9.4945 19.543 9.19986 19.1716 8.82843C18.8001 8.45699 18.5055 8.01604 18.3045 7.53073C18.1035 7.04543 18 6.52529 18 6L22 6L22 10Z"
+          stroke="#381F8C"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        ></path>{" "}
+        <path
+          d="M18 18C18 16.9391 18.4214 15.9217 19.1716 15.1716C19.9217 14.4214 20.9391 14 22 14L22 18L18 18Z"
+          stroke="#381F8C"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        ></path>{" "}
+        <path
+          d="M2 14C3.06087 14 4.07828 14.4214 4.82843 15.1716C5.57857 15.9217 6 16.9391 6 18L2 18L2 14Z"
+          stroke="#381F8C"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        ></path>{" "}
+        <path
+          d="M6 6C6 7.06087 5.57857 8.07828 4.82843 8.82843C4.07828 9.57857 3.06087 10 2 10L2 6H6Z"
+          stroke="#381F8C"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        ></path>{" "}
+        <path
+          d="M14.0741 9.5H11.3333C10.597 9.5 10 10.0596 10 10.75C10 11.4404 10.597 12 11.3333 12H13.1111C13.8475 12 14.4444 12.5596 14.4444 13.25C14.4444 13.9404 13.8475 14.5 13.1111 14.5H10"
+          stroke="#381F8C"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        ></path>{" "}
+        <path
+          d="M12 9.51733V8.5"
+          stroke="#381F8C"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        ></path>{" "}
+        <path
+          d="M12 15.5173V14.5"
+          stroke="#381F8C"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        ></path>{" "}
+      </g>{" "}
+      <defs>
+        {" "}
+        <clipPath id="clip0_443_3628">
+          {" "}
+          <rect width="24" height="24" fill="white"></rect>{" "}
+        </clipPath>{" "}
+      </defs>{" "}
+    </g>
+  </svg>
+);
 
 export const InstagramSvg = (
   <svg width="42" height="42" viewBox="0 0 42 42" fill="none" xmlns="http://www.w3.org/2000/svg">
