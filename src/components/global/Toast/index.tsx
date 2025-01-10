@@ -25,10 +25,10 @@ const Toast: React.FC<ToastProps> = ({ body, isVisible, onClose, theme = 'succes
                         {/* Background Pattern */}
                         <div className="absolute top-0 left-0 w-full h-full overflow-hidden rounded-[19px]">
                             <svg width="55" height="56" viewBox="0 0 55 56" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M-0.178468 54.9999C17.5006 29.5 33.3427 20.8693 54.8215 -1.0001" stroke="#C1BADB" stroke-width="0.5" />
-                                <path d="M-0.178468 54.9999C17.5006 29.5 33.3427 20.8693 54.8215 -1.0001" stroke="#C1BADB" stroke-width="0.5" />
-                                <path d="M-0.178468 54.9999C17.5006 29.5 33.3427 20.8693 54.8215 -1.0001" stroke="#C1BADB" stroke-width="0.5" />
-                                <path d="M-0.178468 54.9999C17.5006 29.5 33.3427 20.8693 54.8215 -1.0001" stroke="#C1BADB" stroke-width="0.5" />
+                                <path d="M-0.178468 54.9999C17.5006 29.5 33.3427 20.8693 54.8215 -1.0001" stroke="#C1BADB" strokeWidth="0.5" />
+                                <path d="M-0.178468 54.9999C17.5006 29.5 33.3427 20.8693 54.8215 -1.0001" stroke="#C1BADB" strokeWidth="0.5" />
+                                <path d="M-0.178468 54.9999C17.5006 29.5 33.3427 20.8693 54.8215 -1.0001" stroke="#C1BADB" strokeWidth="0.5" />
+                                <path d="M-0.178468 54.9999C17.5006 29.5 33.3427 20.8693 54.8215 -1.0001" stroke="#C1BADB" strokeWidth="0.5" />
                             </svg>
                         </div>
 

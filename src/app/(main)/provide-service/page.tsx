@@ -25,6 +25,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/store";
 import { getCookie, setCookie } from "cookies-next";
 import { defaultUserDetails } from "@/data/data";
+import useUserProfileData from "@/hooks/useUserProfileData";
 
 interface FormData {
   listingTitle: string;
@@ -72,7 +73,6 @@ const ProvideService: React.FC = () => {
   const route = useRouter();
   const id = session?.data?.user.user.id;
   const token = session?.data?.user?.accessToken;
-  console.log(session.data);
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const [task, setTask] = useState<FormData>({
@@ -153,8 +153,9 @@ const ProvideService: React.FC = () => {
   const isServiceProvider =
     session?.data?.user?.user?.roles[0] === "SERVICE_PROVIDER";
   const [complete, setComplete] = useState(false);
-  const [fetchedUserData, setFetchedUserData] = useState(defaultUserDetails);
+  // const [fetchedUserData, setFetchedUserData] = useState(defaultUserDetails);
   const [loadingProfile, setLoadingProfile] = useState(true);
+  const fetchedUserData = useUserProfileData(setLoadingProfile)
   const [hasClosedPopup, setHasClosedPopup] = useState(false);
   const isAuth = session.status === "authenticated";
   const isEnabled = session.data?.user.user.enabled;
@@ -190,34 +191,35 @@ const ProvideService: React.FC = () => {
   }, []);
   // End of getting description from the marketplace
 
-  useEffect(() => {
-    const fetchUserData = async () => {
-      if (!token) return;
-      try {
-        const url = isServiceProvider
-          ? `${process.env.NEXT_PUBLIC_API_URL}/service_provider/profile`
-          : `${process.env.NEXT_PUBLIC_API_URL}/customer/profile`;
-        const { data } = await axios.get(url, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "multipart/form-data",
-          },
-        });
-        setFetchedUserData(data);
-        const user = session.data?.user;
-        if (!user || !data.isEnabled) return;
-        const { user: userInfo } = user;
-        if (userInfo.enabled) return;
-        userInfo.enabled = data.isEnabled;
-        await session.update({ user: userInfo });
-      } catch (error) {
-        console.error(error);
-      } finally {
-        setLoadingProfile(false);
-      }
-    };
-    fetchUserData();
-  }, [token, isServiceProvider]);
+  //? Fetch user data, update in state, set loading to false
+  // useEffect(() => {
+  //   const fetchUserData = async () => {
+  //     if (!token) return;
+  //     try {
+  //       const url = isServiceProvider
+  //         ? `${process.env.NEXT_PUBLIC_API_URL}/service_provider/profile`
+  //         : `${process.env.NEXT_PUBLIC_API_URL}/customer/profile`;
+  //       const { data } = await axios.get(url, {
+  //         headers: {
+  //           Authorization: `Bearer ${token}`,
+  //           "Content-Type": "multipart/form-data",
+  //         },
+  //       });
+  //       setFetchedUserData(data);
+  //       const user = session.data?.user;
+  //       if (!user || !data.isEnabled) return;
+  //       const { user: userInfo } = user;
+  //       if (userInfo.enabled) return;
+  //       userInfo.enabled = data.isEnabled;
+  //       await session.update({ user: userInfo });
+  //     } catch (error) {
+  //       console.error(error);
+  //     } finally {
+  //       setLoadingProfile(false);
+  //     }
+  //   };
+  //   fetchUserData();
+  // }, [token, isServiceProvider]);
 
   const { profile: user } = useSelector(
     (state: RootState) => state.userProfile,
