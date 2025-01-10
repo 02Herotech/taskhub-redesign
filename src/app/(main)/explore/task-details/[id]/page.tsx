@@ -13,6 +13,7 @@ import {
   monthNames,
   suffixes,
 } from "@/lib/utils";
+import Link from "next/link";
 import Loading from "@/shared/loading";
 import TaskOffers from "@/components/main/explore/TaskOffers";
 import { FormEvent, useEffect, useRef, useState } from "react";
@@ -26,26 +27,38 @@ import { ShareModal } from "@/components/dashboard/general/ShareModal";
 import ShareTask from "@/components/dashboard/general/ShareTask";
 import { usePathname, useRouter } from "next/navigation";
 import { ShareSvg } from "@/lib/svgIcons";
+import useUserProfileData from "@/hooks/useUserProfileData";
+import Popup from "@/components/global/Popup";
 
 const TaskDetailsPage = ({ params }: { params: { id: string } }) => {
-  const [offerAmount, setOfferAmount] = useState('');
+  const [offerAmount, setOfferAmount] = useState("");
   const [showOfferForm, setShowOfferForm] = useState(false);
+  const [showErrorPopup, setShowErrorPopup] = useState(false);
   const [showSuccessMessage, setShowSuccessMessage] = useState<boolean>(false);
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useState("");
   const [isInviteLoading, setIsInviteLoading] = useState(false);
   const [inviteError, setInviteError] = useState<string | null>(null);
   const offerButtonRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const modalRef = useRef<HTMLDivElement>(null);
-  const pathname = usePathname()
-  const router = useRouter()
+  const pathname = usePathname();
+  const router = useRouter();
+  const fetchedUserData = useUserProfileData();
+  console.log(fetchedUserData);
+
+  useEffect(() => {
+    console.log("User data fetch complete");
+  }, [fetchedUserData]);
 
   const [shareDropdownOpen, setShareDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
         setShareDropdownOpen(false);
       }
     }
@@ -61,41 +74,46 @@ const TaskDetailsPage = ({ params }: { params: { id: string } }) => {
     setInviteError(null);
 
     if (!email) {
-      setInviteError('Please enter an email address');
+      setInviteError("Please enter an email address");
       return;
     }
 
     if (!email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
-      setInviteError('Please enter a valid email address');
+      setInviteError("Please enter a valid email address");
       return;
     }
 
     try {
-      setInviteError('')
+      setInviteError("");
       setIsInviteLoading(true);
 
       // Create mailto link with subject and body
-      const subject = encodeURIComponent('Check out this task on Oloja');
-      const body = encodeURIComponent(`I thought you might be interested in this: ${process.env.NEXT_PUBLIC_URL}${pathname}`);
+      const subject = encodeURIComponent("Check out this task on Oloja");
+      const body = encodeURIComponent(
+        `I thought you might be interested in this: ${process.env.NEXT_PUBLIC_URL}${pathname}`,
+      );
       const mailtoLink = `mailto:${email}?subject=${subject}&body=${body}`;
 
       // Open the mailto link
       window.location.href = mailtoLink;
 
-      setEmail(''); // Clear form on success
-      setShareDropdownOpen(false)
+      setEmail(""); // Clear form on success
+      setShareDropdownOpen(false);
     } catch (err) {
-      setInviteError('Failed to send invite. Please try again.');
+      setInviteError("Failed to send invite. Please try again.");
     } finally {
       setIsInviteLoading(false);
     }
   };
 
-  const id = params.id.split('-')[0];
+  const id = params.id.split("-")[0];
 
-  const { data: task, isLoading, error, isUninitialized } = useGetTaskByIdQuery(
-    id as unknown as number,
-  );
+  const {
+    data: task,
+    isLoading,
+    error,
+    isUninitialized,
+  } = useGetTaskByIdQuery(id as unknown as number);
   const { data: offers, refetch } = useGetTasksOffersQuery(
     id as unknown as number,
   );
@@ -113,9 +131,9 @@ const TaskDetailsPage = ({ params }: { params: { id: string } }) => {
     };
 
     handleResize();
-    window.addEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
 
-    return () => window.removeEventListener('resize', handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   useEffect(() => {
@@ -141,6 +159,9 @@ const TaskDetailsPage = ({ params }: { params: { id: string } }) => {
   }, [task, isLoading, id, params.id, router]);
 
   const handleSubmitOffer = async (message: string) => {
+    if (!fetchedUserData.isVerified) {
+      return setShowErrorPopup(true);
+    }
     const socket = connectSocket(id as unknown as number);
 
     const data = {
@@ -155,7 +176,7 @@ const TaskDetailsPage = ({ params }: { params: { id: string } }) => {
       try {
         socket.emit("offer", data, () => {
           refetch();
-          setOfferAmount('');
+          setOfferAmount("");
           setShowSuccessMessage(true);
 
           setTimeout(() => {
@@ -183,12 +204,14 @@ const TaskDetailsPage = ({ params }: { params: { id: string } }) => {
   // Show error state only if we have an error and no data
   if (error || (!isLoading && !task)) {
     return (
-      <div className="flex h-[50vh] flex-col w-full items-center justify-center">
-        <h2 className="text-xl lg:text-3xl font-satoshiBold font-bold text-primary">
-          {error ? 'Error loading task' : 'Task not found!'}
+      <div className="flex h-[50vh] w-full flex-col items-center justify-center">
+        <h2 className="font-satoshiBold text-xl font-bold text-primary lg:text-3xl">
+          {error ? "Error loading task" : "Task not found!"}
         </h2>
-        <p className="text-lg lg:text-xl font-satoshiMedium text-[#140B31]">
-          {error ? 'An error occurred while loading the task.' : 'The requested task could not be found.'}
+        <p className="font-satoshiMedium text-lg text-[#140B31] lg:text-xl">
+          {error
+            ? "An error occurred while loading the task."
+            : "The requested task could not be found."}
         </p>
         <Button
           onClick={() => window.location.reload()}
@@ -253,8 +276,13 @@ const TaskDetailsPage = ({ params }: { params: { id: string } }) => {
               </div>
 
               {/* Share Service */}
-              <div className="bg-[#F8F7FA] px-5 py-3 rounded-xl lg:flex items-center justify-between w-full">
-                  <ShareTask title={task.taskBriefDescription} description={task.taskDescription} image={task.taskImage} pathname={`/guest/${id}-${createSlug(task.taskBriefDescription)}`} />
+              <div className="w-full items-center justify-between rounded-xl bg-[#F8F7FA] px-5 py-3 lg:flex">
+                <ShareTask
+                  title={task.taskBriefDescription}
+                  description={task.taskDescription}
+                  image={task.taskImage}
+                  pathname={`/guest/${id}-${createSlug(task.taskBriefDescription)}`}
+                />
                 <div className="relative max-sm:my-4" ref={dropdownRef}>
                   {/* <Button
                     theme="secondary"
@@ -270,17 +298,17 @@ const TaskDetailsPage = ({ params }: { params: { id: string } }) => {
                   >
                     Send Invite
                   </Button> */}
-                    <div
-                      onClick={() => setShareDropdownOpen(true)}
-                      onKeyDown={(e) => {
-                        if (e.key === 'Enter' || e.key === ' ') {
-                          setShareDropdownOpen(!shareDropdownOpen);
-                        }
-                      }}
-                      className="cursor-pointer transform transition-transform duration-300 group-hover:scale-110"
-                    >
-                      {ShareSvg}
-                    </div>
+                  <div
+                    onClick={() => setShareDropdownOpen(true)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" || e.key === " ") {
+                        setShareDropdownOpen(!shareDropdownOpen);
+                      }
+                    }}
+                    className="transform cursor-pointer transition-transform duration-300 group-hover:scale-110"
+                  >
+                    {ShareSvg}
+                  </div>
 
                   <ShareModal
                     isOpen={shareDropdownOpen}
@@ -292,22 +320,27 @@ const TaskDetailsPage = ({ params }: { params: { id: string } }) => {
                       <input
                         type="email"
                         placeholder="Enter e-mail address"
-                        className="mt-4 px-4 py-2 w-full bg-[#EEEEEF] outline-none rounded-lg"
+                        className="mt-4 w-full rounded-lg bg-[#EEEEEF] px-4 py-2 outline-none"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         disabled={isInviteLoading}
                         aria-label="Email address"
-                        aria-describedby={inviteError ? "email-error" : undefined}
+                        aria-describedby={
+                          inviteError ? "email-error" : undefined
+                        }
                       />
                       {inviteError && (
-                        <p id="email-error" className="text-sm text-red-500 mt-1">
+                        <p
+                          id="email-error"
+                          className="mt-1 text-sm text-red-500"
+                        >
                           {inviteError}
                         </p>
                       )}
-                      <div className="flex items-center justify-center mt-5 mb-3">
+                      <div className="mb-3 mt-5 flex items-center justify-center">
                         <Button
                           theme="secondary"
-                          className="font-satoshiMedium text-white rounded-full"
+                          className="rounded-full font-satoshiMedium text-white"
                           size="sm"
                           type="submit"
                           disabled={isInviteLoading}
@@ -366,44 +399,70 @@ const TaskDetailsPage = ({ params }: { params: { id: string } }) => {
                   </h2>
                   <div className="relative" ref={offerButtonRef}>
                     <Button
-                      onClick={() => setShowOfferForm(true)}
+                      onClick={() => {
+                        if (!fetchedUserData.isVerified) {
+                          return setShowErrorPopup(true);
+                        }
+                        setShowOfferForm(true);
+                      }}
+                      //! What is this for ?
                       onKeyDown={(e) => {
                         if (e.key === "Enter" || e.key === " ") {
-                          setShowOfferForm(true)
+                          setShowOfferForm(true);
                         }
                       }}
                       aria-expanded={showOfferForm}
                       aria-haspopup="true"
                       className="rounded-full"
-                      disabled={task?.taskStatus === 'ASSIGNED'}
+                      disabled={
+                        task?.taskStatus === "ASSIGNED" ||
+                        !fetchedUserData.firstName
+                      }
                     >
                       Make an offer
                     </Button>
 
                     {showOfferForm && (
-                      <div ref={modalRef} className="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-end sm:items-center justify-center">
-                        <div className="bg-white w-full sm:w-[600px] rounded-t-3xl lg:rounded-2xl px-5 pb-8 pt-2 transition-all duration-300">
-                          <div className={`flex items-center justify-between ${showSuccessMessage !== true && "mb-3"}`}>
-                            <h2 className={`font-clashBold text-primary text-start font-bold ${showSuccessMessage && "hidden"}`}>Your Offer</h2>
-                            <div className="bg-[#EBE9F4] p-2 rounded-full">
-                              <IoIosCloseCircleOutline className="size-6 text-[#5A5960] cursor-pointer" onClick={() => setShowOfferForm(false)} />
+                      <div
+                        ref={modalRef}
+                        className="fixed inset-0 z-50 flex items-end justify-center bg-black bg-opacity-50 sm:items-center"
+                      >
+                        <div className="w-full rounded-t-3xl bg-white px-5 pb-8 pt-2 transition-all duration-300 sm:w-[600px] lg:rounded-2xl">
+                          <div
+                            className={`flex items-center justify-between ${showSuccessMessage !== true && "mb-3"}`}
+                          >
+                            <h2
+                              className={`text-start font-clashBold font-bold text-primary ${showSuccessMessage && "hidden"}`}
+                            >
+                              Your Offer
+                            </h2>
+                            <div className="rounded-full bg-[#EBE9F4] p-2">
+                              <IoIosCloseCircleOutline
+                                className="size-6 cursor-pointer text-[#5A5960]"
+                                onClick={() => setShowOfferForm(false)}
+                              />
                             </div>
                           </div>
 
                           <AnimatePresence>
                             {showSuccessMessage ? (
                               <motion.div
-                                className="py-2 px-5 rounded-xl w-full flex space-y-4 flex-col items-center justify-center"
+                                className="flex w-full flex-col items-center justify-center space-y-4 rounded-xl px-5 py-2"
                                 initial={{ opacity: 0, y: -20 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 exit={{ opacity: 0, y: -20 }}
                                 transition={{ duration: 0.5 }}
                               >
-                                <div className="size-11 bg-[#4CAF50] rounded-full flex items-center justify-center">
+                                <div className="flex size-11 items-center justify-center rounded-full bg-[#4CAF50]">
                                   <FaCheck className="text-white" />
                                 </div>
-                                <h1 className="font-semibold text-primary text-center font-clashSemiBold text-2xl lg:text-3xl">Offer posted successfully!</h1>
-                                <h4 className="text-[#140B31] text-center text-xl font-medium font-satoshiMedium">Your offer has been sent to the customer, you will be notified when there’s a response.</h4>
+                                <h1 className="text-center font-clashSemiBold text-2xl font-semibold text-primary lg:text-3xl">
+                                  Offer posted successfully!
+                                </h1>
+                                <h4 className="text-center font-satoshiMedium text-xl font-medium text-[#140B31]">
+                                  Your offer has been sent to the customer, you
+                                  will be notified when there’s a response.
+                                </h4>
                                 <Button
                                   className="rounded-full"
                                   onClick={() => setShowOfferForm(false)}
@@ -417,8 +476,10 @@ const TaskDetailsPage = ({ params }: { params: { id: string } }) => {
                                   rows={5}
                                   ref={textareaRef}
                                   value={offerAmount}
-                                  onChange={(e) => setOfferAmount(e.target.value)}
-                                  className="w-full p-2 border border-primary rounded-xl mb-4"
+                                  onChange={(e) =>
+                                    setOfferAmount(e.target.value)
+                                  }
+                                  className="mb-4 w-full rounded-xl border border-primary p-2"
                                   required
                                 />
                                 <Button
@@ -464,6 +525,52 @@ const TaskDetailsPage = ({ params }: { params: { id: string } }) => {
           taskId={Number(id)}
         />
       )}
+      <Popup isOpen={showErrorPopup} onClose={() => setShowErrorPopup(false)}>
+        <div className="px-14 py-10 lg:px-24">
+          <div className="relative grid items-center justify-center space-y-5">
+            <p className="font-clashDisplay text-center text-[20px] font-extrabold text-[#2A1769] md:text-[36px] lg:text-[37px] ">
+              Your profile is not updated/enabled
+            </p>
+            <div>
+              <p className="text-center text-[14px] lg:text-[20px]">
+                Please proceed to update your profile
+              </p>
+              <p className="text-center text-[14px] lg:text-[20px]">
+                before you can make an offer
+              </p>
+            </div>
+            <Image
+              src="/assets/images/customer/Task management.png"
+              alt="image"
+              width={116}
+              height={109}
+              className="absolute -right-14 top-28 w-24 lg:-right-12 lg:top-2/3 lg:w-24 "
+            />
+            <Image
+              src="/assets/images/blend.png"
+              width={105}
+              height={219}
+              alt="image"
+              className="absolute -left-12 top-12 w-12 lg:-left-[53px] lg:top-8 lg:w-16"
+            />
+            <div className="flex justify-center space-x-3 md:justify-around">
+              <Link href="/marketplace?">
+                <button className="rounded-2xl border-2 border-status-purpleBase p-2 text-[14px] font-semibold text-status-purpleBase outline-none md:w-[100px]">
+                  Back
+                </button>
+              </Link>
+
+              <button
+                //Todo
+                // onClick={handleProfile}
+                className="rounded-2xl bg-status-purpleBase p-2 text-[14px] text-white outline-none md:w-[100px]"
+              >
+                Go to profile
+              </button>
+            </div>
+          </div>
+        </div>
+      </Popup>
     </section>
   );
 };
