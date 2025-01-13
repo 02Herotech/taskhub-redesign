@@ -26,7 +26,7 @@ function Services() {
     <section className="bg-[#E1DDEE] py-4">
       <div className="mx-auto max-w-7xl">
         <div className="mx-auto w-[85%]">
-          <h2 className="mb-8 text-center font-clashSemiBold text-[32px] font-semibold text-[#140B31] xl:text-[40px]">
+          <h2 className="mb-8 text-center font-clashSemiBold text-[30px] font-semibold text-[#140B31] xl:text-[40px]">
             Whatever You Need, <br /> We’ve Got it{" "}
             <span className="text-[#E58C06]">covered.</span>
           </h2>
@@ -36,7 +36,7 @@ function Services() {
           <div className="mx-auto w-full overflow-clip rounded-3xl border-8 border-[#381F8C] sm:w-4/5 sm:border-[12px]">
             <AnimatePresence mode="wait">
               {index == 0 ? (
-                <motion.div {...fadeAnimationProps} key="services">
+                <motion.div key="services">
                   <Image
                     src="/assets/images/homepage/services.png"
                     alt="#"
@@ -46,7 +46,7 @@ function Services() {
                   />
                 </motion.div>
               ) : (
-                <motion.div {...fadeAnimationProps} key="tasks">
+                <motion.div key="tasks">
                   <Image
                     src="/assets/images/homepage/tasks.png"
                     alt="#"
@@ -58,7 +58,7 @@ function Services() {
               )}
             </AnimatePresence>
           </div>
-          <p className="my-8 text-center font-satoshiBold text-xl">
+          <p className="my-8 text-center font-satoshiBold text-xl font-bold">
             See something you need? Start now!
           </p>
           <button className="mx-auto block w-[250px] rounded-[50px] bg-primary p-3 font-satoshi text-[16px] font-[700] text-[#EBE9F4] hover:bg-[#25135f] lg:w-[175px] xl:w-[190px]">

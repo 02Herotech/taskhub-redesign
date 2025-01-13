@@ -42,12 +42,12 @@ function PillarStructureTwo() {
         <AnimatePresence mode="wait" initial={false}>
           {index == 0 ? (
             <motion.div
-              key="post-your-job"
-              {...fadeAnimationProps}
+              key="post"
+            //   {...fadeAnimationProps}
               className="mx-auto flex w-[85%] flex-col justify-center gap-20 py-10 text-white lg:flex-row lg:gap-0"
             >
               <div>
-                <h2 className="font-clashSemiBold text-[32px] lg:max-w-[320px] xl:text-[40px]">
+                <h2 className="mb-3 font-clashSemiBold text-[32px] lg:max-w-[320px] xl:text-[40px]">
                   Post your <span className="text-[#E58C06]">job</span> and
                   choose your experts with no delays!
                 </h2>
@@ -78,7 +78,7 @@ function PillarStructureTwo() {
                   whileInView={{ opacity: 1, left: -20 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.8, ease: "easeInOut", delay: 0.4 }}
-                  className="absolute bottom-28 w-max rounded-xl border border-[#381F8C] bg-[#EBE9F4] px-3 py-1 font-satoshiBold text-[20px] font-bold text-[#381F8C] sm:bottom-40"
+                  className="absolute bottom-28 w-max rounded-xl border border-[#381F8C] bg-[#EBE9F4] px-3 py-1 font-satoshiBold text-base font-bold text-[#381F8C] sm:bottom-44 sm:text-[20px]"
                 >
                   I want my kitchen sink fixed!
                 </motion.p>
@@ -87,7 +87,7 @@ function PillarStructureTwo() {
                   whileInView={{ opacity: 1, right: 12 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.8, ease: "easeInOut" }}
-                  className="absolute -top-8 right-3 w-max rounded-xl border border-[#381F8C] bg-[#EBE9F4] px-3 py-1 font-satoshiBold text-[20px] font-bold text-[#381F8C]"
+                  className="absolute -top-8 right-3 w-max rounded-xl border border-[#381F8C] bg-[#EBE9F4] px-3 py-1 font-satoshiBold text-base font-bold text-[#381F8C] sm:text-[20px]"
                 >
                   John sent you an offer!
                 </motion.p>
@@ -100,7 +100,7 @@ function PillarStructureTwo() {
                 />
                 <Link
                   href="/"
-                  className="mx-auto mt-5 flex w-max items-center gap-1 rounded-full bg-[#FFFEFE6B] px-4 py-2 font-satoshiBold text-xl font-bold underline"
+                  className="mx-auto mt-5 flex w-max items-center gap-1 rounded-full bg-[#FFFEFE6B] px-4 py-2 font-satoshiBold text-lg font-bold underline sm:text-xl"
                 >
                   <span>Explore How OlojaHub works</span>
                   <MdArrowOutward />
@@ -109,22 +109,22 @@ function PillarStructureTwo() {
             </motion.div>
           ) : (
             <motion.div
-              key="business-hub"
-              {...fadeAnimationProps}
+              key="business"
+            //   {...fadeAnimationProps}
               className="mx-auto flex w-[85%] flex-col justify-between gap-20 py-10 text-white lg:flex-row"
             >
               <div>
                 <h2 className="mb-8 font-clashSemiBold text-[32px] lg:max-w-[200px] xl:text-[40px]">
                   Business <span className="text-[#E58C06]">Hub</span>
                 </h2>
-                <p className="mb-6 max-w-[400px] font-satoshi text-lg text-[#EBE9F4] sm:text-xl">
+                <p className="mb-6 max-w-[400px] font-satoshi text-2xl text-[#EBE9F4]">
                   We offer information on both financial and business literacy ,
                   empowering you with business 101 skills and setting you up for
                   success.
                 </p>
                 <Link
                   href="/"
-                  className="mt-5 flex w-max items-center gap-1 rounded-full border border-[#381F8C] bg-[#EBE9F4] px-4 py-2 font-satoshiBold text-xl font-bold text-[#381F8C]"
+                  className="mt-5 flex w-max items-center gap-1 rounded-full border border-[#381F8C] bg-[#EBE9F4] px-4 py-2 font-satoshiBold text-lg font-bold text-[#381F8C] sm:text-xl"
                 >
                   View Business Resources
                 </Link>
@@ -139,7 +139,7 @@ function PillarStructureTwo() {
                 />
                 <Link
                   href="/"
-                  className="mx-auto mt-5 flex w-max items-center gap-1 rounded-full bg-[#FFFEFE6B] px-4 py-2 font-satoshiBold text-xl underline"
+                  className="mx-auto mt-5 flex w-max items-center gap-1 rounded-full bg-[#FFFEFE6B] px-4 py-2 font-satoshiBold text-lg font-bold underline sm:text-xl"
                 >
                   <span>Explore How OlojaHub works</span>
                   <MdArrowOutward />
