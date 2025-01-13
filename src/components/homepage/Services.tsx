@@ -26,7 +26,7 @@ function Services() {
     <section className="bg-[#E1DDEE] py-10">
       <div className="mx-auto max-w-7xl">
         <div className="mx-auto w-[85%]">
-          <h2 className="mb-8 text-center font-clashSemiBold text-[30px] font-semibold text-[#140B31] xl:text-[40px]">
+          <h2 className="mb-8 text-center font-clashSemiBold text-[30px] font-semibold text-[#2A1769] xl:text-[40px]">
             Whatever You Need, <br /> We’ve Got it{" "}
             <span className="text-[#E58C06]">covered.</span>
           </h2>
@@ -58,11 +58,11 @@ function Services() {
               )}
             </AnimatePresence>
           </div>
-          <p className="my-8 text-center font-satoshiBold text-xl font-bold">
+          <p className="my-8 text-center font-satoshiBold text-xl font-bold text-[#190E3F]">
             See something you need? Start now!
           </p>
-          <button className="mx-auto block w-[250px] rounded-[50px] bg-primary p-3 font-satoshi text-[16px] font-[700] text-[#EBE9F4] hover:bg-[#25135f] lg:w-[175px] xl:w-[190px]">
-            <Link href="/customer/add-task">Post a task for free</Link>
+          <button className="mx-auto block min-w-[300px] rounded-[50px] bg-primary p-3 font-satoshi text-[16px] font-[700] text-[#EBE9F4] hover:bg-[#25135f] lg:w-[175px] xl:w-[190px]">
+            <Link href="/customer/add-task">Post your first task for free</Link>
           </button>
         </div>
       </div>

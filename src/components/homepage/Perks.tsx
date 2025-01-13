@@ -36,7 +36,7 @@ const perks: Perk[] = [
 
 function Perks() {
   return (
-    <section className="bg-[#EBE9F4] py-10">
+    <section className="overflow-x-hidden bg-[#EBE9F4] py-10">
       <div className="mx-auto max-w-7xl">
         <div className="mx-auto flex w-[85%] flex-col-reverse gap-10 lg:flex-row">
           <div
