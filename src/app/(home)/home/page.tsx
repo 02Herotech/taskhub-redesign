@@ -5,19 +5,22 @@ import YouCan from "@/components/homepage/YouCan";
 import BusinessHub from "@/components/homepage/BusinessHub";
 import WhatSetUsApart from "@/components/homepage/WhatSetUsApart";
 import FAQ from "@/components/homepage/FAQ";
+import PillarStructureTwo from "@/components/homepage/PillarStructure/PillarStructureTwo";
+import Services from "@/components/homepage/Services";
 
 const HomePage = () => {
   return (
     <main className="min-h-screen">
       <Hero />
-      <PillarStructure />
-      <StoreFront />
+      {/* <PillarStructure /> */}
+      <PillarStructureTwo />
+      <Services />
+      {/* <StoreFront /> */}
       <YouCan />
       <BusinessHub />
       <WhatSetUsApart />
       <FAQ />
     </main>
-
   );
 };
 export default HomePage;
