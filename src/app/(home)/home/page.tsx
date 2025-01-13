@@ -7,6 +7,8 @@ import WhatSetUsApart from "@/components/homepage/WhatSetUsApart";
 import FAQ from "@/components/homepage/FAQ";
 import PillarStructureTwo from "@/components/homepage/PillarStructure/PillarStructureTwo";
 import Services from "@/components/homepage/Services";
+import Perks from "@/components/homepage/Perks";
+import MonetizeSkills from "@/components/homepage/MonetizeSkills";
 
 const HomePage = () => {
   return (
@@ -15,11 +17,13 @@ const HomePage = () => {
       {/* <PillarStructure /> */}
       <PillarStructureTwo />
       <Services />
+      <Perks />
       {/* <StoreFront /> */}
-      <YouCan />
+      {/* <YouCan /> */}
       <BusinessHub />
-      <WhatSetUsApart />
-      <FAQ />
+      <MonetizeSkills />
+      {/* <WhatSetUsApart /> */}
+      {/* <FAQ /> */}
     </main>
   );
 };

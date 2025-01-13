@@ -124,7 +124,7 @@ function PillarStructureTwo() {
                 </p>
                 <Link
                   href="/"
-                  className="mt-5 flex w-max items-center gap-1 rounded-full border border-[#381F8C] bg-[#EBE9F4] px-4 py-2 font-satoshiBold text-lg font-bold text-[#381F8C] sm:text-xl"
+                  className="mt-5 flex w-max items-center gap-1 rounded-full border border-[#381F8C] bg-[#EBE9F4] px-4 py-2 font-satoshiBold font-bold text-[#381F8C]"
                 >
                   View Business Resources
                 </Link>

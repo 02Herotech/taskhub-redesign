@@ -23,7 +23,7 @@ function Services() {
     return () => clearInterval(interval);
   }, []);
   return (
-    <section className="bg-[#E1DDEE] py-4">
+    <section className="bg-[#E1DDEE] py-10">
       <div className="mx-auto max-w-7xl">
         <div className="mx-auto w-[85%]">
           <h2 className="mb-8 text-center font-clashSemiBold text-[30px] font-semibold text-[#140B31] xl:text-[40px]">
