@@ -72,7 +72,7 @@ function Perks() {
               </p>
             </motion.div>
           </div>
-          <div>
+          <div className="border">
             <h2 className="mb-5 max-w-[500px] font-clashSemiBold text-3xl text-[#381F8C] xl:text-4xl">
               A Safe and <span className="text-[#E58C06]">Scam-Free</span> Zone
               for Getting Things Done
@@ -84,22 +84,22 @@ function Perks() {
             <ul className="mb-8 space-y-3">
               {perks.map((perk) => (
                 <li
-                  className="flex max-w-[550px] flex-wrap items-center gap-2"
+                  className="flex max-w-[550px] flex-wrap items-center gap-3"
                   key={Math.random() * 2000}
                 >
                   <div className="w-max rounded-xl bg-[#381F8C] p-2 text-white">
-                    <perk.icon size={23} />
+                    <perk.icon size={16} />
                   </div>
-                  <h4 className="font-satoshiBold text-lg font-bold text-[#381F8C]">
+                  <h4 className="font-satoshiBold text-base font-bold text-[#381F8C] sm:text-lg">
                     {perk.title}:
                   </h4>
-                  <p className="-mt-2 pl-12 font-satoshiMedium text-[#000000BA]">
+                  <p className="-mt-3 pl-12 font-satoshiMedium text-sm text-[#000000BA] sm:text-base">
                     {perk.desc}
                   </p>
                 </li>
               ))}
             </ul>
-            <button className="min-w-[250px] rounded-[50px] bg-primary p-3 font-satoshi text-[16px] font-[700] text-[#EBE9F4] hover:bg-[#25135f] lg:w-[175px] xl:w-[190px]">
+            <button className="mx-auto block rounded-[50px] bg-primary px-6 py-3 font-satoshi text-[16px] font-[700] text-[#EBE9F4] hover:bg-[#25135f] sm:mx-0">
               <Link href="/customer/add-task">
                 Post your first task for free
               </Link>
