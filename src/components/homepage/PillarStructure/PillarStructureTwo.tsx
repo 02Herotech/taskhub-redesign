@@ -27,7 +27,7 @@ function PillarStructureTwo() {
   useEffect(() => {
     const interval = setInterval(() => {
       setIndex((id) => (id == 0 ? 1 : 0));
-    }, 4000);
+    }, 15000);
     return () => clearInterval(interval);
   }, []);
 
@@ -123,7 +123,7 @@ function PillarStructureTwo() {
                   success.
                 </p>
                 <Link
-                  href="/"
+                  href="/business-hub"
                   className="mt-5 flex w-max items-center gap-1 rounded-full border border-[#381F8C] bg-[#EBE9F4] px-4 py-2 font-satoshiBold font-bold text-[#381F8C]"
                 >
                   View Business Resources
