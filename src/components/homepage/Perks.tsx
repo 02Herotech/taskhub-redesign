@@ -99,8 +99,10 @@ function Perks() {
                 </li>
               ))}
             </ul>
-            <button className="w-[250px] rounded-[50px] bg-primary p-3 font-satoshi text-[16px] font-[700] text-[#EBE9F4] hover:bg-[#25135f] lg:w-[175px] xl:w-[190px]">
-              <Link href="/customer/add-task">Post a task for free</Link>
+            <button className="min-w-[250px] rounded-[50px] bg-primary p-3 font-satoshi text-[16px] font-[700] text-[#EBE9F4] hover:bg-[#25135f] lg:w-[175px] xl:w-[190px]">
+              <Link href="/customer/add-task">
+                Post your first task for free
+              </Link>
             </button>
           </div>
         </div>
