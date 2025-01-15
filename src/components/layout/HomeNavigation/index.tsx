@@ -44,11 +44,12 @@ const HomeNavigation = () => {
     //   url: "/contact",
     // },
   ];
-
+  // container
+  // lg:px-12 xl:px-12
   return (
     <>
       <nav className="fixed left-0 right-0 top-0 z-50 w-full bg-[#EBE9F4]">
-        <div className="container flex items-center justify-between px-7 py-4 lg:px-12 lg:py-5">
+        <div className="max-w-7xl flex mx-auto items-center justify-between px-7 py-4 lg:py-5">
           <Link href="/" className="max-sm:hidden">
             <Logo />
           </Link>

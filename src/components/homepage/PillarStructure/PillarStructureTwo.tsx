@@ -26,7 +26,7 @@ function PillarStructureTwo() {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setIndex((id) => (id == 0 ? 1 : 0));
+      // setIndex((id) => (id == 0 ? 1 : 0));
     }, 15000);
     return () => clearInterval(interval);
   }, []);
@@ -43,7 +43,7 @@ function PillarStructureTwo() {
           {index == 0 ? (
             <motion.div
               key="post"
-            //   {...fadeAnimationProps}
+              //   {...fadeAnimationProps}
               className="mx-auto flex w-[85%] flex-col justify-center gap-20 py-10 text-white lg:flex-row lg:gap-0"
             >
               <div>
@@ -61,7 +61,7 @@ function PillarStructureTwo() {
                       className="flex items-center gap-3 text-lg font-bold"
                       key={Math.random() * 2000}
                     >
-                      <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-[#EBE9F4] font-bold text-[#381F8C]">
+                      <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-[#EBE9F4] p-2 font-bold text-[#381F8C]">
                         {(i + 1).toString().padStart(2, "0")}
                       </span>
                       <p className="font-satoshiBold">{step}</p>
@@ -110,7 +110,7 @@ function PillarStructureTwo() {
           ) : (
             <motion.div
               key="business"
-            //   {...fadeAnimationProps}
+              //   {...fadeAnimationProps}
               className="mx-auto flex w-[85%] flex-col justify-between gap-20 py-10 text-white lg:flex-row"
             >
               <div>
