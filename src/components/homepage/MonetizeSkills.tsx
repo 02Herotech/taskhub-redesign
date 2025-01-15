@@ -35,7 +35,7 @@ function MonetizeSkills() {
       <div className="mx-auto max-w-7xl">
         <div className="mx-auto flex w-[85%] flex-col-reverse gap-10 pb-40 lg:flex-row">
           <div
-            className="relative h-[620px] rounded-xl px-4 py-3 lg:w-[45%] "
+            className="relative h-[620px] rounded-xl px-4 py-3 lg:w-[45%]"
             style={{
               backgroundImage: `url('/assets/images/homepage/mover.jpg')`,
               backgroundPositionX: "50%",
@@ -121,7 +121,7 @@ function MonetizeSkills() {
                 </li>
               ))}
             </ul>
-            <button className="block rounded-[50px] bg-[#FE9B07] py-3 px-6 font-satoshiBold font-bold text-base text-white hover:bg-[#e79823]">
+            <button className="block rounded-[50px] bg-[#FE9B07] px-6 py-3 font-satoshiBold text-base font-bold text-white hover:bg-[#e79823]">
               <Link href="/coming-soon">Monetize your skills</Link>
             </button>
           </div>

@@ -133,7 +133,7 @@ const BusinesHub = () => {
               due to lack of <br /> business acumen”
             </h2>
 
-            <p className="text-center font-satoshi text-[16px] font-[700]  text-[#2A1769] lg:text-[24px] xl:text-[28px] ">
+            <p className="text-center font-satoshi text-[16px] font-[700]  text-[#5B556E] lg:text-[24px] xl:text-[28px]">
               Thrive with our business hub <br className="lg:hidden" /> where
               you learn:
             </p>
