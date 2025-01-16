@@ -80,13 +80,13 @@ function Page() {
         <div className="mx-auto w-max space-x-1 font-satoshiBold sm:space-x-4">
           <Link
             href="/auth/sign-up"
-            className="rounded-full bg-[#381F8C] px-5 py-3 font-bold text-[#EBE9F4]"
+            className="rounded-full bg-[#381F8C] px-3 py-3 font-bold text-[#EBE9F4] sm:px-5"
           >
             Get started now
           </Link>
           <Link
             href="/coming-soon"
-            className="rounded-full border-[0.5px] border-[#381F8C] px-5 py-3 font-bold text-[#381F8C]"
+            className="rounded-full border-[0.5px] border-[#381F8C] px-3 py-3 font-bold text-[#381F8C] sm:px-5"
           >
             Monetize your skills
           </Link>
@@ -306,7 +306,7 @@ function Page() {
                   <p className="mb-7 font-satoshiMedium text-xl sm:mb-10 sm:text-2xl">
                     Your payment is securely held by Olójà Hub until the job is
                     completed to your satisfaction. Once approved, we transfer
-                    it directly to the expert's verified bank account.
+                    it directly to the expert&apos;s verified bank account.
                   </p>
                   <Link
                     href="/customer/add-task"
@@ -361,13 +361,13 @@ function Page() {
           <div className="mx-auto w-max space-x-1 sm:space-x-4">
             <Link
               href="/auth/sign-up"
-              className="rounded-full bg-[#381F8C] px-5 py-3 font-bold text-[#EBE9F4]"
+              className="rounded-full bg-[#381F8C] px-3 py-3 font-bold text-[#EBE9F4] sm:px-5"
             >
               Get started now
             </Link>
             <Link
               href="/coming-soon"
-              className="rounded-full border-[0.5px] border-[#381F8C] px-5 py-3 font-satoshiBold font-bold text-[#381F8C]"
+              className="rounded-full border-[0.5px] border-[#381F8C] px-3 py-3 font-satoshiBold font-bold text-[#381F8C] sm:px-5"
             >
               Monetize your skills
             </Link>
