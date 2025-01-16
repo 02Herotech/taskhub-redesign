@@ -51,7 +51,7 @@ export const homeMobileLinks: LinkRouteTypes[] = [
   // },
   {
     label: "How Olója Works",
-    url: "/",
+    url: "/how-oloja-works",
     icon: AboutUsSvg,
   },
   {
