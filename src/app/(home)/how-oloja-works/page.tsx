@@ -79,7 +79,7 @@ function Page() {
         </h1>
         <div className="mx-auto w-max space-x-1 font-satoshiBold sm:space-x-4">
           <Link
-            href="/auth/sign-up"
+            href="/auth"
             className="rounded-full bg-[#381F8C] px-3 py-3 font-bold text-[#EBE9F4] sm:px-5"
           >
             Get started now
@@ -331,13 +331,16 @@ function Page() {
             Ready to monetize your skills?
           </p>
           <h3 className="mb-3 font-clashSemiBold text-2xl text-primary sm:text-3xl">
-            Oloja Hub makes it easy to find customers and
+            Olójà Hub makes it easy to find customers and
             <br className="hidden sm:block" /> earn money doing what you love
           </h3>
-          <p className="mb-10 font-satoshiBold text-base font-bold text-[#4D4B51] sm:text-2xl">
-            All while keeping things simple, secure, and flexible. Browse
-            through jobs that <br className="hiddem sm:block" /> match your
-            skills at no cost.
+          <p className="mb-10 font-satoshiBold text-base font-bold text-[#221354] sm:text-2xl">
+            <span className="text-[#4D4B51]">All while keeping things</span>{" "}
+            simple, secure, and flexible.{' '}
+            <span className="text-[#4D4B51]">
+              Browse through jobs that
+            </span>{" "}
+            <br className="hiddem sm:block" /> match your skills at no cost.
           </p>
           <ul className="mb-8 grid grid-cols-1 gap-8 md:grid-cols-3 md:gap-3">
             {perks.map((perk) => (
@@ -351,8 +354,9 @@ function Page() {
               </li>
             ))}
           </ul>
+
           <p className="mb-1 font-satoshiMedium text-xl text-primary sm:text-2xl">
-            With Oloja Hub, you focus on what you do best, and we’ll handle the
+            With Olójà Hub, you focus on what you do best, and we’ll handle the
             rest.
           </p>
           <p className="mb-10 font-satoshiMedium text-xl text-[#E58C06] underline sm:text-2xl">
@@ -360,7 +364,7 @@ function Page() {
           </p>
           <div className="mx-auto w-max space-x-1 sm:space-x-4">
             <Link
-              href="/auth/sign-up"
+              href="/auth"
               className="rounded-full bg-[#381F8C] px-3 py-3 font-bold text-[#EBE9F4] sm:px-5"
             >
               Get started now
