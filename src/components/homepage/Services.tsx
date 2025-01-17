@@ -31,7 +31,7 @@ function Services() {
             <span className="text-[#E58C06]">covered.</span>
           </h2>
           <p className="mb-10 text-center font-satoshiBold text-lg font-bold text-[#5B556E] sm:text-xl">
-            Explore a range of services you can get done easily on Oloja Hub.{" "}
+            Explore a range of services you can get done easily on Olójà Hub.{" "}
           </p>
           <div className="mx-auto w-full overflow-clip rounded-3xl border-8 border-[#381F8C] sm:w-4/5 sm:border-[12px]">
             <AnimatePresence mode="wait">

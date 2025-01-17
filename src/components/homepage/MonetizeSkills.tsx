@@ -85,7 +85,7 @@ function MonetizeSkills() {
             </p>
             <p className="mb-5 max-w-[540px] font-satoshiMedium text-base sm:text-[18px]">
               If you’ve got talents to offer, whether it’s filing taxes, fixing
-              pipes, moving furniture, or laying the groundwork, Oloja Hub is
+              pipes, moving furniture, or laying the groundwork, Olójà Hub is
               your platform to connect with real opportunities and start
               earning.
             </p>

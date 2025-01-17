@@ -78,7 +78,7 @@ function Perks() {
               for Getting Things Done
             </h2>
             <p className="mb-8 font-satoshiMedium text-xl font-medium text-[#2A1769] sm:text-2xl">
-              Oloja Hub allows you to confidently connect and get things done,
+              Olójà Hub allows you to confidently connect and get things done,
               hassle-free:
             </p>
             <ul className="mb-8 space-y-3">

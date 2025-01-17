@@ -97,7 +97,7 @@ const Hero = () => {
 
             <p className="py-0 text-center font-satoshiMedium text-[28px] font-[500] text-[#381F8C] ">
               Whether you need tasks handled, want to earn doing what you love,
-              or learn to start your business, Oloja is your platform to
+              or learn to start your business, Olójà is your platform to
               succeed.
             </p>
 

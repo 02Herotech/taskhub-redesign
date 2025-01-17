@@ -102,7 +102,7 @@ function PillarStructureTwo() {
                   href="/how-oloja-works"
                   className="mx-auto mt-5 flex w-max items-center gap-1 rounded-full bg-[#FFFEFE6B] px-4 py-2 font-satoshiBold text-lg font-bold underline sm:text-xl"
                 >
-                  <span>Explore How OlojaHub works</span>
+                  <span>Explore How OlójàHub works</span>
                   <MdArrowOutward />
                 </Link>
               </div>
@@ -141,7 +141,7 @@ function PillarStructureTwo() {
                   href="/how-oloja-works"
                   className="mx-auto mt-5 flex w-max items-center gap-1 rounded-full bg-[#FFFEFE6B] px-4 py-2 font-satoshiBold text-lg font-bold underline sm:text-xl"
                 >
-                  <span>Explore How OlojaHub works</span>
+                  <span>Explore How OlójàHub works</span>
                   <MdArrowOutward />
                 </Link>
               </div>
