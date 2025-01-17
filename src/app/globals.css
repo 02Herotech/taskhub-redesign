@@ -210,3 +210,11 @@ body {
   flex: 0 0 100%;
   min-width: 0;
 }
+
+.clip-circle-half {
+  clip-path: circle(23.6% at 100% 100%);
+}
+
+.clip-circle-full {
+  clip-path: circle(141.4% at 100% 100%);
+}

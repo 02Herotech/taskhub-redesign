@@ -13,7 +13,8 @@ function Guarantee({ text, top, left, animateTo, delay = 0.7 }: Props) {
   return (
     <motion.div
       whileInView={{ left: animateTo, opacity: 1 }}
-      transition={{ delay }}
+      viewport={{ once: true }}
+      transition={{ delay, duration: 1.1 }}
       initial={{ opacity: 0 }}
       className="absolute flex max-w-[300px] items-center gap-2 rounded-xl bg-[#E58C06] px-2 py-2 text-xs font-bold text-white"
       style={{ top: top + "px", left: left + "px" }}

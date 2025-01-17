@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import Guarantee from "./Guarantee";
 import WaveTick from "./WaveTick";
@@ -23,6 +23,7 @@ const perks: { title: string; text: string }[] = [
 ];
 
 function Page() {
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   return (
     <div>
       <header className="mx-auto max-w-7xl pb-10">
@@ -336,21 +337,33 @@ function Page() {
           </h3>
           <p className="mb-10 font-satoshiBold text-base font-bold text-[#221354] sm:text-2xl">
             <span className="text-[#4D4B51]">All while keeping things</span>{" "}
-            simple, secure, and flexible.{' '}
-            <span className="text-[#4D4B51]">
-              Browse through jobs that
-            </span>{" "}
+            simple, secure, and flexible.{" "}
+            <span className="text-[#4D4B51]">Browse through jobs that</span>{" "}
             <br className="hiddem sm:block" /> match your skills at no cost.
           </p>
           <ul className="mb-8 grid grid-cols-1 gap-8 md:grid-cols-3 md:gap-3">
-            {perks.map((perk) => (
+            {perks.map((perk, i) => (
               <li
-                className="relative flex flex-col justify-center gap-4 overflow-clip rounded-3xl bg-[#E1DDEE] px-6 py-10 text-xl text-primary shadow-xl "
+                className={
+                  "relative flex flex-col justify-center gap-4 overflow-clip rounded-3xl bg-[#E1DDEE] px-6 py-10 text-xl shadow-xl " +
+                  (hoveredIndex == i ? "text-white" : "text-primary")
+                }
                 key={Math.random() * 1234}
+                onMouseEnter={() => setHoveredIndex(i)}
+                onMouseLeave={() => setHoveredIndex(null)}
               >
-                <h4 className="font-satoshiBold font-bold">{perk.title}</h4>
-                <p className="font-satoshiMedium">{perk.text}</p>
-                <div className="absolute bottom-0 right-0 h-20 w-20 translate-x-[40%] translate-y-[40%] rounded-full bg-[#EF8C08]" />
+                <h4 className="z-20 font-satoshiBold font-bold">
+                  {perk.title}
+                </h4>
+                <p className="z-20 font-satoshiMedium">{perk.text}</p>
+                <div
+                  className={
+                    "absolute bottom-0 right-0 w-full bg-[#EF8C08] transition-all duration-300 ease-in " +
+                    (hoveredIndex == i
+                      ? "clip-circle-full h-full"
+                      : "clip-circle-half h-1/2")
+                  }
+                />
               </li>
             ))}
           </ul>
