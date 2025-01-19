@@ -81,6 +81,8 @@ const config: Config = {
         "gradient-multi":
           "linear-gradient(to bottom, #0F0826, #100927, #11092A, #130A2E, #150C35, #190E3E, #1D1048, #211253, #26155F, #2A186A, #2F1A74, #321C7D, #351D84, #371E88, #381F8B, #381F8C)",
         "404-not-found": "url('/assets/images/not-found-404.png')",
+        "image-gradient":
+          "linear-gradient(0deg, rgba(227, 220, 251, 0.95) 22.22%, rgba(185, 179, 207, 0.3) 63.39%, rgba(198, 196, 202, 0) 82.21%)",
       },
     },
   },
