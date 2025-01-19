@@ -90,7 +90,7 @@ const HomeNavigation = () => {
               </Button>
             </Link>
 
-            <Link href="/">
+            <Link href="/monetize-your-skills">
               <Button theme="secondary" className="rounded-full">
                 Monetize your skills
               </Button>

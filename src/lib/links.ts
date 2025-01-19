@@ -66,7 +66,7 @@ export const homeMobileLinks: LinkRouteTypes[] = [
   // },
   {
     label: "Monetize your skills",
-    url: "/",
+    url: "/monetize-your-skills",
     icon: MonetizeSVG,
   },
 ];
