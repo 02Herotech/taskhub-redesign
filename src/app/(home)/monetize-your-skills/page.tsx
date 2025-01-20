@@ -114,11 +114,8 @@ function Page() {
           <Wave position="bottom" />
           <div className="relative left-0 top-0 z-20 h-full w-full bg-[#381F8C] bg-opacity-50 pb-10 pt-1">
             <h1 className="mb-7 mt-20 text-center font-clashSemiBold text-3xl sm:text-5xl">
-              <span className="mb-5 hidden font-satoshiBold text-xl font-black italic sm:inline-block">
+              <span className="mb-5 inline-block font-satoshiBold text-base sm:text-xl font-black italic">
                 Learn How To:
-              </span>{" "}
-              <span className="mb-3 inline-block rounded-full bg-[#E1DDEE] px-3 py-2 font-satoshiBold text-sm font-bold text-primary sm:hidden">
-                Learn How To
               </span>{" "}
               <br />
               <span className="text-[#E58C06]">Earn</span> while doing <br />{" "}
