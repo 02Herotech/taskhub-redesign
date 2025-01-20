@@ -156,7 +156,7 @@ function About() {
       </div>
 
       <div className="bg-white">
-        <section className="mx-auto max-w-7xl py-14">
+        <section className="mx-auto max-w-7xl pb-36 pt-14 lg:pb-14">
           <div className="mx-auto w-[93%] sm:w-[85%]">
             <h2 className="mb-5 text-center font-clashSemiBold text-[36px] text-primary sm:text-[44px]">
               Take the first <br /> <span className="text-[#E58C06]">step</span>{" "}
@@ -194,7 +194,7 @@ function About() {
             </ul>
             <Link
               href="/customer/add-task"
-              className="mx-auto mb-14 block w-max rounded-full bg-[#381F8C] px-5 py-3 font-satoshiBold font-bold text-[#EBE9F4] sm:mb-20"
+              className="mx-auto mb-14 block w-full rounded-full bg-[#381F8C] px-5 py-3 text-center font-satoshiBold font-bold text-[#EBE9F4] sm:mb-20 sm:w-max"
             >
               Post a task for free
             </Link>
