@@ -57,8 +57,8 @@ const data: Step[] = [
 
 function Page() {
   return (
-    <div>
-      <div className="absolute left-0 top-0 -z-10 flex w-full justify-between overflow-hidden">
+    <div className="bg-[#EBE9F4]">
+      <div className="absolute left-0 top-0 z-10 flex w-full justify-between overflow-hidden">
         <div
           style={{
             position: "relative",
@@ -148,8 +148,7 @@ function Page() {
       </div>
 
       <div className="mx-auto max-w-7xl">
-        {/* Dimension 2880 X 361 */}
-        <div className="relative -z-10 -translate-y-1 sm:translate-y-0 md:translate-y-5 lg:translate-y-9">
+        <div className="relative z-10 -translate-y-1 sm:translate-y-0 md:translate-y-5 lg:translate-y-9">
           <Image
             width={2880}
             height={361}
@@ -203,7 +202,7 @@ function Page() {
         </div>
       </div>
       <div className="bg-[#E3DCFB4D]">
-        <div className="mx-auto max-w-7xl py-10 pb-20">
+        <div className="mx-auto max-w-7xl py-28">
           <section className="mx-auto min-h-screen w-[93%] sm:w-[85%]">
             <ul className="space-y-20 sm:space-y-24">
               <li className="flex flex-col-reverse items-center justify-between gap-7 md:flex-row md:gap-4">
@@ -225,7 +224,7 @@ function Page() {
                   </Link>
                 </div>
                 <div className="max-x-[450px] relative aspect-video w-full rounded-2xl bg-[#E58C06] md:w-1/2 ">
-                  <div className="bg-image-gradient absolute -bottom-2 -left-3 z-20 h-1/4 w-[104%] rounded-b-2xl sm:-bottom-5 sm:-left-5" />
+                  <div className="absolute -bottom-2 -left-3 z-20 h-1/4 w-[104%] rounded-b-2xl bg-image-gradient sm:-bottom-5 sm:-left-5" />
                   <Image
                     src="/assets/images/monetize-skills/profile-interface.png"
                     alt="Profile interface"
@@ -254,7 +253,7 @@ function Page() {
                   </Link>
                 </div>
                 <div className="max-x-[450px] relative aspect-video w-full rounded-2xl bg-[#321C7E] md:w-1/2 ">
-                  <div className="bg-image-gradient absolute -bottom-2 -right-3 z-20 h-1/4 w-[104%] rounded-b-2xl sm:-bottom-5 sm:-right-5" />
+                  <div className="absolute -bottom-2 -right-3 z-20 h-1/4 w-[104%] rounded-b-2xl bg-image-gradient sm:-bottom-5 sm:-right-5" />
                   <Image
                     src="/assets/images/monetize-skills/offer-interface.png"
                     width={1994}
@@ -284,7 +283,7 @@ function Page() {
                   </Link>
                 </div>
                 <div className="max-x-[450px] relative aspect-video w-full rounded-2xl bg-[#E58C06] md:w-1/2 ">
-                  <div className="bg-image-gradient absolute -bottom-2 -left-3 z-20 h-1/4 w-[104%] rounded-b-2xl sm:-bottom-5 sm:-left-5" />
+                  <div className="absolute -bottom-2 -left-3 z-20 h-1/4 w-[104%] rounded-b-2xl bg-image-gradient sm:-bottom-5 sm:-left-5" />
                   <Image
                     src="/assets/images/monetize-skills/payment-interface.png"
                     alt="Profile interface"
@@ -305,14 +304,14 @@ function Page() {
                     jobs that match your skills.
                   </p>
                   <Link
-                    href="/auth"
+                    href="/provide-service"
                     className="rounded-full bg-[#E58C06] px-5 py-3 font-satoshiBold font-bold text-[#EBE9F4]"
                   >
                     Post a Listing now
                   </Link>
                 </div>
                 <div className="max-x-[450px] relative aspect-video w-full rounded-2xl bg-[#321C7E] md:w-1/2 ">
-                  <div className="bg-image-gradient absolute -bottom-2 -right-3 z-20 h-1/4 w-[104%] rounded-b-2xl sm:-bottom-5 sm:-right-5" />
+                  <div className="absolute -bottom-2 -right-3 z-20 h-1/4 w-[104%] rounded-b-2xl bg-image-gradient sm:-bottom-5 sm:-right-5" />
                   <Image
                     src="/assets/images/monetize-skills/listing-interface.png"
                     alt="Listing interface"
@@ -327,7 +326,7 @@ function Page() {
         </div>
       </div>
 
-      <div className="mb-10 bg-[#EBE9F4]">
+      <div className="bg-[#EBE9F4]">
         <svg
           width="1440"
           height="80"

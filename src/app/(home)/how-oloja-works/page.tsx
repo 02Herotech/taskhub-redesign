@@ -86,7 +86,7 @@ function Page() {
             Get started now
           </Link>
           <Link
-            href="/coming-soon"
+            href="/monetize-your-skills"
             className="rounded-full border-[0.5px] border-[#381F8C] px-3 py-3 font-bold text-[#381F8C] sm:px-5"
           >
             Monetize your skills
@@ -383,7 +383,7 @@ function Page() {
               Get started now
             </Link>
             <Link
-              href="/coming-soon"
+              href="/monetize-your-skills"
               className="rounded-full border-[0.5px] border-[#381F8C] px-3 py-3 font-satoshiBold font-bold text-[#381F8C] sm:px-5"
             >
               Monetize your skills
