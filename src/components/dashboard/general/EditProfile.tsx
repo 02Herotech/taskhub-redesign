@@ -20,6 +20,7 @@ import { UserDataType } from "@/lib/validation/userData.schema";
 import FormField from "./FormField";
 import useValidateABN from "@/hooks/useValidateABN";
 import Notice from "./Notice";
+import useValidateTFN from "@/hooks/useValidateTFN";
 
 const idTypeObject = [
   { label: "Medicare Card", value: "MEDICARE_CARD" },
@@ -110,7 +111,8 @@ const EditProfile = () => {
   const watchField = watch();
   const watchABN = watch("abn");
 
-  const isABNValid = useValidateABN(watchABN, token, userDetails, setErr);
+  /**Boolean variable representing Valid TFN status, formerly ABN */
+  const isABNValid = useValidateTFN(watchABN, token, userDetails, setErr);
 
   const ABNInputRef = useRef<HTMLDivElement | null>(null);
 
@@ -235,7 +237,7 @@ const EditProfile = () => {
           behavior: "smooth",
           block: "center",
         });
-        ABNInputRef.current.focus(); // Optionally focus the input after scrolling
+        ABNInputRef.current.focus();
       }
       return;
     }
@@ -258,7 +260,7 @@ const EditProfile = () => {
           idType: data.idType,
           idNumber: data.idNumber,
           bio: data.bio,
-          abn: data.abn,
+          tfn: data.abn,
         }).reduce((acc, [key, value]) => {
           if (value !== null && value !== undefined && value !== "") {
             // @ts-expect-error "type of key not know"
@@ -578,14 +580,14 @@ const EditProfile = () => {
                 ref={ABNInputRef}
               >
                 <FormField
-                  label="ABN"
+                  label="TFN"
                   name="abn"
                   register={register}
                   errors={errors}
                   watch={watch}
                   watchField={watchField}
                   disabled={!isEditingEnabled || !!userDetails.abn}
-                  minLength={11}
+                  minLength={9}
                 />
               </div>
               {!isABNValid && !userDetails.abn && err && (
