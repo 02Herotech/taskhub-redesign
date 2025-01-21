@@ -150,7 +150,7 @@ function About() {
                   <h4 className="mb-4 font-satoshiBold text-2xl font-bold text-[#140B31] sm:text-3xl">
                     {step.title}
                   </h4>
-                  <p className="text-2xl text-[#34313F] sm:text-[32px]">
+                  <p className="text-2xl text-[#34313F] sm:text-[32px] font-satoshiMedium">
                     {step.text}
                   </p>
                 </li>
@@ -161,13 +161,13 @@ function About() {
       </div>
 
       <div className="bg-white">
-        <section className="mx-auto max-w-7xl pb-36 pt-14 lg:pb-14">
+        <section className="mx-auto max-w-7xl py-14">
           <div className="mx-auto w-[93%] sm:w-[85%]">
             <h2 className="mb-5 text-center font-clashSemiBold text-[36px] text-primary sm:text-[44px]">
               Take the first <br /> <span className="text-[#E58C06]">step</span>{" "}
               today
             </h2>
-            <p className="mb-8 text-center font-satoshi text-[20px] text-[#2A1769] sm:text-[32px]">
+            <p className="mb-8 text-center font-satoshiMedium sm:font-satoshi text-[20px] text-[#2A1769] sm:text-[32px]">
               Join Olójà and start connecting:
             </p>
             <ul className="mb-10 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">

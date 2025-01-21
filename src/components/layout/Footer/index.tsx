@@ -222,7 +222,7 @@ const Footer = () => {
       </div>
 
       {/* Newsletter Section */}
-      {(pathname === "/home" || pathname === "/about") && (
+      {pathname === "/home" && (
         <div className="absolute -top-44 z-20 w-full overflow-hidden lg:-top-24">
           <NewsLetter />
         </div>
