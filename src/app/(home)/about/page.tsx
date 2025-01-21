@@ -65,7 +65,7 @@ function About() {
               and talents.
             </p>
           </header>
-          <div className="flex flex-col items-stretch gap-3 py-5 font-satoshiMedium text-base sm:py-0 sm:text-2xl md:flex-row md:gap-5">
+          <div className="flex flex-col items-stretch gap-3 py-5 font-satoshiMedium text-base sm:py-0 sm:text-3xl md:flex-row md:gap-5">
             <p className="py-2 text-primary sm:py-10">
               For those seeking help or those who are too busy to get day-day
               tasks done, we{" "}
