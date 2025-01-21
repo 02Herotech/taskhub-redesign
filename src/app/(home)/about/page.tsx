@@ -65,20 +65,25 @@ function About() {
               and talents.
             </p>
           </header>
-          <div className="flex flex-col items-stretch gap-3 py-5 font-satoshiBold text-base font-bold sm:py-0 sm:text-3xl md:flex-row md:gap-5">
-            <p className="py-2 text-primary sm:py-5">
+          <div className="flex flex-col items-stretch gap-3 py-5 font-satoshiMedium text-base sm:py-0 sm:text-2xl md:flex-row md:gap-5">
+            <p className="py-2 text-primary sm:py-10">
               For those seeking help or those who are too busy to get day-day
-              tasks done, we <span className="text-[#AC6905]">connect</span> you
-              with trusted individuals to handle your tasks so you can focus on
-              what matters most.{" "}
+              tasks done, we{" "}
+              <span className="font-satoshiBold font-bold text-[#AC6905]">
+                connect
+              </span>{" "}
+              you with trusted individuals to handle your tasks so you can focus
+              on what matters most.{" "}
             </p>
             <div className="bg-mobile-bar-gradient md:bg-bar-gradient h-[100] w-full rotate-180 opacity-25 md:w-20" />
-            <p className="py-2 text-[#AC6905] sm:py-5">
+            <p className="py-2 text-[#AC6905] sm:py-10">
               And for those ready to showcase their{" "}
-              <span className="text-primary">expertise,</span> we provide the
-              tools to monetize your skills and turn your talents into
-              meaningful opportunities, giving you the flexibility to earn while
-              doing what you love.
+              <span className="font-satoshiBold font-bold text-primary">
+                expertise,
+              </span>{" "}
+              we provide the tools to monetize your skills and turn your talents
+              into meaningful opportunities, giving you the flexibility to earn
+              while doing what you love.
             </p>
           </div>
         </div>
@@ -104,7 +109,7 @@ function About() {
                   Empowering <span className="text-[#EBE9F4]">People</span> to
                   Achieve More{" "}
                 </h3>
-                <div className="space-y-4 font-satoshiMedium text-2xl">
+                <div className="space-y-4 font-satoshiMedium text-xl sm:text-2xl">
                   <p>
                     Our mission is simple: help people buy back their{" "}
                     <span className="text-[#E58C06]">time</span> and create
@@ -133,7 +138,7 @@ function About() {
       >
         <section className="mx-auto max-w-7xl py-10">
           <div className="mx-auto w-[93%] sm:w-[85%]">
-            <h2 className="mb-4 font-clashSemiBold text-[44px] text-[#2A1769]">
+            <h2 className="mb-4 font-clashSemiBold text-[36px] text-[#2A1769] sm:text-[44px]">
               Why Olójà?
             </h2>
             <ul className="grid grid-cols-1 gap-3 gap-y-8 md:grid-cols-3">
@@ -162,7 +167,7 @@ function About() {
               Take the first <br /> <span className="text-[#E58C06]">step</span>{" "}
               today
             </h2>
-            <p className="mb-8 text-center font-satoshiMedium text-[20px] text-[#2A1769] sm:text-4xl">
+            <p className="mb-8 text-center font-satoshi text-[20px] text-[#2A1769] sm:text-[32px]">
               Join Olójà and start connecting:
             </p>
             <ul className="mb-10 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
