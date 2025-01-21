@@ -173,7 +173,7 @@ function About() {
             <ul className="mb-10 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
               {steps.map((step) => (
                 <li
-                  className="bg-blue-black rounded-3xl p-5"
+                  className="bg-blue-black rounded-3xl p-10 sm:p-5"
                   key={Math.random() * 3456}
                 >
                   <div className="relative mx-auto mb-4 w-max text-white">

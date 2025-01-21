@@ -1568,7 +1568,7 @@ const ProvideService: React.FC = () => {
                       Please proceed to update your profile
                     </p>
                     <p className="text-center text-[14px] lg:text-[20px]">
-                      before your Task can be posted
+                      before you can make a listing
                     </p>
                   </div>
                   <Image
@@ -1657,7 +1657,7 @@ const ProvideService: React.FC = () => {
                   Please proceed to update your profile
                 </p>
                 <p className="text-center text-[14px] lg:text-[20px]">
-                  before your Task can be posted
+                  before you can make a listing
                 </p>
               </div>
               <Image
