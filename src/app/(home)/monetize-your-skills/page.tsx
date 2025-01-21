@@ -301,10 +301,10 @@ function Page() {
                     jobs that match your skills.
                   </p>
                   <Link
-                    href="/provide-service"
+                    href="/auth"
                     className="rounded-full bg-[#E58C06] px-5 py-3 font-satoshiBold font-bold text-[#EBE9F4]"
                   >
-                    Post a Listing now
+                    Post a Listing
                   </Link>
                 </div>
                 <div className="max-x-[450px] relative aspect-video w-full rounded-2xl bg-[#321C7E] md:w-1/2 ">

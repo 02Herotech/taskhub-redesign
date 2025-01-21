@@ -151,7 +151,6 @@ const ProvideService: React.FC = () => {
   const [complete, setComplete] = useState(false);
   const [loadingProfile, setLoadingProfile] = useState(true);
 
-  //? Fetch user data, update in state, update session if enabled is false, set loading to false
   const fetchedUserData = useUserProfileData(setLoadingProfile);
   const [hasClosedPopup, setHasClosedPopup] = useState(false);
   const isAuth = session.status === "authenticated";
@@ -1106,7 +1105,7 @@ const ProvideService: React.FC = () => {
         );
       case 3:
         return (
-          <div className="xs:w-[500px] mb-10 space-y-10 font-bold text-status-darkpurple lg:w-[700px]">
+          <div className="mb-10 space-y-10 font-bold text-status-darkpurple xs:w-[500px] lg:w-[700px]">
             <form onSubmit={handleSubmit} className="space-y-10">
               <div className="relative mt-2">
                 <Dropdown
@@ -1641,52 +1640,101 @@ const ProvideService: React.FC = () => {
           )}
         </div>
       </div>
-      <Popup
-        isOpen={isEnabledPopup}
-        onClose={() => {
-          setIsEnabledPopup(false);
-        }}
-      >
-        <div className="px-14 py-10 lg:px-24">
-          <div className="relative grid items-center justify-center space-y-5">
-            <p className="font-clashDisplay text-center text-[20px] font-extrabold text-[#2A1769] md:text-[36px] lg:text-[37px] ">
-              Your profile is not updated/enabled
-            </p>
-            <div>
-              <p className="text-center text-[14px] lg:text-[20px]">
-                Please proceed to update your profile
+      {isAuth ? (
+        <Popup
+          isOpen={isEnabledPopup}
+          onClose={() => {
+            setIsEnabledPopup(false);
+          }}
+        >
+          <div className="px-14 py-10 lg:px-24">
+            <div className="relative grid items-center justify-center space-y-5">
+              <p className="font-clashDisplay text-center text-[20px] font-extrabold text-[#2A1769] md:text-[36px] lg:text-[37px] ">
+                Your profile is not updated
               </p>
-              <p className="text-center text-[14px] lg:text-[20px]">
-                before your Task can be posted
-              </p>
-            </div>
-            <Image
-              src={image}
-              alt="image"
-              className="absolute -right-14 top-28 w-24 lg:-right-12 lg:top-2/3 lg:w-24 "
-            />
-            <Image
-              src={img}
-              alt="image"
-              className="absolute -left-12 top-12 w-12 lg:-left-[53px] lg:top-8 lg:w-16"
-            />
-            <div className="flex justify-center space-x-3 md:justify-around">
-              <Link href="/marketplace?">
-                <button className="rounded-2xl border-2 border-status-purpleBase p-2 text-[14px] font-semibold text-status-purpleBase outline-none md:w-[100px]">
-                  Back
-                </button>
-              </Link>
+              <div>
+                <p className="text-center text-[14px] lg:text-[20px]">
+                  Please proceed to update your profile
+                </p>
+                <p className="text-center text-[14px] lg:text-[20px]">
+                  before your Task can be posted
+                </p>
+              </div>
+              <Image
+                src={image}
+                alt="image"
+                className="absolute -right-14 top-28 w-24 lg:-right-12 lg:top-2/3 lg:w-24 "
+              />
+              <Image
+                src={img}
+                alt="image"
+                className="absolute -left-12 top-12 w-12 lg:-left-[53px] lg:top-8 lg:w-16"
+              />
+              <div className="flex justify-center space-x-3 md:justify-around">
+                <Link href="/marketplace?">
+                  <button className="rounded-2xl border-2 border-status-purpleBase p-2 text-[14px] font-semibold text-status-purpleBase outline-none md:w-[100px]">
+                    Back
+                  </button>
+                </Link>
 
-              <button
-                onClick={handleProfile}
-                className="rounded-2xl bg-status-purpleBase p-2 text-[14px] text-white outline-none md:w-[100px]"
-              >
-                Go to profile
-              </button>
+                <button
+                  onClick={handleProfile}
+                  className="rounded-2xl bg-status-purpleBase p-2 text-[14px] text-white outline-none md:w-[100px]"
+                >
+                  Go to profile
+                </button>
+              </div>
             </div>
           </div>
-        </div>
-      </Popup>
+        </Popup>
+      ) : (
+        <Popup
+          isOpen={isEnabledPopup}
+          onClose={() => {
+            setIsEnabledPopup(false);
+          }}
+        >
+          <div className="px-14 py-10 lg:px-24">
+            <div className="relative grid items-center justify-center space-y-5">
+              <p className="font-clashDisplay text-center text-[20px] font-extrabold text-[#2A1769] md:text-[36px] lg:text-[37px] ">
+                You are almost done
+              </p>
+              <div>
+                <p className="text-center text-[14px] lg:text-[20px]">
+                  Please sign up to finish posting your listing
+                </p>
+                <p className="text-center text-[14px] lg:text-[20px]">
+                  and connect with customers
+                </p>
+              </div>
+              <Image
+                src={image}
+                alt="image"
+                className="absolute -right-14 top-28 w-24 lg:-right-12 lg:top-2/3 lg:w-24 "
+              />
+              <Image
+                src={img}
+                alt="image"
+                className="absolute -left-12 top-12 w-12 lg:-left-[53px] lg:top-8 lg:w-16"
+              />
+              <div className="flex justify-center space-x-3 md:justify-around">
+                <Link href="/auth">
+                  <button className="rounded-2xl border-2 border-status-purpleBase p-2 text-[14px] font-semibold text-status-purpleBase outline-none md:w-[100px]">
+                    Sign up
+                  </button>
+                </Link>
+
+                <button
+                  onClick={() => setIsEnabledPopup(false)}
+                  className="rounded-2xl bg-status-purpleBase p-2 text-[14px] text-white outline-none md:w-[100px]"
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        </Popup>
+      )}
     </>
   );
 };

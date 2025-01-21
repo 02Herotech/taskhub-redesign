@@ -1217,7 +1217,7 @@ const AddTaskForm: React.FC = () => {
         <div className="px-14 py-10 lg:px-24">
           <div className="relative grid items-center justify-center space-y-5">
             <p className="font-clashDisplay text-center text-[20px] font-extrabold text-[#2A1769] md:text-[36px] lg:text-[37px] ">
-              Your profile is not updated/enabled
+              Your profile is not updated
             </p>
             <div>
               <p className="text-center text-[14px] lg:text-[20px]">
