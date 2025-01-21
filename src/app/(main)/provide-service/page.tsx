@@ -559,6 +559,7 @@ const ProvideService: React.FC = () => {
     event.preventDefault();
     setLoading(true);
     if (validateField2()) {
+      //Todo Check if user is logged in
       if (isEnabled) {
         try {
           let finalTask = { ...task };

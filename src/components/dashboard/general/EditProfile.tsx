@@ -160,7 +160,7 @@ const EditProfile = () => {
             ? data.bio || ""
             : "No Bio needed for customer",
           abn: isServiceProvider
-            ? data.abn || ""
+            ? data.tfn || ""
             : "No ABN needed for customer",
         });
       } catch (error) {
@@ -586,11 +586,11 @@ const EditProfile = () => {
                   errors={errors}
                   watch={watch}
                   watchField={watchField}
-                  disabled={!isEditingEnabled || !!userDetails.abn}
+                  disabled={!isEditingEnabled || !!userDetails.tfn}
                   minLength={9}
                 />
               </div>
-              {!isABNValid && !userDetails.abn && err && (
+              {!isABNValid && !userDetails.tfn && err && (
                 <div className="text-red-500 ">{err}</div>
               )}
             </section>

@@ -12,6 +12,7 @@ declare interface DefaultUserDetailsType {
   suburbs: string;
   bio: string | null;
   abn: string | null;
+  tfn: string | null;
   isVerified: boolean;
   verificationStatus?: null | "NOT_VERIFIED" | "VERIFIED" | "PENDING";
 }
