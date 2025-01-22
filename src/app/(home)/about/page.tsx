@@ -47,26 +47,26 @@ function About() {
   return (
     <div className="min-h-screen bg-[#EBE9F4] pt-20">
       <section className="mx-auto max-w-7xl pt-10">
-        <div className="mx-auto w-[93%] sm:w-[85%]">
+        <div className="mx-auto w-[90%] sm:w-[85%]">
           {/* bg picture and header text  */}
           <header
-            className="rounded-3xl bg-cover bg-center bg-no-repeat p-4"
+            className="rounded-3xl bg-cover bg-center bg-no-repeat p-5"
             style={{
               backgroundImage: `linear-gradient(rgba(34, 34, 34, 0.7),rgba(34, 34, 34, 0.7)), url('/assets/images/about/multi-racial-friends.jpg')`,
             }}
           >
-            <h1 className="mb-3 mt-44 font-clashSemiBold text-[18px] text-[#E58C06] sm:text-4xl">
+            <h1 className="mb-3 mt-44 font-clashSemiBold text-[20px] text-[#E58C06] sm:text-4xl">
               About Olójà
             </h1>
-            <p className="font-satoshiMedium text-base text-[#EBE9F4] sm:text-3xl">
+            <p className="font-satoshiMedium text-lg text-[#EBE9F4] sm:text-3xl">
               Olójà is a platform built for{" "}
               <span className="text-[#E58C06]">people</span>. We believe that
               everyone deserves the opportunity to make the most of their time
               and talents.
             </p>
           </header>
-          <div className="flex flex-col items-stretch gap-3 py-5 font-satoshiMedium text-base sm:py-0 sm:text-3xl md:flex-row md:gap-5">
-            <p className="py-2 text-primary sm:py-10">
+          <div className="flex flex-col items-stretch gap-3 py-5 font-satoshiMedium text-lg sm:py-0 sm:text-3xl md:flex-row md:gap-5">
+            <p className="self-center py-2 text-primary sm:py-10">
               For those seeking help or those who are too busy to get day-day
               tasks done, we{" "}
               <span className="font-satoshiBold font-bold text-[#AC6905]">
@@ -75,8 +75,8 @@ function About() {
               you with trusted individuals to handle your tasks so you can focus
               on what matters most.{" "}
             </p>
-            <div className="bg-mobile-bar-gradient md:bg-bar-gradient h-[100] w-full rotate-180 opacity-25 md:w-20" />
-            <p className="py-2 text-[#AC6905] sm:py-10">
+            <div className="h-[100] w-full rotate-180 bg-mobile-bar-gradient opacity-10 md:w-20 md:bg-bar-gradient" />
+            <p className="px-0 sm:px-8 py-2 text-[#AC6905] sm:py-10">
               And for those ready to showcase their{" "}
               <span className="font-satoshiBold font-bold text-primary">
                 expertise,
@@ -91,8 +91,8 @@ function About() {
 
       <div className="bg-[#140B31]">
         <section className="mx-auto max-w-7xl py-10">
-          <div className="mx-auto w-[93%] text-[#EBE9f4] sm:w-[85%]">
-            <h2 className="mb-3 text-center font-clashSemiBold text-[30px] text-[#E58C06] sm:text-[40px]">
+          <div className="mx-auto w-[90%] text-[#EBE9f4] sm:w-[85%]">
+            <h2 className="mb-5 text-center font-clashSemiBold text-[30px] text-[#E58C06] sm:text-[40px]">
               Our Mission
             </h2>
             <div className="flex flex-col gap-10 md:flex-row">
@@ -104,12 +104,12 @@ function About() {
                 alt="Handshake"
                 className="mx-auto w-full max-w-[500px] rounded-3xl object-cover md:w-1/2"
               />
-              <div className="w-full md:w-1/2">
-                <h3 className="mb-4 text-center font-satoshiBold text-3xl font-bold text-[#EBE9F4B0]">
-                  Empowering <span className="text-[#EBE9F4]">People</span> to
+              <div className="w-full md:w-1/2 px-4 sm:px-0">
+                <h3 className="mb-8 text-center font-satoshiBold text-3xl font-bold text-[#EBE9F4B0]">
+                  Empowering <span className="text-[#EBE9F4]">People</span> <br className="block sm:hidden"/> to
                   Achieve More{" "}
                 </h3>
-                <div className="space-y-4 font-satoshiMedium text-xl sm:text-2xl">
+                <div className="space-y-6 font-satoshiMedium text-xl sm:text-2xl">
                   <p>
                     Our mission is simple: help people buy back their{" "}
                     <span className="text-[#E58C06]">time</span> and create
@@ -137,20 +137,20 @@ function About() {
         }}
       >
         <section className="mx-auto max-w-7xl py-10">
-          <div className="mx-auto w-[93%] sm:w-[85%]">
-            <h2 className="mb-4 font-clashSemiBold text-[36px] text-[#2A1769] sm:text-[44px]">
+          <div className="mx-auto w-[90%] sm:w-[85%]">
+            <h2 className="mb-5 font-clashSemiBold text-[36px] text-[#2A1769] sm:text-[44px] text-center">
               Why Olójà?
             </h2>
             <ul className="grid grid-cols-1 gap-3 gap-y-8 md:grid-cols-3">
               {data.map((step, i) => (
-                <li className="" key={Math.random() * 1234}>
+                <li className="px-5" key={Math.random() * 1234}>
                   <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-[#E58C06] font-satoshiBold text-[36px] font-bold text-white sm:h-20 sm:w-20 sm:text-[40px]">
                     {(i + 1).toString().padStart(2, "0")}
                   </div>
-                  <h4 className="mb-4 font-satoshiBold text-2xl font-bold text-[#140B31] sm:text-3xl">
+                  <h4 className="mb-3 font-satoshiBold text-2xl font-bold text-[#140B31] sm:text-3xl">
                     {step.title}
                   </h4>
-                  <p className="text-2xl text-[#34313F] sm:text-[32px] font-satoshiMedium">
+                  <p className="font-satoshiMedium text-2xl text-[#34313F] sm:text-3xl">
                     {step.text}
                   </p>
                 </li>
@@ -162,18 +162,18 @@ function About() {
 
       <div className="bg-white">
         <section className="mx-auto max-w-7xl py-14">
-          <div className="mx-auto w-[93%] sm:w-[85%]">
+          <div className="mx-auto w-[85%] sm:w-[85%]">
             <h2 className="mb-5 text-center font-clashSemiBold text-[36px] text-primary sm:text-[44px]">
-              Take the first <br /> <span className="text-[#E58C06]">step</span>{" "}
+              Take the first <br className="block sm:hidden" /> <span className="text-[#E58C06]">step</span>{" "}
               today
             </h2>
-            <p className="mb-8 text-center font-satoshiMedium sm:font-satoshi text-[20px] text-[#2A1769] sm:text-[32px]">
+            <p className="mb-10 text-center font-satoshiMedium text-[20px] text-[#2A1769] sm:font-satoshi sm:text-[32px]">
               Join Olójà and start connecting:
             </p>
-            <ul className="mb-10 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            <ul className="mb-10 grid grid-cols-1 gap-7 sm:gap-3 lg:gap-5 sm:grid-cols-2 lg:grid-cols-4">
               {steps.map((step) => (
                 <li
-                  className="bg-blue-black rounded-3xl p-10 sm:p-5"
+                  className="rounded-3xl bg-blue-black p-10 sm:p-5"
                   key={Math.random() * 3456}
                 >
                   <div className="relative mx-auto mb-4 w-max text-white">
