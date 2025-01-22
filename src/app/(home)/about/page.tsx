@@ -76,7 +76,7 @@ function About() {
               on what matters most.{" "}
             </p>
             <div className="h-[100] w-full rotate-180 bg-mobile-bar-gradient opacity-10 md:w-20 md:bg-bar-gradient" />
-            <p className="px-0 sm:px-8 py-2 text-[#AC6905] sm:py-10">
+            <p className="px-0 py-2 text-[#AC6905] sm:px-8 sm:py-10">
               And for those ready to showcase their{" "}
               <span className="font-satoshiBold font-bold text-primary">
                 expertise,
@@ -104,12 +104,12 @@ function About() {
                 alt="Handshake"
                 className="mx-auto w-full max-w-[500px] rounded-3xl object-cover md:w-1/2"
               />
-              <div className="w-full md:w-1/2 px-4 sm:px-0">
+              <div className="w-full px-4 sm:px-0 md:w-1/2">
                 <h3 className="mb-8 text-center font-satoshiBold text-3xl font-bold text-[#EBE9F4B0]">
-                  Empowering <span className="text-[#EBE9F4]">People</span> <br className="block sm:hidden"/> to
-                  Achieve More{" "}
+                  Empowering <span className="text-[#EBE9F4]">People</span>{" "}
+                  <br className="block sm:hidden" /> to Achieve More{" "}
                 </h3>
-                <div className="space-y-6 font-satoshiMedium text-xl sm:text-2xl">
+                <div className="space-y-6 font-satoshi text-xl sm:text-2xl">
                   <p>
                     Our mission is simple: help people buy back their{" "}
                     <span className="text-[#E58C06]">time</span> and create
@@ -138,19 +138,19 @@ function About() {
       >
         <section className="mx-auto max-w-7xl py-10">
           <div className="mx-auto w-[90%] sm:w-[85%]">
-            <h2 className="mb-5 font-clashSemiBold text-[36px] text-[#2A1769] sm:text-[44px] text-center">
+            <h2 className="mb-5 text-center font-clashSemiBold text-[36px] text-[#2A1769] sm:text-[44px]">
               Why Olójà?
             </h2>
             <ul className="grid grid-cols-1 gap-3 gap-y-8 md:grid-cols-3">
               {data.map((step, i) => (
                 <li className="px-5" key={Math.random() * 1234}>
-                  <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-[#E58C06] font-satoshiBold text-[36px] font-bold text-white sm:h-20 sm:w-20 sm:text-[40px]">
+                  <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-[#E58C06] font-satoshiBold text-[32px] font-bold text-white sm:h-20 sm:w-20 sm:text-[36px]">
                     {(i + 1).toString().padStart(2, "0")}
                   </div>
                   <h4 className="mb-3 font-satoshiBold text-2xl font-bold text-[#140B31] sm:text-3xl">
                     {step.title}
                   </h4>
-                  <p className="font-satoshiMedium text-2xl text-[#34313F] sm:text-3xl">
+                  <p className="font-satoshi text-xl text-[#34313F] sm:text-2xl">
                     {step.text}
                   </p>
                 </li>
@@ -164,16 +164,16 @@ function About() {
         <section className="mx-auto max-w-7xl py-14">
           <div className="mx-auto w-[85%] sm:w-[85%]">
             <h2 className="mb-5 text-center font-clashSemiBold text-[36px] text-primary sm:text-[44px]">
-              Take the first <br className="block sm:hidden" /> <span className="text-[#E58C06]">step</span>{" "}
-              today
+              Take the first <br className="block sm:hidden" />{" "}
+              <span className="text-[#E58C06]">step</span> today
             </h2>
             <p className="mb-10 text-center font-satoshiMedium text-[20px] text-[#2A1769] sm:font-satoshi sm:text-[32px]">
               Join Olójà and start connecting:
             </p>
-            <ul className="mb-10 grid grid-cols-1 gap-7 sm:gap-3 lg:gap-5 sm:grid-cols-2 lg:grid-cols-4">
+            <ul className="mb-10 grid grid-cols-1 gap-7 sm:grid-cols-2 sm:gap-3 lg:grid-cols-4 lg:gap-5">
               {steps.map((step) => (
                 <li
-                  className="rounded-3xl bg-blue-black p-10 sm:p-5"
+                  className="rounded-3xl bg-blue-black p-6 sm:p-5"
                   key={Math.random() * 3456}
                 >
                   <div className="relative mx-auto mb-4 w-max text-white">
