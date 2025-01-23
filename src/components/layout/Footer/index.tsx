@@ -95,8 +95,9 @@ const Footer = () => {
 
             {/* Description */}
             <p className="max-w-2xl px-4 text-center text-sm text-[#EBE9F4] lg:text-base">
-              This platform aims to help immigrants succeed in the Australian
-              economy by providing resources and opportunities.
+              This platform is here to support everyone in thriving within the
+              Australian economy by offering helpful resources and
+              opportunities.
             </p>
 
             {/* Navigation Links */}
@@ -152,9 +153,7 @@ const Footer = () => {
 
               <div className="flex space-x-3">
                 <Link
-                  href={
-                    "https://www.instagram.com/oloja_au?igsh=dzRuYW52MjZ4bjJq"
-                  }
+                  href="https://www.instagram.com/oloja_au?igsh=dzRuYW52MjZ4bjJq"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
@@ -213,8 +212,8 @@ const Footer = () => {
               <div className="w-full border-t border-[#EBE9F4]/20 pt-8 text-center text-xs text-[#EBE9F4] lg:text-sm">
                 <p className="px-4">
                   © {currentYear} Olójà, a trading name of Jacinth Solutions.
-                  <br className="sm:hidden" />
-                  ABN 48672884472. All Rights Reserved.
+                  <br className="sm:hidden" /> ABN 48672884472. All Rights
+                  Reserved.
                 </p>
               </div>
             </div>
@@ -223,7 +222,7 @@ const Footer = () => {
       </div>
 
       {/* Newsletter Section */}
-      {(pathname === "/home" || pathname === "/about") && (
+      {pathname === "/home" && (
         <div className="absolute -top-44 z-20 w-full overflow-hidden lg:-top-24">
           <NewsLetter />
         </div>

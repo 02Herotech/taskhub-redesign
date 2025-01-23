@@ -31,10 +31,10 @@ const HomeNavigation = () => {
       url: "/business-hub",
     },
     {
-      label: "About Us",
-      url: "/about",
+      label: "How Olója Works",
+      url: "/how-oloja-works",
     },
-  
+
     // {
     //   label: "Blog",
     //   url: "/blog",
@@ -44,11 +44,12 @@ const HomeNavigation = () => {
     //   url: "/contact",
     // },
   ];
-
+  // container
+  // lg:px-12 xl:px-12
   return (
     <>
       <nav className="fixed left-0 right-0 top-0 z-50 w-full bg-[#EBE9F4]">
-        <div className="container flex items-center justify-between px-7 py-4 lg:px-12 lg:py-5">
+        <div className="mx-auto flex max-w-7xl items-center justify-between px-7 py-4 lg:py-5">
           <Link href="/" className="max-sm:hidden">
             <Logo />
           </Link>
@@ -61,7 +62,7 @@ const HomeNavigation = () => {
                 <li key={link.url} className="relative">
                   <Link
                     href={link.url as string}
-                    className={cn("text-[#140B31] text-md font-clashMedium", {
+                    className={cn("text-md font-clashMedium text-[#140B31]", {
                       "font-semibold text-primary":
                         link.url === "/" && pathname === "/"
                           ? true
@@ -79,7 +80,9 @@ const HomeNavigation = () => {
 
           <div className="hidden items-center space-x-5 lg:flex">
             <Link href="/auth">
-              <Button theme="outline" className="rounded-full bg-transparent">Sign Up</Button>
+              <Button theme="outline" className="rounded-full bg-transparent">
+                Sign Up
+              </Button>
             </Link>
             <Link href="/auth/login">
               <Button theme="outline" className="rounded-full bg-transparent">
@@ -87,8 +90,10 @@ const HomeNavigation = () => {
               </Button>
             </Link>
 
-            <Link href="/coming-soon">
-              <Button className="rounded-full">Rent a shop</Button>
+            <Link href="/monetize-your-skills">
+              <Button theme="secondary" className="rounded-full">
+                Monetize your skills
+              </Button>
             </Link>
           </div>
           <button

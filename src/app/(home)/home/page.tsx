@@ -5,19 +5,26 @@ import YouCan from "@/components/homepage/YouCan";
 import BusinessHub from "@/components/homepage/BusinessHub";
 import WhatSetUsApart from "@/components/homepage/WhatSetUsApart";
 import FAQ from "@/components/homepage/FAQ";
+import PillarStructureTwo from "@/components/homepage/PillarStructure/PillarStructureTwo";
+import Services from "@/components/homepage/Services";
+import Perks from "@/components/homepage/Perks";
+import MonetizeSkills from "@/components/homepage/MonetizeSkills";
 
 const HomePage = () => {
   return (
     <main className="min-h-screen">
       <Hero />
-      <PillarStructure />
-      <StoreFront />
-      <YouCan />
+      {/* <PillarStructure /> */}
+      <PillarStructureTwo />
+      <Services />
+      <Perks />
+      {/* <StoreFront /> */}
+      {/* <YouCan /> */}
       <BusinessHub />
-      <WhatSetUsApart />
-      <FAQ />
+      <MonetizeSkills />
+      {/* <WhatSetUsApart /> */}
+      {/* <FAQ /> */}
     </main>
-
   );
 };
 export default HomePage;

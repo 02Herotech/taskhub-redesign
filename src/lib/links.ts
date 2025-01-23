@@ -9,6 +9,7 @@ import {
   LoginSvg,
   MarketPlaceSvg,
   MessagesSvg,
+  MonetizeSVG,
   RentShopSvg,
 } from "./svgIcons";
 import React from "react";
@@ -43,9 +44,14 @@ export const homeMobileLinks: LinkRouteTypes[] = [
     url: "/auth/login",
     icon: LoginSvg,
   },
+  // {
+  //   label: "About us",
+  //   url: "/about",
+  //   icon: AboutUsSvg,
+  // },
   {
-    label: "About us",
-    url: "/about",
+    label: "How Olója Works",
+    url: "/how-oloja-works",
     icon: AboutUsSvg,
   },
   {
@@ -53,10 +59,15 @@ export const homeMobileLinks: LinkRouteTypes[] = [
     url: "/business-hub",
     icon: BusinessHubSvg,
   },
+  // {
+  //   label: "Rent a shop",
+  //   url: "/coming-soon",
+  //   icon: RentShopSvg,
+  // },
   {
-    label: "Rent a shop",
-    url: "/coming-soon",
-    icon: RentShopSvg,
+    label: "Monetize your skills",
+    url: "/monetize-your-skills",
+    icon: MonetizeSVG,
   },
 ];
 

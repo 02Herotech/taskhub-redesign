@@ -12,5 +12,6 @@ export const defaultUserDetails: DefaultUserDetailsType = {
   suburbs: "",
   bio: "",
   abn: "",
+  tfn: "",
   isVerified: false,
 };

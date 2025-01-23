@@ -45,8 +45,8 @@ const ProfileCompletion = ({ fetchedUserData }: ProfileCompletionType) => {
       status: fetchedUserData.dateOfBirth,
     },
     {
-      title: "ABN number",
-      status: fetchedUserData.abn,
+      title: "TFN number",
+      status: fetchedUserData.tfn,
     },
     ...(fetchedUserData.idType !== "INTERNATIONAL_PASSPORT"
       ? [

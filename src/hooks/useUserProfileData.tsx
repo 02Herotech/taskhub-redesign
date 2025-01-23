@@ -3,6 +3,11 @@ import { useSession } from "next-auth/react";
 import { defaultUserDetails } from "@/data/data";
 import axios from "axios";
 
+/**
+ * Fetches user details from server and updates the enabled field in the session object
+ * @param setLoadingProfile 
+ * @returns User profile data fetched from server or default user object with empty string for user details
+ */
 function useUserProfileData(
   setLoadingProfile?: React.Dispatch<React.SetStateAction<boolean>>,
 ) {
