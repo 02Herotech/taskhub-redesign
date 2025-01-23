@@ -19,7 +19,7 @@ function useValidateTFN(
   useEffect(() => {
     const validateTFN = async () => {
       if (!token) return;
-      if (userDetails.abn) {
+      if (userDetails.tfn) {
         setIsValidTFN(true);
         return;
       }
