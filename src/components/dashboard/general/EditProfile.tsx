@@ -21,6 +21,7 @@ import FormField from "./FormField";
 import useValidateABN from "@/hooks/useValidateABN";
 import Notice from "./Notice";
 import useValidateTFN from "@/hooks/useValidateTFN";
+import instance from "@/utils/axios.config";
 
 const idTypeObject = [
   { label: "Medicare Card", value: "MEDICARE_CARD" },
@@ -120,6 +121,7 @@ const EditProfile = () => {
     const fetchUserData = async () => {
       if (!token) return;
       try {
+        // instance.get("/customer/profile");
         const url = `${process.env.NEXT_PUBLIC_API_URL}/${isServiceProvider ? "service_provider" : "customer"}/profile`;
         const { data } = await axios.get(url, {
           headers: {

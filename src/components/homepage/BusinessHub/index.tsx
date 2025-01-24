@@ -117,14 +117,13 @@ const BusinesHub = () => {
   const currentImageIndex = useImageTransition(images, 2000);
 
   return (
-    <div className="h-[1520px] py-10 lg:h-auto ">
+    <div className="h-[1520px] py-10 pb-32 lg:h-auto">
       <div className=" mx-auto w-[90%] lg:max-w-7xl">
         <div className="mx-auto w-[85%] ">
           <div className="space-y-5">
             <h2 className="hidden text-center font-clashSemiBold text-[28px] text-[#2A1769]  lg:block xl:text-[32px]">
-              “90% of businesses fail within 12 months of being operational{" "}
-              <br />
-              due to lack of business acumen”
+              “90% of businesses fail within 12 <br /> months of being
+              operational due to <br /> lack of business acumen”
             </h2>
 
             <h2 className="text-center  font-clashSemiBold text-[24px]  text-[#2A1769] lg:hidden">

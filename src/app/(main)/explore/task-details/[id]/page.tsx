@@ -528,7 +528,7 @@ const TaskDetailsPage = ({ params }: { params: { id: string } }) => {
       <Popup isOpen={showErrorPopup} onClose={() => setShowErrorPopup(false)}>
         <div className="px-14 py-10 lg:px-24">
           <div className="relative grid items-center justify-center space-y-5">
-            <p className="font-clashDisplay text-center text-[20px] font-extrabold text-[#2A1769] md:text-[36px] lg:text-[37px] ">
+            <p className="font-clashDisplay text-center text-[20px] font-extrabold text-[#2A1769] md:text-[36px] lg:text-[37px]">
               Your profile is not updated/enabled
             </p>
             <div>

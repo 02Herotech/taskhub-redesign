@@ -36,7 +36,7 @@ const perks: Perk[] = [
 
 function Perks() {
   return (
-    <section className="overflow-x-hidden bg-[#EBE9F4] py-10">
+    <section className="overflow-x-hidden bg-[#EBE9F4] py-20">
       <div className="mx-auto max-w-7xl">
         <div className="mx-auto flex w-[85%] flex-col-reverse gap-10 lg:flex-row">
           <div
@@ -73,8 +73,9 @@ function Perks() {
             </motion.div>
           </div>
           <div className="border">
-            <h2 className="mb-5 max-w-[500px] font-clashSemiBold text-3xl text-[#381F8C] xl:text-4xl">
-              A Safe and <span className="text-[#E58C06]">Scam-Free</span> Zone
+            <h2 className="mb-5 max-w-[500px] font-clashMedium text-4xl text-[#381F8C] xl:text-5xl">
+              A Safe and{" "}
+              <span className="font-clashSemiBold">Scam-Free Zone</span> {' '}
               for Getting Things Done
             </h2>
             <p className="mb-8 font-satoshiMedium text-xl font-medium text-[#2A1769] sm:text-2xl">
