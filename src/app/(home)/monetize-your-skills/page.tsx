@@ -360,7 +360,7 @@ function Page() {
         </svg>
         <div className="mx-auto max-w-7xl sm:py-10">
           <section className="mx-auto flex w-[93%] flex-col items-start justify-between gap-4 sm:w-[85%] md:flex-row md:items-center">
-            <h4 className="w-1/2 font-clashSemiBold text-3xl text-primary sm:text-5xl">
+            <h4 className="w-full sm:w-1/2 font-clashSemiBold text-3xl text-primary sm:text-5xl">
               Your Talent, <br /> Your Income
             </h4>
             <p className="max-w-[650px] font-satoshiBold text-lg font-bold sm:text-2xl md:w-1/2">

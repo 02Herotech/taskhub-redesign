@@ -24,7 +24,7 @@ const reversedTasks = tasks.reverse();
 function PostYourJob() {
   return (
     <div className="mx-auto max-w-7xl">
-      <section className="mx-auto flex w-[85%] flex-col items-stretch gap-10 py-20 md:flex-row">
+      <section className="mx-auto flex w-[85%] flex-col items-stretch gap-10 py:14 sm:py-20 md:flex-row">
         <div className="w-full md:w-1/2">
           <h2 className="mb-3 font-clashSemiBold text-3xl text-[#2A1769] sm:text-5xl md:max-w-[550px]">
             Post your job and choose your experts with no delays!
