@@ -1,9 +1,7 @@
 import EditProfile from "@/components/dashboard/general/EditProfile";
 
 const page = () => {
-  return (
-    <EditProfile />
-  );
+  return <EditProfile />;
 };
 
 export default page;
