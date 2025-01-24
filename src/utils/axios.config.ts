@@ -1,5 +1,5 @@
 import axios, { AxiosError } from "axios";
-import { getSession } from "next-auth/react";
+import { getSession, signOut } from "next-auth/react";
 import { redirect } from "next/navigation";
 
 const instance = axios.create({
@@ -19,9 +19,9 @@ instance.interceptors.response.use(
   async (response) => response,
   async (error: AxiosError<{ error: string; message: string }>) => {
     if (error.response?.status == 401) {
-      console.log("Server session expired");
+      await signOut();
+      redirect("/home");
     }
-    console.log("Error from interceptor: ", error.response?.data);
   },
 );
 

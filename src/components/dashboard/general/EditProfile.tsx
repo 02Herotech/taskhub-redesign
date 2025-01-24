@@ -121,14 +121,8 @@ const EditProfile = () => {
     const fetchUserData = async () => {
       if (!token) return;
       try {
-        // instance.get("/customer/profile");
-        const url = `${process.env.NEXT_PUBLIC_API_URL}/${isServiceProvider ? "service_provider" : "customer"}/profile`;
-        const { data } = await axios.get(url, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        });
+        const url = `${isServiceProvider ? "service_provider" : "customer"}/profile`;
+        const { data } = await instance.get(url);
         setUserDetails(data);
         setIsDocumentEditable(
           data.verificationStatus === null ||
