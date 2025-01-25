@@ -161,9 +161,7 @@ const EditProfile = () => {
           bio: isServiceProvider
             ? data.bio || ""
             : "No Bio needed for customer",
-          abn: isServiceProvider
-            ? data.tfn || ""
-            : "No ABN needed for customer",
+          abn: isServiceProvider ? data.tfn || "" : "",
         });
       } catch (error) {
         console.error("Error fetching user data:", error);
