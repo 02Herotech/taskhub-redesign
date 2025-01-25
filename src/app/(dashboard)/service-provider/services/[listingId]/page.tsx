@@ -2,7 +2,6 @@
 import AiDesciption from "@/components/AiGenerate/AiDescription";
 import { typeData } from "@/data/marketplace/data";
 import { zodResolver } from "@hookform/resolvers/zod";
-import axios from "axios";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
@@ -15,6 +14,8 @@ import { PiFileArrowDownDuotone, PiSealCheckFill } from "react-icons/pi";
 import { RiPencilLine } from "react-icons/ri";
 import { BeatLoader } from "react-spinners";
 import { z } from "zod";
+import instance from "@/utils/axios.config";
+import { instance as authInstance } from "@/utils/axiosInterceptor.config";
 
 const daysData: string[] = [
   "MONDAY",
@@ -114,9 +115,7 @@ const EditListing = () => {
   useEffect(() => {
     const fetchCurentListing = async () => {
       try {
-        const url =
-          `${process.env.NEXT_PUBLIC_API_URL}/listing/` + listingId;
-        const { data } = await axios.get(url);
+        const { data } = await instance.get("listing/" + listingId);
         setCurrentListing(data);
       } catch (error: any) {
         console.log(error.response.data);
@@ -195,8 +194,8 @@ const EditListing = () => {
 
   const handleFectchLocationByPostcode = async () => {
     try {
-      const url = `${process.env.NEXT_PUBLIC_API_URL}/util/locations/search?postcode=${watchField.postcode}`;
-      const { data } = await axios.get(url);
+      const url = `util/locations/search?postcode=${watchField.postcode}`;
+      const { data } = await instance.get(url);
 
       // Map suburbs from the Name field
       const suburbs = data.map((item: { Name: string }) => item.Name);
@@ -230,7 +229,6 @@ const EditListing = () => {
 
       // If you need to store the state abbreviation somewhere
       const stateShort = locationData.StateShort;
-
     } catch (error) {
       console.error("Error fetching location data:", error);
       setSuburbList([]);
@@ -316,14 +314,9 @@ const EditListing = () => {
       return acc;
     }, {});
     try {
-      const url =
-        `${process.env.NEXT_PUBLIC_API_URL}/listing/update-listing/` +
-        listingId;
-      await axios.patch(url, body, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "multipart/form-data",
-        },
+      const url = `listing/update-listing/` + listingId;
+      await authInstance.patch(url, body, {
+        headers: { "Content-Type": "multipart/form-data" },
       });
       setShowModal(true);
     } catch (error: any) {
@@ -373,7 +366,6 @@ const EditListing = () => {
     }
     // eslint-disable-next-line
   }, [watchField]);
-
 
   return (
     <main className="relative space-y-8 p-4 lg:p-8">
@@ -464,8 +456,8 @@ const EditListing = () => {
                   String(
                     watchField?.listingTitle?.split(" ").filter(Boolean).length,
                   ) +
-                  " /" +
-                  " 10"}
+                    " /" +
+                    " 10"}
               </p>
             </div>
           </label>
@@ -530,8 +522,8 @@ const EditListing = () => {
                     watchField?.listingDescription?.split(" ").filter(Boolean)
                       .length,
                   ) +
-                  " /" +
-                  " 50"}
+                    " /" +
+                    " 50"}
               </p>
             </div>
           </div>
@@ -748,12 +740,17 @@ const EditListing = () => {
                       onClick={() => expandDropdown("suburb")}
                       className="h-12 min-w-48 rounded-lg bg-violet-light p-3 pl-4 text-left outline-none"
                     >
-                      {watchField.suburb || currentListing?.suburb || "Select suburb"}
+                      {watchField.suburb ||
+                        currentListing?.suburb ||
+                        "Select suburb"}
                     </button>
                   </div>
                   <div
-                    className={`absolute left-0 top-[calc(100%+0.5rem)] z-10 w-full overflow-hidden rounded-md bg-violet-light transition-all duration-300 ${showDropdown.name === "suburb" && showDropdown.isShown ? "max-h-96" : "max-h-0"
-                      }`}
+                    className={`absolute left-0 top-[calc(100%+0.5rem)] z-10 w-full overflow-hidden rounded-md bg-violet-light transition-all duration-300 ${
+                      showDropdown.name === "suburb" && showDropdown.isShown
+                        ? "max-h-96"
+                        : "max-h-0"
+                    }`}
                   >
                     <div className="small-scrollbar max-h-64 overflow-y-auto">
                       {suburbList.map((item) => (
@@ -764,10 +761,12 @@ const EditListing = () => {
                             expandDropdown("suburb");
                           }}
                           key={item}
-                          className={`w-full p-3 text-left transition-colors hover:bg-violet-200 ${(watchField.suburb || currentListing?.suburb) === item
+                          className={`w-full p-3 text-left transition-colors hover:bg-violet-200 ${
+                            (watchField.suburb || currentListing?.suburb) ===
+                            item
                               ? "bg-violet-normal text-white hover:bg-violet-normal"
                               : ""
-                            }`}
+                          }`}
                         >
                           {item}
                         </button>

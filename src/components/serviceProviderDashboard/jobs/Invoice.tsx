@@ -13,6 +13,8 @@ import { toPng } from 'html-to-image'
 import 'react-datepicker/dist/react-datepicker.css'
 import { formatDateAsYYYYMMDD } from '@/utils'
 import { formatAmount, formatDate } from '@/lib/utils'
+import { instance as authInstance } from "@/utils/axiosInterceptor.config";
+
 
 interface ModalPropType {
   isModalOpen: boolean
@@ -111,12 +113,7 @@ const Invoice = ({ isModalOpen, setIsModalOpen, currentBooking, invoiceDraft }: 
     try {
       setInvoiceState(prev => ({ ...prev, loading: true }))
       const url = `${process.env.NEXT_PUBLIC_API_URL}/booking/generate-invoice`
-      await axios.post(url, invoiceData, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-      })
+      await authIns.post(url, invoiceData)
       safeInvoiceToDraft()
       setInvoiceState(prev => ({
         ...prev,

@@ -54,7 +54,6 @@ const ChatSocket: React.FC = () => {
     (msg: any) => {
       console.log("messageReceived");
       const parsedMessage = JSON.parse(msg.body);
-      console.log("received message: ", parsedMessage);
       dispatch(setNewMessage(parsedMessage));
       loadContacts();
     },

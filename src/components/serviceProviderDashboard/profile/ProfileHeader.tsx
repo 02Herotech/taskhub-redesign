@@ -23,12 +23,13 @@ const ProfileHeader = () => {
 
   const location = user?.address?.state || "Australia";
 
+  //! Data fetch thats not used
+  //Todo Re-visit
   useEffect(() => {
     const fetchUserData = async () => {
       if (!token) return;
       try {
-        const url =
-          `${process.env.NEXT_PUBLIC_API_URL}/service_provider/profile`;
+        const url = `${process.env.NEXT_PUBLIC_API_URL}/service_provider/profile`;
         const { data } = await axios.get(url, {
           headers: {
             Authorization: `Bearer ${token}`,

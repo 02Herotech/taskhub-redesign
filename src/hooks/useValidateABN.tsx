@@ -1,5 +1,5 @@
 import { useState, useEffect, SetStateAction } from "react";
-import axios from "axios";
+import { instance as authInstance } from "@/utils/axiosInterceptor.config";
 
 type Props = {
   watchABN: string | null | undefined;
@@ -25,13 +25,9 @@ function useValidateABN(
       }
       if (watchABN) {
         try {
-          const url = `${process.env.NEXT_PUBLIC_API_URL}/service_provider/abn/validate/${watchABN}`;
-          const response = await axios.get(url, {
-            headers: {
-              Authorization: `Bearer ${token}`,
-              "Content-Type": "application/json",
-            },
-          });
+          const response = await authInstance.get(
+            `service_provider/abn/validate/${watchABN}`,
+          );
           if (response.data) {
             setIsValidABN(true);
           }

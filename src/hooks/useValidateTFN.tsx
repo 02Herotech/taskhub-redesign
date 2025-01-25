@@ -1,5 +1,5 @@
 import { useState, useEffect, SetStateAction } from "react";
-import axios from "axios";
+import { instance as authInstance } from "@/utils/axiosInterceptor.config";
 
 type Props = {
   watchABN: string | null | undefined;
@@ -10,7 +10,6 @@ type Props = {
 
 function useValidateTFN(
   watchABN: string | null | undefined,
-  token: string | undefined,
   userDetails: DefaultUserDetailsType,
   setErr: (value: SetStateAction<string>) => void,
 ) {
@@ -18,20 +17,14 @@ function useValidateTFN(
 
   useEffect(() => {
     const validateTFN = async () => {
-      if (!token) return;
       if (userDetails.tfn) {
         setIsValidTFN(true);
         return;
       }
       if (watchABN) {
         try {
-          const url = `${process.env.NEXT_PUBLIC_API_URL}/service_provider/validate-tfn/${watchABN}`;
-          const response = await axios.get(url, {
-            headers: {
-              Authorization: `Bearer ${token}`,
-              "Content-Type": "application/json",
-            },
-          });
+          const url = `service_provider/validate-tfn/${watchABN}`;
+          const response = await authInstance.get(url);
           if (response.data) {
             setIsValidTFN(true);
           }
@@ -56,7 +49,7 @@ function useValidateTFN(
     }, 500);
 
     return () => clearTimeout(debounceValidation);
-  }, [watchABN, token, userDetails]);
+  }, [watchABN, userDetails]);
 
   return isValidTFN;
 }

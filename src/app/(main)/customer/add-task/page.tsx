@@ -2,7 +2,6 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import Head from "next/head";
 import { IoIosArrowForward } from "react-icons/io";
 import { PiFileArrowDownDuotone } from "react-icons/pi";
@@ -25,6 +24,8 @@ import { FaSortDown } from "react-icons/fa6";
 import Dropdown from "@/components/global/Dropdown";
 import Loading from "@/components/global/loading/page";
 import Progress from "@/components/global/progress";
+import instance from "@/utils/axios.config";
+import { instance as authInstance } from "@/utils/axiosInterceptor.config";
 
 interface FormData {
   taskBriefDescription: string;
@@ -61,7 +62,6 @@ interface CustomInputProps {
 
 const AddTaskForm: React.FC = () => {
   const session = useSession();
-  const { update } = useSession();
   const router = useRouter();
   const token = session?.data?.user.accessToken;
   const isAuthenticated = session.status === "authenticated";
@@ -122,34 +122,27 @@ const AddTaskForm: React.FC = () => {
       }));
     }
   }, []);
-  // End of getting description from the marketplace
 
   //Check if user is verified and update session
   useEffect(() => {
     const updateUserData = async () => {
-      if (!token) return;
-      if (isEnabled) return;
+      //Check if user is not authenticated so the auth instance doesnt fire the re-directions when user is logged in
+      if (session.status !== "authenticated" || isEnabled) return;
       try {
-        const url = `${process.env.NEXT_PUBLIC_API_URL}/customer/profile`;
-        const { data } = await axios.get(url, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "multipart/form-data",
-          },
-        });
+        const { data } = await authInstance.get("customer/profile");
         if (!data.isEnabled) return;
         //Update session
         const user = session.data?.user;
         if (!user) return;
         const { user: userInfo } = user;
         userInfo.enabled = data.isEnabled;
-        await update({ user: userInfo });
+        await session.update({ user: userInfo });
       } catch (error) {
         console.error(error);
       }
     };
     updateUserData();
-  }, [token]);
+  }, [isEnabled, session]);
 
   const handleLoginNavigation = () => {
     setCookie("redirectToAddTask", "/customer/add-task", { maxAge: 360000 });
@@ -177,8 +170,8 @@ const AddTaskForm: React.FC = () => {
   useEffect(() => {
     const fetchPostalCodeData = async () => {
       try {
-        const response = await axios.get<PostalCodeData[]>(
-          `${process.env.NEXT_PUBLIC_API_URL}/util/locations/search?postcode=${selectedCode}`,
+        const response = await instance.get<PostalCodeData[]>(
+          `util/locations/search?postcode=${selectedCode}`,
         );
 
         // Check if response data is an array and has entries
@@ -224,9 +217,7 @@ const AddTaskForm: React.FC = () => {
   useEffect(() => {
     const fetchItems = async () => {
       try {
-        const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_URL}/util/all-categories`,
-        );
+        const response = await instance.get(`util/all-categories`);
         const data: Item[] = response.data;
         setItems(data);
       } catch (error) {
@@ -518,16 +509,11 @@ const AddTaskForm: React.FC = () => {
           }
 
           await Promise.race([
-            axios.post(
-              `${process.env.NEXT_PUBLIC_API_URL}/task/post`,
-              finalTask,
-              {
-                headers: {
-                  Authorization: `Bearer ${token}`,
-                  "Content-Type": "multipart/form-data",
-                },
+            authInstance.post(`task/post`, finalTask, {
+              headers: {
+                "Content-Type": "multipart/form-data",
               },
-            ),
+            }),
             timeout(10000),
           ]);
 

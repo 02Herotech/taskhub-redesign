@@ -3,7 +3,6 @@ import { useEffect, useState, useRef } from "react";
 import { useForm, Controller, SubmitHandler } from "react-hook-form";
 import { useSession } from "next-auth/react";
 import { useSelector, useDispatch } from "react-redux";
-import axios from "axios";
 import Image from "next/image";
 import DatePicker from "react-datepicker";
 import { BiCamera, BiCheck } from "react-icons/bi";
@@ -18,10 +17,10 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { getCookie, deleteCookie } from "cookies-next";
 import { UserDataType } from "@/lib/validation/userData.schema";
 import FormField from "./FormField";
-import useValidateABN from "@/hooks/useValidateABN";
 import Notice from "./Notice";
 import useValidateTFN from "@/hooks/useValidateTFN";
 import instance from "@/utils/axios.config";
+import { instance as authInstance } from "@/utils/axiosInterceptor.config";
 
 const idTypeObject = [
   { label: "Medicare Card", value: "MEDICARE_CARD" },
@@ -66,7 +65,10 @@ const EditProfile = () => {
 
   const { data: session } = useSession();
   const user = session?.user?.user;
+
+  //Todo Token is passed to hook verifying ABN (Refactor hook)
   const token = session?.user?.accessToken;
+
   const isServiceProvider = user?.roles[0] === "SERVICE_PROVIDER";
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -113,16 +115,15 @@ const EditProfile = () => {
   const watchABN = watch("abn");
 
   /**Boolean variable representing Valid TFN status, formerly ABN */
-  const isABNValid = useValidateTFN(watchABN, token, userDetails, setErr);
+  const isABNValid = useValidateTFN(watchABN, userDetails, setErr);
 
   const ABNInputRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     const fetchUserData = async () => {
-      if (!token) return;
       try {
         const url = `${isServiceProvider ? "service_provider" : "customer"}/profile`;
-        const { data } = await instance.get(url);
+        const { data } = await authInstance.get(url);
         setUserDetails(data);
         setIsDocumentEditable(
           data.verificationStatus === null ||
@@ -166,7 +167,7 @@ const EditProfile = () => {
     };
 
     fetchUserData();
-  }, [token, isServiceProvider, dispatch, reset, isEditingEnabled]);
+  }, [isServiceProvider, dispatch, reset, isEditingEnabled]);
 
   const watchPostcode = watch("postcode");
 
@@ -180,8 +181,9 @@ const EditProfile = () => {
       }
 
       try {
-        const url = `${process.env.NEXT_PUBLIC_API_URL}/util/locations/search?postcode=${watchPostcode}`;
-        const { data } = await axios.get(url);
+        const { data } = await instance.get(
+          `util/locations/search?postcode=${watchPostcode}`,
+        );
 
         // Map suburbs from the Name field
         const suburbs = data.map((item: { Name: string }) => item.Name);
@@ -264,7 +266,7 @@ const EditProfile = () => {
           }
           return acc;
         }, {});
-        url = `${process.env.NEXT_PUBLIC_API_URL}/service_provider/update`;
+        url = "service_provider/update";
       } else {
         submitData = Object.entries({
           firstName: data.firstName,
@@ -287,14 +289,11 @@ const EditProfile = () => {
           }
           return acc;
         }, {});
-        url = `${process.env.NEXT_PUBLIC_API_URL}/customer/update`;
+        url = "customer/update";
       }
 
-      await axios.patch(url, submitData, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "multipart/form-data",
-        },
+      await authInstance.patch(url, submitData, {
+        headers: { "Content-Type": "multipart/form-data" },
       });
       setIsProfileUpdatedSuccessfully(true);
       setIsFormModalShown(true);

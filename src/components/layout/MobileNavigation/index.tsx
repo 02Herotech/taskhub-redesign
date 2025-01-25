@@ -266,9 +266,7 @@ const MobileNavigation: React.FC<Props> = ({
                       href={link.url!}
                       className={cn(
                         "flex items-center px-5 py-2 text-lg font-bold text-primary",
-                        {
-                          "rounded-full bg-[#EBE9F4]": isActive,
-                        },
+                        { "rounded-full bg-[#EBE9F4]": isActive },
                       )}
                     >
                       {link.icon && <span className="mr-5">{link.icon}</span>}

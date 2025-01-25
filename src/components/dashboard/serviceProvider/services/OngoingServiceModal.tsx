@@ -1,10 +1,6 @@
 "use client";
 import { fetchAllMarketplaseCategories } from "@/lib/marketplace";
 import { RootState } from "@/store";
-import axios from "axios";
-import { useSession } from "next-auth/react";
-import Image from "next/image";
-import Link from "next/link";
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { BiFlag, BiX } from "react-icons/bi";
 import { BsExclamationTriangle, BsTriangleFill, BsX } from "react-icons/bs";
@@ -13,6 +9,7 @@ import { IoWarning } from "react-icons/io5";
 import { PiSealCheckFill } from "react-icons/pi";
 import { useSelector } from "react-redux";
 import { BeatLoader } from "react-spinners";
+import { instance as authInstance } from "@/utils/axiosInterceptor.config";
 
 interface ModalType {
   modalData: ModalDataType;
@@ -25,9 +22,6 @@ const OngoingServiceModal = ({
   setModalData,
   setRefresh,
 }: ModalType) => {
-  const session = useSession();
-  const token = session?.data?.user?.accessToken;
-
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [completeJobState, setCompleteJobState] = useState({
     message: "",
@@ -66,15 +60,9 @@ const OngoingServiceModal = ({
   const handleCompleteService = async () => {
     try {
       setCompleteJobState({ ...completeJobState, loading: true });
-      const url =
-        `${process.env.NEXT_PUBLIC_API_URL}/booking/complete-task?jobId=` +
-        modalData.message;
+      const url = `booking/complete-task?jobId=` + modalData.message;
       const body = { jobId: modalData.message };
-      const { data } = await axios.post(url, body, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const { data } = await authInstance.post(url, body);
       setModalData((prev) => ({
         ...prev,
         isStartService: true,
@@ -117,14 +105,8 @@ const OngoingServiceModal = ({
         subject: formState.category,
         description: formState.message,
       };
-      const url =
-        `${process.env.NEXT_PUBLIC_API_URL}/booking/job/report/` +
-        modalData.message;
-      const { data } = await axios.post(url, body, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const url = `booking/job/report/` + modalData.message;
+      const { data } = await authInstance.post(url, body);
       setFormState((prev) => ({ ...prev, isReportSent: true }));
     } catch (error: any) {
       console.log(error.response.data);

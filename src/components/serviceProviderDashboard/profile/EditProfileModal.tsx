@@ -22,6 +22,7 @@ import { PiFileArrowDownDuotone, PiSealCheckFill } from "react-icons/pi";
 import { useDispatch } from "react-redux";
 import { BeatLoader } from "react-spinners";
 import Webcam from "react-webcam";
+import { instance as authInstance } from "@/utils/axiosInterceptor.config";
 
 type ModalPropsTypes = {
   setIsFormModalShown: Dispatch<SetStateAction<boolean>>;
@@ -36,9 +37,9 @@ type ModalPropsTypes = {
     }>
   >;
   isEditingProfilePicture: {
-      isEditing: boolean;
-      image: string | null;
-    }
+    isEditing: boolean;
+    image: string | null;
+  };
   setisEditingImageFront: Dispatch<SetStateAction<boolean>>;
   isEditingImageFront: boolean;
   setisEditingImageBack: Dispatch<SetStateAction<boolean>>;
@@ -68,7 +69,7 @@ const EditProfileModal = ({
   setIsProfileUpdatedSuccessfully,
   setSelectedDocumentFront,
   setSelectedDocumentBack,
-  handleRedirect
+  handleRedirect,
 }: ModalPropsTypes) => {
   // set initial state value
   const [isUploadInitiated, setIsUploadInitiated] = useState(false);
@@ -81,10 +82,8 @@ const EditProfileModal = ({
 
   const session = useSession();
   const user = session?.data?.user?.user;
-  const token = session?.data?.user?.accessToken;
   const isServiceProvider = user?.roles[0] === "SERVICE_PROVIDER";
   const dispatch = useDispatch();
-
 
   const capture = useCallback(() => {
     if (webcamRef.current) {
@@ -98,12 +97,19 @@ const EditProfileModal = ({
         } else if (isEditingImageFront) {
           setDocumentImageFront(imageSrc);
         } else if (isEditingImageBack) {
-          setDocumentImageBack(imageSrc)
+          setDocumentImageBack(imageSrc);
         }
         setCameraActive(false);
       }
     }
-  }, [isEditingProfilePicture, setDocumentImageFront, setDocumentImageBack, setisEditingProfilePicture, isEditingImageFront, isEditingImageBack]);
+  }, [
+    isEditingProfilePicture,
+    setDocumentImageFront,
+    setDocumentImageBack,
+    setisEditingProfilePicture,
+    isEditingImageFront,
+    isEditingImageBack,
+  ]);
 
   const handleFileInputChange = (event: ChangeEvent<HTMLInputElement>) => {
     const uploadFile = event.target.files?.[0];
@@ -120,9 +126,8 @@ const EditProfileModal = ({
         } else if (isEditingImageBack) {
           setDocumentImageBack(img);
         }
-        
       };
-      
+
       // console.log(isEditingImageFront, isEditingImageBack, isEditingProfilePicture.isEditing)
       reader.readAsDataURL(uploadFile);
     }
@@ -151,28 +156,17 @@ const EditProfileModal = ({
     try {
       if (selectedFile && isEditingProfilePicture.isEditing) {
         setIsUploadImageLoading(true);
-        let url;
-        if (isServiceProvider) {
-          url =
-            `${process.env.NEXT_PUBLIC_API_URL}/service_provider/profile_picture`;
-        } else {
-          url =
-            `${process.env.NEXT_PUBLIC_API_URL}/customer/profile_picture`;
-        }
+        let url = isServiceProvider
+          ? "service_provider/profile_picture"
+          : "customer/profile_picture";
         try {
-          await axios.post(
+          await authInstance.post(
             url,
             { image: selectedFile },
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-                "Content-Type": "multipart/form-data",
-              },
-            },
+            { headers: { "Content-Type": "multipart/form-data" } },
           );
           const profileUrl =
-            `${process.env.NEXT_PUBLIC_API_URL}/user/user-profile/` +
-            user?.id;
+            `${process.env.NEXT_PUBLIC_API_URL}/user/user-profile/` + user?.id;
           const { data } = await axios.get(profileUrl);
           dispatch(updateUserProfile(data));
           dispatch(refreshUserProfile());
@@ -181,10 +175,10 @@ const EditProfileModal = ({
         } finally {
           dispatch(refreshUserProfile());
         }
-      } else if(selectedFile && isEditingImageFront) {
+      } else if (selectedFile && isEditingImageFront) {
         setSelectedDocumentFront(selectedFile);
-      } else if(selectedFile && isEditingImageBack) {
-        setSelectedDocumentBack(selectedFile)
+      } else if (selectedFile && isEditingImageBack) {
+        setSelectedDocumentBack(selectedFile);
       }
       handleCloseModal();
     } catch (error: any) {
@@ -193,7 +187,7 @@ const EditProfileModal = ({
       setIsUploadImageLoading(false);
     }
   };
- 
+
   return (
     <section
       className={`fixed left-0 top-0 z-50 flex h-screen w-screen items-center justify-center bg-black bg-opacity-60 transition-opacity duration-500 ${isFormModalShown ? "pointer-events-auto opacity-100 " : "pointer-events-none opacity-0"} `}
@@ -239,7 +233,8 @@ const EditProfileModal = ({
               </button>
             </div>
           </div>
-        ) :( !isUploadInitiated &&
+        ) : (
+          !isUploadInitiated && (
             <div className="space-y-4">
               <h1 className="text-2xl font-bold text-violet-dark">
                 Upload a Selfie Image with ID
@@ -253,8 +248,9 @@ const EditProfileModal = ({
                     <BiCheck className="size-4 text-violet-normal" />
                   </span>
                   <span className="text-sm font-medium text-slate-500">
-                    Take a picture of yourself holding up your preferred document
-                    on the left side of your head showing a clear Id number.
+                    Take a picture of yourself holding up your preferred
+                    document on the left side of your head showing a clear Id
+                    number.
                   </span>
                 </p>
                 <p className="flex gap-4">
@@ -278,8 +274,9 @@ const EditProfileModal = ({
                     <BiCheck className="size-4 text-violet-normal" />
                   </span>
                   <span className="text-sm font-medium text-slate-500">
-                    Note that, the more documents you input for verification, the
-                    higher your chances of visibility to potential customers.
+                    Note that, the more documents you input for verification,
+                    the higher your chances of visibility to potential
+                    customers.
                   </span>
                 </p>
               </div>
@@ -295,13 +292,18 @@ const EditProfileModal = ({
                   className="my-2 flex items-center gap-2 text-sm text-violet-normal"
                 >
                   Need help?
-                  <span className="text-orange-normal underline">Contact us</span>
+                  <span className="text-orange-normal underline">
+                    Contact us
+                  </span>
                 </Link>
               </div>
             </div>
+          )
         )}
-        {isUploadInitiated && 
-          (isEditingProfilePicture.isEditing || isEditingImageFront || isEditingImageBack) && (
+        {isUploadInitiated &&
+          (isEditingProfilePicture.isEditing ||
+            isEditingImageFront ||
+            isEditingImageBack) && (
             <div className=" z-50 flex flex-col items-center justify-center gap-5 space-y-3 bg-white">
               <div className="space-y-4">
                 <div className="flex items-center gap-4">

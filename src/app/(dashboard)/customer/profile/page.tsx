@@ -1,5 +1,4 @@
 "use client";
-
 import ProfileHeader from "@/components/serviceProviderDashboard/profile/ProfileHeader";
 import { motion } from "framer-motion";
 import CustomerProfileCompletion from "@/components/dashboard/customer/ProfileCompletion";
@@ -7,33 +6,22 @@ import CustomerBadge from "@/components/dashboard/customer/Badge";
 import TopActivities from "@/components/dashboard/customer/TopActivities";
 import { defaultUserDetails } from "@/data/data";
 import { useEffect, useState } from "react";
-import { useSession } from "next-auth/react";
-import axios from "axios";
+import { instance as authInstance } from "@/utils/axiosInterceptor.config";
 
 const CustomerProfilePage = () => {
   const [fetchedUserData, setFetchedUserData] = useState(defaultUserDetails);
-  const session = useSession();
-  const token = session?.data?.user?.accessToken;
 
   useEffect(() => {
     const fetchUserData = async () => {
-      if (!token) return;
       try {
-        const url = `${process.env.NEXT_PUBLIC_API_URL}/customer/profile`;
-        const { data } = await axios.get(url, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "multipart/form-data",
-          },
-        });
+        const { data } = await authInstance.get("customer/profile");
         setFetchedUserData(data);
-        console.log(data);
       } catch (error) {
         console.error(error);
       }
     };
     fetchUserData();
-  }, [token]);
+  }, []);
 
   return (
     <main className="mt-[5rem] space-y-8 p-4 lg:p-8">

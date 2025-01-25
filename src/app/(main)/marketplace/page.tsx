@@ -9,7 +9,6 @@ import { MdLocalGroceryStore } from "react-icons/md";
 import { FaHeartbeat } from "react-icons/fa";
 import { FaGraduationCap } from "react-icons/fa";
 import { FaImage } from "react-icons/fa";
-
 import MarketPlaceFilter from "@/components/main/marketplace/MarketPlaceFilter";
 import MarketPlaceHeader from "@/components/main/marketplace/MarketPlaceHeader";
 import CategoryListing from "@/components/main/marketplace/CategoryListing";
@@ -21,9 +20,10 @@ import Popup from "@/components/global/Popup";
 import Button from "@/components/global/Button";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import axios from "axios";
 import { defaultUserDetails } from "@/data/data";
 import BoxFilter from "@/components/main/marketplace/BoxFilter";
+import instance from "@/utils/axios.config";
+import { instance as authInstance } from "@/utils/axiosInterceptor.config";
 
 const categoryIcons = [
   FaHome,
@@ -45,7 +45,8 @@ const MareketPlace = () => {
   const router = useRouter();
   const isAuth = session.status === "authenticated";
   const token = session?.data?.user?.accessToken;
-  const isServiceProvider = session?.data?.user?.user?.roles[0] === "SERVICE_PROVIDER";
+  const isServiceProvider =
+    session?.data?.user?.user?.roles[0] === "SERVICE_PROVIDER";
   const [showPopup, setShowPopup] = useState(false);
   const [fetchedUserData, setFetchedUserData] = useState(defaultUserDetails);
   const [loadingProfile, setLoadingProfile] = useState(true);
@@ -55,24 +56,25 @@ const MareketPlace = () => {
     const fetchUserData = async () => {
       if (!token) return;
       try {
-        const url = isServiceProvider ? `${process.env.NEXT_PUBLIC_API_URL}/service_provider/profile` : `${process.env.NEXT_PUBLIC_API_URL}/customer/profile`;
-        const { data } = await axios.get(url, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "multipart/form-data",
-          },
+        const url = isServiceProvider
+          ? `service_provider/profile`
+          : `customer/profile`;
+        const { data } = await instance.get(url, {
+          headers: { Authorization: `Bearer ${token}` },
         });
         setFetchedUserData(data);
       } catch (error) {
         console.error(error);
       } finally {
-        setLoadingProfile(false)
+        setLoadingProfile(false);
       }
     };
     fetchUserData();
   }, [token, isServiceProvider]);
 
-  const { profile: user } = useSelector((state: RootState) => state.userProfile);
+  const { profile: user } = useSelector(
+    (state: RootState) => state.userProfile,
+  );
 
   /* eslint-disable react-hooks/exhaustive-deps */
   const profileProgressData = [
@@ -102,11 +104,11 @@ const MareketPlace = () => {
     },
     ...(fetchedUserData.idType !== "INTERNATIONAL_PASSPORT"
       ? [
-        {
-          title: "Identification Document Back",
-          status: fetchedUserData?.idImageBack,
-        },
-      ]
+          {
+            title: "Identification Document Back",
+            status: fetchedUserData?.idImageBack,
+          },
+        ]
       : []),
   ];
 
@@ -114,12 +116,13 @@ const MareketPlace = () => {
   useLayoutEffect(() => {
     if (!loadingProfile && user && !hasClosedPopup) {
       const isProfileComplete = profileProgressData.every(
-        (item) => item.status !== "" &&
+        (item) =>
+          item.status !== "" &&
           item.status !== null &&
           item.status !== undefined &&
-          item.status !== "null" &&  // Check for "null" string
+          item.status !== "null" && // Check for "null" string
           item.status !== "undefined" && // Check for "undefined" string
-          !(typeof item.status === "string" && item.status.trim() === "")
+          !(typeof item.status === "string" && item.status.trim() === ""),
       );
 
       if (isAuth && !isProfileComplete) {
@@ -133,11 +136,14 @@ const MareketPlace = () => {
   return (
     <main className="mx-auto max-w-screen-2xl">
       {showPopup && (
-        <Popup isOpen={showPopup} onClose={() => {
-          setShowPopup(false)
-          setHasClosedPopup(true);
-        }}>
-          <div className="relative h-[312px] max-lg:mx-2 w-full lg:w-[577px]">
+        <Popup
+          isOpen={showPopup}
+          onClose={() => {
+            setShowPopup(false);
+            setHasClosedPopup(true);
+          }}
+        >
+          <div className="relative h-[312px] w-full max-lg:mx-2 lg:w-[577px]">
             <div className="flex h-full flex-col items-center justify-center space-y-7 text-center">
               <h1 className="font-clashDisplay text-4xl font-semibold text-[#2A1769]">
                 Welcome to Olójà
@@ -147,7 +153,7 @@ const MareketPlace = () => {
                 access to all our features.
               </p>
               <Button
-                className="lg:w-[151px] rounded-full lg:py-6 max-lg:text-sm"
+                className="rounded-full max-lg:text-sm lg:w-[151px] lg:py-6"
                 onClick={() =>
                   router.push(
                     isServiceProvider

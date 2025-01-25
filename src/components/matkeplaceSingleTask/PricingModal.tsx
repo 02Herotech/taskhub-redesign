@@ -14,6 +14,7 @@ import { PiSealCheckFill } from "react-icons/pi";
 import "../../styles/datePickOverflowHandle.css";
 import { setCookie } from "cookies-next";
 import Button from "../global/Button";
+import { instance as authInstance } from "@/utils/axiosInterceptor.config";
 
 interface ModalProps {
   setIsModalShown: Dispatch<SetStateAction<boolean>>;
@@ -62,9 +63,7 @@ const PricingModal = ({
   });
   const [isSubmittedSuccessful, setIsSubmittedSuccessful] = useState(false);
 
-  const session = useSession();
-  const token = session?.data?.user?.accessToken;
-  const pathname = usePathname()
+  const pathname = usePathname();
   const wordLimit = 50;
 
   useEffect(() => {
@@ -107,13 +106,7 @@ const PricingModal = ({
         bookingDescription: formState.description,
         bookingTitle: modalData.title,
       };
-      const url = `${process.env.NEXT_PUBLIC_API_URL}/booking`;
-      const { data } = await axios.post(url, uploadData, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      });
+      const { data } = await authInstance.post("booking", uploadData);
       setSubmitStatus((prev) => ({
         ...prev,
         message: data.message,
@@ -165,16 +158,15 @@ const PricingModal = ({
         setFormState((prev) => ({
           ...prev,
           suburb: suburbs[0],
-          state: data[0].State // Add state if you need it in the form
+          state: data[0].State, // Add state if you need it in the form
         }));
       } else {
         setFormState((prev) => ({
           ...prev,
           suburb: "",
-          state: ""
+          state: "",
         }));
       }
-
     } catch (error) {
       console.log(error);
       // Clear the lists and form state on error
@@ -182,7 +174,7 @@ const PricingModal = ({
       setFormState((prev) => ({
         ...prev,
         suburb: "",
-        state: ""
+        state: "",
       }));
     }
   };
@@ -213,9 +205,7 @@ const PricingModal = ({
 
   const handleSignUpNavigation = () => {
     setCookie("redirectToMarketplaceDetail", pathname, { maxAge: 40000 });
-    router.push(
-      `/auth/sign-up?from=${pathname}`,
-    );
+    router.push(`/auth/sign-up?from=${pathname}`);
   };
 
   return (
@@ -238,9 +228,10 @@ const PricingModal = ({
               className="size-14 object-contain"
             />
             <p className="text-center text-xl font-bold text-violet-normal">
-              Sorry! you are not logged in. Please login or create an account to continue
+              Sorry! you are not logged in. Please login or create an account to
+              continue
             </p>
-            <div className="flex items-center gap-4 !mt-5">
+            <div className="!mt-5 flex items-center gap-4">
               <Button
                 onClick={() => router.push(`/auth/login?from=${pathname}`)}
                 className="rounded-full"

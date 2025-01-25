@@ -10,11 +10,10 @@ import Link from "next/link";
 import { BeatLoader } from "react-spinners";
 import { PiSealCheckFill, PiWarningDiamond } from "react-icons/pi";
 import { BsExclamationTriangle } from "react-icons/bs";
-import { useSession } from "next-auth/react";
-
 import WalletBalance from "@/components/dashboard/serviceProvider/Payment/WalletBalance";
 import { RootState } from "@/store";
 import { refreshWallet } from "@/store/Features/userProfile";
+import { instance as authInstance } from "@/utils/axiosInterceptor.config";
 
 // Schema definition
 const withdrawalSchema = z.object({
@@ -175,19 +174,11 @@ const WithdrawalForm: React.FC<{
   const [userData, setUserData] = useState<{ isVerified: boolean } | null>(
     null,
   );
-  const session = useSession();
-  const token = session.data?.user.accessToken;
+
   useEffect(() => {
     async function fetchUserData() {
-      if (!token) return;
-      const url = `${process.env.NEXT_PUBLIC_API_URL}/service_provider/profile`;
       try {
-        const { data } = await axios.get(url, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        });
+        const { data } = await authInstance.get("service_provider/profile");
         setUserData({ isVerified: data.isVerified });
       } catch (error) {
         console.log(error);
@@ -195,7 +186,7 @@ const WithdrawalForm: React.FC<{
     }
 
     fetchUserData();
-  }, [token]);
+  }, []);
   return (
     <form
       onSubmit={onSubmit}
