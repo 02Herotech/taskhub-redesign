@@ -1,102 +1,110 @@
-'use client'
+"use client";
 
-import React, { useState, useEffect, useRef } from 'react'
-import axios from 'axios'
-import { useSession } from 'next-auth/react'
-import { useRouter } from 'next/navigation'
-import DatePicker from 'react-datepicker'
-import { BiXCircle } from 'react-icons/bi'
-import { BsPencilSquare } from 'react-icons/bs'
-import { PiSealCheckFill } from 'react-icons/pi'
-import { BeatLoader } from 'react-spinners'
-import { toPng } from 'html-to-image'
-import 'react-datepicker/dist/react-datepicker.css'
-import { formatDateAsYYYYMMDD } from '@/utils'
-import { formatAmount, formatDate } from '@/lib/utils'
+import React, { useState, useEffect, useRef } from "react";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import DatePicker from "react-datepicker";
+import { BiXCircle } from "react-icons/bi";
+import { BsPencilSquare } from "react-icons/bs";
+import { PiSealCheckFill } from "react-icons/pi";
+import { BeatLoader } from "react-spinners";
+import { toPng } from "html-to-image";
+import "react-datepicker/dist/react-datepicker.css";
+import { formatDateAsYYYYMMDD } from "@/utils";
+import { formatAmount, formatDate } from "@/lib/utils";
 import { instance as authInstance } from "@/utils/axiosInterceptor.config";
 
-
 interface ModalPropType {
-  isModalOpen: boolean
-  setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>
-  currentBooking: BookingType | undefined
-  invoiceDraft: InvoiceDraftType | undefined
+  isModalOpen: boolean;
+  setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  currentBooking: BookingType | undefined;
+  invoiceDraft: InvoiceDraftType | undefined;
 }
 
-const Invoice = ({ isModalOpen, setIsModalOpen, currentBooking, invoiceDraft }: ModalPropType) => {
+const Invoice = ({
+  isModalOpen,
+  setIsModalOpen,
+  currentBooking,
+  invoiceDraft,
+}: ModalPropType) => {
   const [invoiceState, setInvoiceState] = useState({
-    price: '',
+    price: "",
     date: null as Date | null,
     gst: 0,
     serviceCharge: 0,
     total: 0,
-    successData: '',
+    successData: "",
     loading: false,
-  })
+  });
 
-  const [invoiceDraftData, setInvoiceDraftData] = useState<InvoiceDraftType[]>([])
-  const [isDownloadingImage, setIsDownloadingImage] = useState(false)
-  const [isDatePickerOpen, setIsDatePickerOpen] = useState(false)
-  const invoiceContainerRef = useRef<HTMLDivElement>(null)
-  const datePickerRef = useRef<DatePicker>(null)
+  const [invoiceDraftData, setInvoiceDraftData] = useState<InvoiceDraftType[]>(
+    [],
+  );
+  const [isDownloadingImage, setIsDownloadingImage] = useState(false);
+  const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
+  const invoiceContainerRef = useRef<HTMLDivElement>(null);
+  const datePickerRef = useRef<DatePicker>(null);
 
-  const router = useRouter()
-  const session = useSession()
-  const token = session?.data?.user?.accessToken
-  const user = session?.data?.user?.user
+  const router = useRouter();
+  const session = useSession();
+  const user = session?.data?.user?.user;
 
   useEffect(() => {
     if (currentBooking?.startDate) {
-      const [year, month, day] = currentBooking.startDate
-      setInvoiceState(prev => ({
+      const [year, month, day] = currentBooking.startDate;
+      setInvoiceState((prev) => ({
         ...prev,
         date: new Date(year, month - 1, day),
-      }))
+      }));
     }
-  }, [currentBooking])
+  }, [currentBooking]);
 
   useEffect(() => {
     const calculateUserEarnings = () => {
-      const price = invoiceDraft?.price || currentBooking?.price || 0
-      const gstAmount = Number((Math.round((Number(price) * 0.10) * 100) / 100).toFixed(2))
-      const serviceChargeAmount = Number((Math.round((Number(price) * 0.02) * 100) / 100).toFixed(2))
-      const userEarnings = Number(price) - (gstAmount + serviceChargeAmount)
+      const price = invoiceDraft?.price || currentBooking?.price || 0;
+      const gstAmount = Number(
+        (Math.round(Number(price) * 0.1 * 100) / 100).toFixed(2),
+      );
+      const serviceChargeAmount = Number(
+        (Math.round(Number(price) * 0.02 * 100) / 100).toFixed(2),
+      );
+      const userEarnings = Number(price) - (gstAmount + serviceChargeAmount);
 
-      setInvoiceState(prev => ({
+      setInvoiceState((prev) => ({
         ...prev,
         price: price.toString(),
         gst: gstAmount,
         serviceCharge: serviceChargeAmount,
         total: userEarnings,
-      }))
-    }
+      }));
+    };
 
-    calculateUserEarnings()
-  }, [currentBooking, invoiceDraft])
+    calculateUserEarnings();
+  }, [currentBooking, invoiceDraft]);
 
   const handleDateChange = (date: Date | null) => {
-    setInvoiceState(prev => ({ ...prev, date }))
-    setIsDatePickerOpen(false)
-  }
+    setInvoiceState((prev) => ({ ...prev, date }));
+    setIsDatePickerOpen(false);
+  };
 
   const handlePriceChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const newPrice = event.target.value
-    const price = Number(newPrice) || 0
-    const gstAmount = price * 0.10
-    const serviceChargeAmount = price * 0.02
-    const userEarnings = price - (gstAmount + serviceChargeAmount)
+    const newPrice = event.target.value;
+    const price = Number(newPrice) || 0;
+    const gstAmount = price * 0.1;
+    const serviceChargeAmount = price * 0.02;
+    const userEarnings = price - (gstAmount + serviceChargeAmount);
 
-    setInvoiceState(prev => ({
+    setInvoiceState((prev) => ({
       ...prev,
       price: newPrice,
       gst: gstAmount,
       serviceCharge: serviceChargeAmount,
       total: userEarnings,
-    }))
-  }
+    }));
+  };
 
   const generateInvoice = async () => {
-    if (!currentBooking) return
+    if (!currentBooking) return;
     const invoiceData = {
       bookingId: currentBooking.id,
       subTotal: invoiceState.total,
@@ -108,26 +116,25 @@ const Invoice = ({ isModalOpen, setIsModalOpen, currentBooking, invoiceDraft }: 
       customerId: currentBooking.customer?.id,
       gst: invoiceState.gst,
       platformCharge: Math.floor((Number(invoiceState.price) / 100) * 2),
-    }
+    };
 
     try {
-      setInvoiceState(prev => ({ ...prev, loading: true }))
-      const url = `${process.env.NEXT_PUBLIC_API_URL}/booking/generate-invoice`
-      await authIns.post(url, invoiceData)
-      safeInvoiceToDraft()
-      setInvoiceState(prev => ({
+      setInvoiceState((prev) => ({ ...prev, loading: true }));
+      await authInstance.post("booking/generate-invoice", invoiceData);
+      safeInvoiceToDraft();
+      setInvoiceState((prev) => ({
         ...prev,
-        successData: 'Invoice successfully Generated and sent to customer',
-      }))
+        successData: "Invoice successfully Generated and sent to customer",
+      }));
     } catch (error: any) {
-      console.error(error.response?.data)
+      console.error(error.response?.data);
     } finally {
-      setInvoiceState(prev => ({ ...prev, loading: false }))
+      setInvoiceState((prev) => ({ ...prev, loading: false }));
     }
-  }
+  };
 
   const safeInvoiceToDraft = () => {
-    if (!currentBooking) return
+    if (!currentBooking) return;
     const invoiceData: InvoiceDraftType = {
       bookingId: currentBooking.id,
       subTotal: invoiceState.total,
@@ -140,40 +147,42 @@ const Invoice = ({ isModalOpen, setIsModalOpen, currentBooking, invoiceDraft }: 
       gst: invoiceState.gst,
       platformCharge: Math.floor((Number(invoiceState.price) / 100) * 2),
       price: Number(invoiceState.price),
-    }
+    };
 
-    setInvoiceDraftData(prev => {
-      const updatedDrafts = prev.filter(invoice => invoice.bookingId !== invoiceData.bookingId)
-      const newDrafts = [...updatedDrafts, invoiceData]
-      localStorage.setItem('invoiceDraftData', JSON.stringify(newDrafts))
-      return newDrafts
-    })
+    setInvoiceDraftData((prev) => {
+      const updatedDrafts = prev.filter(
+        (invoice) => invoice.bookingId !== invoiceData.bookingId,
+      );
+      const newDrafts = [...updatedDrafts, invoiceData];
+      localStorage.setItem("invoiceDraftData", JSON.stringify(newDrafts));
+      return newDrafts;
+    });
 
-    setInvoiceState(prev => ({
+    setInvoiceState((prev) => ({
       ...prev,
-      successData: 'Invoice successfully saved to draft',
-    }))
-  }
+      successData: "Invoice successfully saved to draft",
+    }));
+  };
 
   const handleDownloadImage = async () => {
     if (invoiceContainerRef.current) {
-      setIsDownloadingImage(true)
+      setIsDownloadingImage(true);
       try {
-        const dataUrl = await toPng(invoiceContainerRef.current)
-        const link = document.createElement('a')
-        link.href = dataUrl
-        link.download = 'invoice.png'
-        link.click()
+        const dataUrl = await toPng(invoiceContainerRef.current);
+        const link = document.createElement("a");
+        link.href = dataUrl;
+        link.download = "invoice.png";
+        link.click();
       } catch (error) {
-        console.error('Error generating image:', error)
+        console.error("Error generating image:", error);
       } finally {
-        setIsDownloadingImage(false)
+        setIsDownloadingImage(false);
       }
     }
-  }
+  };
 
   function getFormattedDate(dateArray: number[]): string {
-    if (!dateArray) return "Flexible" 
+    if (!dateArray) return "Flexible";
 
     if (dateArray[0] === 1970 && dateArray[1] === 1 && dateArray[2] === 1) {
       return "Flexible";
@@ -182,14 +191,20 @@ const Invoice = ({ isModalOpen, setIsModalOpen, currentBooking, invoiceDraft }: 
     return formatDate(dateArray);
   }
 
-  console.log("tss", currentBooking?.startDate)
+  console.log("tss", currentBooking?.startDate);
 
   return (
     <section
-      className={`fixed left-0 top-0 z-50 flex h-screen w-screen items-center justify-center bg-black bg-opacity-70 transition-opacity duration-300 ${isModalOpen ? 'pointer-events-auto opacity-100' : 'pointer-events-none opacity-0'
-        }`}
+      className={`fixed left-0 top-0 z-50 flex h-screen w-screen items-center justify-center bg-black bg-opacity-70 transition-opacity duration-300 ${
+        isModalOpen
+          ? "pointer-events-auto opacity-100"
+          : "pointer-events-none opacity-0"
+      }`}
     >
-      <div className="absolute inset-0 h-screen w-screen" onClick={() => setIsModalOpen(false)}></div>
+      <div
+        className="absolute inset-0 h-screen w-screen"
+        onClick={() => setIsModalOpen(false)}
+      ></div>
       {invoiceState.successData ? (
         <div className="relative z-10 flex w-[90vw] max-w-md flex-col items-center justify-center gap-4 rounded-lg bg-white p-5">
           <div className="flex size-20 items-center justify-center rounded-full bg-[#C1F6C3] bg-opacity-60">
@@ -197,15 +212,17 @@ const Invoice = ({ isModalOpen, setIsModalOpen, currentBooking, invoiceDraft }: 
               <PiSealCheckFill className="size-10 text-green-500" />
             </div>
           </div>
-          <p className="text-center font-satoshiBold text-2xl font-extrabold text-violet-normal">Success</p>
+          <p className="text-center font-satoshiBold text-2xl font-extrabold text-violet-normal">
+            Success
+          </p>
           <p className="text-center font-semibold text-violet-darker">
-            {invoiceState.successData.includes('draft')
-              ? 'Offer successfully saved to draft'
-              : 'Offer successfully Generated and sent to customer'}
+            {invoiceState.successData.includes("draft")
+              ? "Offer successfully saved to draft"
+              : "Offer successfully Generated and sent to customer"}
           </p>
           <div className="flex items-center justify-center gap-10">
             <button
-              onClick={() => router.push('/service-provider/jobs')}
+              onClick={() => router.push("/service-provider/jobs")}
               className="rounded-full bg-violet-normal px-4 py-2 font-semibold text-white transition-opacity duration-300 hover:opacity-90"
             >
               View Jobs
@@ -215,20 +232,24 @@ const Invoice = ({ isModalOpen, setIsModalOpen, currentBooking, invoiceDraft }: 
       ) : (
         <div
           ref={invoiceContainerRef}
-          className="relative max-lg:w-[90vw] space-y-3 rounded-xl bg-white p-3 py-10 lg:p-6"
+          className="relative space-y-3 rounded-xl bg-white p-3 py-10 max-lg:w-[90vw] lg:p-6"
         >
           <div>
             <h1 className="font-clashBold text-3xl font-extrabold leading-6 text-violet-dark">
-              {!currentBooking?.invoiceSent && 'Make an '}Offer
+              {!currentBooking?.invoiceSent && "Make an "}Offer
             </h1>
-            <p className="text-sm text-violet-active">{currentBooking?.bookingTitle}</p>
+            <p className="text-sm text-violet-active">
+              {currentBooking?.bookingTitle}
+            </p>
           </div>
 
           <div className="flex items-center gap-6">
-            <label className="flex-grow h-20 rounded-lg bg-violet-light flex flex-col px-4 justify-center font-bold">
+            <label className="flex h-20 flex-grow flex-col justify-center rounded-lg bg-violet-light px-4 font-bold">
               <span className="flex items-center justify-between gap-2 text-[#716F78]">
                 <span>Amount</span>
-                {!currentBooking?.invoiceSent && <BsPencilSquare className="text-violet-normal" />}
+                {!currentBooking?.invoiceSent && (
+                  <BsPencilSquare className="text-violet-normal" />
+                )}
               </span>
               <div className="flex w-full items-center gap-1">
                 <p>$</p>
@@ -243,82 +264,83 @@ const Invoice = ({ isModalOpen, setIsModalOpen, currentBooking, invoiceDraft }: 
                 />
               </div>
             </label>
-            <div className="flex-grow h-20 rounded-lg bg-violet-light flex flex-col px-4 justify-center font-bold">
-                <span className="flex items-center justify-between gap-2 text-[#716F78]">
+            <div className="flex h-20 flex-grow flex-col justify-center rounded-lg bg-violet-light px-4 font-bold">
+              <span className="flex items-center justify-between gap-2 text-[#716F78]">
                 <span>Start Date</span>
               </span>
-                <span>{getFormattedDate(currentBooking?.startDate!)}</span>
+              <span>{getFormattedDate(currentBooking?.startDate!)}</span>
             </div>
           </div>
 
-            <div className="space-y-3 rounded-lg bg-violet-active p-3 py-4 text-violet-normal">
-              <p className="font-bold uppercase text-violet-normal ">
-                Service Information
-              </p>
-              <div className="grid grid-cols-2 gap-3">
-                <div className="space-y-3">
-                  <div>
-                    <p className="font-black text-violet-dark">
-                      {formatDateAsYYYYMMDD(new Date())}
-                    </p>
-                    <p className="font-medium  text-[#4E5158]">Issued On</p>
-                  </div>
-                  <div>
-                    <p className=" font-extrabold text-violet-dark  ">
-                      Bill From
-                    </p>
-                    <p className="font-medium  text-[#4E5158]">
-                      {user?.firstName} {user?.lastName}
-                    </p>
-                  </div>
-                  <div>
-                    <p className=" font-extrabold text-violet-dark  ">
-                      ${invoiceState.gst.toFixed(2)}
-                    </p>
-                    <p className="font-medium  text-[#4E5158]">GST @10%</p>
-                  </div>
+          <div className="space-y-3 rounded-lg bg-violet-active p-3 py-4 text-violet-normal">
+            <p className="font-bold uppercase text-violet-normal ">
+              Service Information
+            </p>
+            <div className="grid grid-cols-2 gap-3">
+              <div className="space-y-3">
+                <div>
+                  <p className="font-black text-violet-dark">
+                    {formatDateAsYYYYMMDD(new Date())}
+                  </p>
+                  <p className="font-medium  text-[#4E5158]">Issued On</p>
                 </div>
-                <div className="space-y-3">
-                  <div>
-                    <p className=" font-extrabold text-violet-dark  ">
-                      {formatDateAsYYYYMMDD(new Date(Date.now() + 86400000))}
-                    </p>
-                    <p className="font-medium  text-[#4E5158]">Due On</p>
-                  </div>
-                  <div>
-                    <p className=" font-extrabold text-violet-dark">Bill To</p>
-                    <p className="font-medium  text-[#4E5158]">
-                      {currentBooking?.customer?.user?.fullName}
-                    </p>
-                  </div>
-                  <div>
-                    <p className="font-extrabold text-violet-dark">
-                      ${invoiceState.serviceCharge.toFixed(2)}
-                    </p>
-                    <p className="font-medium text-[#E10909]">
-                      Service fee (2%)
-                    </p>
-                  </div>
+                <div>
+                  <p className=" font-extrabold text-violet-dark  ">
+                    Bill From
+                  </p>
+                  <p className="font-medium  text-[#4E5158]">
+                    {user?.firstName} {user?.lastName}
+                  </p>
+                </div>
+                <div>
+                  <p className=" font-extrabold text-violet-dark  ">
+                    ${invoiceState.gst.toFixed(2)}
+                  </p>
+                  <p className="font-medium  text-[#4E5158]">GST @10%</p>
                 </div>
               </div>
-              <div className="flex items-center justify-center">
+              <div className="space-y-3">
                 <div>
-                  <p className="font-extrabold text-[#006F05] text-center font-satoshiBold text-xl lg:text-3xl">
-                    ${invoiceState.total.toFixed(2)}
+                  <p className=" font-extrabold text-violet-dark  ">
+                    {formatDateAsYYYYMMDD(new Date(Date.now() + 86400000))}
                   </p>
-                  <p className="font-medium text-[#4E5158]">
-                    Total Receivable Amount
+                  <p className="font-medium  text-[#4E5158]">Due On</p>
+                </div>
+                <div>
+                  <p className=" font-extrabold text-violet-dark">Bill To</p>
+                  <p className="font-medium  text-[#4E5158]">
+                    {currentBooking?.customer?.user?.fullName}
                   </p>
+                </div>
+                <div>
+                  <p className="font-extrabold text-violet-dark">
+                    ${invoiceState.serviceCharge.toFixed(2)}
+                  </p>
+                  <p className="font-medium text-[#E10909]">Service fee (2%)</p>
                 </div>
               </div>
             </div>
-            <p className=" font-bold text-violet-darker">
-              Note: The service charges and GST would be deducted from the total
-              paid by the customer
-            </p>
+            <div className="flex items-center justify-center">
+              <div>
+                <p className="text-center font-satoshiBold text-xl font-extrabold text-[#006F05] lg:text-3xl">
+                  ${invoiceState.total.toFixed(2)}
+                </p>
+                <p className="font-medium text-[#4E5158]">
+                  Total Receivable Amount
+                </p>
+              </div>
+            </div>
+          </div>
+          <p className=" font-bold text-violet-darker">
+            Note: The service charges and GST would be deducted from the total
+            paid by the customer
+          </p>
 
           {!isDownloadingImage && (
-            <button className="absolute right-4 top-4" onClick={() => setIsModalOpen(false)}>
+            <button
+              className="absolute right-4 top-4"
+              onClick={() => setIsModalOpen(false)}
+            >
               <BiXCircle className="size-8 text-violet-normal" />
             </button>
           )}
@@ -330,9 +352,13 @@ const Invoice = ({ isModalOpen, setIsModalOpen, currentBooking, invoiceDraft }: 
                   className="rounded-full bg-violet-normal px-4 py-2 font-medium text-white"
                 >
                   {invoiceState.loading ? (
-                    <BeatLoader color={'white'} loading={invoiceState.loading} size={14} />
+                    <BeatLoader
+                      color={"white"}
+                      loading={invoiceState.loading}
+                      size={14}
+                    />
                   ) : (
-                    'Send'
+                    "Send"
                   )}
                 </button>
               )}
@@ -363,7 +389,7 @@ const Invoice = ({ isModalOpen, setIsModalOpen, currentBooking, invoiceDraft }: 
         </div>
       )}
     </section>
-  )
-}
+  );
+};
 
-export default Invoice
+export default Invoice;
