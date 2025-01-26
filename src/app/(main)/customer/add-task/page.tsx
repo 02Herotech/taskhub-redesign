@@ -1157,7 +1157,7 @@ const AddTaskForm: React.FC = () => {
           <Popup
             isOpen={isSuccessPopupOpen}
             onClose={() => {
-              router.push("/marketplace");
+              router.push("/customer/tasks");
               setIsSuccessPopupOpen(false);
             }}
           >
@@ -1174,7 +1174,7 @@ const AddTaskForm: React.FC = () => {
                     Your task has been posted!
                   </p>
                   <p className="text-center lg:text-[20px]">
-                    please click on the button to proceed to marketplace
+                    Please click on the button to proceed to dashboard
                   </p>
                 </div>
                 <Image
@@ -1183,9 +1183,9 @@ const AddTaskForm: React.FC = () => {
                   className="absolute -right-24 top-36  w-32 font-satoshiMedium lg:-right-20 lg:top-2/3"
                 />
                 <div className="flex justify-center">
-                  <Link href="/marketplace">
+                  <Link href="/customer/tasks">
                     <button className="w-[100px] rounded-2xl bg-status-purpleBase p-2 text-[14px] text-white outline-none">
-                      Go Home
+                      Go to dashboard
                     </button>
                   </Link>
                 </div>
