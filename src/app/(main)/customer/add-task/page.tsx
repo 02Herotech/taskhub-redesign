@@ -1184,7 +1184,7 @@ const AddTaskForm: React.FC = () => {
                 />
                 <div className="flex justify-center">
                   <Link href="/customer/tasks">
-                    <button className="w-[100px] rounded-2xl bg-status-purpleBase p-2 text-[14px] text-white outline-none">
+                    <button className="rounded-2xl bg-status-purpleBase p-2 text-[14px] text-white outline-none">
                       Go to dashboard
                     </button>
                   </Link>
