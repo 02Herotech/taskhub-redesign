@@ -10,6 +10,7 @@ import Link from "next/link";
 import { BeatLoader } from "react-spinners";
 import { PiSealCheckFill, PiWarningDiamond } from "react-icons/pi";
 import { BsExclamationTriangle } from "react-icons/bs";
+import { useSession } from "next-auth/react";
 import WalletBalance from "@/components/dashboard/serviceProvider/Payment/WalletBalance";
 import { RootState } from "@/store";
 import { refreshWallet } from "@/store/Features/userProfile";
@@ -18,8 +19,15 @@ import { instance as authInstance } from "@/utils/axiosInterceptor.config";
 // Schema definition
 const withdrawalSchema = z.object({
   accountName: z.string().min(3).max(50),
-  accountNumber: z.string().regex(/^\d+$/, "Account Number must be a number"),
-  routingNumber: z.string().min(3).max(6),
+  accountNumber: z
+    .string()
+    .regex(/^\d+$/, "Account number must be a number")
+    .max(9, "Account number should not be more than 9 digits"),
+  routingNumber: z
+    .string()
+    .regex(/^\d+$/, "BSB should must be a number")
+    .min(3)
+    .max(6, "BSB should not be more than 6 digits"),
   amount: z
     .string()
     .regex(/^\d+(\.\d{1,2})?$/, "Invalid amount")
@@ -174,7 +182,11 @@ const WithdrawalForm: React.FC<{
   const [userData, setUserData] = useState<{ isVerified: boolean } | null>(
     null,
   );
-
+  const { walletBalance, walletLoading } = useSelector(
+    (state: RootState) => state.userProfile,
+  );
+  const session = useSession();
+  const token = session.data?.user.accessToken;
   useEffect(() => {
     async function fetchUserData() {
       try {
@@ -217,6 +229,8 @@ const WithdrawalForm: React.FC<{
         <InputField
           label="Amount"
           type="number"
+          min={1}
+          max={walletBalance ?? 0}
           step=".01"
           register={register("amount")}
           error={errors.amount}
@@ -239,29 +253,40 @@ const WithdrawalForm: React.FC<{
   );
 };
 
-const InputField: React.FC<{
-  label: string;
-  type: string;
+type InputFieldProps = {
   register?: any;
   error?: any;
-  value?: string;
-  disabled?: boolean;
-  min?: number;
-  step?: string;
-}> = ({ label, type, register, error, value, disabled, min, step }) => (
-  <label className="flex flex-col gap-2">
-    <span className="text-lg font-bold text-violet-normal">{label}</span>
-    <input
-      type={type}
-      className="w-full rounded-md bg-white p-3 outline-none"
-      disabled={disabled}
-      value={value}
-      min={min}
-      step={step}
-      {...register}
-    />
-    {error && <p className="text-red-600">{error.message}</p>}
-  </label>
-);
+  label: string;
+} & React.ComponentProps<"input">;
+
+const InputField: React.FC<InputFieldProps> = ({
+  label,
+  type,
+  register,
+  error,
+  value,
+  disabled,
+  min,
+  step,
+  ...props
+}) => {
+  const { max } = props;
+  return (
+    <label className="flex flex-col gap-2">
+      <span className="text-lg font-bold text-violet-normal">{label}</span>
+      <input
+        type={type}
+        className="w-full rounded-md bg-white p-3 outline-none"
+        disabled={disabled}
+        value={value}
+        min={min}
+        {...(max ? { max } : {})}
+        step={step}
+        {...register}
+      />
+      {error && <p className="text-red-600">{error.message}</p>}
+    </label>
+  );
+};
 
 export default WithdrawalPage;

@@ -10,6 +10,12 @@ html {
   scroll-behavior: smooth;
 }
 
+input,
+select,
+textarea {
+  font-size: 16px !important;
+}
+
 /* Custom styles */
 .phone-input input:focus {
   outline: none !important;
