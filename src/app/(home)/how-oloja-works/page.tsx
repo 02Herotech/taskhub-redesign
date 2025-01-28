@@ -415,7 +415,7 @@ function Page() {
             </div>
 
             <div className="md:w-1/2">
-              <div className="mx-auto flex h-[400px] sm:h-[449px] max-w-[390px] items-center justify-center rounded-full bg-[#FCF4E659]">
+              <div className="mx-auto flex h-[400px] max-w-[390px] items-center justify-center rounded-full bg-[#FCF4E659] sm:h-[449px]">
                 <Image
                   width={500}
                   height={500}
@@ -449,7 +449,7 @@ function Page() {
               alt="Phone transactions"
             />
           </div>
-          <div className="w-full rounded-2xl bg-[#140B31] px-7 py-5 text-[#EBE9F4] sm:py-8 md:w-3/5 md:rounded-l-2xl">
+          <div className="w-full rounded-2xl bg-[#140B31] px-7 py-5 text-[#EBE9F4] sm:py-8 md:w-3/5 md:rounded-l-2xl md:rounded-r-none">
             <h4 className="mb-4 font-clashSemiBold text-2xl text-[#E58C06] sm:text-3xl">
               On Our Refunds
             </h4>

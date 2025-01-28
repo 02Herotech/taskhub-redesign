@@ -26,6 +26,7 @@ import Loading from "@/components/global/loading/page";
 import Progress from "@/components/global/progress";
 import instance from "@/utils/axios.config";
 import { instance as authInstance } from "@/utils/axiosInterceptor.config";
+import axios from "axios";
 
 interface FormData {
   taskBriefDescription: string;
@@ -217,7 +218,8 @@ const AddTaskForm: React.FC = () => {
   useEffect(() => {
     const fetchItems = async () => {
       try {
-        const response = await instance.get(`util/all-categories`);
+        const response = await axios.get(process.env.NEXT_PUBLIC_API_URL + "/util/all-categories");
+        console.log(response)
         const data: Item[] = response.data;
         setItems(data);
       } catch (error) {
