@@ -46,9 +46,6 @@ const EditListing = () => {
   const image4Ref = useRef<HTMLInputElement>(null);
   const [showModal, setShowModal] = useState(false);
 
-  const session = useSession();
-  const token = session?.data?.user?.accessToken;
-
   const listingZodSchema = z.object({
     listingTitle: z
       .string()

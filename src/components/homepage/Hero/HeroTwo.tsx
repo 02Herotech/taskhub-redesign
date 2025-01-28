@@ -44,7 +44,6 @@ function HeroTwo() {
           </div>
         </div>
         <div className="relative mr-auto h-[400px] w-full max-w-[450px] rounded-xl bg-primary sm:h-[500px] lg:mx-auto lg:w-1/2">
-          {/* 468 x 498  */}
           <motion.div
             className="mx-auto h-full w-11/12"
             initial={{ y: -300, opacity: 0, rotate: -12 }}
@@ -52,7 +51,7 @@ function HeroTwo() {
             transition={{ type: "spring", bounce: 0.4, duration: 1.2 }}
           >
             <Image
-              src="/assets/images/homepage/hero/workman-smiling.png"
+              src="/assets/images/homepage/hero/plumber-fixing.png"
               alt="Technician with a Customer"
               width={468}
               height={498}
