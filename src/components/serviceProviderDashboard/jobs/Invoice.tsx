@@ -62,11 +62,9 @@ const Invoice = ({
   useEffect(() => {
     const calculateUserEarnings = () => {
       const price = invoiceDraft?.price || currentBooking?.price || 0;
-      const gstAmount = Number(
-        (Math.round(Number(price) * 0.1 * 100) / 100).toFixed(2),
-      );
+      const gstAmount = 0;
       const serviceChargeAmount = Number(
-        (Math.round(Number(price) * 0.02 * 100) / 100).toFixed(2),
+        (Math.round(Number(price) * 0.07 * 100) / 100).toFixed(2),
       );
       const userEarnings = Number(price) - (gstAmount + serviceChargeAmount);
 
@@ -90,8 +88,10 @@ const Invoice = ({
   const handlePriceChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newPrice = event.target.value;
     const price = Number(newPrice) || 0;
-    const gstAmount = price * 0.1;
-    const serviceChargeAmount = price * 0.02;
+    const gstAmount = 0;
+    const serviceChargeAmount = Number(
+      (Math.round(Number(price) * 0.07 * 100) / 100).toFixed(2),
+    );
     const userEarnings = price - (gstAmount + serviceChargeAmount);
 
     setInvoiceState((prev) => ({
@@ -296,7 +296,7 @@ const Invoice = ({
                   <p className=" font-extrabold text-violet-dark  ">
                     ${invoiceState.gst.toFixed(2)}
                   </p>
-                  <p className="font-medium  text-[#4E5158]">GST @10%</p>
+                  <p className="font-medium  text-[#4E5158]">GST @0%</p>
                 </div>
               </div>
               <div className="space-y-3">
@@ -316,7 +316,7 @@ const Invoice = ({
                   <p className="font-extrabold text-violet-dark">
                     ${invoiceState.serviceCharge.toFixed(2)}
                   </p>
-                  <p className="font-medium text-[#E10909]">Service fee (2%)</p>
+                  <p className="font-medium text-[#E10909]">Service fee (7%)</p>
                 </div>
               </div>
             </div>
