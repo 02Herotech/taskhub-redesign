@@ -6,6 +6,7 @@ import WaveTick from "./WaveTick";
 import Wave from "./Wave";
 import { motion } from "framer-motion";
 import Image from "next/image";
+import OrangeTick from "@/components/icons/OrangeTick";
 
 const perks: { title: string; text: string }[] = [
   {
@@ -25,9 +26,9 @@ const perks: { title: string; text: string }[] = [
 function Page() {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   return (
-    <div>
+    <div className="bg-[#EBE9F4] pb-20">
       <header className="mx-auto max-w-7xl pb-10">
-        <div className="absolute left-0 top-0 -z-10 flex w-full justify-between overflow-hidden">
+        <div className="absolute left-0 top-0 z-10 flex w-full justify-between overflow-hidden">
           <div
             style={{
               position: "relative",
@@ -75,7 +76,7 @@ function Page() {
             ></div>
           </div>
         </div>
-        <h1 className="mb-10 mt-28 text-center font-clashSemiBold text-3xl text-[#381F8C] sm:text-4xl">
+        <h1 className="mb-10 pt-28 text-center font-clashSemiBold text-3xl text-[#381F8C] sm:text-4xl">
           Get Tasks Done. <br /> Compare Offers. <br /> Save time and energy
         </h1>
         <div className="mx-auto w-max space-x-1 font-satoshiBold sm:space-x-4">
@@ -213,7 +214,7 @@ function Page() {
             </ul>
           </div>
 
-          <div className="mx-auto flex flex-col items-center gap-5 bg-white py-14 md:flex-row">
+          <div className="mx-auto flex flex-col items-center gap-5 bg-[#EBE9F4] py-14 md:flex-row">
             <div className="w-full md:w-1/2">
               <h2 className="mb-4 font-clashSemiBold text-3xl text-primary sm:text-4xl">
                 Whether it is a simple task or a complex task!{" "}
@@ -325,6 +326,164 @@ function Page() {
             </p>
           </div>
           <Wave position="bottom" />
+        </section>
+
+        {/* New Section One  */}
+        <section className="relative mx-auto my-20 w-[93%] overflow-clip rounded-xl bg-[#FAFAFA] px-6 py-10 text-primary sm:w-[85%]">
+          <h2 className="mb-5 text-center font-clashSemiBold text-2xl sm:text-4xl">
+            Olójà Hub Fees & Charges:{" "}
+          </h2>
+          <p className="mb-5 text-center font-clashMedium text-[18px] sm:text-2xl">
+            Fair, Transparent, and Almost Free!
+          </p>
+          <p className="mx-auto mb-10 max-w-[550px] text-center font-satoshiMedium text-[18px] text-[#4D4B51] sm:text-left sm:text-xl">
+            At Olójà Hub, we believe in keeping our fees straightforward and
+            affordable, so you get the best value whether you’re hiring or
+            offering services.
+          </p>
+
+          <div className="flex flex-col justify-between gap-5 md:flex-row">
+            <div className="md:w-1/2">
+              <h3 className="mb-5 w-max rounded-xl bg-[#2A1769] px-3 py-2 font-clashSemiBold text-xl text-[#EBE9F4] sm:mb-7 sm:text-3xl">
+                As a Customer
+              </h3>
+              <motion.div
+                initial={{ x: -100, opacity: 0 }}
+                whileInView={{ x: 0, opacity: 1 }}
+                viewport={{ once: true }}
+                transition={{ type: "spring", duration: 0.3 }}
+                className="mb-4 ml-20 flex items-center gap-3 rounded-lg bg-[#EBE9F4] px-3 py-2 text-sm sm:text-xl"
+              >
+                <Image
+                  width={24}
+                  height={24}
+                  src="/pin-list.svg"
+                  alt="Pin Icon"
+                />
+                <p className="font-satoshiBold font-bold">
+                  No Connection Fees.{" "}
+                  <span className="font-satoshiMedium">No Service Fees.</span>
+                </p>
+              </motion.div>
+              <motion.div
+                initial={{ x: -100, opacity: 0 }}
+                whileInView={{ x: 0, opacity: 1 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.5, duration: 0.4 }}
+                className="mb-14 ml-20 flex items-center gap-3 rounded-lg bg-[#EBE9F4] px-3 py-2 text-sm sm:text-xl"
+              >
+                {/* 24 x 24  */}
+                <Image
+                  width={24}
+                  height={24}
+                  src="/pin-list.svg"
+                  alt="Pin Icon"
+                />
+                <p className="font-satoshiBold font-bold">
+                  GST:{" "}
+                  <span className="font-satoshiMedium">
+                    A small 10% GST fee applies to the agreed task price.
+                  </span>
+                </p>
+              </motion.div>
+
+              <h3 className="mb-5 w-max rounded-xl bg-[#2A1769] px-3 py-2 font-clashSemiBold text-xl text-[#EBE9F4] sm:mb-7 sm:bg-[#E58C06] sm:text-3xl">
+                As a Service Provider
+              </h3>
+              <motion.div
+                initial={{ x: -100, opacity: 0 }}
+                whileInView={{ x: 0, opacity: 1 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.5, duration: 0.4 }}
+                className="mb-10 ml-20 flex items-center gap-3 rounded-lg bg-[#EBE9F4] px-3 py-2 text-sm sm:text-xl xl:min-w-[480px]"
+              >
+                {/* 24 x 24  */}
+                <Image
+                  width={24}
+                  height={24}
+                  src="/pin-list.svg"
+                  alt="Pin Icon"
+                />
+                <p className="font-satoshiBold font-bold">
+                  Service Fee:{" "}
+                  <span className="font-satoshiMedium">
+                    Just 7% of the agreed task price—one of the lowest rates in
+                    the industry!
+                  </span>
+                </p>
+              </motion.div>
+            </div>
+
+            <div className="md:w-1/2">
+              <div className="mx-auto flex h-[400px] sm:h-[449px] max-w-[390px] items-center justify-center rounded-full bg-[#FCF4E659]">
+                <Image
+                  width={500}
+                  height={500}
+                  src="/assets/images/how-oloja-works/happy-cash.png"
+                  alt="Happy cash"
+                  className="w-10/12"
+                />
+              </div>
+              <p className="mx-auto mt-6 max-w-[400px] text-center font-satoshiMedium text-lg sm:text-xl md:text-left">
+                Even with this, we remain one of the most affordable platforms,
+                ensuring a cost-effective solution for all your needs.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* New Section two  */}
+        <section className="relative mx-auto mb-20 flex w-[93%] flex-col items-end gap-10 sm:w-[85%] md:flex-row">
+          <div className="w-full md:w-2/5">
+            <h2 className="mb-5 font-clashSemiBold text-2xl text-[#E58C06] sm:text-3xl">
+              What Happens Next?
+            </h2>
+            <p className="mb-10 font-satoshiBold text-lg font-bold text-primary sm:text-2xl">
+              We know things don’t always go as planned, so here’s what happens
+              if you need to cancel a task:
+            </p>
+            <Image
+              src="/assets/images/how-oloja-works/phone-transaction.png"
+              width={486}
+              height={456}
+              alt="Phone transactions"
+            />
+          </div>
+          <div className="w-full rounded-2xl bg-[#140B31] px-7 py-5 text-[#EBE9F4] sm:py-8 md:w-3/5 md:rounded-l-2xl">
+            <h4 className="mb-4 font-clashSemiBold text-2xl text-[#E58C06] sm:text-3xl">
+              On Our Refunds
+            </h4>
+            <ul className="mb-6 space-y-3">
+              <li className="flex items-center gap-3">
+                <OrangeTick svgWidth="24" svgHeight="24" />
+                <p className="font-satoshiBold text-sm font-bold sm:text-lg">
+                  Upon cancellation, your payment will be returned either to
+                  your Oloja Hub wallet or your original payment method.
+                </p>
+              </li>
+              <li className="flex items-center gap-3">
+                <OrangeTick svgWidth="24" svgHeight="24" />
+                <p className="font-satoshiBold text-sm font-bold sm:text-lg">
+                  If refunded to your wallet, you can use the balance
+                  immediately for your next task or request a refund back to
+                  your original payment method.
+                </p>
+              </li>
+            </ul>
+
+            <h4 className="mb-4 font-clashSemiBold text-2xl text-[#E58C06] sm:text-3xl">
+              Be Advised
+            </h4>
+            <ul className="mb-6 space-y-3">
+              <li className="flex items-center gap-3">
+                <OrangeTick svgWidth="24" svgHeight="24" />
+                <p className="font-satoshiBold text-sm font-bold sm:text-lg">
+                  If you’re deemed responsible for canceling the Task Contract,
+                  the 7% service fee will be retained by Oloja Hub.
+                </p>
+              </li>
+            </ul>
+          </div>
         </section>
 
         <section className="mx-auto w-[93%] text-center sm:w-[85%]">
