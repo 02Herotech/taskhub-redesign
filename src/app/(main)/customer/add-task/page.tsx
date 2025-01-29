@@ -24,7 +24,6 @@ import { FaSortDown } from "react-icons/fa6";
 import Dropdown from "@/components/global/Dropdown";
 import Loading from "@/components/global/loading/page";
 import Progress from "@/components/global/progress";
-import instance from "@/utils/axios.config";
 import { instance as authInstance } from "@/utils/axiosInterceptor.config";
 import axios from "axios";
 
@@ -171,8 +170,9 @@ const AddTaskForm: React.FC = () => {
   useEffect(() => {
     const fetchPostalCodeData = async () => {
       try {
-        const response = await instance.get<PostalCodeData[]>(
-          `util/locations/search?postcode=${selectedCode}`,
+        const baseUrl = process.env.NEXT_PUBLIC_API_URL;
+        const response = await axios.get<PostalCodeData[]>(
+          `${baseUrl}/util/locations/search?postcode=${selectedCode}`,
         );
 
         // Check if response data is an array and has entries
