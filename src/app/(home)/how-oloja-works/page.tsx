@@ -28,7 +28,7 @@ function Page() {
   return (
     <div className="bg-[#EBE9F4] pb-20">
       <header className="mx-auto max-w-7xl pb-10">
-        <div className="absolute left-0 top-0 z-10 flex w-full justify-between overflow-hidden">
+        <div className="absolute left-0 top-0 z-10 hidden w-full justify-between overflow-hidden sm:flex">
           <div
             style={{
               position: "relative",
@@ -329,7 +329,7 @@ function Page() {
         </section>
 
         {/* New Section One  */}
-        <section className="relative mx-auto my-20 w-[93%] overflow-clip rounded-xl bg-[#FAFAFA] px-6 py-10 text-primary sm:w-[85%]">
+        <section className="relative mx-auto mt-20 mb-10 sm:mb-20 w-[93%] overflow-clip rounded-xl bg-[#FAFAFA] px-6 py-10 text-primary sm:w-[85%]">
           <h2 className="mb-5 text-center font-clashSemiBold text-2xl sm:text-4xl">
             Olójà Hub Fees & Charges:{" "}
           </h2>
@@ -342,9 +342,9 @@ function Page() {
             offering services.
           </p>
 
-          <div className="flex flex-col justify-between gap-5 md:flex-row">
+          <div className="flex flex-col justify-between sm:gap-5 md:flex-row">
             <div className="md:w-1/2">
-              <h3 className="mb-5 w-max rounded-xl bg-[#2A1769] px-3 py-2 font-clashSemiBold text-xl text-[#EBE9F4] sm:mb-7 sm:text-3xl">
+              <h3 className="mb-5 w-max rounded-xl bg-[#2A1769] px-3 py-2 font-clashSemiBold text-lg text-[#EBE9F4] sm:mb-7 sm:text-2xl">
                 As a Customer
               </h3>
               <motion.div
@@ -370,7 +370,7 @@ function Page() {
                 whileInView={{ x: 0, opacity: 1 }}
                 viewport={{ once: true }}
                 transition={{ delay: 0.5, duration: 0.4 }}
-                className="mb-14 ml-20 flex items-center gap-3 rounded-lg bg-[#EBE9F4] px-3 py-2 text-sm sm:text-xl"
+                className="mb-10 sm:mb-14 ml-20 flex items-center gap-3 rounded-lg bg-[#EBE9F4] px-3 py-2 text-sm sm:text-xl"
               >
                 {/* 24 x 24  */}
                 <Image
@@ -387,7 +387,7 @@ function Page() {
                 </p>
               </motion.div>
 
-              <h3 className="mb-5 w-max rounded-xl bg-[#2A1769] px-3 py-2 font-clashSemiBold text-xl text-[#EBE9F4] sm:mb-7 sm:bg-[#E58C06] sm:text-3xl">
+              <h3 className="mb-5 w-max rounded-xl px-3 py-2 font-clashSemiBold text-lg text-[#EBE9F4] sm:mb-7 bg-[#E58C06] sm:text-2xl">
                 As a Service Provider
               </h3>
               <motion.div
@@ -415,7 +415,7 @@ function Page() {
             </div>
 
             <div className="md:w-1/2">
-              <div className="mx-auto flex h-[400px] max-w-[390px] items-center justify-center rounded-full bg-[#FCF4E659] sm:h-[449px]">
+              <div className="mx-auto flex h-[350px] max-w-[390px] items-center justify-center rounded-full bg-[#FCF4E659] sm:h-[449px]">
                 <Image
                   width={500}
                   height={500}
