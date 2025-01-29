@@ -219,7 +219,6 @@ const AddTaskForm: React.FC = () => {
     const fetchItems = async () => {
       try {
         const response = await axios.get(process.env.NEXT_PUBLIC_API_URL + "/util/all-categories");
-        console.log(response)
         const data: Item[] = response.data;
         setItems(data);
       } catch (error) {

@@ -429,6 +429,7 @@ const EditProfile = () => {
                       )}
                     </label>
                     <DatePicker
+                      placeholderText="DD/MM/YYYY"
                       id="dateOfBirth"
                       selected={field.value || null} // Use null if there's no date
                       onChange={(date) => field.onChange(date ? date : "")}
