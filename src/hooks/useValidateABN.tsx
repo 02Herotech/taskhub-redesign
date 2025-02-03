@@ -1,5 +1,6 @@
 import { useState, useEffect, SetStateAction } from "react";
-import { instance as authInstance } from "@/utils/axiosInterceptor.config";
+import { useSession } from "next-auth/react";
+import axios from "axios";
 
 type Props = {
   watchABN: string | null | undefined;
@@ -14,19 +15,23 @@ function useValidateABN(
   setErr: (value: SetStateAction<string>) => void,
 ) {
   const [isValidABN, setIsValidABN] = useState<boolean>(false);
+  const session = useSession();
+  const token = session?.data?.user.accessToken;
 
   useEffect(() => {
     const validateABN = async () => {
+      if (!token) return;
       if (userDetails.abn) {
         setIsValidABN(true);
         return;
       }
       if (watchABN) {
         try {
-          const response = await authInstance.get(
-            `service_provider/validate-abn/${watchABN}`,
+          const response = await axios.get(
+            `${process.env.NEXT_PUBLIC_API_URL}/service_provider/validate-abn/${watchABN}`,
+            {headers: {Authorization: `Bearer ${token}`}}
           );
-          if (response.data) {
+          if (response?.data) {
             setIsValidABN(true);
           }
         } catch (error: any) {
@@ -50,7 +55,7 @@ function useValidateABN(
     }, 500);
 
     return () => clearTimeout(debounceValidation);
-  }, [watchABN, userDetails]);
+  }, [watchABN, token, userDetails]);
 
   return isValidABN;
 }

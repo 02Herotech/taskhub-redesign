@@ -19,6 +19,7 @@ import CustomerTaskOffers from "@/components/dashboard/customer/CustomerTaskOffe
 import { useSession } from "next-auth/react";
 import { instance as authInstance } from "@/utils/axiosInterceptor.config";
 import Popup from "@/components/global/Popup";
+import Link from "next/link";
 
 const NewTaskDetails = ({ params }: { params: { id: string } }) => {
   const id = params.id;
@@ -251,13 +252,19 @@ const NewTaskDetails = ({ params }: { params: { id: string } }) => {
                   height={219}
                   className="absolute -left-12 top-12 w-12 lg:-left-[53px] lg:top-8 lg:w-16"
                 />
-                <div className="flex justify-center space-x-3 md:justify-around">
+                <div className="flex justify-center space-x-3">
                   <button
                     onClick={() => setOpenPopup(false)}
                     className="rounded-2xl bg-status-purpleBase p-2 text-[14px] text-white outline-none md:w-[100px]"
                   >
                     Close
                   </button>
+
+                  <Link href="/customer/profile/edit-profile">
+                    <button className="rounded-2xl border border-primary px-4 py-2 text-[14px] text-status-purpleBase outline-none">
+                      Go to profile
+                    </button>
+                  </Link>
                 </div>
               </div>
             </div>

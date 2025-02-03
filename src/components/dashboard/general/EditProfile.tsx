@@ -182,7 +182,7 @@ const EditProfile = () => {
 
       try {
         const { data } = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_URL}util/locations/search?postcode=${watchPostcode}`,
+          `${process.env.NEXT_PUBLIC_API_URL}/util/locations/search?postcode=${watchPostcode}`,
         );
 
         // Map suburbs from the Name field
