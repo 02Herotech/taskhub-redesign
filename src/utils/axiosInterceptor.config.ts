@@ -21,6 +21,7 @@ instance.interceptors.response.use(
       await signOut();
       redirect("/home");
     }
+    Promise.reject(error)
   },
 );
 

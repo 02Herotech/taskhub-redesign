@@ -67,9 +67,6 @@ const EditProfile = () => {
   const { data: session } = useSession();
   const user = session?.user?.user;
 
-  //Todo Token is passed to hook verifying ABN (Refactor hook)
-  const token = session?.user?.accessToken;
-
   const isServiceProvider = user?.roles[0] === "SERVICE_PROVIDER";
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -115,8 +112,7 @@ const EditProfile = () => {
   const watchField = watch();
   const watchABN = watch("abn");
 
-  /**Boolean variable representing Valid TFN status, formerly ABN, now back to ABN */
-  const isABNValid = useValidateABN(watchABN, userDetails, setErr);
+  const { isValidABN, error: ABNError } = useValidateABN(watchABN, userDetails);
 
   const ABNInputRef = useRef<HTMLDivElement | null>(null);
 
@@ -135,7 +131,7 @@ const EditProfile = () => {
           lastName: data.lastName || "",
           dateOfBirth: data.dateOfBirth ? new Date(data.dateOfBirth) : null,
           // phoneNumber: data.phoneNumber || "",
-          emailAddress: data.emailAddress || "",
+          emailAddress: data.emailAddress || user?.emailAddress || "",
           postcode: data.postalCode || "",
           suburb: data.suburbs || "",
           state: data.state || "",
@@ -228,7 +224,7 @@ const EditProfile = () => {
   }, [watchPostcode, setValue]);
 
   const handleSubmitUserData: SubmitHandler<UserDataType> = async (data) => {
-    if (isServiceProvider && !isABNValid) {
+    if (isServiceProvider && !isValidABN) {
       if (ABNInputRef.current) {
         ABNInputRef.current.scrollIntoView({
           behavior: "smooth",
@@ -238,6 +234,16 @@ const EditProfile = () => {
       }
       return;
     }
+    (data.idImageBack = "null"), (data.idImageFront = "null");
+    const isIncompleteData = Object.entries(data).some(([key, value]) => {
+      return value === "" || value == null;
+    });
+    console.log(data);
+    if (isIncompleteData) {
+      setEditProfileError("Missing required fields");
+      return;
+    }
+    setEditProfileError("");
     try {
       let submitData: any;
       let url;
@@ -368,7 +374,7 @@ const EditProfile = () => {
                 userProfile.profile?.profileImage ??
                 "/assets/images/serviceProvider/user.jpg"
               }
-              alt=""
+              alt="User profile picture"
               width={100}
               height={100}
               className="size-32 h-full w-full rounded-full object-cover"
@@ -586,8 +592,8 @@ const EditProfile = () => {
                   minLength={9}
                 />
               </div>
-              {!isABNValid && !userDetails.tfn && err && (
-                <div className="text-red-500 ">{err}</div>
+              {!isValidABN && !userDetails.abn && ABNError && (
+                <div className="text-red-500 ">{ABNError}</div>
               )}
               <p className="font-satoshiMedium text-[13px] text-primary">
                 Don&apos;t have an ABN? Register easily{" "}
@@ -772,7 +778,7 @@ const EditProfile = () => {
           )}
 
           {editProfileError && (
-            <div className="my-1 text-end text-base font-semibold text-status-error-100 lg:px-24">
+            <div className="my-1 text-left text-base font-semibold text-status-error-100 lg:px-24 lg:text-end">
               {editProfileError}
             </div>
           )}
