@@ -2,7 +2,6 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import Head from "next/head";
 import { IoIosArrowForward } from "react-icons/io";
 import { PiFileArrowDownDuotone } from "react-icons/pi";
@@ -25,6 +24,8 @@ import { FaSortDown } from "react-icons/fa6";
 import Dropdown from "@/components/global/Dropdown";
 import Loading from "@/components/global/loading/page";
 import Progress from "@/components/global/progress";
+import { instance as authInstance } from "@/utils/axiosInterceptor.config";
+import axios from "axios";
 
 interface FormData {
   taskBriefDescription: string;
@@ -61,7 +62,6 @@ interface CustomInputProps {
 
 const AddTaskForm: React.FC = () => {
   const session = useSession();
-  const { update } = useSession();
   const router = useRouter();
   const token = session?.data?.user.accessToken;
   const isAuthenticated = session.status === "authenticated";
@@ -122,34 +122,27 @@ const AddTaskForm: React.FC = () => {
       }));
     }
   }, []);
-  // End of getting description from the marketplace
 
   //Check if user is verified and update session
   useEffect(() => {
     const updateUserData = async () => {
-      if (!token) return;
-      if (isEnabled) return;
+      //Check if user is not authenticated so the auth instance doesnt fire the re-directions when user is logged in
+      if (session.status !== "authenticated" || isEnabled) return;
       try {
-        const url = `${process.env.NEXT_PUBLIC_API_URL}/customer/profile`;
-        const { data } = await axios.get(url, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "multipart/form-data",
-          },
-        });
+        const { data } = await authInstance.get("customer/profile");
         if (!data.isEnabled) return;
         //Update session
         const user = session.data?.user;
         if (!user) return;
         const { user: userInfo } = user;
         userInfo.enabled = data.isEnabled;
-        await update({ user: userInfo });
+        await session.update({ user: userInfo });
       } catch (error) {
         console.error(error);
       }
     };
     updateUserData();
-  }, [token]);
+  }, [isEnabled, session]);
 
   const handleLoginNavigation = () => {
     setCookie("redirectToAddTask", "/customer/add-task", { maxAge: 360000 });
@@ -177,8 +170,9 @@ const AddTaskForm: React.FC = () => {
   useEffect(() => {
     const fetchPostalCodeData = async () => {
       try {
+        const baseUrl = process.env.NEXT_PUBLIC_API_URL;
         const response = await axios.get<PostalCodeData[]>(
-          `${process.env.NEXT_PUBLIC_API_URL}/util/locations/search?postcode=${selectedCode}`,
+          `${baseUrl}/util/locations/search?postcode=${selectedCode}`,
         );
 
         // Check if response data is an array and has entries
@@ -225,7 +219,7 @@ const AddTaskForm: React.FC = () => {
     const fetchItems = async () => {
       try {
         const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_URL}/util/all-categories`,
+          process.env.NEXT_PUBLIC_API_URL + "/util/all-categories",
         );
         const data: Item[] = response.data;
         setItems(data);
@@ -483,81 +477,75 @@ const AddTaskForm: React.FC = () => {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setLoading(true);
+    if (!isAuthenticated) return setIsSuccessPopup(true);
     if (validateFields() && validateField1()) {
-      if (isEnabled) {
-        try {
-          let finalTask = { ...task };
+      try {
+        let finalTask = { ...task };
 
-          if (termAccepted) {
-            finalTask = { ...finalTask };
-          }
-
-          if (selectedDate && selectedTime) {
-            const date = dateString;
-            const time = timeString;
-            finalTask = { ...finalTask, taskDate: date, taskTime: time };
-          } else if (termAccepted) {
-            finalTask = { ...finalTask, termAccepted: true };
-          }
-
-          if (isOpen && activeButtonIndex === 1) {
-            const type = "REMOTE_SERVICE";
-            finalTask = { ...finalTask, taskType: type };
-          } else {
-            finalTask = {
-              ...finalTask,
-              taskType: "PHYSICAL_SERVICE",
-              suburb: selectedCity,
-              postCode: selectedCode,
-              state: postalCodeData[0].State,
-            };
-          }
-
-          if (!task.taskImage) {
-            finalTask = { ...finalTask, taskImage: null };
-          }
-
-          await Promise.race([
-            axios.post(
-              `${process.env.NEXT_PUBLIC_API_URL}/task/post`,
-              finalTask,
-              {
-                headers: {
-                  Authorization: `Bearer ${token}`,
-                  "Content-Type": "multipart/form-data",
-                },
-              },
-            ),
-            timeout(10000),
-          ]);
-
-          setTask({
-            taskBriefDescription: "",
-            taskImage: null,
-            taskTime: "",
-            taskDate: "",
-            taskType: "",
-            termAccepted: false,
-            suburb: "",
-            state: "",
-            postCode: "",
-            customerBudget: null,
-            categoryId: null,
-            taskDescription: "",
-          });
-
-          setIsSuccessPopupOpen(true);
-        } catch (error: any) {
-          console.error("Error submitting form:", error);
-          setErrorMessage(
-            error.response.data.message ||
-              "An error occurred, please try again",
-          );
-        } finally {
-          setLoading(false);
+        if (termAccepted) {
+          finalTask = { ...finalTask };
         }
-      } else {
-        setIsEnabledPopup(true);
+
+        if (selectedDate && selectedTime) {
+          const date = dateString;
+          const time = timeString;
+          finalTask = { ...finalTask, taskDate: date, taskTime: time };
+        } else if (termAccepted) {
+          finalTask = { ...finalTask, termAccepted: true };
+        }
+
+        if (isOpen && activeButtonIndex === 1) {
+          const type = "REMOTE_SERVICE";
+          finalTask = { ...finalTask, taskType: type };
+        } else {
+          finalTask = {
+            ...finalTask,
+            taskType: "PHYSICAL_SERVICE",
+            suburb: selectedCity,
+            postCode: selectedCode,
+            state: postalCodeData[0].State,
+          };
+        }
+
+        if (!task.taskImage) {
+          finalTask = { ...finalTask, taskImage: null };
+        }
+
+        const url = `${process.env.NEXT_PUBLIC_API_URL}/task/post`;
+        await Promise.race([
+          authInstance.post('task/post', finalTask,
+            {
+              headers: {
+                "Content-Type": "multipart/form-data",
+              },
+            },
+          ),
+          timeout(10000),
+        ]);
+
+        setTask({
+          taskBriefDescription: "",
+          taskImage: null,
+          taskTime: "",
+          taskDate: "",
+          taskType: "",
+          termAccepted: false,
+          suburb: "",
+          state: "",
+          postCode: "",
+          customerBudget: null,
+          categoryId: null,
+          taskDescription: "",
+        });
+
+        //Todo Check for enabled here to show popup
+        setIsSuccessPopupOpen(true);
+      } catch (error: any) {
+        console.error("Error submitting form:", error);
+        setErrorMessage(
+          error.response.data.message || "An error occurred, please try again",
+        );
+      } finally {
         setLoading(false);
       }
     } else {
@@ -928,7 +916,7 @@ const AddTaskForm: React.FC = () => {
                   placeholder="500"
                   className={`appearance-none rounded-2xl bg-[#EBE9F4] p-3 pl-6 text-[13px] placeholder:font-bold ${errors.customerBudget ? "border border-[#ff0000] outline-[#FF0000]" : "border-none outline-none"}`}
                 />
-                <p className="absolute left-3 top-8 md:top-8">$</p>
+                <p className="absolute left-3 top-8 md:top-9">$</p>
               </div>
               <div className="text-[#FF0000]">
                 {errors.city ||
@@ -1063,10 +1051,10 @@ const AddTaskForm: React.FC = () => {
               <div>
                 <div className="space-y-2">
                   <h2 className="text-4xl text-status-darkpurple">
-                    Add a Task
+                    Post a Task
                   </h2>
                   <p className="text-[12px] text-[#716F78]">
-                    Please fill out the information below to add a new task.
+                    Please fill out the information below to post a new task.
                   </p>
                 </div>
                 {loading && <Loading />}
@@ -1079,7 +1067,7 @@ const AddTaskForm: React.FC = () => {
           <Popup
             isOpen={isSuccessPopup}
             onClose={() => {
-              setIsSuccessPopupOpen(false);
+              setIsSuccessPopup(false);
             }}
           >
             <div className="px-16 py-10 lg:px-24">
@@ -1171,7 +1159,7 @@ const AddTaskForm: React.FC = () => {
           <Popup
             isOpen={isSuccessPopupOpen}
             onClose={() => {
-              router.push("/marketplace");
+              router.push("/customer/tasks");
               setIsSuccessPopupOpen(false);
             }}
           >
@@ -1188,7 +1176,7 @@ const AddTaskForm: React.FC = () => {
                     Your task has been posted!
                   </p>
                   <p className="text-center lg:text-[20px]">
-                    please click on the button to proceed to marketplace
+                    Please click on the button to view your tasks
                   </p>
                 </div>
                 <Image
@@ -1197,9 +1185,9 @@ const AddTaskForm: React.FC = () => {
                   className="absolute -right-24 top-36  w-32 font-satoshiMedium lg:-right-20 lg:top-2/3"
                 />
                 <div className="flex justify-center">
-                  <Link href="/marketplace">
-                    <button className="w-[100px] rounded-2xl bg-status-purpleBase p-2 text-[14px] text-white outline-none">
-                      Go Home
+                  <Link href="/customer/tasks">
+                    <button className="rounded-2xl bg-status-purpleBase p-2 text-[14px] text-white outline-none">
+                      View Tasks
                     </button>
                   </Link>
                 </div>

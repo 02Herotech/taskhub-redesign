@@ -8,35 +8,22 @@ import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import ProfileCompletion from "@/components/serviceProviderDashboard/profile/ProfileCompletion";
 import { defaultUserDetails } from "@/data/data";
-import axios from "axios";
-import { useSession } from "next-auth/react";
+import { instance as authInstance } from "@/utils/axiosInterceptor.config";
 
 const Page = () => {
   const [fetchedUserData, setFetchedUserData] = useState(defaultUserDetails);
 
-  const session = useSession();
-  const user = session?.data?.user?.user;
-  const token = session?.data?.user?.accessToken;
-
   useEffect(() => {
     const fetchUserData = async () => {
-      if (!token) return;
       try {
-        const url =
-          `${process.env.NEXT_PUBLIC_API_URL}/service_provider/profile`;
-        const { data } = await axios.get(url, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "multipart/form-data",
-          },
-        });
+        const { data } = await authInstance.get("service_provider/profile");
         setFetchedUserData(data);
       } catch (error) {
         console.error(error);
       }
     };
     fetchUserData();
-  }, [token]);
+  }, []);
 
   return (
     <main className="space-y-8 p-4 max-md:pt-10 lg:p-8">
@@ -77,7 +64,7 @@ const Page = () => {
           <CompletionRate />
         </motion.div>
 
-        <div className="flex items-center gap-6 w-full md:hidden overflow-auto">
+        <div className="flex w-full items-center gap-6 overflow-auto md:hidden">
           <motion.div
             className="flex-shrink-0"
             initial={{ opacity: 0, translateY: "5rem" }}

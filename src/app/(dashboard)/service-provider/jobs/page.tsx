@@ -1,30 +1,18 @@
 "use client";
-
 import JobCard from "@/components/dashboard/serviceProvider/jobs/JobCard";
 import { marketPlaceModalIcon } from "@/lib/svgIcons";
 import Loading from "@/shared/loading";
-import axios from "axios";
-import { useSession } from "next-auth/react";
 import React, { useEffect, useState } from "react";
+import { instance as authInstance } from "@/utils/axiosInterceptor.config";
 
 const Jobs = () => {
   const [bookingData, setBookingData] = useState<BookingType[]>([]);
   const [loading, setLoading] = useState(false);
 
-  const session = useSession();
-  const token = session?.data?.user?.accessToken;
-
   const fetchAllBookings = async () => {
-    if (!token) return;
     try {
       setLoading(true);
-      const url =
-        `${process.env.NEXT_PUBLIC_API_URL}/booking/service-provider`;
-      const response = await axios.get(url, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await authInstance.get("booking/service-provider");
       const data: BookingType[] = response.data;
       const filteredData = data.filter(
         (item) => item.bookingStage === "PROPOSED",
@@ -40,7 +28,7 @@ const Jobs = () => {
   useEffect(() => {
     fetchAllBookings();
     // eslint-disable-next-line
-  }, [token]);
+  }, []);
 
   return (
     <>

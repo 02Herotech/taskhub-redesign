@@ -16,6 +16,14 @@ interface PricingPlanProps {
   negotiable: boolean;
 }
 
+type ModalData = {
+  pricing: number;
+  isAuthenticated: string | undefined;
+  isServiceProvider: boolean;
+  title: string;
+  negotiable: boolean;
+};
+
 const PricingPlan = ({
   planOneDescription,
   planOnePrice,
@@ -37,13 +45,7 @@ const PricingPlan = ({
     index: 1,
     state: false,
   });
-  const [modalData, setModalData] = useState<{
-    pricing: number;
-    isAuthenticated: string | undefined;
-    isServiceProvider: boolean;
-    title: string;
-    negotiable: boolean;
-  }>({
+  const [modalData, setModalData] = useState<ModalData>({
     pricing: 0,
     isAuthenticated,
     isServiceProvider,
@@ -61,7 +63,6 @@ const PricingPlan = ({
   function abbreviateNumber(amount: number): string {
     return amount.toLocaleString();
   }
-
 
   const renderDescription = (description: string, index: number) => {
     const words = description.split(" ");

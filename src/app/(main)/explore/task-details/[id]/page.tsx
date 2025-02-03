@@ -44,11 +44,6 @@ const TaskDetailsPage = ({ params }: { params: { id: string } }) => {
   const pathname = usePathname();
   const router = useRouter();
   const fetchedUserData = useUserProfileData();
-  console.log(fetchedUserData);
-
-  useEffect(() => {
-    console.log("User data fetch complete");
-  }, [fetchedUserData]);
 
   const [shareDropdownOpen, setShareDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -529,7 +524,7 @@ const TaskDetailsPage = ({ params }: { params: { id: string } }) => {
         <div className="px-14 py-10 lg:px-24">
           <div className="relative grid items-center justify-center space-y-5">
             <p className="font-clashDisplay text-center text-[20px] font-extrabold text-[#2A1769] md:text-[36px] lg:text-[37px]">
-              Your profile is not updated/enabled
+              Your profile is not updated
             </p>
             <div>
               <p className="text-center text-[14px] lg:text-[20px]">
@@ -560,13 +555,13 @@ const TaskDetailsPage = ({ params }: { params: { id: string } }) => {
                 </button>
               </Link>
 
-              <button
-                //Todo
-                // onClick={handleProfile}
-                className="rounded-2xl bg-status-purpleBase p-2 text-[14px] text-white outline-none md:w-[100px]"
-              >
-                Go to profile
-              </button>
+              <Link href="/service-provider/profile">
+                <button
+                  className="rounded-2xl bg-status-purpleBase p-2 text-[14px] text-white outline-none md:w-[100px]"
+                >
+                  Go to profile
+                </button>
+              </Link>
             </div>
           </div>
         </div>

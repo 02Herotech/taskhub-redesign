@@ -1,8 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import AllServices from "@/components/dashboard/serviceProvider/services/AllServices";
-import { useSession } from "next-auth/react";
-import axios from "axios";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
 import PaidServices from "@/components/dashboard/serviceProvider/services/PaidServices";
@@ -11,10 +9,10 @@ import CompletedServices from "@/components/dashboard/serviceProvider/services/C
 import InspectionServices from "@/components/dashboard/serviceProvider/services/Inspection";
 import OngoingServiceModal from "@/components/dashboard/serviceProvider/services/OngoingServiceModal";
 import AcceptedServices from "@/components/dashboard/serviceProvider/services/AcceptedServices";
+import { instance as authInstance } from "@/utils/axiosInterceptor.config";
 
 const ServicesPage = () => {
   const [currentCategory, setCurrentCategory] = useState("services");
-
   const [acceptedBookingData, setAcceptedBookingData] = useState<BookingType[]>(
     [],
   );
@@ -22,11 +20,9 @@ const ServicesPage = () => {
   const [jobs, setJobs] = useState<JobsType[]>([]);
   const [loading, setLoading] = useState(false);
   const [refresh, setRefresh] = useState(false);
-
   const { profile: user } = useSelector(
     (state: RootState) => state.userProfile,
   );
-
   const [modalData, setModalData] = useState<ModalDataType>({
     isModalShown: false,
     message: "",
@@ -36,20 +32,10 @@ const ServicesPage = () => {
     error: "",
   });
 
-  const session = useSession();
-  const token = session?.data?.user?.accessToken;
-
   const fetchBookings = async () => {
-    if (!token) return;
     try {
       setLoading(true);
-      const url =
-        `${process.env.NEXT_PUBLIC_API_URL}/booking/service-provider`;
-      const response = await axios.get(url, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await authInstance.get("booking/service-provider");
       const data: BookingType[] = response.data;
       setAllBookings(data);
       const filteredAcceptedData = data.filter(
@@ -71,14 +57,8 @@ const ServicesPage = () => {
   const fetchJobs = async () => {
     try {
       setLoading(true);
-      const url =
-        `${process.env.NEXT_PUBLIC_API_URL}/booking/job/service-provider/` +
-        user?.serviceProviderId;
-      const { data } = await axios.get(url, {
-        headers: {
-          Authorization: "Bearer " + token,
-        },
-      });
+      const url = `booking/job/service-provider/` + user?.serviceProviderId;
+      const { data } = await authInstance.get(url);
       setJobs(data);
     } catch (error: any) {
       console.error(error.response?.data || error);
@@ -95,7 +75,7 @@ const ServicesPage = () => {
 
     handlefetches();
     // eslint-disable-next-line
-  }, [token, user, refresh]);
+  }, [user, refresh]);
 
   const handleReportService = async (id: number) => {
     setModalData((prev) => ({
@@ -185,5 +165,3 @@ const ServicesPage = () => {
 };
 
 export default ServicesPage;
-
-//  onClick={() => handleCompleteService(item.id)}

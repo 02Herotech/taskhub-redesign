@@ -3,20 +3,14 @@
 import Congratulations from "@/components/dashboard/serviceProvider/jobs/Congratulations";
 import Invoice from "@/components/serviceProviderDashboard/jobs/Invoice";
 import Loading from "@/shared/loading";
-import { RootState } from "@/store";
-import {
-  dateFromArrays,
-  formatDateFromNumberArray,
-  formatDateFromNumberArrayToRelativeDate,
-} from "@/utils";
-import axios from "axios";
-import { useSession } from "next-auth/react";
+import { dateFromArrays } from "@/utils";
 import Image from "next/image";
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { IoLocationOutline } from "react-icons/io5";
 import { BeatLoader } from "react-spinners";
 import MessageButton from "@/components/global/MessageButton";
+import { instance as authInstance } from "@/utils/axiosInterceptor.config";
 
 const ViewJobs = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -33,20 +27,12 @@ const ViewJobs = () => {
   const [invoiceDraft, setInvoiceDraft] = useState<InvoiceDraftType>();
   const [showCongratulations, setShowCongratulations] = useState(false);
 
-  const session = useSession();
-  const token = session?.data?.user?.accessToken;
   const { id } = useParams();
 
   const fetchSingleBooking = async () => {
-    if (!token) return;
     try {
       setLoading(true);
-      const url = `${process.env.NEXT_PUBLIC_API_URL}/booking/` + id;
-      const response = await axios.get(url, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await authInstance.get("booking/" + id);
       const bookingData = response.data;
       setCurrentBooking(bookingData);
     } catch (error) {
@@ -59,23 +45,15 @@ const ViewJobs = () => {
   useEffect(() => {
     fetchSingleBooking();
     // eslint-disable-next-line
-  }, [token, requestStatus.data]);
+  }, [requestStatus.data]);
 
   const handleAcceptBooking = async () => {
     try {
       setRequestStatus((prev) => ({ ...prev, isAcceptRequesting: true }));
-      const url =
-        `${process.env.NEXT_PUBLIC_API_URL}/booking/accept-proposal?bookingId=` +
-        currentBooking?.id;
-      const response = await axios.post(
-        url,
-        { bookingId: currentBooking?.id },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        },
-      );
+      const url = `booking/accept-proposal?bookingId=${currentBooking?.id}`;
+      const response = await authInstance.post(url, {
+        bookingId: currentBooking?.id,
+      });
       setRequestStatus((prev) => ({ ...prev, data: response.data }));
       setShowCongratulations(true);
     } catch (error) {
@@ -92,18 +70,10 @@ const ViewJobs = () => {
   const handleCancelBooking = async () => {
     try {
       setRequestStatus((prev) => ({ ...prev, isRejectRequesting: true }));
-      const url =
-        `${process.env.NEXT_PUBLIC_API_URL}/booking/reject-proposal?bookingId=` +
-        currentBooking?.id;
-      const response = await axios.post(
-        url,
-        { bookingId: currentBooking?.id },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        },
-      );
+      const url = `booking/reject-proposal?bookingId=${currentBooking?.id}`;
+      const response = await authInstance.post(url, {
+        bookingId: currentBooking?.id,
+      });
       setRequestStatus((prev) => ({ ...prev, data: response.data }));
     } catch (error) {
       console.error("An error occurred while fetching services:", error);
@@ -198,7 +168,10 @@ const ViewJobs = () => {
                     <p className="font-bold capitalize">
                       {/* {dateFromNumberArray(currentBooking.startDate)} */}
                       {currentBooking.startDate
-                        ? dateFromArrays(currentBooking.startDate, currentBooking.startTime)
+                        ? dateFromArrays(
+                            currentBooking.startDate,
+                            currentBooking.startTime,
+                          )
                         : "Flexible"}
                     </p>
                   </div>
@@ -208,8 +181,8 @@ const ViewJobs = () => {
                         <IoLocationOutline />
                       </span>
                       <span>
-                            {currentBooking?.userAddress?.suburb}{" "}
-                            {currentBooking?.userAddress?.state}
+                        {currentBooking?.userAddress?.suburb}{" "}
+                        {currentBooking?.userAddress?.state}
                       </span>
                     </p>
                   )}
@@ -290,15 +263,15 @@ const ViewJobs = () => {
                 )}
                 {(currentBooking.bookingStage === "PROPOSED" ||
                   currentBooking.bookingStage === "ACCEPTED") && (
-                    <div className="flex w-fit items-center gap-2 max-md:w-full max-md:flex-col">
-                      <MessageButton
-                        recipientId={currentBooking?.customer.user.id.toString()}
-                        recipientName={currentBooking?.customer.user.fullName}
-                        message="Chat With Customer"
-                        className="border border-violet-normal  bg-transparent text-violet-normal hover:bg-violet-100  max-md:w-full max-md:px-4 max-md:py-2 "
-                      />
+                  <div className="flex w-fit items-center gap-2 max-md:w-full max-md:flex-col">
+                    <MessageButton
+                      recipientId={currentBooking?.customer.user.id.toString()}
+                      recipientName={currentBooking?.customer.user.fullName}
+                      message="Chat With Customer"
+                      className="border border-violet-normal  bg-transparent text-violet-normal hover:bg-violet-100  max-md:w-full max-md:px-4 max-md:py-2 "
+                    />
 
-                      {/* {invoiceDraft && (
+                    {/* {invoiceDraft && (
                       <button
                         onClick={() => setIsModalOpen(true)}
                         className="rounded-full bg-violet-active px-6 py-3 text-sm font-bold  text-violet-normal transition-opacity duration-300 hover:opacity-90 max-md:w-full max-md:px-4 max-md:py-2 max-md:text-sm "
@@ -306,14 +279,14 @@ const ViewJobs = () => {
                         View Saved Offer
                       </button>
                     )} */}
-                      {/* <button
+                    {/* <button
                           onClick={() => setIsModalOpen(true)}
                           className="rounded-full bg-violet-normal px-6 py-3 text-sm font-medium text-white transition-opacity duration-300 hover:opacity-90 max-md:w-full max-md:px-4 max-md:py-2 max-md:text-sm"
                         >
                           Make An Offer
                         </button> */}
-                    </div>
-                  )}
+                  </div>
+                )}
               </div>
               {requestStatus.error && (
                 <p className="font-medium text-red-500">

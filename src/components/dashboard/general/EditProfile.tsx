@@ -3,7 +3,6 @@ import { useEffect, useState, useRef } from "react";
 import { useForm, Controller, SubmitHandler } from "react-hook-form";
 import { useSession } from "next-auth/react";
 import { useSelector, useDispatch } from "react-redux";
-import axios from "axios";
 import Image from "next/image";
 import DatePicker from "react-datepicker";
 import { BiCamera, BiCheck } from "react-icons/bi";
@@ -18,10 +17,11 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { getCookie, deleteCookie } from "cookies-next";
 import { UserDataType } from "@/lib/validation/userData.schema";
 import FormField from "./FormField";
-import useValidateABN from "@/hooks/useValidateABN";
 import Notice from "./Notice";
-import useValidateTFN from "@/hooks/useValidateTFN";
 import instance from "@/utils/axios.config";
+import { instance as authInstance } from "@/utils/axiosInterceptor.config";
+import axios from "axios";
+import useValidateABN from "@/hooks/useValidateABN";
 
 const idTypeObject = [
   { label: "Medicare Card", value: "MEDICARE_CARD" },
@@ -66,7 +66,7 @@ const EditProfile = () => {
 
   const { data: session } = useSession();
   const user = session?.user?.user;
-  const token = session?.user?.accessToken;
+
   const isServiceProvider = user?.roles[0] === "SERVICE_PROVIDER";
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -112,23 +112,15 @@ const EditProfile = () => {
   const watchField = watch();
   const watchABN = watch("abn");
 
-  /**Boolean variable representing Valid TFN status, formerly ABN */
-  const isABNValid = useValidateTFN(watchABN, token, userDetails, setErr);
+  const { isValidABN, error: ABNError } = useValidateABN(watchABN, userDetails);
 
   const ABNInputRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     const fetchUserData = async () => {
-      if (!token) return;
       try {
-        // instance.get("/customer/profile");
-        const url = `${process.env.NEXT_PUBLIC_API_URL}/${isServiceProvider ? "service_provider" : "customer"}/profile`;
-        const { data } = await axios.get(url, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        });
+        const url = `${isServiceProvider ? "service_provider" : "customer"}/profile`;
+        const { data } = await authInstance.get(url);
         setUserDetails(data);
         setIsDocumentEditable(
           data.verificationStatus === null ||
@@ -139,7 +131,7 @@ const EditProfile = () => {
           lastName: data.lastName || "",
           dateOfBirth: data.dateOfBirth ? new Date(data.dateOfBirth) : null,
           // phoneNumber: data.phoneNumber || "",
-          emailAddress: data.emailAddress || "",
+          emailAddress: data.emailAddress || user?.emailAddress || "",
           postcode: data.postalCode || "",
           suburb: data.suburbs || "",
           state: data.state || "",
@@ -161,9 +153,7 @@ const EditProfile = () => {
           bio: isServiceProvider
             ? data.bio || ""
             : "No Bio needed for customer",
-          abn: isServiceProvider
-            ? data.tfn || ""
-            : "No ABN needed for customer",
+          abn: isServiceProvider ? data.abn || "" : "",
         });
       } catch (error) {
         console.error("Error fetching user data:", error);
@@ -172,7 +162,7 @@ const EditProfile = () => {
     };
 
     fetchUserData();
-  }, [token, isServiceProvider, dispatch, reset, isEditingEnabled]);
+  }, [isServiceProvider, dispatch, reset, isEditingEnabled]);
 
   const watchPostcode = watch("postcode");
 
@@ -186,8 +176,9 @@ const EditProfile = () => {
       }
 
       try {
-        const url = `${process.env.NEXT_PUBLIC_API_URL}/util/locations/search?postcode=${watchPostcode}`;
-        const { data } = await axios.get(url);
+        const { data } = await axios.get(
+          `${process.env.NEXT_PUBLIC_API_URL}/util/locations/search?postcode=${watchPostcode}`,
+        );
 
         // Map suburbs from the Name field
         const suburbs = data.map((item: { Name: string }) => item.Name);
@@ -233,7 +224,7 @@ const EditProfile = () => {
   }, [watchPostcode, setValue]);
 
   const handleSubmitUserData: SubmitHandler<UserDataType> = async (data) => {
-    if (isServiceProvider && !isABNValid) {
+    if (isServiceProvider && !isValidABN) {
       if (ABNInputRef.current) {
         ABNInputRef.current.scrollIntoView({
           behavior: "smooth",
@@ -243,6 +234,27 @@ const EditProfile = () => {
       }
       return;
     }
+    (data.idImageBack = "null"), (data.idImageFront = "null");
+    if (!isServiceProvider) data.abn = "null";
+    const isIncompleteData = Object.entries(data).some(([key, value]) => {
+      return value === "" || value == null;
+    });
+    if (isIncompleteData) {
+      setEditProfileError("Missing required fields");
+      return;
+    }
+    if (data.idType === "International Passport" && !selectedDocumentFront) {
+      setEditProfileError("Missing required fields");
+      return;
+    }
+    if (
+      data.idType !== "International Passport" &&
+      (!selectedDocumentBack || !selectedDocumentFront)
+    ) {
+      setEditProfileError("Missing required fields");
+      return;
+    }
+    setEditProfileError("");
     try {
       let submitData: any;
       let url;
@@ -262,7 +274,7 @@ const EditProfile = () => {
           idType: data.idType,
           idNumber: data.idNumber,
           bio: data.bio,
-          tfn: data.abn,
+          abn: data.abn,
         }).reduce((acc, [key, value]) => {
           if (value !== null && value !== undefined && value !== "") {
             // @ts-expect-error "type of key not know"
@@ -270,8 +282,9 @@ const EditProfile = () => {
           }
           return acc;
         }, {});
-        url = `${process.env.NEXT_PUBLIC_API_URL}/service_provider/update`;
+        url = "service_provider/update";
       } else {
+        delete data.abn;
         submitData = Object.entries({
           firstName: data.firstName,
           lastName: data.lastName,
@@ -293,14 +306,11 @@ const EditProfile = () => {
           }
           return acc;
         }, {});
-        url = `${process.env.NEXT_PUBLIC_API_URL}/customer/update`;
+        url = "customer/update";
       }
 
-      await axios.patch(url, submitData, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "multipart/form-data",
-        },
+      await authInstance.patch(url, submitData, {
+        headers: { "Content-Type": "multipart/form-data" },
       });
       setIsProfileUpdatedSuccessfully(true);
       setIsFormModalShown(true);
@@ -376,7 +386,7 @@ const EditProfile = () => {
                 userProfile.profile?.profileImage ??
                 "/assets/images/serviceProvider/user.jpg"
               }
-              alt=""
+              alt="User profile picture"
               width={100}
               height={100}
               className="size-32 h-full w-full rounded-full object-cover"
@@ -438,7 +448,9 @@ const EditProfile = () => {
                       )}
                     </label>
                     <DatePicker
+                      placeholderText="DD/MM/YYYY"
                       id="dateOfBirth"
+                      open={false}
                       selected={field.value || null} // Use null if there's no date
                       onChange={(date) => field.onChange(date ? date : "")}
                       disabled={!isEditingEnabled || !!userDetails.dateOfBirth} // Disable if date exists and not in editing mode
@@ -582,19 +594,29 @@ const EditProfile = () => {
                 ref={ABNInputRef}
               >
                 <FormField
-                  label="TFN"
+                  label="ABN"
                   name="abn"
                   register={register}
                   errors={errors}
                   watch={watch}
                   watchField={watchField}
-                  disabled={!isEditingEnabled || !!userDetails.tfn}
+                  disabled={!isEditingEnabled || !!userDetails.abn}
                   minLength={9}
                 />
               </div>
-              {!isABNValid && !userDetails.tfn && err && (
-                <div className="text-red-500 ">{err}</div>
+              {!isValidABN && !userDetails.abn && ABNError && (
+                <div className="text-red-500 ">{ABNError}</div>
               )}
+              <p className="font-satoshiMedium text-[13px] text-primary">
+                Don&apos;t have an ABN? Register easily{" "}
+                <a
+                  href="https://abnregistration.com.au/?gad_source=1&gclid=Cj0KCQiAwOe8BhCCARIsAGKeD56r4GB5_V_8FDRDVFuKTdv8LYcmwJfIXBC8F99xy66smfnnl6lps1waAqGhEALw_wcB"
+                  target="_blank"
+                  className="underline"
+                >
+                  here.
+                </a>
+              </p>
             </section>
           )}
 
@@ -768,7 +790,7 @@ const EditProfile = () => {
           )}
 
           {editProfileError && (
-            <div className="my-1 text-end text-base font-semibold text-status-error-100 lg:px-24">
+            <div className="my-1 text-left text-base font-semibold text-status-error-100 lg:px-24 lg:text-end">
               {editProfileError}
             </div>
           )}

@@ -1,9 +1,8 @@
 "use client";
-import { useSession } from "next-auth/react";
 import React, { useState } from "react";
 import JobCard from "../jobs/JobCard";
-import axios from "axios";
 import Loading from "@/shared/loading";
+import { instance as authInstance } from "@/utils/axiosInterceptor.config";
 
 interface PaidServicesPropsType {
   setModalData: React.Dispatch<React.SetStateAction<ModalDataType>>;
@@ -27,21 +26,11 @@ const PaidServices = ({
     loading: false,
   });
 
-  const session = useSession();
-  const token = session?.data?.user?.accessToken;
-
   const handleStartService = async (id: number) => {
     try {
       setStartJobState((prev) => ({ ...prev, loading: true, id }));
-      const url =
-        `${process.env.NEXT_PUBLIC_API_URL}/booking/start-task?jobId=` +
-        id;
-      const body = { jobId: id };
-      const { data } = await axios.post(url, body, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const url = `booking/start-task?jobId=` + id;
+      const { data } = await authInstance.post(url, { jobId: id });
       setModalData((prev) => ({
         ...prev,
         isModalShown: true,

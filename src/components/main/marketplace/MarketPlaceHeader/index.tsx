@@ -79,7 +79,7 @@ const MarketPlaceHeader = () => {
               type="submit"
               className=" max-w-fit rounded-3xl bg-primary px-6 py-3 font-bold transition-all duration-300 hover:opacity-90  "
             >
-              {isServiceProvider ? "Provide a service" : "Add a task"}
+              {isServiceProvider ? "Provide a service" : "Post a task"}
             </button>
           </form>
         </div>

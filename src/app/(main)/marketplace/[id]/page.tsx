@@ -1,12 +1,11 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 "use client";
-
 import Image from "next/image";
 import React, { FormEvent, useEffect, useRef, useState } from "react";
 import { BiCalendarCheck, BiLocationPlus } from "react-icons/bi";
 import PricingPlan from "@/components/matkeplaceSingleTask/PricingPlan";
 import ImageModal from "@/components/main/marketplace/ImageModal";
-import { useParams, usePathname } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
 import MessageButton from "@/components/global/MessageButton";
@@ -19,23 +18,30 @@ import { useGetServiceByIdQuery } from "@/services/listings";
 import Loading from "@/shared/loading";
 
 const Page = ({ params }: { params: { id: string } }) => {
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useState("");
   const [isInviteLoading, setIsInviteLoading] = useState(false);
   const [inviteError, setInviteError] = useState<string | null>(null);
   const [showImageModal, setShowImageModal] = useState({
     state: false,
     image: "",
   });
-  const id = params.id.split('-')[0];;
-  const pathname = usePathname()
+  const id = params.id.split("-")[0];
+  const pathname = usePathname();
 
-  const { data: displayData, isLoading, error } = useGetServiceByIdQuery(id as unknown as number);
+  const {
+    data: displayData,
+    isLoading,
+    error,
+  } = useGetServiceByIdQuery(id as unknown as number);
   const [shareDropdownOpen, setShareDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
         setShareDropdownOpen(false);
       }
     }
@@ -52,31 +58,33 @@ const Page = ({ params }: { params: { id: string } }) => {
 
     // Email validation
     if (!email) {
-      setInviteError('Please enter an email address');
+      setInviteError("Please enter an email address");
       return;
     }
 
     if (!email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
-      setInviteError('Please enter a valid email address');
+      setInviteError("Please enter a valid email address");
       return;
     }
 
     try {
       setIsInviteLoading(true);
-      setInviteError('');
+      setInviteError("");
 
       // Create mailto link with subject and body
-      const subject = encodeURIComponent('Check out this task on Oloja');
-      const body = encodeURIComponent(`I thought you might be interested in this: ${process.env.NEXT_PUBLIC_URL}${pathname}`);
+      const subject = encodeURIComponent("Check out this task on Oloja");
+      const body = encodeURIComponent(
+        `I thought you might be interested in this: ${process.env.NEXT_PUBLIC_URL}${pathname}`,
+      );
       const mailtoLink = `mailto:${email}?subject=${subject}&body=${body}`;
 
       // Open the mailto link
       window.location.href = mailtoLink;
 
-      setEmail('');
+      setEmail("");
       setShareDropdownOpen(false);
     } catch (err) {
-      setInviteError('Failed to open email client. Please try again.');
+      setInviteError("Failed to open email client. Please try again.");
     } finally {
       setIsInviteLoading(false);
     }
@@ -88,18 +96,20 @@ const Page = ({ params }: { params: { id: string } }) => {
 
   if (isLoading) {
     return (
-      <div className="w-full flex flex-col items-center justify-center h-[full]">
+      <div className="flex h-[full] w-full flex-col items-center justify-center">
         <Loading />
       </div>
-    )
+    );
   }
 
   if (error) {
     return (
       <div className="flex h-[50vh] w-full items-center justify-center">
         <div className="space-y-4">
-          <h2 className="text-xl lg:text-3xl  font-satoshiBold font-bold text-primary">Listing not found!</h2>
-          <p className="text-lg lg:text-xl font-satoshiMedium text-[#140B31]">
+          <h2 className="font-satoshiBold text-xl  font-bold text-primary lg:text-3xl">
+            Listing not found!
+          </h2>
+          <p className="font-satoshiMedium text-lg text-[#140B31] lg:text-xl">
             Something went wrong, please try again later.
           </p>
         </div>
@@ -139,8 +149,8 @@ const Page = ({ params }: { params: { id: string } }) => {
             <div className="space-y-8 lg:p-6">
               {/* Main Service Information */}
               <div className="p-6">
-                <div className="pb-4 mb-6">
-                  <h3 className="text-2xl lg:text-3xl font-satoshiBold font-bold first-letter:uppercase">
+                <div className="mb-6 pb-4">
+                  <h3 className="font-satoshiBold text-2xl font-bold first-letter:uppercase lg:text-3xl">
                     {displayData?.listingTitle}
                   </h3>
                 </div>
@@ -151,23 +161,28 @@ const Page = ({ params }: { params: { id: string } }) => {
                     <h4 className="font-satoshiMedium text-lg font-semibold underline underline-offset-4">
                       Service Description
                     </h4>
-                    <p className="font-satoshiMedium text-gray-700 leading-relaxed">
+                    <p className="font-satoshiMedium leading-relaxed text-gray-700">
                       {displayData?.listingDescription}
                     </p>
                   </div>
 
                   {/* Share Service */}
-                  <div className="bg-[#F8F7FA] px-5 py-3 rounded-xl lg:flex items-center justify-between w-full">
-                    <ShareTask pathname={pathname} title={displayData?.listingTitle || ""} description={displayData?.listingDescription || ""} image={displayData?.businessPictures[0] || ""} />
+                  <div className="w-full items-center justify-between rounded-xl bg-[#F8F7FA] px-5 py-3 lg:flex">
+                    <ShareTask
+                      pathname={pathname}
+                      title={displayData?.listingTitle || ""}
+                      description={displayData?.listingDescription || ""}
+                      image={displayData?.businessPictures[0] || ""}
+                    />
                     <div className="relative max-sm:my-4" ref={dropdownRef}>
                       <div
                         onClick={() => setShareDropdownOpen(true)}
                         onKeyDown={(e) => {
-                          if (e.key === 'Enter' || e.key === ' ') {
+                          if (e.key === "Enter" || e.key === " ") {
                             setShareDropdownOpen(!shareDropdownOpen);
                           }
                         }}
-                        className="cursor-pointer transform transition-transform duration-300 group-hover:scale-110"
+                        className="transform cursor-pointer transition-transform duration-300 group-hover:scale-110"
                       >
                         {ShareSvg}
                       </div>
@@ -177,27 +192,34 @@ const Page = ({ params }: { params: { id: string } }) => {
                         onClose={() => setShareDropdownOpen(false)}
                         pathname="/current-path"
                       >
-                        <h5 className="text-start">Invite more friends to join</h5>
+                        <h5 className="text-start">
+                          Invite more friends to join
+                        </h5>
                         <form action="" onSubmit={handleSubmit}>
                           <input
                             type="email"
                             placeholder="Enter e-mail address"
-                            className="mt-4 px-4 py-2 w-full bg-[#EEEEEF] outline-none rounded-lg"
+                            className="mt-4 w-full rounded-lg bg-[#EEEEEF] px-4 py-2 outline-none"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                             disabled={isInviteLoading}
                             aria-label="Email address"
-                            aria-describedby={inviteError ? "email-error" : undefined}
+                            aria-describedby={
+                              inviteError ? "email-error" : undefined
+                            }
                           />
                           {inviteError && (
-                            <p id="email-error" className="text-sm text-red-500 mt-1">
+                            <p
+                              id="email-error"
+                              className="mt-1 text-sm text-red-500"
+                            >
                               {inviteError}
                             </p>
                           )}
-                          <div className="flex items-center justify-center mt-5 mb-3">
+                          <div className="mb-3 mt-5 flex items-center justify-center">
                             <Button
                               theme="secondary"
-                              className="font-satoshiMedium text-white rounded-full"
+                              className="rounded-full font-satoshiMedium text-white"
                               size="sm"
                               type="submit"
                               disabled={isInviteLoading}
@@ -214,27 +236,27 @@ const Page = ({ params }: { params: { id: string } }) => {
                   {/* Location Section */}
                   {displayData?.suburb && (
                     <div className="space-y-2  pt-4">
-                      <h4 className="text-xl lg:text-2xl font-satoshiBold font-semibold">
+                      <h4 className="font-satoshiBold text-xl font-semibold lg:text-2xl">
                         Location
                       </h4>
                       <div className="flex items-center gap-x-2 text-slate-600">
                         <BiLocationPlus className="text-xl" />
-                        <span>{displayData.suburb}, {displayData.state}</span>
+                        <span>
+                          {displayData.suburb}, {displayData.state}
+                        </span>
                       </div>
                     </div>
                   )}
 
                   {/* Availability */}
                   <div className="space-y-4 pt-4">
-                    <h4 className="text-xl lg:text-2xl font-satoshiBold font-semibold">
+                    <h4 className="font-satoshiBold text-xl font-semibold lg:text-2xl">
                       Available days
                     </h4>
                     <div className="space-y-3">
                       <div className="flex items-center gap-x-2 text-slate-600">
                         <BiCalendarCheck className="text-xl" />
-                        <span>
-                          {displayData?.availableDays?.join(', ')}
-                        </span>
+                        <span>{displayData?.availableDays?.join(", ")}</span>
                       </div>
                     </div>
                   </div>
@@ -243,14 +265,14 @@ const Page = ({ params }: { params: { id: string } }) => {
 
               {/* Provider Information */}
               <div className="p-6">
-                <div className="pb-4 mb-6">
-                  <h2 className="text-2xl lg:text-3xl font-satoshiBold font-bold">
+                <div className="mb-6 pb-4">
+                  <h2 className="font-satoshiBold text-2xl font-bold lg:text-3xl">
                     About the Provider
                   </h2>
                 </div>
 
                 <div className="space-y-6">
-                  <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+                  <div className="flex flex-col justify-between gap-6 md:flex-row md:items-center">
                     <div className="flex items-center gap-4">
                       <div className="relative">
                         <Image
@@ -266,12 +288,12 @@ const Page = ({ params }: { params: { id: string } }) => {
                         />
                       </div>
                       <div className="space-y-2">
-                        <p className="text-xl font-satoshiBold">
+                        <p className="font-satoshiBold text-xl">
                           {displayData?.serviceProvider?.user?.fullName}
                         </p>
                         <Link
                           href={`/marketplace/${displayData?.id}/about`}
-                          className="inline-block text-[#e58c06] hover:text-[#cc7c05] underline font-medium transition-colors"
+                          className="inline-block font-medium text-[#e58c06] underline transition-colors hover:text-[#cc7c05]"
                         >
                           View Profile
                         </Link>
@@ -284,7 +306,9 @@ const Page = ({ params }: { params: { id: string } }) => {
                         <div className="md:self-start">
                           <MessageButton
                             recipientId={displayData.serviceProvider.user.id.toString()}
-                            recipientName={displayData?.serviceProvider.user.fullName}
+                            recipientName={
+                              displayData?.serviceProvider.user.fullName
+                            }
                           />
                         </div>
                       )}
@@ -293,7 +317,7 @@ const Page = ({ params }: { params: { id: string } }) => {
                   {/* @ts-ignore */}
                   {displayData?.serviceProvider?.bio && (
                     <div className=" pt-4">
-                      <p className="font-medium text-gray-700 leading-relaxed">
+                      <p className="font-medium leading-relaxed text-gray-700">
                         {/* @ts-ignore */}
                         {displayData?.serviceProvider.bio}
                       </p>
@@ -317,7 +341,7 @@ const Page = ({ params }: { params: { id: string } }) => {
               negotiable={displayData.negotiable}
             />
           )}
-        </section >
+        </section>
 
         {/* Portfolio
         <section className="mx-auto w-full space-y-4 p-4  py-8 lg:p-16 ">
@@ -359,7 +383,7 @@ const Page = ({ params }: { params: { id: string } }) => {
             </div>
           </div>
         </section> */}
-      </main >
+      </main>
     </>
   );
 };

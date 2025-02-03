@@ -27,7 +27,7 @@ const TaskList = () => {
             {tasksData?.length === 0 ? (
                 <div className="flex flex-col items-center justify-center space-y-5 h-[50vh]">
                     <h2 className="text-2xl font-bold text-primary text-center">
-                        No tasks available, please click the button below to add a new task.
+                        No tasks available, please click the button below to post a new task.
                     </h2>
                     <Link href="/customer/add-task">
                         <Button className="rounded-full">Add new task</Button>

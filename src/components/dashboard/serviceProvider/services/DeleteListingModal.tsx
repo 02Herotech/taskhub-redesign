@@ -1,12 +1,11 @@
 "use client";
 import { refreshUserProfile } from "@/store/Features/userProfile";
-import axios from "axios";
-import { useSession } from "next-auth/react";
 import React, { Dispatch, SetStateAction, useState } from "react";
 import { BsExclamationTriangle } from "react-icons/bs";
 import { PiSealCheckFill } from "react-icons/pi";
 import { useDispatch } from "react-redux";
 import { BeatLoader } from "react-spinners";
+import { instance as authInstance } from "@/utils/axiosInterceptor.config";
 
 interface ModalPropsType {
   isDeleteModalShown: { id: number; isShown: boolean };
@@ -19,8 +18,6 @@ const DeleteListingModal = ({
   isDeleteModalShown,
   setIsDeleteModalShown,
 }: ModalPropsType) => {
-  const session = useSession();
-  const token = session?.data?.user?.accessToken;
   const dispatch = useDispatch();
 
   const [loading, setLoading] = useState(false);
@@ -37,14 +34,8 @@ const DeleteListingModal = ({
   const handleDeleteListing = async () => {
     try {
       setLoading(true);
-      const url =
-        `${process.env.NEXT_PUBLIC_API_URL}/listing/delete-listing/` +
-        isDeleteModalShown.id;
-      const { data } = await axios.delete(url, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const url = `listing/delete-listing/` + isDeleteModalShown.id;
+      const { data } = await authInstance.delete(url);
       setSucess(true);
     } catch (error: any) {
       console.log(error.response.data);

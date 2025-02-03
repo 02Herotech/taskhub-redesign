@@ -2,7 +2,6 @@
 
 import Button from "@/components/global/Button";
 import Input from "@/components/global/Input";
-import axios from "axios";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import React, { useState } from "react";
@@ -12,6 +11,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { FiAlertTriangle } from "react-icons/fi";
 import { PiSealCheckFill } from "react-icons/pi";
 import { BsExclamationTriangle } from "react-icons/bs";
+import { instance as authInstance } from "@/utils/axiosInterceptor.config";
 
 type ChangePasswordRequest = {
   password: string;
@@ -20,7 +20,6 @@ type ChangePasswordRequest = {
 
 const DashboardPasswordChange = () => {
   const session = useSession();
-  const token = session.data?.user?.accessToken;
   const [isPasswordVerified, setIsPasswordVerified] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [currentPassword, setCurrentPassword] = useState("");
@@ -36,18 +35,9 @@ const DashboardPasswordChange = () => {
     setError(null);
     try {
       setIsLoading(true);
-      const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/change-password/init`,
-        {
-          oldPassword: currentPassword,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      await authInstance.post("change-password/init", {
+        oldPassword: currentPassword,
+      });
       setIsLoading(false);
       setIsPasswordVerified(true);
     } catch (error: any) {
@@ -77,23 +67,11 @@ const DashboardPasswordChange = () => {
   const onSubmit: SubmitHandler<ChangePasswordRequest> = async (payload) => {
     try {
       setIsLoading(true);
-
-      const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/change-password`,
-        {
-          newPassword: payload.password,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        },
-      );
-
+      const response = await authInstance.post(`change-password`, {
+        newPassword: payload.password,
+      });
       setIsLoading(false);
       setIsPasswordVerified(true);
-
       if (response.status === 200) {
         setSuccess("Password changed successfully");
         setIsLoading(false);
@@ -214,7 +192,11 @@ const DashboardPasswordChange = () => {
                   className="absolute right-4 top-1/2 -translate-y-1/2 cursor-pointer"
                   onClick={() => setShowCurrentPassword(!showCurrentPassword)}
                 >
-                  {showCurrentPassword ? <IoMdEyeOff size={28} /> : <IoMdEye size={28} />}
+                  {showCurrentPassword ? (
+                    <IoMdEyeOff size={28} />
+                  ) : (
+                    <IoMdEye size={28} />
+                  )}
                 </div>
                 <input
                   type={showCurrentPassword ? "text" : "password"}

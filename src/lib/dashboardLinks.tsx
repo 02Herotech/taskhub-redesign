@@ -16,7 +16,7 @@ interface DashboardLinks {
 
 export const customerDashboardLinks: DashboardLinks[] = [
   {
-    label: "My Profile",
+    label: "My Dashboard",
     link: "/customer/profile",
     icon: ProfileIcon,
   },
@@ -44,7 +44,7 @@ export const customerDashboardLinks: DashboardLinks[] = [
 
 export const serviceProviderDashboardLinks: DashboardLinks[] = [
   {
-    label: "Profile",
+    label: "My Dashboard",
     link: "/service-provider/profile",
     icon: ProfileIcon,
   },

@@ -28,7 +28,7 @@ const FormField: React.FC<FormFieldProps> = ({
   ...props
 }) => {
   const watchedValue = watch(name);
-
+  const {watchField, ...rest} = props
   return (
     <label className="flex w-full flex-col gap-3 text-violet-normal">
       <span className="flex items-center justify-between">
@@ -45,14 +45,14 @@ const FormField: React.FC<FormFieldProps> = ({
           className="rounded-xl border border-slate-100 p-2 text-slate-700 shadow outline-none transition-shadow duration-300 hover:shadow-md lg:max-w-sm"
           {...register(name)}
           defaultValue={defaultValue}
-          {...props}
+          {...rest}
         />
       ) : (
         <textarea
           disabled={disabled}
           className="rounded-xl border border-slate-100 p-2 text-slate-700 shadow outline-none transition-shadow duration-300 hover:shadow-md lg:max-w-sm"
           {...register(name)}
-          {...props}
+          {...rest}
         />
       )}
     </label>

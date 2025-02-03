@@ -218,8 +218,8 @@ const ProvideService: React.FC = () => {
       status: fetchedUserData.dateOfBirth,
     },
     {
-      title: "TFN number",
-      status: fetchedUserData.tfn,
+      title: "ABN number",
+      status: fetchedUserData.abn,
     },
     ...(fetchedUserData.idType !== "INTERNATIONAL_PASSPORT"
       ? [
@@ -1105,7 +1105,7 @@ const ProvideService: React.FC = () => {
         );
       case 3:
         return (
-          <div className="mb-10 space-y-10 font-bold text-status-darkpurple xs:w-[500px] lg:w-[700px]">
+          <div className="mb-10 space-y-10 font-bold text-status-darkpurple max-w-[700px]">
             <form onSubmit={handleSubmit} className="space-y-10">
               <div className="relative mt-2">
                 <Dropdown

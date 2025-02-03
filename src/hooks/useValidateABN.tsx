@@ -1,4 +1,5 @@
 import { useState, useEffect, SetStateAction } from "react";
+import { useSession } from "next-auth/react";
 import axios from "axios";
 
 type Props = {
@@ -10,11 +11,12 @@ type Props = {
 
 function useValidateABN(
   watchABN: string | null | undefined,
-  token: string | undefined,
   userDetails: DefaultUserDetailsType,
-  setErr: (value: SetStateAction<string>) => void,
 ) {
   const [isValidABN, setIsValidABN] = useState<boolean>(false);
+  const [error, setError] = useState<string>("");
+  const session = useSession();
+  const token = session?.data?.user.accessToken;
 
   useEffect(() => {
     const validateABN = async () => {
@@ -25,27 +27,25 @@ function useValidateABN(
       }
       if (watchABN) {
         try {
-          const url = `${process.env.NEXT_PUBLIC_API_URL}/service_provider/abn/validate/${watchABN}`;
-          const response = await axios.get(url, {
-            headers: {
-              Authorization: `Bearer ${token}`,
-              "Content-Type": "application/json",
-            },
-          });
-          if (response.data) {
+          const response = await axios.get(
+            `${process.env.NEXT_PUBLIC_API_URL}/service_provider/validate-abn/${watchABN}`,
+            { headers: { Authorization: `Bearer ${token}` } },
+          );
+          if (response?.data) {
             setIsValidABN(true);
+            setError("");
           }
         } catch (error: any) {
           console.error("Error validating ABN: ", error);
           const status: "BAD_REQUEST" | "CONFLICT" = error.response.data.status;
           setIsValidABN(false);
           if (status == "BAD_REQUEST") {
-            return setErr("Please enter a valid 11-digit ABN.");
+            return setError("Please enter a valid 11-digit ABN.");
           }
           if (status == "CONFLICT") {
-            return setErr("ABN number is already in use");
+            return setError("ABN number is already in use");
           }
-          setErr("Error occured while validating ABN");
+          setError("Error occured while validating ABN");
         }
       } else {
         setIsValidABN(false);
@@ -58,7 +58,7 @@ function useValidateABN(
     return () => clearTimeout(debounceValidation);
   }, [watchABN, token, userDetails]);
 
-  return isValidABN;
+  return { isValidABN, error };
 }
 
 export default useValidateABN;

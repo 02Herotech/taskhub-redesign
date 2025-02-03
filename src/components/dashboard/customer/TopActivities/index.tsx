@@ -9,7 +9,7 @@ const TopActivities = () => {
       <div className="lg:flex lg:space-x-4">
         <Link href="/customer/add-task" className="bg-[#F7DBB2] rounded-2xl p-4 w-full h-full font-bold text-primary flex flex-col space-y-5 max-lg:mb-4">
           <IoIosAddCircleOutline className='size-8'/>
-          Add a Task
+          Post a Task
         </Link>
         <Link href="/customer/payment?tab=paymentHistory" className="bg-[#F7DBB2] rounded-2xl p-4 w-full h-full font-bold text-primary flex flex-col space-y-5">
           <GoCreditCard className='size-8' />
