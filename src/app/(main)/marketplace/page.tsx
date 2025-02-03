@@ -125,7 +125,7 @@ const MareketPlace = () => {
           !(typeof item.status === "string" && item.status.trim() === ""),
       );
 
-      if (isAuth && !isProfileComplete) {
+      if (isAuth && isServiceProvider && !isProfileComplete) {
         setShowPopup(true);
       }
     }
