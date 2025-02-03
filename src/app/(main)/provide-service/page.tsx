@@ -218,8 +218,8 @@ const ProvideService: React.FC = () => {
       status: fetchedUserData.dateOfBirth,
     },
     {
-      title: "TFN number",
-      status: fetchedUserData.tfn,
+      title: "ABN number",
+      status: fetchedUserData.abn,
     },
     ...(fetchedUserData.idType !== "INTERNATIONAL_PASSPORT"
       ? [

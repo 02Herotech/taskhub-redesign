@@ -18,7 +18,6 @@ import { getCookie, deleteCookie } from "cookies-next";
 import { UserDataType } from "@/lib/validation/userData.schema";
 import FormField from "./FormField";
 import Notice from "./Notice";
-import useValidateTFN from "@/hooks/useValidateTFN";
 import instance from "@/utils/axios.config";
 import { instance as authInstance } from "@/utils/axiosInterceptor.config";
 import axios from "axios";
