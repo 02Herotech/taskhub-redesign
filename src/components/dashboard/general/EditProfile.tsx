@@ -21,6 +21,7 @@ import Notice from "./Notice";
 import useValidateTFN from "@/hooks/useValidateTFN";
 import instance from "@/utils/axios.config";
 import { instance as authInstance } from "@/utils/axiosInterceptor.config";
+import axios from 'axios'
 
 const idTypeObject = [
   { label: "Medicare Card", value: "MEDICARE_CARD" },
@@ -179,8 +180,8 @@ const EditProfile = () => {
       }
 
       try {
-        const { data } = await instance.get(
-          `util/locations/search?postcode=${watchPostcode}`,
+        const { data } = await axios.get(
+          `${process.env.NEXT_PUBLIC_API_URL}util/locations/search?postcode=${watchPostcode}`,
         );
 
         // Map suburbs from the Name field
@@ -431,6 +432,7 @@ const EditProfile = () => {
                     <DatePicker
                       placeholderText="DD/MM/YYYY"
                       id="dateOfBirth"
+                      open={false}
                       selected={field.value || null} // Use null if there's no date
                       onChange={(date) => field.onChange(date ? date : "")}
                       disabled={!isEditingEnabled || !!userDetails.dateOfBirth} // Disable if date exists and not in editing mode

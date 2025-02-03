@@ -477,76 +477,75 @@ const AddTaskForm: React.FC = () => {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setLoading(true);
+    if (!isAuthenticated) return setIsSuccessPopup(true);
     if (validateFields() && validateField1()) {
-      if (isEnabled) {
-        try {
-          let finalTask = { ...task };
+      try {
+        let finalTask = { ...task };
 
-          if (termAccepted) {
-            finalTask = { ...finalTask };
-          }
+        if (termAccepted) {
+          finalTask = { ...finalTask };
+        }
 
-          if (selectedDate && selectedTime) {
-            const date = dateString;
-            const time = timeString;
-            finalTask = { ...finalTask, taskDate: date, taskTime: time };
-          } else if (termAccepted) {
-            finalTask = { ...finalTask, termAccepted: true };
-          }
+        if (selectedDate && selectedTime) {
+          const date = dateString;
+          const time = timeString;
+          finalTask = { ...finalTask, taskDate: date, taskTime: time };
+        } else if (termAccepted) {
+          finalTask = { ...finalTask, termAccepted: true };
+        }
 
-          if (isOpen && activeButtonIndex === 1) {
-            const type = "REMOTE_SERVICE";
-            finalTask = { ...finalTask, taskType: type };
-          } else {
-            finalTask = {
-              ...finalTask,
-              taskType: "PHYSICAL_SERVICE",
-              suburb: selectedCity,
-              postCode: selectedCode,
-              state: postalCodeData[0].State,
-            };
-          }
+        if (isOpen && activeButtonIndex === 1) {
+          const type = "REMOTE_SERVICE";
+          finalTask = { ...finalTask, taskType: type };
+        } else {
+          finalTask = {
+            ...finalTask,
+            taskType: "PHYSICAL_SERVICE",
+            suburb: selectedCity,
+            postCode: selectedCode,
+            state: postalCodeData[0].State,
+          };
+        }
 
-          if (!task.taskImage) {
-            finalTask = { ...finalTask, taskImage: null };
-          }
+        if (!task.taskImage) {
+          finalTask = { ...finalTask, taskImage: null };
+        }
 
-          await Promise.race([
-            authInstance.post(`task/post`, finalTask, {
+        const url = `${process.env.NEXT_PUBLIC_API_URL}/task/post`;
+        await Promise.race([
+          authInstance.post('task/post', finalTask,
+            {
               headers: {
                 "Content-Type": "multipart/form-data",
               },
-            }),
-            timeout(10000),
-          ]);
+            },
+          ),
+          timeout(10000),
+        ]);
 
-          setTask({
-            taskBriefDescription: "",
-            taskImage: null,
-            taskTime: "",
-            taskDate: "",
-            taskType: "",
-            termAccepted: false,
-            suburb: "",
-            state: "",
-            postCode: "",
-            customerBudget: null,
-            categoryId: null,
-            taskDescription: "",
-          });
+        setTask({
+          taskBriefDescription: "",
+          taskImage: null,
+          taskTime: "",
+          taskDate: "",
+          taskType: "",
+          termAccepted: false,
+          suburb: "",
+          state: "",
+          postCode: "",
+          customerBudget: null,
+          categoryId: null,
+          taskDescription: "",
+        });
 
-          setIsSuccessPopupOpen(true);
-        } catch (error: any) {
-          console.error("Error submitting form:", error);
-          setErrorMessage(
-            error.response.data.message ||
-              "An error occurred, please try again",
-          );
-        } finally {
-          setLoading(false);
-        }
-      } else {
-        setIsEnabledPopup(true);
+        //Todo Check for enabled here to show popup
+        setIsSuccessPopupOpen(true);
+      } catch (error: any) {
+        console.error("Error submitting form:", error);
+        setErrorMessage(
+          error.response.data.message || "An error occurred, please try again",
+        );
+      } finally {
         setLoading(false);
       }
     } else {
@@ -1052,7 +1051,7 @@ const AddTaskForm: React.FC = () => {
               <div>
                 <div className="space-y-2">
                   <h2 className="text-4xl text-status-darkpurple">
-                    Add a Task
+                    Post a Task
                   </h2>
                   <p className="text-[12px] text-[#716F78]">
                     Please fill out the information below to add a new task.
@@ -1068,7 +1067,7 @@ const AddTaskForm: React.FC = () => {
           <Popup
             isOpen={isSuccessPopup}
             onClose={() => {
-              setIsSuccessPopupOpen(false);
+              setIsSuccessPopup(false);
             }}
           >
             <div className="px-16 py-10 lg:px-24">
