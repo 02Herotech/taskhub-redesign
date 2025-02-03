@@ -10,7 +10,6 @@ type Props = {
 
 function useValidateABN(
   watchABN: string | null | undefined,
-  token: string | undefined,
   userDetails: DefaultUserDetailsType,
   setErr: (value: SetStateAction<string>) => void,
 ) {
@@ -18,7 +17,6 @@ function useValidateABN(
 
   useEffect(() => {
     const validateABN = async () => {
-      if (!token) return;
       if (userDetails.abn) {
         setIsValidABN(true);
         return;
@@ -26,7 +24,7 @@ function useValidateABN(
       if (watchABN) {
         try {
           const response = await authInstance.get(
-            `service_provider/abn/validate/${watchABN}`,
+            `service_provider/validate-abn/${watchABN}`,
           );
           if (response.data) {
             setIsValidABN(true);
@@ -52,7 +50,7 @@ function useValidateABN(
     }, 500);
 
     return () => clearTimeout(debounceValidation);
-  }, [watchABN, token, userDetails]);
+  }, [watchABN, userDetails]);
 
   return isValidABN;
 }

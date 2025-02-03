@@ -21,7 +21,8 @@ import Notice from "./Notice";
 import useValidateTFN from "@/hooks/useValidateTFN";
 import instance from "@/utils/axios.config";
 import { instance as authInstance } from "@/utils/axiosInterceptor.config";
-import axios from 'axios'
+import axios from "axios";
+import useValidateABN from "@/hooks/useValidateABN";
 
 const idTypeObject = [
   { label: "Medicare Card", value: "MEDICARE_CARD" },
@@ -115,8 +116,8 @@ const EditProfile = () => {
   const watchField = watch();
   const watchABN = watch("abn");
 
-  /**Boolean variable representing Valid TFN status, formerly ABN */
-  const isABNValid = useValidateTFN(watchABN, userDetails, setErr);
+  /**Boolean variable representing Valid TFN status, formerly ABN, now back to ABN */
+  const isABNValid = useValidateABN(watchABN, userDetails, setErr);
 
   const ABNInputRef = useRef<HTMLDivElement | null>(null);
 
@@ -157,7 +158,7 @@ const EditProfile = () => {
           bio: isServiceProvider
             ? data.bio || ""
             : "No Bio needed for customer",
-          abn: isServiceProvider ? data.tfn || "" : "",
+          abn: isServiceProvider ? data.abn || "" : "",
         });
       } catch (error) {
         console.error("Error fetching user data:", error);
@@ -257,7 +258,7 @@ const EditProfile = () => {
           idType: data.idType,
           idNumber: data.idNumber,
           bio: data.bio,
-          tfn: data.abn,
+          abn: data.abn,
         }).reduce((acc, [key, value]) => {
           if (value !== null && value !== undefined && value !== "") {
             // @ts-expect-error "type of key not know"
@@ -576,19 +577,29 @@ const EditProfile = () => {
                 ref={ABNInputRef}
               >
                 <FormField
-                  label="TFN"
+                  label="ABN"
                   name="abn"
                   register={register}
                   errors={errors}
                   watch={watch}
                   watchField={watchField}
-                  disabled={!isEditingEnabled || !!userDetails.tfn}
+                  disabled={!isEditingEnabled || !!userDetails.abn}
                   minLength={9}
                 />
               </div>
               {!isABNValid && !userDetails.tfn && err && (
                 <div className="text-red-500 ">{err}</div>
               )}
+              <p className="font-satoshiMedium text-[13px] text-primary">
+                Don't have an ABN? Register easily{" "}
+                <a
+                  href="https://abnregistration.com.au/?gad_source=1&gclid=Cj0KCQiAwOe8BhCCARIsAGKeD56r4GB5_V_8FDRDVFuKTdv8LYcmwJfIXBC8F99xy66smfnnl6lps1waAqGhEALw_wcB"
+                  target="_blank"
+                  className="underline"
+                >
+                  here.
+                </a>
+              </p>
             </section>
           )}
 

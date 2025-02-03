@@ -1054,7 +1054,7 @@ const AddTaskForm: React.FC = () => {
                     Post a Task
                   </h2>
                   <p className="text-[12px] text-[#716F78]">
-                    Please fill out the information below to add a new task.
+                    Please fill out the information below to post a new task.
                   </p>
                 </div>
                 {loading && <Loading />}
