@@ -591,7 +591,7 @@ const EditProfile = () => {
                 <div className="text-red-500 ">{err}</div>
               )}
               <p className="font-satoshiMedium text-[13px] text-primary">
-                Don't have an ABN? Register easily{" "}
+                Don&apos;t have an ABN? Register easily{" "}
                 <a
                   href="https://abnregistration.com.au/?gad_source=1&gclid=Cj0KCQiAwOe8BhCCARIsAGKeD56r4GB5_V_8FDRDVFuKTdv8LYcmwJfIXBC8F99xy66smfnnl6lps1waAqGhEALw_wcB"
                   target="_blank"
