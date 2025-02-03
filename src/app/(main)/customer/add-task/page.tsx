@@ -1176,7 +1176,7 @@ const AddTaskForm: React.FC = () => {
                     Your task has been posted!
                   </p>
                   <p className="text-center lg:text-[20px]">
-                    Please click on the button to proceed to dashboard
+                    Please click on the button to view your tasks
                   </p>
                 </div>
                 <Image
@@ -1187,7 +1187,7 @@ const AddTaskForm: React.FC = () => {
                 <div className="flex justify-center">
                   <Link href="/customer/tasks">
                     <button className="rounded-2xl bg-status-purpleBase p-2 text-[14px] text-white outline-none">
-                      Go to dashboard
+                      View Tasks
                     </button>
                   </Link>
                 </div>

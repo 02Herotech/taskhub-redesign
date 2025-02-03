@@ -73,7 +73,7 @@ export const homeMobileLinks: LinkRouteTypes[] = [
 
 export const customerLinks: LinkRouteTypes[] = [
   {
-    label: "Add a task",
+    label: "Post a task",
     url: "/customer/add-task",
   },
   {

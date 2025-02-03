@@ -202,15 +202,15 @@ const YouCan = () => {
                 <div className="space-y-14 pl-4 lg:mt-[-160px] xl:mt-[-200px] xl:space-y-12">
                   <div className="space-y-14 xl:space-y-12">
                     <h2 className="text-left font-clashSemiBold text-[28px] font-[700] text-tc-orange xl:text-[32px]">
-                      ADD A TASK IN <br /> FEW STEPS
+                      POST A TASK IN <br /> FEW STEPS
                     </h2>
 
                     <button className="w-[250px] rounded-[50px] bg-tc-orange p-3 font-satoshi text-[16px] font-[500] text-white hover:bg-[#e79823] lg:w-[175px] xl:w-[190px]">
                       {isServiceProvider ? (
-                        <p onClick={handlePostTask}>Add a task for free</p>
+                        <p onClick={handlePostTask}>Post a task for free</p>
                       ) : (
                         <Link href="/customer/add-task">
-                          Add a task for free
+                          Post a task for free
                         </Link>
                       )}
                     </button>

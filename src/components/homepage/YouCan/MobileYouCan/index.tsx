@@ -165,10 +165,10 @@ const MobileYouCan = () => {
 p-2 text-white hover:bg-[#e79823] w-[150px] -mt-5"
                     >
                         {isServiceProvider ? (
-                            <p onClick={handlePostTask}>Add a task for free</p>
+                            <p onClick={handlePostTask}>Post a task for free</p>
                         ) : (
                             <Link href="/customer/add-task">
-                                Add a task for free
+                                Post a task for free
                             </Link>
                         )}
                     </button>
@@ -201,7 +201,7 @@ p-2 text-white hover:bg-[#e79823] w-[150px] -mt-5"
                     </div>
 
                     <h2 className=' text-[16px] ml-[150px] -mt-[130px] font-clashSemiBold text-tc-orange text-left font-[700]'>
-                        ADD A TASK <br /> IN  FEW STEPS
+                        POST A TASK <br /> IN  FEW STEPS
                     </h2>
                 </div>
 

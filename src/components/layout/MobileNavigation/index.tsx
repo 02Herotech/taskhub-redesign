@@ -102,7 +102,7 @@ const MobileNavigation: React.FC<Props> = ({
                 className="rounded-full"
                 onClick={() => router.push("/customer/add-task")}
               >
-                Add a task
+                Post a task
               </Button>
             )}
           </div>
