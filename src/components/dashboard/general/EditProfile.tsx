@@ -235,11 +235,22 @@ const EditProfile = () => {
       return;
     }
     (data.idImageBack = "null"), (data.idImageFront = "null");
+    if (!isServiceProvider) data.abn = "null";
     const isIncompleteData = Object.entries(data).some(([key, value]) => {
       return value === "" || value == null;
     });
-    console.log(data);
     if (isIncompleteData) {
+      setEditProfileError("Missing required fields");
+      return;
+    }
+    if (data.idType === "International Passport" && !selectedDocumentFront) {
+      setEditProfileError("Missing required fields");
+      return;
+    }
+    if (
+      data.idType !== "International Passport" &&
+      (!selectedDocumentBack || !selectedDocumentFront)
+    ) {
       setEditProfileError("Missing required fields");
       return;
     }
@@ -273,6 +284,7 @@ const EditProfile = () => {
         }, {});
         url = "service_provider/update";
       } else {
+        delete data.abn;
         submitData = Object.entries({
           firstName: data.firstName,
           lastName: data.lastName,
