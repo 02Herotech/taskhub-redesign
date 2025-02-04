@@ -805,6 +805,7 @@ const AddTaskForm: React.FC = () => {
                   Remote Service
                 </button>
               </div>
+              <div className="text-[#FF0000]">{errors.service}</div>
             </div>
             <form onSubmit={handleSubmit} className="space-y-5">
               {isOpen && activeButtonIndex === 1 && (
@@ -918,13 +919,10 @@ const AddTaskForm: React.FC = () => {
                 <p className="absolute left-3 top-8 md:top-9">$</p>
               </div>
               <div className="text-[#FF0000]">
-                {errors.city ||
-                  errors.postalCode ||
-                  errors.service ||
-                  errors.customerBudget}
+                {errors.city || errors.postalCode || errors.customerBudget}
               </div>
               <div className="flex flex-wrap-reverse justify-between gap-3">
-                {isAuthenticated ? (
+                {session.status == "authenticated" ? (
                   <Button
                     className="w-full rounded-3xl lg:w-[200px]"
                     type="submit"
