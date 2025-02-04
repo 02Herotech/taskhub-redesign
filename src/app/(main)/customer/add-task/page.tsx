@@ -239,6 +239,9 @@ const AddTaskForm: React.FC = () => {
 
   const validateFields = () => {
     const errors: any = {};
+    if (activeButtonIndex === null) {
+      errors.service = "Please select the type of service you want";
+    }
     if (activeButtonIndex === 0) {
       // Validation for physical service
       if (!selectedCode) {
@@ -477,8 +480,8 @@ const AddTaskForm: React.FC = () => {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setLoading(true);
-    if (!isAuthenticated) return setIsSuccessPopup(true);
     if (validateFields() && validateField1()) {
+      if (!isAuthenticated) return setIsSuccessPopup(true);
       try {
         let finalTask = { ...task };
 
@@ -511,15 +514,12 @@ const AddTaskForm: React.FC = () => {
           finalTask = { ...finalTask, taskImage: null };
         }
 
-        const url = `${process.env.NEXT_PUBLIC_API_URL}/task/post`;
         await Promise.race([
-          authInstance.post('task/post', finalTask,
-            {
-              headers: {
-                "Content-Type": "multipart/form-data",
-              },
+          authInstance.post("task/post", finalTask, {
+            headers: {
+              "Content-Type": "multipart/form-data",
             },
-          ),
+          }),
           timeout(10000),
         ]);
 
@@ -538,7 +538,6 @@ const AddTaskForm: React.FC = () => {
           taskDescription: "",
         });
 
-        //Todo Check for enabled here to show popup
         setIsSuccessPopupOpen(true);
       } catch (error: any) {
         console.error("Error submitting form:", error);
@@ -925,15 +924,14 @@ const AddTaskForm: React.FC = () => {
                   errors.customerBudget}
               </div>
               <div className="flex flex-wrap-reverse justify-between gap-3">
-                {isAuthenticated && (
+                {isAuthenticated ? (
                   <Button
                     className="w-full rounded-3xl lg:w-[200px]"
                     type="submit"
                   >
                     Confirm Task
                   </Button>
-                )}
-                {!isAuthenticated && (
+                ) : (
                   <Button
                     className="w-full rounded-3xl lg:w-[200px]"
                     type="button"
@@ -962,7 +960,7 @@ const AddTaskForm: React.FC = () => {
   };
   return (
     <>
-      <div className="mt-24 flex min-h-screen items-center justify-center">
+      <div className="relative z-40 mt-24 flex min-h-screen items-center justify-center">
         <Head>
           <title>Oloja | Add Task</title>
         </Head>
