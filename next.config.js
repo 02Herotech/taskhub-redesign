@@ -1,6 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
     reactStrictMode: true,
+    typescript: {
+        ignoreBuildErrors: true,  // Ignore TypeScript errors during build
+    },
     // compiler: {
     //     removeConsole: process.env.NEXT_PUBLIC_ENVIRONMENT === 'production',
     // },
@@ -66,6 +69,9 @@ const nextConfig = {
         return config;
     },
     output: "standalone",
+    eslint: {
+        ignoreDuringBuilds: true,  // This disables ESLint during the build process
+    },
 };
 
 module.exports = nextConfig

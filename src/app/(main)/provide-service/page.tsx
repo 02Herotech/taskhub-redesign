@@ -314,12 +314,12 @@ const ProvideService: React.FC = () => {
 
   const validateFields = () => {
     const errors: any = {};
-    if (!selectedCategory) {
-      errors.category = "Please fill out all required fields";
-    }
-    if (!selectedSubCategory) {
-      errors.subCategory = "Please fill out all required fields";
-    }
+    // if (!selectedCategory) {
+    //   errors.category = "Please fill out all required fields";
+    // }
+    // if (!selectedSubCategory) {
+    //   errors.subCategory = "Please fill out all required fields";
+    // }
     if (!task.listingTitle) {
       errors.lisitingTitle = "Please fill out all required fields";
     }
@@ -661,7 +661,7 @@ const ProvideService: React.FC = () => {
                     className={`rounded-2xl bg-[#EBE9F4] p-3 text-[13px] placeholder:font-satoshi placeholder:font-medium placeholder:text-status-darkpurple ${errors.lisitingTitle ? "border border-[#ff0000] outline-[#FF0000]" : "border-none outline-none"}`}
                   />
                 </div>
-                <div className="relative grid space-y-4">
+                {/* <div className="relative grid space-y-4">
                   <div className="flex items-center justify-between gap-3">
                     <label className="text-[13px] font-semibold lg:text-[16px]">
                       Choose the best category for your listing.{" "}
@@ -738,7 +738,7 @@ const ProvideService: React.FC = () => {
                       </button>
                     ))}
                   </Dropdown>
-                </div>
+                </div> */}
 
                 <div className="lg:hidden">
                   {/* @ts-ignore */}
@@ -780,8 +780,7 @@ const ProvideService: React.FC = () => {
                 <div className="text-red-600">
                   {errors.lisitingTitle ||
                     errors.listingDescription ||
-                    errors.category ||
-                    errors.subCategory}
+                    errors.category }
                 </div>
                 <Button className="w-full rounded-3xl lg:w-1/3" type="submit">
                   Next

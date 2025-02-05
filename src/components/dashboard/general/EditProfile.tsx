@@ -22,6 +22,7 @@ import instance from "@/utils/axios.config";
 import { instance as authInstance } from "@/utils/axiosInterceptor.config";
 import axios from "axios";
 import useValidateABN from "@/hooks/useValidateABN";
+import Information from '@/components/business-hub/Information';
 
 const idTypeObject = [
   { label: "Medicare Card", value: "MEDICARE_CARD" },
@@ -277,7 +278,6 @@ const EditProfile = () => {
           abn: data.abn,
         }).reduce((acc, [key, value]) => {
           if (value !== null && value !== undefined && value !== "") {
-            // @ts-expect-error "type of key not know"
             acc[key] = value;
           }
           return acc;
@@ -301,7 +301,6 @@ const EditProfile = () => {
           idNumber: data.idNumber,
         }).reduce((acc, [key, value]) => {
           if (value !== null && value !== undefined && value !== "") {
-            // @ts-expect-error "type of key not know"
             acc[key] = value;
           }
           return acc;
@@ -346,6 +345,9 @@ const EditProfile = () => {
 
   return (
     <main className="container py-8 lg:py-16">
+      <h5 className="text-2xl font-bold mb-4">Edit your information details</h5>
+      {/* <hr/> */}
+      <hr className="border-t border-gray-700 my-4" />
       {userDetails && (
         <Notice
           role={isServiceProvider ? "SERVICE_PROVIDER" : "USER"}
@@ -399,10 +401,12 @@ const EditProfile = () => {
             {user?.address?.state} Australia
           </p>
           <button
-            onClick={() => setIsEditingEnabled((prev) => !prev)}
+            // onClick={() => setIsEditingEnabled((prev) => !prev)}
+            onClick={handleChangeProfilePicture}
             className="rounded-full bg-violet-normal px-4 py-2 text-sm text-white transition-all duration-300 hover:opacity-90"
           >
-            {isEditingEnabled ? "Editing ..." : "Edit Profile"}
+            {/* {isEditingEnabled ? "Editing ..." : "Edit Profile Picture"} */}
+            Edit Profile Picture
           </button>
         </section>
 
@@ -447,7 +451,7 @@ const EditProfile = () => {
                         <BiCheck className="size-5 rounded-full bg-green-500 p-1 text-white" />
                       )}
                     </label>
-                    <DatePicker
+                    {/* <DatePicker
                       placeholderText="DD/MM/YYYY"
                       id="dateOfBirth"
                       open={false}
@@ -461,7 +465,20 @@ const EditProfile = () => {
                       }
                       className="w-full rounded-xl border border-slate-100 p-2 text-slate-700 shadow outline-none transition-shadow duration-300 hover:shadow-md lg:max-w-sm"
                       dateFormat="dd/MM/yyyy"
+                    /> */}
+
+                    <DatePicker
+                      placeholderText="DD/MM/YYYY"
+                      id="dateOfBirth"
+                      open={false}
+                      selected={field.value || null}  // Use null if there's no date
+                      onChange={(date: Date | null) => field.onChange(date ? date : "")}  // Ensure correct type for 'date'
+                      disabled={!isEditingEnabled || !!userDetails.dateOfBirth}  // Disable if date exists and not in editing mode
+                      maxDate={new Date(new Date().setFullYear(new Date().getFullYear() - 18))}
+                      className="w-full rounded-xl border border-slate-100 p-2 text-slate-700 shadow outline-none transition-shadow duration-300 hover:shadow-md lg:max-w-sm"
+                      dateFormat="dd/MM/yyyy"
                     />
+
                   </div>
                 )}
               />
