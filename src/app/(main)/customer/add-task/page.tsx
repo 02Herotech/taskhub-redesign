@@ -273,9 +273,9 @@ const AddTaskForm: React.FC = () => {
       error.taskDescription = "Please fill out all required fields";
     }
 
-    if (!selectedCategory) {
-      error.category = "Please fill out all required fields";
-    }
+    // if (!selectedCategory) {
+    //   error.category = "Please fill out all required fields";
+    // }
 
     // Validate selectedTime and selectedDate or termAccepted
     if (!(selectedTime && selectedDate) && !termAccepted) {
