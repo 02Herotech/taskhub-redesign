@@ -586,11 +586,7 @@ const ProvideService: React.FC = () => {
           const response = await axios.post(
             `${process.env.NEXT_PUBLIC_API_URL}/listing/create-listing?userId=${id}`,
             finalTask,
-            {
-              headers: {
-                "Content-Type": "multipart/form-data",
-              },
-            },
+            { headers: { "Content-Type": "multipart/form-data" } },
           );
           setTask({
             listingTitle: "",
@@ -1401,7 +1397,7 @@ const ProvideService: React.FC = () => {
 
   return (
     <>
-      <div className="mt-24 flex min-h-screen flex-col items-center justify-center">
+      <div className="relative z-40 mt-24 flex min-h-screen flex-col items-center justify-center">
         <Head>
           <title>TaskHub | Provide Service</title>
         </Head>
@@ -1555,9 +1551,7 @@ const ProvideService: React.FC = () => {
           {complete ? (
             <Popup
               isOpen={isSuccessPopupOpen}
-              onClose={() => {
-                setIsSuccessPopupOpen(false);
-              }}
+              onClose={() => setIsSuccessPopupOpen(false)}
             >
               <div className="px-14 py-10 lg:px-24">
                 <div className="relative grid items-center justify-center space-y-5">
@@ -1647,12 +1641,7 @@ const ProvideService: React.FC = () => {
           onClose={() => setIsEnabledPopup(false)}
         />
       ) : (
-        <Popup
-          isOpen={isEnabledPopup}
-          onClose={() => {
-            setIsEnabledPopup(false);
-          }}
-        >
+        <Popup isOpen={isEnabledPopup} onClose={() => setIsEnabledPopup(false)}>
           <div className="px-14 py-10 lg:px-24">
             <div className="relative grid items-center justify-center space-y-5">
               <p className="font-clashDisplay text-center text-[20px] font-extrabold text-[#2A1769] md:text-[36px] lg:text-[37px] ">
