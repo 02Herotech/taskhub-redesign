@@ -7,7 +7,7 @@ import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { CiEdit } from "react-icons/ci";
+import { CiEdit, CiLocationOn } from "react-icons/ci";
 import { useSelector } from "react-redux";
 
 const ProfileHeader = () => {
@@ -80,13 +80,17 @@ const ProfileHeader = () => {
               href={editProfileLink}
               className="text-md font-satoshi font-semibold text-primary underline"
             >
-              View Profile
+              Edit Account details
             </Link>
+            <p className="text-sm font-medium text-[#140B31] flex items-center gap-1">
+              <CiLocationOn />
+              {location}
+            </p>
+
             <p className="text-sm font-medium text-[#140B31]">
               {/* @ts-expect-error "Type error in the user declaration as number array" */}
-              A member since {formatDateFromNumberArray(user.registeredAt)}
+              Joined Oloja on {formatDateFromNumberArray(user.registeredAt)}
             </p>
-            <p className="text-sm font-medium text-[#140B31]">{location}</p>
           </div>
           <Link href={editProfileLink} className="lg:hidden">
             <CiEdit className="size-6 text-primary" />

@@ -9,8 +9,9 @@ type Props = {
 function Notice({ role, verificationStatus }: Props) {
   let verifiedMessage: string =
     role == "USER"
-      ? "Note: Please provide accurate information below, as some fields (address and date of birth) cannot be edited after submission."
-      : "Note: Please provide accurate information below, as some fields (address, date of birth and ABN) cannot be edited after submission.";
+      ? "Note: Please provide accurate information below. Some fields (first name, last name, address, and date of birth) cannot be edited after submission. Contact customer support for any changes."
+      : "Note: Please provide accurate information below. Some fields (first name, last name, ABN, address, and date of birth) cannot be edited after submission. Contact customer support for any changes.";
+      
   let notVerifiedMessage: string = "Upload a new ID";
   return (
     <div className="mb-5 flex items-center space-x-3 rounded-lg bg-[#F8E9FE] p-3 text-[#D72828]">

@@ -379,7 +379,7 @@ const EditTaskForm = ({ task, setShowEditModal }: TaskCardProps) => {
                                     ></textarea>
                                 </div>
 
-                                <div className="relative grid space-y-4">
+                                {/* <div className="relative grid space-y-4">
                                     <label className="text-[13px] font-semibold text-status-darkpurple lg:text-[16px]">
                                         What category best describes your task?
                                     </label>
@@ -406,7 +406,7 @@ const EditTaskForm = ({ task, setShowEditModal }: TaskCardProps) => {
                                             </button>
                                         ))}
                                     </Dropdown>
-                                </div>
+                                </div> */}
 
                                 <div className="relative grid space-y-3">
                                     <label className="text-[13px] font-semibold text-status-darkpurple lg:text-[16px]">

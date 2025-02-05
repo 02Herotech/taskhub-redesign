@@ -585,7 +585,7 @@ const AddTaskForm: React.FC = () => {
                   {wordCount}/10 words
                 </div>
               </div>
-              <div className="relative grid space-y-4">
+              {/* <div className="relative grid space-y-4">
                 <div className="flex items-center justify-between">
                   <label className="text-[13px] font-semibold lg:text-[16px]">
                     What category best describes your task?{" "}
@@ -623,7 +623,7 @@ const AddTaskForm: React.FC = () => {
                     </button>
                   ))}
                 </Dropdown>
-              </div>
+              </div> */}
               <div className="relative grid space-y-3">
                 <div className="flex items-center justify-between">
                   <label className="flex text-[13px] font-semibold lg:text-[16px]">

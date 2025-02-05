@@ -22,6 +22,7 @@ import instance from "@/utils/axios.config";
 import { instance as authInstance } from "@/utils/axiosInterceptor.config";
 import axios from "axios";
 import useValidateABN from "@/hooks/useValidateABN";
+import Information from '@/components/business-hub/Information';
 
 const idTypeObject = [
   { label: "Medicare Card", value: "MEDICARE_CARD" },
@@ -346,6 +347,9 @@ const EditProfile = () => {
 
   return (
     <main className="container py-8 lg:py-16">
+      <h5 className="text-2xl font-bold mb-4">Edit your information details</h5>
+      {/* <hr/> */}
+      <hr className="border-t border-gray-700 my-4" />
       {userDetails && (
         <Notice
           role={isServiceProvider ? "SERVICE_PROVIDER" : "USER"}
@@ -399,10 +403,12 @@ const EditProfile = () => {
             {user?.address?.state} Australia
           </p>
           <button
-            onClick={() => setIsEditingEnabled((prev) => !prev)}
+            // onClick={() => setIsEditingEnabled((prev) => !prev)}
+            onClick={handleChangeProfilePicture}
             className="rounded-full bg-violet-normal px-4 py-2 text-sm text-white transition-all duration-300 hover:opacity-90"
           >
-            {isEditingEnabled ? "Editing ..." : "Edit Profile"}
+            {/* {isEditingEnabled ? "Editing ..." : "Edit Profile Picture"} */}
+            Edit Profile Picture
           </button>
         </section>
 
