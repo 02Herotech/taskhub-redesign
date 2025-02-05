@@ -45,7 +45,6 @@ const TaskDetailsPage = ({ params }: { params: { id: string } }) => {
   const pathname = usePathname();
   const router = useRouter();
   const fetchedUserData = useUserProfileData();
-  console.log(fetchedUserData)
   
   const [shareDropdownOpen, setShareDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
