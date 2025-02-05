@@ -227,7 +227,7 @@ useEffect(() => {
         !ErrorMsg && filteredData.length === 0 ? (
           <div className="flex min-h-40 flex-col items-center justify-center gap-4">
             <Image
-              src={"/assets/images/marketplace/undraw_void_-3-ggu.svg"}
+              src={"/assets/images/marketplace/cuate.svg"}
               alt="void"
               width={200}
               height={200}
@@ -262,7 +262,7 @@ useEffect(() => {
       ) : displayListing.length === 0 && !ErrorMsg ? (
         <div className="flex min-h-40 flex-col items-center justify-center gap-4">
           <Image
-            src={"/assets/images/marketplace/undraw_void_-3-ggu.svg"}
+            src={"/assets/images/marketplace/cuate.svg"}
             alt="void"
             width={200}
             height={200}
