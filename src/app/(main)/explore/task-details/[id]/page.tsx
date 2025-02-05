@@ -29,6 +29,9 @@ import { usePathname, useRouter } from "next/navigation";
 import { ShareSvg } from "@/lib/svgIcons";
 import useUserProfileData from "@/hooks/useUserProfileData";
 import Popup from "@/components/global/Popup";
+import PopupTwo from "@/components/global/Popup/PopupTwo";
+import ProfileIncomplete from "@/components/global/Popup/ProfileIncomplete";
+import InReview from "@/components/global/Popup/InReview";
 
 const TaskDetailsPage = ({ params }: { params: { id: string } }) => {
   const [offerAmount, setOfferAmount] = useState("");
@@ -520,52 +523,20 @@ const TaskDetailsPage = ({ params }: { params: { id: string } }) => {
           taskId={Number(id)}
         />
       )}
-      <Popup isOpen={showErrorPopup} onClose={() => setShowErrorPopup(false)}>
-        <div className="px-14 py-10 lg:px-24">
-          <div className="relative grid items-center justify-center space-y-5">
-            <p className="font-clashDisplay text-center text-[20px] font-extrabold text-[#2A1769] md:text-[36px] lg:text-[37px]">
-              Your profile is not updated
-            </p>
-            <div>
-              <p className="text-center text-[14px] lg:text-[20px]">
-                Please proceed to update your profile
-              </p>
-              <p className="text-center text-[14px] lg:text-[20px]">
-                before you can make an offer
-              </p>
-            </div>
-            <Image
-              src="/assets/images/customer/Task management.png"
-              alt="image"
-              width={116}
-              height={109}
-              className="absolute -right-14 top-28 w-24 lg:-right-12 lg:top-2/3 lg:w-24 "
-            />
-            <Image
-              src="/assets/images/blend.png"
-              width={105}
-              height={219}
-              alt="image"
-              className="absolute -left-12 top-12 w-12 lg:-left-[53px] lg:top-8 lg:w-16"
-            />
-            <div className="flex justify-center space-x-3 md:justify-around">
-              <Link href="/marketplace?">
-                <button className="rounded-2xl border-2 border-status-purpleBase p-2 text-[14px] font-semibold text-status-purpleBase outline-none md:w-[100px]">
-                  Back
-                </button>
-              </Link>
-
-              <Link href="/service-provider/profile">
-                <button
-                  className="rounded-2xl bg-status-purpleBase p-2 text-[14px] text-white outline-none md:w-[100px]"
-                >
-                  Go to profile
-                </button>
-              </Link>
-            </div>
-          </div>
-        </div>
-      </Popup>
+      <ProfileIncomplete
+        isOpen={
+          showErrorPopup &&
+          (fetchedUserData?.verificationStatus === null ||
+            fetchedUserData?.verificationStatus === "NOT_VERIFIED")
+        }
+        onClose={() => setShowErrorPopup(false)}
+      />
+      <InReview
+        isOpen={
+          showErrorPopup && fetchedUserData?.verificationStatus === "PENDING"
+        }
+        onClose={() => setShowErrorPopup(false)}
+      />
     </section>
   );
 };

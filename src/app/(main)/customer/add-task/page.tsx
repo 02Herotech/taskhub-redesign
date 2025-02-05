@@ -26,6 +26,8 @@ import Loading from "@/components/global/loading/page";
 import Progress from "@/components/global/progress";
 import { instance as authInstance } from "@/utils/axiosInterceptor.config";
 import axios from "axios";
+import PopupTwo from "@/components/global/Popup/PopupTwo";
+import { IoIosCheckmarkCircle } from "react-icons/io";
 
 interface FormData {
   taskBriefDescription: string;
@@ -1152,44 +1154,57 @@ const AddTaskForm: React.FC = () => {
             </div>
           </Popup>
         ) : (
-          <Popup
+          <PopupTwo
             isOpen={isSuccessPopupOpen}
             onClose={() => {
               router.push("/customer/tasks");
               setIsSuccessPopupOpen(false);
             }}
           >
-            <div className="px-12 py-10 lg:px-24">
-              <div className="relative grid items-center justify-center space-y-5">
-                <div className="flex justify-center text-[1px] text-white">
-                  <Image src={imags} alt="image" />
-                </div>
-                <p className="font-clashDisplay text-center text-[25px] font-extrabold text-[#2A1769] lg:text-[37px] ">
-                  Congratulations
-                </p>
-                <div>
-                  <p className="text-center lg:text-[20px]">
-                    Your task has been posted!
-                  </p>
-                  <p className="text-center lg:text-[20px]">
-                    Please click on the button to view your tasks
-                  </p>
-                </div>
-                <Image
-                  src={image}
-                  alt="image"
-                  className="absolute -right-24 top-36  w-32 font-satoshiMedium lg:-right-20 lg:top-2/3"
-                />
-                <div className="flex justify-center">
-                  <Link href="/customer/tasks">
-                    <button className="rounded-2xl bg-status-purpleBase p-2 text-[14px] text-white outline-none">
-                      View Tasks
-                    </button>
-                  </Link>
-                </div>
+            <div className="relative max-h-[700px] min-w-[320px] max-w-[700px] bg-white p-5 sm:min-w-[560px]">
+              <IoIosCheckmarkCircle
+                className="mx-auto"
+                size={50}
+                fill="#FE9B07"
+              />
+              <h3 className="mb-3 mt-2 text-center font-clashSemiBold text-2xl text-[#2A1769] sm:text-4xl">
+                Congratulations!!
+              </h3>
+              <p className="md::text-xl mx-auto mb-5 max-w-[383px] text-center font-satoshiMedium text-base text-[#140B31] sm:text-lg">
+                Your task is posted! 📣 Ready to get matched with an expert who
+                can slay? Check out your task or browse our marketplace for some
+                fire talent.
+              </p>
+              <div className="flex justify-center gap-5">
+                <Link
+                  href="/customer/tasks"
+                  className="rounded-full border-[0.5px] border-primary bg-[#EBE9F4] px-4 py-2 font-bold text-primary"
+                >
+                  View Tasks
+                </Link>
+                <Link
+                  href="/marketplace"
+                  className="rounded-full bg-[#381F8C] px-4 py-2 font-bold text-[#EBE9F4]"
+                >
+                  Explore Marketplace
+                </Link>
               </div>
+              <Image
+                src="/assets/icons/popup-design.png"
+                width={263}
+                height={626}
+                alt="Icon"
+                className="absolute -left-10 top-5 h-full w-3/12 sm:left-0"
+              />
+              <Image
+                src="/assets/icons/popup-design.png"
+                width={263}
+                height={626}
+                alt="Icon"
+                className="absolute -right-10 top-5 aspect-auto h-full w-3/12 scale-x-[-1] sm:right-0"
+              />
             </div>
-          </Popup>
+          </PopupTwo>
         )}
       </div>
       <Popup
