@@ -1,7 +1,6 @@
 import React from "react";
 import Popup from "./PopupTwo";
 import Image from "next/image";
-import Link from "next/link";
 
 interface PopupProps {
   isOpen: boolean;
@@ -13,7 +12,7 @@ function InReview({ isOpen, onClose }: PopupProps) {
     <Popup isOpen={isOpen} onClose={onClose}>
       <div className="relative max-h-[700px] min-w-[320px] max-w-[700px] bg-white p-5 sm:min-w-[560px]">
         <h3 className="mb-7 mt-4 text-center font-clashSemiBold text-2xl text-[#2A1769] sm:text-4xl">
-          Verification in Review.
+          Verification in Review
         </h3>
         <p className="mx-auto mb-10 max-w-[383px] text-center font-satoshiMedium text-base text-[#140B31] sm:text-lg md:text-xl">
           We’re verifying your ID and would get back to you via email within 24
@@ -27,12 +26,6 @@ function InReview({ isOpen, onClose }: PopupProps) {
           >
             Close
           </button>
-          {/* <Link
-            href="/service-provider/profile"
-            className="rounded-full bg-[#381F8C] px-5 py-2 font-bold text-[#EBE9F4]"
-          >
-            Go To Profile
-          </Link> */}
         </div>
         <Image
           src="/assets/icons/popup-design.png"

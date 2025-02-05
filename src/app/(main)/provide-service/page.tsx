@@ -25,6 +25,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/store";
 import { getCookie, setCookie } from "cookies-next";
 import useUserProfileData from "@/hooks/useUserProfileData";
+import ProfileIncomplete from "@/components/global/Popup/ProfileIncomplete";
 
 interface FormData {
   listingTitle: string;
@@ -1105,7 +1106,7 @@ const ProvideService: React.FC = () => {
         );
       case 3:
         return (
-          <div className="mb-10 space-y-10 font-bold text-status-darkpurple max-w-[700px]">
+          <div className="mb-10 max-w-[700px] space-y-10 font-bold text-status-darkpurple">
             <form onSubmit={handleSubmit} className="space-y-10">
               <div className="relative mt-2">
                 <Dropdown
@@ -1641,52 +1642,10 @@ const ProvideService: React.FC = () => {
         </div>
       </div>
       {isAuth ? (
-        <Popup
+        <ProfileIncomplete
           isOpen={isEnabledPopup}
-          onClose={() => {
-            setIsEnabledPopup(false);
-          }}
-        >
-          <div className="px-14 py-10 lg:px-24">
-            <div className="relative grid items-center justify-center space-y-5">
-              <p className="font-clashDisplay text-center text-[20px] font-extrabold text-[#2A1769] md:text-[36px] lg:text-[37px] ">
-                Your profile is not updated
-              </p>
-              <div>
-                <p className="text-center text-[14px] lg:text-[20px]">
-                  Please proceed to update your profile
-                </p>
-                <p className="text-center text-[14px] lg:text-[20px]">
-                  before you can make a listing
-                </p>
-              </div>
-              <Image
-                src={image}
-                alt="image"
-                className="absolute -right-14 top-28 w-24 lg:-right-12 lg:top-2/3 lg:w-24 "
-              />
-              <Image
-                src={img}
-                alt="image"
-                className="absolute -left-12 top-12 w-12 lg:-left-[53px] lg:top-8 lg:w-16"
-              />
-              <div className="flex justify-center space-x-3 md:justify-around">
-                <Link href="/marketplace?">
-                  <button className="rounded-2xl border-2 border-status-purpleBase p-2 text-[14px] font-semibold text-status-purpleBase outline-none md:w-[100px]">
-                    Back
-                  </button>
-                </Link>
-
-                <button
-                  onClick={handleProfile}
-                  className="rounded-2xl bg-status-purpleBase p-2 text-[14px] text-white outline-none md:w-[100px]"
-                >
-                  Go to profile
-                </button>
-              </div>
-            </div>
-          </div>
-        </Popup>
+          onClose={() => setIsEnabledPopup(false)}
+        />
       ) : (
         <Popup
           isOpen={isEnabledPopup}
