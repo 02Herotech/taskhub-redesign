@@ -137,7 +137,7 @@ const EditListing = () => {
     if (currentListing) {
       reset({
         listingTitle: currentListing.listingTitle,
-        category: currentListing.category.categoryName,
+        // category: currentListing.category.categoryName,
         // subCategory: currentListing.subCategory.name,
         listingDescription: currentListing.listingDescription,
         availableDays: currentListing.availableDays,

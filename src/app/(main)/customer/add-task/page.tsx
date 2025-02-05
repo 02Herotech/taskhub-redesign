@@ -93,7 +93,7 @@ const AddTaskForm: React.FC = () => {
   const [termAccepted, settermAccepted] = useState(false);
   const [accepted, setAccepted] = useState(false);
   const [isRemote, setIsRemote] = useState("");
-  const [selectedCategoryName, setSelectedCategoryName] = useState("Category");
+  // const [selectedCategoryName, setSelectedCategoryName] = useState("Category");
   const [isOpen, setIsOpen] = useState(false);
   const [activeButtonIndex, setActiveButtonIndex] = useState<number | null>(
     null,
