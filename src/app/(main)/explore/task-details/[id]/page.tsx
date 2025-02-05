@@ -29,6 +29,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { ShareSvg } from "@/lib/svgIcons";
 import useUserProfileData from "@/hooks/useUserProfileData";
 import Popup from "@/components/global/Popup";
+import PopupTwo from "@/components/global/Popup/PopupTwo";
 
 const TaskDetailsPage = ({ params }: { params: { id: string } }) => {
   const [offerAmount, setOfferAmount] = useState("");
@@ -520,7 +521,14 @@ const TaskDetailsPage = ({ params }: { params: { id: string } }) => {
           taskId={Number(id)}
         />
       )}
-      <Popup isOpen={showErrorPopup} onClose={() => setShowErrorPopup(false)}>
+      <Popup
+        isOpen={
+          showErrorPopup &&
+          (fetchedUserData?.verificationStatus === null ||
+            fetchedUserData?.verificationStatus === "NOT_VERIFIED")
+        }
+        onClose={() => setShowErrorPopup(false)}
+      >
         <div className="px-14 py-10 lg:px-24">
           <div className="relative grid items-center justify-center space-y-5">
             <p className="font-clashDisplay text-center text-[20px] font-extrabold text-[#2A1769] md:text-[36px] lg:text-[37px]">
@@ -556,9 +564,7 @@ const TaskDetailsPage = ({ params }: { params: { id: string } }) => {
               </Link>
 
               <Link href="/service-provider/profile">
-                <button
-                  className="rounded-2xl bg-status-purpleBase p-2 text-[14px] text-white outline-none md:w-[100px]"
-                >
+                <button className="rounded-2xl bg-status-purpleBase p-2 text-[14px] text-white outline-none md:w-[100px]">
                   Go to profile
                 </button>
               </Link>
@@ -566,6 +572,48 @@ const TaskDetailsPage = ({ params }: { params: { id: string } }) => {
           </div>
         </div>
       </Popup>
+      <PopupTwo
+        isOpen={
+          showErrorPopup && fetchedUserData?.verificationStatus === "PENDING"
+        }
+        onClose={() => setShowErrorPopup(false)}
+      >
+        <div className="relative max-h-[700px] min-w-[320px] max-w-[700px] bg-white p-5 sm:min-w-[560px]">
+          <h3 className="mb-7 mt-4 text-center font-clashSemiBold text-2xl text-[#2A1769] sm:text-4xl">
+            Verification in Review.
+          </h3>
+          <p className="md::text-xl mx-auto mb-10 max-w-[383px] text-center font-satoshiMedium text-base text-[#140B31] sm:text-lg">
+            We’re verifying your ID and would get back to you via email within
+            24 hrs. Until it’s complete, actions like making an offer are
+            unavailable. Thanks for your patience!
+          </p>
+          <div className="flex justify-center gap-5">
+            <button className="rounded-full border-[0.5px] border-primary bg-[#EBE9F4] px-5 py-2 font-bold text-primary">
+              Back
+            </button>
+            <Link
+              href="/customer/profile"
+              className="rounded-full bg-[#381F8C] px-5 py-2 font-bold text-[#EBE9F4]"
+            >
+              Go To Profile
+            </Link>
+          </div>
+          <Image
+            src="/assets/icons/popup-design.png"
+            width={263}
+            height={626}
+            alt="Icon"
+            className="absolute -left-10 top-5 h-full w-3/12 sm:left-0"
+          />
+          <Image
+            src="/assets/icons/popup-design.png"
+            width={263}
+            height={626}
+            alt="Icon"
+            className="absolute -right-10 top-5 aspect-auto h-full w-3/12 scale-x-[-1] sm:right-0"
+          />
+        </div>
+      </PopupTwo>
     </section>
   );
 };
