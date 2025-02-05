@@ -57,6 +57,9 @@ const PaymentHistory = () => {
         );
     }
 
+    // type PDFDownloadLinkChildrenProps = {
+    //     loading: boolean;
+    // };
     // const formatCreatedAt = (dateArray: number[]): string => {
     //     const [year, month, day] = dateArray;
     //     return new Date(year, month - 1, day).toLocaleDateString('en-US', {
@@ -122,7 +125,7 @@ const PaymentHistory = () => {
                         <div className="absolute right-0 top-full z-50 mt-2">
                             <DatePicker
                                 selected={selectedDate}
-                                onChange={(date: Date) => {
+                                onChange={(date: Date | null) => {
                                     setSelectedDate(date);
                                     setIsDatePickerOpen(false);
                                 }}
@@ -235,7 +238,7 @@ const PaymentHistory = () => {
                             </div>
                         </div>
                         <div className="flex items-center justify-center w-full !mt-4 sm:!mt-3 pb-2 sm:pb-3">
-                            <PDFDownloadLink
+                            {/* <PDFDownloadLink
                                 document={<PaymentReceipt selectedPayment={selectedPayment} user={user} formattedDate={formattedDate} />}
                                 fileName="oloja_receipt.pdf"
                                 className="text-center text-[#E58C06] font-bold underline hover:text-[#c77905] transition-colors duration-300"
@@ -243,7 +246,8 @@ const PaymentHistory = () => {
                                 {({ blob, url, loading, error }) =>
                                     loading ? 'Loading document...' : 'Download Receipt'
                                 }
-                            </PDFDownloadLink>
+                            </PDFDownloadLink> */}
+
                         </div>
                     </div>
                 </Popup>

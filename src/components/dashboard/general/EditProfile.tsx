@@ -278,7 +278,6 @@ const EditProfile = () => {
           abn: data.abn,
         }).reduce((acc, [key, value]) => {
           if (value !== null && value !== undefined && value !== "") {
-            // @ts-expect-error "type of key not know"
             acc[key] = value;
           }
           return acc;
@@ -302,7 +301,6 @@ const EditProfile = () => {
           idNumber: data.idNumber,
         }).reduce((acc, [key, value]) => {
           if (value !== null && value !== undefined && value !== "") {
-            // @ts-expect-error "type of key not know"
             acc[key] = value;
           }
           return acc;
@@ -453,7 +451,7 @@ const EditProfile = () => {
                         <BiCheck className="size-5 rounded-full bg-green-500 p-1 text-white" />
                       )}
                     </label>
-                    <DatePicker
+                    {/* <DatePicker
                       placeholderText="DD/MM/YYYY"
                       id="dateOfBirth"
                       open={false}
@@ -467,7 +465,20 @@ const EditProfile = () => {
                       }
                       className="w-full rounded-xl border border-slate-100 p-2 text-slate-700 shadow outline-none transition-shadow duration-300 hover:shadow-md lg:max-w-sm"
                       dateFormat="dd/MM/yyyy"
+                    /> */}
+
+                    <DatePicker
+                      placeholderText="DD/MM/YYYY"
+                      id="dateOfBirth"
+                      open={false}
+                      selected={field.value || null}  // Use null if there's no date
+                      onChange={(date: Date | null) => field.onChange(date ? date : "")}  // Ensure correct type for 'date'
+                      disabled={!isEditingEnabled || !!userDetails.dateOfBirth}  // Disable if date exists and not in editing mode
+                      maxDate={new Date(new Date().setFullYear(new Date().getFullYear() - 18))}
+                      className="w-full rounded-xl border border-slate-100 p-2 text-slate-700 shadow outline-none transition-shadow duration-300 hover:shadow-md lg:max-w-sm"
+                      dateFormat="dd/MM/yyyy"
                     />
+
                   </div>
                 )}
               />

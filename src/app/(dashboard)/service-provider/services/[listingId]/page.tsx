@@ -305,7 +305,6 @@ const EditListing = () => {
         value !== "" &&
         value !== 0
       ) {
-        // @ts-expect-error "type of key not known"
         acc[key] = value;
       }
       return acc;
