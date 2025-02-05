@@ -588,11 +588,14 @@ const TaskDetailsPage = ({ params }: { params: { id: string } }) => {
             unavailable. Thanks for your patience!
           </p>
           <div className="flex justify-center gap-5">
-            <button className="rounded-full border-[0.5px] border-primary bg-[#EBE9F4] px-5 py-2 font-bold text-primary">
+            <button
+              onClick={() => setShowErrorPopup(false)}
+              className="rounded-full border-[0.5px] border-primary bg-[#EBE9F4] px-5 py-2 font-bold text-primary"
+            >
               Back
             </button>
             <Link
-              href="/customer/profile"
+              href="/service-provider/profile"
               className="rounded-full bg-[#381F8C] px-5 py-2 font-bold text-[#EBE9F4]"
             >
               Go To Profile
