@@ -1175,16 +1175,16 @@ const AddTaskForm: React.FC = () => {
                 can slay? Check out your task or browse our marketplace for some
                 fire talent.
               </p>
-              <div className="flex justify-center gap-5">
+              <div className="flex justify-center gap-3 sm:gap-5">
                 <Link
                   href="/customer/tasks"
-                  className="rounded-full border-[0.5px] border-primary bg-[#EBE9F4] px-4 py-2 font-bold text-primary"
+                  className="rounded-full border-[0.5px] border-primary bg-[#EBE9F4] px-3 py-2 font-bold text-primary"
                 >
                   View Tasks
                 </Link>
                 <Link
                   href="/marketplace"
-                  className="rounded-full bg-[#381F8C] px-4 py-2 font-bold text-[#EBE9F4]"
+                  className="rounded-full bg-[#381F8C] px-3 py-2 font-bold text-[#EBE9F4]"
                 >
                   Explore Marketplace
                 </Link>
