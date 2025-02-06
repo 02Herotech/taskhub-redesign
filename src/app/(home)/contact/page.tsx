@@ -8,7 +8,7 @@ import axios from "axios";
 
 type Category = {
     id: number | null;
-    categoryName: string;
+    subjectCategoryName: string;
 };
 
 const ContactUsPage = () => {
@@ -78,7 +78,7 @@ const ContactUsPage = () => {
             // Reset the form fields
             setSelectedCategory({
                 id: null,
-                categoryName: '',
+                subjectCategoryName: '',
             });
             setFullName('');
             setEmailAddress('');
@@ -112,7 +112,7 @@ const ContactUsPage = () => {
                                         >
                                             <div className="flex items-center justify-between">
                                                 <h4 className={`${selectedCategory.categoryName ? 'text-black' : 'text-[#D3D2D5]'}`}>
-                                                    {selectedCategory.categoryName ? `${selectedCategory.categoryName}` : 'Enter subject category'}
+                                                    {selectedCategory.subjectCategoryName ? `${selectedCategory.subjectCategoryName}` : 'Enter subject category'}
                                                 </h4>
                                                 <svg width="9" height="6" viewBox="0 0 9 6" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                     <path d="M5.2365 5.68091L8.88456 0.994324C8.95978 0.894089 8.99958 0.780446 9 0.6647C9.00042 0.548953 8.96145 0.43514 8.88696 0.334582C8.81248 0.234024 8.70508 0.150227 8.57544 0.0915275C8.44581 0.0328279 8.29846 0.00127172 8.14806 0L0.85194 0C0.701538 0.00127172 0.55419 0.0328279 0.424556 0.0915275C0.294922 0.150227 0.18752 0.234024 0.113036 0.334582C0.0385523 0.43514 -0.000418663 0.548953 2.86102e-06 0.6647C0.000424385 0.780446 0.0402222 0.894089 0.115437 0.994324L3.7635 5.68091C3.84028 5.77832 3.94839 5.85885 4.0774 5.91474C4.2064 5.97064 4.35195 6 4.5 6C4.64805 6 4.7936 5.97064 4.9226 5.91474C5.05161 5.85885 5.15972 5.77832 5.2365 5.68091Z" fill="#190E3F" />
@@ -135,7 +135,7 @@ const ContactUsPage = () => {
                                                         }}
                                                         className="cursor-pointer"
                                                     >
-                                                        {category.categoryName}
+                                                        {category.subjectCategoryName}
                                                     </div>
                                                 ))}
                                             </div>
