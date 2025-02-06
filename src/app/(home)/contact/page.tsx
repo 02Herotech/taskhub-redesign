@@ -28,7 +28,7 @@ const ContactUsPage = () => {
         const fetchCategoriesData = async () => {
             try {
                 const response = await axios.get(
-                    `${process.env.NEXT_PUBLIC_API_URL}/util/all-categories`,
+                    `${process.env.NEXT_PUBLIC_API_URL}/util/all-subject-categories`,
                 );
                 setCategoriesData(response.data);
             } catch (error) {

@@ -6,6 +6,7 @@ import axios from "axios";
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import ReactSlider from "react-slider";
+import { number } from 'zod';
 
 interface ModalProp {
     isMobileFilterModalShown: boolean;
@@ -21,6 +22,8 @@ const ExploreMobileFilterModal = ({
     filterDataStructure,
 }: ModalProp) => {
     const { categories } = useSelector((state: RootState) => state.explore);
+
+    // const [someValue, setSomeValue] = useState(null);
 
     useEffect(() => {
         window.scrollTo({
@@ -145,7 +148,7 @@ const ExploreMobileFilterModal = ({
                                 ${filterDataStructure.minPrice} - $
                                 {filterDataStructure.maxPrice}
                             </p>
-                            <ReactSlider
+                            <ReactSlider<readonly number[]>
                                 className="relative h-2 w-full rounded-md bg-[#FE9B07]"
                                 thumbClassName="absolute h-6 w-6 bg-[#FE9B07] rounded-full cursor-grab transform -translate-y-1/2 top-1/2"
                                 trackClassName="top-1/2 bg-[#FE9B07]"
@@ -153,10 +156,11 @@ const ExploreMobileFilterModal = ({
                                     filterDataStructure.minPrice,
                                     filterDataStructure.maxPrice,
                                 ]}
+                                // refs={}
                                 min={5}
                                 max={1000}
                                 step={5}
-                                onChange={(newValues: number[]) =>
+                                onChange={(newValues: any[]) =>
                                     setfilterDataStructure((prev) => ({
                                         ...prev,
                                         minPrice: newValues[0],
@@ -164,6 +168,13 @@ const ExploreMobileFilterModal = ({
                                     }))
                                 }
                             />
+                            {/* <ReactSlider<number>
+                                min={0}
+                                max={100}
+                                step={1}
+                                value={someValue}
+                                onChange={(value) => setSomeValue(value)}
+                            /> */}
                         </div>
                         {/* <input
               type="number"
