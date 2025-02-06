@@ -5,7 +5,8 @@ import "../globals.css";
 
 export const metadata: Metadata = {
   title: "Oloja",
-  description: "Oloja is a task management and booking app built with Next.js.",
+  description:
+    "Olojà is an AI-driven platform that transcends boundaries, connecting diverse communities with a world of authentic products and services.",
 };
 
 export default function RootLayout({
