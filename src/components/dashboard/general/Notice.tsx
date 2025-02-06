@@ -60,7 +60,7 @@ function Notice({ role, verificationStatus }: Props) {
             ? <>
                 {verifiedMessage}
                 <button
-                  // onClick={() => setIsModalOpen(true)}
+                  onClick={() => setIsModalOpen(true)}
                   className="text-blue-600 underline ml-1"
                 >
                   Contact customer support
