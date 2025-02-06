@@ -32,7 +32,7 @@ const idTypeObject = [
 ];
 
 const EditProfile = () => {
-  const [isEditingEnabled, setIsEditingEnabled] = useState(false);
+  const [isEditingEnabled, setIsEditingEnabled] = useState(true);
   const [isFormModalShown, setIsFormModalShown] = useState(false);
   const [isEditingProfilePicture, setIsEditingProfilePicture] = useState({
     isEditing: false,
@@ -313,7 +313,7 @@ const EditProfile = () => {
       });
       setIsProfileUpdatedSuccessfully(true);
       setIsFormModalShown(true);
-      setIsEditingEnabled(false);
+      setIsEditingEnabled(true);
     } catch (error: any) {
       console.log(error);
       setEditProfileError("Something went wrong, please try again");
@@ -659,7 +659,7 @@ const EditProfile = () => {
                   <select
                     {...register("idType")}
                     className="w-full rounded-xl border border-slate-100 px-2 py-2.5 text-slate-700 shadow outline-none transition-shadow duration-300 hover:shadow-md lg:max-w-sm"
-                    disabled={!isEditingEnabled || !isDocumentEditable}
+                    disabled={ !isEditingEnabled || !isDocumentEditable}
                   >
                     {idTypeObject.map((item) => (
                       <option key={item.label} value={item.label}>
