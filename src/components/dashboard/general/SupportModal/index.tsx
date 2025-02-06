@@ -83,7 +83,7 @@ const ContactSupportModal = ({ onClose }: Props) => {
       setTimeout(() => {
         onClose();
         setSuccessMessage(""); // Clear success message if needed
-      }, 3000);
+      }, 2000);
     } catch (error) {
       console.error("Error submitting form:", error);
       setErrorMessage("Something went wrong. Please try again.");
