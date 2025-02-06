@@ -5,8 +5,7 @@ import "../globals.css";
 
 export const metadata: Metadata = {
   title: "Oloja",
-  description:
-    "Olojà is an AI-driven platform that transcends boundaries, connecting diverse communities with a world of authentic products and services.",
+  description: "Get your tasks done in a few clicks with Olójà Hub",
 };
 
 export default function RootLayout({
