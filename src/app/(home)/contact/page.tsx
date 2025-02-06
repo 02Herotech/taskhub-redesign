@@ -15,7 +15,7 @@ const ContactUsPage = () => {
     const [categoriesData, setCategoriesData] = useState<Category[]>([]);
     const [selectedCategory, setSelectedCategory] = useState<Category>({
         id: null,
-        categoryName: '',
+        subjectCategoryName: '',
     });
     const [fullName, setFullName] = useState<string>('');
     const [emailAddress, setEmailAddress] = useState<string>('');
