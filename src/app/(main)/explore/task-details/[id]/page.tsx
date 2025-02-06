@@ -13,7 +13,6 @@ import {
   monthNames,
   suffixes,
 } from "@/lib/utils";
-import Link from "next/link";
 import Loading from "@/shared/loading";
 import TaskOffers from "@/components/main/explore/TaskOffers";
 import { FormEvent, useEffect, useRef, useState } from "react";
@@ -28,8 +27,6 @@ import ShareTask from "@/components/dashboard/general/ShareTask";
 import { usePathname, useRouter } from "next/navigation";
 import { ShareSvg } from "@/lib/svgIcons";
 import useUserProfileData from "@/hooks/useUserProfileData";
-import Popup from "@/components/global/Popup";
-import PopupTwo from "@/components/global/Popup/PopupTwo";
 import ProfileIncomplete from "@/components/global/Popup/ProfileIncomplete";
 import InReview from "@/components/global/Popup/InReview";
 
