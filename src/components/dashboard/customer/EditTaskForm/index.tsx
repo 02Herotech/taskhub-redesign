@@ -45,7 +45,7 @@ const EditTaskForm = ({ task, setShowEditModal }: TaskCardProps) => {
     const taskSchema = z.object({
         taskBriefDescription: z.string(),
         taskDescription: z.string(),
-        category: z.string(),
+        // category: z.string(),
         taskType: z.string(),
         postCode: z.string().nullable().optional(),
         suburb: z.string().nullable().optional(),
@@ -90,7 +90,7 @@ const EditTaskForm = ({ task, setShowEditModal }: TaskCardProps) => {
             reset({
                 taskBriefDescription: task.taskBriefDescription,
                 taskDescription: task.taskDescription,
-                category: selectedCategory,
+                // category: selectedCategory,
                 taskType: task.taskType,
                 postCode: task.postCode ? task.postCode.toString() : null, // Ensure string conversion
                 suburb: task.suburb,
@@ -109,7 +109,8 @@ const EditTaskForm = ({ task, setShowEditModal }: TaskCardProps) => {
             }
         }
         // eslint-disable-next-line
-    }, [task, isFlexible, selectedCategory, initialDate, initialTime, reset]);
+    }, [task, isFlexible, initialDate, initialTime, reset]);
+    // }, [task, isFlexible, selectedCategory, initialDate, initialTime, reset]);
 
     const handleDateChange = useCallback((date: Date | null) => {
         setUpdatedDate(date);
@@ -257,7 +258,7 @@ const EditTaskForm = ({ task, setShowEditModal }: TaskCardProps) => {
         const fields: Record<string, string | number | null> = {
             taskBriefDescription: data.taskBriefDescription ?? "",
             taskDescription: data.taskDescription ?? "",
-            categoryId: categories.find(category => category.categoryName === data.category)?.id ?? "",
+            // categoryId: categories.find(category => category.categoryName === data.category)?.id ?? "",
             taskType: data.taskType ?? "",
             postCode: data.postCode ?? "",
             suburb: data.suburb ?? "",
@@ -379,7 +380,7 @@ const EditTaskForm = ({ task, setShowEditModal }: TaskCardProps) => {
                                     ></textarea>
                                 </div>
 
-                                <div className="relative grid space-y-4">
+                                {/* <div className="relative grid space-y-4">
                                     <label className="text-[13px] font-semibold text-status-darkpurple lg:text-[16px]">
                                         What category best describes your task?
                                     </label>
@@ -406,7 +407,7 @@ const EditTaskForm = ({ task, setShowEditModal }: TaskCardProps) => {
                                             </button>
                                         ))}
                                     </Dropdown>
-                                </div>
+                                </div> */}
 
                                 <div className="relative grid space-y-3">
                                     <label className="text-[13px] font-semibold text-status-darkpurple lg:text-[16px]">

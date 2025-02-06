@@ -1,9 +1,13 @@
-import React from "react";
-import instance from "@/utils/axios.config";
-import Popup from "@/components/global/Popup";
+import axios from "axios";
 
+const instance = axios.create({
+  timeout: 20000,
+  baseURL: process.env.NEXT_PUBLIC_API_URL,
+});
+
+/**Re-usable hook that returns authenticated axios instance */
 function useAxios() {
-  return <div>useAxios</div>;
+  return instance;
 }
 
 export default useAxios;

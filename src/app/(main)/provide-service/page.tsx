@@ -25,6 +25,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/store";
 import { getCookie, setCookie } from "cookies-next";
 import useUserProfileData from "@/hooks/useUserProfileData";
+import ProfileIncomplete from "@/components/global/Popup/ProfileIncomplete";
 
 interface FormData {
   listingTitle: string;
@@ -313,12 +314,12 @@ const ProvideService: React.FC = () => {
 
   const validateFields = () => {
     const errors: any = {};
-    if (!selectedCategory) {
-      errors.category = "Please fill out all required fields";
-    }
-    if (!selectedSubCategory) {
-      errors.subCategory = "Please fill out all required fields";
-    }
+    // if (!selectedCategory) {
+    //   errors.category = "Please fill out all required fields";
+    // }
+    // if (!selectedSubCategory) {
+    //   errors.subCategory = "Please fill out all required fields";
+    // }
     if (!task.listingTitle) {
       errors.lisitingTitle = "Please fill out all required fields";
     }
@@ -585,11 +586,7 @@ const ProvideService: React.FC = () => {
           const response = await axios.post(
             `${process.env.NEXT_PUBLIC_API_URL}/listing/create-listing?userId=${id}`,
             finalTask,
-            {
-              headers: {
-                "Content-Type": "multipart/form-data",
-              },
-            },
+            { headers: { "Content-Type": "multipart/form-data" } },
           );
           setTask({
             listingTitle: "",
@@ -664,7 +661,7 @@ const ProvideService: React.FC = () => {
                     className={`rounded-2xl bg-[#EBE9F4] p-3 text-[13px] placeholder:font-satoshi placeholder:font-medium placeholder:text-status-darkpurple ${errors.lisitingTitle ? "border border-[#ff0000] outline-[#FF0000]" : "border-none outline-none"}`}
                   />
                 </div>
-                <div className="relative grid space-y-4">
+                {/* <div className="relative grid space-y-4">
                   <div className="flex items-center justify-between gap-3">
                     <label className="text-[13px] font-semibold lg:text-[16px]">
                       Choose the best category for your listing.{" "}
@@ -741,7 +738,7 @@ const ProvideService: React.FC = () => {
                       </button>
                     ))}
                   </Dropdown>
-                </div>
+                </div> */}
 
                 <div className="lg:hidden">
                   {/* @ts-ignore */}
@@ -783,8 +780,7 @@ const ProvideService: React.FC = () => {
                 <div className="text-red-600">
                   {errors.lisitingTitle ||
                     errors.listingDescription ||
-                    errors.category ||
-                    errors.subCategory}
+                    errors.category }
                 </div>
                 <Button className="w-full rounded-3xl lg:w-1/3" type="submit">
                   Next
@@ -1105,7 +1101,7 @@ const ProvideService: React.FC = () => {
         );
       case 3:
         return (
-          <div className="mb-10 space-y-10 font-bold text-status-darkpurple max-w-[700px]">
+          <div className="mb-10 max-w-[700px] space-y-10 font-bold text-status-darkpurple">
             <form onSubmit={handleSubmit} className="space-y-10">
               <div className="relative mt-2">
                 <Dropdown
@@ -1400,7 +1396,7 @@ const ProvideService: React.FC = () => {
 
   return (
     <>
-      <div className="mt-24 flex min-h-screen flex-col items-center justify-center">
+      <div className="relative z-40 mt-24 flex min-h-screen flex-col items-center justify-center">
         <Head>
           <title>TaskHub | Provide Service</title>
         </Head>
@@ -1554,9 +1550,7 @@ const ProvideService: React.FC = () => {
           {complete ? (
             <Popup
               isOpen={isSuccessPopupOpen}
-              onClose={() => {
-                setIsSuccessPopupOpen(false);
-              }}
+              onClose={() => setIsSuccessPopupOpen(false)}
             >
               <div className="px-14 py-10 lg:px-24">
                 <div className="relative grid items-center justify-center space-y-5">
@@ -1641,59 +1635,12 @@ const ProvideService: React.FC = () => {
         </div>
       </div>
       {isAuth ? (
-        <Popup
+        <ProfileIncomplete
           isOpen={isEnabledPopup}
-          onClose={() => {
-            setIsEnabledPopup(false);
-          }}
-        >
-          <div className="px-14 py-10 lg:px-24">
-            <div className="relative grid items-center justify-center space-y-5">
-              <p className="font-clashDisplay text-center text-[20px] font-extrabold text-[#2A1769] md:text-[36px] lg:text-[37px] ">
-                Your profile is not updated
-              </p>
-              <div>
-                <p className="text-center text-[14px] lg:text-[20px]">
-                  Please proceed to update your profile
-                </p>
-                <p className="text-center text-[14px] lg:text-[20px]">
-                  before you can make a listing
-                </p>
-              </div>
-              <Image
-                src={image}
-                alt="image"
-                className="absolute -right-14 top-28 w-24 lg:-right-12 lg:top-2/3 lg:w-24 "
-              />
-              <Image
-                src={img}
-                alt="image"
-                className="absolute -left-12 top-12 w-12 lg:-left-[53px] lg:top-8 lg:w-16"
-              />
-              <div className="flex justify-center space-x-3 md:justify-around">
-                <Link href="/marketplace?">
-                  <button className="rounded-2xl border-2 border-status-purpleBase p-2 text-[14px] font-semibold text-status-purpleBase outline-none md:w-[100px]">
-                    Back
-                  </button>
-                </Link>
-
-                <button
-                  onClick={handleProfile}
-                  className="rounded-2xl bg-status-purpleBase p-2 text-[14px] text-white outline-none md:w-[100px]"
-                >
-                  Go to profile
-                </button>
-              </div>
-            </div>
-          </div>
-        </Popup>
+          onClose={() => setIsEnabledPopup(false)}
+        />
       ) : (
-        <Popup
-          isOpen={isEnabledPopup}
-          onClose={() => {
-            setIsEnabledPopup(false);
-          }}
-        >
+        <Popup isOpen={isEnabledPopup} onClose={() => setIsEnabledPopup(false)}>
           <div className="px-14 py-10 lg:px-24">
             <div className="relative grid items-center justify-center space-y-5">
               <p className="font-clashDisplay text-center text-[20px] font-extrabold text-[#2A1769] md:text-[36px] lg:text-[37px] ">

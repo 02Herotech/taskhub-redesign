@@ -26,6 +26,8 @@ import Loading from "@/components/global/loading/page";
 import Progress from "@/components/global/progress";
 import { instance as authInstance } from "@/utils/axiosInterceptor.config";
 import axios from "axios";
+import PopupTwo from "@/components/global/Popup/PopupTwo";
+import { IoIosCheckmarkCircle } from "react-icons/io";
 
 interface FormData {
   taskBriefDescription: string;
@@ -91,7 +93,7 @@ const AddTaskForm: React.FC = () => {
   const [termAccepted, settermAccepted] = useState(false);
   const [accepted, setAccepted] = useState(false);
   const [isRemote, setIsRemote] = useState("");
-  const [selectedCategoryName, setSelectedCategoryName] = useState("Category");
+  // const [selectedCategoryName, setSelectedCategoryName] = useState("Category");
   const [isOpen, setIsOpen] = useState(false);
   const [activeButtonIndex, setActiveButtonIndex] = useState<number | null>(
     null,
@@ -239,6 +241,9 @@ const AddTaskForm: React.FC = () => {
 
   const validateFields = () => {
     const errors: any = {};
+    if (activeButtonIndex === null) {
+      errors.service = "Please select the type of service you want";
+    }
     if (activeButtonIndex === 0) {
       // Validation for physical service
       if (!selectedCode) {
@@ -270,9 +275,9 @@ const AddTaskForm: React.FC = () => {
       error.taskDescription = "Please fill out all required fields";
     }
 
-    if (!selectedCategory) {
-      error.category = "Please fill out all required fields";
-    }
+    // if (!selectedCategory) {
+    //   error.category = "Please fill out all required fields";
+    // }
 
     // Validate selectedTime and selectedDate or termAccepted
     if (!(selectedTime && selectedDate) && !termAccepted) {
@@ -477,8 +482,8 @@ const AddTaskForm: React.FC = () => {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setLoading(true);
-    if (!isAuthenticated) return setIsSuccessPopup(true);
     if (validateFields() && validateField1()) {
+      if (!isAuthenticated) return setIsSuccessPopup(true);
       try {
         let finalTask = { ...task };
 
@@ -511,15 +516,12 @@ const AddTaskForm: React.FC = () => {
           finalTask = { ...finalTask, taskImage: null };
         }
 
-        const url = `${process.env.NEXT_PUBLIC_API_URL}/task/post`;
         await Promise.race([
-          authInstance.post('task/post', finalTask,
-            {
-              headers: {
-                "Content-Type": "multipart/form-data",
-              },
+          authInstance.post("task/post", finalTask, {
+            headers: {
+              "Content-Type": "multipart/form-data",
             },
-          ),
+          }),
           timeout(10000),
         ]);
 
@@ -538,7 +540,6 @@ const AddTaskForm: React.FC = () => {
           taskDescription: "",
         });
 
-        //Todo Check for enabled here to show popup
         setIsSuccessPopupOpen(true);
       } catch (error: any) {
         console.error("Error submitting form:", error);
@@ -586,7 +587,7 @@ const AddTaskForm: React.FC = () => {
                   {wordCount}/10 words
                 </div>
               </div>
-              <div className="relative grid space-y-4">
+              {/* <div className="relative grid space-y-4">
                 <div className="flex items-center justify-between">
                   <label className="text-[13px] font-semibold lg:text-[16px]">
                     What category best describes your task?{" "}
@@ -624,7 +625,7 @@ const AddTaskForm: React.FC = () => {
                     </button>
                   ))}
                 </Dropdown>
-              </div>
+              </div> */}
               <div className="relative grid space-y-3">
                 <div className="flex items-center justify-between">
                   <label className="flex text-[13px] font-semibold lg:text-[16px]">
@@ -806,6 +807,7 @@ const AddTaskForm: React.FC = () => {
                   Remote Service
                 </button>
               </div>
+              <div className="text-[#FF0000]">{errors.service}</div>
             </div>
             <form onSubmit={handleSubmit} className="space-y-5">
               {isOpen && activeButtonIndex === 1 && (
@@ -919,21 +921,17 @@ const AddTaskForm: React.FC = () => {
                 <p className="absolute left-3 top-8 md:top-9">$</p>
               </div>
               <div className="text-[#FF0000]">
-                {errors.city ||
-                  errors.postalCode ||
-                  errors.service ||
-                  errors.customerBudget}
+                {errors.city || errors.postalCode || errors.customerBudget}
               </div>
               <div className="flex flex-wrap-reverse justify-between gap-3">
-                {isAuthenticated && (
+                {session.status == "authenticated" ? (
                   <Button
                     className="w-full rounded-3xl lg:w-[200px]"
                     type="submit"
                   >
                     Confirm Task
                   </Button>
-                )}
-                {!isAuthenticated && (
+                ) : (
                   <Button
                     className="w-full rounded-3xl lg:w-[200px]"
                     type="button"
@@ -962,7 +960,7 @@ const AddTaskForm: React.FC = () => {
   };
   return (
     <>
-      <div className="mt-24 flex min-h-screen items-center justify-center">
+      <div className="relative z-40 mt-24 flex min-h-screen items-center justify-center">
         <Head>
           <title>Oloja | Add Task</title>
         </Head>
@@ -1156,44 +1154,57 @@ const AddTaskForm: React.FC = () => {
             </div>
           </Popup>
         ) : (
-          <Popup
+          <PopupTwo
             isOpen={isSuccessPopupOpen}
             onClose={() => {
               router.push("/customer/tasks");
               setIsSuccessPopupOpen(false);
             }}
           >
-            <div className="px-12 py-10 lg:px-24">
-              <div className="relative grid items-center justify-center space-y-5">
-                <div className="flex justify-center text-[1px] text-white">
-                  <Image src={imags} alt="image" />
-                </div>
-                <p className="font-clashDisplay text-center text-[25px] font-extrabold text-[#2A1769] lg:text-[37px] ">
-                  Congratulations
-                </p>
-                <div>
-                  <p className="text-center lg:text-[20px]">
-                    Your task has been posted!
-                  </p>
-                  <p className="text-center lg:text-[20px]">
-                    Please click on the button to view your tasks
-                  </p>
-                </div>
-                <Image
-                  src={image}
-                  alt="image"
-                  className="absolute -right-24 top-36  w-32 font-satoshiMedium lg:-right-20 lg:top-2/3"
-                />
-                <div className="flex justify-center">
-                  <Link href="/customer/tasks">
-                    <button className="rounded-2xl bg-status-purpleBase p-2 text-[14px] text-white outline-none">
-                      View Tasks
-                    </button>
-                  </Link>
-                </div>
+            <div className="relative max-h-[700px] min-w-[320px] max-w-[700px] bg-white p-5 sm:min-w-[560px]">
+              <IoIosCheckmarkCircle
+                className="mx-auto"
+                size={50}
+                fill="#FE9B07"
+              />
+              <h3 className="mb-3 mt-2 text-center font-clashSemiBold text-2xl text-[#2A1769] sm:text-4xl">
+                Congratulations!!
+              </h3>
+              <p className="md::text-xl mx-auto mb-5 max-w-[383px] text-center font-satoshiMedium text-base text-[#140B31] sm:text-lg">
+                Your task is posted! 📣 Ready to get matched with an expert who
+                can slay? Check out your task or browse our marketplace for some
+                fire talent.
+              </p>
+              <div className="flex justify-center gap-3 sm:gap-5">
+                <Link
+                  href="/customer/tasks"
+                  className="rounded-full border-[0.5px] border-primary bg-[#EBE9F4] px-3 py-2 font-bold text-primary"
+                >
+                  View Tasks
+                </Link>
+                <Link
+                  href="/marketplace"
+                  className="rounded-full bg-[#381F8C] px-3 py-2 font-bold text-[#EBE9F4]"
+                >
+                  Explore Marketplace
+                </Link>
               </div>
+              <Image
+                src="/assets/icons/popup-design.png"
+                width={263}
+                height={626}
+                alt="Icon"
+                className="absolute -left-10 top-5 h-full w-3/12 sm:left-0"
+              />
+              <Image
+                src="/assets/icons/popup-design.png"
+                width={263}
+                height={626}
+                alt="Icon"
+                className="absolute -right-10 top-5 aspect-auto h-full w-3/12 scale-x-[-1] sm:right-0"
+              />
             </div>
-          </Popup>
+          </PopupTwo>
         )}
       </div>
       <Popup
