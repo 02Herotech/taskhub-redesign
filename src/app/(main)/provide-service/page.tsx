@@ -26,6 +26,7 @@ import { RootState } from "@/store";
 import { getCookie, setCookie } from "cookies-next";
 import useUserProfileData from "@/hooks/useUserProfileData";
 import ProfileIncomplete from "@/components/global/Popup/ProfileIncomplete";
+import InReview from "@/components/global/Popup/InReview";
 
 interface FormData {
   listingTitle: string;
@@ -158,6 +159,7 @@ const ProvideService: React.FC = () => {
   const isEnabled = session.data?.user.user.enabled;
   const [isEnabledPopup, setIsEnabledPopup] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [inReviewPopup, setInReviewPopup] = useState(false);
 
   const [errs, setErrs] = useState({
     image1: "",
@@ -620,6 +622,9 @@ const ProvideService: React.FC = () => {
         } finally {
           setLoading(false);
         }
+      } else if (fetchedUserData.verificationStatus === "PENDING") {
+        setInReviewPopup(true);
+        setLoading(false)
       } else {
         setIsEnabledPopup(true);
         setLoading(false);
@@ -1683,6 +1688,10 @@ const ProvideService: React.FC = () => {
           </div>
         </Popup>
       )}
+      <InReview
+        isOpen={inReviewPopup}
+        onClose={() => setInReviewPopup(false)}
+      />
     </>
   );
 };
