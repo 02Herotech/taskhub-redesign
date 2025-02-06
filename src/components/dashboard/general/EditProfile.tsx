@@ -34,6 +34,7 @@ const idTypeObject = [
 const EditProfile = () => {
   const [isEditingEnabled, setIsEditingEnabled] = useState(true);
   const [isFormModalShown, setIsFormModalShown] = useState(false);
+  const [isSupportModalShown, setIsSupportModalShown] = useState(false);
   const [isEditingProfilePicture, setIsEditingProfilePicture] = useState({
     isEditing: false,
     image: null as string | null,
@@ -323,6 +324,10 @@ const EditProfile = () => {
   const handleChangeProfilePicture = () => {
     setIsEditingProfilePicture({ isEditing: true, image: null });
     setIsFormModalShown(true);
+  };
+
+  const handleContactSupport = () => {
+    setIsSupportModalShown(true);
   };
 
   const handleChangeFront = () => {
