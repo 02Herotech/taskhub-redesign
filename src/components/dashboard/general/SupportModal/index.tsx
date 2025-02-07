@@ -90,8 +90,8 @@ const ContactSupportModal = ({ onClose }: Props) => {
 
   return (
 <section className="fixed left-0 top-0 z-50 flex h-screen w-screen items-center justify-center bg-black bg-opacity-60">
-  <form onSubmit={handleFormSubmit}>
-    <div className="bg-white p-4 sm:p-8 rounded-lg shadow-lg w-full sm:w-[500px]">
+  <form onSubmit={handleFormSubmit} className="w-full sm:w-[500px] md:w-[550px] lg:w-[600px]">
+    <div className="bg-white p-4 sm:p-8 rounded-lg shadow-lg w-full">
       {/* Conditionally show the Popup */}
       {successMessage && (
         <div>
@@ -111,32 +111,28 @@ const ContactSupportModal = ({ onClose }: Props) => {
       <div className="flex justify-between items-center border-b pb-3">
         <h2 className="text-lg sm:text-xl font-bold text-primary">Help Center</h2>
         <button onClick={onClose} className="text-gray-500 hover:text-gray-700">
-          <AiOutlineClose className="w-6 h-6" />
+          {/* <AiOutlineClose className="w-6 h-6 text-primary" /> */}
+          <div className="w-8 h-8 flex items-center justify-center border-2 border-primary rounded-full">
+            <AiOutlineClose className="w-6 h-6 text-primary" />
+          </div>
         </button>
       </div>
       <p className="font-bold mb-4 text-sm sm:text-base">We are here to make your journey easy and simple</p>
 
-      <div className="mt-8 flex flex-col sm:flex-row sm:justify-between items-start sm:items-center space-y-4 sm:space-y-0 sm:space-x-4">
+      <div className="mt-7 flex flex-col sm:flex-row sm:justify-between items-start sm:items-center space-y-4 sm:space-y-0 sm:space-x-4 px-4">
   {/* Call Us Section */}
   <div className="flex items-center space-x-2 sm:ml-0 ml-4">
-    <svg
-      width="24"
-      height="25"
-      viewBox="0 0 36 37"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <path
-        d="M1.30779 2.23041L8.62014 0.542947C9.41465 0.360138 10.2303 0.774973 10.5537 1.52027L13.9286 9.3951C14.2239 10.0842 14.0271 10.8927 13.4435 11.3638L9.18263 14.8512C11.7138 20.2441 16.1364 24.7299 21.6417 27.3104L25.1292 23.0495C25.6073 22.4659 26.4088 22.2691 27.0979 22.5644L34.9727 25.9393C35.7251 26.2697 36.1399 27.0854 35.9571 27.8799L34.2696 35.1922C34.0938 35.9516 33.4189 36.5 32.6243 36.5C14.6177 36.5 0 21.9105 0 3.87569C0 3.08821 0.541397 2.40619 1.30779 2.23041Z"
-        fill="#FE9B07"
-      />
+    <svg width="80" height="61" viewBox="0 0 90 71" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect width="88" height="69" rx="6" transform="matrix(-1 0 0 1 89 1)" stroke="#E58C06" stroke-width="2"/>
+    <path d="M28.3078 18.2304L35.6201 16.5429C36.4147 16.3601 37.2303 16.775 37.5537 17.5203L40.9286 25.3951C41.2239 26.0842 41.0271 26.8927 40.4435 27.3638L36.1826 30.8512C38.7138 36.2441 43.1364 40.7299 48.6417 43.3104L52.1292 39.0495C52.6073 38.4659 53.4088 38.2691 54.0979 38.5644L61.9727 41.9393C62.7251 42.2697 63.1399 43.0854 62.9571 43.8799L61.2696 51.1922C61.0938 51.9516 60.4189 52.5 59.6243 52.5C41.6177 52.5 27 37.9105 27 19.8757C27 19.0882 27.5414 18.4062 28.3078 18.2304Z" fill="#FE9B07"/>
     </svg>
+
 
     <div className="flex flex-col">
       <span className="text-sm sm:text-base text-primary font-bold">Call Us</span>
       <a
         href="tel:+61426131854"
-        className="text-sm sm:text-base text-primary font-bold hover:underline"
+        className="text-xs sm:text-xs text-dark font-bold hover:underline"
       >
         (+61) 426131854
       </a>
@@ -145,23 +141,16 @@ const ContactSupportModal = ({ onClose }: Props) => {
 
   {/* Email Us Section */}
   <div className="flex items-center space-x-2 sm:ml-0 ml-4">
-    <svg
-      width="28"
-      height="24"
-      viewBox="0 0 41 33"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <path
-        d="M40.2232 11.0667C40.5355 10.8083 41 11.05 41 11.4583V28.5C41 30.7083 39.2783 32.5 37.1562 32.5H3.84375C1.72168 32.5 0 30.7083 0 28.5V11.4667C0 11.05 0.456445 10.8167 0.776758 11.075C2.57051 12.525 4.94883 14.3667 13.1168 20.5417C14.8064 21.825 17.6572 24.525 20.5 24.5083C23.3588 24.5333 26.2656 21.775 27.8912 20.5417C36.0592 14.3667 38.4295 12.5167 40.2232 11.0667ZM20.5 21.8333C22.3578 21.8667 25.0324 19.4 26.3777 18.3833C37.0041 10.3583 37.8129 9.65833 40.2633 7.65833C40.7277 7.28333 41 6.7 41 6.08333V4.5C41 2.29167 39.2783 0.5 37.1562 0.5H3.84375C1.72168 0.5 0 2.29167 0 4.5V6.08333C0 6.7 0.272266 7.275 0.736719 7.65833C3.18711 9.65 3.9959 10.3583 14.6223 18.3833C15.9676 19.4 18.6422 21.8667 20.5 21.8333Z"
-        fill="#FE9B07"
-      />
+    <svg width="80" height="61" viewBox="0 0 90 71" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect width="88" height="69" rx="6" transform="matrix(-1 0 0 1 89 1)" stroke="#FE9B07" stroke-width="2"/>
+    <path d="M65.2232 29.0667C65.5355 28.8083 66 29.05 66 29.4583V46.5C66 48.7083 64.2783 50.5 62.1562 50.5H28.8438C26.7217 50.5 25 48.7083 25 46.5V29.4667C25 29.05 25.4564 28.8167 25.7768 29.075C27.5705 30.525 29.9488 32.3667 38.1168 38.5417C39.8064 39.825 42.6572 42.525 45.5 42.5083C48.3588 42.5333 51.2656 39.775 52.8912 38.5417C61.0592 32.3667 63.4295 30.5167 65.2232 29.0667ZM45.5 39.8333C47.3578 39.8667 50.0324 37.4 51.3777 36.3833C62.0041 28.3583 62.8129 27.6583 65.2633 25.6583C65.7277 25.2833 66 24.7 66 24.0833V22.5C66 20.2917 64.2783 18.5 62.1562 18.5H28.8438C26.7217 18.5 25 20.2917 25 22.5V24.0833C25 24.7 25.2723 25.275 25.7367 25.6583C28.1871 27.65 28.9959 28.3583 39.6223 36.3833C40.9676 37.4 43.6422 39.8667 45.5 39.8333Z" fill="#FE9B07"/>
     </svg>
+
     <div className="flex flex-col">
       <span className="text-sm sm:text-base text-primary font-bold">Email Us @:</span>
       <a
         href="mailto:olojahub@jacinthsolutions.com.au"
-        className="text-sm sm:text-base text-primary font-bold hover:underline"
+        className="text-xs sm:text-xs text-dark font-bold hover:underline"
       >
         olojahub@jacinthsolutions.com.au
       </a>
@@ -169,8 +158,8 @@ const ContactSupportModal = ({ onClose }: Props) => {
   </div>
 </div>
 
-  <div className="mt-4 flex flex-col sm:flex-row sm:items-center sm:space-x-3">
-    <label className="text-sm sm:text-base font-bold text-primary sm:w-[120px]">
+  <div className="mt-8 flex flex-col sm:flex-row sm:items-center sm:space-x-3">
+    <label className="text-[12px] sm:text-[12px] font-bold text-primary sm:w-[120px]">
       Subject Category:
     </label>
     <select
@@ -194,7 +183,7 @@ const ContactSupportModal = ({ onClose }: Props) => {
   </div>
 
       <div className="mt-4 flex flex-col sm:flex-row sm:items-center sm:space-x-3">
-        <label className="text-sm sm:text-base font-bold text-primary sm:w-[120px]">
+        <label className="text-[12px] sm:text-[12px] font-bold text-primary sm:w-[120px]">
           Message:
         </label>
         <textarea
@@ -209,7 +198,7 @@ const ContactSupportModal = ({ onClose }: Props) => {
       <div className="mt-4 flex justify-center">
         <Button
           type="submit"
-          className="w-[150px] font-medium py-4 text-lg rounded-full 
+          className="w-[120px] font-medium py-4 text-lg rounded-full 
                     md:w-[120px] sm:w-[120px] lg:w-[150px] sm:py-3 sm:text-base"
         >
           Submit
