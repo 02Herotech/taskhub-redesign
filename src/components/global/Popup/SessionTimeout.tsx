@@ -3,15 +3,26 @@ import Link from "next/link";
 import Popup from "./PopupTwo";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "@/store";
+import { useRouter } from "next/navigation";
 import { setAuthStatus } from "@/store/Features/authStatus";
+import { signOut } from "next-auth/react";
 
 /**Functional Component for session timeout*/
 function SessionTimeout() {
   const timeoutPopup = useSelector((state: RootState) => state.timeoutPopup);
-  const dispatch = useDispatch()
-  console.log("Timeout popup: ", timeoutPopup);
+  const dispatch = useDispatch();
+  const router = useRouter();
+  const handleLogout = () => {};
   return (
-    <Popup isOpen={timeoutPopup} onClose={() => dispatch(setAuthStatus(false))}>
+    <Popup
+      isOpen={timeoutPopup}
+      onClose={async () => {
+        dispatch(setAuthStatus(false));
+        await signOut({
+          callbackUrl: `${process.env.NEXT_PUBLIC_URL}/auth/login`,
+        });
+      }}
+    >
       <div className="max-h-[700px] min-w-[320px] max-w-[700px] bg-white p-5 sm:min-w-[560px]">
         <h4 className="mb-10 font-clashSemiBold text-xl text-[#140B31] sm:text-3xl">
           Session Timed out
@@ -41,7 +52,7 @@ function SessionTimeout() {
             Login
           </Link>
           <Link
-            href="/auth/login"
+            href="/home"
             className="rounded-full border-[0.5px] border-[#381F8C] px-5 py-2 font-bold text-[#381F8C]"
           >
             Sign out

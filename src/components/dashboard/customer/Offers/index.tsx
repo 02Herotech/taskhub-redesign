@@ -440,9 +440,9 @@ const Offers = () => {
                         </div>
                         <div className="w-1/2">
                           <h2 className="text-xl font-bold text-[#001433]">
-                            10%
+                            {formatAmount(selectedInvoice.total * 0.10, "USD", false)}
                           </h2>
-                          <h5 className="text-[#716F78]">GST</h5>
+                          <h5 className="text-[#716F78]">Gst(10%)</h5>
                         </div>
                       </div>
                     </div>
