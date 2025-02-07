@@ -497,7 +497,7 @@ const EditProfile = () => {
                       showIcon
                       placeholder="DD/MM/YYYY"
                       maxDate={new Date(new Date().setFullYear(new Date().getFullYear() - 18))}
-                      className="p-inputtext border w-full border-slate-100 rounded-xl shadow hover:shadow-md"
+                      className="p-inputtext border w-full lg:max-w-sm border-slate-100 rounded-xl shadow hover:shadow-md"
                     />
                   )}
                 />
