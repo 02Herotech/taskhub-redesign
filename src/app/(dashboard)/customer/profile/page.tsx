@@ -6,10 +6,16 @@ import CustomerBadge from "@/components/dashboard/customer/Badge";
 import TopActivities from "@/components/dashboard/customer/TopActivities";
 import { defaultUserDetails } from "@/data/data";
 import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import { setAuthStatus } from "@/store/Features/authStatus";
+import useAxios from "@/hooks/useAxios";
 import { instance as authInstance } from "@/utils/axiosInterceptor.config";
+
 
 const CustomerProfilePage = () => {
   const [fetchedUserData, setFetchedUserData] = useState(defaultUserDetails);
+  const dispatch = useDispatch();
+  // const hookInterceptor = useAxios();
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -21,11 +27,28 @@ const CustomerProfilePage = () => {
       }
     };
     fetchUserData();
+
+    // async function fetchWithHookInterceptor() {
+    //   try {
+    //     const { data } = await hookInterceptor.get("customer/profile");
+    //     console.log("Data from hook axios instance, ", data);
+    //   } catch (error) {
+    //     console.error(error);
+    //   }
+    // }
+
+    // fetchWithHookInterceptor();
   }, []);
 
   return (
     <main className="mt-[5rem] space-y-8 p-4 lg:p-8">
       <ProfileHeader />
+      {/* <button
+        onClick={() => dispatch(setAuthStatus(true))}
+        className="rounded-3xl bg-primary px-4 py-2 font-satoshiMedium text-white"
+      >
+        Toggle session timeout
+      </button> */}
       <section className="flex flex-col flex-wrap gap-6 lg:grid lg:grid-cols-12">
         <motion.div
           className="w-full lg:col-span-12"
