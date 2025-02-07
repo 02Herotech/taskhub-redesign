@@ -4,7 +4,6 @@ import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { FaSortDown } from "react-icons/fa";
-import axios from "axios";
 import Button from "@/components/global/Button";
 import { cn } from "@/lib/utils";
 import {
@@ -49,7 +48,6 @@ const MobileNavigation: React.FC<Props> = ({
   const handleLogout = async () => {
     try {
       await signOut({ callbackUrl: `${process.env.NEXT_PUBLIC_URL}/home` });
-      await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/logout`);
       router.push("/home");
     } catch (error) {
       console.error("Logout error:", error);
