@@ -28,14 +28,12 @@ const NotificationComponent = () => {
     try {
       setLoading(true);
       const url =
-        `${process.env.NEXT_PUBLIC_API_URL}/notification?userId=` +
-        userId;
+        `${process.env.NEXT_PUBLIC_API_URL}/notification?userId=` + userId;
       const { data } = await axios.get(url, {
         headers: {
           Authorization: "Bearer " + token,
         },
       });
-      console.log("refreshed");
       setAlNotifications(data);
       setNotifications(data);
     } catch (error: any) {
@@ -100,8 +98,6 @@ const NotificationComponent = () => {
   useEffect(() => {
     notifications && categorizeNotifications(notifications);
   }, [notifications]);
-
-  console.log("not", notifications);
 
   return (
     <main className="mt-24 py-4 lg:p-8">

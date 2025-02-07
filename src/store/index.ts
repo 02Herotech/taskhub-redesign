@@ -7,6 +7,7 @@ import marketReducer from "./Features/marketplace";
 import userProfileReducer from "./Features/userProfile";
 import chatReducer from "./Features/chat";
 import exploreReducer from "./Features/explore";
+import authStatusReducer from "./Features/authStatus";
 import { stripe } from "@/services/stripe";
 import profileProgressReducer from "@/services/profile"
 import { listing } from "@/services/listings";
@@ -24,6 +25,7 @@ export const store = configureStore({
     chat: chatReducer,
     explore: exploreReducer,
     profileProgress: profileProgressReducer,
+    timeoutPopup: authStatusReducer
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(

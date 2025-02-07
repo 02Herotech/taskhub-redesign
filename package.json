@@ -47,6 +47,7 @@
     "react-type-animation": "^3.2.0",
     "react-typed": "^2.0.12",
     "react-webcam": "^7.2.0",
+    "sharp": "^0.33.5",
     "slick-carousel": "^1.8.1",
     "socket.io-client": "^2.5.0",
     "tailwind-merge": "^2.3.0",
