@@ -91,7 +91,7 @@ const AddTaskForm: React.FC = () => {
   const [termAccepted, settermAccepted] = useState(false);
   const [accepted, setAccepted] = useState(false);
   const [isRemote, setIsRemote] = useState("");
-  const [selectedCategoryName, setSelectedCategoryName] = useState("Category");
+  // const [selectedCategoryName, setSelectedCategoryName] = useState("Category");
   const [isOpen, setIsOpen] = useState(false);
   const [activeButtonIndex, setActiveButtonIndex] = useState<number | null>(
     null,
@@ -274,9 +274,9 @@ const AddTaskForm: React.FC = () => {
       error.taskDescription = "Please fill out all required fields";
     }
 
-    if (!selectedCategory) {
-      error.category = "Please fill out all required fields";
-    }
+    // if (!selectedCategory) {
+    //   error.category = "Please fill out all required fields";
+    // }
 
     // Validate selectedTime and selectedDate or termAccepted
     if (!(selectedTime && selectedDate) && !termAccepted) {
@@ -586,7 +586,7 @@ const AddTaskForm: React.FC = () => {
                   {wordCount}/10 words
                 </div>
               </div>
-              <div className="relative grid space-y-4">
+              {/* <div className="relative grid space-y-4">
                 <div className="flex items-center justify-between">
                   <label className="text-[13px] font-semibold lg:text-[16px]">
                     What category best describes your task?{" "}
@@ -624,7 +624,7 @@ const AddTaskForm: React.FC = () => {
                     </button>
                   ))}
                 </Dropdown>
-              </div>
+              </div> */}
               <div className="relative grid space-y-3">
                 <div className="flex items-center justify-between">
                   <label className="flex text-[13px] font-semibold lg:text-[16px]">

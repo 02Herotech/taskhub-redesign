@@ -62,7 +62,7 @@ const Popup: React.FC<PopupProps> = ({
         >
           <motion.div
             ref={popupRef}
-            className="relative z-10 mx-10 flex items-center justify-between rounded-xl bg-white shadow-lg lg:mx-0"
+            className="relative z-10 mx-10 flex items-center justify-between rounded-xl bg-white shadow-lg lg:mx-0 p-5"
             variants={popupVariants}
           >
             {popUpTitle && (

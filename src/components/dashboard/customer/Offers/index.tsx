@@ -263,7 +263,7 @@ const Offers = () => {
                 <div className="absolute right-0 top-full z-50 mt-2">
                   <DatePicker
                     selected={selectedDate}
-                    onChange={(date: Date) => {
+                    onChange={(date: Date | null) => {
                       setSelectedDate(date);
                       setIsDatePickerOpen(false);
                     }}

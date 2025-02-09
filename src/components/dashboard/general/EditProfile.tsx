@@ -20,7 +20,9 @@ import FormField from "./FormField";
 import Notice from "./Notice";
 import axios from "axios";
 import useValidateABN from "@/hooks/useValidateABN";
+import Information from '@/components/business-hub/Information';
 import useAxios from "@/hooks/useAxios";
+import { Calendar } from "primereact/calendar";
 
 const idTypeObject = [
   { label: "Medicare Card", value: "MEDICARE_CARD" },
@@ -30,8 +32,9 @@ const idTypeObject = [
 ];
 
 const EditProfile = () => {
-  const [isEditingEnabled, setIsEditingEnabled] = useState(false);
+  const [isEditingEnabled, setIsEditingEnabled] = useState(true);
   const [isFormModalShown, setIsFormModalShown] = useState(false);
+  const [isSupportModalShown, setIsSupportModalShown] = useState(false);
   const [isEditingProfilePicture, setIsEditingProfilePicture] = useState({
     isEditing: false,
     image: null as string | null,
@@ -62,10 +65,16 @@ const EditProfile = () => {
   const authInstance = useAxios();
 
   const userProfile = useSelector((state: RootState) => state.userProfile);
+
+  const [dateOfBirth, setDateOfBirth] = useState<Date | null>(null);
   const dispatch = useDispatch();
 
   const { data: session } = useSession();
   const user = session?.user?.user;
+
+
+  const maxDate = new Date();
+  maxDate.setFullYear(maxDate.getFullYear() - 18);
 
   const isServiceProvider = user?.roles[0] === "SERVICE_PROVIDER";
   const router = useRouter();
@@ -95,9 +104,8 @@ const EditProfile = () => {
     defaultValues: {
       firstName: "",
       lastName: "",
-      dateOfBirth: null,
-      // phoneNumber: "",
-      emailAddress: "",
+      dateOfBirth: new Date(),
+      emailAddress: user?.emailAddress || "",
       postcode: "",
       suburb: "",
       state: "",
@@ -223,6 +231,19 @@ const EditProfile = () => {
     fetchLocationByPostcode();
   }, [watchPostcode, setValue]);
 
+  // const formatDateAsYYYYMMDD = (date: Date | null) => {
+  //   if (!date) return "";
+  //   return date.toISOString().split("T")[0]; // Extract YYYY-MM-DD
+  // };
+
+  const formatDateAsYYYYMMDD = (date: Date): string => {
+    const yyyy = date.getFullYear();
+    const mm = String(date.getMonth() + 1).padStart(2, "0"); // Months are 0-based
+    const dd = String(date.getDate()).padStart(2, "0");
+    return `${yyyy}-${mm}-${dd}`;
+  };
+  
+
   const handleSubmitUserData: SubmitHandler<UserDataType> = async (data) => {
     if (isServiceProvider && !isValidABN) {
       if (ABNInputRef.current) {
@@ -236,24 +257,46 @@ const EditProfile = () => {
     }
     (data.idImageBack = "null"), (data.idImageFront = "null");
     if (!isServiceProvider) data.abn = "null";
-    const isIncompleteData = Object.entries(data).some(([key, value]) => {
-      return value === "" || value == null;
-    });
-    if (isIncompleteData) {
-      setEditProfileError("Missing required fields");
+    // const isIncompleteData = Object.entries(data).some(([key, value]) => {
+    //   return value === "" || value == null;
+    // });
+    // if (isIncompleteData) {
+    //   setEditProfileError("Missing required fields");
+    //   return;
+    // }
+    // if (data.idType === "International Passport" && !selectedDocumentFront) {
+    //   setEditProfileError("Missing required fields");
+    //   return;
+    // }
+    // if (
+    //   data.idType !== "International Passport" &&
+    //   (!selectedDocumentBack || !selectedDocumentFront)
+    // ) {
+    //   setEditProfileError("Missing required fields");
+    //   return;
+    // }
+    const missingFields = Object.entries(data)
+    .filter(([key, value]) => value === "" || value == null)
+    .map(([key]) => key); // Get only field names
+
+    if (missingFields.length > 0) {
+      setEditProfileError(`Missing required fields: ${missingFields.join(", ")}`);
+      console.log("Missing fields:", missingFields);
       return;
     }
+
     if (data.idType === "International Passport" && !selectedDocumentFront) {
-      setEditProfileError("Missing required fields");
+      setEditProfileError("Missing required field: idImageFront");
+      console.log("Missing field: idImageFront");
       return;
     }
-    if (
-      data.idType !== "International Passport" &&
-      (!selectedDocumentBack || !selectedDocumentFront)
-    ) {
-      setEditProfileError("Missing required fields");
+
+    if (data.idType !== "International Passport" && (!selectedDocumentBack || !selectedDocumentFront)) {
+      setEditProfileError("Missing required fields: idImageFront, idImageBack");
+      console.log("Missing fields: idImageFront, idImageBack");
       return;
     }
+
     setEditProfileError("");
     try {
       let submitData: any;
@@ -262,9 +305,7 @@ const EditProfile = () => {
         submitData = Object.entries({
           firstName: data.firstName,
           lastName: data.lastName,
-          dateOfBirth: data.dateOfBirth
-            ? formatDateAsYYYYMMDD(data.dateOfBirth as Date)
-            : "",
+          dateOfBirth: data.dateOfBirth ? formatDateAsYYYYMMDD(data.dateOfBirth as Date) : "",
           suburb: data.suburb,
           // phoneNumber: data.phoneNumber,
           state: data.state,
@@ -275,22 +316,26 @@ const EditProfile = () => {
           idNumber: data.idNumber,
           bio: data.bio,
           abn: data.abn,
-        }).reduce((acc, [key, value]) => {
-          if (value !== null && value !== undefined && value !== "") {
-            // @ts-expect-error "type of key not know"
-            acc[key] = value;
-          }
-          return acc;
-        }, {});
+        // }).reduce((acc, [key, value]) => {
+        //   if (value !== null && value !== undefined && value !== "") {
+        //     acc[key] = value;
+        //   }
+        //   return acc;
+        // }, {});
+        ...(isServiceProvider ? { abn: data.abn } : {}), // Include ABN only if service provider
+      }).reduce((acc, [key, value]) => {
+        if (value !== null && value !== undefined && value !== "") {
+          acc[key] = value;
+        }
+        return acc;
+      }, {});
         url = "service_provider/update";
       } else {
         delete data.abn;
         submitData = Object.entries({
           firstName: data.firstName,
           lastName: data.lastName,
-          dateOfBirth: data.dateOfBirth
-            ? formatDateAsYYYYMMDD(data.dateOfBirth as Date)
-            : "",
+          dateOfBirth: data.dateOfBirth ? formatDateAsYYYYMMDD(data.dateOfBirth as Date) : "",
           suburb: data.suburb,
           // phoneNumber: data.phoneNumber,
           state: data.state,
@@ -301,7 +346,6 @@ const EditProfile = () => {
           idNumber: data.idNumber,
         }).reduce((acc, [key, value]) => {
           if (value !== null && value !== undefined && value !== "") {
-            // @ts-expect-error "type of key not know"
             acc[key] = value;
           }
           return acc;
@@ -314,7 +358,7 @@ const EditProfile = () => {
       });
       setIsProfileUpdatedSuccessfully(true);
       setIsFormModalShown(true);
-      setIsEditingEnabled(false);
+      setIsEditingEnabled(true);
     } catch (error: any) {
       console.log(error);
       setEditProfileError("Something went wrong, please try again");
@@ -346,6 +390,9 @@ const EditProfile = () => {
 
   return (
     <main className="container py-8 lg:py-16">
+      <h5 className="text-2xl font-bold mb-4">Edit your information details</h5>
+      {/* <hr/> */}
+      <hr className="border-t border-gray-700 my-4" />
       {userDetails && (
         <Notice
           role={isServiceProvider ? "SERVICE_PROVIDER" : "USER"}
@@ -399,10 +446,12 @@ const EditProfile = () => {
             {user?.address?.state} Australia
           </p>
           <button
-            onClick={() => setIsEditingEnabled((prev) => !prev)}
+            // onClick={() => setIsEditingEnabled((prev) => !prev)}
+            onClick={handleChangeProfilePicture}
             className="rounded-full bg-violet-normal px-4 py-2 text-sm text-white transition-all duration-300 hover:opacity-90"
           >
-            {isEditingEnabled ? "Editing ..." : "Edit Profile"}
+            {/* {isEditingEnabled ? "Editing ..." : "Edit Profile Picture"} */}
+            Edit Profile Picture
           </button>
         </section>
 
@@ -433,38 +482,29 @@ const EditProfile = () => {
                 watch={watch}
                 disabled
               />
-              <Controller
-                control={control}
-                name="dateOfBirth"
-                render={({ field }) => (
-                  <div className="flex w-full flex-col gap-3 text-violet-normal">
-                    <label
-                      htmlFor="dateOfBirth"
-                      className="flex items-center justify-between"
-                    >
-                      <span>Date of Birth</span>
-                      {!errors.dateOfBirth && field.value && (
-                        <BiCheck className="size-5 rounded-full bg-green-500 p-1 text-white" />
-                      )}
-                    </label>
-                    <DatePicker
-                      placeholderText="DD/MM/YYYY"
-                      id="dateOfBirth"
-                      open={false}
-                      selected={field.value || null} // Use null if there's no date
-                      onChange={(date) => field.onChange(date ? date : "")}
-                      disabled={!isEditingEnabled || !!userDetails.dateOfBirth} // Disable if date exists and not in editing mode
-                      maxDate={
-                        new Date(
-                          new Date().setFullYear(new Date().getFullYear() - 18),
-                        )
-                      }
-                      className="w-full rounded-xl border border-slate-100 p-2 text-slate-700 shadow outline-none transition-shadow duration-300 hover:shadow-md lg:max-w-sm"
-                      dateFormat="dd/MM/yyyy"
+
+              <div className="w-full flex flex-col gap-4">
+                <label htmlFor="dob">Date of Birth</label>
+                <Controller
+                  name="dateOfBirth"
+                  control={control}
+                  rules={{ required: "Date of Birth is required" }}
+                  render={({ field }) => (
+                    <Calendar
+                      {...field}
+                      id="dob"
+                      dateFormat="dd/mm/yy"
+                      showIcon
+                      placeholder="DD/MM/YYYY"
+                      maxDate={new Date(new Date().setFullYear(new Date().getFullYear() - 18))}
+                      className="p-inputtext border w-full lg:max-w-sm border-slate-100 rounded-xl shadow hover:shadow-md"
                     />
-                  </div>
+                  )}
+                />
+                {dateOfBirth && dateOfBirth > maxDate && (
+                  <small className="text-red-500">You must be at least 18 years old</small>
                 )}
-              />
+              </div>
             </div>
           </section>
 
@@ -523,6 +563,15 @@ const EditProfile = () => {
               </label>
             </div>
           </section>
+
+          {/* <Controller
+            name="emailAddress"
+            control={control}
+            defaultValue={user?.emailAddress} // Ensure it's prefilled
+            render={({ field }) => (
+              <input {...field} disabled className="your-input-styles" />
+            )}
+          /> */}
 
           {/* Address Information */}
           <section className="flex flex-col gap-4">
@@ -642,7 +691,7 @@ const EditProfile = () => {
                   <select
                     {...register("idType")}
                     className="w-full rounded-xl border border-slate-100 px-2 py-2.5 text-slate-700 shadow outline-none transition-shadow duration-300 hover:shadow-md lg:max-w-sm"
-                    disabled={!isEditingEnabled || !isDocumentEditable}
+                    disabled={ !isEditingEnabled || !isDocumentEditable}
                   >
                     {idTypeObject.map((item) => (
                       <option key={item.label} value={item.label}>

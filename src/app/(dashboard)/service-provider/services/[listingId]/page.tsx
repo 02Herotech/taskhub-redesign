@@ -60,8 +60,8 @@ const EditListing = () => {
       .refine((str) => str.split(" ").filter(Boolean).length >= 5, {
         message: `Description must have ${5} words or more`,
       }),
-    category: z.string(),
-    subCategory: z.string(),
+    // category: z.string(),
+    // subCategory: z.string(),
     availableDays: z.array(z.string()),
     available: z.boolean(),
     taskType: z.string(),
@@ -138,8 +138,8 @@ const EditListing = () => {
     if (currentListing) {
       reset({
         listingTitle: currentListing.listingTitle,
-        category: currentListing.category.categoryName,
-        subCategory: currentListing.subCategory.name,
+        // category: currentListing.category.categoryName,
+        // subCategory: currentListing.subCategory.name,
         listingDescription: currentListing.listingDescription,
         availableDays: currentListing.availableDays,
         available: currentListing.available,
@@ -306,7 +306,6 @@ const EditListing = () => {
         value !== "" &&
         value !== 0
       ) {
-        // @ts-expect-error "type of key not known"
         acc[key] = value;
       }
       return acc;
@@ -461,7 +460,7 @@ const EditListing = () => {
           </label>
           {/* ------------------------- */}
           {/* category */}
-          <label className="flex flex-col gap-2">
+          {/* <label className="flex flex-col gap-2">
             <span className=" text-violet-darker">
               Category <span className="text-xl text-red-600"> * </span>
             </span>
@@ -471,9 +470,9 @@ const EditListing = () => {
               disabled
               {...register("category")}
             />
-          </label>
+          </label> */}
           {/* subcategory */}
-          <label className="flex flex-col gap-2">
+          {/* <label className="flex flex-col gap-2">
             <span className=" text-violet-darker">
               Subcategory <span className="text-xl text-red-600"> * </span>
             </span>
@@ -483,7 +482,7 @@ const EditListing = () => {
               disabled
               {...register("subCategory")}
             />
-          </label>
+          </label> */}
           {/* Description */}
           {/* -------------------  */}
           <div className="flex flex-col gap-4">

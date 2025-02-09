@@ -5,6 +5,9 @@
 /* Import slick-carousel CSS */
 @import "~slick-carousel/slick/slick.css";
 @import "~slick-carousel/slick/slick-theme.css";
+@import "primereact/resources/themes/lara-light-indigo/theme.css";  
+@import "primereact/resources/primereact.min.css";
+@import "primeicons/primeicons.css";
 
 html {
   scroll-behavior: smooth;
@@ -88,6 +91,12 @@ textarea {
 
 .datepicker-style {
   z-index: 9999;
+}
+
+.p-calendar .p-datepicker-trigger .p-icon {
+  font-size: 1.5rem !important; 
+  width: 1.5rem !important;
+  height: 1.5rem !important;
 }
 
 @layer base {

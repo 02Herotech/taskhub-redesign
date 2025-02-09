@@ -84,13 +84,13 @@ const Button: React.FC<ButtonProps> = ({
 	if (tag === "a") {
 		return (
 			<Link
-				href={
-					isExternal
-						? !href?.includes("https" || "http")
-							? `https://${href}`
-							: href
-						: href || pathname
-				}
+			href={
+				isExternal
+				  ? !href?.includes("https") && !href?.includes("http")
+					? `https://${href}`
+					: href
+				  : href || pathname
+			  	}			  
 				target={isExternal ? "_blank" : "_self"}
 				className={cn(LinkTheme(theme), { underline: underline }, className)}>
 				{children}

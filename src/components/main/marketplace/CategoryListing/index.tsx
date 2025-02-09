@@ -29,6 +29,7 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
   const [displayListing, setDisplayListing] = useState<ListingDataType[]>([]);
   const [page, setPage] = useState({ totalPages: 1, currentPage: 0 });
   const [buttonNumbers, setButtonNumbers] = useState<number[]>([]);
+  const [currentMessageIndex, setCurrentMessageIndex] = useState(0);
   const dispatch = useDispatch();
   const handleFetchCategory = async (currentPage: number) => {
     const categoryId = categories.find(
@@ -150,6 +151,34 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
     fetchData();
     // eslint-disable-next-line
   }, [allListsting, isViewMore]);
+  
+
+  //messages
+const emptyCategoryMessages = [
+  "Be the first to shine! List your service now and be discovered.",
+  "No listings yet? That's your cue! be the first and set the trend.",
+  "Nothing here...yet! This could be YOUR space to shine. Get listed today!.",
+  "This space is waiting for you! Add your listing and grow your business today.",
+  "Big moves start small! Add your service now and get noticed.",
+  "Nothing here...yet! Your perfect opportunity to grab attention. List your service now!",
+  "Oops, looks like no listings yet! Why not be the trendsetter? Post your service now!"
+];
+
+
+useEffect(() => {
+  const intervalId = setInterval(() => {
+    setCurrentMessageIndex(() => {
+      let newIndex;
+      do {
+        newIndex = Math.floor(Math.random() * emptyCategoryMessages.length);
+      } while (newIndex === currentMessageIndex); // Prevent picking the same message consecutively
+      return newIndex;
+    });
+  }, 120000); // Every 2 minutes
+
+  return () => clearInterval(intervalId);
+}, [currentMessageIndex]);
+
 
   return (
     <div className="h-full w-full py-4 ">
@@ -198,13 +227,16 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
         !ErrorMsg && filteredData.length === 0 ? (
           <div className="flex min-h-40 flex-col items-center justify-center gap-4">
             <Image
-              src={"/assets/images/marketplace/undraw_void_-3-ggu.svg"}
+              src={"/assets/images/marketplace/cuate.svg"}
               alt="void"
               width={200}
               height={200}
             />
-            <p className="text-lg text-violet-normal">
+            {/* <p className="text-lg text-violet-normal">
               No Listing Available at the moment
+            </p> */}
+            <p className="text-lg text-violet-normal">
+              {emptyCategoryMessages[currentMessageIndex]} {/* Display shuffled message */}
             </p>
           </div>
         ) : (
@@ -230,14 +262,17 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
       ) : displayListing.length === 0 && !ErrorMsg ? (
         <div className="flex min-h-40 flex-col items-center justify-center gap-4">
           <Image
-            src={"/assets/images/marketplace/undraw_void_-3-ggu.svg"}
+            src={"/assets/images/marketplace/cuate.svg"}
             alt="void"
             width={200}
             height={200}
           />
-          <p className="text-lg text-violet-normal">
+          {/* <p className="text-lg text-violet-normal">
             No Listing Available at the moment
-          </p>
+          </p> */}
+            <p className="text-lg text-violet-normal">
+              {emptyCategoryMessages[currentMessageIndex]} {/* Display shuffled message */}
+            </p>
         </div>
       ) : (
         <div className="my-2 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
