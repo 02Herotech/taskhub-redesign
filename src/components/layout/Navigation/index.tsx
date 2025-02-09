@@ -150,8 +150,7 @@ const Navigation = () => {
       try {
         dispatch(setWalletLoading(true));
         const url =
-          `${process.env.NEXT_PUBLIC_API_URL}/user/user-profile/` +
-          user.id;
+          `${process.env.NEXT_PUBLIC_API_URL}/user/user-profile/` + user.id;
         const { data } = await axios.get(url);
         const userData: UserProfileTypes = data;
         dispatch(updateUserProfile(data));
