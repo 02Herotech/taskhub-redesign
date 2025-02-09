@@ -9,7 +9,7 @@ import CompletedServices from "@/components/dashboard/serviceProvider/services/C
 import InspectionServices from "@/components/dashboard/serviceProvider/services/Inspection";
 import OngoingServiceModal from "@/components/dashboard/serviceProvider/services/OngoingServiceModal";
 import AcceptedServices from "@/components/dashboard/serviceProvider/services/AcceptedServices";
-import { instance as authInstance } from "@/utils/axiosInterceptor.config";
+import useAxios from "@/hooks/useAxios";
 
 const ServicesPage = () => {
   const [currentCategory, setCurrentCategory] = useState("services");
@@ -31,6 +31,7 @@ const ServicesPage = () => {
     isReportService: false,
     error: "",
   });
+  const authInstance = useAxios()
 
   const fetchBookings = async () => {
     try {

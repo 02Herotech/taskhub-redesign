@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { defaultUserDetails } from "@/data/data";
-import { instance as authInstance } from "@/utils/axiosInterceptor.config";
+import useAxios from "./useAxios";
 
 /**
  * Fetches user details from server and updates the enabled field in the session object
@@ -16,6 +16,7 @@ function useUserProfileData(
   const token = session?.data?.user?.accessToken;
   const isServiceProvider =
     session?.data?.user?.user?.roles[0] === "SERVICE_PROVIDER";
+  const authInstance = useAxios();
 
   useEffect(() => {
     const fetchUserData = async () => {

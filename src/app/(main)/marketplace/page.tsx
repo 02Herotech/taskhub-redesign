@@ -23,7 +23,6 @@ import Image from "next/image";
 import { defaultUserDetails } from "@/data/data";
 import BoxFilter from "@/components/main/marketplace/BoxFilter";
 import instance from "@/utils/axios.config";
-import { instance as authInstance } from "@/utils/axiosInterceptor.config";
 
 const categoryIcons = [
   FaHome,

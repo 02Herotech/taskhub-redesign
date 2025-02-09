@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import JobCard from "../jobs/JobCard";
 import Loading from "@/shared/loading";
-import { instance as authInstance } from "@/utils/axiosInterceptor.config";
+import useAxios from "@/hooks/useAxios";
 
 interface PaidServicesPropsType {
   setModalData: React.Dispatch<React.SetStateAction<ModalDataType>>;
@@ -25,6 +25,7 @@ const PaidServices = ({
     id: 0,
     loading: false,
   });
+  const authInstance = useAxios()
 
   const handleStartService = async (id: number) => {
     try {

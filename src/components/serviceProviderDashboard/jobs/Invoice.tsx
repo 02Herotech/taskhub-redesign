@@ -12,7 +12,7 @@ import { toPng } from "html-to-image";
 import "react-datepicker/dist/react-datepicker.css";
 import { formatDateAsYYYYMMDD } from "@/utils";
 import { formatAmount, formatDate } from "@/lib/utils";
-import { instance as authInstance } from "@/utils/axiosInterceptor.config";
+import useAxios from "@/hooks/useAxios";
 
 interface ModalPropType {
   isModalOpen: boolean;
@@ -48,6 +48,7 @@ const Invoice = ({
   const router = useRouter();
   const session = useSession();
   const user = session?.data?.user?.user;
+  const authInstance = useAxios();
 
   useEffect(() => {
     if (currentBooking?.startDate) {

@@ -5,6 +5,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "@/store";
 import { useRouter } from "next/navigation";
 import { setAuthStatus } from "@/store/Features/authStatus";
+import { removeUserProfile } from "@/store/Features/userProfile";
 import { signOut } from "next-auth/react";
 
 /**Functional Component for session timeout*/
@@ -12,17 +13,14 @@ function SessionTimeout() {
   const timeoutPopup = useSelector((state: RootState) => state.timeoutPopup);
   const dispatch = useDispatch();
   const router = useRouter();
-  const handleLogout = () => {};
+  const resetAuth = async (redirectTo = "/auth/login") => {
+    dispatch(removeUserProfile());
+    dispatch(setAuthStatus(false));
+    await signOut({ redirect: false });
+    router.replace(redirectTo);
+  };
   return (
-    <Popup
-      isOpen={timeoutPopup}
-      onClose={async () => {
-        dispatch(setAuthStatus(false));
-        await signOut({
-          callbackUrl: `${process.env.NEXT_PUBLIC_URL}/auth/login`,
-        });
-      }}
-    >
+    <Popup isOpen={timeoutPopup} onClose={resetAuth}>
       <div className="max-h-[700px] min-w-[320px] max-w-[700px] bg-white p-5 sm:min-w-[560px]">
         <h4 className="mb-10 font-clashSemiBold text-xl text-[#140B31] sm:text-3xl">
           Session Timed out
@@ -45,18 +43,22 @@ function SessionTimeout() {
           continue.
         </p>
         <div className="flex justify-end gap-3">
-          <Link
-            href="/auth/login"
-            className="rounded-full bg-[#381F8C] px-5 py-2 font-bold text-[#EBE9F4]"
-          >
-            Login
-          </Link>
-          <Link
-            href="/home"
-            className="rounded-full border-[0.5px] border-[#381F8C] px-5 py-2 font-bold text-[#381F8C]"
-          >
-            Sign out
-          </Link>
+          <button onClick={() => resetAuth()}>
+            <Link
+              href="/auth/login"
+              className="rounded-full bg-[#381F8C] px-5 py-2 font-bold text-[#EBE9F4]"
+            >
+              Login
+            </Link>
+          </button>
+          <button onClick={() => resetAuth("/home")}>
+            <Link
+              href="/home"
+              className="rounded-full border-[0.5px] border-[#381F8C] px-5 py-2 font-bold text-[#381F8C]"
+            >
+              Sign out
+            </Link>
+          </button>
         </div>
         <hr className="my-5" />
         <p className="text-sm text-[#546276]">

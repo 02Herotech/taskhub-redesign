@@ -14,7 +14,7 @@ import { PiSealCheckFill } from "react-icons/pi";
 import "../../styles/datePickOverflowHandle.css";
 import { setCookie } from "cookies-next";
 import Button from "../global/Button";
-import { instance as authInstance } from "@/utils/axiosInterceptor.config";
+import useAxios from "@/hooks/useAxios";
 
 interface ModalProps {
   setIsModalShown: Dispatch<SetStateAction<boolean>>;
@@ -62,6 +62,7 @@ const PricingModal = ({
     time: "",
   });
   const [isSubmittedSuccessful, setIsSubmittedSuccessful] = useState(false);
+  const authInstance = useAxios();
 
   const pathname = usePathname();
   const wordLimit = 50;

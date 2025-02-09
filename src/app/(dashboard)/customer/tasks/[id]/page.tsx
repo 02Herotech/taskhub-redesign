@@ -17,14 +17,15 @@ import { useEffect, useRef, useState } from "react";
 import AssignOfferForm from "@/components/dashboard/customer/AssignOfferForm";
 import CustomerTaskOffers from "@/components/dashboard/customer/CustomerTaskOffers";
 import { useSession } from "next-auth/react";
-import { instance as authInstance } from "@/utils/axiosInterceptor.config";
 import Popup from "@/components/global/Popup";
 import Link from "next/link";
+import useAxios from "@/hooks/useAxios";
 
 const NewTaskDetails = ({ params }: { params: { id: string } }) => {
   const id = params.id;
   const session = useSession();
   const isEnabled = session.data?.user.user.enabled;
+  const authInstance = useAxios()
 
   const {
     data: task,

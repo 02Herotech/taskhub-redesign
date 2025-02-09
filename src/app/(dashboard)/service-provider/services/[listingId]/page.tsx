@@ -15,7 +15,7 @@ import { RiPencilLine } from "react-icons/ri";
 import { BeatLoader } from "react-spinners";
 import { z } from "zod";
 import instance from "@/utils/axios.config";
-import { instance as authInstance } from "@/utils/axiosInterceptor.config";
+import useAxios from "@/hooks/useAxios";
 
 const daysData: string[] = [
   "MONDAY",
@@ -45,6 +45,7 @@ const EditListing = () => {
   const image3Ref = useRef<HTMLInputElement>(null);
   const image4Ref = useRef<HTMLInputElement>(null);
   const [showModal, setShowModal] = useState(false);
+  const authInstance = useAxios()
 
   const listingZodSchema = z.object({
     listingTitle: z
