@@ -54,7 +54,7 @@ const Popup: React.FC<PopupProps> = ({
     <AnimatePresence>
       {isOpen && (
         <motion.div
-          className="fixed left-0 top-0 z-50 flex h-full w-full items-center justify-center bg-black bg-opacity-60"
+          className="fixed left-0 top-0 z-[100] flex h-full w-full items-center justify-center bg-black bg-opacity-60"
           initial="hidden"
           animate="visible"
           exit="exit"
