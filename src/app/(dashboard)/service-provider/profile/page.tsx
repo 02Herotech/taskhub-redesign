@@ -8,10 +8,11 @@ import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import ProfileCompletion from "@/components/serviceProviderDashboard/profile/ProfileCompletion";
 import { defaultUserDetails } from "@/data/data";
-import { instance as authInstance } from "@/utils/axiosInterceptor.config";
+import useAxios from "@/hooks/useAxios";
 
 const Page = () => {
   const [fetchedUserData, setFetchedUserData] = useState(defaultUserDetails);
+  const authInstance = useAxios();
 
   useEffect(() => {
     const fetchUserData = async () => {

@@ -22,7 +22,7 @@ import { PiFileArrowDownDuotone, PiSealCheckFill } from "react-icons/pi";
 import { useDispatch } from "react-redux";
 import { BeatLoader } from "react-spinners";
 import Webcam from "react-webcam";
-import { instance as authInstance } from "@/utils/axiosInterceptor.config";
+import useAxios from "@/hooks/useAxios";
 
 type ModalPropsTypes = {
   setIsFormModalShown: Dispatch<SetStateAction<boolean>>;
@@ -84,6 +84,7 @@ const EditProfileModal = ({
   const user = session?.data?.user?.user;
   const isServiceProvider = user?.roles[0] === "SERVICE_PROVIDER";
   const dispatch = useDispatch();
+  const authInstance = useAxios()
 
   const capture = useCallback(() => {
     if (webcamRef.current) {

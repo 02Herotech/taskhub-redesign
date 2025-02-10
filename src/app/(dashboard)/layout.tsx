@@ -13,7 +13,7 @@ const DashboardLayout = ({ children }: AuthLayoutProps) => {
     <div className="relative mx-auto ">
       <Navigation />
       <DashboardSidebar />
-      {/* <SessionTimeout /> */}
+      <SessionTimeout />
       <main className="mt-[4rem] max-lg:container max-lg:mt-[4.8rem] lg:ml-72 ">
         <Suspense>{children}</Suspense>
       </main>

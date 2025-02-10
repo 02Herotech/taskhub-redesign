@@ -3,11 +3,12 @@ import JobCard from "@/components/dashboard/serviceProvider/jobs/JobCard";
 import { marketPlaceModalIcon } from "@/lib/svgIcons";
 import Loading from "@/shared/loading";
 import React, { useEffect, useState } from "react";
-import { instance as authInstance } from "@/utils/axiosInterceptor.config";
+import useAxios from "@/hooks/useAxios";
 
 const Jobs = () => {
   const [bookingData, setBookingData] = useState<BookingType[]>([]);
   const [loading, setLoading] = useState(false);
+  const authInstance = useAxios()
 
   const fetchAllBookings = async () => {
     try {

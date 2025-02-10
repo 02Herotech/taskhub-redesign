@@ -9,7 +9,7 @@ let authInstance: AxiosInstance = instance;
 instance.interceptors.request.use(async (request) => {
   const session = await getSession();
   if (!session) redirect("/auth/login");
-  const accessToken = session.user.accessToken;
+  const accessToken = session?.user.accessToken;
   request.headers["Authorization"] = `Bearer ${accessToken}`;
   return request;
 });
@@ -21,7 +21,7 @@ instance.interceptors.response.use(
       await signOut();
       redirect("/home");
     }
-    Promise.reject(error)
+    Promise.reject(error);
   },
 );
 

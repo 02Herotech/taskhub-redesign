@@ -14,7 +14,7 @@ import { useSession } from "next-auth/react";
 import WalletBalance from "@/components/dashboard/serviceProvider/Payment/WalletBalance";
 import { RootState } from "@/store";
 import { refreshWallet } from "@/store/Features/userProfile";
-import { instance as authInstance } from "@/utils/axiosInterceptor.config";
+import useAxios from "@/hooks/useAxios";
 
 // Schema definition
 const withdrawalSchema = z.object({
@@ -186,7 +186,7 @@ const WithdrawalForm: React.FC<{
     (state: RootState) => state.userProfile,
   );
   const session = useSession();
-  const token = session.data?.user.accessToken;
+  const authInstance = useAxios()
   useEffect(() => {
     async function fetchUserData() {
       try {

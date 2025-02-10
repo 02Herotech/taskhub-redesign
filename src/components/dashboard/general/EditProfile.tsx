@@ -18,11 +18,10 @@ import { getCookie, deleteCookie } from "cookies-next";
 import { UserDataType } from "@/lib/validation/userData.schema";
 import FormField from "./FormField";
 import Notice from "./Notice";
-import instance from "@/utils/axios.config";
-import { instance as authInstance } from "@/utils/axiosInterceptor.config";
 import axios from "axios";
 import useValidateABN from "@/hooks/useValidateABN";
 import Information from '@/components/business-hub/Information';
+import useAxios from "@/hooks/useAxios";
 import { Calendar } from "primereact/calendar";
 
 const idTypeObject = [
@@ -63,6 +62,7 @@ const EditProfile = () => {
   const [userDetails, setUserDetails] = useState(defaultUserDetails);
   const [editProfileError, setEditProfileError] = useState("");
   const [isDocumentEditable, setIsDocumentEditable] = useState(false);
+  const authInstance = useAxios();
 
   const userProfile = useSelector((state: RootState) => state.userProfile);
 

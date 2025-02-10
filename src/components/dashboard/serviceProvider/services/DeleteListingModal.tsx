@@ -5,7 +5,7 @@ import { BsExclamationTriangle } from "react-icons/bs";
 import { PiSealCheckFill } from "react-icons/pi";
 import { useDispatch } from "react-redux";
 import { BeatLoader } from "react-spinners";
-import { instance as authInstance } from "@/utils/axiosInterceptor.config";
+import useAxios from "@/hooks/useAxios";
 
 interface ModalPropsType {
   isDeleteModalShown: { id: number; isShown: boolean };
@@ -22,6 +22,7 @@ const DeleteListingModal = ({
 
   const [loading, setLoading] = useState(false);
   const [success, setSucess] = useState(false);
+  const authInstance = useAxios();
 
   const handleCloseModal = () => {
     success && dispatch(refreshUserProfile());

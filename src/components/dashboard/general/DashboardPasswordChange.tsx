@@ -11,7 +11,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { FiAlertTriangle } from "react-icons/fi";
 import { PiSealCheckFill } from "react-icons/pi";
 import { BsExclamationTriangle } from "react-icons/bs";
-import { instance as authInstance } from "@/utils/axiosInterceptor.config";
+import useAxios from "@/hooks/useAxios";
 
 type ChangePasswordRequest = {
   password: string;
@@ -26,6 +26,7 @@ const DashboardPasswordChange = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [success, setSuccess] = useState<string | null>(null);
   const [showCurrentPassword, setShowCurrentPassword] = useState(false);
+  const authInstance = useAxios();
 
   const isServiceProvider =
     session?.data?.user?.user?.roles[0] === "SERVICE_PROVIDER";

@@ -1,5 +1,5 @@
 import { useState, useEffect, SetStateAction } from "react";
-import { instance as authInstance } from "@/utils/axiosInterceptor.config";
+import useAxios from "./useAxios";
 
 type Props = {
   watchABN: string | null | undefined;
@@ -14,6 +14,7 @@ function useValidateTFN(
   setErr: (value: SetStateAction<string>) => void,
 ) {
   const [isValidTFN, setIsValidTFN] = useState<boolean>(false);
+  const authInstance = useAxios();
 
   useEffect(() => {
     const validateTFN = async () => {

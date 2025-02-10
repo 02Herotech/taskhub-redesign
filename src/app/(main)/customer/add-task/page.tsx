@@ -14,7 +14,6 @@ import { useSession } from "next-auth/react";
 import image from "../../../../../public/assets/images/customer/Task management.png";
 import img from "../../../../../public/assets/images/blend.png";
 import imag from "../../../../../public/assets/images/contract.png";
-import imags from "../../../../../public/assets/images/tickk.png";
 import imgg from "../../../../../public/assets/images/girl.png";
 import Image from "next/image";
 import Link from "next/link";
@@ -24,10 +23,10 @@ import { FaSortDown } from "react-icons/fa6";
 import Dropdown from "@/components/global/Dropdown";
 import Loading from "@/components/global/loading/page";
 import Progress from "@/components/global/progress";
-import { instance as authInstance } from "@/utils/axiosInterceptor.config";
 import axios from "axios";
 import PopupTwo from "@/components/global/Popup/PopupTwo";
 import { IoIosCheckmarkCircle } from "react-icons/io";
+import useAxios from "@/hooks/useAxios";
 
 interface FormData {
   taskBriefDescription: string;
@@ -65,7 +64,6 @@ interface CustomInputProps {
 const AddTaskForm: React.FC = () => {
   const session = useSession();
   const router = useRouter();
-  const token = session?.data?.user.accessToken;
   const isAuthenticated = session.status === "authenticated";
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(false);
@@ -112,6 +110,7 @@ const AddTaskForm: React.FC = () => {
   const isEnabled = session.data?.user.user.enabled;
   const [isEnabledPopup, setIsEnabledPopup] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const authInstance = useAxios();
 
   // Handling getting the description from the marketplace when i user navigates from the marketplace
   useEffect(() => {
@@ -913,6 +912,7 @@ const AddTaskForm: React.FC = () => {
                 </div>
                 <input
                   type="number"
+                  min={1}
                   name="customerBudget"
                   onChange={handlePrice}
                   placeholder="500"
