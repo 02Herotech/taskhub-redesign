@@ -912,7 +912,7 @@ const AddTaskForm: React.FC = () => {
                 </div>
                 <input
                   type="number"
-                  min={0}
+                  min={1}
                   name="customerBudget"
                   onChange={handlePrice}
                   placeholder="500"
