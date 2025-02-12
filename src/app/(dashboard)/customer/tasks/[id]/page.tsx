@@ -25,7 +25,7 @@ const NewTaskDetails = ({ params }: { params: { id: string } }) => {
   const id = params.id;
   const session = useSession();
   const isEnabled = session.data?.user.user.enabled;
-  const authInstance = useAxios()
+  const authInstance = useAxios();
 
   const {
     data: task,
@@ -41,8 +41,6 @@ const NewTaskDetails = ({ params }: { params: { id: string } }) => {
 
   useEffect(() => {
     const updateUserData = async () => {
-      //Check if user is not authenticated so the auth instance doesnt fire the re-directions when user is logged in
-      if (session.status !== "authenticated" || isEnabled) return;
       try {
         const { data } = await authInstance.get("customer/profile");
         if (!data.isEnabled) return;
@@ -141,24 +139,32 @@ const NewTaskDetails = ({ params }: { params: { id: string } }) => {
         </div>
       ) : (
         <>
+          {/* <div className="md:ml-auto flex w-max rounded-2xl border border-primary text-primary">
+            <p className="border-r border-primary p-2 font-satoshiMedium text-lg sm:p-3 md:text-2xl">
+              Budget
+            </p>
+            <p className="p-2 font-satoshiMedium text-lg sm:p-3 md:text-2xl">
+              AUD$ {formatAmount(task?.customerBudget!, "jungle_coin", false)}
+            </p>
+          </div> */}
           <div className="mt-10 grid w-full grid-cols-1 gap-10 md:grid-cols-2 lg:space-x-5">
             <div className="space-y-7 font-satoshi lg:space-y-10">
-              <h2 className="text-lg font-black text-primary lg:text-4xl">
+              <h2 className="font-satoshiBold text-lg font-black text-primary lg:text-4xl">
                 {task?.taskBriefDescription}
               </h2>
               <div className="space-y-3">
-                <h2 className="font-satoshiMedium font-bold text-primary lg:text-2xl">
+                <h2 className="font-satoshiMedium font-bold text-[#454545] lg:text-2xl">
                   Task Description
                 </h2>
-                <p className="font-satoshiMedium text-xl font-medium text-[#221354]">
+                <p className="font-satoshiMedium text-xl text-[#221354]">
                   {task?.taskDescription}
                 </p>
               </div>
               <div className="space-y-5">
-                <h4 className="font-satoshiMedium font-bold text-primary lg:text-2xl">
+                <h4 className="font-satoshiMedium font-bold text-[#454545] lg:text-2xl">
                   Location
                 </h4>
-                <div className="flex w-full items-center space-x-2 text-[#716F78]">
+                <div className="flex w-full items-center space-x-2 text-primary">
                   <HiOutlineLocationMarker className="h-6 w-6 font-bold" />
                   <h5 className="font-satoshiMedium text-[15px] font-medium lg:text-xl">
                     {task.state
@@ -169,16 +175,16 @@ const NewTaskDetails = ({ params }: { params: { id: string } }) => {
               </div>
 
               <div className="space-y-5">
-                <h4 className="font-satoshiMedium font-bold text-primary lg:text-2xl">
+                <h4 className="font-satoshiMedium text-[#454545] lg:text-2xl">
                   Date and Time
                 </h4>
-                <div className="flex items-center space-x-3 text-[#716F78] max-lg:text-xs">
+                <div className="flex items-center space-x-3 text-primary max-lg:text-xs">
                   <FiCalendar className="h-6 w-6" />
                   <h5 className="font-satoshiMedium text-[15px] font-medium lg:text-xl">
                     On {formattedDate}
                   </h5>
                 </div>
-                <div className="flex items-center space-x-3 text-[#716F78] max-lg:text-xs">
+                <div className="flex items-center space-x-3 text-primary max-lg:text-xs">
                   <FiClock className="h-6 w-6" />
                   <h5 className="font-satoshiMedium text-[15px] font-medium lg:text-xl">
                     {formatTime24Hour(task.taskTime) || "Flexible"}
@@ -209,7 +215,7 @@ const NewTaskDetails = ({ params }: { params: { id: string } }) => {
                   </Button>
                 </div>
               </div>
-              <h2 className="text-lg font-bold text-primary lg:text-xl">
+              <h2 className="text-2xl font-bold text-primary lg:text-3xl">
                 Reference Images
               </h2>
               {task.taskImage ? (

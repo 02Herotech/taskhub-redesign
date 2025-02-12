@@ -10,7 +10,6 @@ import Link from "next/link";
 import { BeatLoader } from "react-spinners";
 import { PiSealCheckFill, PiWarningDiamond } from "react-icons/pi";
 import { BsExclamationTriangle } from "react-icons/bs";
-import { useSession } from "next-auth/react";
 import WalletBalance from "@/components/dashboard/serviceProvider/Payment/WalletBalance";
 import { RootState } from "@/store";
 import { refreshWallet } from "@/store/Features/userProfile";
@@ -185,8 +184,7 @@ const WithdrawalForm: React.FC<{
   const { walletBalance, walletLoading } = useSelector(
     (state: RootState) => state.userProfile,
   );
-  const session = useSession();
-  const authInstance = useAxios()
+  const authInstance = useAxios();
   useEffect(() => {
     async function fetchUserData() {
       try {
@@ -229,8 +227,8 @@ const WithdrawalForm: React.FC<{
         <InputField
           label="Amount"
           type="number"
-          min={1}
           max={walletBalance ?? 0}
+          min={1}
           step=".01"
           register={register("amount")}
           error={errors.amount}

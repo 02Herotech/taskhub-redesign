@@ -16,12 +16,7 @@ const getRequest = <T>(url: string, params?: T) => {
   };
 
   return {
-    url: !params
-      ? url
-      : url +
-      `?${queryString({
-        ...cleanedParams,
-      })}`,
+    url: !params ? url : url + `?${queryString({ ...cleanedParams })}`,
     method: "GET",
   };
 };
@@ -60,10 +55,8 @@ export const listing = createApi({
     getServiceById: builder.query<ListingDataType, number>({
       query: (serviceId) => getRequest(`/listing/${serviceId}`),
       providesTags: ["Listing"],
-    })
+    }),
   }),
 });
 
-export const {
-  useGetServiceByIdQuery
-} = listing;
+export const { useGetServiceByIdQuery } = listing;
