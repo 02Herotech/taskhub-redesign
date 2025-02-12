@@ -105,7 +105,7 @@ const EditProfile = () => {
       firstName: "",
       lastName: "",
       dateOfBirth: new Date(),
-      emailAddress: user?.emailAddress || "",
+      // emailAddress: user?.emailAddress || "",
       postcode: "",
       suburb: "",
       state: "",
@@ -123,6 +123,43 @@ const EditProfile = () => {
   const { isValidABN, error: ABNError } = useValidateABN(watchABN, userDetails);
 
   const ABNInputRef = useRef<HTMLDivElement | null>(null);
+
+  // useEffect(() => {
+  //   const inputField = document.querySelector("#dob");
+
+  //   if (inputField) {
+  //     const handleKeyDown = (e) => {
+  //       if (!/[0-9/]/.test(e.key) && !["Backspace", "ArrowLeft", "ArrowRight"].includes(e.key)) {
+  //         e.preventDefault();
+  //       }
+  //     };
+
+  //     inputField.addEventListener("keydown", handleKeyDown);
+
+  //     return () => {
+  //       inputField.removeEventListener("keydown", handleKeyDown);
+  //     };
+  //   }
+  // }, []);
+
+  // useEffect(() => {
+  //   const inputField = document.querySelector("#dob");
+
+  //   if (inputField) {
+  //     const handleKeyDown = (e) => {
+  //       if (!/[0-9/]/.test(e.key) && !["Backspace", "ArrowLeft", "ArrowRight"].includes(e.key)) {
+  //         e.preventDefault();
+  //       }
+  //     };
+
+  //     inputField.addEventListener("keydown", handleKeyDown);
+
+  //     return () => {
+  //       inputField.removeEventListener("keydown", handleKeyDown);
+  //     };
+  //   }
+  // }, []);
+
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -285,11 +322,16 @@ const EditProfile = () => {
       return;
     }
 
-    if (data.idType === "International Passport" && !selectedDocumentFront) {
+    // if (data.idType === "International Passport" && !selectedDocumentFront) {
+    //   setEditProfileError("Missing required field: idImageFront");
+    //   console.log("Missing field: idImageFront");
+    //   return;
+    // }
+    if (data.idType === "International Passport" && !selectedDocumentFront && !data.idImageFront) {
       setEditProfileError("Missing required field: idImageFront");
-      console.log("Missing field: idImageFront");
       return;
     }
+    
 
     if (data.idType !== "International Passport" && (!selectedDocumentBack || !selectedDocumentFront)) {
       setEditProfileError("Missing required fields: idImageFront, idImageBack");
@@ -310,8 +352,11 @@ const EditProfile = () => {
           // phoneNumber: data.phoneNumber,
           state: data.state,
           postCode: data.postcode,
-          idImageFront: selectedDocumentFront,
-          idImageBack: selectedDocumentBack,
+          // idImageFront: selectedDocumentFront,
+          // idImageFront: selectedDocumentFront || data.idImageFront || userDetails.idImageFront,
+          // idImageBack: selectedDocumentBack,
+          ...(selectedDocumentFront ? { idImageFront: selectedDocumentFront } : {}),
+          ...(selectedDocumentBack ? { idImageBack: selectedDocumentBack } : {}),
           idType: data.idType,
           idNumber: data.idNumber,
           bio: data.bio,
@@ -340,8 +385,11 @@ const EditProfile = () => {
           // phoneNumber: data.phoneNumber,
           state: data.state,
           postCode: data.postcode,
-          idImageFront: selectedDocumentFront,
-          idImageBack: selectedDocumentBack,
+          // idImageFront: selectedDocumentFront,
+          // idImageFront: selectedDocumentFront || data.idImageFront || userDetails.idImageFront,
+          // idImageBack: selectedDocumentBack,
+          ...(selectedDocumentFront ? { idImageFront: selectedDocumentFront } : {}),
+          ...(selectedDocumentBack ? { idImageBack: selectedDocumentBack } : {}),
           idType: data.idType,
           idNumber: data.idNumber,
         }).reduce((acc, [key, value]) => {
@@ -485,25 +533,78 @@ const EditProfile = () => {
 
               <div className="w-full flex flex-col gap-4">
                 <label htmlFor="dob">Date of Birth</label>
+  {/* <Controller
+      name="dateOfBirth"
+      control={control}
+      rules={{
+        required: "Date of Birth is required",
+        validate: (value) => {
+          if (!value) return "Date of Birth is required";
+          const enteredDate = new Date(value);
+          const today = new Date();
+          const minDate = new Date(today.setFullYear(today.getFullYear() - 18));
+
+          return enteredDate <= minDate || "You must be at least 18 years old";
+        },
+      }}
+      render={({ field }) => (
+        <Calendar
+          {...field}
+          id="dob"
+          dateFormat="dd/mm/yy"
+          showIcon
+          placeholder="DD/MM/YYYY"
+          maxDate={new Date(new Date().setFullYear(new Date().getFullYear() - 18))}
+          className="p-inputtext border w-full lg:max-w-sm border-slate-100 rounded-xl shadow hover:shadow-md"
+        />
+      )}
+  /> */}
+
+
                 <Controller
                   name="dateOfBirth"
                   control={control}
-                  rules={{ required: "Date of Birth is required" }}
-                  render={({ field }) => (
-                    <Calendar
-                      {...field}
-                      id="dob"
-                      dateFormat="dd/mm/yy"
-                      showIcon
-                      placeholder="DD/MM/YYYY"
-                      maxDate={new Date(new Date().setFullYear(new Date().getFullYear() - 18))}
-                      className="p-inputtext border w-full lg:max-w-sm border-slate-100 rounded-xl shadow hover:shadow-md"
-                    />
+                  rules={{
+                    required: "You must be at least 18 years old",
+                    validate: (value) => {
+                      if (!value) return "Date of birth is required";
+
+                      const enteredDate = new Date(value);
+                      const today = new Date();
+                      const minAllowedDate = new Date(today.setFullYear(today.getFullYear() - 18));
+
+                      return enteredDate <= minAllowedDate || "You must be at least 18 years old";
+                    },
+                  }}
+                  render={({ field, fieldState }) => (
+                    <div>
+                      <Calendar
+                        {...field}
+                        id="dob"
+                        dateFormat="dd/mm/yy"
+                        showIcon
+                        placeholder="DD/MM/YYYY"
+                        maxDate={new Date(new Date().setFullYear(new Date().getFullYear() - 19))}
+                        className="p-inputtext border w-full lg:max-w-sm border-slate-100 rounded-xl shadow hover:shadow-md"
+                        onInput={(e) => {
+                          const inputElement = e.target as HTMLInputElement;
+                          const regex = /^[0-9/]*$/;
+                          if (!regex.test(inputElement.value)) {
+                            inputElement.value = inputElement.value.replace(/[^0-9/]/g, "");
+                          }
+                        }}
+                        onChange={(e) => {
+                          field.onChange(e.value);
+                        }}
+                      />
+                      {fieldState.error && <p className="text-red-500 text-sm mt-1">{fieldState.error.message}</p>}
+                    </div>
                   )}
                 />
-                {dateOfBirth && dateOfBirth > maxDate && (
+
+                {/* {dateOfBirth && dateOfBirth > maxDate && (
                   <small className="text-red-500">You must be at least 18 years old</small>
-                )}
+                )} */}
               </div>
             </div>
           </section>
