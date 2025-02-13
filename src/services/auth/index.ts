@@ -29,6 +29,7 @@ export const auth = createApi({
       return headers;
     },
   }),
+
   endpoints: (builder) => ({
     signin: builder.mutation<SignInResponse, SignInRequest>({
       query: (credentials) => postRequest("/auth/login", credentials),

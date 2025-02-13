@@ -112,7 +112,7 @@ const AddTaskForm: React.FC = () => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const authInstance = useAxios();
 
-  // Handling getting the description from the marketplace when i user navigates from the marketplace
+  // Handling getting the description from the marketplace when a user navigates from the marketplace
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const marketplaceDescription = urlParams.get("marketplaceDescription");
@@ -127,7 +127,8 @@ const AddTaskForm: React.FC = () => {
   //Check if user is verified and update session
   useEffect(() => {
     const updateUserData = async () => {
-      //Check if user is not authenticated so the auth instance doesnt fire the re-directions when user is logged in
+      //Check if user is not authenticated 
+      //So the auth instance doesnt fire the re-direction when user is not logged in
       if (session.status !== "authenticated" || isEnabled) return;
       try {
         const { data } = await authInstance.get("customer/profile");
