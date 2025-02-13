@@ -69,7 +69,7 @@ function OfferForm({
   return (
     <Popup
       isOpen={showOfferForm}
-      onClose={() => {}}
+      onClose={closeOfferForm}
       popUpTitle={
         !showSuccessMessage ? (
           <h3 className="font-clashSemiBold text-xl text-primary lg:text-3xl">
