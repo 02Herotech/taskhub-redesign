@@ -193,20 +193,6 @@ const TaskDetailsPage = ({ params }: { params: { id: string } }) => {
   }
   const formattedDate = `${dayOfWeekName}, ${monthName} ${day}${daySuffix}`;
 
-  /*
-    Todo Remove after pushing and testing on dev
-    const hours = date.getHours();
-    const minutes = date.getMinutes();
-
-    let formattedTime;
-
-    if (hours >= 12) {
-      formattedTime = `${hours === 12 ? 12 : hours - 12}:${(minutes < 10 ? "0" : "") + minutes} PM`;
-    } else {
-      formattedTime = `${hours === 0 ? 12 : hours}:${(minutes < 10 ? "0" : "") + minutes} AM`;
-    }
-  */
-
   return (
     <section className="container py-20 font-satoshi">
       {isLoading ? (
@@ -363,12 +349,6 @@ const TaskDetailsPage = ({ params }: { params: { id: string } }) => {
                           return setShowErrorPopup(true);
                         }
                         setShowOfferForm(true);
-                      }}
-                      //! What is this for ?
-                      onKeyDown={(e) => {
-                        if (e.key === "Enter" || e.key === " ") {
-                          setShowOfferForm(true);
-                        }
                       }}
                       aria-expanded={showOfferForm}
                       aria-haspopup="true"

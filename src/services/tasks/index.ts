@@ -9,6 +9,7 @@ import {
   GetCustomerCompletedTasksResponse,
 } from "@/types/services/tasks";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { Middleware } from "@reduxjs/toolkit";
 import { getSession } from "next-auth/react";
 
 const getRequest = <T>(url: string, params?: T) => {
@@ -30,9 +31,9 @@ const getRequest = <T>(url: string, params?: T) => {
     url: !params
       ? url
       : url +
-      `?${queryString({
-        ...cleanedParams,
-      })}`,
+        `?${queryString({
+          ...cleanedParams,
+        })}`,
     method: "GET",
   };
 };
@@ -75,7 +76,7 @@ export const task = createApi({
         headers.set("Authorization", `Bearer ${token}`);
 
         // Set Content-Type based on the request method
-        if (endpoint.includes('updateTask')) {
+        if (endpoint.includes("updateTask")) {
           // Don't set Content-Type for multipart/form-data
           // The browser will set it automatically with the correct boundary
         } else {
@@ -87,7 +88,8 @@ export const task = createApi({
   }),
   endpoints: (builder) => ({
     getActiveTasks: builder.query<GetTasksResponse, GetTasksRequest>({
-      query: (credentials) => getRequest(`/task/all-active-tasks/${credentials}`),
+      query: (credentials) =>
+        getRequest(`/task/all-active-tasks/${credentials}`),
       providesTags: ["Task"],
     }),
     getTaskById: builder.query<GetSingleTasksResponse, number>({
@@ -95,7 +97,8 @@ export const task = createApi({
       providesTags: ["Task"],
     }),
     filterTaskByEarliestDate: builder.query<GetTasksResponse, number>({
-      query: (pageNumber) => getRequest(`/task/task-date-earliest/${pageNumber}`),
+      query: (pageNumber) =>
+        getRequest(`/task/task-date-earliest/${pageNumber}`),
       providesTags: ["Task"],
     }),
     filterTaskByLatestDate: builder.query<GetTasksResponse, number>({
@@ -111,15 +114,24 @@ export const task = createApi({
       providesTags: ["Task"],
     }),
     getTaskByCustomerId: builder.query<GetCustomerTasksResponse, number>({
-      query: (customerId) => getRequest(`/task/tasks-by-customerId/${customerId}`),
+      query: (customerId) =>
+        getRequest(`/task/tasks-by-customerId/${customerId}`),
       providesTags: ["Task"],
     }),
-    getCustomerOngoingTasks: builder.query<GetCustomerOngoingTasksResponse, number>({
-      query: (customerId) => getRequest(`/task/customer-ongoing-tasks/${customerId}`),
+    getCustomerOngoingTasks: builder.query<
+      GetCustomerOngoingTasksResponse,
+      number
+    >({
+      query: (customerId) =>
+        getRequest(`/task/customer-ongoing-tasks/${customerId}`),
       providesTags: ["Task"],
     }),
-    getCustomerCompletedTasks: builder.query<GetCustomerCompletedTasksResponse, number>({
-      query: (customerId) => getRequest(`/task/customer-completed-tasks/${customerId}`),
+    getCustomerCompletedTasks: builder.query<
+      GetCustomerCompletedTasksResponse,
+      number
+    >({
+      query: (customerId) =>
+        getRequest(`/task/customer-completed-tasks/${customerId}`),
       providesTags: ["Task"],
     }),
     deleteTask: builder.mutation<void, number>({
@@ -127,23 +139,40 @@ export const task = createApi({
       invalidatesTags: ["Task"],
     }),
     searchTaskByText: builder.query<GetTasksResponse, GetTaskByTextRequest>({
-      query: (credentials) => getRequest(`/task/text/${credentials.pageNumber}?text=${credentials.text}`),
+      query: (credentials) =>
+        getRequest(
+          `/task/text/${credentials.pageNumber}?text=${credentials.text}`,
+        ),
       providesTags: ["Task"],
     }),
     updateTask: builder.mutation<void, { id: number; details: FormData }>({
-      query: (credentials) => patchRequest(`/task/update-task/${credentials.id}`, credentials.details),
+      query: (credentials) =>
+        patchRequest(
+          `/task/update-task/${credentials.id}`,
+          credentials.details,
+        ),
       invalidatesTags: ["Task"],
     }),
     filterTasks: builder.query<GetTasksResponse, GetFilterTasksRequest>({
-      query: (credentials) => getRequest(`/task/filter-tasks/${credentials.pageNumber}?category=${credentials.category}?typeOfService=${credentials.typeOfService}?location=${credentials.location}?minPrice=${credentials.minPrice}?maxPrice=${credentials.maxPrice}`),
+      query: (credentials) =>
+        getRequest(
+          `/task/filter-tasks/${credentials.pageNumber}?category=${credentials.category}?typeOfService=${credentials.typeOfService}?location=${credentials.location}?minPrice=${credentials.minPrice}?maxPrice=${credentials.maxPrice}`,
+        ),
       providesTags: ["Task"],
     }),
     getTasksOffers: builder.query<Offer[], number>({
       query: (id) => getRequest(`/chat/offer/${id}`),
       providesTags: ["Task"],
     }),
-    assignTask: builder.mutation<void, { taskId: number; serviceProviderId: number }>({
-      query: (credentials) => putRequest(`/task/assign-task/${credentials.taskId}/${credentials.serviceProviderId}`, {}),
+    assignTask: builder.mutation<
+      void,
+      { taskId: number; serviceProviderId: number }
+    >({
+      query: (credentials) =>
+        putRequest(
+          `/task/assign-task/${credentials.taskId}/${credentials.serviceProviderId}`,
+          {},
+        ),
       invalidatesTags: ["Task"],
     }),
   }),

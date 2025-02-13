@@ -9,8 +9,9 @@ import chatReducer from "./Features/chat";
 import exploreReducer from "./Features/explore";
 import authStatusReducer from "./Features/authStatus";
 import { stripe } from "@/services/stripe";
-import profileProgressReducer from "@/services/profile"
+import profileProgressReducer from "@/services/profile";
 import { listing } from "@/services/listings";
+import apiErrorMiddleware from "./apiMiddleware";
 
 export const store = configureStore({
   reducer: {
@@ -25,16 +26,17 @@ export const store = configureStore({
     chat: chatReducer,
     explore: exploreReducer,
     profileProgress: profileProgressReducer,
-    timeoutPopup: authStatusReducer
+    timeoutPopup: authStatusReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(
       auth.middleware,
       task.middleware,
       booking.middleware,
-      blog.middleware, 
+      blog.middleware,
       stripe.middleware,
-      listing.middleware
+      listing.middleware,
+      apiErrorMiddleware,
     ),
 });
 
