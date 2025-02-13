@@ -1,5 +1,4 @@
 "use client";
-
 import Image from "next/image";
 import Button from "@/components/global/Button";
 import { HiOutlineLocationMarker } from "react-icons/hi";
@@ -18,10 +17,6 @@ import TaskOffers from "@/components/main/explore/TaskOffers";
 import { FormEvent, useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
-import { connectSocket } from "@/lib/socket";
-import { AnimatePresence, motion } from "framer-motion";
-import { IoIosCloseCircleOutline } from "react-icons/io";
-import { FaCheck } from "react-icons/fa6";
 import { ShareModal } from "@/components/dashboard/general/ShareModal";
 import ShareTask from "@/components/dashboard/general/ShareTask";
 import { usePathname, useRouter } from "next/navigation";
@@ -29,17 +24,15 @@ import { ShareSvg } from "@/lib/svgIcons";
 import useUserProfileData from "@/hooks/useUserProfileData";
 import ProfileIncomplete from "@/components/global/Popup/ProfileIncomplete";
 import InReview from "@/components/global/Popup/InReview";
+import OfferForm from "./OfferForm";
 
 const TaskDetailsPage = ({ params }: { params: { id: string } }) => {
-  const [offerAmount, setOfferAmount] = useState("");
   const [showOfferForm, setShowOfferForm] = useState(false);
   const [showErrorPopup, setShowErrorPopup] = useState(false);
-  const [showSuccessMessage, setShowSuccessMessage] = useState<boolean>(false);
   const [email, setEmail] = useState("");
   const [isInviteLoading, setIsInviteLoading] = useState(false);
   const [inviteError, setInviteError] = useState<string | null>(null);
   const offerButtonRef = useRef<HTMLDivElement>(null);
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
   const modalRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
   const router = useRouter();
@@ -109,6 +102,7 @@ const TaskDetailsPage = ({ params }: { params: { id: string } }) => {
     error,
     isUninitialized,
   } = useGetTaskByIdQuery(id as unknown as number);
+
   const { data: offers, refetch } = useGetTasksOffersQuery(
     id as unknown as number,
   );
@@ -117,8 +111,6 @@ const TaskDetailsPage = ({ params }: { params: { id: string } }) => {
   );
 
   useEffect(() => {
-    textareaRef.current?.focus();
-
     const handleResize = () => {
       if (modalRef.current) {
         modalRef.current.style.height = `${window.innerHeight}px`;
@@ -152,40 +144,6 @@ const TaskDetailsPage = ({ params }: { params: { id: string } }) => {
       }
     }
   }, [task, isLoading, id, params.id, router]);
-
-  const handleSubmitOffer = async (message: string) => {
-    if (!fetchedUserData.isVerified) {
-      return setShowErrorPopup(true);
-    }
-    const socket = connectSocket(id as unknown as number);
-
-    const data = {
-      taskId: id,
-      customerId: task?.posterId,
-      serviceProviderId: user?.serviceProviderId,
-      fullName: user?.firstName + " " + user?.lastName,
-      message,
-    };
-
-    if (user && socket) {
-      try {
-        socket.emit("offer", data, () => {
-          refetch();
-          setOfferAmount("");
-          setShowSuccessMessage(true);
-
-          setTimeout(() => {
-            setShowSuccessMessage(false);
-            setShowOfferForm(false);
-          }, 3000);
-        });
-      } catch (error) {
-        console.error("Error submitting offer:", error);
-      }
-    } else {
-      console.error("Socket not connected or user not logged in");
-    }
-  };
 
   // Show loading state only during initial load
   if (isUninitialized || isLoading) {
@@ -226,22 +184,28 @@ const TaskDetailsPage = ({ params }: { params: { id: string } }) => {
   const monthName = monthNames[month];
   const dayOfWeek = date.getDay();
   const dayOfWeekName = dayOfWeekNames[dayOfWeek];
-  let daySuffix;
+
+  let daySuffix: string;
   if (day === 11 || day === 12 || day === 13) {
     daySuffix = "th";
   } else {
     daySuffix = suffixes[day % 10] || suffixes[0]; // Default to "th" if suffix is undefined
   }
   const formattedDate = `${dayOfWeekName}, ${monthName} ${day}${daySuffix}`;
-  const hours = date.getHours();
-  const minutes = date.getMinutes();
 
-  let formattedTime;
-  if (hours >= 12) {
-    formattedTime = `${hours === 12 ? 12 : hours - 12}:${(minutes < 10 ? "0" : "") + minutes} PM`;
-  } else {
-    formattedTime = `${hours === 0 ? 12 : hours}:${(minutes < 10 ? "0" : "") + minutes} AM`;
-  }
+  /*
+    Todo Remove after pushing and testing on dev
+    const hours = date.getHours();
+    const minutes = date.getMinutes();
+
+    let formattedTime;
+
+    if (hours >= 12) {
+      formattedTime = `${hours === 12 ? 12 : hours - 12}:${(minutes < 10 ? "0" : "") + minutes} PM`;
+    } else {
+      formattedTime = `${hours === 0 ? 12 : hours}:${(minutes < 10 ? "0" : "") + minutes} AM`;
+    }
+  */
 
   return (
     <section className="container py-20 font-satoshi">
@@ -256,16 +220,16 @@ const TaskDetailsPage = ({ params }: { params: { id: string } }) => {
         </div>
       ) : (
         <>
-          <div className="mt-10 grid w-full grid-cols-1 gap-10 md:grid-cols-2 lg:space-x-5">
+          <div className="grid w-full grid-cols-1 gap-10 sm:mt-10 md:grid-cols-2 lg:space-x-5">
             <div className="space-y-7 font-satoshi lg:space-y-10">
-              <h2 className="text-lg font-black text-primary lg:text-4xl">
+              <h2 className="font-satoshiBold text-2xl font-black text-primary lg:text-4xl">
                 {task?.taskBriefDescription}
               </h2>
               <div className="space-y-3">
-                <h2 className="font-satoshiMedium font-bold text-primary lg:text-2xl">
+                <h2 className="font-satoshiBold text-lg font-bold text-primary underline lg:text-2xl">
                   Task Description
                 </h2>
-                <p className="font-satoshiMedium text-xl font-medium text-[#221354]">
+                <p className="font-satoshiMedium text-base font-medium text-[#221354] lg:text-xl">
                   {task?.taskDescription}
                 </p>
               </div>
@@ -350,7 +314,7 @@ const TaskDetailsPage = ({ params }: { params: { id: string } }) => {
               </div>
 
               <div className="space-y-5">
-                <h4 className="font-satoshiMedium font-bold text-primary lg:text-2xl">
+                <h4 className="font-satoshiBold text-xl font-bold text-[#2A1769] lg:text-3xl">
                   Location
                 </h4>
                 <div className="flex w-full items-center space-x-2 text-[#716F78]">
@@ -364,7 +328,7 @@ const TaskDetailsPage = ({ params }: { params: { id: string } }) => {
               </div>
 
               <div className="space-y-5">
-                <h4 className="font-satoshiMedium font-bold text-primary lg:text-2xl">
+                <h4 className="font-satoshiBold text-xl font-bold text-[#2A1769] lg:text-3xl">
                   Date and Time
                 </h4>
                 <div className="flex items-center space-x-3 text-[#716F78] max-lg:text-xs">
@@ -417,85 +381,20 @@ const TaskDetailsPage = ({ params }: { params: { id: string } }) => {
                       Make an offer
                     </Button>
 
-                    {showOfferForm && (
-                      <div
-                        ref={modalRef}
-                        className="fixed inset-0 z-50 flex items-end justify-center bg-black bg-opacity-50 sm:items-center"
-                      >
-                        <div className="w-full rounded-t-3xl bg-white px-5 pb-8 pt-2 transition-all duration-300 sm:w-[600px] lg:rounded-2xl">
-                          <div
-                            className={`flex items-center justify-between ${showSuccessMessage !== true && "mb-3"}`}
-                          >
-                            <h2
-                              className={`text-start font-clashBold font-bold text-primary ${showSuccessMessage && "hidden"}`}
-                            >
-                              Your Offer
-                            </h2>
-                            <div className="rounded-full bg-[#EBE9F4] p-2">
-                              <IoIosCloseCircleOutline
-                                className="size-6 cursor-pointer text-[#5A5960]"
-                                onClick={() => setShowOfferForm(false)}
-                              />
-                            </div>
-                          </div>
-
-                          <AnimatePresence>
-                            {showSuccessMessage ? (
-                              <motion.div
-                                className="flex w-full flex-col items-center justify-center space-y-4 rounded-xl px-5 py-2"
-                                initial={{ opacity: 0, y: -20 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                exit={{ opacity: 0, y: -20 }}
-                                transition={{ duration: 0.5 }}
-                              >
-                                <div className="flex size-11 items-center justify-center rounded-full bg-[#4CAF50]">
-                                  <FaCheck className="text-white" />
-                                </div>
-                                <h1 className="text-center font-clashSemiBold text-2xl font-semibold text-primary lg:text-3xl">
-                                  Offer posted successfully!
-                                </h1>
-                                <h4 className="text-center font-satoshiMedium text-xl font-medium text-[#140B31]">
-                                  Your offer has been sent to the customer, you
-                                  will be notified when there’s a response.
-                                </h4>
-                                <Button
-                                  className="rounded-full"
-                                  onClick={() => setShowOfferForm(false)}
-                                >
-                                  Go Back
-                                </Button>
-                              </motion.div>
-                            ) : (
-                              <div>
-                                <textarea
-                                  rows={5}
-                                  ref={textareaRef}
-                                  value={offerAmount}
-                                  onChange={(e) =>
-                                    setOfferAmount(e.target.value)
-                                  }
-                                  className="mb-4 w-full rounded-xl border border-primary p-2"
-                                  required
-                                />
-                                <Button
-                                  type="submit"
-                                  disabled={!offerAmount.trim()}
-                                  className="rounded-full"
-                                  onClick={() => handleSubmitOffer(offerAmount)}
-                                >
-                                  Post your offer
-                                </Button>
-                              </div>
-                            )}
-                          </AnimatePresence>
-                        </div>
-                      </div>
-                    )}
+                    <OfferForm
+                      showOfferForm={showOfferForm}
+                      closeOfferForm={() => setShowOfferForm(false)}
+                      showErrorPopup={() => setShowErrorPopup(true)}
+                      isVerified={fetchedUserData.isVerified}
+                      user={user}
+                      refetchOffers={refetch}
+                      taskPosterId={task?.posterId}
+                    />
                   </div>
                 </div>
               </div>
-              <h2 className="text-lg font-bold text-primary lg:text-xl">
-                Reference Images
+              <h2 className="font-satoshiBold text-xl font-bold text-primary lg:text-3xl">
+                Reference Image
               </h2>
               {task.taskImage ? (
                 <Image

@@ -66,9 +66,9 @@ const Popup: React.FC<PopupProps> = ({
             variants={popupVariants}
           >
             {popUpTitle && (
-              <div className="absolute left-0 top-0 z-10 p-2">{popUpTitle}</div>
+              <div className="absolute left-0 top-0 z-10 p-2 pl-4">{popUpTitle}</div>
             )}
-            <div className="absolute right-0 top-0 z-10 cursor-pointer p-2">
+            <div className="absolute right-0 top-0 z-10 cursor-pointer p-2 pr-4">
               <button
                 onClick={onClose}
                 className="rounded-3xl bg-[#EBE9F4] p-2 text-primary hover:text-gray-800"
