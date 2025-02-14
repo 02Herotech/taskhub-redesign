@@ -9,6 +9,10 @@ declare module "next-auth" {
       jti: string;
       message: string;
       refreshToken: string;
+      signUpBonusWallet?: {
+        balance: number;
+        expired: boolean;
+      }
 
       user: {
         id: number;

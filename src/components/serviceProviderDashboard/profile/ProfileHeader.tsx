@@ -16,6 +16,7 @@ const ProfileHeader = () => {
   const session = useSession();
   const user = session?.data?.user?.user;
   const token = session?.data?.user?.accessToken;
+  const userSignUpBonus = (session?.data?.user?.signUpBonusWallet?.balance ?? 0).toFixed(2);
   const isServiceProvider = user?.roles[0] === "SERVICE_PROVIDER";
   const editProfileLink = isServiceProvider
     ? "/service-provider/profile/edit-profile"
@@ -65,6 +66,15 @@ const ProfileHeader = () => {
               quality={100}
               className="max-size-40 size-40 rounded-full object-cover max-md:size-16 max-md:max-w-16"
             />
+            {/* <div className="flex flex-col gap-2">
+              <h1 className="text-base font-bold text-[#140B31] lg:text-3xl">
+                Welcome {user?.firstName} {user?.lastName}
+              </h1>
+              <p className="font-clashDisplay text-sm text-[#140B31] lg:text-base">
+                {user?.emailAddress}
+              </p>
+            </div> */}
+
             <div className="flex flex-col gap-2">
               <h1 className="text-base font-bold text-[#140B31] lg:text-3xl">
                 Welcome {user?.firstName} {user?.lastName}
@@ -72,7 +82,21 @@ const ProfileHeader = () => {
               <p className="font-clashDisplay text-sm text-[#140B31] lg:text-base">
                 {user?.emailAddress}
               </p>
+
+              {/* Bonus Cards */}
+              <div className="flex items-center gap-4 mt-2">
+                <div className="flex flex-col items-center justify-center w-28 h-24 bg-[#EBE9F4] rounded-lg shadow-md">
+                  <p className="text-3xl font-bold text-orange-normal">{userSignUpBonus}</p>
+                  <p className="text-md font-bold text-primary">Bonus credits</p>
+                </div>
+                <div className="h-24 w-[1px] bg-primary"></div> {/* Separator Line */}
+                <div className="flex flex-col items-center justify-center w-28 h-24 bg-[#EBE9F4] rounded-lg shadow-md">
+                  <p className="text-3xl font-bold text-orange-normal">0</p>
+                  <p className="text-md font-bold text-primary">Points reward </p>
+                </div>
+              </div>
             </div>
+
           </div>
 
           <div className="hidden flex-row gap-4 max-md:justify-between max-md:py-4 lg:flex lg:flex-col lg:items-end">
