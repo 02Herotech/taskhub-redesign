@@ -39,23 +39,24 @@ const NewTaskDetails = ({ params }: { params: { id: string } }) => {
   const [showAssignForm, setShowAssignForm] = useState(false);
   const [openPopup, setOpenPopup] = useState(false);
 
-  useEffect(() => {
-    const updateUserData = async () => {
-      try {
-        const { data } = await authInstance.get("customer/profile");
-        if (!data.isEnabled) return;
-        //Update session
-        const user = session.data?.user;
-        if (!user) return;
-        const { user: userInfo } = user;
-        userInfo.enabled = data.isEnabled;
-        await session.update({ user: userInfo });
-      } catch (error) {
-        console.error(error);
-      }
-    };
-    updateUserData();
-  }, [isEnabled, session]);
+  //Todo
+  // useEffect(() => {
+  //   const updateUserData = async () => {
+  //     try {
+  //       const { data } = await authInstance.get("customer/profile");
+  //       if (!data.isEnabled) return;
+  //       //Update session
+  //       const user = session.data?.user;
+  //       if (!user) return;
+  //       const { user: userInfo } = user;
+  //       userInfo.enabled = data.isEnabled;
+  //       await session.update({ user: userInfo });
+  //     } catch (error) {
+  //       console.error(error);
+  //     }
+  //   };
+  //   updateUserData();
+  // }, [session.status]);
 
   const handleAssign = (offerId: string) => {
     console.log(`Assigning task to offer: ${offerId}`);
@@ -147,24 +148,24 @@ const NewTaskDetails = ({ params }: { params: { id: string } }) => {
               AUD$ {formatAmount(task?.customerBudget!, "jungle_coin", false)}
             </p>
           </div> */}
-          <div className="mt-10 grid w-full grid-cols-1 gap-10 md:grid-cols-2 lg:space-x-5">
+          <div className="grid w-full grid-cols-1 gap-10 md:grid-cols-2 lg:space-x-5">
             <div className="space-y-7 font-satoshi lg:space-y-10">
-              <h2 className="font-satoshiBold text-lg font-black text-primary lg:text-4xl">
+              <h2 className="font-satoshiBold text-2xl font-black text-primary lg:text-4xl">
                 {task?.taskBriefDescription}
               </h2>
               <div className="space-y-3">
-                <h2 className="font-satoshiMedium font-bold text-[#454545] lg:text-2xl">
+                <h2 className="font-satoshiBold text-lg font-bold text-primary underline lg:text-2xl">
                   Task Description
                 </h2>
-                <p className="font-satoshiMedium text-xl text-[#221354]">
+                <p className="font-satoshiMedium text-base font-medium text-[#221354] lg:text-xl">
                   {task?.taskDescription}
                 </p>
               </div>
               <div className="space-y-5">
-                <h4 className="font-satoshiMedium font-bold text-[#454545] lg:text-2xl">
+                <h4 className="font-satoshiBold text-xl font-bold text-[#2A1769] lg:text-3xl">
                   Location
                 </h4>
-                <div className="flex w-full items-center space-x-2 text-primary">
+                <div className="flex w-full items-center space-x-2 text-[#716F78]">
                   <HiOutlineLocationMarker className="h-6 w-6 font-bold" />
                   <h5 className="font-satoshiMedium text-[15px] font-medium lg:text-xl">
                     {task.state
@@ -175,16 +176,16 @@ const NewTaskDetails = ({ params }: { params: { id: string } }) => {
               </div>
 
               <div className="space-y-5">
-                <h4 className="font-satoshiMedium text-[#454545] lg:text-2xl">
+                <h4 className="font-satoshiBold text-xl font-bold text-[#2A1769] lg:text-3xl">
                   Date and Time
                 </h4>
-                <div className="flex items-center space-x-3 text-primary max-lg:text-xs">
+                <div className="flex items-center space-x-3 text-[#716F78] max-lg:text-xs">
                   <FiCalendar className="h-6 w-6" />
                   <h5 className="font-satoshiMedium text-[15px] font-medium lg:text-xl">
                     On {formattedDate}
                   </h5>
                 </div>
-                <div className="flex items-center space-x-3 text-primary max-lg:text-xs">
+                <div className="flex items-center space-x-3 text-[#716F78] max-lg:text-xs">
                   <FiClock className="h-6 w-6" />
                   <h5 className="font-satoshiMedium text-[15px] font-medium lg:text-xl">
                     {formatTime24Hour(task.taskTime) || "Flexible"}
@@ -215,8 +216,8 @@ const NewTaskDetails = ({ params }: { params: { id: string } }) => {
                   </Button>
                 </div>
               </div>
-              <h2 className="text-2xl font-bold text-primary lg:text-3xl">
-                Reference Images
+              <h2 className="font-satoshiBold text-xl font-bold text-primary lg:text-3xl">
+                Reference Image
               </h2>
               {task.taskImage ? (
                 <Image

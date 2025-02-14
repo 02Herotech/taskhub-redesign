@@ -33,7 +33,6 @@ const TaskDetailsPage = ({ params }: { params: { id: string } }) => {
   const [isInviteLoading, setIsInviteLoading] = useState(false);
   const [inviteError, setInviteError] = useState<string | null>(null);
   const offerButtonRef = useRef<HTMLDivElement>(null);
-  const modalRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
   const router = useRouter();
   const fetchedUserData = useUserProfileData();
@@ -109,19 +108,6 @@ const TaskDetailsPage = ({ params }: { params: { id: string } }) => {
   const { profile: user } = useSelector(
     (state: RootState) => state.userProfile,
   );
-
-  useEffect(() => {
-    const handleResize = () => {
-      if (modalRef.current) {
-        modalRef.current.style.height = `${window.innerHeight}px`;
-      }
-    };
-
-    handleResize();
-    window.addEventListener("resize", handleResize);
-
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
 
   useEffect(() => {
     const intervalId = setInterval(() => {
