@@ -20,13 +20,16 @@ const withdrawalSchema = z.object({
   accountName: z.string().min(3).max(50),
   accountNumber: z
     .string()
-    .regex(/^\d+$/, "Account number must be a number")
-    .max(9, "Account number should not be more than 9 digits"),
+    .regex(/^\d+$/, "Account number must be a numeric")
+    .min(6, "Invalid account number")
+    .max(10, "Invalid account number"),
   routingNumber: z
     .string()
-    .regex(/^\d+$/, "BSB should must be a number")
-    .min(3)
-    .max(6, "BSB should not be more than 6 digits"),
+    .regex(
+      /^\d+$/,
+      "Please enter a valid BSB number, should consist of only digits",
+    )
+    .length(6, "Please enter a valid BSB number"),
   amount: z
     .string()
     .regex(/^\d+(\.\d{1,2})?$/, "Invalid amount")
@@ -42,9 +45,28 @@ const WithdrawalPage: React.FC = () => {
     (state: RootState) => state.userProfile,
   );
 
+  const [userData, setUserData] = useState<{ isVerified: boolean } | null>(
+    null,
+  );
+
   const [status, setStatus] = useState<"idle" | "success" | "error">("idle");
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const isServiceProvider = auth?.role?.[0] === "SERVICE_PROVIDER";
+
+  const authInstance = useAxios();
+
+  useEffect(() => {
+    async function fetchUserData() {
+      try {
+        const { data } = await authInstance.get("service_provider/profile");
+        setUserData({ isVerified: data.isVerified });
+      } catch (error) {
+        console.error("Error fetching profile data", error);
+      }
+    }
+
+    fetchUserData();
+  }, []);
 
   const {
     handleSubmit,
@@ -52,7 +74,12 @@ const WithdrawalPage: React.FC = () => {
     reset,
     setValue,
     formState: { errors, isSubmitting },
+    setError,
   } = useForm<WithdrawalType>({ resolver: zodResolver(withdrawalSchema) });
+
+  const { walletBalance } = useSelector(
+    (state: RootState) => state.userProfile,
+  );
 
   useEffect(() => {
     if (user) {
@@ -62,6 +89,10 @@ const WithdrawalPage: React.FC = () => {
 
   const submitWithdraw: SubmitHandler<WithdrawalType> = async (data) => {
     if (!auth.token) return;
+    if (data.amount > (walletBalance as number)) {
+      setError("amount", { message: "Insufficent funds" });
+      return;
+    }
     try {
       const url = `${process.env.NEXT_PUBLIC_API_URL}/stripe/payout`;
       await axios.post(url, data, {
@@ -95,13 +126,55 @@ const WithdrawalPage: React.FC = () => {
       <WarningBanner />
 
       {user && (
-        <WithdrawalForm
-          user={user}
+        <form
           onSubmit={handleSubmit(submitWithdraw)}
-          register={register}
-          errors={errors}
-          isSubmitting={isSubmitting}
-        />
+          className="space-y-3 rounded-xl bg-violet-active p-3 lg:p-6"
+        >
+          <h2 className="text-xl font-semibold text-violet-normal lg:text-2xl">
+            Withdrawal Method
+          </h2>
+          <div className="grid grid-cols-2 gap-3 outline-none lg:gap-6">
+            <InputField
+              label="Account name"
+              type="text"
+              register={register("accountName")}
+              error={errors.accountName}
+            />
+            <InputField
+              label="Account number"
+              type="text"
+              register={register("accountNumber")}
+              error={errors.accountNumber}
+            />
+            <InputField
+              label="BSB"
+              type="text"
+              register={register("routingNumber")}
+              error={errors.routingNumber}
+            />
+            <InputField
+              label="Amount"
+              type="number"
+              min={1}
+              step=".01"
+              register={register("amount")}
+              error={errors.amount}
+            />
+          </div>
+          <div className="flex justify-end">
+            <button
+              type="submit"
+              className="w-fit rounded-full bg-violet-normal px-6 py-3 font-medium text-white disabled:opacity-60"
+              disabled={isSubmitting || !userData || !userData.isVerified}
+            >
+              {isSubmitting ? (
+                <BeatLoader color="white" loading={isSubmitting} />
+              ) : (
+                "Request Withdrawal"
+              )}
+            </button>
+          </div>
+        </form>
       )}
     </main>
   );
@@ -170,86 +243,6 @@ const WarningBanner: React.FC = () => (
     </span>
   </p>
 );
-
-const WithdrawalForm: React.FC<{
-  user: any;
-  onSubmit: (e?: React.BaseSyntheticEvent) => Promise<void>;
-  register: any;
-  errors: any;
-  isSubmitting: boolean;
-}> = ({ user, onSubmit, register, errors, isSubmitting }) => {
-  const [userData, setUserData] = useState<{ isVerified: boolean } | null>(
-    null,
-  );
-  const { walletBalance, walletLoading } = useSelector(
-    (state: RootState) => state.userProfile,
-  );
-  const authInstance = useAxios();
-  useEffect(() => {
-    async function fetchUserData() {
-      try {
-        const { data } = await authInstance.get("service_provider/profile");
-        setUserData({ isVerified: data.isVerified });
-      } catch (error) {
-        console.log(error);
-      }
-    }
-
-    fetchUserData();
-  }, []);
-  return (
-    <form
-      onSubmit={onSubmit}
-      className="space-y-3 rounded-xl bg-violet-active p-3 lg:p-6"
-    >
-      <h2 className="text-xl font-semibold text-violet-normal lg:text-2xl">
-        Withdrawal Method
-      </h2>
-      <div className="grid grid-cols-2 gap-3 outline-none lg:gap-6">
-        <InputField
-          label="Account name"
-          type="text"
-          register={register("accountName")}
-          error={errors.accountName}
-        />
-        <InputField
-          label="Account number"
-          type="text"
-          register={register("accountNumber")}
-          error={errors.accountNumber}
-        />
-        <InputField
-          label="BSB"
-          type="text"
-          register={register("routingNumber")}
-          error={errors.routingNumber}
-        />
-        <InputField
-          label="Amount"
-          type="number"
-          max={walletBalance ?? 0}
-          min={1}
-          step=".01"
-          register={register("amount")}
-          error={errors.amount}
-        />
-      </div>
-      <div className="flex justify-end">
-        <button
-          type="submit"
-          className="w-fit rounded-full bg-violet-normal px-6 py-3 font-medium text-white disabled:opacity-60"
-          disabled={isSubmitting || !userData || !userData.isVerified}
-        >
-          {isSubmitting ? (
-            <BeatLoader color="white" loading={isSubmitting} />
-          ) : (
-            "Request Withdrawal"
-          )}
-        </button>
-      </div>
-    </form>
-  );
-};
 
 type InputFieldProps = {
   register?: any;
