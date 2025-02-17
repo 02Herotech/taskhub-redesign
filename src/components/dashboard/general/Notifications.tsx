@@ -3,7 +3,6 @@
 import { marketPlaceModalIcon } from "@/lib/svgIcons";
 import Loading from "@/shared/loading";
 import { isOlder, isThisMonth, isThisWeek, isToday } from "@/utils";
-import axios from "axios";
 import { useSession } from "next-auth/react";
 import React, { useEffect, useState } from "react";
 import NotificationList from "./NotificationList";
@@ -20,7 +19,6 @@ const NotificationComponent = () => {
   const authInstance = useAxios();
 
   const session = useSession();
-  const token = session?.data?.user?.accessToken;
   const userId = session?.data?.user?.user?.id;
 
   const oneWeekAgo = new Date();
@@ -42,7 +40,7 @@ const NotificationComponent = () => {
   useEffect(() => {
     handleFetchNotifications();
     // eslint-disable-next-line
-  }, [token, refresh]);
+  }, [refresh]);
 
   const handleChangeCategory = (category: string) => {
     setCurrentCategory(category);
