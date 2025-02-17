@@ -16,27 +16,39 @@ import { refreshWallet } from "@/store/Features/userProfile";
 import useAxios from "@/hooks/useAxios";
 
 // Schema definition
-const withdrawalSchema = z.object({
-  accountName: z.string().min(3, "Please enter a valid name").max(50),
-  accountNumber: z
-    .string()
-    .regex(/^\d+$/, "Account number must be numeric")
-    .min(6, "Invalid account number")
-    .max(10, "Invalid account number"),
-  routingNumber: z
-    .string()
-    .regex(
-      /^\d+$/,
-      "Please enter a valid BSB number, it should consist of six digits",
-    )
-    .length(6, "Please enter a valid six digit BSB number"),
-  amount: z
-    .string()
-    .regex(/^\d+(\.\d{1,2})?$/, "Invalid amount")
-    .transform(Number),
-});
+const withdrawalSchema = (maxValue: number) => {
+  return z.object({
+    accountName: z
+      .string()
+      .min(3, "Please enter a valid name")
+      .max(50)
+      .refine((value) => !/\d/.test(value), {
+        message: "Account name cannot contain numbers",
+      }),
+    accountNumber: z
+      .string()
+      .regex(/^\d+(\.\d+)?$/, "Account number must be numeric")
+      .min(6, "Invalid account number")
+      .max(10, "Invalid account number"),
+    routingNumber: z
+      .string()
+      .regex(
+        /^\d+$/,
+        "Please enter a valid BSB number, it should consist of six digits",
+      )
+      .length(6, "Please enter a valid six digit BSB number"),
+    amount: z
+      .number({
+        invalid_type_error: "Amount required, Please enter a valid amount",
+      })
+      .max(maxValue, "Amount should not exceed wallet balance")
+      .refine((value) => Math.floor(value * 100) === value * 100, {
+        message: "Number must have at most 2 decimal places",
+      }),
+  });
+};
 
-type WithdrawalType = z.infer<typeof withdrawalSchema>;
+type WithdrawalType = z.infer<ReturnType<typeof withdrawalSchema>>;
 
 // Component definition
 const WithdrawalPage: React.FC = () => {
@@ -44,14 +56,20 @@ const WithdrawalPage: React.FC = () => {
   const { userProfileAuth: auth, profile: user } = useSelector(
     (state: RootState) => state.userProfile,
   );
-
+  const { walletBalance } = useSelector(
+    (state: RootState) => state.userProfile,
+  );
   const [userData, setUserData] = useState<{ isVerified: boolean } | null>(
     null,
   );
-
+  const [schema, setSchema] = useState(() => withdrawalSchema(0));
   const [status, setStatus] = useState<"idle" | "success" | "error">("idle");
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const isServiceProvider = auth?.role?.[0] === "SERVICE_PROVIDER";
+
+  useEffect(() => {
+    if (walletBalance) setSchema(withdrawalSchema(walletBalance as number));
+  }, [walletBalance]);
 
   const authInstance = useAxios();
 
@@ -74,33 +92,24 @@ const WithdrawalPage: React.FC = () => {
     reset,
     setValue,
     formState: { errors, isSubmitting },
-    setError,
+    watch,
   } = useForm<WithdrawalType>({
-    resolver: zodResolver(withdrawalSchema),
+    resolver: zodResolver(schema),
     mode: "onChange",
   });
 
-  const { walletBalance } = useSelector(
-    (state: RootState) => state.userProfile,
-  );
-
   useEffect(() => {
     if (user) {
-      setValue("accountName", `${user.lastName} ${user.firstName}`);
+      const fullName = `${user.lastName} ${user.firstName}`;
+      if (watch("accountName") && fullName !== watch("accountName")) return;
+      setValue("accountName", fullName);
     }
   }, [user, setValue]);
 
   const submitWithdraw: SubmitHandler<WithdrawalType> = async (data) => {
     if (!auth.token) return;
-    if (data.amount > (walletBalance as number)) {
-      setError("amount", { message: "Insufficent funds" });
-      return;
-    }
     try {
-      const url = `${process.env.NEXT_PUBLIC_API_URL}/stripe/payout`;
-      await axios.post(url, data, {
-        headers: { Authorization: `Bearer ${auth.token}` },
-      });
+      await authInstance.post("/stripe/payout", data);
       setStatus("success");
       dispatch(refreshWallet());
       reset();
@@ -161,7 +170,7 @@ const WithdrawalPage: React.FC = () => {
               type="number"
               min={1}
               step=".01"
-              register={register("amount")}
+              register={register("amount", { valueAsNumber: true })}
               error={errors.amount}
             />
           </div>
