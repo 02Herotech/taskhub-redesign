@@ -15,12 +15,12 @@ function SessionTimeout() {
   const router = useRouter();
   const resetAuth = async (redirectTo = "/auth/login") => {
     dispatch(removeUserProfile());
-    await signOut({ redirect: false });
     dispatch(setAuthStatus(false));
+    await signOut({ redirect: false });
     router.replace(redirectTo);
   };
   return (
-    <Popup isOpen={timeoutPopup} onClose={resetAuth}>
+    <Popup isOpen={timeoutPopup} onClose={() => resetAuth()}>
       <div className="max-h-[700px] min-w-[320px] max-w-[700px] bg-white p-5 sm:min-w-[560px]">
         <h4 className="mb-10 font-clashSemiBold text-xl text-[#140B31] sm:text-3xl">
           Session Timed out
