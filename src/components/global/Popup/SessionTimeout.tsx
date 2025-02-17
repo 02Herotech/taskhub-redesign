@@ -3,7 +3,6 @@ import Link from "next/link";
 import Popup from "./PopupTwo";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "@/store";
-import { useRouter } from "next/navigation";
 import { setAuthStatus } from "@/store/Features/authStatus";
 import { removeUserProfile } from "@/store/Features/userProfile";
 import { signOut } from "next-auth/react";
@@ -12,12 +11,10 @@ import { signOut } from "next-auth/react";
 function SessionTimeout() {
   const timeoutPopup = useSelector((state: RootState) => state.timeoutPopup);
   const dispatch = useDispatch();
-  const router = useRouter();
-  const resetAuth = async (redirectTo = "/auth/login") => {
+  const resetAuth = (redirectTo = "/auth/login") => {
     dispatch(removeUserProfile());
+    signOut({ callbackUrl: `${process.env.NEXT_PUBLIC_URL}${redirectTo}` });
     dispatch(setAuthStatus(false));
-    await signOut({ redirect: false });
-    router.replace(redirectTo);
   };
   return (
     <Popup isOpen={timeoutPopup} onClose={() => resetAuth()}>
