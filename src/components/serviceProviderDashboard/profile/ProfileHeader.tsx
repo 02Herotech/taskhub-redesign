@@ -86,7 +86,7 @@ const ProfileHeader = () => {
               {/* Bonus Cards */}
               <div className="flex items-center gap-4 mt-2">
                 <div className="flex flex-col items-center justify-center w-28 h-24 bg-[#EBE9F4] rounded-lg shadow-md">
-                  <p className="text-3xl font-bold text-orange-normal">{userSignUpBonus}</p>
+                  <p className="text-3xl font-bold text-orange-normal">${userSignUpBonus}</p>
                   <p className="text-md font-bold text-primary">Bonus credits</p>
                 </div>
                 <div className="h-24 w-[1px] bg-primary"></div> {/* Separator Line */}
