@@ -17,19 +17,19 @@ import useAxios from "@/hooks/useAxios";
 
 // Schema definition
 const withdrawalSchema = z.object({
-  accountName: z.string().min(3).max(50),
+  accountName: z.string().min(3, "Please enter a valid name").max(50),
   accountNumber: z
     .string()
-    .regex(/^\d+$/, "Account number must be a numeric")
+    .regex(/^\d+$/, "Account number must be numeric")
     .min(6, "Invalid account number")
     .max(10, "Invalid account number"),
   routingNumber: z
     .string()
     .regex(
       /^\d+$/,
-      "Please enter a valid BSB number, should consist of only digits",
+      "Please enter a valid BSB number, it should consist of six digits",
     )
-    .length(6, "Please enter a valid BSB number"),
+    .length(6, "Please enter a valid six digit BSB number"),
   amount: z
     .string()
     .regex(/^\d+(\.\d{1,2})?$/, "Invalid amount")
@@ -75,7 +75,10 @@ const WithdrawalPage: React.FC = () => {
     setValue,
     formState: { errors, isSubmitting },
     setError,
-  } = useForm<WithdrawalType>({ resolver: zodResolver(withdrawalSchema) });
+  } = useForm<WithdrawalType>({
+    resolver: zodResolver(withdrawalSchema),
+    mode: "onChange",
+  });
 
   const { walletBalance } = useSelector(
     (state: RootState) => state.userProfile,
