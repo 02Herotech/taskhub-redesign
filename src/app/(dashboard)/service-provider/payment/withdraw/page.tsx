@@ -104,7 +104,8 @@ const WithdrawalPage: React.FC = () => {
     } catch (error: any) {
       setStatus("error");
       setErrorMessage(
-        error?.response?.data || "Something went wrong, please try again",
+        error?.response?.data.message ||
+          "Something went wrong, please try again",
       );
       console.error(error?.response?.data || error);
     }
