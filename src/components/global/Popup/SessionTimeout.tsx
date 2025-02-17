@@ -15,8 +15,8 @@ function SessionTimeout() {
   const router = useRouter();
   const resetAuth = async (redirectTo = "/auth/login") => {
     dispatch(removeUserProfile());
-    dispatch(setAuthStatus(false));
     await signOut({ redirect: false });
+    dispatch(setAuthStatus(false));
     router.replace(redirectTo);
   };
   return (
