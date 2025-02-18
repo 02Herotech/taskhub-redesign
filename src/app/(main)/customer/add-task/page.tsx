@@ -211,8 +211,6 @@ const AddTaskForm: React.FC = () => {
     return Object.keys(errors).length === 0;
   };
 
-  console.log(errors);
-
   const validateField1 = () => {
     const error: any = {};
 
