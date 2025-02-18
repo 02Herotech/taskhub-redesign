@@ -5,7 +5,7 @@ import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
 const WalletBalance: React.FC = () => {
-  const { walletBalance, walletLoading } = useSelector(
+  const { walletBalance } = useSelector(
     (state: RootState) => state.userProfile,
   );
 
