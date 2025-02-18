@@ -817,8 +817,8 @@ const AddTaskForm: React.FC = () => {
                                 : "bg-white")
                             }
                             key={Math.random() * 12345}
-                            onMouseEnter={() => setHoveredIndex(index)}
-                            onMouseLeave={() => setHoveredIndex(null)}
+                            // onMouseEnter={() => setHoveredIndex(index)}
+                            // onMouseLeave={() => setHoveredIndex(null)}
                             onClick={() => {
                               setCurrentSuburb(suburb);
                               setSuburb(
@@ -828,19 +828,21 @@ const AddTaskForm: React.FC = () => {
                             }}
                           >
                             <CiLocationOn
-                              stroke={
-                                hoveredIndex === index ? "#0F052E" : "#BFBDC6"
-                              }
+                              // stroke={
+                              //   hoveredIndex === index ? "#0F052E" : "#BFBDC6"
+                              // }
+                              stroke="#0F052E"
                               size={20}
                               strokeWidth={1}
                             />
                             <span
-                              className={
-                                "font-satoshiMedium " +
-                                (hoveredIndex === index
-                                  ? "text-[#0F052E]"
-                                  : "text-[#76757A61]")
-                              }
+                            // className={
+                            //   "font-satoshiMedium " +
+                            //   (hoveredIndex === index
+                            //     ? "text-[#0F052E]"
+                            //     : "text-[#76757A61]")
+                            // }
+                            className="text-[#0F052E]"
                             >
                               {suburb.name},{" "}
                               {suburb.locality ? `${suburb.locality},` : ""}{" "}
