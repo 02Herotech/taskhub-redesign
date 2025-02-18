@@ -233,3 +233,13 @@ body {
 .clip-circle-full {
   clip-path: circle(141.4% at 100% 100%);
 }
+
+input[data-autocompleted] {
+  background-color: transparent !important;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:focus {
+  transition: background-color 0s 0s, color 0s 0s;
+  transition-delay: calc(infinity * 1s);
+}

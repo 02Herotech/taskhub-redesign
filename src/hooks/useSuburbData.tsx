@@ -1,31 +1,35 @@
-import axios from "axios";
 import { useEffect, useState } from "react";
+import axios from "axios";
 
-type SurburbInfo = {
+export type SurburbInfo = {
   name: string;
   postcode: number;
   state: {
     name: string;
     abbreviation: string;
   };
-  locality: string;
+  locality: string | null;
   latitude: number;
   longitude: number;
 };
 
-function useSuburbData(searchValue: string) {
+function useSuburbData(searchValue: string, currentSuburb: SurburbInfo | null) {
   const [suburbList, setSuburbList] = useState<SurburbInfo[]>([]);
   const [error, setError] = useState<string>("");
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const fetchSuburbData = async () => {
-      if (searchValue.length < 2) return;
+      if (searchValue.trim().length < 1 || currentSuburb) {
+        setSuburbList([]);
+        return;
+      }
       try {
         if (suburbList.length < 1) setIsLoading(true);
-        const baseUrl = process.env.NEXT_PUBLIC_API_URL;
         const { data } = await axios.get<SurburbInfo[]>(
-          baseUrl + "/util/locations/search?postcode=" + searchValue,
+          process.env.NEXT_PUBLIC_API_URL +
+            "/util/locations?suburb=" +
+            searchValue,
         );
         setIsLoading(false);
         setSuburbList(data);
@@ -45,7 +49,7 @@ function useSuburbData(searchValue: string) {
     return () => clearTimeout(debounceFetchSuburb);
   }, [searchValue]);
 
-  return { suburbList, error, isLoading };
+  return { suburbList, setSuburbList, error, isLoading };
 }
 
 export default useSuburbData;
