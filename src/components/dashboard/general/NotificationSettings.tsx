@@ -87,7 +87,6 @@ const NotificationsSettings = () => {
         },
       });
       setSuccess(true);
-
       setTimeout(() => setSuccess(false), 4000);
     } catch (error: any) {
       console.log(error?.response?.data || error);
@@ -106,7 +105,6 @@ const NotificationsSettings = () => {
           Authorization: `Bearer ${auth.token}`,
         },
       });
-      console.log(data);
       setNotificationPreferences(data);
     } catch (error: any) {
       console.log(error?.response?.data || error);
