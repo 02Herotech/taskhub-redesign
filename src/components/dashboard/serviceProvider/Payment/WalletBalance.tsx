@@ -1,7 +1,7 @@
 "use client";
 import { formatAmount } from "@/lib/utils";
 import { RootState } from "@/store";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
 const WalletBalance: React.FC = () => {
@@ -9,9 +9,13 @@ const WalletBalance: React.FC = () => {
     (state: RootState) => state.userProfile,
   );
 
-  const balance = walletBalance as unknown as number || 0;  
+  const [balance, setBalance] = useState<number | null>(null);
 
-  return <span>{walletLoading ? "---" : formatAmount(balance, "USD", false)}</span>;
+  useEffect(() => {
+    setBalance(walletBalance as unknown as number);
+  }, [walletBalance]);
+
+  return <span>{!balance ? "---" : formatAmount(balance, "USD", false)}</span>;
 };
 
 export default WalletBalance;

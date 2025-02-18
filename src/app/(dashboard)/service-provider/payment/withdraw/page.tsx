@@ -26,9 +26,8 @@ const withdrawalSchema = (maxValue: number) => {
       }),
     accountNumber: z
       .string()
-      .regex(/^\d+(\.\d+)?$/, "Account number must be numeric")
-      .min(6, "Invalid account number")
-      .max(10, "Invalid account number"),
+      .length(9, "Invalid account number")
+      .regex(/^\d+(\.\d+)?$/, "Account number must be numeric"),
     routingNumber: z
       .string()
       .regex(
@@ -42,7 +41,7 @@ const withdrawalSchema = (maxValue: number) => {
       })
       .max(maxValue, "Amount should not exceed wallet balance")
       .refine((value) => Math.floor(value * 100) === value * 100, {
-        message: "Number must have at most 2 decimal places",
+        message: "Amount should not exceed 2 decimal places",
       }),
   });
 };
@@ -124,6 +123,10 @@ const WithdrawalPage: React.FC = () => {
 
   const resetStatus = () => setStatus("idle");
 
+  function removeLetterOnInput(e: React.FormEvent<HTMLInputElement>) {
+    e.currentTarget.value = e.currentTarget.value.replace(/\D/g, "");
+  }
+
   return (
     <main className="space-y-8 p-4 lg:p-8">
       {status !== "idle" && (
@@ -134,35 +137,43 @@ const WithdrawalPage: React.FC = () => {
           isServiceProvider={isServiceProvider}
         />
       )}
-
       <WarningBanner />
-
       {user && (
         <form
           onSubmit={handleSubmit(submitWithdraw)}
-          className="space-y-3 rounded-xl bg-violet-active p-3 lg:p-6"
+          className="space-y-4 rounded-xl bg-violet-active p-3 lg:p-6"
         >
-          <h2 className="text-xl font-semibold text-violet-normal lg:text-2xl">
+          <h2 className="mb-5 font-satoshiBold text-xl font-bold text-violet-normal lg:text-2xl">
             Withdrawal Method
           </h2>
-          <div className="grid grid-cols-2 gap-3 outline-none lg:gap-6">
+          <div className="grid grid-cols-1 gap-3 outline-none sm:grid-cols-2 lg:gap-6">
             <InputField
               label="Account name"
               type="text"
               register={register("accountName")}
               error={errors.accountName}
+              onInput={(e) => {
+                e.currentTarget.value = e.currentTarget.value.replace(
+                  /[^a-zA-Z\s]/g,
+                  "",
+                );
+              }}
             />
             <InputField
               label="Account number"
               type="text"
               register={register("accountNumber")}
               error={errors.accountNumber}
+              onInput={removeLetterOnInput}
+              maxLength={9}
             />
             <InputField
               label="BSB"
               type="text"
               register={register("routingNumber")}
               error={errors.routingNumber}
+              onInput={removeLetterOnInput}
+              maxLength={6}
             />
             <InputField
               label="Amount"
@@ -173,14 +184,14 @@ const WithdrawalPage: React.FC = () => {
               error={errors.amount}
             />
           </div>
-          <div className="flex justify-end">
+          <div className="mt-4 flex justify-end">
             <button
               type="submit"
               className="w-fit rounded-full bg-violet-normal px-6 py-3 font-medium text-white disabled:opacity-60"
               disabled={isSubmitting || !userData || !userData.isVerified}
             >
               {isSubmitting ? (
-                <BeatLoader color="white" loading={isSubmitting} />
+                <BeatLoader size={12} color="white" loading={isSubmitting} />
               ) : (
                 "Request Withdrawal"
               )}
@@ -273,7 +284,7 @@ const InputField: React.FC<InputFieldProps> = ({
   step,
   ...props
 }) => {
-  const { max } = props;
+  const { maxLength, onInput } = props;
   return (
     <label className="flex flex-col gap-2">
       <span className="text-lg font-bold text-violet-normal">{label}</span>
@@ -283,7 +294,8 @@ const InputField: React.FC<InputFieldProps> = ({
         disabled={disabled}
         value={value}
         min={min}
-        {...(max ? { max } : {})}
+        {...(maxLength ? { maxLength } : {})}
+        {...(onInput ? { onInput } : {})}
         step={step}
         {...register}
       />
