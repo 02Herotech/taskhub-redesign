@@ -20,13 +20,14 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { setCookie, getCookie } from "cookies-next";
 import { FaSortDown } from "react-icons/fa6";
-import Dropdown from "@/components/global/Dropdown";
 import Loading from "@/components/global/loading/page";
 import Progress from "@/components/global/progress";
 import axios from "axios";
 import PopupTwo from "@/components/global/Popup/PopupTwo";
 import { IoIosCheckmarkCircle } from "react-icons/io";
 import useAxios from "@/hooks/useAxios";
+import { CiLocationOn } from "react-icons/ci";
+import useSuburbData, { SurburbInfo } from "@/hooks/useSuburbData";
 
 interface FormData {
   taskBriefDescription: string;
@@ -48,14 +49,6 @@ interface Item {
   categoryName: string;
 }
 
-interface PostalCodeData {
-  Name: string;
-  Postcode: string;
-  State: string;
-  StateShort: string;
-  Type: string;
-}
-
 interface CustomInputProps {
   value?: string;
   onClick?: () => void;
@@ -67,7 +60,6 @@ const AddTaskForm: React.FC = () => {
   const isAuthenticated = session.status === "authenticated";
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(false);
-  const [code, setCode] = useState<boolean>(false);
   const [task, setTask] = useState<FormData>({
     taskBriefDescription: getCookie("taskBriefDescription") || "",
     taskImage: null,
@@ -86,8 +78,6 @@ const AddTaskForm: React.FC = () => {
   });
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [selectedTime, setSelectedTime] = useState<Date | null>(null);
-  const [selectedCode, setSelectedCode] = useState("");
-  const [selectedCity, setSelectedCity] = useState("");
   const [termAccepted, settermAccepted] = useState(false);
   const [accepted, setAccepted] = useState(false);
   const [isRemote, setIsRemote] = useState("");
@@ -99,7 +89,6 @@ const AddTaskForm: React.FC = () => {
   const [errors, setErrors] = useState<any>({});
   const [error, setError] = useState<any>({});
   const [isSuccessPopupOpen, setIsSuccessPopupOpen] = useState(false);
-  const [postalCodeData, setPostalCodeData] = useState<PostalCodeData[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
   const [items, setItems] = useState<Item[]>([]);
   const [wordCount, setWordCount] = useState(0);
@@ -111,6 +100,16 @@ const AddTaskForm: React.FC = () => {
   const [isEnabledPopup, setIsEnabledPopup] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const authInstance = useAxios();
+  const [suburb, setSuburb] = useState("");
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+
+  const [currentSuburb, setCurrentSuburb] = useState<SurburbInfo | null>(null);
+  const {
+    suburbList,
+    setSuburbList,
+    error: suburbError,
+    isLoading,
+  } = useSuburbData(suburb, currentSuburb);
 
   // Handling getting the description from the marketplace when a user navigates from the marketplace
   useEffect(() => {
@@ -127,7 +126,7 @@ const AddTaskForm: React.FC = () => {
   //Check if user is verified and update session
   useEffect(() => {
     const updateUserData = async () => {
-      //Check if user is not authenticated 
+      //Check if user is not authenticated
       //So the auth instance doesnt fire the re-direction when user is not logged in
       if (session.status !== "authenticated" || isEnabled) return;
       try {
@@ -170,54 +169,6 @@ const AddTaskForm: React.FC = () => {
   }, [task]);
 
   useEffect(() => {
-    const fetchPostalCodeData = async () => {
-      try {
-        const baseUrl = process.env.NEXT_PUBLIC_API_URL;
-        const response = await axios.get<PostalCodeData[]>(
-          `${baseUrl}/util/locations/search?postcode=${selectedCode}`,
-        );
-
-        // Check if response data is an array and has entries
-        if (!Array.isArray(response.data) || response.data.length === 0) {
-          console.log("No postal code data found");
-          setCode(true);
-          setPostalCodeData([]); // Reset postal code data
-          return;
-        }
-
-        // Validate that the response matches our expected structure
-        const isValidData = response.data.every(
-          (item) =>
-            "Name" in item &&
-            "Postcode" in item &&
-            "State" in item &&
-            "StateShort" in item &&
-            "Type" in item,
-        );
-
-        if (!isValidData) {
-          console.error("Invalid data structure received");
-          setCode(true);
-          setPostalCodeData([]);
-          return;
-        }
-
-        // If data is valid, update state
-        setCode(false);
-        setPostalCodeData(response.data);
-      } catch (error) {
-        console.error("Error fetching postal code data:", error);
-        setCode(true);
-        setPostalCodeData([]);
-      }
-    };
-
-    if (selectedCode.length > 0) {
-      fetchPostalCodeData();
-    }
-  }, [selectedCode]);
-
-  useEffect(() => {
     const fetchItems = async () => {
       try {
         const response = await axios.get(
@@ -246,11 +197,8 @@ const AddTaskForm: React.FC = () => {
     }
     if (activeButtonIndex === 0) {
       // Validation for physical service
-      if (!selectedCode) {
-        errors.postalCode = "Please fill out all required fields";
-      }
-      if (!selectedCity) {
-        errors.city = "Please fill out all required fields";
+      if (!currentSuburb) {
+        errors.suburb = "Please fill out all required fields";
       }
     } else if (!isRemote) {
       error.service = "Please fill out all required fields";
@@ -258,6 +206,7 @@ const AddTaskForm: React.FC = () => {
     if (!task.customerBudget) {
       errors.customerBudget = "Please fill out all required fields";
     }
+
     setErrors(errors);
     return Object.keys(errors).length === 0;
   };
@@ -311,14 +260,6 @@ const AddTaskForm: React.FC = () => {
   const handleClick = (index: number) => {
     setActiveButtonIndex(index);
     setIsOpen(true);
-  };
-
-  const handleCode = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSelectedCode(event.target.value);
-  };
-
-  const handleCity = (data: any) => {
-    setSelectedCity(data);
   };
 
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -458,7 +399,7 @@ const AddTaskForm: React.FC = () => {
     if (isOpen && activeButtonIndex === 1) {
       requiredFields.push(isRemote);
     } else {
-      requiredFields.push(selectedCode);
+      requiredFields.push(currentSuburb?.name);
     }
 
     const filledFields = requiredFields.filter(
@@ -503,12 +444,13 @@ const AddTaskForm: React.FC = () => {
           const type = "REMOTE_SERVICE";
           finalTask = { ...finalTask, taskType: type };
         } else {
+          const { state, postcode, name } = currentSuburb;
           finalTask = {
             ...finalTask,
             taskType: "PHYSICAL_SERVICE",
-            suburb: selectedCity,
-            postCode: selectedCode,
-            state: postalCodeData[0].State,
+            suburb: name,
+            postCode: String(postcode),
+            state: state.name,
           };
         }
 
@@ -820,82 +762,94 @@ const AddTaskForm: React.FC = () => {
                 />
               )}
               {isOpen && activeButtonIndex === 0 && (
-                <div className="space-y-10 font-bold text-status-darkpurple ">
-                  <div className="flex space-x-4">
-                    <div className="grid space-y-4">
-                      <div className="flex items-center justify-between">
-                        <label>
-                          Postal code{" "}
-                          <span className="font-extrabold text-[#ff0000]">
-                            *
-                          </span>
-                        </label>
-                        {selectedCode && (
-                          <div className="h-[16px] w-[16px] rounded-3xl bg-[#4CAF50] text-[16px] font-extrabold text-white">
-                            <GrFormCheckmark />
-                          </div>
-                        )}
-                      </div>
-                      <input
-                        value={selectedCode}
-                        onChange={handleCode}
-                        name="postCode"
-                        type="number"
-                        className={`w-[155px] cursor-pointer  rounded-2xl bg-[#EBE9F4] p-3 text-[13px] placeholder:font-bold ${errors.postalCode || code == true ? "border border-[#ff0000] outline-[#FF0000]" : "border-none outline-none"}`}
-                      />
-                    </div>
-
-                    <div className="grid space-y-4">
-                      <div className="flex items-center justify-between">
-                        <label>
-                          Suburb{" "}
-                          <span className="font-extrabold text-[#ff0000]">
-                            *
-                          </span>
-                        </label>
-                        {selectedCity && (
-                          <div className="h-[16px] w-[16px] rounded-3xl bg-[#4CAF50] text-[16px] font-extrabold text-white">
-                            <GrFormCheckmark />
-                          </div>
-                        )}
-                      </div>
-                      <Dropdown
-                        trigger={() => (
-                          <div
-                            className={`flex h-full w-[150px] cursor-pointer appearance-none justify-between rounded-2xl bg-[#EBE9F4] p-3 font-satoshi text-[13px] font-light ${errors.city ? "border border-[#ff0000] outline-[#FF0000]" : "border-none outline-none"}`}
-                          >
-                            <h2>{selectedCity}</h2>
-                            <FaSortDown />
-                          </div>
-                        )}
-                        className="small-scrollbar left-0 right-0 top-14 mx-auto max-h-64 overflow-y-auto bg-white transition-all duration-300"
-                      >
-                        {postalCodeData.map((data, index) => (
-                          <button
-                            type="button"
-                            className="block p-2 text-[12px] text-[#221354]"
-                            key={index}
-                            value={data.Name}
-                            onClick={() => handleCity(data.Name)}
-                          >
-                            {data.Name}
-                          </button>
-                        ))}
-                      </Dropdown>
-                    </div>
-                  </div>
-                  <div className="grid space-y-4">
-                    <label>State/Territory</label>
+                <div className="relative w-full">
+                  <label
+                    htmlFor="suburb"
+                    className="mb-2 block font-satoshiMedium text-base text-[#140B31] sm:text-lg"
+                  >
+                    Where do you need this done
+                  </label>
+                  <div
+                    className={
+                      "flex items-center rounded-lg bg-[#EBE9F4] px-3 pl-2 focus-within:bg-white " +
+                      (errors.suburb
+                        ? "border border-[#ff0000] outline-[#FF0000]"
+                        : "border-primary outline-none focus-within:border")
+                    }
+                  >
+                    <CiLocationOn fill="#76757A61" size={22} />
                     <input
-                      value={
-                        postalCodeData.length > 0 ? postalCodeData[0].State : ""
-                      }
-                      onChange={handleChange}
-                      name="state"
-                      id="state"
-                      disabled
-                      className="w-full cursor-pointer rounded-2xl bg-[#EBE9F4] p-3 text-sm outline-none"
+                      id="suburb"
+                      type="text"
+                      className="-ml-2 block w-full appearance-none bg-transparent p-3 placeholder-[#76757A61] outline-none placeholder:font-satoshiMedium"
+                      placeholder="Enter a suburb"
+                      value={suburb}
+                      onChange={(e) => {
+                        if (currentSuburb) {
+                          setCurrentSuburb(null);
+                          const enteredInput = e.target.value.slice(-1);
+                          e.target.value = enteredInput;
+                          setSuburb(enteredInput);
+                        }
+                        setSuburb(e.target.value);
+                      }}
                     />
+                  </div>
+                  <div className="absolute left-0 z-20 bg-white">
+                    {isLoading && (
+                      <p className="py-2 text-center font-satoshiMedium text-[#76757A61]">
+                        Loading...
+                      </p>
+                    )}
+                    {suburbError && !isLoading && (
+                      <p className="py-2 text-center font-satoshiMedium text-red-600">
+                        Error occured while loading suburb data
+                      </p>
+                    )}
+                    {suburbList.length > 1 && (
+                      <ul className="roundeed-lg max-h-52 overflow-y-auto overflow-x-hidden">
+                        {suburbList.map((suburb, index) => (
+                          <li
+                            className={
+                              "flex cursor-pointer items-center gap-1 px-4 py-3 text-[13px] " +
+                              (hoveredIndex == index
+                                ? "bg-[#EBE9F4]"
+                                : "bg-white")
+                            }
+                            key={Math.random() * 12345}
+                            onMouseEnter={() => setHoveredIndex(index)}
+                            onMouseLeave={() => setHoveredIndex(null)}
+                            onClick={() => {
+                              setCurrentSuburb(suburb);
+                              setSuburb(
+                                `${suburb.name}, ${suburb.state.abbreviation}, Australia`,
+                              );
+                              setSuburbList([]);
+                            }}
+                          >
+                            <CiLocationOn
+                              stroke={
+                                hoveredIndex === index ? "#0F052E" : "#BFBDC6"
+                              }
+                              size={20}
+                              strokeWidth={1}
+                            />
+                            <span
+                              className={
+                                "font-satoshiMedium " +
+                                (hoveredIndex === index
+                                  ? "text-[#0F052E]"
+                                  : "text-[#76757A61]")
+                              }
+                            >
+                              {suburb.name},{" "}
+                              {suburb.locality ? `${suburb.locality},` : ""}{" "}
+                              {suburb.state.name}, AUS
+                            </span>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
                   </div>
                 </div>
               )}
@@ -922,7 +876,7 @@ const AddTaskForm: React.FC = () => {
                 <p className="absolute left-3 top-8 md:top-9">$</p>
               </div>
               <div className="text-[#FF0000]">
-                {errors.city || errors.postalCode || errors.customerBudget}
+                {errors.city || errors.suburb || errors.customerBudget}
               </div>
               <div className="flex flex-wrap-reverse justify-between gap-3">
                 {session.status == "authenticated" ? (

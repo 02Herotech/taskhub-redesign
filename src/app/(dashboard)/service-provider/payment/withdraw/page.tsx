@@ -5,7 +5,6 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useDispatch, useSelector } from "react-redux";
 import { z } from "zod";
-import axios from "axios";
 import Link from "next/link";
 import { BeatLoader } from "react-spinners";
 import { PiSealCheckFill, PiWarningDiamond } from "react-icons/pi";
