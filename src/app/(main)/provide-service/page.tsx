@@ -26,6 +26,8 @@ import { RootState } from "@/store";
 import { getCookie, setCookie } from "cookies-next";
 import useUserProfileData from "@/hooks/useUserProfileData";
 import ProfileIncomplete from "@/components/global/Popup/ProfileIncomplete";
+import useSuburbData, { SurburbInfo } from "@/hooks/useSuburbData";
+import { CiLocationOn } from "react-icons/ci";
 
 interface FormData {
   listingTitle: string;
@@ -123,7 +125,16 @@ const ProvideService: React.FC = () => {
   const [selectedDay, setSelectedDay] = useState("");
   const [selectedDays, setSelectedDays] = useState<string[]>([]);
   const maxSize = 5 * 1024 * 1024;
-  3;
+
+  const [suburb, setSuburb] = useState("");
+
+  const [currentSuburb, setCurrentSuburb] = useState<SurburbInfo | null>(null);
+  const {
+    suburbList,
+    setSuburbList,
+    error: suburbError,
+    isLoading,
+  } = useSuburbData(suburb, currentSuburb);
 
   const handleProfile = () => {
     setCookie("redirectToProvideService", "/provide-service", { maxAge: 3600 });
@@ -339,8 +350,8 @@ const ProvideService: React.FC = () => {
       error.price = "Please fill out all required fields";
     }
     if (activeButtonIndex === 0) {
-      if (!selectedCode) {
-        error.postalCode = "Please fill out all required fields";
+      if (!currentSuburb) {
+        error.suburb = "Please fill out all required fields";
       }
     }
     if (activeButtonIndex === 0) {
@@ -537,7 +548,7 @@ const ProvideService: React.FC = () => {
     if (isOpen && activeButtonIndex === 1) {
       requiredFields.push(isRemote);
     } else {
-      requiredFields.push(selectedCode);
+      requiredFields.push(currentSuburb?.name);
     }
     const filledFields = requiredFields.filter(
       (value) => value !== "" && value !== null,
@@ -568,12 +579,14 @@ const ProvideService: React.FC = () => {
             const type = "REMOTE_SERVICE";
             finalTask = { ...finalTask, taskType: type };
           } else {
+            const { state, postcode, name } = currentSuburb;
+
             finalTask = {
               ...finalTask,
               taskType: "PHYSICAL_SERVICE",
-              suburb: selectedCity,
-              postCode: selectedCode,
-              state: postalCodeData[0].State,
+              suburb: name,
+              postCode: String(postcode),
+              state: state.name,
             };
           }
 
@@ -583,7 +596,7 @@ const ProvideService: React.FC = () => {
 
           finalTask = { ...finalTask, negotiable: negotiable };
 
-          const response = await axios.post(
+          await axios.post(
             `${process.env.NEXT_PUBLIC_API_URL}/listing/create-listing?userId=${id}`,
             finalTask,
             { headers: { "Content-Type": "multipart/form-data" } },
@@ -780,7 +793,7 @@ const ProvideService: React.FC = () => {
                 <div className="text-red-600">
                   {errors.lisitingTitle ||
                     errors.listingDescription ||
-                    errors.category }
+                    errors.category}
                 </div>
                 <Button className="w-full rounded-3xl lg:w-1/3" type="submit">
                   Next
@@ -1010,69 +1023,79 @@ const ProvideService: React.FC = () => {
                   />
                 )}
                 {isOpen && activeButtonIndex === 0 && (
-                  <div className="flex flex-col font-satoshiMedium font-medium text-status-darkpurple lg:flex-row lg:space-x-3">
-                    <div className="flex space-x-4 lg:justify-normal">
-                      <div className="grid space-y-4">
-                        <label>
-                          Postal code{" "}
-                          <span className="font-extrabold text-[#ff0000]">
-                            *
-                          </span>
-                        </label>
-                        <input
-                          value={selectedCode}
-                          onChange={handleCode}
-                          name="postalCode"
-                          className={`w-[155px] cursor-pointer rounded-2xl bg-[#EBE9F4]  p-3 text-[13px] placeholder:font-bold sm:w-[200px]  lg:w-[140px] ${error.postalCode ? "border border-[#ff0000] outline-[#FF0000]" : "border-none outline-none"}`}
-                        />
-                      </div>
-
-                      <div className="relative grid space-y-4">
-                        <label>
-                          Suburb{" "}
-                          <span className="font-extrabold text-[#ff0000]">
-                            *
-                          </span>
-                        </label>
-                        <Dropdown
-                          trigger={() => (
-                            <div
-                              className={`flex h-full w-[150px] cursor-pointer appearance-none justify-between rounded-2xl bg-[#EBE9F4] p-3 font-satoshi text-[13px] font-light ${error.city ? "border border-[#ff0000] outline-[#FF0000]" : "border-none outline-none"}`}
-                            >
-                              <h2>{selectedCity}</h2>
-                              <FaSortDown />
-                            </div>
-                          )}
-                          className="small-scrollbar left-0 right-0 top-14 mx-auto max-h-64 overflow-y-auto bg-white transition-all duration-300"
-                        >
-                          {postalCodeData.map((data, index) => (
-                            <button
-                              type="button"
-                              className="block p-2 text-[12px] capitalize text-[#221354]"
-                              key={index}
-                              value={data.Name}
-                              onClick={() => handleCity(data.Name)}
-                            >
-                              {data.Name}
-                            </button>
-                          ))}
-                        </Dropdown>
-                      </div>
-                    </div>
-                    <div className="grid space-y-4 ">
-                      <label>State/Territory</label>
+                  <div className="relative w-full">
+                    <label
+                      htmlFor="suburb"
+                      className="mb-2 block font-satoshiMedium text-base text-[#140B31] sm:text-lg"
+                    >
+                      Where do you need this done{" "}
+                      <span className="font-extrabold text-[#ff0000]">*</span>
+                    </label>
+                    <div
+                      className={
+                        "flex items-center rounded-lg bg-[#EBE9F4] px-3 pl-2 focus-within:bg-white " +
+                        (error.suburb
+                          ? "border border-[#ff0000] outline-[#FF0000]"
+                          : "border-primary outline-none focus-within:border")
+                      }
+                    >
+                      <CiLocationOn fill="#76757A61" size={22} />
                       <input
-                        value={
-                          postalCodeData.length > 0
-                            ? postalCodeData[0].State
-                            : ""
-                        }
-                        onChange={handleChange}
-                        name="state"
-                        id="state"
-                        disabled
-                        className="cursor-pointer rounded-2xl bg-[#EBE9F4] p-3 text-sm outline-none lg:w-[145px]"
+                        id="suburb"
+                        type="text"
+                        className="-ml-2 block w-full appearance-none bg-transparent p-3 placeholder-[#76757A61] outline-none placeholder:font-satoshiMedium"
+                        placeholder="Enter a suburb"
+                        value={suburb}
+                        onChange={(e) => {
+                          if (currentSuburb) {
+                            setCurrentSuburb(null);
+                            const enteredInput = e.target.value.slice(-1);
+                            e.target.value = enteredInput;
+                            setSuburb(enteredInput);
+                          }
+                          setSuburb(e.target.value);
+                        }}
                       />
+                    </div>
+                    <div className="absolute left-0 bg-white">
+                      {isLoading && (
+                        <p className="py-2 text-center font-satoshiMedium text-[#76757A61]">
+                          Loading...
+                        </p>
+                      )}
+                      {suburbError && !isLoading && (
+                        <p className="py-2 text-center font-satoshiMedium text-red-600">
+                          Error occured while loading suburb data
+                        </p>
+                      )}
+                      {suburbList.length > 1 && (
+                        <ul className="roundeed-lg max-h-52 overflow-y-auto overflow-x-hidden">
+                          {suburbList.map((suburb) => (
+                            <li
+                              className="flex cursor-pointer items-center gap-1 bg-white px-4 py-3 text-[13px]"
+                              key={Math.random() * 12345}
+                              onClick={() => {
+                                setCurrentSuburb(suburb);
+                                setSuburb(
+                                  `${suburb.name}, ${suburb.state.abbreviation}, Australia`,
+                                );
+                                setSuburbList([]);
+                              }}
+                            >
+                              <CiLocationOn
+                                stroke="#0F052E"
+                                size={20}
+                                strokeWidth={1}
+                              />
+                              <span className="text-[#0F052E]">
+                                {suburb.name},{" "}
+                                {suburb.locality ? `${suburb.locality},` : ""}{" "}
+                                {suburb.state.name}, AUS
+                              </span>
+                            </li>
+                          ))}
+                        </ul>
+                      )}
                     </div>
                   </div>
                 )}
@@ -1080,7 +1103,7 @@ const ProvideService: React.FC = () => {
                   {error.planDetails ||
                     error.price ||
                     error.postalCode ||
-                    error.city}
+                    error.suburb}
                 </div>
                 <div className="flex flex-wrap gap-3 lg:justify-between">
                   <Button

@@ -101,7 +101,6 @@ const AddTaskForm: React.FC = () => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const authInstance = useAxios();
   const [suburb, setSuburb] = useState("");
-  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
   const [currentSuburb, setCurrentSuburb] = useState<SurburbInfo | null>(null);
   const {
@@ -765,9 +764,10 @@ const AddTaskForm: React.FC = () => {
                 <div className="relative w-full">
                   <label
                     htmlFor="suburb"
-                    className="mb-2 block font-satoshiMedium text-base text-[#140B31] sm:text-lg"
+                    className="font-satoshiBold text-[13px] font-bold text-status-darkpurple lg:text-[16px]"
                   >
-                    Where do you need this done
+                    Where do you need this done {' '}
+                    <span className="font-extrabold text-[#ff0000]">*</span>
                   </label>
                   <div
                     className={
@@ -793,9 +793,10 @@ const AddTaskForm: React.FC = () => {
                         }
                         setSuburb(e.target.value);
                       }}
+                      autoComplete="off"
                     />
                   </div>
-                  <div className="absolute left-0 z-20 bg-white">
+                  <div className="absolute left-0 z-10 bg-white">
                     {isLoading && (
                       <p className="py-2 text-center font-satoshiMedium text-[#76757A61]">
                         Loading...
@@ -808,17 +809,10 @@ const AddTaskForm: React.FC = () => {
                     )}
                     {suburbList.length > 1 && (
                       <ul className="roundeed-lg max-h-52 overflow-y-auto overflow-x-hidden">
-                        {suburbList.map((suburb, index) => (
+                        {suburbList.map((suburb) => (
                           <li
-                            className={
-                              "flex cursor-pointer items-center gap-1 px-4 py-3 text-[13px] " +
-                              (hoveredIndex == index
-                                ? "bg-[#EBE9F4]"
-                                : "bg-white")
-                            }
+                            className="flex cursor-pointer items-center gap-1 bg-white px-4 py-3 text-[13px]"
                             key={Math.random() * 12345}
-                            // onMouseEnter={() => setHoveredIndex(index)}
-                            // onMouseLeave={() => setHoveredIndex(null)}
                             onClick={() => {
                               setCurrentSuburb(suburb);
                               setSuburb(
@@ -828,22 +822,11 @@ const AddTaskForm: React.FC = () => {
                             }}
                           >
                             <CiLocationOn
-                              // stroke={
-                              //   hoveredIndex === index ? "#0F052E" : "#BFBDC6"
-                              // }
                               stroke="#0F052E"
                               size={20}
                               strokeWidth={1}
                             />
-                            <span
-                            // className={
-                            //   "font-satoshiMedium " +
-                            //   (hoveredIndex === index
-                            //     ? "text-[#0F052E]"
-                            //     : "text-[#76757A61]")
-                            // }
-                            className="text-[#0F052E]"
-                            >
+                            <span className="text-[#0F052E]">
                               {suburb.name},{" "}
                               {suburb.locality ? `${suburb.locality},` : ""}{" "}
                               {suburb.state.name}, AUS
@@ -922,7 +905,7 @@ const AddTaskForm: React.FC = () => {
           <title>Oloja | Add Task</title>
         </Head>
         <div className="w-full">
-          <div className="fixed left-0 top-20 z-10 hidden w-full border-t-2 bg-white shadow-md lg:block">
+          <div className="fixed left-0 top-20 z-20 hidden w-full border-t-2 bg-white shadow-md lg:block">
             <div className="mb-3 flex justify-center space-x-5 pt-4">
               <div
                 className={`${

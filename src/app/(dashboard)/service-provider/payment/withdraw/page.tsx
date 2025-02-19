@@ -26,7 +26,7 @@ const withdrawalSchema = (maxValue: number) => {
       }),
     accountNumber: z
       .string()
-      .length(9, "Invalid account number")
+      .length(9, "Please enter a valid 9 digit account number")
       .regex(/^\d+(\.\d+)?$/, "Account number must be numeric"),
     routingNumber: z
       .string()
@@ -220,7 +220,7 @@ const StatusModal: React.FC<{
         </p>
         <p className="text-center font-semibold text-violet-darker">
           {status === "success"
-            ? "Please wait 24 hours to receive payment."
+            ? "Please wait for 24 hours for payment processing."
             : "Something went wrong, please try again later"}
         </p>
         <Link
@@ -273,6 +273,8 @@ type InputFieldProps = {
   label: string;
 } & React.ComponentProps<"input">;
 
+
+//Only label, register and error needs to be pulled out from the rest of the props
 const InputField: React.FC<InputFieldProps> = ({
   label,
   type,
