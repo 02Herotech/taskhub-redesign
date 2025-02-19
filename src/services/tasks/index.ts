@@ -7,6 +7,7 @@ import {
   GetTasksRequest,
   GetTasksResponse,
   GetCustomerCompletedTasksResponse,
+  GetAllCustomerTasksResponse,
 } from "@/types/services/tasks";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { Middleware } from "@reduxjs/toolkit";
@@ -113,6 +114,11 @@ export const task = createApi({
       query: (pageNumber) => getRequest(`/task/task-price-desc/${pageNumber}`),
       providesTags: ["Task"],
     }),
+    getAllTaskByCustomerId: builder.query<GetAllCustomerTasksResponse, number>({
+      query: (customerId) =>
+        getRequest(`/task/all-tasks-by-customerId/${customerId}`),
+      providesTags: ["Task"],
+    }),
     getTaskByCustomerId: builder.query<GetCustomerTasksResponse, number>({
       query: (customerId) =>
         getRequest(`/task/tasks-by-customerId/${customerId}`),
@@ -186,6 +192,7 @@ export const {
   useFilterTaskByPriceAscQuery,
   useFilterTaskByPriceDescQuery,
   useGetTaskByCustomerIdQuery,
+  useGetAllTaskByCustomerIdQuery,
   useGetCustomerOngoingTasksQuery,
   useGetCustomerCompletedTasksQuery,
   useDeleteTaskMutation,
