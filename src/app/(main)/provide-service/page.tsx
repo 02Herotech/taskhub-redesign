@@ -1028,7 +1028,8 @@ const ProvideService: React.FC = () => {
                       htmlFor="suburb"
                       className="mb-2 block font-satoshiMedium text-base text-[#140B31] sm:text-lg"
                     >
-                      Where do you need this done
+                      Where do you need this done{" "}
+                      <span className="font-extrabold text-[#ff0000]">*</span>
                     </label>
                     <div
                       className={
