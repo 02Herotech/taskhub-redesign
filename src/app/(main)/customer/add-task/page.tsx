@@ -764,9 +764,10 @@ const AddTaskForm: React.FC = () => {
                 <div className="relative w-full">
                   <label
                     htmlFor="suburb"
-                    className="mb-2 block font-satoshiMedium text-base text-[#140B31] sm:text-lg"
+                    className="font-satoshiBold text-[13px] font-bold text-status-darkpurple lg:text-[16px]"
                   >
-                    Where do you need this done
+                    Where do you need this done {' '}
+                    <span className="font-extrabold text-[#ff0000]">*</span>
                   </label>
                   <div
                     className={
@@ -792,9 +793,10 @@ const AddTaskForm: React.FC = () => {
                         }
                         setSuburb(e.target.value);
                       }}
+                      autoComplete="off"
                     />
                   </div>
-                  <div className="absolute left-0 bg-white">
+                  <div className="absolute left-0 z-10 bg-white">
                     {isLoading && (
                       <p className="py-2 text-center font-satoshiMedium text-[#76757A61]">
                         Loading...
@@ -903,7 +905,7 @@ const AddTaskForm: React.FC = () => {
           <title>Oloja | Add Task</title>
         </Head>
         <div className="w-full">
-          <div className="fixed left-0 top-20 z-10 hidden w-full border-t-2 bg-white shadow-md lg:block">
+          <div className="fixed left-0 top-20 z-20 hidden w-full border-t-2 bg-white shadow-md lg:block">
             <div className="mb-3 flex justify-center space-x-5 pt-4">
               <div
                 className={`${
