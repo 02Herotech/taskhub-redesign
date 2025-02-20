@@ -136,8 +136,6 @@ const PricingModal = ({
     isLoading,
   } = useSuburbData(formState.suburb, currentSuburb);
 
-  console.log(currentSuburb);
-
   const handleInputChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     const inputText = event.target.value;
     const words = inputText.trim().split(/\s+/);
