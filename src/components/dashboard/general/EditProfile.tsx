@@ -618,7 +618,7 @@ const EditProfile = () => {
                         dateFormat="dd/mm/yy"
                         showIcon
                         placeholder="DD/MM/YYYY"
-                        maxDate={new Date(new Date().setFullYear(new Date().getFullYear() - 19))}
+                        maxDate={new Date(new Date().setFullYear(new Date().getFullYear() - 18))}
                         className="p-inputtext border w-full lg:max-w-sm border-slate-100 rounded-xl shadow hover:shadow-md"
                         onInput={(e) => {
                           const inputElement = e.target as HTMLInputElement;
@@ -634,7 +634,7 @@ const EditProfile = () => {
                         {fieldState.error ? (
                           <p className="text-red-500 text-sm mt-1">{fieldState.error.message}</p>
                         ) : (
-                          <p className="text-gray-500 text-sm mt-1">You must be at least 18 years old</p>
+                          <p className="text-red-500 text-sm mt-1">You must be at least 18 years old</p>
                         )}
                     </div>
                   )}
