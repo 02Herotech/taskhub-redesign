@@ -68,7 +68,7 @@ function SessionTimeout() {
           <Link
             href="/contact"
             className="text-[#FE9B07]"
-            onClick={() => resetAuth()}
+            onClick={() => resetAuth("/contact")}
           >
             Contact Us
           </Link>
