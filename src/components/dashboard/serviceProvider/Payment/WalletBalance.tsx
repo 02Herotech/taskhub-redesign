@@ -17,7 +17,7 @@ const WalletBalance: React.FC = () => {
     setBalance(walletBalance as unknown as number);
   }, [walletBalance]);
 
-  return <span>{!balance ? "---" : formatAmount(balance, "USD", false)}</span>;
+  return <span>{balance == null ? "---" : formatAmount(balance, "USD", false)}</span>;
 };
 
 export default WalletBalance;
