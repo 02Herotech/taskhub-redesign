@@ -12,11 +12,8 @@ const TaskList = () => {
   const { profile: user } = useSelector(
     (state: RootState) => state.userProfile,
   );
-  console.log("customer details", user);
 
   const userId = user?.customerId
-  console.log("customer", userId);
-
 
   // Make the query only when the userId is available
   const { data: tasksData, isLoading, error } = useGetTaskByCustomerIdQuery(userId!, {

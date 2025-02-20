@@ -13,7 +13,6 @@ const TaskList = () => {
     (state: RootState) => state.userProfile,
   );
   const userId = user?.customerId
-  console.log("userId", userId);
 
   // Make the query only when the userId is available
   const { data: tasksData, isLoading, error } = useGetAllTaskByCustomerIdQuery(userId!, {
