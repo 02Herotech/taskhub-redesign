@@ -71,7 +71,7 @@ const Navigation = () => {
       await signOut({ callbackUrl: `${process.env.NEXT_PUBLIC_URL}/home` });
       router.push("/home");
     } catch (error: any) {
-      console.log(error);
+      console.error(error);
     }
   };
 
@@ -161,7 +161,6 @@ const Navigation = () => {
           const response = await axios.get(walleturl, {
             headers: { Authorization: `Bearer ${token}` },
           });
-          console.log("Wallet balance from Navigation", response.data.walletBalance)
           dispatch(setWalletBalance(response.data.walletBalance));
         }
       } catch (error: any) {
