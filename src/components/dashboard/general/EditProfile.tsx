@@ -23,6 +23,9 @@ import useValidateABN from "@/hooks/useValidateABN";
 import Information from '@/components/business-hub/Information';
 import useAxios from "@/hooks/useAxios";
 import { Calendar } from "primereact/calendar";
+import useSuburbData, { SurburbInfo } from "@/hooks/useSuburbData";
+import { CiLocationOn } from "react-icons/ci";
+
 
 const idTypeObject = [
   { label: "Medicare Card", value: "MEDICARE_CARD" },
@@ -49,7 +52,7 @@ const EditProfile = () => {
     null,
   );
   const [documentImage, setDocumentImage] = useState<string | null>(null);
-  const [suburbList, setSuburbList] = useState<string[]>([]);
+  // const [suburbList, setSuburbList] = useState<string[]>([]);
   const [selectedDocumentFront, setSelectedDocumentFront] =
     useState<File | null>(null);
   const [selectedDocumentBack, setSelectedDocumentBack] = useState<File | null>(
@@ -67,6 +70,23 @@ const EditProfile = () => {
   const userProfile = useSelector((state: RootState) => state.userProfile);
 
   const [dateOfBirth, setDateOfBirth] = useState<Date | null>(null);
+
+  // const [suburb, setSuburb] = useState("");
+
+  // const [currentSuburb, setCurrentSuburb] = useState<SurburbInfo | null>(null);
+  // const {
+  //   suburbList,
+  //   setSuburbList,
+  //   error: suburbError,
+  //   isLoading,
+  // } = useSuburbData(suburb, currentSuburb);
+
+  // const [inputValue, setInputValue] = useState(field.value || "");
+  // const [currentSuburb, setCurrentSuburb] = useState<SurburbInfo | null>(null);
+  // const { suburbList, setSuburbList, error: suburbError, isLoading } = useSuburbData(inputValue, currentSuburb);
+
+  
+  // const { suburbList, setSuburbList, error: suburbError, isLoading } = useSuburbData(inputValue, currentSuburb);
   const dispatch = useDispatch();
 
   const { data: session } = useSession();
@@ -116,6 +136,20 @@ const EditProfile = () => {
       isVerified: false,
     },
   });
+
+  const [inputValue, setInputValue] = useState(""); // Initialize state for input
+  const [currentSuburb, setCurrentSuburb] = useState<SurburbInfo | null>(null);
+  const suburbValue = watch("suburb"); // Watch the suburb field
+  
+  // Sync input value with react-hook-form's field value
+  useEffect(() => {
+    if (suburbValue) {
+      setInputValue(suburbValue);
+    }
+  }, [suburbValue]);
+
+
+  const { suburbList, setSuburbList, error: suburbError, isLoading } = useSuburbData(inputValue, currentSuburb);
 
   const watchField = watch();
   const watchABN = watch("abn");
@@ -211,62 +245,62 @@ const EditProfile = () => {
 
   const watchPostcode = watch("postcode");
 
-  useEffect(() => {
-    const fetchLocationByPostcode = async () => {
-      if (!watchPostcode) {
-        setSuburbList([]);
-        setValue("suburb", "");
-        setValue("state", "");
-        return;
-      }
+  // useEffect(() => {
+  //   const fetchLocationByPostcode = async () => {
+  //     if (!watchPostcode) {
+  //       setSuburbList([]);
+  //       setValue("suburb", "");
+  //       setValue("state", "");
+  //       return;
+  //     }
 
-      try {
-        const { data } = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_URL}/util/locations/search?postcode=${watchPostcode}`,
-        );
+  //     try {
+  //       const { data } = await axios.get(
+  //         `${process.env.NEXT_PUBLIC_API_URL}/util/locations/search?postcode=${watchPostcode}`,
+  //       );
 
-        // Map suburbs from the Name field
-        const suburbs = data.map((item: { Name: string }) => item.Name);
-        setSuburbList(suburbs);
+  //       // Map suburbs from the Name field
+  //       const suburbs = data.map((item: { Name: string }) => item.Name);
+  //       setSuburbList(suburbs);
 
-        // Set the first suburb as the default if available
-        if (suburbs.length > 0) {
-          setValue("suburb", suburbs[0]);
-        } else {
-          setValue("suburb", "");
-        }
+  //       // Set the first suburb as the default if available
+  //       if (suburbs.length > 0) {
+  //         setValue("suburb", suburbs[0]);
+  //       } else {
+  //         setValue("suburb", "");
+  //       }
 
-        // Set the state if available using the State field
-        if (data[0]?.State) {
-          setValue("state", data[0].State);
-        } else {
-          setValue("state", "");
-        }
+  //       // Set the state if available using the State field
+  //       if (data[0]?.State) {
+  //         setValue("state", data[0].State);
+  //       } else {
+  //         setValue("state", "");
+  //       }
 
-        // Define the type for the location data
-        interface LocationData {
-          Name: string;
-          Postcode: string;
-          State: string;
-          StateShort: string;
-          Type: string;
-        }
+  //       // Define the type for the location data
+  //       interface LocationData {
+  //         Name: string;
+  //         Postcode: string;
+  //         State: string;
+  //         StateShort: string;
+  //         Type: string;
+  //       }
 
-        // You might also want to store the full location data for reference
-        const locationData: LocationData = data[0];
+  //       // You might also want to store the full location data for reference
+  //       const locationData: LocationData = data[0];
 
-        // If you need to store the state abbreviation somewhere
-        const stateShort = locationData.StateShort;
-      } catch (error) {
-        console.error("Error fetching location data:", error);
-        setSuburbList([]);
-        setValue("suburb", "");
-        setValue("state", "");
-      }
-    };
+  //       // If you need to store the state abbreviation somewhere
+  //       const stateShort = locationData.StateShort;
+  //     } catch (error) {
+  //       console.error("Error fetching location data:", error);
+  //       setSuburbList([]);
+  //       setValue("suburb", "");
+  //       setValue("state", "");
+  //     }
+  //   };
 
-    fetchLocationByPostcode();
-  }, [watchPostcode, setValue]);
+  //   fetchLocationByPostcode();
+  // }, [watchPostcode, setValue]);
 
   // const formatDateAsYYYYMMDD = (date: Date | null) => {
   //   if (!date) return "";
@@ -532,7 +566,7 @@ const EditProfile = () => {
               />
 
               <div className="w-full flex flex-col gap-4">
-                <label htmlFor="dob">Date of Birth</label>
+              <label htmlFor="dob" className="text-violet-normal">Date of Birth</label>
   {/* <Controller
       name="dateOfBirth"
       control={control}
@@ -597,7 +631,11 @@ const EditProfile = () => {
                           field.onChange(e.value);
                         }}
                       />
-                      {fieldState.error && <p className="text-red-500 text-sm mt-1">{fieldState.error.message}</p>}
+                        {fieldState.error ? (
+                          <p className="text-red-500 text-sm mt-1">{fieldState.error.message}</p>
+                        ) : (
+                          <p className="text-gray-500 text-sm mt-1">You must be at least 18 years old</p>
+                        )}
                     </div>
                   )}
                 />
@@ -680,6 +718,7 @@ const EditProfile = () => {
               Address Information
             </h3>
             <div className="flex flex-wrap gap-6 lg:col-span-8 lg:grid lg:grid-cols-2">
+            <div className="hidden">
               <FormField
                 label="Postal Code"
                 name="postcode"
@@ -689,7 +728,8 @@ const EditProfile = () => {
                 watchField={watchField}
                 disabled={!isEditingEnabled || !!userDetails.postalCode}
               />
-              <Controller
+              </div>
+              {/* <Controller
                 name="suburb"
                 control={control}
                 render={({ field }) => (
@@ -720,16 +760,101 @@ const EditProfile = () => {
                     </select>
                   </div>
                 )}
-              />
-              <FormField
-                label="State"
-                name="state"
-                watch={watch}
-                register={register}
-                errors={errors}
-                watchField={watchField}
-                disabled={true}
-              />
+              /> */}
+<Controller
+  name="suburb"
+  control={control}
+  render={({ field }) => (
+    <div className="relative flex w-full flex-col gap-3 text-violet-normal">
+      <label htmlFor="suburb" className="flex items-center justify-between">
+        <span>Suburb</span>
+        {!errors.suburb && field.value && (
+          <BiCheck className="size-5 rounded-full bg-green-500 p-1 text-white" />
+        )}
+      </label>
+
+      {/* Suburb Input Field */}
+      <div className="relative w-full lg:max-w-sm">
+        <div
+          className={`flex items-center rounded-xl border border-slate-100 bg-white px-3 transition-shadow duration-300 hover:shadow-md shadow outline-none ${
+            errors.suburb ? "border-red-500" : ""
+          }`}
+        >
+          <CiLocationOn fill="#76757A61" size={22} />
+          <input
+            id="suburb"
+            type="text"
+            className="w-full rounded-xl border-none bg-white p-2 text-slate-700 shadow-none outline-none"
+            placeholder="Enter a suburb"
+            value={inputValue}
+            onChange={(e) => {
+              if (currentSuburb) {
+                setCurrentSuburb(null);
+                const enteredInput = e.target.value.slice(-1);
+                e.target.value = enteredInput;
+                setInputValue(enteredInput);
+              } else {
+                setInputValue(e.target.value);
+              }
+              field.onChange(e.target.value); // Sync with react-hook-form
+            }}
+            autoComplete="off"
+          />
+        </div>
+
+        {/* Suburb Dropdown */}
+        {suburbList.length > 0 && (
+          <div className="absolute left-0 z-10 w-full bg-white shadow-lg rounded-lg">
+            {isLoading && (
+              <p className="py-2 text-center font-satoshiMedium text-[#76757A61]">Loading...</p>
+            )}
+            {suburbError && !isLoading && (
+              <p className="py-2 text-center font-satoshiMedium text-red-600">
+                Error occurred while loading suburb data
+              </p>
+            )}
+            <ul className="max-h-52 overflow-y-auto overflow-x-hidden">
+              {suburbList.map((suburb) => (
+                <li
+                  className="flex cursor-pointer items-center gap-1 bg-white px-4 py-3 text-[13px] hover:bg-gray-100"
+                  key={Math.random() * 12345}
+                  onClick={() => {
+                    setCurrentSuburb(suburb);
+                    setInputValue(`${suburb.name}, ${suburb.state.abbreviation}, Australia`);
+                    field.onChange(`${suburb.name}, ${suburb.state.abbreviation}, Australia`); // Update form value
+                    setValue("postcode", String(suburb.postcode)); // Auto-update postcode field
+                    setValue("state", suburb.state.name);
+                    setSuburbList([]); // Clear dropdown
+                  }}
+                >
+                  <CiLocationOn stroke="#0F052E" size={20} strokeWidth={1} />
+                  <span className="text-[#0F052E]">
+                    {suburb.name},{" "}
+                    {suburb.locality ? `${suburb.locality},` : ""} {suburb.state.name}, AUS
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+      </div>
+    </div>
+  )}
+/>
+
+
+
+              <div className="hidden">
+                <FormField
+                  label="State"
+                  name="state"
+                  watch={watch}
+                  register={register}
+                  errors={errors}
+                  watchField={watchField}
+                  disabled={true}
+                />
+              </div>
             </div>
           </section>
 

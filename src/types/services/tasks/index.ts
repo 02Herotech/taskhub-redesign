@@ -58,6 +58,21 @@ export type OngoingTask = {
     id: number
 };
 
+export type AllTask = {
+    invoiceId?: number;
+    bookingId?: number;
+    total?: number;
+    createdAt?: [number, number, number, number, number, number, number];
+    customerId?: number;
+    taskTime: [number, number];
+    jobTitle?: string;
+    jobStatus?: "IN_PROGRESS" | "PENDING" | "INSPECTION" | "COMPLETED"
+    jobDescription?: string;
+    id: number
+};
+
+export type GetAllCustomerTasksResponse = AllTask[];
+
 export type GetCustomerOngoingTasksResponse = OngoingTask[];
 
 export type GetCustomerTasksResponse = CustomerTasks[];
