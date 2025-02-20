@@ -5,7 +5,7 @@
 /* Import slick-carousel CSS */
 @import "~slick-carousel/slick/slick.css";
 @import "~slick-carousel/slick/slick-theme.css";
-@import "primereact/resources/themes/lara-light-indigo/theme.css";  
+@import "primereact/resources/themes/lara-light-indigo/theme.css";
 @import "primereact/resources/primereact.min.css";
 @import "primeicons/primeicons.css";
 
@@ -94,7 +94,7 @@ textarea {
 }
 
 .p-calendar .p-datepicker-trigger .p-icon {
-  font-size: 1.5rem !important; 
+  font-size: 1.5rem !important;
   width: 1.5rem !important;
   height: 1.5rem !important;
 }
@@ -240,6 +240,19 @@ input[data-autocompleted] {
 
 input:-webkit-autofill,
 input:-webkit-autofill:focus {
-  transition: background-color 0s 0s, color 0s 0s;
+  transition:
+    background-color 0s 0s,
+    color 0s 0s;
   transition-delay: calc(infinity * 1s);
+}
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield;
 }

@@ -65,7 +65,11 @@ function SessionTimeout() {
         <hr className="my-5" />
         <p className="text-sm text-[#546276]">
           Need help?{" "}
-          <Link href="/contact" className="text-[#FE9B07]">
+          <Link
+            href="/contact"
+            className="text-[#FE9B07]"
+            onClick={() => resetAuth()}
+          >
             Contact Us
           </Link>
         </p>
