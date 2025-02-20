@@ -40,8 +40,8 @@ const withdrawalSchema = (maxValue: number) => {
         invalid_type_error: "Amount required, Please enter a valid amount",
       })
       .max(maxValue, "Amount should not exceed wallet balance")
-      .refine((value) => Math.floor(value * 100) === value * 100, {
-        message: "Amount should not exceed 2 decimal places",
+      .refine((val) => Number.isInteger(val * 100), {
+        message: "Amount should not exceed two decimal places",
       }),
   });
 };
@@ -137,7 +137,12 @@ const WithdrawalPage: React.FC = () => {
           isServiceProvider={isServiceProvider}
         />
       )}
-      <WarningBanner />
+      <p className="flex items-center gap-2 rounded-xl bg-orange-normal p-5 font-normal text-white">
+        <PiWarningDiamond className="size-5" />
+        <span>
+          Available funds to withdraw: <WalletBalance />
+        </span>
+      </p>
       {user && (
         <form
           onSubmit={handleSubmit(submitWithdraw)}
@@ -258,21 +263,11 @@ const StatusIcon: React.FC<{ status: "success" | "error" }> = ({ status }) => (
   </div>
 );
 
-const WarningBanner: React.FC = () => (
-  <p className="flex items-center gap-2 rounded-xl bg-orange-normal p-5 font-normal text-white">
-    <PiWarningDiamond className="size-5" />
-    <span>
-      Available funds to withdraw: <WalletBalance />
-    </span>
-  </p>
-);
-
 type InputFieldProps = {
   register?: any;
   error?: any;
   label: string;
 } & React.ComponentProps<"input">;
-
 
 //Only label, register and error needs to be pulled out from the rest of the props
 const InputField: React.FC<InputFieldProps> = ({
