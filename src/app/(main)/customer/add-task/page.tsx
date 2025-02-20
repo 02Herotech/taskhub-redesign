@@ -766,7 +766,7 @@ const AddTaskForm: React.FC = () => {
                     htmlFor="suburb"
                     className="font-satoshiBold text-[13px] font-bold text-status-darkpurple lg:text-[16px]"
                   >
-                    Where do you need this done {' '}
+                    Where do you need this done{" "}
                     <span className="font-extrabold text-[#ff0000]">*</span>
                   </label>
                   <div
@@ -796,7 +796,7 @@ const AddTaskForm: React.FC = () => {
                       autoComplete="off"
                     />
                   </div>
-                  <div className="absolute left-0 z-10 bg-white">
+                  <div className="absolute left-0 z-10 w-full bg-white">
                     {isLoading && (
                       <p className="py-2 text-center font-satoshiMedium text-[#76757A61]">
                         Loading...

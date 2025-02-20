@@ -71,7 +71,7 @@ const Navigation = () => {
       await signOut({ callbackUrl: `${process.env.NEXT_PUBLIC_URL}/home` });
       router.push("/home");
     } catch (error: any) {
-      console.log(error);
+      console.error(error);
     }
   };
 

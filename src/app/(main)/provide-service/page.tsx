@@ -119,7 +119,6 @@ const ProvideService: React.FC = () => {
   const [err, setErr] = useState<any>({});
   const [isSuccessPopupOpen, setIsSuccessPopupOpen] = useState(false);
   const [inputDisabled, setInputDisabled] = useState(false);
-  const [postalCodeData, setPostalCodeData] = useState<PostalCodeData[]>([]);
   const [items, setItems] = useState<Item[]>([]);
   const [subcategories, setSubcategories] = useState<Subcategory[]>([]);
   const [selectedDay, setSelectedDay] = useState("");
@@ -257,24 +256,6 @@ const ProvideService: React.FC = () => {
       }
     }
   }, [loadingProfile, user, fetchedUserData, isAuth, profileProgressData]);
-
-  useEffect(() => {
-    const fetchPostalCodeData = async () => {
-      try {
-        const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_URL}/util/locations/search?postcode=${selectedCode}`,
-        );
-        setPostalCodeData(response.data as PostalCodeData[]);
-      } catch (error) {
-        console.error("Error fetching postal code data:", error);
-        setPostalCodeData([]);
-      }
-    };
-
-    if (selectedCode.length > 0) {
-      fetchPostalCodeData();
-    }
-  }, [selectedCode]);
 
   useEffect(() => {
     const fetchItems = async () => {
@@ -1056,7 +1037,7 @@ const ProvideService: React.FC = () => {
                         }}
                       />
                     </div>
-                    <div className="absolute left-0 bg-white">
+                    <div className="absolute left-0 w-full bg-white">
                       {isLoading && (
                         <p className="py-2 text-center font-satoshiMedium text-[#76757A61]">
                           Loading...

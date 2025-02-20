@@ -11,13 +11,13 @@ const WalletBalance: React.FC = () => {
 
   const [balance, setBalance] = useState<number | null>(null);
 
-  console.log(walletBalance)
-
   useEffect(() => {
     setBalance(walletBalance as unknown as number);
   }, [walletBalance]);
 
-  return <span>{balance == null ? "---" : formatAmount(balance, "USD", false)}</span>;
+  return (
+    <span>{balance == null ? "---" : formatAmount(balance, "USD", false)}</span>
+  );
 };
 
 export default WalletBalance;
