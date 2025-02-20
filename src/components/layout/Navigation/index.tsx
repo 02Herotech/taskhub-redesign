@@ -161,6 +161,7 @@ const Navigation = () => {
           const response = await axios.get(walleturl, {
             headers: { Authorization: `Bearer ${token}` },
           });
+          console.log("Wallet balance from Navigation", response.data.walletBalance)
           dispatch(setWalletBalance(response.data.walletBalance));
         }
       } catch (error: any) {
