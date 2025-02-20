@@ -39,6 +39,7 @@ const withdrawalSchema = (maxValue: number) => {
       .number({
         invalid_type_error: "Amount required, Please enter a valid amount",
       })
+      .min(1, "Amount can not be less than $1")
       .max(maxValue, "Amount should not exceed wallet balance")
       .refine((val) => Number.isInteger(val * 100), {
         message: "Amount should not exceed two decimal places",
