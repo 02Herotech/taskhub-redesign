@@ -1,6 +1,5 @@
 "use client";
 
-import axios from "axios";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
@@ -15,6 +14,8 @@ import "../../styles/datePickOverflowHandle.css";
 import { setCookie } from "cookies-next";
 import Button from "../global/Button";
 import useAxios from "@/hooks/useAxios";
+import useSuburbData, { SurburbInfo } from "@/hooks/useSuburbData";
+import { CiLocationOn } from "react-icons/ci";
 
 interface ModalProps {
   setIsModalShown: Dispatch<SetStateAction<boolean>>;
@@ -36,16 +37,13 @@ const PricingModal = ({
   listingId,
 }: ModalProps) => {
   const router = useRouter();
-
   const [submitSatus, setSubmitStatus] = useState({
     state: false,
     error: "",
     isSubmtting: false,
     message: "",
   });
-
   const [wordCount, setWordCount] = useState(0);
-  const [stateLists, setStateLists] = useState([]);
   const [formState, setFormState] = useState<{
     postcode: number | string;
     date: Date | string;
@@ -63,6 +61,8 @@ const PricingModal = ({
   });
   const [isSubmittedSuccessful, setIsSubmittedSuccessful] = useState(false);
   const authInstance = useAxios();
+  const session = useSession();
+  const isAuthenticated = session.status === "authenticated";
 
   const pathname = usePathname();
   const wordLimit = 50;
@@ -71,13 +71,6 @@ const PricingModal = ({
     setFormState((prev) => ({ ...prev, pricing: modalData.pricing }));
   }, [modalData.pricing]);
 
-  const handleUpdateFormState = (
-    event: React.ChangeEvent<HTMLInputElement>,
-  ) => {
-    const { name, value } = event.target;
-    setFormState((prev) => ({ ...prev, [name]: value }));
-  };
-
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     try {
@@ -85,7 +78,6 @@ const PricingModal = ({
       if (
         !formState.date ||
         !formState.time ||
-        !formState.postcode ||
         !formState.suburb ||
         !formState.pricing ||
         !formState.description
@@ -101,8 +93,8 @@ const PricingModal = ({
         listingId,
         startDate: formatDate(formState.date as Date),
         startTime: formatTimeFromDate(formState.time as Date),
-        postCode: formState.postcode,
-        suburb: formState.suburb,
+        postCode: currentSuburb.postcode,
+        suburb: currentSuburb.name,
         price: formState.pricing,
         bookingDescription: formState.description,
         bookingTitle: modalData.title,
@@ -114,7 +106,7 @@ const PricingModal = ({
       }));
       setIsSubmittedSuccessful(true);
     } catch (error: any) {
-      console.log(error);
+      console.error(error);
       setSubmitStatus((prev) => ({
         ...prev,
         error: "Kindly check your network connection",
@@ -136,59 +128,15 @@ const PricingModal = ({
     }
   }, [formState.pricing]);
 
-  const handleFectchLocationByPostcode = async () => {
-    try {
-      const url = `${process.env.NEXT_PUBLIC_API_URL}/util/locations/search?postcode=${formState.postcode}`;
-      const { data } = await axios.get(url);
+  const [currentSuburb, setCurrentSuburb] = useState<SurburbInfo | null>(null);
+  const {
+    suburbList,
+    setSuburbList,
+    error: suburbError,
+    isLoading,
+  } = useSuburbData(formState.suburb, currentSuburb);
 
-      // Define type for the location data
-      interface LocationData {
-        Name: string;
-        Postcode: string;
-        State: string;
-        StateShort: string;
-        Type: string;
-      }
-
-      // Map suburbs from the Name field
-      const suburbs = data.map((item: LocationData) => item.Name);
-      setStateLists(suburbs);
-
-      // Update form state with first suburb and state if available
-      if (data.length > 0) {
-        setFormState((prev) => ({
-          ...prev,
-          suburb: suburbs[0],
-          state: data[0].State, // Add state if you need it in the form
-        }));
-      } else {
-        setFormState((prev) => ({
-          ...prev,
-          suburb: "",
-          state: "",
-        }));
-      }
-    } catch (error) {
-      console.log(error);
-      // Clear the lists and form state on error
-      setStateLists([]);
-      setFormState((prev) => ({
-        ...prev,
-        suburb: "",
-        state: "",
-      }));
-    }
-  };
-
-  useEffect(() => {
-    const fetchData = async () => {
-      if (formState.postcode) {
-        await handleFectchLocationByPostcode();
-      }
-    };
-    fetchData();
-    // eslint-disable-next-line
-  }, [formState.postcode]);
+  console.log(currentSuburb);
 
   const handleInputChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     const inputText = event.target.value;
@@ -217,7 +165,7 @@ const PricingModal = ({
         className="absolute inset-0 -z-10 h-screen w-screen"
         onClick={() => setIsModalShown(false)}
       ></div>
-      {!modalData.isAuthenticated ? (
+      {!isAuthenticated ? (
         <div className="relative z-10 flex w-[90vw] max-w-xl flex-col items-center justify-center gap-3 bg-violet-light p-3 px-4 lg:space-y-4 lg:p-10">
           <div className="clip-triangle absolute left-0 top-0 h-full w-full bg-violet-active"></div>
           <div className="relative flex flex-col items-center justify-center gap-4 bg-white p-6 lg:px-12 ">
@@ -318,7 +266,7 @@ const PricingModal = ({
               Please fill in a little details so you can get a quick response
             </p>
           </div>
-          <div className="grid w-full grid-cols-2  items-end justify-end gap-4 ">
+          <div className="grid w-full grid-cols-2 items-end justify-end gap-4 ">
             {/* Date */}
             <div className="flex flex-col justify-between space-y-1">
               <label className="font-bold  text-violet-darker">Date</label>
@@ -353,61 +301,90 @@ const PricingModal = ({
                 className="small-scrollbar w-full rounded-xl border border-slate-100 p-2 py-3 text-slate-700 shadow outline-none transition-shadow duration-300 hover:shadow-md lg:max-w-sm"
                 required
               />
+            </div>
 
-              {/* <input
-                type="time"
-                name="time"
-                required
-                value={formState.time}
-                onChange={(event) =>
-                  setFormState((prev) => ({
-                    ...prev,
-                    time: event.target.value,
-                  }))
-                }
-                className="w-full  rounded-lg p-3 outline-none"
-              /> */}
-            </div>
-            {/* Location */}
-            <div className="flex flex-col space-y-1">
-              <label htmlFor="" className="font-bold  text-violet-darker">
-                Location
-              </label>
-              <input
-                type="number"
-                name="postcode"
-                required
-                value={formState.postcode}
-                onChange={(event) => handleUpdateFormState(event)}
-                placeholder="Postcode"
-                className="w-full max-w-60 rounded-lg p-3 outline-none"
-              />
-            </div>
-            {/* State  */}
-            <div className="flex flex-col space-y-1">
-              <label htmlFor="" className="font-bold  text-violet-darker">
-                State/Suburb
-              </label>
-              <select
-                className="w-full max-w-60 rounded-lg p-3 outline-none"
-                disabled={stateLists.length === 0}
-                required
-                value={formState.suburb}
-                onChange={(event) =>
-                  setFormState((prev) => ({
-                    ...prev,
-                    suburb: event.target.value,
-                  }))
-                }
-              >
-                {stateLists.map((item) => (
-                  <option key={item} value={item}>
-                    {item}
-                  </option>
-                ))}
-              </select>
+            {/* Suburb  */}
+            <div className="relative col-span-2">
+              <div className="flex flex-col space-y-1">
+                <label
+                  htmlFor="suburb"
+                  className="font-bold  text-violet-darker"
+                >
+                  Where do you need this done
+                </label>
+                <div className="relative">
+                  <span className="absolute left-2 top-1/2 -translate-y-1/2">
+                    <CiLocationOn />
+                  </span>
+                  <input
+                    placeholder="Enter a suburb"
+                    type="text"
+                    id="suburb"
+                    className="w-full rounded-lg p-3 px-7 outline-none disabled:bg-white "
+                    value={formState.suburb}
+                    required
+                    onChange={(event) => {
+                      if (currentSuburb) {
+                        setCurrentSuburb(null);
+                        const enteredInput = event.target.value.slice(-1);
+                        event.target.value = enteredInput;
+                        setFormState((prev) => ({
+                          ...prev,
+                          suburb: enteredInput,
+                        }));
+                      }
+                      setFormState((prev) => ({
+                        ...prev,
+                        suburb: event.target.value,
+                      }));
+                    }}
+                  />
+                </div>
+              </div>
+              <div className="absolute left-0 z-10 w-full bg-white">
+                {isLoading && (
+                  <p className="py-2 text-center font-satoshiMedium text-[#76757A61]">
+                    Loading...
+                  </p>
+                )}
+                {suburbError && !isLoading && (
+                  <p className="py-2 text-center font-satoshiMedium text-red-600">
+                    Error occured while loading suburb data
+                  </p>
+                )}
+                {suburbList.length > 1 && (
+                  <ul className="roundeed-lg max-h-52 overflow-y-auto overflow-x-hidden">
+                    {suburbList.map((suburb) => (
+                      <li
+                        className="flex cursor-pointer items-center gap-1 bg-white px-4 py-3 text-[13px]"
+                        key={Math.random() * 12345}
+                        onClick={() => {
+                          setCurrentSuburb(suburb);
+                          setFormState((prev) => ({
+                            ...prev,
+                            suburb: `${suburb.name}, ${suburb.state.abbreviation}, Australia`,
+                          }));
+                          setSuburbList([]);
+                        }}
+                      >
+                        <CiLocationOn
+                          stroke="#0F052E"
+                          size={20}
+                          strokeWidth={1}
+                        />
+                        <span className="text-[#0F052E]">
+                          {suburb.name},{" "}
+                          {suburb.locality ? `${suburb.locality},` : ""}{" "}
+                          {suburb.state.name}, AUS
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
             </div>
           </div>
+
           {/* Price  */}
           <div className="flex flex-col space-y-1">
             <label htmlFor="" className="font-bold  text-violet-darker">
@@ -418,10 +395,10 @@ const PricingModal = ({
                 $
               </span>
               <input
-                placeholder="what’s your budget?"
+                placeholder="What’s your budget?"
                 type="number"
                 disabled={!modalData.negotiable}
-                className="w-full  rounded-lg p-3 px-7 outline-none disabled:bg-white "
+                className="w-full rounded-lg p-3 px-7 outline-none disabled:bg-white "
                 value={formState.pricing}
                 required
                 min={Math.floor(

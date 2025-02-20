@@ -127,7 +127,6 @@ const ProvideService: React.FC = () => {
   const maxSize = 5 * 1024 * 1024;
 
   const [suburb, setSuburb] = useState("");
-
   const [currentSuburb, setCurrentSuburb] = useState<SurburbInfo | null>(null);
   const {
     suburbList,
@@ -874,7 +873,7 @@ const ProvideService: React.FC = () => {
                             />
                             <p className="absolute left-3 top-3">$</p>
                             <p className="font-extraBold text-xs text-[#140B31]">
-                              Minimum AUD$5 + 10% GST inclusive
+                              Minimum AUD$5
                             </p>
                           </div>
                         </div>
