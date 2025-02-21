@@ -359,7 +359,7 @@ const EditTaskForm = ({ task, setShowEditModal }: TaskCardProps) => {
             </div>
           </div>
           <form
-            className="w-full flex-1 p-4 lg:px-5"
+            className="w-full flex-1 lg:px-5"
             onSubmit={handleSubmit(handleUpdateTask)}
           >
             {activeEditModalLink === "Task Details" && (
@@ -683,7 +683,7 @@ const EditTaskForm = ({ task, setShowEditModal }: TaskCardProps) => {
                   </div>
 
                   {/* {errors && <div className="font-bold text-red-500">{errors.}</div>} */}
-                  <div className="flex items-center justify-end space-x-3">
+                  <div className="flex items-center justify-center space-x-3 lg:justify-end">
                     <Button
                       theme="outline"
                       onClick={() => setActiveEditModalLink("Location")}
