@@ -123,6 +123,7 @@ const EditListing = () => {
   useEffect(() => {
     if (watchField.taskType === typeData[0].value) {
       setValue("suburb", "");
+      setSuburbList([]);
     }
     // eslint-disable-next-line
   }, [watchField.taskType]);
@@ -215,7 +216,7 @@ const EditListing = () => {
       fetchCurentListing();
       setShowModal(true);
     } catch (error: any) {
-      console.log(error.response.data);
+      console.error(error.response.data);
       setErrorMessage(error.response.data.message);
     }
   };
@@ -330,7 +331,6 @@ const EditListing = () => {
           </label>
 
           {/* title */}
-
           <label className="flex flex-col gap-2">
             <span className=" text-violet-darker">
               Service Title <span className="text-xl text-red-600">*</span>

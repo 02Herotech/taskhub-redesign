@@ -20,6 +20,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { typeData } from "@/data/marketplace/data";
 import { useRouter } from "next/navigation";
 import { useUpdateTaskMutation } from "@/services/tasks";
+import useSuburbData, { SurburbInfo } from "@/hooks/useSuburbData";
+import { IoLocationOutline } from "react-icons/io5";
+import { CiLocationOn } from "react-icons/ci";
 
 interface TaskCardProps {
   task: CustomerTasks;
@@ -31,20 +34,30 @@ interface CustomInputProps {
   onClick?: () => void;
 }
 
+const taskSchema = z.object({
+  taskBriefDescription: z.string(),
+  taskDescription: z.string(),
+  // category: z.string(),
+  taskType: z.string(),
+  suburb: z.string().nullable().optional(),
+  taskImage: z.string().optional(),
+  taskDate: z.number().array().nullable().optional(),
+  taskTime: z.string().nullable().optional(),
+  customerBudget: z.string().transform((val) => Number(val)),
+});
+
+type taskZodType = z.infer<typeof taskSchema>;
+
 const EditTaskForm = ({ task, setShowEditModal }: TaskCardProps) => {
   const [activeEditModalLink, setActiveEditModalLink] =
     useState<string>("Task Details");
   const [categories, setCategories] = useState<
     { id: number; categoryName: string }[]
   >([]);
-  const [updatedPostCode, setUpdatedPostCode] = useState<string | null>(
-    task.postCode ? task.postCode.toString() : null,
-  );
   const [updatedDate, setUpdatedDate] = useState<Date | null>(null);
   const [updatedTime, setUpdatedTime] = useState<Date | null>(null);
   const [taskImage, setTaskImage] = useState<File | null>(null);
   const taskImageRef = useRef<HTMLInputElement>(null);
-  const [suburbList, setSuburbList] = useState([] as string[]);
   const [selectedCategory, setSelectedCategory] = useState<string>(
     task.category.categoryName,
   );
@@ -52,26 +65,7 @@ const EditTaskForm = ({ task, setShowEditModal }: TaskCardProps) => {
   const [isFlexible, setIsFlexible] = useState(
     task.taskDate === null && task.taskTime === null,
   );
-  const [selectedSuburb, setSelectedSuburb] = useState<string>(
-    task.suburb || "",
-  );
   const router = useRouter();
-
-  const taskSchema = z.object({
-    taskBriefDescription: z.string(),
-    taskDescription: z.string(),
-    // category: z.string(),
-    taskType: z.string(),
-    postCode: z.string().nullable().optional(),
-    suburb: z.string().nullable().optional(),
-    state: z.string().nullable().optional(),
-    taskImage: z.string().optional(),
-    taskDate: z.number().array().nullable().optional(),
-    taskTime: z.string().nullable().optional(),
-    customerBudget: z.string().transform((val) => Number(val)),
-  });
-
-  type taskZodType = z.infer<typeof taskSchema>;
 
   const initialDate = useMemo(() => {
     return task.taskDate
@@ -107,9 +101,7 @@ const EditTaskForm = ({ task, setShowEditModal }: TaskCardProps) => {
         taskDescription: task.taskDescription,
         // category: selectedCategory,
         taskType: task.taskType,
-        postCode: task.postCode ? task.postCode.toString() : null, // Ensure string conversion
-        suburb: task.suburb,
-        state: task.state,
+        suburb: "",
         taskImage: task.taskImage,
         taskDate: isFlexible ? null : task.taskDate,
         taskTime: isFlexible
@@ -122,14 +114,19 @@ const EditTaskForm = ({ task, setShowEditModal }: TaskCardProps) => {
 
       setUpdatedDate(initialDate);
       setUpdatedTime(initialTime);
-
-      if (task.postCode) {
-        setUpdatedPostCode(task.postCode.toString());
-      }
     }
     // eslint-disable-next-line
   }, [task, isFlexible, initialDate, initialTime, reset]);
-  // }, [task, isFlexible, selectedCategory, initialDate, initialTime, reset]);
+
+  const watchField = watch();
+
+  const [currentSuburb, setCurrentSuburb] = useState<SurburbInfo | null>(null);
+  const {
+    suburbList,
+    setSuburbList,
+    error: suburbError,
+    isLoading,
+  } = useSuburbData(watchField.suburb, currentSuburb);
 
   const handleDateChange = useCallback(
     (date: Date | null) => {
@@ -160,56 +157,13 @@ const EditTaskForm = ({ task, setShowEditModal }: TaskCardProps) => {
     [setValue],
   );
 
-  const watchField = watch();
-
   useEffect(() => {
     if (watchField.taskType === typeData[0].value) {
-      setValue("postCode", "");
-      setValue("state", "");
       setValue("suburb", "");
+      setSuburbList([]);
     }
     // eslint-disable-next-line
   }, [watchField.taskType]);
-
-  useEffect(() => {
-    const fetchSuburbData = async () => {
-      try {
-        const postcodeValue = watchField.postCode;
-        if (postcodeValue && postcodeValue.toString().length > 0) {
-          const url = `${process.env.NEXT_PUBLIC_API_URL}/util/locations/search?postcode=${postcodeValue}`;
-          const { data } = await axios.get(url);
-
-          if (Array.isArray(data) && data.length > 0) {
-            const suburbs = data.map((item: { Name: string }) => item.Name);
-            setSuburbList(suburbs);
-
-            if (suburbs.length > 0) {
-              setSelectedSuburb(suburbs[0]);
-              setValue("suburb", suburbs[0]);
-            } else {
-              setSelectedSuburb("");
-              setValue("suburb", "");
-            }
-          } else {
-            setSuburbList([]);
-            setSelectedSuburb("");
-            setValue("suburb", "");
-          }
-        } else {
-          setSuburbList([]);
-          setSelectedSuburb("");
-          setValue("suburb", "");
-        }
-      } catch (error) {
-        console.error("Error fetching location data:", error);
-        setSuburbList([]);
-        setSelectedSuburb("");
-        setValue("suburb", "");
-      }
-    };
-
-    fetchSuburbData();
-  }, [watchField.postCode, setValue]);
 
   useEffect(() => {
     const fetchAllCategories = async () => {
@@ -283,15 +237,15 @@ const EditTaskForm = ({ task, setShowEditModal }: TaskCardProps) => {
 
   const handleUpdateTask: SubmitHandler<taskZodType> = async (data) => {
     const formData = new FormData();
-
+    const { state, postcode } = currentSuburb;
     const fields: Record<string, string | number | null> = {
       taskBriefDescription: data.taskBriefDescription ?? "",
       taskDescription: data.taskDescription ?? "",
       // categoryId: categories.find(category => category.categoryName === data.category)?.id ?? "",
       taskType: data.taskType ?? "",
-      postCode: data.postCode ?? "",
+      postCode: postcode ?? "",
       suburb: data.suburb ?? "",
-      state: data.state ?? "",
+      state: state.name ?? "",
       taskDate: isFlexible ? "" : dateString,
       taskTime: isFlexible ? "" : timeString,
       customerBudget: data.customerBudget ?? 0,
@@ -319,9 +273,10 @@ const EditTaskForm = ({ task, setShowEditModal }: TaskCardProps) => {
 
     try {
       await updateTask({ id: task.id, details: formData }).unwrap();
+      router.refresh()
       setShowSuccessModal(true);
     } catch (error: any) {
-      console.log(error);
+      console.error(error);
     }
   };
 
@@ -623,82 +578,86 @@ const EditTaskForm = ({ task, setShowEditModal }: TaskCardProps) => {
                   </div>
                 </div>
                 <div className="space-y-5">
-                  {watchField.taskType === typeData[1].value ? (
-                    <>
-                      <div className="flex items-center justify-between space-x-4">
-                        {/* postcode */}
-                        <div className="w-full space-y-4">
-                          <label className="text-[13px] font-semibold text-status-darkpurple lg:text-[16px]">
-                            Post Code
-                          </label>
-                          <input
-                            type="text"
-                            className="w-full rounded-2xl bg-violet-light p-3 text-[13px] outline-none"
-                            {...register("postCode")}
-                            onChange={(e) => {
-                              const value = e.target.value;
-                              setValue(
-                                "postCode",
-                                value ? value.toString() : null,
-                              );
-                              setUpdatedPostCode(
-                                value ? value.toString() : null,
-                              );
-                            }}
-                            value={watchField.postCode || ""}
-                          />
-                        </div>
-
-                        {/* suburb */}
-                        <div className="w-full space-y-4">
-                          <div className="flex items-center justify-between">
-                            <label className="text-[13px] font-semibold text-status-darkpurple lg:text-[16px]">
-                              Suburb{" "}
-                            </label>
-                          </div>
-                          <Dropdown
-                            trigger={() => (
-                              <div
-                                className={`outline-none"} flex h-full w-full cursor-pointer appearance-none justify-between rounded-2xl border-none bg-[#EBE9F4] p-3 font-satoshi text-[13px] font-light`}
-                              >
-                                <h2>{selectedSuburb || "Choose Suburb"}</h2>
-                                <FaSortDown />
-                              </div>
-                            )}
-                            className="small-scrollbar left-0 right-0 top-14 mx-auto max-h-64 overflow-y-auto bg-white transition-all duration-300"
-                          >
-                            {suburbList.map((data, index) => (
-                              <button
-                                type="button"
-                                className="block p-2 text-start text-[12px] font-semibold capitalize text-primary hover:text-tc-orange"
-                                key={index}
-                                value={data}
-                                onClick={() => {
-                                  setSelectedSuburb(data);
-                                  setValue("suburb", data);
-                                }}
-                              >
-                                {data}
-                              </button>
-                            ))}
-                          </Dropdown>
-                        </div>
+                  {watchField.taskType === typeData[1].value && (
+                    <div className="relative">
+                      {/* Display previous suburb  */}
+                      <div className="mb-3 flex items-center gap-x-2 text-slate-600">
+                        <IoLocationOutline className="text-xl" />
+                        <span>
+                          {task.suburb}, {task.state}
+                        </span>
                       </div>
-                      {/* State */}
+                      {/* Suburb input */}
                       <div className="w-full space-y-4">
-                        <label className="text-[13px] font-semibold text-status-darkpurple lg:text-[16px]">
-                          State/ Territory
+                        <label
+                          className="text-[13px] font-semibold text-status-darkpurple lg:text-[16px]"
+                          htmlFor="suburb"
+                        >
+                          Suburb
                         </label>
                         <input
+                          id="suburb"
                           type="text"
-                          readOnly
+                          placeholder="Enter a new suburb..."
+                          autoComplete="off"
                           className="w-full cursor-default rounded-2xl bg-violet-light p-3 pl-4 text-[13px] outline-none"
-                          {...register("state")}
+                          {...register("suburb", {
+                            onChange: (e) => {
+                              if (currentSuburb) {
+                                setCurrentSuburb(null);
+                                const enteredInput = e.target.value.slice(-1);
+                                e.target.value = enteredInput;
+                                setValue("suburb", enteredInput);
+                              }
+                              setValue("suburb", e.target.value);
+                            },
+                          })}
                         />
                       </div>
-                    </>
-                  ) : (
-                    <div></div>
+
+                      {/* Auto-complete modal  */}
+                      <div className="absolute left-0 z-10 w-full bg-white">
+                        {isLoading && (
+                          <p className="py-2 text-center font-satoshiMedium text-[#76757A61]">
+                            Loading...
+                          </p>
+                        )}
+                        {suburbError && !isLoading && (
+                          <p className="py-2 text-center font-satoshiMedium text-red-600">
+                            Error occured while loading suburb data
+                          </p>
+                        )}
+                        {suburbList.length > 1 && (
+                          <ul className="roundeed-lg max-h-52 overflow-y-auto overflow-x-hidden">
+                            {suburbList.map((suburb) => (
+                              <li
+                                className="flex cursor-pointer items-center gap-1 bg-white px-4 py-3 text-[13px]"
+                                key={Math.random() * 12345}
+                                onClick={() => {
+                                  setCurrentSuburb(suburb);
+                                  setValue(
+                                    "suburb",
+                                    `${suburb.name}, ${suburb.state.abbreviation}, Australia`,
+                                  );
+                                  setSuburbList([]);
+                                }}
+                              >
+                                <CiLocationOn
+                                  stroke="#0F052E"
+                                  size={20}
+                                  strokeWidth={1}
+                                />
+                                <span className="text-[#0F052E]">
+                                  {suburb.name},{" "}
+                                  {suburb.locality ? `${suburb.locality},` : ""}{" "}
+                                  {suburb.state.name}, AUS
+                                </span>
+                              </li>
+                            ))}
+                          </ul>
+                        )}
+                      </div>
+                    </div>
                   )}
                   <div className="space-y-2">
                     <div className="flex items-center justify-between">
