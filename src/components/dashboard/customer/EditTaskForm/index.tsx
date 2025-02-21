@@ -273,7 +273,7 @@ const EditTaskForm = ({ task, setShowEditModal }: TaskCardProps) => {
 
     try {
       await updateTask({ id: task.id, details: formData }).unwrap();
-      router.refresh()
+      router.refresh();
       setShowSuccessModal(true);
     } catch (error: any) {
       console.error(error);
@@ -564,7 +564,7 @@ const EditTaskForm = ({ task, setShowEditModal }: TaskCardProps) => {
                   <h2 className="text-[13px] font-semibold text-status-darkpurple lg:text-[16px]">
                     Type of Service{" "}
                   </h2>
-                  <div className="space-x-2">
+                  <div className="flex flex-col gap-3 space-x-0 sm:flex-row sm:space-x-2">
                     {typeData.map((item, index) => (
                       <button
                         key={index}
