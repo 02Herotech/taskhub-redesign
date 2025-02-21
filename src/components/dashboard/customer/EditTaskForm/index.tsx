@@ -237,15 +237,14 @@ const EditTaskForm = ({ task, setShowEditModal }: TaskCardProps) => {
 
   const handleUpdateTask: SubmitHandler<taskZodType> = async (data) => {
     const formData = new FormData();
-    const { state, postcode } = currentSuburb;
     const fields: Record<string, string | number | null> = {
       taskBriefDescription: data.taskBriefDescription ?? "",
       taskDescription: data.taskDescription ?? "",
       // categoryId: categories.find(category => category.categoryName === data.category)?.id ?? "",
       taskType: data.taskType ?? "",
-      postCode: postcode ?? "",
+      postCode: currentSuburb?.postcode ?? "",
       suburb: data.suburb ?? "",
-      state: state.name ?? "",
+      state: currentSuburb?.state.name ?? "",
       taskDate: isFlexible ? "" : dateString,
       taskTime: isFlexible ? "" : timeString,
       customerBudget: data.customerBudget ?? 0,
