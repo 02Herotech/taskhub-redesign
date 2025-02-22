@@ -175,7 +175,6 @@ const EditListing = () => {
 
   const handleUpdateListing: SubmitHandler<listingZodType> = async (data) => {
     setErrorMessage("");
-    const { state, postcode } = currentSuburb;
     const body = Object.entries({
       listingTitle: data.listingTitle,
       listingDescription: data.listingDescription,
@@ -190,8 +189,8 @@ const EditListing = () => {
       planThreeDescription: data.planOneDescription,
       planThreePrice: Number(data.planThreePrice),
       suburb: data.suburb,
-      state: state.name,
-      postCode: postcode,
+      state: currentSuburb?.state.name,
+      postCode: currentSuburb?.postcode,
       image1,
       image2,
       image3,
