@@ -35,11 +35,11 @@ const TaskList = () => {
           </Link>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-          {tasksData?.map((task, index) => (
+        <div className="grid grid-cols-1 gap-10">
+        {tasksData?.map((task, index) => (
             <AllTasksCard key={index} task={task} />
-          ))}
-        </div>
+        ))}
+        </div>    
       )}
     </>
   );

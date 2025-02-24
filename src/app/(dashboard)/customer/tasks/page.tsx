@@ -117,21 +117,19 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import CompletedTasks from '@/components/dashboard/customer/CompletedTasks';
 import NewTasks from '@/components/dashboard/customer/NewTasks';
 import OngoingTasks from '@/components/dashboard/customer/OngoingTasks';
-// import AllTasks from '@/components/dashboard/customer/AllTasks';
+import AllTasks from '@/components/dashboard/customer/AllTasks';
 
-// type TabName = 'All tasks' | 'New tasks' | 'Ongoing tasks' | 'Completed tasks';
-type TabName = 'New tasks' | 'Ongoing tasks' | 'Completed tasks';
+type TabName = 'All tasks' | 'New tasks' | 'Ongoing tasks' | 'Completed tasks';
 
 const CustomerTasksPage: React.FC = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const tab = searchParams.get('tab');
-  const [activeTab, setActiveTab] = useState<TabName>('New tasks');
-  // const [activeTab, setActiveTab] = useState<TabName>('All tasks');
+  const [activeTab, setActiveTab] = useState<TabName>('All tasks');
 
   useEffect(() => {
-    if (tab && (tab === 'New tasks' || tab === 'Ongoing tasks' || tab === 'Completed tasks')) {
-      // if (tab && (tab === 'All tasks' || tab === 'New tasks' || tab === 'Ongoing tasks' || tab === 'Completed tasks')) {
+    // if (tab && (tab === 'New tasks' || tab === 'Ongoing tasks' || tab === 'Completed tasks')) {
+    if (tab && (tab === 'All tasks' || tab === 'New tasks' || tab === 'Ongoing tasks' || tab === 'Completed tasks')) {
       setActiveTab(tab as TabName);
     }
   }, [tab]);
@@ -143,8 +141,8 @@ const CustomerTasksPage: React.FC = () => {
 
   const renderContent = (): JSX.Element => {
     switch (activeTab) {
-      // case 'All tasks':
-      //   return <AllTasks />;
+      case 'All tasks':
+        return <AllTasks />;
       case 'New tasks':
         return <NewTasks />;
       case 'Ongoing tasks':
@@ -152,15 +150,14 @@ const CustomerTasksPage: React.FC = () => {
       case 'Completed tasks':
         return <CompletedTasks />;
       default:
-        // return <AllTasks />;
-        return <NewTasks />;
+        return <AllTasks />;
     }
   };
 
   return (
     <div className='p-4 lg:px-14 mt-[4rem]'>
       <div className="hidden lg:flex items-center space-x-5 mt-10 lg:mt-14">
-        {(['New tasks', 'Ongoing tasks', 'Completed tasks'] as TabName[]).map((tabName) => (
+        {(['All tasks', 'New tasks', 'Ongoing tasks', 'Completed tasks'] as TabName[]).map((tabName) => (
           <button
             key={tabName}
             className={`py-3 px-5 rounded-xl text-sm lg:text-base font-satoshiMedium ${
@@ -174,7 +171,7 @@ const CustomerTasksPage: React.FC = () => {
       </div>
 
       <div className="lg:hidden flex items-center space-x-5 mt-10 lg:mt-14">
-        {(['New tasks', 'Ongoing tasks', 'Completed tasks'] as TabName[]).map((tabName, index) => (
+        {(['All tasks', 'New tasks', 'Ongoing tasks', 'Completed tasks'] as TabName[]).map((tabName, index) => (
           <button
             key={index}
             className={`py-3 px-5 rounded-xl text-sm lg:text-base font-satoshiMedium ${
