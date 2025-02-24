@@ -227,7 +227,7 @@ const StatusModal: React.FC<{
         <p className="text-center font-semibold text-violet-darker">
           {status === "success"
             ? "Please wait for 24 hours for payment processing."
-            : "Something went wrong, please try again later"}
+            : errorMessage}
         </p>
         <Link
           href={
