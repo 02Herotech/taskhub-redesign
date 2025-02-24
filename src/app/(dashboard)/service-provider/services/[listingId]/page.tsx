@@ -123,6 +123,7 @@ const EditListing = () => {
   useEffect(() => {
     if (watchField.taskType === typeData[0].value) {
       setValue("suburb", "");
+      setSuburbList([]);
     }
     // eslint-disable-next-line
   }, [watchField.taskType]);
@@ -174,7 +175,6 @@ const EditListing = () => {
 
   const handleUpdateListing: SubmitHandler<listingZodType> = async (data) => {
     setErrorMessage("");
-    const { state, postcode } = currentSuburb;
     const body = Object.entries({
       listingTitle: data.listingTitle,
       listingDescription: data.listingDescription,
@@ -189,8 +189,8 @@ const EditListing = () => {
       planThreeDescription: data.planOneDescription,
       planThreePrice: Number(data.planThreePrice),
       suburb: data.suburb,
-      state: state.name,
-      postCode: postcode,
+      state: currentSuburb?.state.name,
+      postCode: currentSuburb?.postcode,
       image1,
       image2,
       image3,
@@ -215,7 +215,7 @@ const EditListing = () => {
       fetchCurentListing();
       setShowModal(true);
     } catch (error: any) {
-      console.log(error.response.data);
+      console.error(error.response.data);
       setErrorMessage(error.response.data.message);
     }
   };
@@ -330,7 +330,6 @@ const EditListing = () => {
           </label>
 
           {/* title */}
-
           <label className="flex flex-col gap-2">
             <span className=" text-violet-darker">
               Service Title <span className="text-xl text-red-600">*</span>
