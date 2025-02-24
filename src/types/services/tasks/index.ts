@@ -59,16 +59,26 @@ export type OngoingTask = {
 };
 
 export type AllTask = {
-    invoiceId?: number;
-    bookingId?: number;
-    total?: number;
-    createdAt?: [number, number, number, number, number, number, number];
-    customerId?: number;
+    id: number;
+    posterId: number;
+    taskBriefDescription: string;
+    taskDescription: string;
+    taskImage: any;
     taskTime: [number, number];
-    jobTitle?: string;
-    jobStatus?: "IN_PROGRESS" | "PENDING" | "INSPECTION" | "COMPLETED"
-    jobDescription?: string;
-    id: number
+    taskDate: [number, number, number];
+    category: {
+        id: number;
+        categoryName: string;
+    }
+    hubTime: string | null;
+    taskType: string;
+    taskStatus: string;
+    state: string | null;
+    postCode: string | number | null;
+    suburb: string | null;
+    createdAt: [number, number, number];
+    customerBudget: number;
+    active: boolean;
 };
 
 export type GetAllCustomerTasksResponse = AllTask[];
