@@ -242,7 +242,7 @@ const StatusModal: React.FC<{
         </p>
         <p className="text-center font-semibold text-violet-darker py-3">
           {status === "success"
-            ? "Your withdrawal request was successful. Your payment will be processed and deposited into your account within 2 business days"
+            ? "Your withdrawal request was successful. Your payment will be processed and deposited into your account within 2 business days."
             : errorMessage}
         </p>
         {status === "success" ? (
