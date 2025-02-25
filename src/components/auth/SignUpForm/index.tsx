@@ -57,7 +57,8 @@ const SignUpForm = () => {
                 lastName: payload.lastName,
                 emailAddress: payload.emailAddress,
                 // phoneNumber: payload.phoneNumber,
-                password: payload.password
+                password: payload.password,
+                media: "WEB"
             };
 
             setCookie('firstName', payload.firstName, { maxAge: 60 * 2 });
