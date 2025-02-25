@@ -158,43 +158,6 @@ const EditProfile = () => {
 
   const ABNInputRef = useRef<HTMLDivElement | null>(null);
 
-  // useEffect(() => {
-  //   const inputField = document.querySelector("#dob");
-
-  //   if (inputField) {
-  //     const handleKeyDown = (e) => {
-  //       if (!/[0-9/]/.test(e.key) && !["Backspace", "ArrowLeft", "ArrowRight"].includes(e.key)) {
-  //         e.preventDefault();
-  //       }
-  //     };
-
-  //     inputField.addEventListener("keydown", handleKeyDown);
-
-  //     return () => {
-  //       inputField.removeEventListener("keydown", handleKeyDown);
-  //     };
-  //   }
-  // }, []);
-
-  // useEffect(() => {
-  //   const inputField = document.querySelector("#dob");
-
-  //   if (inputField) {
-  //     const handleKeyDown = (e) => {
-  //       if (!/[0-9/]/.test(e.key) && !["Backspace", "ArrowLeft", "ArrowRight"].includes(e.key)) {
-  //         e.preventDefault();
-  //       }
-  //     };
-
-  //     inputField.addEventListener("keydown", handleKeyDown);
-
-  //     return () => {
-  //       inputField.removeEventListener("keydown", handleKeyDown);
-  //     };
-  //   }
-  // }, []);
-
-
   useEffect(() => {
     const fetchUserData = async () => {
       try {
@@ -245,68 +208,6 @@ const EditProfile = () => {
 
   const watchPostcode = watch("postcode");
 
-  // useEffect(() => {
-  //   const fetchLocationByPostcode = async () => {
-  //     if (!watchPostcode) {
-  //       setSuburbList([]);
-  //       setValue("suburb", "");
-  //       setValue("state", "");
-  //       return;
-  //     }
-
-  //     try {
-  //       const { data } = await axios.get(
-  //         `${process.env.NEXT_PUBLIC_API_URL}/util/locations/search?postcode=${watchPostcode}`,
-  //       );
-
-  //       // Map suburbs from the Name field
-  //       const suburbs = data.map((item: { Name: string }) => item.Name);
-  //       setSuburbList(suburbs);
-
-  //       // Set the first suburb as the default if available
-  //       if (suburbs.length > 0) {
-  //         setValue("suburb", suburbs[0]);
-  //       } else {
-  //         setValue("suburb", "");
-  //       }
-
-  //       // Set the state if available using the State field
-  //       if (data[0]?.State) {
-  //         setValue("state", data[0].State);
-  //       } else {
-  //         setValue("state", "");
-  //       }
-
-  //       // Define the type for the location data
-  //       interface LocationData {
-  //         Name: string;
-  //         Postcode: string;
-  //         State: string;
-  //         StateShort: string;
-  //         Type: string;
-  //       }
-
-  //       // You might also want to store the full location data for reference
-  //       const locationData: LocationData = data[0];
-
-  //       // If you need to store the state abbreviation somewhere
-  //       const stateShort = locationData.StateShort;
-  //     } catch (error) {
-  //       console.error("Error fetching location data:", error);
-  //       setSuburbList([]);
-  //       setValue("suburb", "");
-  //       setValue("state", "");
-  //     }
-  //   };
-
-  //   fetchLocationByPostcode();
-  // }, [watchPostcode, setValue]);
-
-  // const formatDateAsYYYYMMDD = (date: Date | null) => {
-  //   if (!date) return "";
-  //   return date.toISOString().split("T")[0]; // Extract YYYY-MM-DD
-  // };
-
   const formatDateAsYYYYMMDD = (date: Date): string => {
     const yyyy = date.getFullYear();
     const mm = String(date.getMonth() + 1).padStart(2, "0"); // Months are 0-based
@@ -328,27 +229,34 @@ const EditProfile = () => {
     }
     (data.idImageBack = "null"), (data.idImageFront = "null");
     if (!isServiceProvider) data.abn = "null";
-    // const isIncompleteData = Object.entries(data).some(([key, value]) => {
-    //   return value === "" || value == null;
-    // });
-    // if (isIncompleteData) {
-    //   setEditProfileError("Missing required fields");
-    //   return;
-    // }
-    // if (data.idType === "International Passport" && !selectedDocumentFront) {
-    //   setEditProfileError("Missing required fields");
-    //   return;
-    // }
-    // if (
-    //   data.idType !== "International Passport" &&
-    //   (!selectedDocumentBack || !selectedDocumentFront)
-    // ) {
-    //   setEditProfileError("Missing required fields");
-    //   return;
-    // }
+
+    // const missingFields = Object.entries(data)
+    // .filter(([key, value]) => value === "" || value == null)
+    // .map(([key]) => key); 
+
+    // const missingFields = Object.entries(data)
+    // .filter(([key, value]) => value === "" || value == null)
+    // .map(([key]) => key)
+    // .filter((key) => key !== "emailAddress");
+
+    console.log("selectedDocumentFront:", selectedDocumentFront);
+console.log("userDetails.idImageFront:", userDetails.idImageFront);
+console.log("selectedDocumentBack:", selectedDocumentBack);
+console.log("userDetails.idImageBack:", userDetails.idImageBack);
+
+
     const missingFields = Object.entries(data)
-    .filter(([key, value]) => value === "" || value == null)
-    .map(([key]) => key); // Get only field names
+  .filter(([key, value]) => {
+    if (["idImageFront", "idImageBack"].includes(key)) {
+      return !selectedDocumentFront && !userDetails.idImageFront && key === "idImageFront" ||
+             !selectedDocumentBack && !userDetails.idImageBack && key === "idImageBack";
+    }
+    return value === "" || value == null;
+  })
+  // .map(([key]) => key);
+    .map(([key]) => key)
+    .filter((key) => key !== "emailAddress");
+
 
     if (missingFields.length > 0) {
       setEditProfileError(`Missing required fields: ${missingFields.join(", ")}`);
@@ -367,11 +275,22 @@ const EditProfile = () => {
     }
     
 
-    if (data.idType !== "International Passport" && (!selectedDocumentBack || !selectedDocumentFront)) {
-      setEditProfileError("Missing required fields: idImageFront, idImageBack");
-      console.log("Missing fields: idImageFront, idImageBack");
-      return;
-    }
+    // if (data.idType !== "International Passport" && (!selectedDocumentBack || !selectedDocumentFront)) {
+    //   setEditProfileError("Missing required fields: idImageFront, idImageBack");
+    //   console.log("Missing fields: idImageFront, idImageBack");
+    //   return;
+    // }
+
+    // if (data.idType === "Medicare Card" && !selectedDocumentFront && !data.idImageFront) {
+    //   setEditProfileError("Missing required field: idImageFront");
+    //   return;
+    // }
+
+    // if (data.idType !== "Medicare Card" && (!selectedDocumentBack || !selectedDocumentFront)) {
+    //   setEditProfileError("Missing required fields: idImageFront, idImageBack");
+    //   console.log("Missing fields: idImageFront, idImageBack");
+    //   return;
+    // }
 
     setEditProfileError("");
     try {
@@ -389,8 +308,18 @@ const EditProfile = () => {
           // idImageFront: selectedDocumentFront,
           // idImageFront: selectedDocumentFront || data.idImageFront || userDetails.idImageFront,
           // idImageBack: selectedDocumentBack,
-          ...(selectedDocumentFront ? { idImageFront: selectedDocumentFront } : {}),
-          ...(selectedDocumentBack ? { idImageBack: selectedDocumentBack } : {}),
+          // ...(selectedDocumentFront
+          //   ? { idImageFront: selectedDocumentFront }
+          //   : userDetails.idImageFront
+          //   ? { idImageFront: userDetails.idImageFront }
+          //   : {}), // Retain existing front image if not changed
+          // ...(selectedDocumentBack
+          //   ? { idImageBack: selectedDocumentBack }
+          //   : userDetails.idImageBack
+          //   ? { idImageBack: userDetails.idImageBack }
+          //   : {}),
+          idImageFront: selectedDocumentFront ?? userDetails.idImageFront ?? null,
+          idImageBack: selectedDocumentBack ?? userDetails.idImageBack ?? null,
           idType: data.idType,
           idNumber: data.idNumber,
           bio: data.bio,
@@ -416,6 +345,7 @@ const EditProfile = () => {
           lastName: data.lastName,
           dateOfBirth: data.dateOfBirth ? formatDateAsYYYYMMDD(data.dateOfBirth as Date) : "",
           suburb: data.suburb,
+          emailAddress: data.emailAddress || user?.emailAddress || "",
           // phoneNumber: data.phoneNumber,
           state: data.state,
           postCode: data.postcode,
@@ -434,6 +364,9 @@ const EditProfile = () => {
         }, {});
         url = "customer/update";
       }
+
+      console.log("Final submitData:", JSON.stringify(submitData, null, 2));
+
 
       await authInstance.patch(url, submitData, {
         headers: { "Content-Type": "multipart/form-data" },
