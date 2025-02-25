@@ -13,8 +13,6 @@ import Button from "@/components/global/Button";
 import { useSession } from "next-auth/react";
 import image from "../../../../../public/assets/images/customer/Task management.png";
 import img from "../../../../../public/assets/images/blend.png";
-import imag from "../../../../../public/assets/images/contract.png";
-import imgg from "../../../../../public/assets/images/girl.png";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -1033,12 +1031,12 @@ const AddTaskForm: React.FC = () => {
             <h3 className="mb-3 mt-2 text-center font-clashSemiBold text-2xl text-[#2A1769] sm:text-4xl">
               You’re almost there!
             </h3>
-            <p className="md::text-xl mx-auto mb-5 max-w-[383px] text-center font-satoshiMedium text-base text-[#140B31] sm:text-lg">
+            <p className="md::text-xl mx-auto mb-5 max-w-[320px] text-center font-satoshiMedium text-base text-[#140B31] sm:text-lg">
               Complete sign up to add and manage all your tasks.
             </p>
             <Link
               href="/auth/sign-up"
-              className=" mx-auto block w-max rounded-full bg-[#EBE9F4] px-4 py-2 font-satoshiBold font-bold text-primary md:px-6"
+              className="relative z-10 mx-auto block w-max rounded-full bg-[#EBE9F4] px-4 py-2 font-satoshiBold font-bold text-primary md:px-6"
             >
               Sign up
             </Link>
