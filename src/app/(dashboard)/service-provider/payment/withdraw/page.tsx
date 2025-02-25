@@ -41,7 +41,7 @@ const withdrawalSchema = (maxValue: number) => {
       })
       .min(1, "Amount can not be less than $1")
       .max(maxValue, "Amount should not exceed wallet balance")
-      .refine((val) => Number.isInteger(val * 100), {
+      .refine((val) => /^(\d+|\d+\.\d{1,2})$/.test(val.toString()), {
         message: "Amount should not exceed two decimal places",
       }),
   });
@@ -220,48 +220,53 @@ const StatusModal: React.FC<{
     <div className="absolute inset-0 h-screen w-screen" onClick={onClose} />
     <div className="relative z-10 flex w-[90vw] max-w-xl flex-col items-center justify-center gap-3 rounded-xl bg-white p-3 px-4 lg:space-y-4 lg:p-10">
       <div className="flex flex-col items-center justify-center gap-4">
-        <StatusIcon status={status} />
+        <div
+          className={`flex size-20 items-center justify-center rounded-full ${
+            status === "success" ? "bg-[#C1F6C3]" : "bg-red-100"
+          } bg-opacity-60`}
+        >
+          <div
+            className={`flex size-14 items-center justify-center rounded-full ${
+              status === "success" ? "bg-[#A6F8AA]" : "bg-red-300"
+            } p-2`}
+          >
+            {status === "success" ? (
+              <PiSealCheckFill className="size-10 text-green-500" />
+            ) : (
+              <BsExclamationTriangle className="size-10 text-red-500" />
+            )}
+          </div>
+        </div>
         <p className="text-center font-clashBold text-2xl font-bold text-violet-normal">
           {status === "success" ? "Withdrawal Successful" : "Failure"}
         </p>
-        <p className="text-center font-semibold text-violet-darker">
+        <p className="text-center font-semibold text-violet-darker py-3">
           {status === "success"
-            ? "Please wait for 24 hours for payment processing."
-            : "Something went wrong, please try again later"}
+            ? "Your withdrawal request was successful. Your payment will be processed and deposited into your account within 2 business days."
+            : errorMessage}
         </p>
-        <Link
-          href={
-            isServiceProvider
-              ? "/service-provider/profile"
-              : "/customer/profile"
-          }
-          className="rounded-full bg-violet-normal px-4 py-2 font-bold text-white max-sm:text-sm"
-        >
-          Proceed to profile
-        </Link>
+        {status === "success" ? (
+          <Link
+            href={
+              isServiceProvider
+                ? "/service-provider/profile"
+                : "/customer/profile"
+            }
+            className="rounded-full bg-violet-normal px-4 py-2 font-bold text-white max-sm:text-sm"
+          >
+            Proceed to profile
+          </Link>
+        ) : (
+          <button
+            onClick={onClose}
+            className="rounded-full bg-violet-normal px-4 py-2 font-bold text-white max-sm:text-sm"
+          >
+            Close
+          </button>
+        )}
       </div>
     </div>
   </section>
-);
-
-const StatusIcon: React.FC<{ status: "success" | "error" }> = ({ status }) => (
-  <div
-    className={`flex size-20 items-center justify-center rounded-full ${
-      status === "success" ? "bg-[#C1F6C3]" : "bg-red-100"
-    } bg-opacity-60`}
-  >
-    <div
-      className={`flex size-14 items-center justify-center rounded-full ${
-        status === "success" ? "bg-[#A6F8AA]" : "bg-red-300"
-      } p-2`}
-    >
-      {status === "success" ? (
-        <PiSealCheckFill className="size-10 text-green-500" />
-      ) : (
-        <BsExclamationTriangle className="size-10 text-red-500" />
-      )}
-    </div>
-  </div>
 );
 
 type InputFieldProps = {

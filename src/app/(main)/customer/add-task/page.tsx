@@ -3,7 +3,7 @@
 
 import React, { useEffect, useState } from "react";
 import Head from "next/head";
-import { IoIosArrowForward } from "react-icons/io";
+import { IoIosArrowForward, IoMdCheckmark } from "react-icons/io";
 import { PiFileArrowDownDuotone } from "react-icons/pi";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -13,8 +13,6 @@ import Button from "@/components/global/Button";
 import { useSession } from "next-auth/react";
 import image from "../../../../../public/assets/images/customer/Task management.png";
 import img from "../../../../../public/assets/images/blend.png";
-import imag from "../../../../../public/assets/images/contract.png";
-import imgg from "../../../../../public/assets/images/girl.png";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -1001,53 +999,64 @@ const AddTaskForm: React.FC = () => {
             </div>
           </div>
         </div>
-        {
-          <Popup
-            isOpen={isSuccessPopup}
-            onClose={() => {
-              setIsSuccessPopup(false);
-            }}
-          >
-            <div className="px-16 py-10 lg:px-24">
-              <div className="relative grid items-center justify-center space-y-5">
-                <p className="text-center font-clashBold text-[20px] font-extrabold text-[#2A1769] md:text-[36px] lg:text-[37px] ">
-                  You are almost done!!!
-                </p>
-                <div>
-                  <p className="text-center text-[14px] lg:text-[20px] ">
-                    Please sign up to finish adding your first{" "}
-                  </p>
-                  <p className="text-center text-[14px] lg:text-[20px] ">
-                    task and manage all your tasks.
-                  </p>
-                </div>
-                <Image
-                  src={imag}
-                  alt="image"
-                  className="absolute -right-16 top-20 w-24 lg:-right-24 lg:top-1/3 lg:w-36 "
-                />
-                <Image
-                  src={imgg}
-                  alt="image"
-                  className="absolute -left-12 top-0 w-16 lg:-left-[100px] lg:-top-12 lg:w-28"
-                />
-                <div className="flex justify-center space-x-3">
-                  <button
-                    onClick={handleLoginNavigation}
-                    className="rounded-2xl border border-status-purpleBase p-2 text-[14px] font-semibold text-status-purpleBase outline-none md:w-[100px]"
+
+        {/* Popup for users not signed up  */}
+        <PopupTwo
+          isOpen={isSuccessPopup}
+          onClose={() => setIsSuccessPopup(false)}
+        >
+          <div className="relative max-h-[700px] min-w-[320px] max-w-[700px] bg-white p-5 sm:min-w-[560px]">
+            <div className="mx-auto mb-7 w-max rounded-full bg-[#C1F6C399] p-[10px]">
+              <div className="rounded-full bg-[#A6F8AA] p-[5px]">
+                <div className="relative w-max text-white">
+                  <svg
+                    width="26"
+                    height="26"
+                    viewBox="0 0 40 40"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
                   >
-                    Sign Up
-                  </button>
-                  <Link href="/">
-                    <button className="rounded-2xl bg-status-purpleBase p-2 text-[14px] text-white outline-none md:w-[100px]">
-                      Cancel
-                    </button>
-                  </Link>
+                    <path
+                      d="M20 2.74667L25.36 0L28.6267 5.05778L34.64 5.36L34.9422 11.3733L40 14.64L37.2533 20L40 25.36L34.9422 28.6267L34.64 34.64L28.6267 34.9422L25.36 40L20 37.2533L14.64 40L11.3733 34.9422L5.36 34.64L5.05778 28.6267L0 25.36L2.74667 20L0 14.64L5.05778 11.3733L5.36 5.36L11.3733 5.05778L14.64 0L20 2.74667Z"
+                      fill="#4CAF50"
+                    />
+                  </svg>
+                  <IoMdCheckmark
+                    size={20}
+                    className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
+                  />
                 </div>
               </div>
             </div>
-          </Popup>
-        }
+            <h3 className="mb-3 mt-2 text-center font-clashSemiBold text-2xl text-[#2A1769] sm:text-4xl">
+              You’re almost there!
+            </h3>
+            <p className="md::text-xl mx-auto mb-5 max-w-[320px] text-center font-satoshiMedium text-base text-[#140B31] sm:text-lg">
+              Complete sign up to add and manage all your tasks.
+            </p>
+            <Link
+              href="/auth/sign-up"
+              className="relative z-10 mx-auto block w-max rounded-full bg-[#EBE9F4] px-4 py-2 font-satoshiBold font-bold text-primary md:px-6"
+            >
+              Sign up
+            </Link>
+            <Image
+              src="/assets/icons/popup-image-two.png"
+              alt="Icon"
+              width={170}
+              height={310}
+              className="absolute -left-20 top-5 aspect-auto h-full w-10/12 -rotate-12 sm:-left-10 sm:w-5/12 sm:rotate-0"
+            />
+            <Image
+              src="/assets/icons/popup-image-two.png"
+              alt="Icon"
+              width={170}
+              height={310}
+              className="absolute -right-20 top-5 aspect-auto h-full w-10/12 rotate-12 scale-x-[-1] sm:-right-10 sm:w-5/12 sm:rotate-0"
+            />
+          </div>
+        </PopupTwo>
+
         {!isAuthenticated ? (
           <Popup
             isOpen={isSuccessPopupOpen}
