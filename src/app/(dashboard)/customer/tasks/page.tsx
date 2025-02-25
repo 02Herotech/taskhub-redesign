@@ -155,8 +155,9 @@ const CustomerTasksPage: React.FC = () => {
   };
 
   return (
-    <div className='p-4 lg:px-14 mt-[4rem]'>
-      <div className="hidden lg:flex items-center space-x-5 mt-10 lg:mt-14">
+    <div className='p-1 lg:px-14'>
+    {/* <div className="w-full px-0 sm:px-4 lg:px-14 mt-[4rem] mb-[6rem] mx-auto"> */}
+      <div className="hidden lg:flex items-center space-x-5 mt-12 lg:mt-16">
         {(['All tasks', 'New tasks', 'Ongoing tasks', 'Completed tasks'] as TabName[]).map((tabName) => (
           <button
             key={tabName}
@@ -170,7 +171,8 @@ const CustomerTasksPage: React.FC = () => {
         ))}
       </div>
 
-      <div className="lg:hidden flex items-center space-x-5 mt-10 lg:mt-14">
+      {/* <div className="lg:hidden flex items-center space-x-5 mt-10 lg:mt-14"> */}
+      <div className="lg:hidden flex w-full justify-between mt-10">
         {(['All tasks', 'New tasks', 'Ongoing tasks', 'Completed tasks'] as TabName[]).map((tabName, index) => (
           <button
             key={index}
