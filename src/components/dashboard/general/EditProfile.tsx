@@ -236,43 +236,155 @@ const EditProfile = () => {
 
     // const missingFields = Object.entries(data)
     // .filter(([key, value]) => value === "" || value == null)
-    // .map(([key]) => key)
+    // .map(([key]) => key);
     // .filter((key) => key !== "emailAddress");
 
     console.log("selectedDocumentFront:", selectedDocumentFront);
-console.log("userDetails.idImageFront:", userDetails.idImageFront);
+// console.log("userDetails.idImageFront:", userDetails.idImageFront);
 console.log("selectedDocumentBack:", selectedDocumentBack);
-console.log("userDetails.idImageBack:", userDetails.idImageBack);
+// console.log("userDetails.idImageBack:", userDetails.idImageBack);
 
+
+    // const missingFields = Object.entries(data)
+    // .filter(([key, value]) => {
+    //   if (["idImageFront", "idImageBack"].includes(key)) {
+    //     return !selectedDocumentFront && !userDetails.idImageFront && key === "idImageFront" ||
+    //           !selectedDocumentBack && !userDetails.idImageBack && key === "idImageBack";
+    //   }
+    //   return value === "" || value == null;
+    // })
+    // .map(([key]) => key)
+    // .filter((key) => key !== "emailAddress");
 
     const missingFields = Object.entries(data)
-  .filter(([key, value]) => {
-    if (["idImageFront", "idImageBack"].includes(key)) {
-      return !selectedDocumentFront && !userDetails.idImageFront && key === "idImageFront" ||
-             !selectedDocumentBack && !userDetails.idImageBack && key === "idImageBack";
-    }
-    return value === "" || value == null;
-  })
-  // .map(([key]) => key);
+    .filter(([key, value]) => {
+      if (["idImageFront", "idImageBack"].includes(key)) {
+        if (data.idType === "International Passport") {
+          // Only check for idImageFront, completely ignore idImageBack
+          return key === "idImageFront" && !selectedDocumentFront && !userDetails.idImageFront;
+        }
+  
+        // For other ID types, check both front and back images
+        return (
+          (key === "idImageFront" && !selectedDocumentFront && !userDetails.idImageFront) ||
+          (key === "idImageBack" && !selectedDocumentBack && !userDetails.idImageBack)
+        );
+      }
+  
+      return value === "" || value == null;
+    })
     .map(([key]) => key)
-    .filter((key) => key !== "emailAddress");
+    .filter((key) => key !== "emailAddress" && (data.idType !== "International Passport" || key !== "idImageBack")); // Ensure idImageBack is ignored for passports
+  
+  if (missingFields.length > 0) {
+    setEditProfileError(`Missing required fields: ${missingFields.join(", ")}`);
+    console.log("Missing fields:", missingFields);
+    return;
+  }
+
+  // const missingFields = Object.entries(data)
+  // .filter(([key, value]) => {
+  //   if (["idImageFront", "idImageBack"].includes(key)) {
+  //     if (data.idType === "International Passport") {
+  //       // Only require idImageFront for international passports
+  //       return key === "idImageFront" && !selectedDocumentFront && !userDetails.idImageFront;
+  //     }
+
+  //     // Other ID types require both images
+  //     return (
+  //       (!selectedDocumentFront && !userDetails.idImageFront && key === "idImageFront") ||
+  //       (!selectedDocumentBack && !userDetails.idImageBack && key === "idImageBack")
+  //     );
+  //   }
+
+  //   return value === "" || value == null;
+  // })
+  // .map(([key]) => key)
+  // .filter((key) => key !== "emailAddress"); // Exclude optional fields like email
 
 
-    if (missingFields.length > 0) {
-      setEditProfileError(`Missing required fields: ${missingFields.join(", ")}`);
-      console.log("Missing fields:", missingFields);
-      return;
-    }
+console.log("Final missing fields:", missingFields);
+
+console.log("ID Type:", data.idType);  // Log the ID type before checking
+
+// if (missingFields.length > 0) {
+//   if (
+//     missingFields.length === 1 &&
+//     data.idType.toLowerCase() === "international passport" &&
+//     missingFields.includes("idImageBack")
+//   ) {
+//     console.log("Skipping idImageBack validation for International Passport");
+//   } else {
+//     setEditProfileError(`Missing required fields: ${missingFields.join(", ")}`);
+//     console.log("Missing fields:", missingFields);
+//     return;
+//   }
+// } else {
+//   console.log("No missing fields, proceeding...");
+// }
+
+// if (
+//   missingFields.length > 0 &&
+//   data.idType.toLowerCase() === "international passport" && 
+//   missingFields.includes("idImageBack")
+// ) {
+//   console.log("Skipping idImageBack validation for International Passport");
+// } else {
+//   setEditProfileError(`Missing required fields: ${missingFields.join(", ")}`);
+//   console.log("Missing fields:", missingFields);
+//   return;
+// }
+
+  // if (missingFields.length > 0) {
+  //   setEditProfileError(`Missing required fields: ${missingFields.join(", ")}`);
+  //   console.log("Missing fields:", missingFields);
+  //   return;
+  // }
+// if (
+//   missingFields.length > 0 &&
+//   data.idType === "INTERNATIONAL_PASSPORT" && 
+//   missingFields.includes("idImageBack")
+// ) {
+//   console.log("Skipping idImageBack validation for International Passport");
+// } else {
+//   setEditProfileError(`Missing required fields: ${missingFields.join(", ")}`);
+//   console.log("Missing fields:", missingFields);
+//   return;
+// }
+
+
+// if (
+//   missingFields.length === 1 && 
+//   data.idType === "INTERNATIONAL_PASSPORT" && 
+//   missingFields.includes("idImageBack")
+// ) {
+//   // Skip validation for idImageBack when idType is INTERNATIONAL_PASSPORT
+//   console.log("Skipping idImageBack validation for International Passport");
+// } else {
+//   setEditProfileError(`Missing required fields: ${missingFields.join(", ")}`);
+//   console.log("Missing fields:", missingFields);
+//   return;
+// }
+
+
+
+
+
+
+  
+  
+ 
+  
 
     // if (data.idType === "International Passport" && !selectedDocumentFront) {
     //   setEditProfileError("Missing required field: idImageFront");
     //   console.log("Missing field: idImageFront");
     //   return;
     // }
-    if (data.idType === "International Passport" && !selectedDocumentFront && !data.idImageFront) {
-      setEditProfileError("Missing required field: idImageFront");
-      return;
-    }
+    // if (data.idType === "International Passport" && !selectedDocumentFront && !data.idImageFront) {
+    //   setEditProfileError("Missing required field: idImageFront");
+    //   return;
+    // }
     
 
     // if (data.idType !== "International Passport" && (!selectedDocumentBack || !selectedDocumentFront)) {
@@ -305,21 +417,8 @@ console.log("userDetails.idImageBack:", userDetails.idImageBack);
           // phoneNumber: data.phoneNumber,
           state: data.state,
           postCode: data.postcode,
-          // idImageFront: selectedDocumentFront,
-          // idImageFront: selectedDocumentFront || data.idImageFront || userDetails.idImageFront,
-          // idImageBack: selectedDocumentBack,
-          // ...(selectedDocumentFront
-          //   ? { idImageFront: selectedDocumentFront }
-          //   : userDetails.idImageFront
-          //   ? { idImageFront: userDetails.idImageFront }
-          //   : {}), // Retain existing front image if not changed
-          // ...(selectedDocumentBack
-          //   ? { idImageBack: selectedDocumentBack }
-          //   : userDetails.idImageBack
-          //   ? { idImageBack: userDetails.idImageBack }
-          //   : {}),
-          idImageFront: selectedDocumentFront ?? userDetails.idImageFront ?? null,
-          idImageBack: selectedDocumentBack ?? userDetails.idImageBack ?? null,
+          ...(selectedDocumentFront ? { idImageFront: selectedDocumentFront } : {}),
+          ...(selectedDocumentBack ? { idImageBack: selectedDocumentBack } : {}),
           idType: data.idType,
           idNumber: data.idNumber,
           bio: data.bio,
@@ -345,13 +444,10 @@ console.log("userDetails.idImageBack:", userDetails.idImageBack);
           lastName: data.lastName,
           dateOfBirth: data.dateOfBirth ? formatDateAsYYYYMMDD(data.dateOfBirth as Date) : "",
           suburb: data.suburb,
-          emailAddress: data.emailAddress || user?.emailAddress || "",
+          // emailAddress: data.emailAddress || user?.emailAddress || "",
           // phoneNumber: data.phoneNumber,
           state: data.state,
           postCode: data.postcode,
-          // idImageFront: selectedDocumentFront,
-          // idImageFront: selectedDocumentFront || data.idImageFront || userDetails.idImageFront,
-          // idImageBack: selectedDocumentBack,
           ...(selectedDocumentFront ? { idImageFront: selectedDocumentFront } : {}),
           ...(selectedDocumentBack ? { idImageBack: selectedDocumentBack } : {}),
           idType: data.idType,
@@ -367,6 +463,7 @@ console.log("userDetails.idImageBack:", userDetails.idImageBack);
 
       console.log("Final submitData:", JSON.stringify(submitData, null, 2));
 
+      console.log("FormData keys:", [...submitData.keys()]);
 
       await authInstance.patch(url, submitData, {
         headers: { "Content-Type": "multipart/form-data" },
@@ -375,7 +472,8 @@ console.log("userDetails.idImageBack:", userDetails.idImageBack);
       setIsFormModalShown(true);
       setIsEditingEnabled(true);
     } catch (error: any) {
-      console.log(error);
+      console.log("Submission error:", error);
+      console.error("Detailed error:", error.response ? error.response.data : error.message);
       setEditProfileError("Something went wrong, please try again");
     }
   };
