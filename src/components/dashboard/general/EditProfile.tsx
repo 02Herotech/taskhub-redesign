@@ -463,8 +463,6 @@ console.log("ID Type:", data.idType);  // Log the ID type before checking
 
       console.log("Final submitData:", JSON.stringify(submitData, null, 2));
 
-      console.log("FormData keys:", [...submitData.keys()]);
-
       await authInstance.patch(url, submitData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
