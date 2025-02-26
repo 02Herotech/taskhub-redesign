@@ -95,10 +95,6 @@ function StepTwo() {
       setError("root", { message: "Please select a suburb" });
       return;
     }
-    if (session.status !== "authenticated") {
-      setPopupState({ open: true, status: "authentication" });
-      return;
-    }
     // Save all values from this step in browser memory
     dispatch(setTaskDetail({ key: "taskType", value: data.taskType }));
     dispatch(
@@ -107,6 +103,10 @@ function StepTwo() {
     dispatch(setTaskDetail({ key: "currentSuburb", value: currentSuburb }));
     if (data.taskType === "REMOTE_SERVICE") {
       dispatch(setTaskDetail({ key: "currentSuburb", value: null }));
+    }
+    if (session.status !== "authenticated") {
+      setPopupState({ open: true, status: "authentication" });
+      return;
     }
     // Information from previous step in redux
     const {
@@ -143,7 +143,6 @@ function StepTwo() {
         timeout(10000),
       ]);
       setPopupState({ open: true, status: "success" });
-      dispatch(resetSavedTask());
       reset();
     } catch (error) {
       console.error("Error submitting form: ", error);
@@ -387,6 +386,7 @@ function StepTwo() {
       <PopupTwo
         isOpen={popupState.open && popupState.status === "success"}
         onClose={() => {
+          dispatch(resetSavedTask());
           router.push("/customer/tasks");
           setPopupState({ open: false, status: "" });
         }}
@@ -404,11 +404,13 @@ function StepTwo() {
           <div className="flex justify-center gap-3 sm:gap-5">
             <Link
               href="/customer/tasks"
+              onClick={() => dispatch(resetSavedTask())}
               className="rounded-full border-[0.5px] border-primary bg-[#EBE9F4] px-3 py-2 font-bold text-primary"
             >
               View Tasks
             </Link>
             <Link
+              onClick={() => dispatch(resetSavedTask())}
               href="/marketplace"
               className="rounded-full bg-[#381F8C] px-3 py-2 font-bold text-[#EBE9F4]"
             >
