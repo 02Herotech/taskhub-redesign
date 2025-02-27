@@ -9,6 +9,8 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { CiEdit, CiLocationOn } from "react-icons/ci";
 import { useSelector } from "react-redux";
+import useAxios from "@/hooks/useAxios";
+
 
 const ProfileHeader = () => {
   const [fetchedUserData, setFetchedUserData] = useState(defaultUserDetails);
@@ -24,6 +26,21 @@ const ProfileHeader = () => {
     : "/customer/profile/edit-profile";
 
   const location = user?.address?.state || "Australia";
+  const [rewardsWallet, setRewardsWallet] = useState<RewardsWallet>();
+  const authInstance = useAxios();
+  
+
+  const handleRewardsWallet = async () => {
+    try {
+        // setLoading(true);
+        const { data } = await authInstance.get("rewards/wallet");
+        setRewardsWallet(data.data);
+        console.log("rewards", data.data);
+        } catch (error: any) {
+            console.error(error.response?.data || error);
+        } 
+            // setLoading(false);
+  };
 
   //! Data fetch thats not used
   //Todo Re-visit
@@ -44,7 +61,15 @@ const ProfileHeader = () => {
       }
     };
 
+    handleRewardsWallet();
     fetchUserData();
+
+    const interval = setInterval(() => {
+      handleRewardsWallet();
+      // handleFetchRewardPointsHistory();
+    }, 30000); // Fetch every 30 seconds
+
+    return () => clearInterval(interval);
   }, [token]);
 
   return (
@@ -92,7 +117,7 @@ const ProfileHeader = () => {
                 </div>
                 <div className="h-24 w-[1px] bg-primary"></div> {/* Separator Line */}
                 <div className="flex flex-col items-center justify-center w-28 h-24 bg-[#EBE9F4] rounded-lg shadow-md">
-                  <p className="text-3xl font-bold text-orange-normal">{userRewardPoints}</p>
+                  <p className="text-3xl font-bold text-orange-normal">{rewardsWallet?.balance}</p>
                   <p className="text-md font-bold text-primary">Points reward </p>
                 </div>
               </div>

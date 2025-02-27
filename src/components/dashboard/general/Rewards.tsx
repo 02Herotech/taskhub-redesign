@@ -10,6 +10,7 @@ const RewardsComponent = () =>{
     const [allRewardPoints, setAllRewardPoints] = useState<RewardPointsHistory[]>(
       [],
     );
+    const [rewardsWallet, setRewardsWallet] = useState<RewardsWallet>();
     const [refresh, setRefresh] = useState(0);
     const authInstance = useAxios();
   
@@ -17,22 +18,70 @@ const RewardsComponent = () =>{
     const userId = session?.data?.user?.user?.id;
     const userRewardPoints = (session?.data?.user?.rewardsWallet?.balance ?? 0);
 
+    const formatDate = (rewardedAt) => {
+        const date = new Date(
+          rewardedAt[0], // Year
+          rewardedAt[1] - 1, // Month (adjust for 0-based index)
+          rewardedAt[2] // Day
+        );
+      
+        const day = date.getDate();
+        const year = date.getFullYear();
+        const month = date.toLocaleString("en-US", { month: "long" });
+      
+        // Function to add ordinal suffix (st, nd, rd, th)
+        const getOrdinalSuffix = (day) => {
+          if (day > 3 && day < 21) return "th"; // Covers 4th - 20th
+          switch (day % 10) {
+            case 1:
+              return "st";
+            case 2:
+              return "nd";
+            case 3:
+              return "rd";
+            default:
+              return "th";
+          }
+        };
+      
+        return `${day}${getOrdinalSuffix(day)} ${month} ${year}`;
+    };
 
     const handleFetchRewardPointsHistory = async () => {
         try {
             setLoading(true);
             const { data } = await authInstance.get("rewards/history");
-            setAllRewardPoints(data);
-            console.log("reds", data);
+            setAllRewardPoints(data.data);
+            console.log("reds", data.data);
             } catch (error: any) {
                 console.error(error.response?.data || error);
             } finally {
                 setLoading(false);
-            }
-        };
+        }
+    };
+
+    const handleRewardsWallet = async () => {
+        try {
+            // setLoading(true);
+            const { data } = await authInstance.get("rewards/wallet");
+            setRewardsWallet(data.data);
+            console.log("rewards", data.data);
+            } catch (error: any) {
+                console.error(error.response?.data || error);
+            } 
+                // setLoading(false);
+    };
 
     useEffect(() => {
+        handleRewardsWallet();
         handleFetchRewardPointsHistory();
+
+        const interval = setInterval(() => {
+            handleRewardsWallet();
+            // handleFetchRewardPointsHistory();
+        }, 30000); // Fetch every 30 seconds
+    
+        return () => clearInterval(interval);
     // eslint-disable-next-line
     }, [refresh]);
 
@@ -41,10 +90,9 @@ const RewardsComponent = () =>{
             <div className="flex items-center justify-between mx-auto p-6 bg-[#EBE9F4] rounded-3xl w-[95%] mt-[6rem] h-[80px]">
                 <p className="text-[30px] font-bold text-primary">Point/Rewards</p>
             <div className="p-2 bg-white rounded-2xl shadow-md">
-                    <svg width="82" height="39" viewBox="0 0 97 59" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <rect width="82" height="39" rx="16" fill="white"/>
-                        <path d="M36.8621 23.6552C37.5259 23.6552 38.0943 23.419 38.5674 22.9467C39.0405 22.4744 39.2767 21.906 39.2759 21.2414C39.2751 20.5768 39.0389 20.0087 38.5674 19.5372C38.0959 19.0657 37.5275 18.8292 36.8621 18.8276C36.1967 18.826 35.6286 19.0625 35.1579 19.5372C34.6872 20.012 34.4507 20.58 34.4483 21.2414C34.4459 21.9028 34.6824 22.4712 35.1579 22.9467C35.6334 23.4222 36.2015 23.6584 36.8621 23.6552ZM30.8276 35.7241V33.3103H35.6552V29.569C34.6695 29.3477 33.7897 28.9305 33.0157 28.3174C32.2417 27.7043 31.6732 26.9347 31.3103 26.0086C29.8017 25.8276 28.5397 25.169 27.5243 24.0329C26.5089 22.8968 26.0008 21.564 26 20.0345V16.4138H30.8276V14H42.8965V16.4138H47.7241V20.0345C47.7241 21.5632 47.216 22.896 46.1998 24.0329C45.1836 25.1698 43.9216 25.8284 42.4138 26.0086C42.0517 26.9339 41.4837 27.7035 40.7097 28.3174C39.9356 28.9313 39.0554 29.3485 38.069 29.569V33.3103H42.8965V35.7241H30.8276ZM30.8276 23.4138V18.8276H28.4138V20.0345C28.4138 20.7988 28.6351 21.488 29.0776 22.1019C29.5201 22.7158 30.1034 23.1531 30.8276 23.4138ZM36.8621 27.2759C37.8678 27.2759 38.7227 26.9238 39.4267 26.2198C40.1307 25.5158 40.4828 24.6609 40.4828 23.6552V16.4138H33.2414V23.6552C33.2414 24.6609 33.5934 25.5158 34.2974 26.2198C35.0014 26.9238 35.8563 27.2759 36.8621 27.2759ZM42.8965 23.4138C43.6207 23.1523 44.204 22.7146 44.6465 22.1007C45.0891 21.4868 45.3103 20.798 45.3103 20.0345V18.8276H42.8965V23.4138Z" fill="#381F8C"/>
-                        <path d="M59.7955 42.9657L61.6783 38.8382L65.83 36.9313L61.6783 35.0485L59.7955 30.8968L57.9007 35.0485L53.7611 36.9313L57.9007 38.8382L59.7955 42.9657ZM55.1731 25.7795C56.6396 25.176 58.2097 24.8645 59.7955 24.8623C61.3766 24.8623 62.9455 25.1761 64.4179 25.7795C65.8783 26.383 67.2059 27.2761 68.3283 28.3985C69.4507 29.5209 70.3438 30.8485 70.9473 32.3089C71.5507 33.7813 71.8645 35.3502 71.8645 36.9313C71.8645 40.1295 70.5973 43.2071 68.3283 45.464C67.209 46.5864 65.879 47.4766 64.4147 48.0835C62.9504 48.6903 61.3806 49.0019 59.7955 49.0002C58.2097 48.9981 56.6396 48.6865 55.1731 48.083C53.7104 47.4751 52.3817 46.5852 51.2628 45.464C50.1404 44.3448 49.2502 43.0148 48.6433 41.5505C48.0365 40.0861 47.7249 38.5164 47.7266 36.9313C47.7266 33.733 48.9938 30.6554 51.2628 28.3985C52.3852 27.2761 53.7128 26.383 55.1731 25.7795ZM52.9645 43.7623C54.7748 45.5726 57.2369 46.5864 59.7955 46.5864C62.3542 46.5864 64.8162 45.5726 66.6266 43.7623C68.4369 41.952 69.4507 39.4899 69.4507 36.9313C69.4507 34.3726 68.4369 31.9106 66.6266 30.1002C65.7292 29.2039 64.6641 28.4931 63.492 28.0086C62.3199 27.524 61.0638 27.2751 59.7955 27.2761C57.2369 27.2761 54.7748 28.2899 52.9645 30.1002C52.0682 30.9976 51.3574 32.0627 50.8728 33.2348C50.3883 34.4069 50.1394 35.663 50.1404 36.9313C50.1404 39.4899 51.1542 41.952 52.9645 43.7623Z" fill="#381F8C"/>
+                    <svg width="80" height="39" viewBox="0 0 97 59" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect width="80" height="39" rx="16" fill="white"/>
+                        <path d="M48.5 32.9179L51.1238 34.506C51.377 34.6671 51.6302 34.6615 51.8833 34.4894C52.1365 34.3172 52.2286 34.0811 52.1595 33.781L51.469 30.7774L53.8167 28.7405C54.0468 28.5333 54.1159 28.2861 54.0238 27.9989C53.9317 27.7117 53.7246 27.5561 53.4024 27.5321L50.3298 27.2905L49.1214 24.4595C49.0063 24.1833 48.7992 24.0452 48.5 24.0452C48.2008 24.0452 47.9937 24.1833 47.8786 24.4595L46.6702 27.2905L43.5976 27.5321C43.2754 27.5552 43.0683 27.7107 42.9762 27.9989C42.8841 28.2871 42.9532 28.5343 43.1833 28.7405L45.531 30.7774L44.8405 33.781C44.7714 34.0802 44.8635 34.3163 45.1167 34.4894C45.3698 34.6625 45.623 34.668 45.8762 34.506L48.5 32.9179ZM43.8738 40.5476H40.2143C39.4548 40.5476 38.8048 40.2774 38.2644 39.737C37.724 39.1966 37.4533 38.5462 37.4524 37.7857V34.1262L34.794 31.4333C34.5409 31.1571 34.3452 30.8524 34.2071 30.5191C34.069 30.1859 34 29.8462 34 29.5C34 29.1538 34.069 28.8146 34.2071 28.4822C34.3452 28.1499 34.5409 27.8447 34.794 27.5667L37.4524 24.8738V21.2143C37.4524 20.4548 37.723 19.8048 38.2644 19.2644C38.8057 18.724 39.4557 18.4533 40.2143 18.4524H43.8738L46.5667 15.794C46.8429 15.5409 47.148 15.3452 47.4822 15.2071C47.8164 15.069 48.1557 15 48.5 15C48.8443 15 49.184 15.069 49.5191 15.2071C49.8543 15.3452 50.159 15.5409 50.4333 15.794L53.1262 18.4524H56.7857C57.5452 18.4524 58.1957 18.723 58.737 19.2644C59.2783 19.8057 59.5485 20.4557 59.5476 21.2143V24.8738L62.206 27.5667C62.4591 27.8429 62.6548 28.148 62.7929 28.4822C62.931 28.8164 63 29.1557 63 29.5C63 29.8443 62.931 30.184 62.7929 30.5191C62.6548 30.8543 62.4591 31.159 62.206 31.4333L59.5476 34.1262V37.7857C59.5476 38.5452 59.2774 39.1957 58.737 39.737C58.1966 40.2783 57.5462 40.5485 56.7857 40.5476H53.1262L50.4333 43.206C50.1571 43.4591 49.8524 43.6548 49.5191 43.7929C49.1859 43.931 48.8462 44 48.5 44C48.1538 44 47.8146 43.931 47.4822 43.7929C47.1499 43.6548 46.8447 43.4591 46.5667 43.206L43.8738 40.5476ZM45.0476 37.7857L48.5 41.2381L51.9524 37.7857H56.7857V32.9524L60.2381 29.5L56.7857 26.0476V21.2143H51.9524L48.5 17.7619L45.0476 21.2143H40.2143V26.0476L36.7619 29.5L40.2143 32.9524V37.7857H45.0476Z" fill="#381F8C"/>
                     </svg>
                 </div>
             </div>
@@ -62,8 +110,8 @@ const RewardsComponent = () =>{
                     },
                     {
                         icon: "/assets/icons/rewards-purple.svg",
-                        title: "Completing tasks.",
-                        description: "Earn 10 points by Leaving reviews.",
+                        title: "Reviews.",
+                        description: "Earn 10 points by leaving reviews.",
                         bg: "bg-purple-200",
                     },
                     {
@@ -95,7 +143,7 @@ const RewardsComponent = () =>{
                 <div className="flex flex-col items-center mr-6">
                     <div className="bg-white p-6 rounded-lg shadow-md text-left w-full md:w-[220px] h-[220px] flex flex-col justify-center">
                         <p className="text-primary text-[24px] font-bold mt-[-1.5rem]">Points</p>
-                        <p className="text-[50px] text-[#FE9B07]">{userRewardPoints}</p>
+                        <p className="text-[50px] text-[#FE9B07]">{rewardsWallet?.balance}</p>
                         <p className="text-black mt-2 text-md">Your earned points will automatically go to Wallet</p>
                     </div>
                     
@@ -188,18 +236,61 @@ const RewardsComponent = () =>{
                 //     </div>
                 //     <hr className="w-full border-2 border-gray-600 my-2" />
                 // </div>
-                <div className="flex flex-col mt-[-7.5rem] bg-[#EBE9F4] justify-start items-start text-white rounded-xl w-full max-w-lg mr-auto p-4">
-    <div className="flex items-start">
-        <img src="/assets/icons/rewards-green.svg" className="w-16 h-16" />
-        <div className="flex flex-col text-sm items-start ml-3">
-            <span className="text-primary text-[20px] mt-1">You earned 10 points for posting a task.</span>
-            <span className="text-black text-[16px] mt-3">15 of Oct, 2025</span>
-        </div>
-    </div>
-    {/* Horizontal line below all content */}
-    <hr className="w-full border-t-2 border-gray-600 mt-4" />
-</div>
+                // <div className="flex flex-col mt-[-7.5rem] bg-[#EBE9F4] justify-start items-start text-white rounded-xl w-full max-w-lg mr-auto p-4">
+                //     <div className="flex items-start">
+                //         <img src="/assets/icons/rewards-green.svg" className="w-16 h-16" />
+                //         <div className="flex flex-col text-sm items-start ml-3">
+                //             <span className="text-primary text-[20px] mt-2">You earned 10 points for posting a task.</span>
+                //             <span className="text-black text-[14px] mt-2">15 of Oct, 2025</span>
+                //         </div>
+                //     </div>
+                //     {/* Horizontal line below all content */}
+                //     <hr className="w-full border-t-2 border-gray-300" />
+                // </div>
+                // <div className="flex flex-col mt-[-7.5rem] bg-[#EBE9F4] justify-start items-start text-white rounded-xl w-full max-w-lg mr-auto p-4">
+                //     <div className="flex items-start w-full">
+                //         <img src="/assets/icons/rewards-green.svg" className="w-16 h-16" />
+                //         <div className="flex flex-col text-sm items-start ml-3">
+                //             <span className="text-primary text-[20px] mt-2">You earned 10 points for posting a task.</span>
+                //             <span className="text-black text-[14px] mt-2">15 of Oct, 2025</span>
+                //         </div>
+                //     </div>
+                //     {/* Horizontal line below all content, stretching across the full width */}
+                //     <hr className="w-full border-t-2 border-gray-300 -mx-4" />
+                // </div>
 
+                // <div className="flex flex-col mt-[-7.5rem] bg-[#EBE9F4] rounded-xl w-full max-w-lg mr-auto p-4">
+                //     <div className="flex items-start w-full">
+                //         <img src="/assets/icons/rewards-green.svg" className="w-16 h-16" />
+                //         <div className="flex flex-col text-sm items-start ml-3">
+                //             <span className="text-primary text-[20px] mt-2">You earned {allRewardPoints.amount} points for posting a task.</span>
+                //             <span className="text-black text-[14px] mt-2">15 of Oct, 2025</span>
+                //         </div>
+                //     </div>
+                //     {/* Full-width horizontal line */}
+                //     <div className="w-full -mx-4">
+                //         <hr className="border-t-2 border-gray-300 w-full" />
+                //     </div>
+                // </div>
+                <div className="flex flex-col space-y-4 items-start">
+                    {allRewardPoints.map((reward, index) => (
+                        <div key={index} className="flex flex-col bg-[#EBE9F4] rounded-xl w-full max-w-lg p-4">
+                            <div className="flex items-start w-full">
+                                <img src="/assets/icons/rewards-green.svg" className="w-16 h-16" />
+                                <div className="flex flex-col text-sm items-start ml-3">
+                                    <span className="text-primary text-[20px] mt-2">
+                                        You earned {reward.amount} points for posting a task.
+                                    </span>
+                                    <span className="text-black text-[14px] mt-2">
+                                        {formatDate(reward.rewardedAt)}
+                                    </span>
+                                </div>
+                            </div>
+                            {/* Full-width horizontal line */}
+                            <hr className="border-t-2 border-gray-300 w-full mt-2" />
+                        </div>
+                    ))}
+                </div>
 
                 )}
             </div>

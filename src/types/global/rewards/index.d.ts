@@ -5,3 +5,7 @@ declare interface RewardPointsHistory {
     amount: number;
     rewardedAt: number[] | null;
   }
+
+  declare interface RewardsWallet {
+    balance: number;
+  }
