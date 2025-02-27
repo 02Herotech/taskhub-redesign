@@ -17,6 +17,7 @@ const ProfileHeader = () => {
   const user = session?.data?.user?.user;
   const token = session?.data?.user?.accessToken;
   const userSignUpBonus = (session?.data?.user?.signUpBonusWallet?.balance ?? 0).toFixed(2);
+  const userRewardPoints = (session?.data?.user?.rewardsWallet?.balance ?? 0);
   const isServiceProvider = user?.roles[0] === "SERVICE_PROVIDER";
   const editProfileLink = isServiceProvider
     ? "/service-provider/profile/edit-profile"
@@ -91,7 +92,7 @@ const ProfileHeader = () => {
                 </div>
                 <div className="h-24 w-[1px] bg-primary"></div> {/* Separator Line */}
                 <div className="flex flex-col items-center justify-center w-28 h-24 bg-[#EBE9F4] rounded-lg shadow-md">
-                  <p className="text-3xl font-bold text-orange-normal">0</p>
+                  <p className="text-3xl font-bold text-orange-normal">{userRewardPoints}</p>
                   <p className="text-md font-bold text-primary">Points reward </p>
                 </div>
               </div>

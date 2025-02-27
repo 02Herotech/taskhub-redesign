@@ -850,7 +850,7 @@ console.log("ID Type:", data.idType);  // Log the ID type before checking
                   onClick={() => {
                     setCurrentSuburb(suburb);
                     setInputValue(`${suburb.name}, ${suburb.state.abbreviation}, Australia`);
-                    field.onChange(`${suburb.name}, ${suburb.state.abbreviation}, Australia`); // Update form value
+                    field.onChange(suburb.name); // Update form value
                     setValue("postcode", String(suburb.postcode)); // Auto-update postcode field
                     setValue("state", suburb.state.name);
                     setSuburbList([]); // Clear dropdown
