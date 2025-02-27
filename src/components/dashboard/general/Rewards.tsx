@@ -10,6 +10,7 @@ const RewardsComponent = () =>{
     const [allRewardPoints, setAllRewardPoints] = useState<RewardPointsHistory[]>(
       [],
     );
+    const [rewardsWallet, setRewardsWallet] = useState<RewardsWallet>();
     const [refresh, setRefresh] = useState(0);
     const authInstance = useAxios();
   
@@ -56,11 +57,31 @@ const RewardsComponent = () =>{
                 console.error(error.response?.data || error);
             } finally {
                 setLoading(false);
-            }
-        };
+        }
+    };
+
+    const handleRewardsWallet = async () => {
+        try {
+            // setLoading(true);
+            const { data } = await authInstance.get("rewards/wallet");
+            setRewardsWallet(data.data);
+            console.log("rewards", data.data);
+            } catch (error: any) {
+                console.error(error.response?.data || error);
+            } 
+                // setLoading(false);
+    };
 
     useEffect(() => {
+        handleRewardsWallet();
         handleFetchRewardPointsHistory();
+
+        const interval = setInterval(() => {
+            handleRewardsWallet();
+            // handleFetchRewardPointsHistory();
+        }, 30000); // Fetch every 30 seconds
+    
+        return () => clearInterval(interval);
     // eslint-disable-next-line
     }, [refresh]);
 
@@ -122,7 +143,7 @@ const RewardsComponent = () =>{
                 <div className="flex flex-col items-center mr-6">
                     <div className="bg-white p-6 rounded-lg shadow-md text-left w-full md:w-[220px] h-[220px] flex flex-col justify-center">
                         <p className="text-primary text-[24px] font-bold mt-[-1.5rem]">Points</p>
-                        <p className="text-[50px] text-[#FE9B07]">{userRewardPoints}</p>
+                        <p className="text-[50px] text-[#FE9B07]">{rewardsWallet?.balance}</p>
                         <p className="text-black mt-2 text-md">Your earned points will automatically go to Wallet</p>
                     </div>
                     
