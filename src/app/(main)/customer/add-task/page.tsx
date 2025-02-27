@@ -77,7 +77,6 @@ const AddTaskForm: React.FC = () => {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [selectedTime, setSelectedTime] = useState<Date | null>(null);
   const [termAccepted, settermAccepted] = useState(false);
-  const [accepted, setAccepted] = useState(false);
   const [isRemote, setIsRemote] = useState("");
   // const [selectedCategoryName, setSelectedCategoryName] = useState("Category");
   const [isOpen, setIsOpen] = useState(false);
@@ -343,12 +342,10 @@ const AddTaskForm: React.FC = () => {
 
   const handleDateChange = (date: Date | null) => {
     setSelectedDate(date);
-    setAccepted(true);
   };
 
   const handleTimeChange = (time: Date | null) => {
     setSelectedTime(time);
-    setAccepted(true);
   };
 
   const formatDateToString = (date: Date | null) => {
@@ -479,7 +476,7 @@ const AddTaskForm: React.FC = () => {
           taskDescription: "",
         });
 
-        setIsSuccessPopupOpen(true);
+        // setIsSuccessPopupOpen(true);
       } catch (error: any) {
         console.error("Error submitting form:", error);
         setErrorMessage(
@@ -585,7 +582,7 @@ const AddTaskForm: React.FC = () => {
                   onChange={handleDescription}
                 ></textarea>
               </div>
-              <div className=" space-y-3">
+              <div className="space-y-3">
                 <label className="font-satoshiBold text-[13px] font-bold text-status-darkpurple lg:text-[16px]">
                   Upload an Image (Optional)
                 </label>
@@ -659,7 +656,7 @@ const AddTaskForm: React.FC = () => {
                       name="taskDate"
                       disabled={termAccepted}
                       customInput={<CustomInput />}
-                      className="w-full cursor-pointer rounded-2xl bg-[#EBE9F4] px-2 py-1 outline-none placeholder:text-[14px] placeholder:font-bold "
+                      className="w-full cursor-pointer rounded-2xl bg-[#EBE9F4] px-2 py-1 outline-none placeholder:text-[14px] placeholder:font-bold"
                     />
                   </div>
                   <div className="relative">

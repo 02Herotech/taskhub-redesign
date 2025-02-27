@@ -20,7 +20,8 @@ function useSuburbData(searchValue: string, currentSuburb: SurburbInfo | null) {
 
   useEffect(() => {
     const fetchSuburbData = async () => {
-      if (searchValue.trim().length < 1 || currentSuburb) {
+      if (!searchValue || searchValue?.trim().length < 1 || currentSuburb) {
+        setError("");
         setSuburbList([]);
         return;
       }
