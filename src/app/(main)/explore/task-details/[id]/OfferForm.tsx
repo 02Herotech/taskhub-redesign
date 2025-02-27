@@ -6,6 +6,19 @@ import Button from "@/components/global/Button";
 import { FaCheck } from "react-icons/fa6";
 import { connectSocket } from "@/lib/socket";
 import { useParams } from "next/navigation";
+import { useForm, SubmitHandler } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+
+//Todo Ask for max value for offerMessage string
+const offerSchema = z.object({
+  offerPrice: z
+    .number({ invalid_type_error: "Offer amount is required" })
+    .min(1, "Offer must be above $1"),
+  message: z.string().min(1, "Please enter your message"),
+});
+
+type OfferSchema = z.infer<typeof offerSchema>;
 
 //Add loading prop for button
 type Props = {
@@ -28,15 +41,19 @@ function OfferForm({
   taskPosterId,
 }: Props) {
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
-  const [offerAmount, setOfferAmount] = useState("");
 
   const params = useParams();
   const id = (params.id as string).split("-")[0];
 
-  const handleSubmitOffer = async (message: string) => {
-    if (!isVerified) {
-      return showErrorPopup();
-    }
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<OfferSchema>({ resolver: zodResolver(offerSchema) });
+  const submitForm: SubmitHandler<OfferSchema> = (formData) => {
+    console.log(formData);
+
+    if (!isVerified) return showErrorPopup();
     const socket = connectSocket(id as unknown as number);
 
     const data = {
@@ -44,14 +61,14 @@ function OfferForm({
       customerId: taskPosterId,
       serviceProviderId: user?.serviceProviderId,
       fullName: user?.firstName + " " + user?.lastName,
-      message,
+      message: formData.message,
+      offerPrice: formData.offerPrice,
     };
 
     if (user && socket) {
       try {
         socket.emit("offer", data, () => {
           refetchOffers();
-          setOfferAmount("");
           setShowSuccessMessage(true);
 
           setTimeout(() => {
@@ -66,6 +83,39 @@ function OfferForm({
       console.error("Socket not connected or user not logged in");
     }
   };
+
+  // const handleSubmitOffer = async (message: string) => {
+  //   if (!isVerified) {
+  //     return showErrorPopup();
+  //   }
+  //   const socket = connectSocket(id as unknown as number);
+
+  //   const data = {
+  //     taskId: id,
+  //     customerId: taskPosterId,
+  //     serviceProviderId: user?.serviceProviderId,
+  //     fullName: user?.firstName + " " + user?.lastName,
+  //     message,
+  //   };
+
+  //   if (user && socket) {
+  //     try {
+  //       socket.emit("offer", data, () => {
+  //         refetchOffers();
+  //         setShowSuccessMessage(true);
+
+  //         setTimeout(() => {
+  //           setShowSuccessMessage(false);
+  //           closeOfferForm();
+  //         }, 3000);
+  //       });
+  //     } catch (error) {
+  //       console.error("Error submitting offer:", error);
+  //     }
+  //   } else {
+  //     console.error("Socket not connected or user not logged in");
+  //   }
+  // };
   return (
     <Popup
       isOpen={showOfferForm}
@@ -105,23 +155,60 @@ function OfferForm({
               </Button>
             </motion.div>
           ) : (
-            <div>
-              <textarea
-                rows={5}
-                value={offerAmount}
-                onChange={(e) => setOfferAmount(e.target.value)}
-                className="mb-4 w-full rounded-xl border border-primary p-2"
-                required
-              />
-              <Button
+            <form
+              className="space-y-6 px-1"
+              onSubmit={handleSubmit(submitForm)}
+            >
+              <div>
+                <label
+                  htmlFor="price"
+                  className="mb-2 block font-satoshiBold text-base font-bold text-primary sm:text-lg"
+                >
+                  Your offer price
+                </label>
+                <div className="flex w-full items-center rounded-lg border bg-[#EEEEEF]">
+                  <div className="border-r border-black px-3">$</div>
+                  <input
+                    id="price"
+                    type="number"
+                    min={1}
+                    className="block w-full appearance-none rounded-lg bg-transparent p-3 text-black placeholder-[#55535A] outline-none placeholder:font-satoshiMedium"
+                    placeholder="100"
+                    {...register("offerPrice", { valueAsNumber: true })}
+                  />
+                </div>
+
+                <p className="ml-1 mt-1 text-sm text-[#FF0000]">
+                  {errors?.offerPrice?.message}
+                </p>
+              </div>
+
+              <div>
+                <label
+                  htmlFor="message"
+                  className="mb-2 block font-satoshiBold text-base font-bold text-primary sm:text-lg"
+                >
+                  Drop a message
+                </label>
+                <textarea
+                  id="message"
+                  className="block w-full rounded-lg bg-[#EEEEEF] p-3 placeholder-[#55535A] outline-none placeholder:font-satoshiMedium"
+                  placeholder="Write message here..."
+                  rows={5}
+                  {...register("message")}
+                ></textarea>
+                <p className="ml-1 mt-1 text-sm text-[#FF0000]">
+                  {errors?.message?.message}
+                </p>
+              </div>
+
+              <button
                 type="submit"
-                disabled={!offerAmount.trim()}
-                className="rounded-full"
-                onClick={() => handleSubmitOffer(offerAmount)}
+                className="rounded-full bg-primary px-4 py-2 text-white"
               >
                 Post your offer
-              </Button>
-            </div>
+              </button>
+            </form>
           )}
         </AnimatePresence>
       </div>
