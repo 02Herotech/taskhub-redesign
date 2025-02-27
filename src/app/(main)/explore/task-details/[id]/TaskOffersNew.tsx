@@ -131,7 +131,7 @@ function TaskOffersNew({ currentUserId, taskId, posterId }: OffersProps) {
         </p>
       </header>
 
-      <ul className="">
+      <ul className="space-y-3">
         {offers?.map((offer) => (
           <li className="border-b border-[#C1BADB] pb-4" key={offer.id}>
             <div className="flex gap-1 sm:gap-3">
@@ -190,7 +190,7 @@ function TaskOffersNew({ currentUserId, taskId, posterId }: OffersProps) {
                   )}
                 </div>
                 {offer.offerThreadList.length > 0 && (
-                  <ul className="mt-5 w-full">
+                  <ul className="mt-5 w-full space-y-2">
                     {offer.offerThreadList.map((offerThread) => (
                       <li key={offerThread.message}>
                         <div className="flex gap-1 sm:gap-3">
