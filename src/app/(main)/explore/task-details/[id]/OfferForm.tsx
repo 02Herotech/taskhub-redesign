@@ -2,13 +2,13 @@
 import Popup from "@/components/global/Popup/PopupTwo";
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import Button from "@/components/global/Button";
 import { FaCheck } from "react-icons/fa6";
 import { connectSocket } from "@/lib/socket";
 import { useParams } from "next/navigation";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import Button from "@/components/global/Button";
 
 //Todo Ask for max value for offerMessage string
 const offerSchema = z.object({
@@ -170,12 +170,12 @@ function OfferForm({
                 </p>
               </div>
 
-              <button
+              <Button
                 type="submit"
                 className="rounded-full bg-primary px-4 py-2 text-white"
               >
                 Post your offer
-              </button>
+              </Button>
             </form>
           )}
         </AnimatePresence>
