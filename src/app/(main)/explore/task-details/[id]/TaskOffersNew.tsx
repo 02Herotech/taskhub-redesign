@@ -229,8 +229,7 @@ function TaskOffersNew({ currentUserId, taskId, posterId }: OffersProps) {
                 )}
               </div>
             </div>
-            {offer.serviceProviderId === currentUserId &&
-              offer.offerThreadList.length > 0 && <ReplyOfferForm />}
+            {offer.serviceProviderId === currentUserId && <ReplyOfferForm />}
           </li>
         ))}
       </ul>
