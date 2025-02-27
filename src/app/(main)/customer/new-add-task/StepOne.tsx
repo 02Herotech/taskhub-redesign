@@ -294,9 +294,9 @@ function StepOne() {
 
       <Button
         type="submit"
-        className="w-full rounded-3xl p-3 text-white"
+        className="w-full rounded-3xl p-3 text-white lg:w-[100px]"
       >
-        Save and Continue
+        Next
       </Button>
     </motion.form>
   );
