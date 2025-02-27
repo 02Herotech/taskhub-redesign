@@ -12,6 +12,9 @@ declare module "next-auth" {
       signUpBonusWallet?: {
         balance: number;
         expired: boolean;
+      },
+      rewardsWallet?: {
+        balance: number;
       }
 
       user: {
