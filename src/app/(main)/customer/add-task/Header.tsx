@@ -6,8 +6,6 @@ import { setTaskDetail } from "@/store/Features/taskDetails";
 import { useRouter } from "next/navigation";
 
 function Header() {
-  //Todo Progress calculation
-  const progress = 0;
   const dispatch = useDispatch();
   const savedTask = useSelector((state: RootState) => state.taskDetails);
   const { currentStep } = savedTask;
@@ -85,12 +83,12 @@ function Header() {
                       ? "bg-status-purpleBase"
                       : "bg-status-purpleBase"
                 }`}
-                style={{ width: `${progress}%` }}
+                style={{ width: `${Math.round((currentStep / 2) * 100)}%` }}
               />
             </div>
-            <p className="text-xs text-status-darkpurple">
-              {`${progress}% complete`}
-            </p>
+            {/* <p className="text-xs text-status-darkpurple">
+              {`${Math.round((currentStep / 2) * 100)}% complete`}
+            </p> */}
           </div>
         </div>
       </div>
@@ -109,7 +107,7 @@ function Header() {
           <div className="h-1 w-full bg-[#EAE9EB]">
             <div
               className="h-full bg-status-purpleBase"
-              style={{ width: `${progress}%` }}
+              style={{ width: `${Math.round((currentStep / 2) * 100)}%` }}
             ></div>
           </div>
         </div>
