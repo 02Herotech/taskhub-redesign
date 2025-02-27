@@ -6,6 +6,19 @@ import Button from "@/components/global/Button";
 import { FaCheck } from "react-icons/fa6";
 import { connectSocket } from "@/lib/socket";
 import { useParams } from "next/navigation";
+import { useForm, SubmitHandler } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+
+//Todo Ask for max value for offerMessage string
+const offerSchema = z.object({
+  offerPrice: z
+    .number({ invalid_type_error: "Offer amount must be a number" })
+    .min(1, "Offer must be above $1"),
+  offerMessage: z.string().max(13, "Message too long").optional(),
+});
+
+type OfferSchema = z.infer<typeof offerSchema>;
 
 //Add loading prop for button
 type Props = {
@@ -27,8 +40,15 @@ function OfferForm({
   refetchOffers,
   taskPosterId,
 }: Props) {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<OfferSchema>({ resolver: zodResolver(offerSchema) });
+  const submitForm: SubmitHandler<OfferSchema> = (data) => {
+    console.log(data);
+  };
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
-  const [offerAmount, setOfferAmount] = useState("");
 
   const params = useParams();
   const id = (params.id as string).split("-")[0];
@@ -51,7 +71,6 @@ function OfferForm({
       try {
         socket.emit("offer", data, () => {
           refetchOffers();
-          setOfferAmount("");
           setShowSuccessMessage(true);
 
           setTimeout(() => {
@@ -105,23 +124,61 @@ function OfferForm({
               </Button>
             </motion.div>
           ) : (
-            <div>
-              <textarea
-                rows={5}
-                value={offerAmount}
-                onChange={(e) => setOfferAmount(e.target.value)}
-                className="mb-4 w-full rounded-xl border border-primary p-2"
-                required
-              />
-              <Button
+            <form
+              className="space-y-6 px-1"
+              onSubmit={handleSubmit(submitForm)}
+            >
+              {/* Required  */}
+              <div>
+                <label
+                  htmlFor="price"
+                  className="mb-2 block font-satoshiBold text-base font-bold text-primary sm:text-lg"
+                >
+                  Your offer price
+                </label>
+                <div className="flex w-full items-center rounded-lg border bg-[#EEEEEF]">
+                  <div className="border-r border-black px-3">$</div>
+                  <input
+                    id="price"
+                    type="number"
+                    className="block w-full appearance-none rounded-lg bg-transparent p-3 text-black placeholder-[#55535A] outline-none placeholder:font-satoshiMedium"
+                    placeholder="100"
+                    {...register("offerPrice", { valueAsNumber: true })}
+                  />
+                </div>
+
+                <p className="ml-1 mt-1 text-sm text-[#FF0000]">
+                  {errors?.offerPrice?.message}
+                </p>
+              </div>
+
+              {/* Optional  */}
+              <div>
+                <label
+                  htmlFor="message"
+                  className="mb-2 block font-satoshiBold text-base font-bold text-primary sm:text-lg"
+                >
+                  Drop a message
+                </label>
+                <textarea
+                  id="message"
+                  className="block w-full rounded-lg bg-[#EEEEEF] p-3 placeholder-[#55535A] outline-none placeholder:font-satoshiMedium"
+                  placeholder="Write message here..."
+                  rows={5}
+                  {...register("offerMessage")}
+                ></textarea>
+                <p className="ml-1 mt-1 text-sm text-[#FF0000]">
+                  {errors?.offerMessage?.message}
+                </p>
+              </div>
+
+              <button
                 type="submit"
-                disabled={!offerAmount.trim()}
-                className="rounded-full"
-                onClick={() => handleSubmitOffer(offerAmount)}
+                className="rounded-full bg-primary px-4 py-2 text-white"
               >
                 Post your offer
-              </Button>
-            </div>
+              </button>
+            </form>
           )}
         </AnimatePresence>
       </div>
