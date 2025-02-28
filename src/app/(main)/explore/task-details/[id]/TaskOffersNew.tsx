@@ -39,6 +39,9 @@ function TaskOffersNew({ currentUserId, taskId, posterId }: OffersProps) {
     (state: RootState) => state.userProfile,
   );
   const { data: offers, refetch } = useGetTasksOffersQuery(taskId);
+
+  console.log(offers);
+
   const modalRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -151,7 +154,7 @@ function TaskOffersNew({ currentUserId, taskId, posterId }: OffersProps) {
                   <p className="font-satoshiMedium text-lg text-primary md:text-2xl">
                     {offer.fullName}
                   </p>
-                  <div className="flex gap-2 border-b border-[#F7DBB2] pb-2">
+                  {/* <div className="flex gap-2 border-b border-[#F7DBB2] pb-2">
                     <small>(4.5)</small>
                     <div className="flex items-center">
                       {Array.from({ length: 5 }).map((_) => (
@@ -162,7 +165,7 @@ function TaskOffersNew({ currentUserId, taskId, posterId }: OffersProps) {
                         />
                       ))}
                     </div>
-                  </div>
+                  </div> */}
                   <div className="mt-3 flex justify-between">
                     <p className="max-w-[150px] font-satoshiMedium text-sm text-[#140B31] sm:max-w-full sm:text-xl">
                       {offer.message}
@@ -174,9 +177,11 @@ function TaskOffersNew({ currentUserId, taskId, posterId }: OffersProps) {
                       <p className="block font-satoshiMedium text-xs text-primary sm:text-base">
                         {formatTimeAgo(offer.createdAt)}
                       </p>
-                      <p className="font-satoshiMedium text-sm text-[#E58C06] line-through md:text-xl">
-                        Price: $2500
-                      </p>
+                      {offer.offerAmount && (
+                        <p className="font-satoshiMedium text-sm text-[#E58C06] md:text-xl">
+                          Price: ${offer.offerAmount}
+                        </p>
+                      )}
                     </div>
                   </div>
                   {/* Display when offer has other messages  */}
@@ -213,9 +218,11 @@ function TaskOffersNew({ currentUserId, taskId, posterId }: OffersProps) {
                                 <p className="block font-satoshiMedium text-xs text-primary sm:text-base">
                                   {formatTimeAgo(offerThread.timeStamp)}
                                 </p>
-                                <p className="font-satoshiMedium text-sm text-[#E58C06] line-through md:text-xl">
-                                  Price: $2000
-                                </p>
+                                {offerThread.offerAmount && (
+                                  <p className="font-satoshiMedium text-sm text-[#E58C06] md:text-xl">
+                                    Price: ${offerThread.offerAmount}
+                                  </p>
+                                )}
                               </div>
                             </div>
                             <p className="max-w-[150px] font-satoshiMedium text-sm text-[#140B31] sm:max-w-full sm:text-xl">
@@ -229,7 +236,9 @@ function TaskOffersNew({ currentUserId, taskId, posterId }: OffersProps) {
                 )}
               </div>
             </div>
-            {offer.serviceProviderId === currentUserId && <ReplyOfferForm />}
+            {offer.serviceProviderId === currentUserId && (
+              <ReplyOfferForm taskId={offer.taskId} user={user} />
+            )}
           </li>
         ))}
       </ul>

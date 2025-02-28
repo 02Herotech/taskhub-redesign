@@ -1,11 +1,51 @@
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { IoClose } from "react-icons/io5";
 import { motion, AnimatePresence } from "framer-motion";
 import { LiaReplySolid } from "react-icons/lia";
+import { connectSocket } from "@/lib/socket";
 
-function ReplyOfferForm() {
+type Props = {
+  taskId: number;
+  user: UserProfileTypes;
+};
+
+function ReplyOfferForm({ taskId, user }: Props) {
   const [showReplyForm, setShowReplyForm] = useState(false);
-  const formRef = useRef<HTMLFormElement>(null);
+
+  const handleReply = (offerId: string) => {
+    const socket = connectSocket(taskId);
+    const data = {
+      offerThreadList: [
+        {
+          taskId,
+          offerId,
+          userId: user?.serviceProviderId,
+          fullName: user?.firstName + " " + user?.lastName,
+          //? Message and price
+          //message: replyText,
+          //price: 
+        },
+      ],
+    };
+
+    if (user && socket) {
+      try {
+        socket.emit("offer/replies", data, () => {
+          //? Run when post is successful
+          //refetch();
+
+          // Delay the closing of the modal and hiding the success message
+          setTimeout(() => {
+            //? CLosing of modal
+          }, 3000);
+        });
+      } catch (error) {
+        console.error("Error submitting reply:", error);
+      }
+    } else {
+      console.error("Socket not connected or user not logged in");
+    }
+  };
   return (
     <AnimatePresence initial={false} mode="wait">
       {!showReplyForm ? (
@@ -17,7 +57,6 @@ function ReplyOfferForm() {
           exit={{ opacity: 0 }}
           onClick={() => {
             setShowReplyForm(true);
-            // formRef.current?.scrollIntoView({ behavior: "smooth" });
           }}
         >
           <LiaReplySolid strokeWidth={1.2} size={20} className="rotate-180" />
@@ -27,14 +66,10 @@ function ReplyOfferForm() {
         </motion.button>
       ) : (
         <motion.form
-          ref={formRef}
           key="form"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          onAnimationComplete={() => {
-            formRef.current?.scrollIntoView({ behavior: "smooth" });
-          }}
           className="relative mt-4 flex gap-[6px] rounded-lg border border-primary bg-[#EEEEEF99] p-4"
         >
           <textarea
