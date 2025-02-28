@@ -88,7 +88,7 @@ const SignUpForm = () => {
 
         } catch (err: any) {
             clearTimeout(timeoutId);
-            console.log("Error:", err);
+            console.error("Error:", err);
             setError(err.data.message || 'An unexpected error occurred');
             setIsLoading(false);
         }

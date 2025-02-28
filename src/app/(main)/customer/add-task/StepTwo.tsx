@@ -50,6 +50,10 @@ function StepTwo() {
 
   const watchForm = watch();
 
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, []);
+
   //Set task type and current suburb
   useEffect(() => {
     setValue("taskType", taskType as TaskType);
@@ -132,7 +136,6 @@ function StepTwo() {
       customerBudget,
       termAccepted: true,
     };
-    console.log(finalTask);
     try {
       await Promise.race([
         authInstance.post("task/post", finalTask, {
