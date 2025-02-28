@@ -369,7 +369,7 @@ function StepTwo() {
             href="/auth/sign-up?userType=Customer"
             onClick={() => {
               setCookie("redirectToAddTask", "/customer/add-task", {
-                maxAge: 360000,
+                maxAge: 3 * 60 * 60,
               });
             }}
             className="relative z-10 mx-auto block w-max rounded-full bg-[#EBE9F4] px-4 py-2 font-satoshiBold font-bold text-primary md:px-6"
