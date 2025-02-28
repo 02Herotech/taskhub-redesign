@@ -42,6 +42,10 @@ function StepOne() {
   });
 
   const watchForm = watch();
+  
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, []);
 
   useEffect(() => {
     if (typeof watchForm.taskImage == "string") {
