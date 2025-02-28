@@ -149,7 +149,6 @@ const TaskOffers: FC<OffersProps> = ({ currentUserId, taskId, posterId }) => {
                       />
                     </div>
                   </div>
-
                   <AnimatePresence>
                     {showSuccessMessage ? (
                       <motion.div

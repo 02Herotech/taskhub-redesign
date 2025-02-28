@@ -1,22 +1,21 @@
 "use client";
 
-import { useGetTaskByCustomerIdQuery } from "@/services/tasks";
+import { useGetAllTaskByCustomerIdQuery, useGetTaskByCustomerIdQuery } from "@/services/tasks";
 import Loading from "@/shared/loading";
 import Link from "next/link";
 import Button from "@/components/global/Button";
-import NewTasksCard from "../NewTasksCard";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
+import AllTasksCard from "../AllTasksCard";
 
 const TaskList = () => {
   const { profile: user } = useSelector(
     (state: RootState) => state.userProfile,
   );
-
   const userId = user?.customerId
 
   // Make the query only when the userId is available
-  const { data: tasksData, isLoading, error } = useGetTaskByCustomerIdQuery(userId!, {
+  const { data: tasksData, isLoading, error } = useGetAllTaskByCustomerIdQuery(userId!, {
     skip: !userId,
   });
 
@@ -37,10 +36,10 @@ const TaskList = () => {
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-          {tasksData?.map((task, index) => (
-            <NewTasksCard key={index} task={task} />
-          ))}
-        </div>
+        {tasksData?.map((task, index) => (
+            <AllTasksCard key={index} task={task} />
+        ))}
+        </div>    
       )}
     </>
   );

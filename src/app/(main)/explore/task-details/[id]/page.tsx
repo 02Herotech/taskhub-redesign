@@ -25,6 +25,7 @@ import useUserProfileData from "@/hooks/useUserProfileData";
 import ProfileIncomplete from "@/components/global/Popup/ProfileIncomplete";
 import InReview from "@/components/global/Popup/InReview";
 import OfferForm from "./OfferForm";
+import TaskOffersNew from "./TaskOffersNew";
 
 const TaskDetailsPage = ({ params }: { params: { id: string } }) => {
   const [showOfferForm, setShowOfferForm] = useState(false);
@@ -105,6 +106,8 @@ const TaskDetailsPage = ({ params }: { params: { id: string } }) => {
   const { data: offers, refetch } = useGetTasksOffersQuery(
     id as unknown as number,
   );
+
+  console.log(offers);
   const { profile: user } = useSelector(
     (state: RootState) => state.userProfile,
   );
@@ -377,7 +380,8 @@ const TaskDetailsPage = ({ params }: { params: { id: string } }) => {
           </div>
         </>
       )}
-      {offers && offers.length > 0 && (
+      
+      {false && (
         <TaskOffers
           // offers={offers}
           posterId={task?.posterId}
@@ -385,6 +389,15 @@ const TaskDetailsPage = ({ params }: { params: { id: string } }) => {
           taskId={Number(id)}
         />
       )}
+
+      {offers && offers.length > 0 && (
+        <TaskOffersNew
+          posterId={task?.posterId}
+          currentUserId={user?.serviceProviderId!}
+          taskId={Number(id)}
+        />
+      )}
+
       <ProfileIncomplete
         isOpen={
           showErrorPopup &&
