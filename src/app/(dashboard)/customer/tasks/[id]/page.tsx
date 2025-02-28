@@ -41,7 +41,6 @@ const NewTaskDetails = ({ params }: { params: { id: string } }) => {
 
   useEffect(() => {
     const updateUserData = async () => {
-      if (session.data.user.user.enabled) return;
       try {
         const { data } = await authInstance.get("customer/profile");
         if (!data.isEnabled) return;
