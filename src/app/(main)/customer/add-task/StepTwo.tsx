@@ -19,6 +19,7 @@ import PopupTwo from "@/components/global/Popup/PopupTwo";
 import Link from "next/link";
 import Image from "next/image";
 import Loading from "@/components/global/loading/page";
+import { setCookie, getCookie, deleteCookie } from "cookies-next";
 
 type TaskType = "PHYSICAL_SERVICE" | "REMOTE_SERVICE";
 
@@ -49,6 +50,10 @@ function StepTwo() {
   });
 
   const watchForm = watch();
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, []);
 
   //Set task type and current suburb
   useEffect(() => {
@@ -132,7 +137,6 @@ function StepTwo() {
       customerBudget,
       termAccepted: true,
     };
-    console.log(finalTask);
     try {
       await Promise.race([
         authInstance.post("task/post", finalTask, {
@@ -362,7 +366,12 @@ function StepTwo() {
             Complete sign up to add and manage all your tasks.
           </p>
           <Link
-            href="/auth/sign-up"
+            href="/auth/sign-up?userType=Customer"
+            onClick={() => {
+              setCookie("redirectToAddTask", "/customer/add-task", {
+                maxAge: 3 * 60 * 60,
+              });
+            }}
             className="relative z-10 mx-auto block w-max rounded-full bg-[#EBE9F4] px-4 py-2 font-satoshiBold font-bold text-primary md:px-6"
           >
             Sign up

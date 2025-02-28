@@ -2,13 +2,13 @@
 import Popup from "@/components/global/Popup/PopupTwo";
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import Button from "@/components/global/Button";
 import { FaCheck } from "react-icons/fa6";
 import { connectSocket } from "@/lib/socket";
 import { useParams } from "next/navigation";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import Button from "@/components/global/Button";
 
 //Todo Ask for max value for offerMessage string
 const offerSchema = z.object({
@@ -84,38 +84,6 @@ function OfferForm({
     }
   };
 
-  // const handleSubmitOffer = async (message: string) => {
-  //   if (!isVerified) {
-  //     return showErrorPopup();
-  //   }
-  //   const socket = connectSocket(id as unknown as number);
-
-  //   const data = {
-  //     taskId: id,
-  //     customerId: taskPosterId,
-  //     serviceProviderId: user?.serviceProviderId,
-  //     fullName: user?.firstName + " " + user?.lastName,
-  //     message,
-  //   };
-
-  //   if (user && socket) {
-  //     try {
-  //       socket.emit("offer", data, () => {
-  //         refetchOffers();
-  //         setShowSuccessMessage(true);
-
-  //         setTimeout(() => {
-  //           setShowSuccessMessage(false);
-  //           closeOfferForm();
-  //         }, 3000);
-  //       });
-  //     } catch (error) {
-  //       console.error("Error submitting offer:", error);
-  //     }
-  //   } else {
-  //     console.error("Socket not connected or user not logged in");
-  //   }
-  // };
   return (
     <Popup
       isOpen={showOfferForm}
@@ -202,12 +170,12 @@ function OfferForm({
                 </p>
               </div>
 
-              <button
+              <Button
                 type="submit"
                 className="rounded-full bg-primary px-4 py-2 text-white"
               >
                 Post your offer
-              </button>
+              </Button>
             </form>
           )}
         </AnimatePresence>
