@@ -35,11 +35,11 @@ export const customerDashboardLinks: DashboardLinks[] = [
     link: "/customer/payment?tab=paymentHistory",
     icon: PaymentIcon,
   },
-  { 
-    label: "Rewards",
-    link: "/customer/rewards",
-    icon: PaymentIcon,
-  },
+  // { 
+  //   label: "Rewards",
+  //   link: "/customer/rewards",
+  //   icon: PaymentIcon,
+  // },
   // {
   //   label: "Settings",
   //   link: "/customer/settings",
