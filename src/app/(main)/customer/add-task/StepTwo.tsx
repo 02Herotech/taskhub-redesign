@@ -19,6 +19,7 @@ import PopupTwo from "@/components/global/Popup/PopupTwo";
 import Link from "next/link";
 import Image from "next/image";
 import Loading from "@/components/global/loading/page";
+import { setCookie, getCookie, deleteCookie } from "cookies-next";
 
 type TaskType = "PHYSICAL_SERVICE" | "REMOTE_SERVICE";
 
@@ -365,7 +366,12 @@ function StepTwo() {
             Complete sign up to add and manage all your tasks.
           </p>
           <Link
-            href="/auth/sign-up"
+            href="/auth/sign-up?userType=Customer"
+            onClick={() => {
+              setCookie("redirectToAddTask", "/customer/add-task", {
+                maxAge: 360000,
+              });
+            }}
             className="relative z-10 mx-auto block w-max rounded-full bg-[#EBE9F4] px-4 py-2 font-satoshiBold font-bold text-primary md:px-6"
           >
             Sign up
