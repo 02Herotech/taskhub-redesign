@@ -1,19 +1,12 @@
-import { FC, useEffect, useRef, useState } from "react";
-import { connectSocket } from "@/lib/socket";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
-import { FaChevronDown, FaStar } from "react-icons/fa6";
-import Button from "@/components/global/Button";
-import { IoIosCloseCircleOutline } from "react-icons/io";
+import { FaChevronDown } from "react-icons/fa6";
 import { useGetTasksOffersQuery } from "@/services/tasks";
-import { motion, AnimatePresence } from "framer-motion";
-import OfferMessage from "@/components/dashboard/customer/OfferMessage";
-import { FaCheck } from "react-icons/fa";
 import { formatTimeAgo } from "@/lib/utils";
 
 ////
 import { LiaReplySolid } from "react-icons/lia";
-import { IoClose } from "react-icons/io5";
 import Image from "next/image";
 import ReplyOfferForm from "./ReplyOfferForm";
 
@@ -26,37 +19,10 @@ interface OffersProps {
 
 function TaskOffersNew({ currentUserId, taskId, posterId }: OffersProps) {
   const [viewAll, setViewAll] = useState(false);
-  const [showReplyForm, setShowReplyForm] = useState(false);
-  const formRef = useRef<HTMLFormElement>(null);
-
-  ////////
-  const [replyText, setReplyText] = useState<string>("");
-  const [openReplyModal, setOpenReplyModal] = useState<{
-    [key: string]: boolean;
-  }>({});
-  const [showSuccessMessage, setShowSuccessMessage] = useState<boolean>(false);
   const { profile: user } = useSelector(
     (state: RootState) => state.userProfile,
   );
   const { data: offers, refetch } = useGetTasksOffersQuery(taskId);
-
-  console.log(offers);
-
-  const modalRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const handleResize = () => {
-      if (modalRef.current) {
-        modalRef.current.style.height = `${window.innerHeight}px`;
-      }
-    };
-
-    handleResize();
-    window.addEventListener("resize", handleResize);
-
-    return () => window.removeEventListener("resize", handleResize);
-  }, [openReplyModal]);
-
   useEffect(() => {
     const intervalId = setInterval(() => {
       refetch();
@@ -66,41 +32,6 @@ function TaskOffersNew({ currentUserId, taskId, posterId }: OffersProps) {
       clearInterval(intervalId);
     };
   }, []);
-
-  const handleReply = (offerId: string) => {
-    const socket = connectSocket(taskId);
-    const data = {
-      offerThreadList: [
-        {
-          taskId,
-          offerId,
-          userId: user?.serviceProviderId,
-          fullName: user?.firstName + " " + user?.lastName,
-          message: replyText,
-        },
-      ],
-    };
-
-    if (user && socket) {
-      try {
-        socket.emit("offer/replies", data, () => {
-          refetch();
-          setReplyText("");
-          setShowSuccessMessage(true);
-
-          // Delay the closing of the modal and hiding the success message
-          setTimeout(() => {
-            setShowSuccessMessage(false);
-            setOpenReplyModal((prev) => ({ ...prev, [offerId]: false }));
-          }, 3000);
-        });
-      } catch (error) {
-        console.error("Error submitting reply:", error);
-      }
-    } else {
-      console.error("Socket not connected or user not logged in");
-    }
-  };
   return (
     <section className="mt-14">
       <header className="mb-6 text-[#E58C06]">
@@ -237,7 +168,12 @@ function TaskOffersNew({ currentUserId, taskId, posterId }: OffersProps) {
               </div>
             </div>
             {offer.serviceProviderId === currentUserId && (
-              <ReplyOfferForm taskId={offer.taskId} user={user} />
+              <ReplyOfferForm
+                taskId={offer.taskId}
+                offerId={offer.id}
+                user={user}
+                refetch={refetch}
+              />
             )}
           </li>
         ))}

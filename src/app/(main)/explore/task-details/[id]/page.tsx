@@ -107,7 +107,7 @@ const TaskDetailsPage = ({ params }: { params: { id: string } }) => {
     id as unknown as number,
   );
 
-  console.log(offers);
+  //console.log(offers);
   const { profile: user } = useSelector(
     (state: RootState) => state.userProfile,
   );
