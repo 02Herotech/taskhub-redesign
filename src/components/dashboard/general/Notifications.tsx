@@ -40,7 +40,7 @@ const NotificationComponent = () => {
   useEffect(() => {
     handleFetchNotifications();
     // eslint-disable-next-line
-  }, [refresh]);
+  }, [refresh, userId]);
 
   const handleChangeCategory = (category: string) => {
     setCurrentCategory(category);

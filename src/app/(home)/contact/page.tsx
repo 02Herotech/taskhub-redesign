@@ -74,7 +74,6 @@ const ContactUsPage = () => {
             );
             setSuccessMessage('Form submitted successfully');
             setErrorMessage('');
-            console.log('Form submitted', response.data);
             // Reset the form fields
             setSelectedCategory({
                 id: null,
@@ -84,7 +83,7 @@ const ContactUsPage = () => {
             setEmailAddress('');
             setMessage('');
         } catch (error) {
-            console.log(error);
+            console.error("Error occured: ", error);
         }
     };
 
@@ -111,6 +110,7 @@ const ContactUsPage = () => {
                                             className="block w-full mt-2 p-3 border border-gray-300 bg-white rounded-2xl text-[#333236] cursor-pointer"
                                         >
                                             <div className="flex items-center justify-between">
+                                                {/* @ts-ignore  */}
                                                 <h4 className={`${selectedCategory.categoryName ? 'text-black' : 'text-[#D3D2D5]'}`}>
                                                     {selectedCategory.subjectCategoryName ? `${selectedCategory.subjectCategoryName}` : 'Enter subject category'}
                                                 </h4>

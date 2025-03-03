@@ -149,9 +149,7 @@ const NotificationList = ({
       await axios.post(
         url,
         { notificationId: notification.id },
-        {
-          headers: { Authorization: "Bearer " + token },
-        },
+        { headers: { Authorization: "Bearer " + token } },
       );
       setRefresh((prev) => prev + 1);
     } catch (error: any) {
