@@ -49,7 +49,7 @@ function TaskOffersNew({ currentUserId, taskId, posterId }: OffersProps) {
             <FaChevronDown />
           </button>
         </div>
-        <p className="font-satoshiBold text-base font-bold text-[#403E44] sm:text-lg">
+        {/* <p className="font-satoshiBold text-base font-bold text-[#403E44] sm:text-lg">
           <strong className="font-bold text-primary">Note: </strong>
           Before you accept an Offer...
         </p>
@@ -62,7 +62,7 @@ function TaskOffersNew({ currentUserId, taskId, posterId }: OffersProps) {
             Edit your task details
           </strong>{" "}
           (if necessary)—especially the price—to match what you both agreed on.
-        </p>
+        </p> */}
       </header>
 
       <ul className="space-y-3">
