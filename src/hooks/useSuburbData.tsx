@@ -23,6 +23,7 @@ function useSuburbData(searchValue: string, currentSuburb: SurburbInfo | null) {
       if (!searchValue || searchValue?.trim().length < 1 || currentSuburb) {
         setError("");
         setSuburbList([]);
+        setIsLoading(false);
         return;
       }
       try {
@@ -38,7 +39,9 @@ function useSuburbData(searchValue: string, currentSuburb: SurburbInfo | null) {
       } catch (error) {
         console.error("Suburb list fetch error: ", error);
         setIsLoading(false);
-        setError("Error occured while fetching data");
+        if (searchValue) {
+          setError("Error occured while fetching data");
+        }
         setSuburbList([]);
       }
     };
