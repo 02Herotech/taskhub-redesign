@@ -321,6 +321,7 @@ const PricingModal = ({
                     id="suburb"
                     className="w-full rounded-lg p-3 px-7 outline-none disabled:bg-white "
                     value={formState.suburb}
+                    autoComplete="off"
                     required
                     onChange={(event) => {
                       if (currentSuburb) {
