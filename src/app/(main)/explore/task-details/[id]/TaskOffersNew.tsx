@@ -34,7 +34,7 @@ function TaskOffersNew({ currentUserId, taskId, posterId }: OffersProps) {
   }, []);
   return (
     <section className="mt-14">
-      <header className="mb-6 text-[#E58C06]">
+      <header className="mb-8 text-[#E58C06]">
         <div className="mb-3 flex items-center justify-between">
           <h2 className="font-satoshiBold text-xl font-bold lg:text-3xl">
             Offers
