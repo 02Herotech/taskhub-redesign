@@ -39,24 +39,23 @@ const NewTaskDetails = ({ params }: { params: { id: string } }) => {
   const [showAssignForm, setShowAssignForm] = useState(false);
   const [openPopup, setOpenPopup] = useState(false);
 
-  //Todo
-  // useEffect(() => {
-  //   const updateUserData = async () => {
-  //     try {
-  //       const { data } = await authInstance.get("customer/profile");
-  //       if (!data.isEnabled) return;
-  //       //Update session
-  //       const user = session.data?.user;
-  //       if (!user) return;
-  //       const { user: userInfo } = user;
-  //       userInfo.enabled = data.isEnabled;
-  //       await session.update({ user: userInfo });
-  //     } catch (error) {
-  //       console.error(error);
-  //     }
-  //   };
-  //   updateUserData();
-  // }, [session.status]);
+  useEffect(() => {
+    const updateUserData = async () => {
+      try {
+        const { data } = await authInstance.get("customer/profile");
+        if (!data.isEnabled) return;
+        //Update session
+        const user = session.data?.user;
+        if (!user) return;
+        const { user: userInfo } = user;
+        userInfo.enabled = data.isEnabled;
+        await session.update({ user: userInfo });
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    updateUserData();
+  }, [session.status]);
 
   const handleAssign = (offerId: string) => {
     console.log(`Assigning task to offer: ${offerId}`);

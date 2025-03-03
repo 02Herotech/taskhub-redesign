@@ -40,7 +40,7 @@ function TaskOffersNew({ currentUserId, taskId, posterId }: OffersProps) {
             Offers
           </h2>
           <button
-            className="flex items-center gap-3"
+            className="flex items-center gap-1 sm:gap-3"
             onClick={() => setViewAll(!viewAll)}
           >
             <span className="font-satoshiBold font-bold">
