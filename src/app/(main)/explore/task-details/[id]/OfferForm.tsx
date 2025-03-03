@@ -51,8 +51,6 @@ function OfferForm({
     formState: { errors },
   } = useForm<OfferSchema>({ resolver: zodResolver(offerSchema) });
   const submitForm: SubmitHandler<OfferSchema> = (formData) => {
-    console.log(formData);
-
     if (!isVerified) return showErrorPopup();
     const socket = connectSocket(id as unknown as number);
 
