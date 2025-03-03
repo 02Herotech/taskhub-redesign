@@ -120,8 +120,7 @@ function TaskOffersNew({ currentUserId, taskId, posterId }: OffersProps) {
                     <LiaReplySolid
                       strokeWidth={1.2}
                       stroke="#381F8C"
-                      size={25}
-                      className="absolute -bottom-5 -left-5 rotate-180"
+                      className="absolute -bottom-5 -left-5 rotate-180 text-base md:text-xl"
                     />
                   )}
                 </div>

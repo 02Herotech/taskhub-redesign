@@ -81,7 +81,10 @@ function ReplyOfferForm({ taskId, user, refetch, offerId }: Props) {
           exit={{ opacity: 0 }}
           onClick={() => setShowReplyForm(true)}
         >
-          <LiaReplySolid strokeWidth={1.2} size={20} className="rotate-180" />
+          <LiaReplySolid
+            strokeWidth={1.2}
+            className="rotate-180 text-base md:text-xl"
+          />
           <span className="font-satoshiBold text-base font-bold sm:text-xl ">
             Reply
           </span>
