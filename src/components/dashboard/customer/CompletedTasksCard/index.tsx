@@ -16,10 +16,9 @@ import Popup from "@/components/global/Popup";
 import Button from "@/components/global/Button";
 import { useDeleteTaskMutation } from "@/services/tasks";
 import RebookForm from "../RebookForm";
-import { useSession } from "next-auth/react";
 import Image from "next/image";
 import imags from "../../../../../public/assets/images/tickk.png";
-import { instance as authInstance } from "@/utils/axiosInterceptor.config";
+import useAxios from "@/hooks/useAxios";
 
 interface TaskCardProps {
   task: CompletedTask;
@@ -32,7 +31,6 @@ type DropDownItem = {
 };
 
 const CompletedTasksCard = ({ task }: TaskCardProps) => {
-  const session = useSession();
   const [dropReviewPopup, setDropReviewPopup] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [reviewSent, setReviewSent] = useState<boolean>(false);
@@ -48,7 +46,7 @@ const CompletedTasksCard = ({ task }: TaskCardProps) => {
   const serviceProviderId = task.providerId;
   const categoryId = task.categoryId;
   const comment = review;
-  const token = session.data?.user.refreshToken;
+  const authInstance = useAxios();
   // Function to get the correct ordinal suffix
   function getOrdinalSuffix(day: any) {
     if (day > 3 && day < 21) return "th";

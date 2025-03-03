@@ -12,11 +12,8 @@ import {
 } from "@/lib/dashboardLinks";
 import Link from "next/link";
 import { SettingsIcon } from "@/lib/svgIcons";
-import axios from "axios";
 import { useDispatch } from "react-redux";
-import {
-  removeUserProfile
-} from "@/store/Features/userProfile";
+import { removeUserProfile } from "@/store/Features/userProfile";
 
 const initialAuthState = {
   token: null,
@@ -40,10 +37,9 @@ const DashboardSidebar = () => {
 
   const handleLogout = async () => {
     try {
-      await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/logout`);
       setAuth(initialAuthState);
       dispatch(removeUserProfile());
-      await signOut({ callbackUrl: `${ process.env.NEXT_PUBLIC_URL}/home` });
+      await signOut({ callbackUrl: `${process.env.NEXT_PUBLIC_URL}/home` });
       router.push("/home");
     } catch (error: any) {
       console.log(error);

@@ -97,7 +97,7 @@ const OnogoingTaskDetailsPage = ({ params }: { params: { id: string } }) => {
       rejectionReason: selectedRevision,
     });
     if (response.error) {
-      console.log(response.error);
+      console.error(response.error);
       setRevisionError("Job has not been completed by Service Provider");
       return;
     } else {
@@ -119,7 +119,7 @@ const OnogoingTaskDetailsPage = ({ params }: { params: { id: string } }) => {
     setInspectionError("");
     const response = await inspectTask({ jobId: task.id });
     if (response.error) {
-      console.log(response.error);
+      console.error(response.error);
       setInspectionError("Job has not been completed by Service Provider");
       return;
     } else {

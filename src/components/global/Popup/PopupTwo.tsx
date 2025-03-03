@@ -54,7 +54,7 @@ const Popup: React.FC<PopupProps> = ({
     <AnimatePresence>
       {isOpen && (
         <motion.div
-          className="fixed left-0 top-0 z-50 flex h-full w-full items-center justify-center bg-black bg-opacity-60"
+          className="fixed left-0 top-0 z-[60] flex h-full w-full items-center justify-center bg-black bg-opacity-60"
           initial="hidden"
           animate="visible"
           exit="exit"
@@ -62,13 +62,13 @@ const Popup: React.FC<PopupProps> = ({
         >
           <motion.div
             ref={popupRef}
-            className="relative z-10 mx-5 flex items-center justify-between overflow-hidden rounded-xl bg-white shadow-lg lg:mx-0"
+            className="relative z-[100] mx-5 flex items-center justify-between overflow-hidden rounded-xl bg-white shadow-lg lg:mx-0"
             variants={popupVariants}
           >
             {popUpTitle && (
-              <div className="absolute left-0 top-0 z-10 p-2">{popUpTitle}</div>
+              <div className="absolute left-0 top-0 z-10 p-2 pl-4">{popUpTitle}</div>
             )}
-            <div className="absolute right-0 top-0 z-10 cursor-pointer p-2">
+            <div className="absolute right-0 top-0 z-10 cursor-pointer p-2 pr-4">
               <button
                 onClick={onClose}
                 className="rounded-3xl bg-[#EBE9F4] p-2 text-primary hover:text-gray-800"

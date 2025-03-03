@@ -35,7 +35,7 @@ const Footer = () => {
   ];
 
   const link_3 = [
-    { label: "FAQs", url: "/home#FAQSection" },
+    // { label: "FAQs", url: "/home#FAQSection" },
     { label: "Contact us", url: "/contact" },
     { label: "Terms and Condition", url: "/terms-and-condition" },
     { label: "Privacy", url: "/privacy" },
@@ -80,7 +80,7 @@ const Footer = () => {
         <div className="relative mx-auto w-full max-w-7xl px-4 py-12 sm:px-6 lg:px-8 lg:py-16">
           <div className="flex flex-col items-center space-y-8 lg:space-y-12">
             {/* Logo */}
-            <div className="z-30 mt-20 flex w-full justify-center sm:mt-0">
+            <div className="mt-20 flex w-full justify-center sm:mt-0">
               <Link href="/" className="block">
                 <div className="relative">
                   <Image

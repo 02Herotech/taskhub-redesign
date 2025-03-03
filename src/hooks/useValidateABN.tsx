@@ -14,6 +14,7 @@ function useValidateABN(
   userDetails: DefaultUserDetailsType,
 ) {
   const [isValidABN, setIsValidABN] = useState<boolean>(false);
+
   const [error, setError] = useState<string>("");
   const session = useSession();
   const token = session?.data?.user.accessToken;

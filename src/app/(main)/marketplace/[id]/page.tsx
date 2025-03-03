@@ -119,7 +119,7 @@ const Page = ({ params }: { params: { id: string } }) => {
 
   return (
     <>
-      <main className="relative py-16 font-satoshiMedium text-[#221354] ">
+      <main className="relative py-16 font-satoshiMedium text-[#221354]">
         <ImageModal
           showImageModal={showImageModal}
           setShowImageModal={setShowImageModal}

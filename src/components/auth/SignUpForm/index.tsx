@@ -57,7 +57,8 @@ const SignUpForm = () => {
                 lastName: payload.lastName,
                 emailAddress: payload.emailAddress,
                 // phoneNumber: payload.phoneNumber,
-                password: payload.password
+                password: payload.password,
+                media: "WEB"
             };
 
             setCookie('firstName', payload.firstName, { maxAge: 60 * 2 });
@@ -87,7 +88,7 @@ const SignUpForm = () => {
 
         } catch (err: any) {
             clearTimeout(timeoutId);
-            console.log("Error:", err);
+            console.error("Error:", err);
             setError(err.data.message || 'An unexpected error occurred');
             setIsLoading(false);
         }

@@ -9,12 +9,10 @@ import { AnimatePresence } from "framer-motion";
 import { BsChat } from "react-icons/bs";
 import { IoMdNotificationsOutline } from "react-icons/io";
 import { BiChevronDown } from "react-icons/bi";
-import { RiMenu3Fill } from "react-icons/ri";
 import Dropdown from "@/components/global/Dropdown";
 import { signOut, useSession } from "next-auth/react";
 import Logo from "../Logo";
 import axios from "axios";
-import PlaceholderImage from "../../../../public/assets/images/placeholder.jpeg";
 import {
   customerLinks,
   homeLinks,
@@ -68,13 +66,12 @@ const Navigation = () => {
 
   const handleLogout = async () => {
     try {
-      await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/logout`);
       setAuth(initialAuthState);
       dispatch(removeUserProfile());
       await signOut({ callbackUrl: `${process.env.NEXT_PUBLIC_URL}/home` });
       router.push("/home");
     } catch (error: any) {
-      console.log(error);
+      console.error(error);
     }
   };
 
@@ -153,8 +150,7 @@ const Navigation = () => {
       try {
         dispatch(setWalletLoading(true));
         const url =
-          `${process.env.NEXT_PUBLIC_API_URL}/user/user-profile/` +
-          user.id;
+          `${process.env.NEXT_PUBLIC_API_URL}/user/user-profile/` + user.id;
         const { data } = await axios.get(url);
         const userData: UserProfileTypes = data;
         dispatch(updateUserProfile(data));
@@ -290,7 +286,7 @@ const Navigation = () => {
                         <Image
                           src={
                             userProfile?.profile?.profileImage ||
-                            PlaceholderImage.src
+                            "/assets/images/placeholder.jpeg"
                           }
                           alt="Profile"
                           className="size-[46px] rounded-full object-cover"

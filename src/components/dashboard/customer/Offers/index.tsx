@@ -438,17 +438,27 @@ const Offers = () => {
                           </h2>
                           <h5 className="text-[#716F78]">Start Date</h5>
                         </div>
+                        {/* <div className="w-1/2">
+                          <h2 className="text-xl font-bold text-[#001433]">
+                            {formatAmount(selectedInvoice.total * 0.10, "USD", false)}
+                          </h2>
+                          <h5 className="text-[#716F78]">Gst(10%)</h5>
+                        </div> */}
                         <div className="w-1/2">
                           <h2 className="text-xl font-bold text-[#001433]">
-                            10%
+                            {formatAmount(
+                              selectedInvoice.total * 0,
+                              "USD",
+                              false,
+                            )}
                           </h2>
-                          <h5 className="text-[#716F78]">GST</h5>
+                          <h5 className="text-[#716F78]">Gst(0%)</h5>
                         </div>
                       </div>
                     </div>
-                    <p className="font-satoshiBold font-bold text-[#140B31]">
+                    {/* <p className="font-satoshiBold font-bold text-[#140B31]">
                       Note: A 10% GST charge would be added to the final bill.
-                    </p>
+                    </p> */}
                     {error && (
                       <div className="my-1 text-base font-semibold text-status-error-100">
                         {error}

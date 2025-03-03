@@ -6,10 +6,11 @@ import CustomerBadge from "@/components/dashboard/customer/Badge";
 import TopActivities from "@/components/dashboard/customer/TopActivities";
 import { defaultUserDetails } from "@/data/data";
 import { useEffect, useState } from "react";
-import { instance as authInstance } from "@/utils/axiosInterceptor.config";
+import useAxios from "@/hooks/useAxios";
 
 const CustomerProfilePage = () => {
   const [fetchedUserData, setFetchedUserData] = useState(defaultUserDetails);
+  const authInstance = useAxios();
 
   useEffect(() => {
     const fetchUserData = async () => {

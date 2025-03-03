@@ -12,6 +12,7 @@ const TaskList = () => {
   const { profile: user } = useSelector(
     (state: RootState) => state.userProfile,
   );
+
   const userId = user?.customerId
 
   // Make the query only when the userId is available

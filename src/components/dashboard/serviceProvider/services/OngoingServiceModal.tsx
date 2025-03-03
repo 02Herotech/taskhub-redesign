@@ -7,9 +7,8 @@ import { BsExclamationTriangle, BsTriangleFill, BsX } from "react-icons/bs";
 import { GrFlagFill } from "react-icons/gr";
 import { IoWarning } from "react-icons/io5";
 import { PiSealCheckFill } from "react-icons/pi";
-import { useSelector } from "react-redux";
 import { BeatLoader } from "react-spinners";
-import { instance as authInstance } from "@/utils/axiosInterceptor.config";
+import useAxios from "@/hooks/useAxios";
 
 interface ModalType {
   modalData: ModalDataType;
@@ -36,6 +35,7 @@ const OngoingServiceModal = ({
     jobId: modalData.message,
     isReportSent: false,
   });
+  const authInstance = useAxios()
 
   const handleCloseModal = () => {
     setModalData({

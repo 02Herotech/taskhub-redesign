@@ -10,7 +10,7 @@ import React, { useEffect, useState } from "react";
 import { IoLocationOutline } from "react-icons/io5";
 import { BeatLoader } from "react-spinners";
 import MessageButton from "@/components/global/MessageButton";
-import { instance as authInstance } from "@/utils/axiosInterceptor.config";
+import useAxios from "@/hooks/useAxios";
 
 const ViewJobs = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -28,6 +28,7 @@ const ViewJobs = () => {
   const [showCongratulations, setShowCongratulations] = useState(false);
 
   const { id } = useParams();
+  const authInstance = useAxios()
 
   const fetchSingleBooking = async () => {
     try {

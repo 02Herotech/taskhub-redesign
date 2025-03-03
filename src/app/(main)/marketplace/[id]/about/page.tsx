@@ -13,7 +13,7 @@ import AllServices from "@/components/dashboard/serviceProvider/services/AllServ
 import { truncateText } from "@/utils/marketplace";
 import { motion } from "framer-motion";
 import instance from "@/utils/axios.config";
-import { instance as authInstance } from "@/utils/axiosInterceptor.config";
+import useAxios from "@/hooks/useAxios";
 
 const Page = () => {
   const session = useSession();
@@ -28,6 +28,7 @@ const Page = () => {
     state: false,
     image: "",
   });
+  const authInstance = useAxios()
 
   const { id } = useParams();
   const { userProfileAuth: auth } = useSelector(

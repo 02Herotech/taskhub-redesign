@@ -2,20 +2,23 @@
 import AiDesciption from "@/components/AiGenerate/AiDescription";
 import { typeData } from "@/data/marketplace/data";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import React, { useEffect, useRef, useState } from "react";
-import { useForm, SubmitHandler, Controller, set } from "react-hook-form";
-import { BiChevronDown, BiX } from "react-icons/bi";
-import { BsTriangle, BsTriangleFill } from "react-icons/bs";
-import { PiFileArrowDownDuotone, PiSealCheckFill } from "react-icons/pi";
+import { useForm, SubmitHandler } from "react-hook-form";
+import { BiX } from "react-icons/bi";
+import { BsTriangleFill } from "react-icons/bs";
+import { PiSealCheckFill } from "react-icons/pi";
 import { RiPencilLine } from "react-icons/ri";
 import { BeatLoader } from "react-spinners";
 import { z } from "zod";
 import instance from "@/utils/axios.config";
-import { instance as authInstance } from "@/utils/axiosInterceptor.config";
+import useAxios from "@/hooks/useAxios";
+import listingZodSchema from "./listSchema";
+import useSuburbData, { SurburbInfo } from "@/hooks/useSuburbData";
+import { IoLocationOutline } from "react-icons/io5";
+import { CiLocationOn } from "react-icons/ci";
 
 const daysData: string[] = [
   "MONDAY",
@@ -27,13 +30,14 @@ const daysData: string[] = [
   "SUNDAY",
 ];
 
+type listingZodType = z.infer<typeof listingZodSchema>;
+
 const EditListing = () => {
   const [currentListing, setCurrentListing] = useState<ListingDataType>();
   const [showDropdown, setShowDropdown] = useState({
     name: "",
     isShown: false,
   });
-  const [suburbList, setSuburbList] = useState([]);
   const [errorMessage, setErrorMessage] = useState("");
   const { listingId } = useParams();
   const [image1, setImage1] = useState<File | null>(null);
@@ -45,80 +49,18 @@ const EditListing = () => {
   const image3Ref = useRef<HTMLInputElement>(null);
   const image4Ref = useRef<HTMLInputElement>(null);
   const [showModal, setShowModal] = useState(false);
+  const authInstance = useAxios();
 
-  const listingZodSchema = z.object({
-    listingTitle: z
-      .string()
-      .min(3, "Minimum of 3 characters")
-      .refine((str) => str.split(" ").filter(Boolean).length > 0, {
-        message: `Title must have ${1} word or more`,
-      }),
-    listingDescription: z
-      .string()
-      .min(10, "Minimum of 10 characters")
-      .refine((str) => str.split(" ").filter(Boolean).length >= 5, {
-        message: `Description must have ${5} words or more`,
-      }),
-    // category: z.string(),
-    // subCategory: z.string(),
-    availableDays: z.array(z.string()),
-    available: z.boolean(),
-    taskType: z.string(),
-    negotiable: z.boolean(),
-    planOneDescription: z.string().min(1, "Please write a plan description"),
-    planOnePrice: z.number(),
-    planTwoDescription: z.string().nullable().optional(),
-    planTwoPrice: z.string().nullable().optional(),
-    planThreeDescription: z.string().nullable().optional(),
-    planThreePrice: z.string().nullable().optional(),
-    postcode: z.string().nullable().optional(),
-    suburb: z.string().nullable().optional(),
-    state: z.string().nullable().optional(),
-    image1: z.string().optional(),
-    image2: z.string().optional(),
-    image3: z.string().optional(),
-    image4: z.string().optional(),
-  });
-  // .refine(
-  //   (data) => {
-  //     // Check if planTwoDescription is not "", null, or undefined, and ensure planTwoPrice is provided
-  //     if (
-  //       data.planTwoDescription &&
-  //       data.planTwoDescription.trim().length > 0 &&
-  //       !data.planTwoPrice
-  //     ) {
-  //       return false;
-  //     }
-
-  //     // Check if planThreeDescription is not "", null, or undefined, and ensure planThreePrice is provided
-  //     if (
-  //       data.planThreeDescription &&
-  //       data.planThreeDescription.trim().length > 0 &&
-  //       !data.planThreePrice
-  //     ) {
-  //       return false;
-  //     }
-
-  //     return true;
-  //   },
-  //   {
-  //     message: "Price is required if description is provided",
-  //     path: ["planTwoPrice", "planThreePrice"], // This will show error on both fields
-  //   },
-  // );
-
-  type listingZodType = z.infer<typeof listingZodSchema>;
+  const fetchCurentListing = async () => {
+    try {
+      const { data } = await instance.get("listing/" + listingId);
+      setCurrentListing(data);
+    } catch (error: any) {
+      console.error(error.response.data);
+    }
+  };
 
   useEffect(() => {
-    const fetchCurentListing = async () => {
-      try {
-        const { data } = await instance.get("listing/" + listingId);
-        setCurrentListing(data);
-      } catch (error: any) {
-        console.log(error.response.data);
-      }
-    };
-
     fetchCurentListing();
   }, [listingId]);
 
@@ -150,9 +92,7 @@ const EditListing = () => {
         planTwoPrice: currentListing.planTwoPrice?.toString(),
         planThreeDescription: currentListing.planThreeDescription,
         planThreePrice: currentListing.planThreePrice?.toString(),
-        postcode: currentListing.postCode,
-        suburb: currentListing.suburb,
-        state: currentListing.state,
+        suburb: "",
         image1: currentListing.businessPictures[0],
         image2: currentListing.businessPictures[1],
         image3: currentListing.businessPictures[2],
@@ -182,62 +122,11 @@ const EditListing = () => {
 
   useEffect(() => {
     if (watchField.taskType === typeData[0].value) {
-      setValue("postcode", "");
-      setValue("state", "");
       setValue("suburb", "");
+      setSuburbList([]);
     }
     // eslint-disable-next-line
   }, [watchField.taskType]);
-
-  const handleFectchLocationByPostcode = async () => {
-    try {
-      const url = `util/locations/search?postcode=${watchField.postcode}`;
-      const { data } = await instance.get(url);
-
-      // Map suburbs from the Name field
-      const suburbs = data.map((item: { Name: string }) => item.Name);
-      setSuburbList(suburbs);
-
-      // Only set the suburb if there isn't already a current suburb value
-      // This preserves the existing suburb when editing
-      if (!watchField.suburb && suburbs.length > 0) {
-        // If no current suburb exists, then default to first in list
-        setValue("suburb", suburbs[0]);
-      }
-
-      // Set the state if available using the State field
-      if (data[0]?.State) {
-        setValue("state", data[0].State);
-      } else {
-        setValue("state", "");
-      }
-
-      // Define the type for the location data
-      interface LocationData {
-        Name: string;
-        Postcode: string;
-        State: string;
-        StateShort: string;
-        Type: string;
-      }
-
-      // You might also want to store the full location data for reference
-      const locationData: LocationData = data[0];
-
-      // If you need to store the state abbreviation somewhere
-      const stateShort = locationData.StateShort;
-    } catch (error) {
-      console.error("Error fetching location data:", error);
-      setSuburbList([]);
-      setValue("suburb", "");
-      setValue("state", "");
-    }
-  };
-
-  useEffect(() => {
-    if (watchField.postcode) handleFectchLocationByPostcode();
-    // eslint-disable-next-line
-  }, [watchField.postcode]);
 
   const watchImageArray = [
     watchField.image1,
@@ -269,6 +158,14 @@ const EditListing = () => {
     }
   };
 
+  const [currentSuburb, setCurrentSuburb] = useState<SurburbInfo | null>(null);
+  const {
+    suburbList,
+    setSuburbList,
+    error: suburbError,
+    isLoading,
+  } = useSuburbData(watchField.suburb, currentSuburb);
+
   const imageRefs = [image1Ref, image2Ref, image3Ref, image4Ref];
 
   const handleClickImageButton = ({ index }: { index: number }) => {
@@ -292,8 +189,8 @@ const EditListing = () => {
       planThreeDescription: data.planOneDescription,
       planThreePrice: Number(data.planThreePrice),
       suburb: data.suburb,
-      state: data.state,
-      postCode: data.postcode,
+      state: currentSuburb?.state.name,
+      postCode: currentSuburb?.postcode,
       image1,
       image2,
       image3,
@@ -314,9 +211,11 @@ const EditListing = () => {
       await authInstance.patch(url, body, {
         headers: { "Content-Type": "multipart/form-data" },
       });
+      //Refetch after submitting form
+      fetchCurentListing();
       setShowModal(true);
     } catch (error: any) {
-      console.log(error.response.data);
+      console.error(error.response.data);
       setErrorMessage(error.response.data.message);
     }
   };
@@ -431,7 +330,6 @@ const EditListing = () => {
           </label>
 
           {/* title */}
-
           <label className="flex flex-col gap-2">
             <span className=" text-violet-darker">
               Service Title <span className="text-xl text-red-600">*</span>
@@ -599,7 +497,7 @@ const EditListing = () => {
                   Plan Two
                 </button>
                 <div
-                  className={` overflow-hidden transition-all duration-300  ${showDropdown.name === "two" && showDropdown.isShown ? "max-h-96" : "max-h-0"} `}
+                  className={`overflow-hidden transition-all duration-300  ${showDropdown.name === "two" && showDropdown.isShown ? "max-h-96" : "max-h-0"} `}
                 >
                   <textarea
                     {...register("planTwoDescription")}
@@ -699,80 +597,77 @@ const EditListing = () => {
             </div>
 
             {/* Physical Service Props */}
-            {watchField.taskType === typeData[1].value ? (
-              <div className="flex flex-wrap justify-between gap-4 ">
-                {/* postcode */}
-                <label className="flex flex-col gap-2">
-                  <span className=" text-violet-darker">Postcode</span>
+            {watchField.taskType === typeData[1].value && (
+              <div className="relative">
+                <div className="mb-3 flex items-center gap-x-2 text-slate-600">
+                  <IoLocationOutline className="text-xl" />
+                  <span>
+                    {currentListing.suburb}, {currentListing.state}
+                  </span>
+                </div>
+                {/* Suburb */}
+                <label className="flex w-full flex-col gap-2">
+                  <span className=" text-violet-darker">Suburb</span>
                   <input
-                    type="number"
-                    className="rounded-lg bg-violet-light p-3 pl-4 outline-none lg:w-28"
-                    {...register("postcode")}
+                    type="string"
+                    className="w-full rounded-lg bg-violet-light p-3 pl-4 outline-none"
+                    placeholder="Enter a new suburb.."
+                    autoComplete="off"
+                    {...register("suburb", {
+                      onChange: (e) => {
+                        if (currentSuburb) {
+                          setCurrentSuburb(null);
+                          const enteredInput = e.target.value.slice(-1);
+                          e.target.value = enteredInput;
+                          setValue("suburb", enteredInput);
+                        }
+                        setValue("suburb", e.target.value);
+                      },
+                    })}
                   />
                 </label>
-                {/* State */}
-                <label className="flex flex-col gap-2">
-                  <span className=" text-violet-darker">State</span>
-                  <input
-                    type="text"
-                    readOnly
-                    className=" cursor-default rounded-lg bg-violet-light p-3 pl-4 outline-none lg:w-32"
-                    {...register("state")}
-                  />
-                </label>
-
-                {/* suburb */}
-                <div className="relative flex flex-col gap-2">
-                  <span className="font-bold text-violet-darker">Suburb</span>
-                  <div className="relative">
-                    <span className="absolute right-4 top-1/2 -translate-y-1/2">
-                      <BsTriangleFill
-                        className="size-3 rotate-[60deg] text-violet-normal"
-                        fill="rgb(56 31 140)"
-                      />
-                    </span>
-                    <button
-                      type="button"
-                      onClick={() => expandDropdown("suburb")}
-                      className="h-12 min-w-48 rounded-lg bg-violet-light p-3 pl-4 text-left outline-none"
-                    >
-                      {watchField.suburb ||
-                        currentListing?.suburb ||
-                        "Select suburb"}
-                    </button>
-                  </div>
-                  <div
-                    className={`absolute left-0 top-[calc(100%+0.5rem)] z-10 w-full overflow-hidden rounded-md bg-violet-light transition-all duration-300 ${
-                      showDropdown.name === "suburb" && showDropdown.isShown
-                        ? "max-h-96"
-                        : "max-h-0"
-                    }`}
-                  >
-                    <div className="small-scrollbar max-h-64 overflow-y-auto">
-                      {suburbList.map((item) => (
-                        <button
-                          type="button"
+                <div className="absolute left-0 z-10 w-full bg-white">
+                  {isLoading && (
+                    <p className="py-2 text-center font-satoshiMedium text-[#76757A61]">
+                      Loading...
+                    </p>
+                  )}
+                  {suburbError && !isLoading && (
+                    <p className="py-2 text-center font-satoshiMedium text-red-600">
+                      Error occured while loading suburb data
+                    </p>
+                  )}
+                  {suburbList.length > 1 && (
+                    <ul className="roundeed-lg max-h-52 overflow-y-auto overflow-x-hidden">
+                      {suburbList.map((suburb) => (
+                        <li
+                          className="flex cursor-pointer items-center gap-1 bg-white px-4 py-3 text-[13px]"
+                          key={Math.random() * 12345}
                           onClick={() => {
-                            setValue("suburb", item);
-                            expandDropdown("suburb");
+                            setCurrentSuburb(suburb);
+                            setValue(
+                              "suburb",
+                              `${suburb.name}, ${suburb.state.abbreviation}, Australia`,
+                            );
+                            setSuburbList([]);
                           }}
-                          key={item}
-                          className={`w-full p-3 text-left transition-colors hover:bg-violet-200 ${
-                            (watchField.suburb || currentListing?.suburb) ===
-                            item
-                              ? "bg-violet-normal text-white hover:bg-violet-normal"
-                              : ""
-                          }`}
                         >
-                          {item}
-                        </button>
+                          <CiLocationOn
+                            stroke="#0F052E"
+                            size={20}
+                            strokeWidth={1}
+                          />
+                          <span className="text-[#0F052E]">
+                            {suburb.name},{" "}
+                            {suburb.locality ? `${suburb.locality},` : ""}{" "}
+                            {suburb.state.name}, AUS
+                          </span>
+                        </li>
                       ))}
-                    </div>
-                  </div>
+                    </ul>
+                  )}
                 </div>
               </div>
-            ) : (
-              <div></div>
             )}
           </div>
         </section>

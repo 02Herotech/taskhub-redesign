@@ -18,11 +18,13 @@ import { getCookie, deleteCookie } from "cookies-next";
 import { UserDataType } from "@/lib/validation/userData.schema";
 import FormField from "./FormField";
 import Notice from "./Notice";
-import instance from "@/utils/axios.config";
-import { instance as authInstance } from "@/utils/axiosInterceptor.config";
 import axios from "axios";
 import useValidateABN from "@/hooks/useValidateABN";
-import Information from '@/components/business-hub/Information';
+import Information from "@/components/business-hub/Information";
+import useAxios from "@/hooks/useAxios";
+import { Calendar } from "primereact/calendar";
+import useSuburbData, { SurburbInfo } from "@/hooks/useSuburbData";
+import { CiLocationOn } from "react-icons/ci";
 
 const idTypeObject = [
   { label: "Medicare Card", value: "MEDICARE_CARD" },
@@ -49,7 +51,7 @@ const EditProfile = () => {
     null,
   );
   const [documentImage, setDocumentImage] = useState<string | null>(null);
-  const [suburbList, setSuburbList] = useState<string[]>([]);
+  // const [suburbList, setSuburbList] = useState<string[]>([]);
   const [selectedDocumentFront, setSelectedDocumentFront] =
     useState<File | null>(null);
   const [selectedDocumentBack, setSelectedDocumentBack] = useState<File | null>(
@@ -62,12 +64,34 @@ const EditProfile = () => {
   const [userDetails, setUserDetails] = useState(defaultUserDetails);
   const [editProfileError, setEditProfileError] = useState("");
   const [isDocumentEditable, setIsDocumentEditable] = useState(false);
+  const authInstance = useAxios();
 
   const userProfile = useSelector((state: RootState) => state.userProfile);
+
+  const [dateOfBirth, setDateOfBirth] = useState<Date | null>(null);
+
+  // const [suburb, setSuburb] = useState("");
+
+  // const [currentSuburb, setCurrentSuburb] = useState<SurburbInfo | null>(null);
+  // const {
+  //   suburbList,
+  //   setSuburbList,
+  //   error: suburbError,
+  //   isLoading,
+  // } = useSuburbData(suburb, currentSuburb);
+
+  // const [inputValue, setInputValue] = useState(field.value || "");
+  // const [currentSuburb, setCurrentSuburb] = useState<SurburbInfo | null>(null);
+  // const { suburbList, setSuburbList, error: suburbError, isLoading } = useSuburbData(inputValue, currentSuburb);
+
+  // const { suburbList, setSuburbList, error: suburbError, isLoading } = useSuburbData(inputValue, currentSuburb);
   const dispatch = useDispatch();
 
   const { data: session } = useSession();
   const user = session?.user?.user;
+
+  const maxDate = new Date();
+  maxDate.setFullYear(maxDate.getFullYear() - 18);
 
   const isServiceProvider = user?.roles[0] === "SERVICE_PROVIDER";
   const router = useRouter();
@@ -97,9 +121,8 @@ const EditProfile = () => {
     defaultValues: {
       firstName: "",
       lastName: "",
-      dateOfBirth: null,
-      // phoneNumber: "",
-      emailAddress: "",
+      dateOfBirth: new Date(),
+      // emailAddress: user?.emailAddress || "",
       postcode: "",
       suburb: "",
       state: "",
@@ -110,6 +133,24 @@ const EditProfile = () => {
       isVerified: false,
     },
   });
+
+  const [inputValue, setInputValue] = useState(""); // Initialize state for input
+  const [currentSuburb, setCurrentSuburb] = useState<SurburbInfo | null>(null);
+  const suburbValue = watch("suburb"); // Watch the suburb field
+
+  // Sync input value with react-hook-form's field value
+  useEffect(() => {
+    if (suburbValue) {
+      setInputValue(suburbValue);
+    }
+  }, [suburbValue]);
+
+  const {
+    suburbList,
+    setSuburbList,
+    error: suburbError,
+    isLoading,
+  } = useSuburbData(inputValue, currentSuburb);
 
   const watchField = watch();
   const watchABN = watch("abn");
@@ -168,62 +209,12 @@ const EditProfile = () => {
 
   const watchPostcode = watch("postcode");
 
-  useEffect(() => {
-    const fetchLocationByPostcode = async () => {
-      if (!watchPostcode) {
-        setSuburbList([]);
-        setValue("suburb", "");
-        setValue("state", "");
-        return;
-      }
-
-      try {
-        const { data } = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_URL}/util/locations/search?postcode=${watchPostcode}`,
-        );
-
-        // Map suburbs from the Name field
-        const suburbs = data.map((item: { Name: string }) => item.Name);
-        setSuburbList(suburbs);
-
-        // Set the first suburb as the default if available
-        if (suburbs.length > 0) {
-          setValue("suburb", suburbs[0]);
-        } else {
-          setValue("suburb", "");
-        }
-
-        // Set the state if available using the State field
-        if (data[0]?.State) {
-          setValue("state", data[0].State);
-        } else {
-          setValue("state", "");
-        }
-
-        // Define the type for the location data
-        interface LocationData {
-          Name: string;
-          Postcode: string;
-          State: string;
-          StateShort: string;
-          Type: string;
-        }
-
-        // You might also want to store the full location data for reference
-        const locationData: LocationData = data[0];
-
-        // If you need to store the state abbreviation somewhere
-        const stateShort = locationData.StateShort;
-      } catch (error) {
-        console.error("Error fetching location data:", error);
-        setSuburbList([]);
-        setValue("suburb", "");
-        setValue("state", "");
-      }
-    };
-
-    fetchLocationByPostcode();
-  }, [watchPostcode, setValue]);
+  const formatDateAsYYYYMMDD = (date: Date): string => {
+    const yyyy = date.getFullYear();
+    const mm = String(date.getMonth() + 1).padStart(2, "0"); // Months are 0-based
+    const dd = String(date.getDate()).padStart(2, "0");
+    return `${yyyy}-${mm}-${dd}`;
+  };
 
   const handleSubmitUserData: SubmitHandler<UserDataType> = async (data) => {
     if (isServiceProvider && !isValidABN) {
@@ -238,24 +229,181 @@ const EditProfile = () => {
     }
     (data.idImageBack = "null"), (data.idImageFront = "null");
     if (!isServiceProvider) data.abn = "null";
-    const isIncompleteData = Object.entries(data).some(([key, value]) => {
-      return value === "" || value == null;
-    });
-    if (isIncompleteData) {
-      setEditProfileError("Missing required fields");
+
+    // const missingFields = Object.entries(data)
+    // .filter(([key, value]) => value === "" || value == null)
+    // .map(([key]) => key);
+
+    // const missingFields = Object.entries(data)
+    // .filter(([key, value]) => value === "" || value == null)
+    // .map(([key]) => key);
+    // .filter((key) => key !== "emailAddress");
+
+    console.log("selectedDocumentFront:", selectedDocumentFront);
+    // console.log("userDetails.idImageFront:", userDetails.idImageFront);
+    console.log("selectedDocumentBack:", selectedDocumentBack);
+    // console.log("userDetails.idImageBack:", userDetails.idImageBack);
+
+    // const missingFields = Object.entries(data)
+    // .filter(([key, value]) => {
+    //   if (["idImageFront", "idImageBack"].includes(key)) {
+    //     return !selectedDocumentFront && !userDetails.idImageFront && key === "idImageFront" ||
+    //           !selectedDocumentBack && !userDetails.idImageBack && key === "idImageBack";
+    //   }
+    //   return value === "" || value == null;
+    // })
+    // .map(([key]) => key)
+    // .filter((key) => key !== "emailAddress");
+
+    const missingFields = Object.entries(data)
+      .filter(([key, value]) => {
+        if (["idImageFront", "idImageBack"].includes(key)) {
+          if (data.idType === "International Passport") {
+            // Only check for idImageFront, completely ignore idImageBack
+            return (
+              key === "idImageFront" &&
+              !selectedDocumentFront &&
+              !userDetails.idImageFront
+            );
+          }
+
+          // For other ID types, check both front and back images
+          return (
+            (key === "idImageFront" &&
+              !selectedDocumentFront &&
+              !userDetails.idImageFront) ||
+            (key === "idImageBack" &&
+              !selectedDocumentBack &&
+              !userDetails.idImageBack)
+          );
+        }
+
+        return value === "" || value == null;
+      })
+      .map(([key]) => key)
+      .filter(
+        (key) =>
+          key !== "emailAddress" &&
+          (data.idType !== "International Passport" || key !== "idImageBack"),
+      ); // Ensure idImageBack is ignored for passports
+
+    if (missingFields.length > 0) {
+      setEditProfileError(
+        `Missing required fields: ${missingFields.join(", ")}`,
+      );
+      console.log("Missing fields:", missingFields);
       return;
     }
-    if (data.idType === "International Passport" && !selectedDocumentFront) {
-      setEditProfileError("Missing required fields");
-      return;
-    }
-    if (
-      data.idType !== "International Passport" &&
-      (!selectedDocumentBack || !selectedDocumentFront)
-    ) {
-      setEditProfileError("Missing required fields");
-      return;
-    }
+
+    // const missingFields = Object.entries(data)
+    // .filter(([key, value]) => {
+    //   if (["idImageFront", "idImageBack"].includes(key)) {
+    //     if (data.idType === "International Passport") {
+    //       // Only require idImageFront for international passports
+    //       return key === "idImageFront" && !selectedDocumentFront && !userDetails.idImageFront;
+    //     }
+
+    //     // Other ID types require both images
+    //     return (
+    //       (!selectedDocumentFront && !userDetails.idImageFront && key === "idImageFront") ||
+    //       (!selectedDocumentBack && !userDetails.idImageBack && key === "idImageBack")
+    //     );
+    //   }
+
+    //   return value === "" || value == null;
+    // })
+    // .map(([key]) => key)
+    // .filter((key) => key !== "emailAddress"); // Exclude optional fields like email
+
+    console.log("Final missing fields:", missingFields);
+
+    console.log("ID Type:", data.idType); // Log the ID type before checking
+
+    // if (missingFields.length > 0) {
+    //   if (
+    //     missingFields.length === 1 &&
+    //     data.idType.toLowerCase() === "international passport" &&
+    //     missingFields.includes("idImageBack")
+    //   ) {
+    //     console.log("Skipping idImageBack validation for International Passport");
+    //   } else {
+    //     setEditProfileError(`Missing required fields: ${missingFields.join(", ")}`);
+    //     console.log("Missing fields:", missingFields);
+    //     return;
+    //   }
+    // } else {
+    //   console.log("No missing fields, proceeding...");
+    // }
+
+    // if (
+    //   missingFields.length > 0 &&
+    //   data.idType.toLowerCase() === "international passport" &&
+    //   missingFields.includes("idImageBack")
+    // ) {
+    //   console.log("Skipping idImageBack validation for International Passport");
+    // } else {
+    //   setEditProfileError(`Missing required fields: ${missingFields.join(", ")}`);
+    //   console.log("Missing fields:", missingFields);
+    //   return;
+    // }
+
+    // if (missingFields.length > 0) {
+    //   setEditProfileError(`Missing required fields: ${missingFields.join(", ")}`);
+    //   console.log("Missing fields:", missingFields);
+    //   return;
+    // }
+    // if (
+    //   missingFields.length > 0 &&
+    //   data.idType === "INTERNATIONAL_PASSPORT" &&
+    //   missingFields.includes("idImageBack")
+    // ) {
+    //   console.log("Skipping idImageBack validation for International Passport");
+    // } else {
+    //   setEditProfileError(`Missing required fields: ${missingFields.join(", ")}`);
+    //   console.log("Missing fields:", missingFields);
+    //   return;
+    // }
+
+    // if (
+    //   missingFields.length === 1 &&
+    //   data.idType === "INTERNATIONAL_PASSPORT" &&
+    //   missingFields.includes("idImageBack")
+    // ) {
+    //   // Skip validation for idImageBack when idType is INTERNATIONAL_PASSPORT
+    //   console.log("Skipping idImageBack validation for International Passport");
+    // } else {
+    //   setEditProfileError(`Missing required fields: ${missingFields.join(", ")}`);
+    //   console.log("Missing fields:", missingFields);
+    //   return;
+    // }
+
+    // if (data.idType === "International Passport" && !selectedDocumentFront) {
+    //   setEditProfileError("Missing required field: idImageFront");
+    //   console.log("Missing field: idImageFront");
+    //   return;
+    // }
+    // if (data.idType === "International Passport" && !selectedDocumentFront && !data.idImageFront) {
+    //   setEditProfileError("Missing required field: idImageFront");
+    //   return;
+    // }
+
+    // if (data.idType !== "International Passport" && (!selectedDocumentBack || !selectedDocumentFront)) {
+    //   setEditProfileError("Missing required fields: idImageFront, idImageBack");
+    //   console.log("Missing fields: idImageFront, idImageBack");
+    //   return;
+    // }
+
+    // if (data.idType === "Medicare Card" && !selectedDocumentFront && !data.idImageFront) {
+    //   setEditProfileError("Missing required field: idImageFront");
+    //   return;
+    // }
+
+    // if (data.idType !== "Medicare Card" && (!selectedDocumentBack || !selectedDocumentFront)) {
+    //   setEditProfileError("Missing required fields: idImageFront, idImageBack");
+    //   console.log("Missing fields: idImageFront, idImageBack");
+    //   return;
+    // }
+
     setEditProfileError("");
     try {
       let submitData: any;
@@ -270,13 +418,26 @@ const EditProfile = () => {
           suburb: data.suburb,
           // phoneNumber: data.phoneNumber,
           state: data.state,
-          postCode: data.postcode,
-          idImageFront: selectedDocumentFront,
-          idImageBack: selectedDocumentBack,
+          // postCode: data.postcode,
+          postCode:
+            data.postcode.length === 3 ? `0${data.postcode}` : data.postcode,
+          ...(selectedDocumentFront
+            ? { idImageFront: selectedDocumentFront }
+            : {}),
+          ...(selectedDocumentBack
+            ? { idImageBack: selectedDocumentBack }
+            : {}),
           idType: data.idType,
           idNumber: data.idNumber,
           bio: data.bio,
           abn: data.abn,
+          // }).reduce((acc, [key, value]) => {
+          //   if (value !== null && value !== undefined && value !== "") {
+          //     acc[key] = value;
+          //   }
+          //   return acc;
+          // }, {});
+          ...(isServiceProvider ? { abn: data.abn } : {}), // Include ABN only if service provider
         }).reduce((acc, [key, value]) => {
           if (value !== null && value !== undefined && value !== "") {
             acc[key] = value;
@@ -293,11 +454,16 @@ const EditProfile = () => {
             ? formatDateAsYYYYMMDD(data.dateOfBirth as Date)
             : "",
           suburb: data.suburb,
+          // emailAddress: data.emailAddress || user?.emailAddress || "",
           // phoneNumber: data.phoneNumber,
           state: data.state,
           postCode: data.postcode,
-          idImageFront: selectedDocumentFront,
-          idImageBack: selectedDocumentBack,
+          ...(selectedDocumentFront
+            ? { idImageFront: selectedDocumentFront }
+            : {}),
+          ...(selectedDocumentBack
+            ? { idImageBack: selectedDocumentBack }
+            : {}),
           idType: data.idType,
           idNumber: data.idNumber,
         }).reduce((acc, [key, value]) => {
@@ -309,6 +475,8 @@ const EditProfile = () => {
         url = "customer/update";
       }
 
+      console.log("Final submitData:", JSON.stringify(submitData, null, 2));
+
       await authInstance.patch(url, submitData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
@@ -316,7 +484,11 @@ const EditProfile = () => {
       setIsFormModalShown(true);
       setIsEditingEnabled(true);
     } catch (error: any) {
-      console.log(error);
+      console.log("Submission error:", error);
+      console.error(
+        "Detailed error:",
+        error.response ? error.response.data : error.message,
+      );
       setEditProfileError("Something went wrong, please try again");
     }
   };
@@ -324,10 +496,6 @@ const EditProfile = () => {
   const handleChangeProfilePicture = () => {
     setIsEditingProfilePicture({ isEditing: true, image: null });
     setIsFormModalShown(true);
-  };
-
-  const handleContactSupport = () => {
-    setIsSupportModalShown(true);
   };
 
   const handleChangeFront = () => {
@@ -350,9 +518,9 @@ const EditProfile = () => {
 
   return (
     <main className="container py-8 lg:py-16">
-      <h5 className="text-2xl font-bold mb-4">Edit your information details</h5>
+      <h5 className="mb-4 text-2xl font-bold">Edit your information details</h5>
       {/* <hr/> */}
-      <hr className="border-t border-gray-700 my-4" />
+      <hr className="my-4 border-t border-gray-700" />
       {userDetails && (
         <Notice
           role={isServiceProvider ? "SERVICE_PROVIDER" : "USER"}
@@ -442,51 +610,105 @@ const EditProfile = () => {
                 watch={watch}
                 disabled
               />
-              <Controller
-                control={control}
-                name="dateOfBirth"
-                render={({ field }) => (
-                  <div className="flex w-full flex-col gap-3 text-violet-normal">
-                    <label
-                      htmlFor="dateOfBirth"
-                      className="flex items-center justify-between"
-                    >
-                      <span>Date of Birth</span>
-                      {!errors.dateOfBirth && field.value && (
-                        <BiCheck className="size-5 rounded-full bg-green-500 p-1 text-white" />
+
+              <div className="flex w-full flex-col gap-4">
+                <label htmlFor="dob" className="text-violet-normal">
+                  Date of Birth
+                </label>
+                {/* <Controller
+      name="dateOfBirth"
+      control={control}
+      rules={{
+        required: "Date of Birth is required",
+        validate: (value) => {
+          if (!value) return "Date of Birth is required";
+          const enteredDate = new Date(value);
+          const today = new Date();
+          const minDate = new Date(today.setFullYear(today.getFullYear() - 18));
+
+          return enteredDate <= minDate || "You must be at least 18 years old";
+        },
+      }}
+      render={({ field }) => (
+        <Calendar
+          {...field}
+          id="dob"
+          dateFormat="dd/mm/yy"
+          showIcon
+          placeholder="DD/MM/YYYY"
+          maxDate={new Date(new Date().setFullYear(new Date().getFullYear() - 18))}
+          className="p-inputtext border w-full lg:max-w-sm border-slate-100 rounded-xl shadow hover:shadow-md"
+        />
+      )}
+  /> */}
+
+                <Controller
+                  name="dateOfBirth"
+                  control={control}
+                  rules={{
+                    required: "You must be at least 18 years old",
+                    validate: (value) => {
+                      if (!value) return "Date of birth is required";
+
+                      const enteredDate = new Date(value);
+                      const today = new Date();
+                      const minAllowedDate = new Date(
+                        today.setFullYear(today.getFullYear() - 18),
+                      );
+
+                      return (
+                        enteredDate <= minAllowedDate ||
+                        "You must be at least 18 years old"
+                      );
+                    },
+                  }}
+                  render={({ field, fieldState }) => (
+                    <div>
+                      <Calendar
+                        {...field}
+                        id="dob"
+                        dateFormat="dd/mm/yy"
+                        showIcon
+                        placeholder="DD/MM/YYYY"
+                        maxDate={
+                          new Date(
+                            new Date().setFullYear(
+                              new Date().getFullYear() - 18,
+                            ),
+                          )
+                        }
+                        className="p-inputtext w-full rounded-xl border border-slate-100 shadow hover:shadow-md lg:max-w-sm"
+                        onInput={(e) => {
+                          const inputElement = e.target as HTMLInputElement;
+                          const regex = /^[0-9/]*$/;
+                          if (!regex.test(inputElement.value)) {
+                            inputElement.value = inputElement.value.replace(
+                              /[^0-9/]/g,
+                              "",
+                            );
+                          }
+                        }}
+                        onChange={(e) => {
+                          field.onChange(e.value);
+                        }}
+                      />
+                      {fieldState.error ? (
+                        <p className="mt-1 text-sm text-red-500">
+                          {fieldState.error.message}
+                        </p>
+                      ) : (
+                        <p className="mt-1 text-sm text-red-500">
+                          You must be at least 18 years old
+                        </p>
                       )}
-                    </label>
-                    {/* <DatePicker
-                      placeholderText="DD/MM/YYYY"
-                      id="dateOfBirth"
-                      open={false}
-                      selected={field.value || null} // Use null if there's no date
-                      onChange={(date) => field.onChange(date ? date : "")}
-                      disabled={!isEditingEnabled || !!userDetails.dateOfBirth} // Disable if date exists and not in editing mode
-                      maxDate={
-                        new Date(
-                          new Date().setFullYear(new Date().getFullYear() - 18),
-                        )
-                      }
-                      className="w-full rounded-xl border border-slate-100 p-2 text-slate-700 shadow outline-none transition-shadow duration-300 hover:shadow-md lg:max-w-sm"
-                      dateFormat="dd/MM/yyyy"
-                    /> */}
+                    </div>
+                  )}
+                />
 
-                    <DatePicker
-                      placeholderText="DD/MM/YYYY"
-                      id="dateOfBirth"
-                      open={false}
-                      selected={field.value || null}  // Use null if there's no date
-                      onChange={(date: Date | null) => field.onChange(date ? date : "")}  // Ensure correct type for 'date'
-                      disabled={!isEditingEnabled || !!userDetails.dateOfBirth}  // Disable if date exists and not in editing mode
-                      maxDate={new Date(new Date().setFullYear(new Date().getFullYear() - 18))}
-                      className="w-full rounded-xl border border-slate-100 p-2 text-slate-700 shadow outline-none transition-shadow duration-300 hover:shadow-md lg:max-w-sm"
-                      dateFormat="dd/MM/yyyy"
-                    />
-
-                  </div>
-                )}
-              />
+                {/* {dateOfBirth && dateOfBirth > maxDate && (
+                  <small className="text-red-500">You must be at least 18 years old</small>
+                )} */}
+              </div>
             </div>
           </section>
 
@@ -546,22 +768,33 @@ const EditProfile = () => {
             </div>
           </section>
 
+          {/* <Controller
+            name="emailAddress"
+            control={control}
+            defaultValue={user?.emailAddress} // Ensure it's prefilled
+            render={({ field }) => (
+              <input {...field} disabled className="your-input-styles" />
+            )}
+          /> */}
+
           {/* Address Information */}
           <section className="flex flex-col gap-4">
             <h3 className="text-lg font-bold text-primary">
               Address Information
             </h3>
             <div className="flex flex-wrap gap-6 lg:col-span-8 lg:grid lg:grid-cols-2">
-              <FormField
-                label="Postal Code"
-                name="postcode"
-                watch={watch}
-                register={register}
-                errors={errors}
-                watchField={watchField}
-                disabled={!isEditingEnabled || !!userDetails.postalCode}
-              />
-              <Controller
+              <div className="hidden">
+                <FormField
+                  label="Postal Code"
+                  name="postcode"
+                  watch={watch}
+                  register={register}
+                  errors={errors}
+                  watchField={watchField}
+                  disabled={!isEditingEnabled || !!userDetails.postalCode}
+                />
+              </div>
+              {/* <Controller
                 name="suburb"
                 control={control}
                 render={({ field }) => (
@@ -592,16 +825,111 @@ const EditProfile = () => {
                     </select>
                   </div>
                 )}
+              /> */}
+              <Controller
+                name="suburb"
+                control={control}
+                render={({ field }) => (
+                  <div className="relative flex w-full flex-col gap-3 text-violet-normal">
+                    <label
+                      htmlFor="suburb"
+                      className="flex items-center justify-between"
+                    >
+                      <span>Suburb</span>
+                      {!errors.suburb && field.value && (
+                        <BiCheck className="size-5 rounded-full bg-green-500 p-1 text-white" />
+                      )}
+                    </label>
+
+                    {/* Suburb Input Field */}
+                    <div className="relative w-full lg:max-w-sm">
+                      <div
+                        className={`flex items-center rounded-xl border border-slate-100 bg-white px-3 shadow outline-none transition-shadow duration-300 hover:shadow-md ${
+                          errors.suburb ? "border-red-500" : ""
+                        }`}
+                      >
+                        <CiLocationOn fill="#76757A61" size={22} />
+                        <input
+                          id="suburb"
+                          type="text"
+                          className="w-full rounded-xl border-none bg-white p-2 text-slate-700 shadow-none outline-none"
+                          placeholder="Enter a suburb"
+                          value={inputValue}
+                          onChange={(e) => {
+                            if (currentSuburb) {
+                              setCurrentSuburb(null);
+                              const enteredInput = e.target.value.slice(-1);
+                              e.target.value = enteredInput;
+                              setInputValue(enteredInput);
+                            } else {
+                              setInputValue(e.target.value);
+                            }
+                            field.onChange(e.target.value); // Sync with react-hook-form
+                          }}
+                          autoComplete="off"
+                        />
+                      </div>
+
+                      {/* Suburb Dropdown */}
+                      {suburbList.length > 0 && (
+                        <div className="absolute left-0 z-10 w-full rounded-lg bg-white shadow-lg">
+                          {isLoading && (
+                            <p className="py-2 text-center font-satoshiMedium text-[#76757A61]">
+                              Loading...
+                            </p>
+                          )}
+                          {suburbError && !isLoading && (
+                            <p className="py-2 text-center font-satoshiMedium text-red-600">
+                              Error occurred while loading suburb data
+                            </p>
+                          )}
+                          <ul className="max-h-52 overflow-y-auto overflow-x-hidden">
+                            {suburbList.map((suburb) => (
+                              <li
+                                className="flex cursor-pointer items-center gap-1 bg-white px-4 py-3 text-[13px] hover:bg-gray-100"
+                                key={Math.random() * 12345}
+                                onClick={() => {
+                                  setCurrentSuburb(suburb);
+                                  setInputValue(
+                                    `${suburb.name}, ${suburb.state.abbreviation}, Australia`,
+                                  );
+                                  field.onChange(suburb.name); // Update form value
+                                  setValue("postcode", String(suburb.postcode)); // Auto-update postcode field
+                                  setValue("state", suburb.state.name);
+                                  setSuburbList([]); // Clear dropdown
+                                }}
+                              >
+                                <CiLocationOn
+                                  stroke="#0F052E"
+                                  size={20}
+                                  strokeWidth={1}
+                                />
+                                <span className="text-[#0F052E]">
+                                  {suburb.name},{" "}
+                                  {suburb.locality ? `${suburb.locality},` : ""}{" "}
+                                  {suburb.state.name}, AUS
+                                </span>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
               />
-              <FormField
-                label="State"
-                name="state"
-                watch={watch}
-                register={register}
-                errors={errors}
-                watchField={watchField}
-                disabled={true}
-              />
+
+              <div className="hidden">
+                <FormField
+                  label="State"
+                  name="state"
+                  watch={watch}
+                  register={register}
+                  errors={errors}
+                  watchField={watchField}
+                  disabled={true}
+                />
+              </div>
             </div>
           </section>
 
@@ -664,7 +992,7 @@ const EditProfile = () => {
                   <select
                     {...register("idType")}
                     className="w-full rounded-xl border border-slate-100 px-2 py-2.5 text-slate-700 shadow outline-none transition-shadow duration-300 hover:shadow-md lg:max-w-sm"
-                    disabled={ !isEditingEnabled || !isDocumentEditable}
+                    disabled={!isEditingEnabled || !isDocumentEditable}
                   >
                     {idTypeObject.map((item) => (
                       <option key={item.label} value={item.label}>

@@ -3,10 +3,10 @@
 import { marketPlaceModalIcon } from "@/lib/svgIcons";
 import Loading from "@/shared/loading";
 import { isOlder, isThisMonth, isThisWeek, isToday } from "@/utils";
-import axios from "axios";
 import { useSession } from "next-auth/react";
 import React, { useEffect, useState } from "react";
 import NotificationList from "./NotificationList";
+import useAxios from "@/hooks/useAxios";
 
 const NotificationComponent = () => {
   const [currentCategory, setCurrentCategory] = useState("All");
@@ -16,9 +16,9 @@ const NotificationComponent = () => {
     [],
   );
   const [refresh, setRefresh] = useState(0);
+  const authInstance = useAxios();
 
   const session = useSession();
-  const token = session?.data?.user?.accessToken;
   const userId = session?.data?.user?.user?.id;
 
   const oneWeekAgo = new Date();
@@ -27,15 +27,7 @@ const NotificationComponent = () => {
   const handleFetchNotifications = async () => {
     try {
       setLoading(true);
-      const url =
-        `${process.env.NEXT_PUBLIC_API_URL}/notification?userId=` +
-        userId;
-      const { data } = await axios.get(url, {
-        headers: {
-          Authorization: "Bearer " + token,
-        },
-      });
-      console.log("refreshed");
+      const { data } = await authInstance.get("notification?userId=" + userId);
       setAlNotifications(data);
       setNotifications(data);
     } catch (error: any) {
@@ -48,7 +40,7 @@ const NotificationComponent = () => {
   useEffect(() => {
     handleFetchNotifications();
     // eslint-disable-next-line
-  }, [token, refresh]);
+  }, [refresh, userId]);
 
   const handleChangeCategory = (category: string) => {
     setCurrentCategory(category);
@@ -100,8 +92,6 @@ const NotificationComponent = () => {
   useEffect(() => {
     notifications && categorizeNotifications(notifications);
   }, [notifications]);
-
-  console.log("not", notifications);
 
   return (
     <main className="mt-24 py-4 lg:p-8">

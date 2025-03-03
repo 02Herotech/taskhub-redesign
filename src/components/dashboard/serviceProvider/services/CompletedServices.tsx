@@ -10,20 +10,17 @@ interface CompletedServices {
 }
 
 const CompletedServices = ({ jobs, allBookings }: CompletedServices) => {
-
-
   const formatDate = (createdAtArray: any) => {
     if (!createdAtArray || createdAtArray.length < 3) {
-      return 'Flexible';
+      return "Flexible";
     }
 
     const year = createdAtArray[0];
-    const month = createdAtArray[1].toString().padStart(2, '0');
-    const day = createdAtArray[2].toString().padStart(2, '0');
+    const month = createdAtArray[1].toString().padStart(2, "0");
+    const day = createdAtArray[2].toString().padStart(2, "0");
 
     return `${day}-${month}-${year}`;
   };
-  // console.log(jobs)
   return (
     <div className="flex flex-wrap gap-8 pb-4  max-sm:flex-col">
       {jobs
