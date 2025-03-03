@@ -73,6 +73,11 @@ export const serviceProviderDashboardLinks: DashboardLinks[] = [
     link: "/service-provider/payment",
     icon: PaymentIcon,
   },
+  // { 
+  //   label: "Rewards",
+  //   link: "/service-provider/rewards",
+  //   icon: PaymentIcon,
+  // },
   // {
   //   title: "Settings",
   //   link: "/service-provider/dashboard/settings",
