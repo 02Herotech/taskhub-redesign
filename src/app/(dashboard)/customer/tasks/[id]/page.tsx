@@ -20,6 +20,7 @@ import { useSession } from "next-auth/react";
 import Popup from "@/components/global/Popup";
 import Link from "next/link";
 import useAxios from "@/hooks/useAxios";
+import NewCustomerTaskOffers from "./NewCustomerTaskOffers";
 
 const NewTaskDetails = ({ params }: { params: { id: string } }) => {
   const id = params.id;
@@ -107,22 +108,13 @@ const NewTaskDetails = ({ params }: { params: { id: string } }) => {
   const monthName = monthNames[month];
   const dayOfWeek = date.getDay();
   const dayOfWeekName = dayOfWeekNames[dayOfWeek];
-  let daySuffix;
+  let daySuffix: string;
   if (day === 11 || day === 12 || day === 13) {
     daySuffix = "th";
   } else {
     daySuffix = suffixes[day % 10] || suffixes[0]; // Default to "th" if suffix is undefined
   }
   const formattedDate = `${dayOfWeekName}, ${monthName} ${day}${daySuffix}`;
-  const hours = date.getHours();
-  const minutes = date.getMinutes();
-
-  let formattedTime;
-  if (hours >= 12) {
-    formattedTime = `${hours === 12 ? 12 : hours - 12}:${(minutes < 10 ? "0" : "") + minutes} PM`;
-  } else {
-    formattedTime = `${hours === 0 ? 12 : hours}:${(minutes < 10 ? "0" : "") + minutes} AM`;
-  }
 
   const isAssigned = task?.taskStatus === "ASSIGNED";
 
@@ -278,8 +270,11 @@ const NewTaskDetails = ({ params }: { params: { id: string } }) => {
           </Popup>
         </>
       )}
-      {offers && offers.length > 0 && (
+      {false && (
         <CustomerTaskOffers taskId={Number(id)} posterId={task.posterId} />
+      )}
+      {offers && offers.length > 0 && (
+        <NewCustomerTaskOffers taskId={Number(id)} posterId={task.posterId} />
       )}
       {showAssignForm && (
         <AssignOfferForm
