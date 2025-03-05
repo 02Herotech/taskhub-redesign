@@ -92,7 +92,6 @@ function Offer({ offer, taskId, refetch, isAssigned }: Props) {
                 onClick={() => acceptOffer(taskId, offer.serviceProviderId)}
               >
                 {isLoading ? <BeatLoader color="white" size={13} /> : "Accept"}
-                Accept
               </button>
             </div>
 
