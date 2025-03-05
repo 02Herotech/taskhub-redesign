@@ -42,6 +42,7 @@ const NewTaskDetails = ({ params }: { params: { id: string } }) => {
 
   useEffect(() => {
     const updateUserData = async () => {
+      if (isEnabled) return;
       try {
         const { data } = await authInstance.get("customer/profile");
         if (!data.isEnabled) return;
@@ -270,12 +271,12 @@ const NewTaskDetails = ({ params }: { params: { id: string } }) => {
           </Popup>
         </>
       )}
-      {offers && offers.length > 0 && (
-        <CustomerTaskOffers taskId={Number(id)} posterId={task.posterId} />
-      )}
       {/* {offers && offers.length > 0 && (
-        <NewCustomerTaskOffers taskId={Number(id)} posterId={task.posterId} />
+        <CustomerTaskOffers taskId={Number(id)} posterId={task.posterId} />
       )} */}
+      {offers && offers.length > 0 && (
+        <NewCustomerTaskOffers taskId={Number(id)} posterId={task.posterId} />
+      )}
       {showAssignForm && (
         <AssignOfferForm
           onClose={() => setShowAssignForm(false)}

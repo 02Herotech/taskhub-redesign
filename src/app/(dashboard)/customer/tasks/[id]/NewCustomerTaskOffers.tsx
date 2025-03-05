@@ -1,8 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FaChevronDown, FaStar } from "react-icons/fa6";
 import { useGetTasksOffersQuery } from "@/services/tasks";
-import { useSelector } from "react-redux";
-import { RootState } from "@/store";
 import { LiaReplySolid } from "react-icons/lia";
 import ReplyForm from "./ReplyForm";
 import Image from "next/image";
@@ -15,12 +13,16 @@ type OffersProps = {
 
 function NewCustomerTaskOffers({ taskId, posterId }: OffersProps) {
   const [viewAll, setViewAll] = useState(false);
-  const { profile: user } = useSelector(
-    (state: RootState) => state.userProfile,
-  );
   const { data: offers, refetch } = useGetTasksOffersQuery(taskId);
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      refetch();
+    }, 3000);
 
-  async function acceptOffer(taskId: string, serviceProviderid: string) {}
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, []);
   return (
     <div className="mt-14 min-h-96 pr-5">
       <header className="mb-6 mt-10 text-[#E58C06]">
@@ -111,7 +113,6 @@ function NewCustomerTaskOffers({ taskId, posterId }: OffersProps) {
                       )}
                     </div>
                   </div>
-                  {/* Display when offer has other messages or reply button when there are no other messages  */}
                   {offer.offerThreadList.length > 0 && (
                     <LiaReplySolid
                       strokeWidth={1.2}
@@ -162,7 +163,7 @@ function NewCustomerTaskOffers({ taskId, posterId }: OffersProps) {
                 </ul>
               </div>
             </div>
-            <ReplyForm />
+            <ReplyForm taskId={taskId} offerId={offer.id} refetch={refetch} />
           </li>
         ))}
       </ul>
