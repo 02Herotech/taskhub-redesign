@@ -380,14 +380,14 @@ const TaskDetailsPage = ({ params }: { params: { id: string } }) => {
         </>
       )}
 
-      {false && (
+      {/* {offers && offers.length > 0 && (
         <TaskOffers
           // offers={offers}
           posterId={task?.posterId}
           currentUserId={user?.serviceProviderId!}
           taskId={Number(id)}
         />
-      )}
+      )} */}
 
       {offers && offers.length > 0 && (
         <TaskOffersNew
