@@ -6,6 +6,7 @@ import ReplyForm from "./ReplyForm";
 import Image from "next/image";
 import { formatTimeAgo } from "@/lib/utils";
 import SendPayment from "./SendPayment";
+import Offer from "./Offer";
 
 type OffersProps = {
   taskId: number;
