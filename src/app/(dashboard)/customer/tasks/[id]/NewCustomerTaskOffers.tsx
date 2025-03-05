@@ -19,6 +19,8 @@ function NewCustomerTaskOffers({ taskId, posterId }: OffersProps) {
     (state: RootState) => state.userProfile,
   );
   const { data: offers, refetch } = useGetTasksOffersQuery(taskId);
+
+  async function acceptOffer(taskId: string, serviceProviderid) {}
   return (
     <div className="mt-14 min-h-96 pr-5">
       <header className="mb-6 mt-10 text-[#E58C06]">
