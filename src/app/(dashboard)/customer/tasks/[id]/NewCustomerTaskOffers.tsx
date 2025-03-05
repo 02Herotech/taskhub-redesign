@@ -5,6 +5,7 @@ import { LiaReplySolid } from "react-icons/lia";
 import ReplyForm from "./ReplyForm";
 import Image from "next/image";
 import { formatTimeAgo } from "@/lib/utils";
+import SendPayment from "./SendPayment";
 
 type OffersProps = {
   taskId: number;
@@ -12,6 +13,7 @@ type OffersProps = {
 };
 
 function NewCustomerTaskOffers({ taskId, posterId }: OffersProps) {
+  const [openPaymentModal, setOpenPaymentModal] = useState(false);
   const [viewAll, setViewAll] = useState(false);
   const { data: offers, refetch } = useGetTasksOffersQuery(taskId);
   useEffect(() => {
@@ -93,6 +95,7 @@ function NewCustomerTaskOffers({ taskId, posterId }: OffersProps) {
                     <button
                       type="submit"
                       className="rounded-full bg-primary px-5 py-2 font-satoshiBold text-sm font-bold text-white md:text-base"
+                      onClick={() => setOpenPaymentModal(true)}
                     >
                       Accept
                     </button>
@@ -167,6 +170,10 @@ function NewCustomerTaskOffers({ taskId, posterId }: OffersProps) {
           </li>
         ))}
       </ul>
+      <SendPayment
+        open={openPaymentModal}
+        closeModal={() => setOpenPaymentModal(false)}
+      />
     </div>
   );
 }
