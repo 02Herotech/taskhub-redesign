@@ -6,17 +6,17 @@ import { useState } from "react";
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY);
 
-function SendPayment({
-  open,
-  closeModal,
-}: {
+type Props = {
   open: boolean;
   closeModal: () => void;
-}) {
+  clientSecret: string | null;
+};
+
+function SendPayment({ open, closeModal, clientSecret }: Props) {
   const [saveCard, setSaveCard] = useState(false);
   return (
     <Popup
-      isOpen={open}
+      isOpen={open && Boolean(clientSecret)}
       onClose={closeModal}
       popUpTitle={
         <h3 className="font-clashSemiBold text-xl text-primary lg:text-3xl">
@@ -32,8 +32,7 @@ function SendPayment({
         <Elements
           stripe={stripePromise}
           options={{
-            clientSecret:
-              "pi_3Qz5zrCkMV0SAhVy1ukdq6zn_secret_BhFnUKuRTPebZWxIccSl9jzLp",
+            clientSecret,
             appearance: {
               variables: { colorPrimary: "#381f8c" },
               theme: "flat",

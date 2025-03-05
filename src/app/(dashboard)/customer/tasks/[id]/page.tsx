@@ -319,6 +319,7 @@ const NewTaskDetails = ({ params }: { params: { id: string } }) => {
                 offer={offer}
                 taskId={Number(id)}
                 refetch={refetch}
+                isAssigned={isAssigned}
               />
             ))}
           </ul>
