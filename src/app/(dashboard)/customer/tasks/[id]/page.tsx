@@ -270,12 +270,12 @@ const NewTaskDetails = ({ params }: { params: { id: string } }) => {
           </Popup>
         </>
       )}
-      {false && (
+      {offers && offers.length > 0 && (
         <CustomerTaskOffers taskId={Number(id)} posterId={task.posterId} />
       )}
-      {offers && offers.length > 0 && (
+      {/* {offers && offers.length > 0 && (
         <NewCustomerTaskOffers taskId={Number(id)} posterId={task.posterId} />
-      )}
+      )} */}
       {showAssignForm && (
         <AssignOfferForm
           onClose={() => setShowAssignForm(false)}

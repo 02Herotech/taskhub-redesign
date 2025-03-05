@@ -20,7 +20,7 @@ function NewCustomerTaskOffers({ taskId, posterId }: OffersProps) {
   );
   const { data: offers, refetch } = useGetTasksOffersQuery(taskId);
 
-  async function acceptOffer(taskId: string, serviceProviderid) {}
+  async function acceptOffer(taskId: string, serviceProviderid: string) {}
   return (
     <div className="mt-14 min-h-96 pr-5">
       <header className="mb-6 mt-10 text-[#E58C06]">
@@ -90,7 +90,7 @@ function NewCustomerTaskOffers({ taskId, posterId }: OffersProps) {
                     </div>
                     <button
                       type="submit"
-                      className="rounded-full bg-primary px-5 py-2 text-white"
+                      className="rounded-full bg-primary px-5 py-2 font-satoshiBold text-sm font-bold text-white md:text-base"
                     >
                       Accept
                     </button>
