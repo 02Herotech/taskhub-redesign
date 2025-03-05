@@ -43,7 +43,6 @@ function ReplyOfferForm({ taskId, user, refetch, offerId }: Props) {
           offerId,
           userId: user?.serviceProviderId,
           fullName: user?.firstName + " " + user?.lastName,
-          //? Message and price
           message: data.message,
           price: data.offerPrice,
         },
@@ -56,11 +55,6 @@ function ReplyOfferForm({ taskId, user, refetch, offerId }: Props) {
           reset();
           refetch();
           setShowReplyForm(false);
-
-          setTimeout(() => {
-            //? Closing of modal
-            // Hiding the success message
-          }, 3000);
         });
       } catch (error) {
         console.error("Error submitting reply:", error);
