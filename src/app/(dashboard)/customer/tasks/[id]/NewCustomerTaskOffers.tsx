@@ -26,7 +26,7 @@ function NewCustomerTaskOffers({ taskId, posterId }: OffersProps) {
     };
   }, []);
   return (
-    <div className="mt-14 min-h-96 pr-5">
+    <div className="mt-14 min-h-96">
       <header className="mb-6 mt-10 text-[#E58C06]">
         <div className="mb-3 flex items-center justify-between">
           <h2 className="font-satoshiBold text-xl font-bold lg:text-3xl">
