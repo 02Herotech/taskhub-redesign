@@ -10,11 +10,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import Button from "@/components/global/Button";
 
-//Todo Ask for max value for offerMessage string
+//Todo Max value for offerMessage string
 const offerSchema = z.object({
-  // offerPrice: z
-  //   .number({ invalid_type_error: "Offer amount is required" })
-  //   .min(1, "Offer must be above $1"),
+  offerPrice: z
+    .number({ invalid_type_error: "Offer amount is required" })
+    .min(1, "Offer must be above $1"),
   message: z.string().min(1, "Please enter your message"),
 });
 
@@ -61,7 +61,7 @@ function OfferForm({
       serviceProviderId: user?.serviceProviderId,
       fullName: user?.firstName + " " + user?.lastName,
       message: formData.message,
-      //offerPrice: formData.offerPrice,
+      offerPrice: formData.offerPrice,
     };
 
     if (user && socket) {
@@ -127,7 +127,7 @@ function OfferForm({
               className="space-y-6 px-1"
               onSubmit={handleSubmit(submitForm)}
             >
-              {/* <div>
+              <div>
                 <label
                   htmlFor="price"
                   className="mb-2 block font-satoshiBold text-base font-bold text-primary sm:text-lg"
@@ -149,7 +149,7 @@ function OfferForm({
                 <p className="ml-1 mt-1 text-sm text-[#FF0000]">
                   {errors?.offerPrice?.message}
                 </p>
-              </div> */}
+              </div>
 
               <div>
                 <label
