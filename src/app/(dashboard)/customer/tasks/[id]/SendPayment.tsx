@@ -4,10 +4,7 @@ import { loadStripe } from "@stripe/stripe-js";
 import { PaymentElement } from "@stripe/react-stripe-js";
 import { useState } from "react";
 
-const public_stripe_key =
-  "pk_test_51P4k3bCkMV0SAhVyr2cd8Q80pmK7SoqLlI41m7lkOmNdfrbF6PO5LJvWfovWnNLKWq1LiqeFdhdVBfLorui1Nydy00raylOjWl";
-
-const stripePromise = loadStripe(public_stripe_key);
+const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY);
 
 function SendPayment({
   open,
