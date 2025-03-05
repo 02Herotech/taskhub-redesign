@@ -6,12 +6,52 @@ import { LiaReplySolid } from "react-icons/lia";
 import SendPayment from "./SendPayment";
 import { FaStar } from "react-icons/fa6";
 import ReplyForm from "./ReplyForm";
+import useAxios from "@/hooks/useAxios";
+import { BeatLoader } from "react-spinners";
 
-type Props = { offer: Offer; taskId: number; refetch: any };
+type Props = {
+  offer: Offer;
+  taskId: number;
+  refetch: any;
+  isAssigned: boolean;
+};
 
-function Offer({ offer, taskId, refetch }) {
+type AcceptOfferData = {
+  data: {
+    clientSecret: string;
+    hasCard: boolean;
+  };
+  message: string;
+  successful: boolean;
+};
+
+function Offer({ offer, taskId, refetch, isAssigned }: Props) {
   const [openPaymentModal, setOpenPaymentModal] = useState(false);
+  const [confirmPaymentModal, setConfirmPaymentModal] = useState(false);
 
+  const [clientSecret, setClientSecret] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const authInstance = useAxios();
+
+  async function acceptOffer(taskId: number, spId: number) {
+    try {
+      setIsLoading(true);
+      const { data } = await authInstance.put<AcceptOfferData>(
+        `task/accept-offer/${taskId}/${spId}`,
+      );
+      if (data.data.hasCard) {
+        setConfirmPaymentModal(true);
+      } else {
+        setClientSecret(data.data.clientSecret);
+        setOpenPaymentModal(true);
+      }
+    } catch (error) {
+      //Todo Error handling
+      console.error("Error occured while accepting task: ", error);
+    } finally {
+      setIsLoading(false);
+    }
+  }
   return (
     <li className="border-b border-[#C1BADB] pb-4" key={offer.id}>
       <div className="flex gap-1 sm:gap-3">
@@ -47,9 +87,11 @@ function Offer({ offer, taskId, refetch }) {
               </div>
               <button
                 type="submit"
-                className="rounded-full bg-primary px-5 py-2 font-satoshiBold text-sm font-bold text-white md:text-base"
-                onClick={() => setOpenPaymentModal(true)}
+                className="flex items-center justify-center rounded-full bg-primary px-5 py-2 font-satoshiBold text-sm font-bold text-white disabled:opacity-50 md:text-base"
+                disabled={isAssigned || isLoading}
+                onClick={() => acceptOffer(taskId, offer.serviceProviderId)}
               >
+                {isLoading ? <BeatLoader color="white" size={13} /> : "Accept"}
                 Accept
               </button>
             </div>
@@ -119,11 +161,15 @@ function Offer({ offer, taskId, refetch }) {
           </ul>
         </div>
       </div>
+      {!isAssigned && (
+        <ReplyForm taskId={taskId} offerId={offer.id} refetch={refetch} />
+      )}
       <SendPayment
         open={openPaymentModal}
         closeModal={() => setOpenPaymentModal(false)}
+        clientSecret={clientSecret}
       />
-      <ReplyForm taskId={taskId} offerId={offer.id} refetch={refetch} />
+      {/* Todo Confirm payment modal  */}
     </li>
   );
 }

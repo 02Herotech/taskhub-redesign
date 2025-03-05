@@ -6,7 +6,6 @@ import ReplyForm from "./ReplyForm";
 import Image from "next/image";
 import { formatTimeAgo } from "@/lib/utils";
 import SendPayment from "./SendPayment";
-import Offer from "./Offer";
 
 type OffersProps = {
   taskId: number;
@@ -171,10 +170,10 @@ function NewCustomerTaskOffers({ taskId, posterId }: OffersProps) {
           </li>
         ))}
       </ul>
-      <SendPayment
+      {/* <SendPayment
         open={openPaymentModal}
         closeModal={() => setOpenPaymentModal(false)}
-      />
+      /> */}
     </div>
   );
 }
