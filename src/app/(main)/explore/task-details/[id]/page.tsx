@@ -380,7 +380,7 @@ const TaskDetailsPage = ({ params }: { params: { id: string } }) => {
         </>
       )}
 
-      {offers && offers.length > 0 && (
+      {false && (
         <TaskOffers
           // offers={offers}
           posterId={task?.posterId}
@@ -389,13 +389,13 @@ const TaskDetailsPage = ({ params }: { params: { id: string } }) => {
         />
       )}
 
-      {/* {offers && offers.length > 0 && (
+      {offers && offers.length > 0 && (
         <TaskOffersNew
           posterId={task?.posterId}
           currentUserId={user?.serviceProviderId!}
           taskId={Number(id)}
         />
-      )} */}
+      )}
 
       <ProfileIncomplete
         isOpen={
