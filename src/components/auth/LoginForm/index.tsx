@@ -129,13 +129,13 @@ const LoginForm = () => {
           <form
             onSubmit={methods.handleSubmit(onSubmit)}
             className="w-full space-y-7 font-satoshi"
+            autoComplete="off"
           >
             <Input
               focused
               name="emailAddress"
               label="Email address"
               placeholder="johndoe@gmail.com"
-              autoComplete="off"
               rules={["email", "required"]}
               type="email"
               className="shadow-sm"
