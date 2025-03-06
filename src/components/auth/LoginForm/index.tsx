@@ -139,6 +139,12 @@ const LoginForm = () => {
               rules={["email", "required"]}
               type="email"
               className="shadow-sm"
+              onChange={(e) => {
+                e.currentTarget.value = e.currentTarget.value.replace(
+                  /\s/g,
+                  "",
+                );
+              }}
             />
             <Input
               name="password"
@@ -147,6 +153,12 @@ const LoginForm = () => {
               className="shadow-sm placeholder:text-dark"
               rules={["required", "password"]}
               type="password"
+              onChange={(e) => {
+                e.currentTarget.value = e.currentTarget.value.replace(
+                  /\s/g,
+                  "",
+                );
+              }}
             />
             {error && (
               <div className="my-1 text-base font-semibold text-status-error-100">
