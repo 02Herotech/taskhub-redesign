@@ -2,7 +2,8 @@ import Popup from "@/components/global/Popup/PopupTwo";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import { PaymentElement } from "@stripe/react-stripe-js";
-import { useState } from "react";
+import { useStripe, useElements } from "@stripe/react-stripe-js";
+import { FormEvent, useState } from "react";
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY);
 
@@ -14,6 +15,14 @@ type Props = {
 
 function SendPayment({ open, closeModal, clientSecret }: Props) {
   const [saveCard, setSaveCard] = useState(false);
+
+  const stripe = useStripe();
+  const elements = useElements();
+
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (!stripe || !elements) return;
+  };
   return (
     <Popup
       isOpen={open && Boolean(clientSecret)}
@@ -40,7 +49,7 @@ function SendPayment({ open, closeModal, clientSecret }: Props) {
             loader: "always",
           }}
         >
-          <form>
+          <form onSubmit={handleSubmit}>
             <PaymentElement />
             <div className="my-3 flex flex-row-reverse justify-end gap-3">
               <label
@@ -58,7 +67,8 @@ function SendPayment({ open, closeModal, clientSecret }: Props) {
               />
             </div>
             <button
-              className="mx-auto mt-5 block w-max rounded-full bg-primary px-4 py-2 font-satoshiBold font-bold text-[#EBE9F4]"
+              disabled={!stripe || !elements}
+              className="mx-auto mt-5 flex w-max items-center justify-center rounded-full bg-primary px-4 py-2 font-satoshiBold font-bold text-[#EBE9F4] disabled:opacity-55"
               type="submit"
             >
               Send Payment
