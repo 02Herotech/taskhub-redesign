@@ -38,12 +38,15 @@ const LoginForm = () => {
   const handleApiLogin = async (payload: SignInRequest) => {
     const response = await axios.post(
       `${process.env.NEXT_PUBLIC_API_URL}/auth/login`,
-      payload
+      payload,
     );
     return response.data;
   };
 
-  const handleNextAuthSignIn = async (payload: SignInRequest, userType: string) => {
+  const handleNextAuthSignIn = async (
+    payload: SignInRequest,
+    userType: string,
+  ) => {
     const result = await signIn("credentials", {
       redirect: false,
       email: payload.emailAddress,
@@ -57,21 +60,18 @@ const LoginForm = () => {
 
   const handleRedirect = () => {
     const newRedirectToAddTask = getCookie("redirectToAddTask");
-    const redirectToServiceDetail = getCookie("redirectToMarketplaceDetail")
-    const redirectToExploreDetail = getCookie("redirectToExploreDetail")
+    const redirectToServiceDetail = getCookie("redirectToMarketplaceDetail");
+    const redirectToExploreDetail = getCookie("redirectToExploreDetail");
 
     if (newRedirectToAddTask) {
       router.push(newRedirectToAddTask);
       deleteCookie("redirectToAddTask");
-
     } else if (redirectToServiceDetail) {
       router.push(redirectToServiceDetail);
       deleteCookie("redirectToMarketplaceDetail");
-
     } else if (redirectToExploreDetail) {
       router.push(redirectToExploreDetail);
       deleteCookie("redirectToExploreDetail");
-
     } else {
       router.push(from || "/marketplace");
       deleteCookie("redirectToAddTask");
@@ -85,7 +85,11 @@ const LoginForm = () => {
     setError(null);
 
     try {
-      const loginData = await handleApiLogin(payload);
+      const updatedPayload = {
+        ...payload,
+        emailAddress: payload.emailAddress.toLowerCase(),
+      };
+      const loginData = await handleApiLogin(updatedPayload);
 
       const authData = {
         token: loginData.accessToken,
@@ -93,11 +97,14 @@ const LoginForm = () => {
       };
       localStorage.setItem("auth", JSON.stringify(authData));
 
-      await handleNextAuthSignIn(payload, loginData.user.roles[0]);
+      await handleNextAuthSignIn(updatedPayload, loginData.user.roles[0]);
 
       handleRedirect();
     } catch (error: any) {
-      setError(error.response?.data?.message || "Something went wrong, please try again");
+      setError(
+        error.response?.data?.message ||
+          "Something went wrong, please try again",
+      );
     } finally {
       setIsLoading(false);
     }
