@@ -135,6 +135,7 @@ const LoginForm = () => {
               name="emailAddress"
               label="Email address"
               placeholder="johndoe@gmail.com"
+              autoComplete="off"
               rules={["email", "required"]}
               type="email"
               className="shadow-sm"
