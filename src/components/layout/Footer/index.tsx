@@ -10,6 +10,7 @@ import {
   setFilterParams,
 } from "@/store/Features/marketplace";
 import axios from "axios";
+import { FaFacebook } from "react-icons/fa";
 import Image from "next/image";
 
 const Footer = () => {
@@ -151,7 +152,7 @@ const Footer = () => {
                 ))}
               </nav>
 
-              <div className="flex space-x-3">
+              <div className="flex items-center gap-4">
                 <Link
                   href="https://www.instagram.com/oloja_au?igsh=dzRuYW52MjZ4bjJq"
                   target="_blank"
@@ -205,6 +206,14 @@ const Footer = () => {
                       </clipPath>
                     </defs>
                   </svg>
+                </Link>
+                <Link
+                  href="https://www.facebook.com/share/18efaCJ7CG/?mibextid=wwXIfr"
+                  target="_blank"
+                >
+                  <div className="rounded-full bg-[#C1BADB] p-2">
+                    <FaFacebook fill="#381f8c" size={30} />
+                  </div>
                 </Link>
               </div>
 
