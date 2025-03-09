@@ -352,7 +352,7 @@ function UploadIdPopup({
                         stroke-width="16"
                       />
                     </svg>
-                    <div className="relative z-10 mx-auto w-10/12  md:w-1/2">
+                    <div className="relative z-10 mx-auto w-10/12 md:w-1/2">
                       <Image
                         src="/assets/images/serviceProvider/id-front-back.png"
                         alt="ID"
