@@ -276,8 +276,8 @@ function UploadIdPopup({
                       />
                     </svg>
                     <div className="relative z-10 mx-auto flex w-max items-center">
-                      <img
-                        src="/images/id-image.png"
+                      <Image
+                        src="/assets/images/serviceProvider/id-image.png"
                         alt="ID"
                         width={234}
                         height={136}
@@ -353,15 +353,15 @@ function UploadIdPopup({
                       />
                     </svg>
                     <div className="relative z-10 mx-auto w-10/12  md:w-1/2">
-                      <img
-                        src="/images/id-front-back.png"
+                      <Image
+                        src="/assets/images/serviceProvider/id-front-back.png"
                         alt="ID"
                         width={368}
                         height={129}
                         className="absolute left-1/2 top-1/2 z-10 h-[129px] -translate-x-1/2 -translate-y-1/2 object-cover"
                       />
-                      <img
-                        src="/images/face-id.png"
+                      <Image
+                        src="/assets/images/serviceProvider/face-id.png"
                         alt="ID"
                         width={551}
                         height={146}
@@ -424,7 +424,7 @@ function UploadIdPopup({
           (isEditingProfilePicture.isEditing ||
             isEditingImageFront ||
             isEditingImageBack) && (
-            <div className=" z-50 flex flex-col items-center justify-center gap-5 space-y-3 bg-white">
+            <div className=" z-50 my-10 flex flex-col items-center justify-center gap-5 space-y-3 bg-white">
               <div className="space-y-4">
                 <div className="flex items-center gap-4">
                   <button
