@@ -16,12 +16,15 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-            <head>
-          <meta name="facebook-domain-verification" content="fvdmvueltfhf25xud8zdn88ms54tib" />
+      <head>
+        <meta
+          name="facebook-domain-verification"
+          content="fvdmvueltfhf25xud8zdn88ms54tib"
+        />
 
-              <script
-                dangerouslySetInnerHTML={{
-                  __html: `
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
       !function(f,b,e,v,n,t,s)
       {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
       n.callMethod.apply(n,arguments):n.queue.push(arguments)};
@@ -32,40 +35,39 @@ export default function RootLayout({
       'https://connect.facebook.net/en_US/fbevents.js');
       fbq('init', '532276502710889');
       fbq('track', 'PageView');
-    `
-                }}
-              />
+    `,
+          }}
+        />
 
-              <noscript>
-                <img
-                  height='1'
-                  width='1'
-                  style={{ display: 'none' }}
-                  src='https://www.facebook.com/tr?id=532276502710889&ev=PageView&noscript=1'
-                />
-              </noscript>
+        <noscript>
+          <img
+            height="1"
+            width="1"
+            style={{ display: "none" }}
+            src="https://www.facebook.com/tr?id=532276502710889&ev=PageView&noscript=1"
+          />
+        </noscript>
 
-
-              {/* Google Tag Manager */}
-          <script
-              async
-              src='https://www.googletagmanager.com/gtag/js?id=G-9DNH0S7F2B'
-          ></script>
-          <script
-              dangerouslySetInnerHTML={{
-                  __html: `
+        {/* Google Tag Manager */}
+        <script
+          async
+          src="https://www.googletagmanager.com/gtag/js?id=G-9DNH0S7F2B"
+        ></script>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
       gtag('config', 'G-9DNH0S7F2B');
-    `
-              }}
-          />
+    `,
+          }}
+        />
       </head>
       <body>
         <Provider>
           <TokenExpirationCheck>
-            <main className="">{children}</main>
+            <main className="min-w-80">{children}</main>
           </TokenExpirationCheck>
         </Provider>
       </body>

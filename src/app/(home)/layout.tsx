@@ -14,7 +14,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <main>
+    <main className="min-w-80">
       <HomeNavigation />
       <div className="">{children}</div>
       <Footer />
