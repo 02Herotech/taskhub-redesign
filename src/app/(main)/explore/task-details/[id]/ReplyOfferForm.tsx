@@ -44,7 +44,7 @@ function ReplyOfferForm({ taskId, user, refetch, offerId }: Props) {
           userId: user?.serviceProviderId,
           fullName: user?.firstName + " " + user?.lastName,
           message: data.message,
-          price: data.offerAmount,
+          offerAmount: data.offerAmount,
         },
       ],
     };
