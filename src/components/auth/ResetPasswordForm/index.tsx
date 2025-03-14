@@ -90,14 +90,14 @@ const ResetPasswordForm = () => {
                             <Input
                                 name='password'
                                 label='Password'
-                                placeholder='password'
+                                placeholder='Password'
                                 rules={["required", "password"]}
                                 type='password'
                             />
                             <Input
                                 name='confirm password'
                                 label='Confirm Password'
-                                placeholder='password'
+                                placeholder='Password'
                                 rules={["required", "confirmPassword"]}
                                 type='password'
                             />
