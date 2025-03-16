@@ -30,7 +30,6 @@ const animationProps = (from: "left" | "right" = "left") => {
   };
 };
 
-//Todo box-shadow: 0px 2.47px 4.94px -2.47px #0000000A; for input
 function SignUp() {
   const [step, setStep] = useState(1);
   const [stepOneData, setStepOneData] = useState<StepOneSchema | null>(null);
@@ -145,24 +144,6 @@ function SignUp() {
                   error={form.formState.errors.firstName?.message}
                 />
 
-                <div>
-                  <label
-                    htmlFor="lastName"
-                    className="mb-1 block text-sm text-[#333236] sm:text-base"
-                  >
-                    Last name
-                  </label>
-                  <input
-                    id="lastName"
-                    className="w-full rounded-2xl border-[1.5px] border-[#E9ECF1] p-2 px-3 font-satoshiMedium outline-none placeholder:text-[#D3D2D5]"
-                    placeholder="Enter Last name"
-                    {...form.register("lastName")}
-                  />
-                  <p className="ml-1 mt-1 text-sm text-[#FF0000]">
-                    {form.formState.errors.lastName?.message}
-                  </p>
-                </div>
-
                 <Input
                   id="lastName"
                   label="Last name"
@@ -231,25 +212,17 @@ function SignUp() {
                     </div>
                   ))}
                 </div>
-                <div className="col-span-2">
-                  <div className="w-full sm:w-1/2">
-                    <label
-                      htmlFor="abn"
-                      className="mb-1 block text-sm text-[#333236] sm:text-base"
-                    >
-                      ABN (where applicable)
-                    </label>
-                    <input
-                      id="abn"
-                      className="w-full rounded-2xl border-[1.5px] border-[#E9ECF1] p-2 px-3 font-satoshiMedium outline-none placeholder:text-[#D3D2D5]"
-                      placeholder="123456789"
-                      {...form.register("abn")}
-                    />
-                    <p className="ml-1 mt-1 text-sm text-[#FF0000]">
-                      {form.formState.errors.abn?.message}
-                    </p>
-                  </div>
+
+                <div className="col-span-2 sm:col-span-1">
+                  <Input
+                    id="abn"
+                    label="ABN (where applicable)"
+                    placeholder="123456789"
+                    {...form.register("abn")}
+                    error={form.formState.errors.abn?.message}
+                  />
                 </div>
+
                 <div className="col-span-2 my-3">
                   <button
                     type="submit"
@@ -266,25 +239,15 @@ function SignUp() {
                 onSubmit={handleSubmit(submitFinalForm)}
                 {...animationProps("right")}
               >
-                <div className="w-full">
-                  <label
-                    htmlFor="email"
-                    className="mb-1 block text-sm text-[#333236] sm:text-base"
-                  >
-                    Email
-                  </label>
-                  <input
-                    type="email"
-                    id="email"
-                    className="w-full rounded-2xl border-[1.5px] border-[#E9ECF1] p-2 px-3 font-satoshiMedium outline-none placeholder:text-[#D3D2D5]"
-                    placeholder="johndoe@gmail.com"
-                    {...register("email")}
-                    disabled={isSubmitting}
-                  />
-                  <p className="ml-1 mt-1 text-sm text-[#FF0000]">
-                    {errors.email?.message}
-                  </p>
-                </div>
+                <Input
+                  type="email"
+                  id="email"
+                  label="Email"
+                  placeholder="johndoe@gmail.com"
+                  {...register("email")}
+                  disabled={isSubmitting}
+                  error={errors.email?.message}
+                />
 
                 <div className="w-full">
                   <label
@@ -371,12 +334,15 @@ function SignUp() {
                   />
                   <label htmlFor="terms" className="">
                     I agree to all{" "}
-                    <Link href="#" className="text-primary underline">
+                    <Link
+                      href="/terms-and-condition"
+                      className="text-primary underline"
+                    >
                       {" "}
                       Terms of service
                     </Link>{" "}
                     and{" "}
-                    <Link href="#" className="text-primary underline">
+                    <Link href="/privacy" className="text-primary underline">
                       Privacy.
                     </Link>
                   </label>
@@ -410,7 +376,6 @@ function SignUp() {
                     disabled={isSubmitting}
                     loading={isSubmitting}
                     className="w-full rounded-full px-10 py-2 font-satoshiBold font-bold sm:w-max"
-                    // className="w-full rounded-full bg-primary px-10 py-2 font-satoshiBold font-bold text-white sm:w-max"
                   >
                     Submit
                   </Button>

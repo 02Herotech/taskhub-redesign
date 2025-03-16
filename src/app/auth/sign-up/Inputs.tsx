@@ -1,4 +1,4 @@
-import React, { useState, FC, forwardRef } from "react";
+import React, { useState, forwardRef } from "react";
 import { MdVisibility, MdVisibilityOff } from "react-icons/md";
 
 type InputProps = React.InputHTMLAttributes<HTMLInputElement> & {
@@ -6,6 +6,7 @@ type InputProps = React.InputHTMLAttributes<HTMLInputElement> & {
   label: string;
 };
 
+//Todo box-shadow: 0px 2.47px 4.94px -2.47px #0000000A; for input
 export const Input = forwardRef<HTMLInputElement, InputProps>(
   ({ label, error, ...props }, ref) => {
     return (
@@ -27,7 +28,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
   },
 );
 
-//Set Display name for beteer debugging in react
+//Set Display name for beteer debugging in react dev tools
 Input.displayName = "SignupInput";
 
 type PasswordInputProps = React.InputHTMLAttributes<HTMLInputElement> & {

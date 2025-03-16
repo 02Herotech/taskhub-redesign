@@ -95,4 +95,6 @@ function Carousel() {
   );
 }
 
+Carousel.displayName = "OnboardingCarousel";
+
 export default Carousel;
