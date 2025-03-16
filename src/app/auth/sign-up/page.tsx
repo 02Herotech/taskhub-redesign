@@ -1,11 +1,14 @@
+// Previous signup component
 import SignUpForm from "@/components/auth/SignUpForm";
+import { Metadata } from "next";
+import SignUp from "./SignUp";
 
-// export async function generateMetadata(props) {
-//   console.log(props);
-// }
+export const metadata: Metadata = {
+  title: "Sign up | Olójà",
+};
 
 const SignUpPage = () => {
-  return <SignUpForm />;
+  return <SignUp />;
 };
 
 export default SignUpPage;
