@@ -34,10 +34,10 @@ export const auth = createApi({
     signin: builder.mutation<SignInResponse, SignInRequest>({
       query: (credentials) => postRequest("/auth/login", credentials),
     }),
-    customerSignup: builder.mutation<SignUpResponse, SignUpRequest>({
+    customerSignup: builder.mutation<SignUpResponse, SignUpRequest | any>({
       query: (credentials) => postRequest("customer/sign-up", credentials),
     }),
-    serviceProviderSignup: builder.mutation<SignUpResponse, SignUpRequest>({
+    serviceProviderSignup: builder.mutation<SignUpResponse, SignUpRequest | any>({
       query: (credentials) =>
         postRequest("service_provider/sign-up", credentials),
     }),

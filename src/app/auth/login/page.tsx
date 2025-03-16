@@ -1,12 +1,12 @@
-import LoginForm from "@/components/auth/LoginForm"
+import LoginForm from "@/components/auth/LoginForm";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Oloja | Login",
+  title: "Login | Olójà",
 };
 
 const LoginPage = () => {
-  return <LoginForm />
-}
+  return <LoginForm />;
+};
 
-export default LoginPage
+export default LoginPage;
