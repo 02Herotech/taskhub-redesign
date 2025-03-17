@@ -316,7 +316,7 @@ function SignUp() {
                 <ul>
                   {failingRules.map((msg, index) => (
                     <li
-                      key={index}
+                      key={Math.random() * 1234}
                       style={{ color: "red" }}
                       className="text-xs"
                     >
@@ -351,8 +351,11 @@ function SignUp() {
                   </p>
                 </div>
                 {errors.password?.types &&
-                  Object.values(errors.password.types).map((msg, index) => (
-                    <p key={index} className="ml-1 mt-1 text-sm text-[#FF0000]">
+                  Object.values(errors.password.types).map((msg) => (
+                    <p
+                      key={Math.random() * 1234}
+                      className="ml-1 mt-1 text-sm text-[#FF0000]"
+                    >
                       {msg}
                     </p>
                   ))}

@@ -1,8 +1,8 @@
 import axios from "axios";
-import Link from "next/link";
 import Carousel from "../Carousel";
-import { redirect } from "next/navigation";
+import RedirectLink from "./RedirectLink";
 
+//Todo Error handling
 const Page = async ({
   searchParams,
 }: {
@@ -14,9 +14,6 @@ const Page = async ({
   await axios.post(
     `${process.env.NEXT_PUBLIC_API_URL}/user/verify?t=${token}&e=${email}`,
   );
-
-  //Todo Add search params to tell login page it's from signup
-  setTimeout(() => redirect("/auth/login"), 2500);
   return (
     <section className="mx-auto flex max-w-[1400px] flex-col p-3 lg:flex-row">
       <Carousel />
@@ -29,12 +26,7 @@ const Page = async ({
           <p className="mb-7 text-sm font-semibold text-[#55535A] md:text-2xl">
             Your email has been successfully verified, proceed to login.
           </p>
-          <Link
-            href="/auth/login"
-            className="rounded-full bg-primary px-10 py-3 font-satoshiBold font-bold text-white"
-          >
-            Login
-          </Link>
+          <RedirectLink />
         </div>
       </div>
     </section>
