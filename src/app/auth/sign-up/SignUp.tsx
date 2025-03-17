@@ -216,8 +216,10 @@ function SignUp() {
                 <div className="col-span-2 sm:col-span-1">
                   <Input
                     id="abn"
+                    maxLength={11}
+                    placeholder="12345678901"
                     label="ABN (where applicable)"
-                    placeholder="123456789"
+                    inputMode="numeric"
                     {...form.register("abn")}
                     error={form.formState.errors.abn?.message}
                   />
