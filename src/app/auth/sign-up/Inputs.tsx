@@ -6,7 +6,6 @@ type InputProps = React.InputHTMLAttributes<HTMLInputElement> & {
   label: string;
 };
 
-//Todo box-shadow: 0px 2.47px 4.94px -2.47px #0000000A; for input
 export const Input = forwardRef<HTMLInputElement, InputProps>(
   ({ label, error, ...props }, ref) => {
     return (
@@ -19,6 +18,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
         </label>
         <input
           className="w-full rounded-2xl border-[1.5px] border-[#E9ECF1] p-2 px-3 font-satoshiMedium outline-none placeholder:text-[#D3D2D5]"
+          style={{ boxShadow: "0px 2.47px 4.94px -2.47px #0000000A" }}
           {...props}
           ref={ref}
         />
@@ -28,7 +28,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
   },
 );
 
-//Set Display name for beteer debugging in react dev tools
+//Set Display name for better debugging in react dev tools
 Input.displayName = "SignupInput";
 
 type PasswordInputProps = React.InputHTMLAttributes<HTMLInputElement> & {
