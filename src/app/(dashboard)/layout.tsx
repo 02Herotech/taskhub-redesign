@@ -14,7 +14,7 @@ const DashboardLayout = ({ children }: AuthLayoutProps) => {
       <Navigation />
       <DashboardSidebar />
       <SessionTimeout />
-      <main className="mt-[4rem] max-lg:container max-lg:mt-[4.8rem] lg:ml-72 ">
+      <main className="mt-[3.5rem] px-7 lg:ml-72 ">
         <Suspense>{children}</Suspense>
       </main>
     </div>
