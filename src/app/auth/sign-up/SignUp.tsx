@@ -277,7 +277,7 @@ function SignUp() {
                   {failingRules.map((msg) => (
                     <li
                       key={Math.random() * 7890}
-                      className="flex items-center gap-1 text-xs text-red-300"
+                      className="flex items-center gap-1 text-xs text-[#FF0000]"
                     >
                       <RiErrorWarningLine />
                       <span>{msg}</span>
