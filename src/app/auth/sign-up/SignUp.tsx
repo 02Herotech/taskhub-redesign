@@ -97,7 +97,7 @@ function SignUp() {
       media: "WEB",
       ...otherInputs,
       emailAddress: email.toLowerCase(),
-      role: actionChoice === "GET_TASKS_DONE" ? "INDIVIDUAL" : "BUSINESS",
+      role: actionChoice === "GET_TASKS_DONE" ? "CUSTOMER" : "SERVICE_PROVIDER",
     };
     try {
       await signup(finalData).unwrap();
@@ -183,7 +183,7 @@ function SignUp() {
                     <div
                       className="flex w-full cursor-pointer items-center gap-3 rounded-lg border border-[#EBE9F4] p-2 sm:w-1/2"
                       onClick={() => form.setValue("userType", choice.action)}
-                      key={Math.random() * 1234}
+                      key={Math.random() * 5678}
                     >
                       <div className="flex size-5 flex-shrink-0 items-center justify-center rounded-full border-2 border-primary bg-white p-1">
                         {form.watch("userType") == choice.action && (
@@ -312,7 +312,7 @@ function SignUp() {
                 <ul>
                   {failingRules.map((msg, index) => (
                     <li
-                      key={Math.random() * 1234}
+                      key={Math.random() * 7890}
                       style={{ color: "red" }}
                       className="text-xs"
                     >

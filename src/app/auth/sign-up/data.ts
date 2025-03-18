@@ -39,7 +39,7 @@ export const userTypes: Option<UserType>[] = [
     imageUrl: "/assets/images/onboarding/user-wink.gif",
     title: "Individual",
     description: "Just me—ready to hire or get hired and make things happen!",
-    action: "USER",
+    action: "INDIVIDUAL",
   },
   {
     imageUrl: "/assets/images/onboarding/business-choice.svg",
