@@ -17,7 +17,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
           {label}
         </label>
         <input
-          className="w-full rounded-2xl border-[1.5px] border-[#E9ECF1] p-2 px-3 font-satoshiMedium outline-none placeholder:text-[#D3D2D5]"
+          className="w-full rounded-2xl border-[1.5px] border-[#E9ECF1] p-2 px-3 font-satoshiMedium outline-none placeholder:text-[#D3D2D5] shadow-sm"
           style={{ boxShadow: "0px 2.47px 4.94px -2.47px #0000000A" }}
           {...props}
           ref={ref}
@@ -49,7 +49,7 @@ export const PasswordInput = forwardRef<HTMLInputElement, PasswordInputProps>(
             {...props}
             ref={ref}
             type={showPassword ? "text" : "password"}
-            className="w-full font-satoshiMedium outline-none placeholder:text-[#D3D2D5]"
+            className="w-full font-satoshiMedium outline-none placeholder:text-[#D3D2D5] shadow-sm"
             placeholder="*************"
           />
           <div role="button" onClick={() => setShowPassword(!showPassword)}>

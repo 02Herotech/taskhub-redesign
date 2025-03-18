@@ -31,15 +31,13 @@ const handler = NextAuth({
           );
           const { data, status } = response;
           if (status === 200) {
-            //! BAD
             return { ...data, jwtt: data.token };
           } else {
-            // throw new Error(`Unexpected status error:, ${status}`);
-            console.error("Unexpected status error: ", status);
+            console.error(response.data);
             return null;
           }
         } catch (error) {
-          console.error("Request error: ", error);
+          console.error(error);
           return null;
         }
       },
