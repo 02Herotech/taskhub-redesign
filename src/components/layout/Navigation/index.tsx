@@ -193,9 +193,9 @@ const Navigation = () => {
             <Link href="/" className="lg:hidden">
               <SmallLogo />
             </Link>
-            <div className="flex items-center gap-3 lg:hidden">
+            <div className="flex items-center gap-4 lg:hidden">
               <Link href="/message" className="relative cursor-pointer">
-                <BsChat className="size-6 text-black" />
+                <BsChat className="size-7 text-black" />
                 {totalUnreadMessages > 0 && (
                   <span className="absolute -right-1 -top-1 flex size-5 items-center justify-center rounded-full bg-tc-orange text-xs text-white">
                     {totalUnreadMessages}
@@ -206,7 +206,7 @@ const Navigation = () => {
                 className="relative cursor-pointer"
                 onClick={() => router.push(notificationRoute)}
               >
-                <IoMdNotificationsOutline className="size-7 text-black" />
+                <IoMdNotificationsOutline className="size-8 text-black" />
                 {/* display notification length here */}
                 {notifications.length > 0 && (
                   <div className="absolute -right-1 -top-1 flex size-5 items-center justify-center rounded-full bg-tc-orange text-xs text-white">

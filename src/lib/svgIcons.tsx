@@ -110,7 +110,7 @@ export const SettingsIcon = (
 );
 
 export const HamburgerIcon = (
-  <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+  <svg width="30" height="30" viewBox="0 0 24 24" fill="none">
     <path
       d="M21 10H7"
       stroke="black"
