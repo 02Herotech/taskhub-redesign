@@ -9,12 +9,10 @@ import { stepOneSchema, StepOneSchema } from "./schema";
 import { StepTwoSchema, stepTwoSchema } from "./schema";
 import { actionChoices, userTypes, passwordRules } from "./data";
 import useAbnValidate from "@/hooks/useAbnValidate";
-import { MdVisibility, MdVisibilityOff } from "react-icons/md";
 import { useRouter } from "next/navigation";
-import Image from "next/image";
 import { useSignupMutation } from "@/services/auth";
 import Button from "@/components/global/Button";
-import { Input } from "./Inputs";
+import { Input, PasswordInput } from "./Inputs";
 import { RiErrorWarningLine } from "react-icons/ri";
 
 /**Animation properties for transitioning between components */
@@ -81,7 +79,6 @@ function SignUp() {
   //?Step one logic
 
   //?Form two logic
-  const [showPassword, setShowPassword] = useState(false);
   const {
     watch,
     reset,
@@ -245,7 +242,7 @@ function SignUp() {
               </motion.form>
             ) : (
               <motion.form
-                className="space-y-5 py-10"
+                className="space-y-3 py-7"
                 key="step-two"
                 onSubmit={handleSubmit(submitFinalForm)}
                 {...animationProps("right")}
@@ -260,69 +257,21 @@ function SignUp() {
                   error={errors.emailAddress?.message}
                 />
 
-                <div className="w-full">
-                  <label
-                    htmlFor="password"
-                    className="mb-1 block text-sm text-[#333236] sm:text-base"
-                  >
-                    Password
-                  </label>
-                  <div className="flex w-full items-center rounded-2xl border-[1.5px] border-[#E9ECF1] p-2 px-3">
-                    <input
-                      type={showPassword ? "text" : "password"}
-                      id="password"
-                      className="w-full font-satoshiMedium outline-none placeholder:text-[#D3D2D5]"
-                      placeholder="*************"
-                      disabled={isSubmitting}
-                      {...register("password")}
-                    />
-                    <div
-                      role="button"
-                      onClick={() => setShowPassword(!showPassword)}
-                    >
-                      {showPassword ? (
-                        <MdVisibilityOff />
-                      ) : (
-                        <MdVisibility color="[#E9ECF1" />
-                      )}
-                    </div>
-                  </div>
-                  <p className="ml-1 mt-1 text-sm text-[#FF0000]">
-                    {errors.password?.message}
-                  </p>
-                </div>
+                <PasswordInput
+                  label="Password"
+                  id="password"
+                  disabled={isSubmitting}
+                  {...register("password")}
+                  error={errors.password?.message}
+                />
 
-                <div className="w-full">
-                  <label
-                    htmlFor="confirm-password"
-                    className="mb-1 block text-sm text-[#333236] sm:text-base"
-                  >
-                    Confirm password
-                  </label>
-                  <div className="flex w-full items-center rounded-2xl border-[1.5px] border-[#E9ECF1] p-2 px-3">
-                    <input
-                      type={showPassword ? "text" : "password"}
-                      id="confirm-password"
-                      className="w-full font-satoshiMedium outline-none placeholder:text-[#D3D2D5]"
-                      placeholder="*************"
-                      disabled={isSubmitting}
-                      {...register("confirmPassword")}
-                    />
-                    <div
-                      role="button"
-                      onClick={() => setShowPassword(!showPassword)}
-                    >
-                      {showPassword ? (
-                        <MdVisibilityOff />
-                      ) : (
-                        <MdVisibility color="[#E9ECF1" />
-                      )}
-                    </div>
-                  </div>
-                  <p className="ml-1 mt-1 text-sm text-[#FF0000]">
-                    {errors.confirmPassword?.message}
-                  </p>
-                </div>
+                <PasswordInput
+                  label="Confirm password"
+                  id="confirm-password"
+                  disabled={isSubmitting}
+                  {...register("confirmPassword")}
+                  error={errors.confirmPassword?.message}
+                />
 
                 <ul>
                   {failingRules.map((msg) => (
