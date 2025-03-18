@@ -10,7 +10,7 @@ export const signupSchema = z.object({
     errorMap: () => ({ message: "" }),
   }),
   abn: z.string().optional(),
-  email: z
+  emailAddress: z
     .string()
     .min(1, "Email is required")
     .email({ message: "Please enter a valid email address" }),
@@ -58,7 +58,7 @@ export type StepOneSchema = z.infer<typeof stepOneSchema>;
 
 export const stepTwoSchema = signupSchema
   .pick({
-    email: true,
+    emailAddress: true,
     password: true,
     confirmPassword: true,
     terms: true,

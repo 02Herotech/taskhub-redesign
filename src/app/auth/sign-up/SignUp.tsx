@@ -15,6 +15,7 @@ import Image from "next/image";
 import { useSignupMutation } from "@/services/auth";
 import Button from "@/components/global/Button";
 import { Input } from "./Inputs";
+import { RiErrorWarningLine } from "react-icons/ri";
 
 /**Animation properties for transitioning between components */
 const animationProps = (from: "left" | "right" = "left") => {
@@ -66,6 +67,17 @@ function SignUp() {
     setStepOneData(data);
     setStep(2);
   };
+
+  const allowLetters = {
+    onInput: (e) => {
+      e.currentTarget.value = e.currentTarget.value.replace(/[^a-zA-Z\s]/g, "");
+    },
+  };
+  const allowNumbers = {
+    onInput: (e) => {
+      e.currentTarget.value = e.currentTarget.value.replace(/\D/g, "");
+    },
+  };
   //?Step one logic
 
   //?Form two logic
@@ -78,6 +90,7 @@ function SignUp() {
     formState: { errors, isSubmitting },
   } = useForm<StepTwoSchema>({
     resolver: zodResolver(stepTwoSchema),
+    mode: "onChange",
   });
 
   const password = watch("password");
@@ -91,12 +104,12 @@ function SignUp() {
   const submitFinalForm: SubmitHandler<StepTwoSchema> = async (data) => {
     if (!stepOneData) return;
     const { actionChoice, ...otherInputs } = stepOneData;
-    const { confirmPassword, terms, email, ...rest } = data;
+    const { confirmPassword, terms, emailAddress, ...rest } = data;
     const finalData = {
       ...rest,
       media: "WEB",
       ...otherInputs,
-      emailAddress: email.toLowerCase(),
+      emailAddress: emailAddress.toLowerCase(),
       role: actionChoice === "GET_TASKS_DONE" ? "CUSTOMER" : "SERVICE_PROVIDER",
     };
     try {
@@ -115,17 +128,17 @@ function SignUp() {
       <Carousel />
       <div className="flex flex-grow items-center justify-center">
         <div className="w-full pt-8 sm:w-10/12 lg:pt-0">
-          <h2 className="mb-2 text-xl font-semibold text-[#190E3F] md:text-4xl">
+          <h2 className="mb-2 text-xl font-semibold text-[#190E3F] md:text-3xl">
             Create account
           </h2>
-          <h3 className="font-clashMedium text-sm text-[#55535A] md:text-2xl">
+          <h3 className="font-clashMedium text-sm text-[#55535A] md:text-xl">
             Join us for exclusive access to our services
           </h3>
           <AnimatePresence initial={false} mode="wait">
             {step === 1 ? (
               <motion.form
                 onSubmit={form.handleSubmit(submitFormOne)}
-                className="mt-5 grid grid-cols-2 gap-3 gap-y-5"
+                className="mt-5 grid grid-cols-2 gap-3 gap-y-3"
                 autoComplete="off"
                 {...animationProps()}
                 key="step-one"
@@ -136,6 +149,7 @@ function SignUp() {
                   placeholder="Enter First name"
                   {...form.register("firstName")}
                   error={form.formState.errors.firstName?.message}
+                  {...allowLetters}
                 />
 
                 <Input
@@ -144,8 +158,8 @@ function SignUp() {
                   placeholder="Enter Last name"
                   {...form.register("lastName")}
                   error={form.formState.errors.lastName?.message}
+                  {...allowLetters}
                 />
-
                 <p className="col-span-2 -mb-2">
                   What do you want to do on Olójà at this time?
                 </p>
@@ -216,10 +230,11 @@ function SignUp() {
                     inputMode="numeric"
                     {...form.register("abn")}
                     error={form.formState.errors.abn?.message}
+                    {...allowNumbers}
                   />
                 </div>
 
-                <div className="col-span-2 my-3">
+                <div className="col-span-2 my-2">
                   <button
                     type="submit"
                     className="w-full rounded-full bg-primary px-10 py-2 font-satoshiBold font-bold text-white sm:w-max"
@@ -240,9 +255,9 @@ function SignUp() {
                   id="email"
                   label="Email"
                   placeholder="johndoe@gmail.com"
-                  {...register("email")}
+                  {...register("emailAddress")}
                   disabled={isSubmitting}
-                  error={errors.email?.message}
+                  error={errors.emailAddress?.message}
                 />
 
                 <div className="w-full">
@@ -310,13 +325,13 @@ function SignUp() {
                 </div>
 
                 <ul>
-                  {failingRules.map((msg, index) => (
+                  {failingRules.map((msg) => (
                     <li
                       key={Math.random() * 7890}
-                      style={{ color: "red" }}
-                      className="text-xs"
+                      className="flex items-center gap-1 text-xs text-red-300"
                     >
-                      ❌ {msg}
+                      <RiErrorWarningLine />
+                      <span>{msg}</span>
                     </li>
                   ))}
                 </ul>

@@ -83,22 +83,18 @@ const LoginForm = () => {
   const onSubmit: SubmitHandler<SignInRequest> = async (payload) => {
     setIsLoading(true);
     setError(null);
-
     try {
       const updatedPayload = {
         ...payload,
         emailAddress: payload.emailAddress.toLowerCase(),
       };
       const loginData = await handleApiLogin(updatedPayload);
-
       const authData = {
         token: loginData.accessToken,
         role: loginData.user.roles,
       };
       localStorage.setItem("auth", JSON.stringify(authData));
-
       await handleNextAuthSignIn(updatedPayload, loginData.user.roles[0]);
-
       handleRedirect();
     } catch (error: any) {
       setError(

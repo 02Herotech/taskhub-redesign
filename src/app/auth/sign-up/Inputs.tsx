@@ -12,7 +12,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
       <div>
         <label
           htmlFor={props.id}
-          className="mb-1 block text-sm text-[#333236] sm:text-base"
+          className="block text-sm text-[#333236] sm:text-base"
         >
           {label}
         </label>
