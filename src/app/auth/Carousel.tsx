@@ -38,16 +38,16 @@ function Carousel() {
   //@ts-ignore
   const onSelect = useCallback(() => {
     if (!emblaApi) return;
-    setCurrentIndex(emblaApi.selectedScrollSnap()); // Get the active slide index
+    setCurrentIndex(emblaApi.selectedScrollSnap());
   }, [emblaApi]);
 
   useEffect(() => {
     if (!emblaApi) return;
     setNumberOfSlides(emblaApi.slideNodes().length);
-    // emblaApi.on('select', onSelect);
-    // return () => {
-    //   emblaApi?.off('select', onSelect);
-    // };
+    emblaApi.on("select", onSelect);
+    return () => {
+      emblaApi?.off("select", onSelect);
+    };
   }, [emblaApi]);
 
   return (

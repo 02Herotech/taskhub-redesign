@@ -18,20 +18,20 @@ const Page = ({
       <Carousel />
       <div className="flex flex-grow items-center justify-center">
         <div className="w-full px-3 pt-8 sm:w-10/12 lg:px-0 lg:pt-0">
-          <h2 className="mb-2 font-clashMedium text-xl text-[#190E3F] md:text-4xl">
+          <h2 className="mb-7 font-clashMedium text-xl text-[#190E3F] md:text-4xl">
             Verify Email
           </h2>
-          <p className="mb-5 text-sm font-semibold text-[#55535A] md:text-2xl">
-            A Link has been sent to{" "}
+          <p className="mb-4 text-sm font-semibold text-[#55535A] md:text-2xl">
+            A link has been sent to{" "}
             <span className="text-[#FE9B07]">{email}</span>, click on the link
-            to verify Email.{" "}
-            <Link href="/auth/sign-up" className="text-primary">
+            to verify email.{" "}
+            <Link href="/auth/sign-up" className="text-primary underline">
               Change email
             </Link>
           </p>
           <p className="text-sm font-bold text-[#55535A] md:text-lg">
             If you did not receive an email,{" "}
-            <Link href="#" className="text-primary">
+            <Link href="#" className="text-primary underline">
               resend email.
             </Link>
           </p>
