@@ -2,7 +2,6 @@ import axios from "axios";
 import Carousel from "../Carousel";
 import RedirectLink from "./RedirectLink";
 
-//Todo Error handling
 const Page = async ({
   searchParams,
 }: {
