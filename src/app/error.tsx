@@ -14,7 +14,7 @@ function Error({
     console.error(error);
   }, [error]);
   return (
-    <section className="mx-auto flex h-lvh max-w-[1400px] flex-col items-center justify-center p-3">
+    <section className="mx-auto flex h-[80vh] max-w-[1400px] flex-col items-center justify-center p-3">
       <Image
         src="/assets/images/error-occured.jpg"
         alt="Error image"
@@ -39,7 +39,7 @@ function Error({
             contact support.
           </Link>
         </p>
-        <div className="mx-auto my-3 mt-8 flex w-max gap-3 border">
+        <div className="mx-auto my-3 mt-8 flex w-max gap-3">
           <button
             onClick={() => reset()}
             className="rounded-full bg-primary px-8 py-2 font-satoshiBold font-bold text-white"
