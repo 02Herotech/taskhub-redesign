@@ -193,7 +193,7 @@ const Navigation = () => {
             <Link href="/" className="lg:hidden">
               <SmallLogo />
             </Link>
-            <div className="flex items-center gap-4 lg:hidden">
+            <div className="flex items-center gap-3 lg:hidden">
               <Link href="/message" className="relative cursor-pointer">
                 <BsChat className="size-7 text-black" />
                 {totalUnreadMessages > 0 && (

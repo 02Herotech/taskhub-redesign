@@ -12,10 +12,7 @@ import useAbnValidate from "@/hooks/useAbnValidate";
 import { MdVisibility, MdVisibilityOff } from "react-icons/md";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import {
-  useCustomerSignupMutation,
-  useServiceProviderSignupMutation,
-} from "@/services/auth";
+import { useSignupMutation } from "@/services/auth";
 import Button from "@/components/global/Button";
 import { Input } from "./Inputs";
 
@@ -35,8 +32,7 @@ function SignUp() {
   const [stepOneData, setStepOneData] = useState<StepOneSchema | null>(null);
   const [error, setError] = useState("");
   const router = useRouter();
-  const [customerSignup] = useCustomerSignupMutation();
-  const [serviceProviderSignup] = useServiceProviderSignupMutation();
+  const [signup] = useSignupMutation();
 
   //?Step one logic
   const form = useForm<StepOneSchema>({ resolver: zodResolver(stepOneSchema) });
@@ -94,19 +90,17 @@ function SignUp() {
 
   const submitFinalForm: SubmitHandler<StepTwoSchema> = async (data) => {
     if (!stepOneData) return;
-    const { actionChoice, userType, ...otherInputs } = stepOneData;
+    const { actionChoice, ...otherInputs } = stepOneData;
     const { confirmPassword, terms, email, ...rest } = data;
     const finalData = {
-      ...otherInputs,
-      emailAddress: email.toLowerCase(),
       ...rest,
       media: "WEB",
+      ...otherInputs,
+      emailAddress: email.toLowerCase(),
+      role: actionChoice === "GET_TASKS_DONE" ? "INDIVIDUAL" : "BUSINESS",
     };
     try {
-      actionChoice == "GET_TASKS_DONE"
-        ? await customerSignup(finalData).unwrap()
-        : await serviceProviderSignup(finalData).unwrap();
-
+      await signup(finalData).unwrap();
       setError("");
       reset();
       router.push(`/auth/verify-email?email=${finalData.emailAddress}`);

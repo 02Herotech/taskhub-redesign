@@ -6,7 +6,7 @@ export const signupSchema = z.object({
   actionChoice: z.enum(["GET_TASKS_DONE", "MONETIZE_YOUR_SKILLS"], {
     errorMap: () => ({ message: "" }),
   }),
-  userType: z.enum(["USER", "BUSINESS"], {
+  userType: z.enum(["INDIVIDUAL", "BUSINESS"], {
     errorMap: () => ({ message: "" }),
   }),
   abn: z.string().optional(),
