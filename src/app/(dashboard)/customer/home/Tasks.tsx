@@ -7,6 +7,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/store";
 import Image from "next/image";
 import { truncateText } from "@/utils/marketplace";
+import Link from "next/link";
 
 function Tasks() {
   const { profile: user } = useSelector(
@@ -18,7 +19,7 @@ function Tasks() {
   });
   return (
     <section className="w-full md:w-2/5">
-      <h3 className="font-semibold mb-1 text-[#0000009E]">My Tasks</h3>
+      <h3 className="mb-1 font-semibold text-[#0000009E]">My Tasks</h3>
       <div className="relative h-[550px] overflow-y-auto rounded-2xl border border-[#0000001A] px-3">
         {isLoading && (
           <div className="flex h-full w-full items-center justify-center">
@@ -90,9 +91,12 @@ function Tasks() {
                   </li>
                 ))}
                 <div className="w-full bg-white">
-                  <button className="ml-auto block w-max font-satoshiBold font-bold text-primary">
+                  <Link
+                    href="/customer/tasks"
+                    className="ml-auto block w-max font-satoshiBold font-bold text-primary"
+                  >
                     View all
-                  </button>
+                  </Link>
                 </div>
               </ul>
             )}

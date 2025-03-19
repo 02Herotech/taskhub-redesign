@@ -5,6 +5,7 @@ import {
   BusinessHubSvg,
   ContactUsSvg,
   DashboardSvg,
+  HomeIcon,
   HomeSvg,
   LoginSvg,
   MarketPlaceSvg,
@@ -196,6 +197,11 @@ export const mobileServiceProviderLinks: LinkRouteTypes[] = [
 ];
 
 export const mobileCustomerLinks: LinkRouteTypes[] = [
+  {
+    label: "Home",
+    icon: HomeIcon,
+    url: "/customer/home",
+  },
   {
     label: "My Dashboard",
     icon: DashboardSvg,

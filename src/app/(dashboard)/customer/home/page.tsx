@@ -13,7 +13,7 @@ function Page() {
         <header className="mb-5 flex min-w-[500px] gap-2">
           <div>
             <h3 className="mb-2 font-semibold">Profile</h3>
-            <div className="flex items-stretch gap-2 rounded-xl border border-[#0000001A] p-4">
+            <div className="flex items-center gap-2 rounded-xl border border-[#0000001A] p-4">
               <CgProfile strokeWidth={0.8} size={40} color="#2A1769" />
               <div>
                 <h4 className="mb-1 text-2xl font-bold text-[#2A1769]">
