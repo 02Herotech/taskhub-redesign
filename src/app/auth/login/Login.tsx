@@ -55,6 +55,7 @@ function Login() {
     }
   };
 
+  //userType: 'CUSTOMER' | 'SERVICE_PROVIDER'
   const handleRedirect = () => {
     const newRedirectToAddTask = getCookie("redirectToAddTask");
     const redirectToServiceDetail = getCookie("redirectToMarketplaceDetail");

@@ -1,5 +1,6 @@
 import React from "react";
 import {
+  HomeIcon,
   JobsIcon,
   NotificationIcon,
   PaymentIcon,
@@ -15,6 +16,7 @@ interface DashboardLinks {
 }
 
 export const customerDashboardLinks: DashboardLinks[] = [
+  { label: "Home", link: "/customer/home", icon: HomeIcon },
   {
     label: "My Dashboard",
     link: "/customer/profile",
@@ -25,7 +27,7 @@ export const customerDashboardLinks: DashboardLinks[] = [
     link: "/customer/tasks",
     icon: JobsIcon,
   },
-  { 
+  {
     label: "My Notifications",
     link: "/customer/notifications",
     icon: NotificationIcon,
@@ -35,7 +37,7 @@ export const customerDashboardLinks: DashboardLinks[] = [
     link: "/customer/payment?tab=paymentHistory",
     icon: PaymentIcon,
   },
-  // { 
+  // {
   //   label: "Rewards",
   //   link: "/customer/rewards",
   //   icon: PaymentIcon,
@@ -73,7 +75,7 @@ export const serviceProviderDashboardLinks: DashboardLinks[] = [
     link: "/service-provider/payment",
     icon: PaymentIcon,
   },
-  // { 
+  // {
   //   label: "Rewards",
   //   link: "/service-provider/rewards",
   //   icon: PaymentIcon,
