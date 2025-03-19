@@ -14,9 +14,9 @@ function PaymentHistory() {
     user?.customerId!,
   );
   return (
-    <section className="w-3/5">
+    <section className="w-3/5 hidden md:block">
       <h3 className="font-semibold mb-1 text-[#0000009E]">Payment History</h3>
-      <div className="h-[500px] overflow-y-hidden rounded-2xl border border-[#0000001A]">
+      <div className="h-[550px] overflow-y-hidden rounded-2xl border border-[#0000001A]">
         {isLoading && (
           <div className="flex h-full w-full items-center justify-center">
             <Image

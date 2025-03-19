@@ -17,9 +17,9 @@ function Tasks() {
     skip: !userId,
   });
   return (
-    <section className="w-2/5">
+    <section className="w-full md:w-2/5">
       <h3 className="font-semibold mb-1 text-[#0000009E]">My Tasks</h3>
-      <div className="relative h-[500px] overflow-y-auto rounded-2xl border border-[#0000001A] px-3">
+      <div className="relative h-[550px] overflow-y-auto rounded-2xl border border-[#0000001A] px-3">
         {isLoading && (
           <div className="flex h-full w-full items-center justify-center">
             <Image
