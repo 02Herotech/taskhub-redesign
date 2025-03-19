@@ -14,7 +14,7 @@ function Error({
     console.error(error);
   }, [error]);
   return (
-    <section className="mx-auto flex h-[80vh] max-w-[1400px] flex-col items-center justify-center p-3">
+    <section className="mx-auto flex h-[90vh] max-w-[1400px] flex-col items-center justify-center p-3">
       <Image
         src="/assets/images/error-occured.jpg"
         alt="Error image"

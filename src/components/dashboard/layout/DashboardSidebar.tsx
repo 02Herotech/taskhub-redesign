@@ -62,10 +62,10 @@ const DashboardSidebar = () => {
             <Link
               key={item.label}
               href={item.link}
-              className={`flex items-center  rounded-md px-4 py-3 text-sm font-medium text-white  transition-all duration-300 max-md:text-sm ${isServiceProvider ? "gap-4" : "gap-8"}  ${
+              className={`flex items-center rounded-md px-4 py-3 text-sm font-medium transition-all duration-300 max-md:text-sm ${isServiceProvider ? "gap-4" : "gap-8"}  ${
                 pathname.includes(item.link)
-                  ? "bg-yellow-500 hover:bg-opacity-90"
-                  : "hover:bg-violet-950"
+                  ? "bg-white text-primary hover:bg-opacity-90"
+                  : "text-white hover:bg-violet-950"
               } `}
             >
               {item.icon}
@@ -86,7 +86,7 @@ const DashboardSidebar = () => {
           </button>
 
           <div
-            className={` space-y-2 overflow-hidden px-4 transition-all duration-300 ${showSettings ? "max-h-80" : "max-h-0"} `}
+            className={`space-y-2 overflow-hidden px-4 transition-all duration-300 ${showSettings ? "max-h-80" : "max-h-0"} `}
           >
             {currentDropDownLink.map((item) => (
               <Link

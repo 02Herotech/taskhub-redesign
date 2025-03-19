@@ -1,6 +1,7 @@
 import DashboardSidebar from "@/components/dashboard/layout/DashboardSidebar";
 import { Suspense } from "react";
-import Navigation from "@/components/layout/Navigation";
+// import Navigation from "@/components/layout/Navigation";
+import Navigation from '@/components/layout/Navigation'
 import SessionTimeout from "@/components/global/Popup/SessionTimeout";
 import "../../styles/serviceProviderStyles.css";
 
