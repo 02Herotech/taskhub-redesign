@@ -112,7 +112,7 @@ function SignUp() {
     try {
       await signup(finalData).unwrap();
       setError("");
-      // reset();
+      reset();
       router.replace(`/auth/verify-email?email=${finalData.emailAddress}`);
     } catch (error: any) {
       console.error("Error while signing up: ", error);
