@@ -55,8 +55,8 @@ const DashboardSidebar = () => {
     : customerDashboardLinks;
 
   return (
-    <aside className="fixed right-full top-0 mt-20 h-[calc(100vh-5rem)] w-72 rounded-br-3xl rounded-tr-3xl bg-[#381F8C] lg:left-0">
-      <nav className="flex h-full flex-col justify-between gap-6 px-2 py-8 lg:px-6">
+    <aside className="fixed right-full top-0 mt-20 h-[calc(100vh-5rem)] w-64 rounded-br-3xl rounded-tr-3xl bg-[#381F8C] lg:left-0">
+      <nav className="flex h-full flex-col justify-between gap-6 px-2 py-8 lg:px-4">
         <div className="flex flex-col gap-4">
           {currentDashboardLink.map((item) => (
             <Link
