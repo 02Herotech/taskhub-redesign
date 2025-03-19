@@ -6,6 +6,27 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/store";
 import { CgProfile } from "react-icons/cg";
 
+// const Error = () => {
+//   return (
+//     <div className="flex h-[50vh] w-full flex-col items-center justify-center">
+//       <h2 className="font-satoshiBold text-xl font-bold text-primary lg:text-3xl">
+//         {error ? "Error loading task" : "Task not found!"}
+//       </h2>
+//       <p className="font-satoshiMedium text-lg text-[#140B31] lg:text-xl">
+//         {error
+//           ? "An error occurred while loading the task."
+//           : "The requested task could not be found."}
+//       </p>
+//       <Button
+//         onClick={() => window.location.reload()}
+//         className="mt-4 rounded-full"
+//       >
+//         Retry
+//       </Button>
+//     </div>
+//   );
+// };
+
 function PaymentHistory() {
   const { profile: user } = useSelector(
     (state: RootState) => state.userProfile,
@@ -14,8 +35,8 @@ function PaymentHistory() {
     user?.customerId!,
   );
   return (
-    <section className="w-3/5 hidden md:block">
-      <h3 className="font-semibold mb-1 text-[#0000009E]">Payment History</h3>
+    <section className="hidden w-3/5 md:block">
+      <h3 className="mb-1 font-semibold text-[#0000009E]">Payment History</h3>
       <div className="h-[550px] overflow-y-hidden rounded-2xl border border-[#0000001A]">
         {isLoading && (
           <div className="flex h-full w-full items-center justify-center">
@@ -57,7 +78,7 @@ function PaymentHistory() {
                       height={40}
                       className="size-10 rounded-full object-cover object-top md:size-14"
                     /> */}
-                    <CgProfile size={30} />
+                    <CgProfile size={30} className="mt-2" strokeWidth={0.2} />
                     <div>
                       <h5 className="font-satoshiBold text-lg font-bold text-[#140B31]">
                         {payment.bookingTitle}
