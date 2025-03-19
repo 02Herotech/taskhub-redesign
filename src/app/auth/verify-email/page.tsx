@@ -1,6 +1,7 @@
 import Carousel from "../Carousel";
 import Link from "next/link";
 import { Metadata } from "next";
+import ResendEmail from "./ResendEmail";
 
 export const metadata: Metadata = {
   title: "Verify Email | Olójà",
@@ -29,12 +30,7 @@ const Page = ({
               Change email
             </Link>
           </p>
-          <p className="text-sm font-bold text-[#55535A] md:text-lg">
-            If you did not receive an email,{" "}
-            <Link href="#" className="text-primary underline">
-              resend email.
-            </Link>
-          </p>
+          <ResendEmail email={email}/>
         </div>
       </div>
     </section>
