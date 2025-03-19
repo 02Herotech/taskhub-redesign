@@ -17,6 +17,21 @@ function Tasks() {
   const { data, isLoading, error } = useGetAllTaskByCustomerIdQuery(userId!, {
     skip: !userId,
   });
+
+  type TaskType = NonNullable<typeof data>[number];
+
+  function displayTaskStatus(task: TaskType) {
+    if (task.taskStatus == "COMPLETED") {
+      return <div className="mb-2 text-sm sm:text-xs text-[#34B367]">Completed</div>;
+    } else if (task.taskStatus == "ONGOING") {
+      return <div className="mb-2 text-sm sm:text-xs text-[#FEA621]">Ongoing</div>;
+      //@ts-ignore
+    } else if (task.assignedTo) {
+      return <div className="mb-2 text-sm sm:text-xs text-primary">Assigned</div>;
+    } else {
+      return <div className="mb-2 text-sm sm:text-xs text-[#045AA6]">Open</div>;
+    }
+  }
   return (
     <section className="w-full md:w-2/5">
       <h3 className="mb-1 font-semibold text-[#0000009E]">My Tasks</h3>
@@ -62,12 +77,11 @@ function Tasks() {
                     key={Math.random() * 1234}
                   >
                     <div>
-                      {/* Colors:  Assigned: #381F8C Open: #381F8C Completed: #34B367 Ongoing: #FEA621  */}
-                      <div className="mb-2 text-xs text-primary">Assigned</div>
-                      <p className="mb-4 font-satoshiBold text-xs font-bold text-[#01353D]">
+                      {displayTaskStatus(task)}
+                      <p className="mb-4 font-satoshiBold text-base font-bold text-[#01353D] sm:text-xs">
                         {task.taskBriefDescription}
                       </p>
-                      <p className="max-w-[200px] text-xs text-[#00323A]">
+                      <p className="max-w-[200px] text-sm text-[#00323A] sm:text-xs">
                         {truncateText(task.taskDescription, 66)}
                       </p>
                     </div>

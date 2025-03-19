@@ -35,9 +35,13 @@ function Heading() {
   }, []);
 
   return (
-    <h2 className="mb-5 text-2xl font-semibold text-primary">
-      Hi {data?.user.user.firstName}, {greeting}!
-    </h2>
+    <div className="mb-5">
+      <h2 className="mb-1 font-satoshiBold text-3xl font-bold text-primary sm:text-2xl sm:font-semibold">
+        Hi {data?.user.user.firstName}
+        <span className="hidden sm:inline">, {greeting}!</span>
+      </h2>
+      <p className="block font-medium text-[#55535A] sm:hidden">{greeting}!</p>
+    </div>
   );
 }
 

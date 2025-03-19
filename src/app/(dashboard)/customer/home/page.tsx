@@ -4,12 +4,13 @@ import { IoIosAddCircle } from "react-icons/io";
 import PaymentHistory from "./PaymentHistory";
 import Tasks from "./Tasks";
 import Heading from "./Heading";
+import PostTask from "./PostTask";
 
 function Page() {
   return (
-    <section className="mt-[5rem] p-4">
+    <section className="relative mt-[5rem] p-4">
       <Heading />
-      <div className="overflow-x-auto">
+      <div className="mb-4 overflow-x-auto">
         <header className="mb-5 flex min-w-[500px] gap-2">
           <div>
             <h3 className="mb-2 font-semibold">Profile</h3>
@@ -89,6 +90,8 @@ function Page() {
         <PaymentHistory />
         <Tasks />
       </div>
+
+      <PostTask />
     </section>
   );
 }
