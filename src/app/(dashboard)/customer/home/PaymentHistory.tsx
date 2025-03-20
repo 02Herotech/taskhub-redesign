@@ -83,14 +83,13 @@ function PaymentHistory() {
                 </h4>
                 {data.slice(0, 7).map((payment) => (
                   <li className="flex gap-2" key={Math.random() * 5678}>
-                    {/* <Image
-                      src="/happy_customer.jpg"
+                    <Image
+                      src="/assets/images/placeholder.png"
                       alt="Profile picture"
                       width={40}
                       height={40}
                       className="size-10 rounded-full object-cover object-top md:size-14"
-                    /> */}
-                    <CgProfile size={30} className="mt-2" strokeWidth={0.2} />
+                    />
                     <div>
                       <h5 className="font-satoshiBold text-lg font-bold text-[#140B31]">
                         {payment.bookingTitle}
@@ -100,14 +99,14 @@ function PaymentHistory() {
                       </p>
                     </div>
 
-                    {/* Colors: Successful -> #17A851, Pending -> #FEA621, Failed -> #EA323E */}
                     <div className="ml-auto space-y-2 text-right">
                       <p className="text-sm text-[#5A5960]">
                         {formatTimeFromDate(
                           new Date(convertMonthInDateArray(payment.createdAt)),
                         )}
                       </p>
-                      <p className="text-[#17A851]">Successful</p>
+                      {/* Colors: Successful -> #17A851, Pending -> #FEA621, Failed -> #EA323E */}
+                      {/* <p className="text-[#17A851]">Successful</p> */}
                     </div>
                   </li>
                 ))}

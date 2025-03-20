@@ -27,6 +27,7 @@ const animationProps = (from: "left" | "right" = "left") => {
   };
 };
 
+//Todo Abstractions
 function SignUp() {
   const [step, setStep] = useState(1);
   const [stepOneData, setStepOneData] = useState<StepOneSchema | null>(null);
@@ -118,7 +119,7 @@ function SignUp() {
 
   useEffect(() => {
     if (step == 2 && isEmailChange) {
-      //Timer because time taken for animation to render the form
+      //Timer because time taken for animation to completely render the form
       setTimeout(() => setFocus("emailAddress"), 1000);
     }
   }, [step]);
@@ -269,7 +270,7 @@ function SignUp() {
                     id="abn"
                     maxLength={11}
                     placeholder="12345678901"
-                    label="ABN (where applicable)"
+                    label={`ABN ${actionChoice == "GET_TASKS_DONE" ? "(where applicable)" : "(required)"}`}
                     inputMode="numeric"
                     {...form.register("abn")}
                     error={form.formState.errors.abn?.message}
