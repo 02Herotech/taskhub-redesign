@@ -14,6 +14,7 @@ const Page = ({
 }) => {
   const params = new URLSearchParams(searchParams as Record<string, string>);
   const email = params.get("email");
+  const abn = params.get("abn");
   return (
     <section className="mx-auto flex max-w-[1400px] flex-col p-3 lg:flex-row">
       <Carousel />
@@ -26,11 +27,16 @@ const Page = ({
             A link has been sent to{" "}
             <span className="text-[#FE9B07]">{email}</span>, click on the link
             to verify email.{" "}
-            <Link href="/auth/sign-up" className="text-primary underline">
-              Change email
-            </Link>
+            {abn == "false" && (
+              <Link
+                href="/auth/sign-up?action=change-email"
+                className="text-primary underline"
+              >
+                Change email
+              </Link>
+            )}
           </p>
-          <ResendEmail email={email}/>
+          <ResendEmail email={email} />
         </div>
       </div>
     </section>

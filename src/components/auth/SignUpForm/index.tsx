@@ -8,7 +8,7 @@ import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 import { useState } from "react";
 import PhoneInputWithCountry from "react-phone-number-input/react-hook-form";
 import "react-phone-number-input/style.css";
-import { useCustomerSignupMutation, useServiceProviderSignupMutation } from "@/services/auth";
+// import { useCustomerSignupMutation, useServiceProviderSignupMutation } from "@/services/auth";
 import { setCookie, getCookie } from 'cookies-next';
 
 type SignUpRequest = {
@@ -22,8 +22,8 @@ type SignUpRequest = {
 const SignUpForm = () => {
     const router = useRouter();
     const [isLoading, setIsLoading] = useState(false);
-    const [customerSignUpApiCall] = useCustomerSignupMutation();
-    const [serviceProviderSignUpApiCall] = useServiceProviderSignupMutation();
+    // const [customerSignUpApiCall] = useCustomerSignupMutation();
+    // const [serviceProviderSignUpApiCall] = useServiceProviderSignupMutation();
     const [error, setError] = useState<string | null>(null);
 
     const searchParams = useSearchParams();
@@ -75,13 +75,13 @@ const SignUpForm = () => {
                 }, 30000)
             );
 
-            const signUpPromise = userType === 'Service Provider'
-                ? serviceProviderSignUpApiCall(data).unwrap()
-                : customerSignUpApiCall(data).unwrap();
+            // const signUpPromise = userType === 'Service Provider'
+            //     ? serviceProviderSignUpApiCall(data).unwrap()
+            //     : customerSignUpApiCall(data).unwrap();
 
-            await Promise.race([signUpPromise, timeoutPromise]);
+            // await Promise.race([signUpPromise, timeoutPromise]);
 
-         clearTimeout(timeoutId);
+            clearTimeout(timeoutId);
 
             setIsLoading(false);
             router.push(`/auth/verify-email?email=${payload.emailAddress}`);
