@@ -5,6 +5,7 @@ import { useGetReceiptsByCustomerIdQuery } from "@/services/bookings";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
 import { CgProfile } from "react-icons/cg";
+import { formatTimeFromDate } from "@/utils";
 
 // const Error = () => {
 //   return (
@@ -34,6 +35,17 @@ function PaymentHistory() {
   const { data, isLoading, error } = useGetReceiptsByCustomerIdQuery(
     user?.customerId!,
   );
+  function convertMonthInDateArray(dates: number[]) {
+    return new Date(
+      dates[0],
+      dates[1] - 1,
+      dates[2],
+      dates[3],
+      dates[4],
+      dates[5],
+      dates[6],
+    );
+  }
   return (
     <section className="hidden w-3/5 md:block">
       <h3 className="mb-1 font-semibold text-[#0000009E]">Payment History</h3>
@@ -69,7 +81,7 @@ function PaymentHistory() {
                 <h4 className="mb-3 font-satoshiMedium text-[#756F6F]">
                   Today
                 </h4>
-                {data?.slice(0, 7).map((payment) => (
+                {data.slice(0, 7).map((payment) => (
                   <li className="flex gap-2" key={Math.random() * 5678}>
                     {/* <Image
                       src="/happy_customer.jpg"
@@ -90,7 +102,11 @@ function PaymentHistory() {
 
                     {/* Colors: Successful -> #17A851, Pending -> #FEA621, Failed -> #EA323E */}
                     <div className="ml-auto space-y-2 text-right">
-                      <p className="text-sm text-[#5A5960]">10:13 am</p>
+                      <p className="text-sm text-[#5A5960]">
+                        {formatTimeFromDate(
+                          new Date(convertMonthInDateArray(payment.createdAt)),
+                        )}
+                      </p>
                       <p className="text-[#17A851]">Successful</p>
                     </div>
                   </li>

@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
 import Carousel from "../Carousel";
@@ -9,11 +9,12 @@ import { stepOneSchema, StepOneSchema } from "./schema";
 import { StepTwoSchema, stepTwoSchema } from "./schema";
 import { actionChoices, userTypes, passwordRules } from "./data";
 import useAbnValidate from "@/hooks/useAbnValidate";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useSignupMutation } from "@/services/auth";
 import Button from "@/components/global/Button";
 import { Input, PasswordInput } from "./Inputs";
 import { RiErrorWarningLine } from "react-icons/ri";
+import { setCookie, getCookie } from "cookies-next";
 
 /**Animation properties for transitioning between components */
 const animationProps = (from: "left" | "right" = "left") => {
@@ -32,13 +33,32 @@ function SignUp() {
   const [error, setError] = useState("");
   const router = useRouter();
   const [signup] = useSignupMutation();
+  const searchParams = useSearchParams();
+  const isEmailChange = searchParams.get("action") === "change-email";
+  const nextButtonRef = useRef(null);
 
   //?Step one logic
-  const form = useForm<StepOneSchema>({ resolver: zodResolver(stepOneSchema) });
+  const form = useForm<StepOneSchema>({
+    resolver: zodResolver(stepOneSchema),
+    defaultValues: {
+      firstName: isEmailChange ? getCookie("firstName") : "",
+      lastName: isEmailChange ? getCookie("lastName") : "",
+    },
+  });
+
   //Set default values for choices
   useEffect(() => {
-    form.setValue("actionChoice", actionChoices[0].action);
-    form.setValue("userType", userTypes[0].action);
+    if (isEmailChange) {
+      form.setValue(
+        "actionChoice",
+        getCookie("actionChoice") as unknown as any,
+      );
+      form.setValue("userType", getCookie("userType") as unknown as any);
+      if (nextButtonRef.current) nextButtonRef.current.click();
+    } else {
+      form.setValue("actionChoice", actionChoices[0].action);
+      form.setValue("userType", userTypes[0].action);
+    }
   }, []);
 
   const actionChoice = form.watch("actionChoice");
@@ -78,17 +98,30 @@ function SignUp() {
   };
   //?Step one logic
 
-  //?Form two logic
+  //?Step two logic
   const {
     watch,
     reset,
     register,
+    setFocus,
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm<StepTwoSchema>({
     resolver: zodResolver(stepTwoSchema),
     mode: "onChange",
+    defaultValues: {
+      emailAddress: isEmailChange ? getCookie("emailAddress") : "",
+      password: isEmailChange ? getCookie("password") : "",
+      confirmPassword: isEmailChange ? getCookie("password") : "",
+    },
   });
+
+  useEffect(() => {
+    if (step == 2 && isEmailChange) {
+      //Timer because time taken for animation to render the form
+      setTimeout(() => setFocus("emailAddress"), 1000);
+    }
+  }, [step]);
 
   const password = watch("password");
 
@@ -100,6 +133,8 @@ function SignUp() {
 
   const submitFinalForm: SubmitHandler<StepTwoSchema> = async (data) => {
     if (!stepOneData) return;
+
+    //Grab data from step one
     const { actionChoice, ...otherInputs } = stepOneData;
     const { confirmPassword, terms, emailAddress, ...rest } = data;
     const finalData = {
@@ -109,11 +144,22 @@ function SignUp() {
       emailAddress: emailAddress.toLowerCase(),
       role: actionChoice === "GET_TASKS_DONE" ? "CUSTOMER" : "SERVICE_PROVIDER",
     };
+
+    setCookie("firstName", finalData.firstName, { maxAge: 60 * 20 });
+    setCookie("lastName", finalData.lastName, { maxAge: 60 * 20 });
+    setCookie("actionChoice", actionChoice, { maxAge: 60 * 20 });
+    setCookie("userType", finalData.userType, { maxAge: 60 * 20 });
+    setCookie("emailAddress", finalData.emailAddress, { maxAge: 60 * 20 });
+    setCookie("password", finalData.password, { maxAge: 60 * 20 });
+    setCookie("confirmPassword", finalData.password, { maxAge: 60 * 20 });
+
     try {
       await signup(finalData).unwrap();
       setError("");
       reset();
-      router.replace(`/auth/verify-email?email=${finalData.emailAddress}`);
+      router.replace(
+        `/auth/verify-email?email=${finalData.emailAddress}&abn=${Boolean(finalData.abn)}`,
+      );
     } catch (error: any) {
       console.error("Error while signing up: ", error);
       setError(error?.data?.message || "An unexpected error occurred");
@@ -167,7 +213,7 @@ function SignUp() {
                       onClick={() => {
                         form.setValue("actionChoice", choice.action);
                       }}
-                      key={Math.random() * 1234}
+                      key={Math.random() * 124345}
                     >
                       <div className="flex size-5 flex-shrink-0 items-center justify-center rounded-full border-2 border-[#E58C06] bg-white p-1">
                         {actionChoice == choice.action && (
@@ -234,6 +280,7 @@ function SignUp() {
                 <div className="col-span-2 my-2">
                   <button
                     type="submit"
+                    ref={nextButtonRef}
                     className="w-full rounded-full bg-primary px-10 py-2 font-satoshiBold font-bold text-white sm:w-max"
                   >
                     Next
@@ -313,7 +360,7 @@ function SignUp() {
                 {errors.password?.types &&
                   Object.values(errors.password.types).map((msg) => (
                     <p
-                      key={Math.random() * 1234}
+                      key={Math.random() * 3478}
                       className="ml-1 mt-1 text-sm text-[#FF0000]"
                     >
                       {msg}
