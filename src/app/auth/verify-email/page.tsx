@@ -26,14 +26,17 @@ const Page = ({
           <p className="mb-4 text-sm font-semibold text-[#55535A] md:text-2xl">
             A link has been sent to{" "}
             <span className="text-[#FE9B07]">{email}</span>, click on the link
-            to verify email.{" "}
+            to verify email{" "}
             {abn == "false" && (
-              <Link
-                href="/auth/sign-up?action=change-email"
-                className="text-primary underline"
-              >
-                Change email
-              </Link>
+              <span>
+                or{" "}
+                <Link
+                  href="/auth/sign-up?action=change-email"
+                  className="text-primary underline"
+                >
+                  Change email
+                </Link>
+              </span>
             )}
           </p>
           <ResendEmail email={email} />

@@ -1,4 +1,5 @@
 "use client";
+import { useEffect, useState } from "react";
 import { IoLocationOutline } from "react-icons/io5";
 import { CiCalendar } from "react-icons/ci";
 import { MdArrowOutward } from "react-icons/md";
@@ -9,6 +10,24 @@ import Image from "next/image";
 import { truncateText } from "@/utils/marketplace";
 import Link from "next/link";
 
+function getOrdinalSuffix(day: number) {
+  if (day > 3 && day < 21) return "th";
+  const suffixes = ["st", "nd", "rd"];
+  return suffixes[(day % 10) - 1] || "th";
+}
+
+function formatDate(date) {
+  const options = { weekday: "short", month: "short", day: "numeric" };
+  const formattedDate = date.toLocaleDateString("en-US", options);
+
+  const day = date.getDate();
+  return formattedDate.replace(day, `${day}${getOrdinalSuffix(day)}`);
+}
+
+function convertMonthInDateArray(dates: number[]) {
+  return new Date(dates[0], dates[1] - 1, dates[2]);
+}
+
 function Tasks() {
   const { profile: user } = useSelector(
     (state: RootState) => state.userProfile,
@@ -18,18 +37,36 @@ function Tasks() {
     skip: !userId,
   });
 
+  const [tasks, setTasks] = useState([
+    { heading: "Today", data: [] },
+    { heading: "Yesterday", data: [] },
+    { heading: "Older", data: [] },
+  ]);
+
+  // useEffect(() => {
+  //   if(data) {
+
+  //   }
+  // }, [data])
+
   type TaskType = NonNullable<typeof data>[number];
 
   function displayTaskStatus(task: TaskType) {
     if (task.taskStatus == "COMPLETED") {
-      return <div className="mb-2 text-sm sm:text-xs text-[#34B367]">Completed</div>;
+      return (
+        <div className="mb-2 text-sm text-[#34B367] sm:text-xs">Completed</div>
+      );
     } else if (task.taskStatus == "ONGOING") {
-      return <div className="mb-2 text-sm sm:text-xs text-[#FEA621]">Ongoing</div>;
+      return (
+        <div className="mb-2 text-sm text-[#FEA621] sm:text-xs">Ongoing</div>
+      );
       //@ts-ignore
     } else if (task.assignedTo) {
-      return <div className="mb-2 text-sm sm:text-xs text-primary">Assigned</div>;
+      return (
+        <div className="mb-2 text-sm text-primary sm:text-xs">Assigned</div>
+      );
     } else {
-      return <div className="mb-2 text-sm sm:text-xs text-[#045AA6]">Open</div>;
+      return <div className="mb-2 text-sm text-[#045AA6] sm:text-xs">Open</div>;
     }
   }
   return (
@@ -89,16 +126,16 @@ function Tasks() {
                       <div className="mb-3 text-right font-satoshiBold text-2xl font-bold text-[#E58C06]">
                         ${task.customerBudget}
                       </div>
-                      <div className="mb-1 flex items-center gap-2 text-[#716F78]">
+                      <div className="mb-1 flex items-center gap-2 text-right text-[#716F78]">
                         <IoLocationOutline />
                         <span className="text-[10px] font-medium">
                           {task.state ? task.state : "Remote"}
                         </span>
                       </div>
-                      <div className="flex items-center gap-2 text-[#716F78]">
+                      <div className="flex items-center gap-2 text-right text-[#716F78]">
                         <CiCalendar />
                         <span className="text-[10px] font-medium">
-                          Sat, June 8th
+                          {formatDate(convertMonthInDateArray(task.createdAt))}
                         </span>
                       </div>
                     </div>
