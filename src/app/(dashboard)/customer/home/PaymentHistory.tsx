@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { useGetReceiptsByCustomerIdQuery } from "@/services/bookings";
 import { useSelector } from "react-redux";
@@ -35,16 +35,19 @@ function PaymentHistory() {
   const { data, isLoading, error } = useGetReceiptsByCustomerIdQuery(
     user?.customerId!,
   );
+
+  const [today, setToday] = useState([]);
+  const [yesterday, setYesterday] = useState([]);
+
+  //Todo 
+  useEffect(() => {
+    if (data && data.length > 1) {
+      // for ()
+    }
+  }, [data]);
   function convertMonthInDateArray(dates: number[]) {
-    return new Date(
-      dates[0],
-      dates[1] - 1,
-      dates[2],
-      dates[3],
-      dates[4],
-      dates[5],
-      dates[6],
-    );
+    const [year, month, ...rest] = dates;
+    return new Date(year, month - 1, ...rest);
   }
   return (
     <section className="hidden w-3/5 md:block">
