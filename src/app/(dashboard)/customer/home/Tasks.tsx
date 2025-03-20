@@ -37,18 +37,6 @@ function Tasks() {
     skip: !userId,
   });
 
-  const [tasks, setTasks] = useState([
-    { heading: "Today", data: [] },
-    { heading: "Yesterday", data: [] },
-    { heading: "Older", data: [] },
-  ]);
-
-  // useEffect(() => {
-  //   if(data) {
-
-  //   }
-  // }, [data])
-
   type TaskType = NonNullable<typeof data>[number];
 
   function displayTaskStatus(task: TaskType) {
