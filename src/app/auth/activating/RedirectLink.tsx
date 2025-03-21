@@ -8,7 +8,7 @@ function RedirectLink() {
   const router = useRouter();
   useEffect(() => {
     setTimeout(() => {
-      router.replace("/auth/login?from=onboarding");
+      router.replace("/auth/login?onboarding=true");
     }, 2500);
   }, []);
   return (
