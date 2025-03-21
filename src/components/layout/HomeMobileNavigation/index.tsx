@@ -27,7 +27,7 @@ const HomeMobileNavigation = ({ showMobileNav, setShowMobileNav }: Props) => {
           transition: { type: "tween", duration: 0.3 },
         }}
         exit={{ x: "-100%", transition: { type: "tween", duration: 0.3 } }}
-        className="fixed left-0 top-0 z-50 flex h-screen w-4/5 flex-col justify-between overflow-auto bg-white p-5 drop-shadow-md"
+        className="fixed left-0 top-0 z-50 flex h-screen w-4/5 flex-col justify-between overflow-auto bg-[#EBE9F4] p-5 drop-shadow-md"
       >
         <div>
           <div className="flex w-full items-center justify-between border-b border-primary pb-3">

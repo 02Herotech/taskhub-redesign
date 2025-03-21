@@ -79,7 +79,7 @@ const MobileNavigation: React.FC<Props> = ({
           transition: { type: "tween", duration: 0.3 },
         }}
         exit={{ x: "-100%", transition: { type: "tween", duration: 0.3 } }}
-        className="fixed left-0 top-0 z-50 flex h-screen w-4/5 flex-col justify-between overflow-hidden rounded-br-xl rounded-tr-xl bg-white p-5 shadow drop-shadow-md"
+        className="fixed left-0 top-0 z-50 flex h-screen w-4/5 flex-col justify-between overflow-hidden rounded-br-xl rounded-tr-xl bg-[#EBE9F4] p-5 shadow drop-shadow-md"
       >
         <div className="pb-20">
           <div className="flex w-full items-center justify-between border-b border-primary pb-3">
