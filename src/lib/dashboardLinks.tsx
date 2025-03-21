@@ -90,7 +90,7 @@ export const serviceProviderDashboardLinks: DashboardLinks[] = [
   //   icon: NotificationIcon,
   // },
   {
-    label: "Payment and Wallet",
+    label: "Payment",
     link: "/service-provider/payment",
     icon: IoWalletOutline,
   },

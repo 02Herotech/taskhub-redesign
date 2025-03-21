@@ -1,7 +1,6 @@
 import DashboardSidebar from "@/components/dashboard/layout/DashboardSidebar";
 import { Suspense } from "react";
-// import Navigation from "@/components/layout/Navigation";
-import Navigation from '@/components/layout/Navigation'
+import Navigation from "@/components/layout/Navigation";
 import SessionTimeout from "@/components/global/Popup/SessionTimeout";
 import "../../styles/serviceProviderStyles.css";
 
@@ -11,7 +10,7 @@ type AuthLayoutProps = {
 
 const DashboardLayout = ({ children }: AuthLayoutProps) => {
   return (
-    <div className="relative max-w-[1400px] mx-auto">
+    <div className="relative mx-auto max-w-[1400px]">
       <Navigation />
       <DashboardSidebar />
       <SessionTimeout />

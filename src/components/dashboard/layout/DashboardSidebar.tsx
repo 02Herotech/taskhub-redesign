@@ -15,6 +15,7 @@ import { useDispatch } from "react-redux";
 import { removeUserProfile } from "@/store/Features/userProfile";
 import { IoSettingsOutline } from "react-icons/io5";
 
+/**Dashboard sidebar navigation */
 const DashboardSidebar = () => {
   const [showSettings, setShowSettings] = useState(false);
   const session = useSession();

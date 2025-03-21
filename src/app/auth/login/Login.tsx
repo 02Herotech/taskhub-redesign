@@ -106,7 +106,7 @@ function Login() {
       <Carousel />
       <div className="flex flex-grow items-center justify-center p-3">
         <div className="w-full pt-5 sm:w-10/12 lg:pt-0">
-          <h2 className="mb-2 text-lg font-medium text-[#190E3F] md:text-4xl">
+          <h2 className="mb-2 text-lg font-semibold text-[#190E3F] md:text-4xl">
             Login
           </h2>
           <h3 className="font-clashMedium text-sm text-[#55535A] md:text-2xl">
