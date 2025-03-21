@@ -38,10 +38,15 @@ function PaymentHistory() {
 
   const [today, setToday] = useState([]);
   const [yesterday, setYesterday] = useState([]);
+  const [older, setOlder] = useState([]);
 
-  //Todo 
+  //Todo
   useEffect(() => {
     if (data && data.length > 1) {
+      //Loop through the first 7 but loop backwards
+      //Check if the date is before yesterday and older
+      //Check if the date is posted yesterday
+      //Check if the date is posted today
       // for ()
     }
   }, [data]);
@@ -81,9 +86,9 @@ function PaymentHistory() {
               </div>
             ) : (
               <ul className="space-y-4 p-3 py-4">
-                <h4 className="mb-3 font-satoshiMedium text-[#756F6F]">
+                {/* <h4 className="mb-3 font-satoshiMedium text-[#756F6F]">
                   Today
-                </h4>
+                </h4> */}
                 {data.slice(0, 7).map((payment) => (
                   <li className="flex gap-2" key={Math.random() * 5678}>
                     <Image
