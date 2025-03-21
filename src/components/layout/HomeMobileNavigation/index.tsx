@@ -11,6 +11,7 @@ type Props = {
   links: LinkRouteTypes[];
 };
 
+/**Navigation sibebar for unauthorized users*/
 const HomeMobileNavigation = ({ showMobileNav, setShowMobileNav }: Props) => {
   const pathname = usePathname();
   return (

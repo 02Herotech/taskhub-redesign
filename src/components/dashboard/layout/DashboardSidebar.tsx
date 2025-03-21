@@ -15,11 +15,6 @@ import { useDispatch } from "react-redux";
 import { removeUserProfile } from "@/store/Features/userProfile";
 import { IoSettingsOutline } from "react-icons/io5";
 
-const initialAuthState = {
-  token: null,
-  role: null,
-};
-
 const DashboardSidebar = () => {
   const [showSettings, setShowSettings] = useState(false);
   const session = useSession();
@@ -28,16 +23,10 @@ const DashboardSidebar = () => {
   const pathname = usePathname();
   const router = useRouter();
 
-  const [auth, setAuth] = useState<{
-    token: string | null;
-    role: string[] | null;
-  }>(initialAuthState);
-
   const dispatch = useDispatch();
 
   const handleLogout = async () => {
     try {
-      setAuth(initialAuthState);
       dispatch(removeUserProfile());
       localStorage.removeItem("auth");
       await signOut({ callbackUrl: `${process.env.NEXT_PUBLIC_URL}/home` });
