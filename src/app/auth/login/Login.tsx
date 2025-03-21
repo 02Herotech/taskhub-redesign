@@ -1,15 +1,13 @@
 "use client";
 import Carousel from "../Carousel";
 import Link from "next/link";
-import { deleteCookie, getCookie } from "cookies-next";
+import { deleteCookie, getCookie, setCookie } from "cookies-next";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useRouter, useSearchParams } from "next/navigation";
 import { signIn } from "next-auth/react";
-import Popup from "@/components/global/Popup/PopupTwo";
 import { signupSchema } from "../sign-up/schema";
-import Image from "next/image";
 import { useState } from "react";
 import axios from "axios";
 import Button from "@/components/global/Button";
@@ -19,12 +17,11 @@ const loginSchema = signupSchema.pick({ emailAddress: true, password: true });
 
 type LoginSchema = z.infer<typeof loginSchema>;
 
-type UserType = "CUSTOMER" | "SERVICE_PROVDER";
 function Login() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const from = searchParams.get("from");
-  const [userType, setUserType] = useState<null | UserType>(null);
+  const isOnboarding = searchParams.get("onboarding");
   const [error, setError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
@@ -62,16 +59,16 @@ function Login() {
     const redirectToExploreDetail = getCookie("redirectToExploreDetail");
 
     if (newRedirectToAddTask) {
-      router.push(newRedirectToAddTask);
+      router.replace(newRedirectToAddTask);
       deleteCookie("redirectToAddTask");
     } else if (redirectToServiceDetail) {
-      router.push(redirectToServiceDetail);
+      router.replace(redirectToServiceDetail);
       deleteCookie("redirectToMarketplaceDetail");
     } else if (redirectToExploreDetail) {
-      router.push(redirectToExploreDetail);
+      router.replace(redirectToExploreDetail);
       deleteCookie("redirectToExploreDetail");
     } else {
-      router.push(from || "/marketplace");
+      router.replace(from || "/marketplace");
       deleteCookie("redirectToAddTask");
       deleteCookie("redirectToMarketplaceDetail");
       deleteCookie("redirectToExploreDetail");
@@ -92,12 +89,10 @@ function Login() {
       };
       localStorage.setItem("auth", JSON.stringify(authData));
       await handleNextAuthSignIn(payload);
-      if (from === "onboarding") {
-        //open popup
-        setUserType(authData.role[0]);
-      } else {
-        handleRedirect();
+      if (isOnboarding === "true") {
+        setCookie("firstLogin", true, { maxAge: 60 * 10 });
       }
+      handleRedirect();
     } catch (error: any) {
       console.error(error);
       setError(
@@ -199,77 +194,6 @@ function Login() {
           </p>
         </div>
       </div>
-      <Popup
-        isOpen={Boolean(userType)}
-        onClose={() => {
-          router.replace(
-            userType === "CUSTOMER"
-              ? "/customer/profile"
-              : "/service-provider/profile",
-          );
-        }}
-      >
-        <div className="relative mt-6 max-h-[700px] min-w-[320px] max-w-[800px] bg-white p-5 sm:min-w-[560px]">
-          <h3 className="mb-2 text-center font-clashSemiBold text-2xl text-[#2A1769] md:mb-4 md:text-4xl">
-            Congratulations!!!
-          </h3>
-          <div className="mx-auto mb-6 max-w-[500px] space-y-3">
-            <p className="text-pry-sec-gradient mb-2 text-center text-base font-semibold md:text-2xl">
-              You’re officially welcome to the Hub
-            </p>
-            <p className="text-center text-sm text-[#55535A] sm:text-xl">
-              You just unlocked a world of opportunities—whether you’re here to
-              get things done or showcase your skills, you’re in the right
-              place! 🚀
-            </p>
-            <p className="text-center text-sm text-[#55535A] sm:text-xl">
-              <span className="font-semibold text-[#E58C06]">Next Steps?</span>{" "}
-              Complete your profile to stand out and start connecting with the
-              right people!
-            </p>
-          </div>
-          <div className="my-3 flex flex-col justify-center gap-3 sm:flex-row">
-            {userType && (
-              <Link
-                href={
-                  userType === "CUSTOMER"
-                    ? "/customer/add-task"
-                    : "/provide-service"
-                }
-                className="w-full rounded-full border border-primary bg-[#EBE9F4] px-10 py-2 text-center font-satoshiBold font-bold text-primary sm:w-max"
-              >
-                {userType === "CUSTOMER"
-                  ? "Post my first task"
-                  : "Create a listing"}
-              </Link>
-            )}
-            <Link
-              href={
-                userType === "CUSTOMER"
-                  ? "/customer/profile"
-                  : "/service-provider/profile"
-              }
-              className="w-full rounded-full bg-primary px-10 py-2 text-center font-satoshiBold font-bold text-white sm:w-max"
-            >
-              Update Profile
-            </Link>
-          </div>
-          <Image
-            src="/assets/icons/popup-design.png"
-            alt="Icon"
-            width={263}
-            height={626}
-            className="absolute -left-10 -top-20 hidden aspect-auto h-full w-3/12 sm:-left-8 sm:block"
-          />
-          <Image
-            src="/assets/icons/popup-design.png"
-            alt="Icon"
-            width={263}
-            height={626}
-            className="absolute -right-10 top-24 hidden aspect-auto h-full w-3/12 scale-x-[-1] blur-md sm:-right-10 sm:block"
-          />
-        </div>
-      </Popup>
     </section>
   );
 }

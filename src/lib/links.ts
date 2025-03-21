@@ -14,11 +14,26 @@ import {
   RentShopSvg,
 } from "./svgIcons";
 import React from "react";
+import { FiUser } from "react-icons/fi";
+import { LuClipboard, LuStore } from "react-icons/lu";
+import { IoWalletOutline } from "react-icons/io5";
+
+import { IconType } from "react-icons";
+import { TbSmartHome } from "react-icons/tb";
+import { MdMailOutline } from "react-icons/md";
+import { FiLogIn } from "react-icons/fi";
+
+import { IoMdInformationCircleOutline } from "react-icons/io";
+
+import { MdOutlineHub } from "react-icons/md";
+import { FaRegMoneyBillAlt } from "react-icons/fa";
+import { LuLayoutDashboard } from "react-icons/lu";
+import { IoSettingsOutline } from "react-icons/io5";
 
 export type LinkRouteTypes = {
   label: string;
   url?: string;
-  icon?: React.ReactNode;
+  icon?: IconType;
   sublinks?: {
     label: string;
     url: string;
@@ -33,17 +48,17 @@ export const homeMobileLinks: LinkRouteTypes[] = [
   {
     label: "Home",
     url: "/home",
-    icon: HomeSvg,
+    icon: TbSmartHome,
   },
   {
     label: "Marketplace",
     url: "/marketplace",
-    icon: MarketPlaceSvg,
+    icon: LuStore,
   },
   {
     label: "Log in",
     url: "/auth/login",
-    icon: LoginSvg,
+    icon: FiLogIn,
   },
   // {
   //   label: "About us",
@@ -53,12 +68,12 @@ export const homeMobileLinks: LinkRouteTypes[] = [
   {
     label: "How Olója Works",
     url: "/how-oloja-works",
-    icon: AboutUsSvg,
+    icon: IoMdInformationCircleOutline,
   },
   {
     label: "Business Hub",
     url: "/business-hub",
-    icon: BusinessHubSvg,
+    icon: MdOutlineHub,
   },
   // {
   //   label: "Rent a shop",
@@ -68,7 +83,7 @@ export const homeMobileLinks: LinkRouteTypes[] = [
   {
     label: "Monetize your skills",
     url: "/monetize-your-skills",
-    icon: MonetizeSVG,
+    icon: FaRegMoneyBillAlt,
   },
 ];
 
@@ -136,7 +151,7 @@ export const homeLinks: LinkRouteTypes[] = [
 export const mobileServiceProviderLinks: LinkRouteTypes[] = [
   {
     label: "My Dashboard",
-    icon: DashboardSvg,
+    icon: LuLayoutDashboard,
     sublinks: [
       {
         label: "Profile",
@@ -177,17 +192,17 @@ export const mobileServiceProviderLinks: LinkRouteTypes[] = [
   {
     label: "Explore Tasks",
     url: "/explore",
-    icon: MarketPlaceSvg,
+    icon: LuStore,
   },
   {
     label: "Marketplace",
     url: "/marketplace",
-    icon: MarketPlaceSvg,
+    icon: LuStore,
   },
   {
     label: "Messages",
     url: "/message",
-    icon: MessagesSvg,
+    icon: MdMailOutline,
   },
   // {
   //   label: "Contact us",
@@ -199,54 +214,89 @@ export const mobileServiceProviderLinks: LinkRouteTypes[] = [
 export const mobileCustomerLinks: LinkRouteTypes[] = [
   {
     label: "Home",
-    icon: HomeIcon,
     url: "/customer/home",
+    icon: TbSmartHome,
   },
   {
-    label: "My Dashboard",
-    icon: DashboardSvg,
-    sublinks: [
-      {
-        label: "Profile",
-        url: "/customer/profile",
-      },
-      {
-        label: "My Tasks",
-        url: "/customer/tasks",
-      },
-      {
-        label: "My Notifications",
-        url: "/customer/notifications",
-      },
-      {
-        label: "Payment",
-        url: "/customer/payment?tab=paymentHistory",
-      },
-      {
-        label: "Settings",
-        url: "/customer/settings",
-        sublinks: [
-          {
-            label: "Change Password",
-            url: "/customer/password",
-          },
-          {
-            label: "Notification settings",
-            url: "/customer/notification-settings",
-          },
-        ],
-      },
-    ],
+    label: "Profile",
+    url: "/customer/profile",
+    icon: FiUser,
+  },
+  {
+    label: "My Tasks",
+    url: "/customer/tasks",
+    icon: LuClipboard,
+  },
+  {
+    label: "Payments",
+    url: "/customer/payment?tab=paymentHistory",
+    icon: IoWalletOutline,
   },
   {
     label: "Marketplace",
+    url: "#",
+    icon: LuStore,
+  },
+  // {
+  //   label: "My Dashboard",
+  //   icon: DashboardSvg,
+  //   sublinks: [
+  //     {
+  //       label: "Profile",
+  //       url: "/customer/profile",
+  //     },
+  //     {
+  //       label: "My Tasks",
+  //       url: "/customer/tasks",
+  //     },
+  //     {
+  //       label: "My Notifications",
+  //       url: "/customer/notifications",
+  //     },
+  //     {
+  //       label: "Payment",
+  //       url: "/customer/payment?tab=paymentHistory",
+  //     },
+  //     {
+  //       label: "Settings",
+  //       url: "/customer/settings",
+  //       sublinks: [
+  //         {
+  //           label: "Change Password",
+  //           url: "/customer/password",
+  //         },
+  //         {
+  //           label: "Notification settings",
+  //           url: "/customer/notification-settings",
+  //         },
+  //       ],
+  //     },
+  //   ],
+  // },
+  {
+    label: "Marketplace",
     url: "/marketplace",
-    icon: MarketPlaceSvg,
+    icon: LuStore,
   },
   {
     label: "Messages",
     url: "/message",
-    icon: MessagesSvg,
+    icon: MdMailOutline,
+  },
+  {
+    label: "Settings",
+    url: "/customer/settings",
+    icon: IoSettingsOutline,
+    sublinks: [
+      {
+        label: "Change Password",
+        url: "/customer/password",
+      },
+      {
+        label: "Notification settings",
+        url: "/customer/notification-settings",
+      },
+    ],
   },
   // {
   //   label: "Contact us",

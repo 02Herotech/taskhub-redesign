@@ -13,7 +13,7 @@ function RedirectLink() {
   }, []);
   return (
     <Link
-      href="/auth/login?from=onboarding"
+      href="/auth/login?onboarding=true"
       className="rounded-full bg-primary px-10 py-3 font-satoshiBold font-bold text-white"
     >
       Login
