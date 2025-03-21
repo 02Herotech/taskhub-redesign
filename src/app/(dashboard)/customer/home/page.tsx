@@ -5,6 +5,7 @@ import PaymentHistory from "./PaymentHistory";
 import Tasks from "./Tasks";
 import Heading from "./Heading";
 import PostTask from "./PostTask";
+import Link from "next/link";
 
 function Page() {
   return (
@@ -12,7 +13,7 @@ function Page() {
       <Heading />
       <div className="mb-4 overflow-x-auto">
         <header className="mb-5 flex min-w-[500px] gap-2">
-          <div>
+          <Link href="/customer/profile" className="block">
             <h3 className="mb-2 font-semibold">Profile</h3>
             <div className="flex items-center gap-2 rounded-xl border border-[#0000001A] p-4">
               <CgProfile strokeWidth={0.8} size={40} color="#2A1769" />
@@ -26,12 +27,12 @@ function Page() {
                 </p>
               </div>
             </div>
-          </div>
+          </Link>
 
           <div className="flex flex-col">
             <h3 className="mb-2 font-semibold">Quick Actions</h3>
             <div className="flex flex-1 rounded-xl border border-[#0000001A]">
-              <div
+              <Link href='/customer/add-task'
                 className="hidden items-center gap-2 border-r border-r-[#0000003D] py-4 pl-2 pr-8 md:flex"
                 role="button"
               >
@@ -46,7 +47,7 @@ function Page() {
                     provider
                   </p>
                 </div>
-              </div>
+              </Link>
 
               <div className="h-full rounded-lg bg-primary text-white">
                 <div className="relative flex h-full items-center justify-center px-5">
