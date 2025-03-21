@@ -72,7 +72,7 @@ export const serviceProviderDashboardLinks: DashboardLinks[] = [
   {
     label: "Profile",
     link: "/service-provider/profile",
-    icon: TbSmartHome,
+    icon: FiUser,
   },
   {
     label: "My Services",

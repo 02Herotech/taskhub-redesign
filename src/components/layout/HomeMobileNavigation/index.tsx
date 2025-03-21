@@ -11,9 +11,9 @@ type Props = {
   links: LinkRouteTypes[];
 };
 
+/**Navigation sibebar for unauthorized users*/
 const HomeMobileNavigation = ({ showMobileNav, setShowMobileNav }: Props) => {
   const pathname = usePathname();
-
   return (
     <>
       <div
@@ -50,9 +50,7 @@ const HomeMobileNavigation = ({ showMobileNav, setShowMobileNav }: Props) => {
                     href={link.url!}
                     className={cn(
                       "flex items-center px-5 py-2 text-lg font-bold text-primary",
-                      {
-                        "rounded-full bg-[#EBE9F4]": isActive,
-                      },
+                      { "rounded-xl bg-primary text-white": isActive },
                     )}
                   >
                     {link.icon && <link.icon className="mr-8 w-5" />}

@@ -13,9 +13,12 @@ function Page() {
       <Heading />
       <div className="mb-4 overflow-x-auto">
         <header className="mb-5 flex min-w-[500px] gap-2">
-          <Link href="/customer/profile" className="block">
+          <div>
             <h3 className="mb-2 font-semibold">Profile</h3>
-            <div className="flex items-center gap-2 rounded-xl border border-[#0000001A] p-4">
+            <Link
+              href="/customer/profile"
+              className="flex items-center gap-2 rounded-xl border border-[#0000001A] p-4 min-w-[250px]"
+            >
               <CgProfile strokeWidth={0.8} size={40} color="#2A1769" />
               <div>
                 <h4 className="mb-1 text-2xl font-bold text-[#2A1769]">
@@ -26,20 +29,21 @@ function Page() {
                   service providers for your needs
                 </p>
               </div>
-            </div>
-          </Link>
+            </Link>
+          </div>
 
           <div className="flex flex-col">
             <h3 className="mb-2 font-semibold">Quick Actions</h3>
             <div className="flex flex-1 rounded-xl border border-[#0000001A]">
-              <Link href='/customer/add-task'
+              <Link
+                href="/customer/add-task"
                 className="hidden items-center gap-2 border-r border-r-[#0000003D] py-4 pl-2 pr-8 md:flex"
                 role="button"
               >
                 <IoIosAddCircle color="#2A1769" size={40} />
                 <div className="">
                   <h4 className="mb-1 text-2xl font-bold text-[#2A1769]">
-                    Add a <br />
+                    Post a <br />
                     Task
                   </h4>
                   <p className="max-w-[200px] text-sm font-medium text-[#0000007A]">
@@ -49,10 +53,10 @@ function Page() {
                 </div>
               </Link>
 
-              <div className="h-full rounded-lg bg-primary text-white">
+              <div className="h-full min-w-[250px] rounded-lg bg-primary text-white">
                 <div className="relative flex h-full items-center justify-center px-5">
                   <p className="absolute left-1 top-1">Wallet</p>
-                  <p className="text-6xl font-semibold ">$300.00</p>
+                  <p className="text-6xl font-semibold ">$0.00</p>
                   <button className="absolute bottom-1 right-1 z-10 rounded-full bg-white px-4 py-2 font-bold text-primary">
                     Top up
                   </button>
