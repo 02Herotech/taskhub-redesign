@@ -232,11 +232,6 @@ export const mobileCustomerLinks: LinkRouteTypes[] = [
     url: "/customer/payment?tab=paymentHistory",
     icon: IoWalletOutline,
   },
-  {
-    label: "Marketplace",
-    url: "#",
-    icon: LuStore,
-  },
   // {
   //   label: "My Dashboard",
   //   icon: DashboardSvg,

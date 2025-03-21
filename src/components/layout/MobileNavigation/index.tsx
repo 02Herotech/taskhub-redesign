@@ -121,30 +121,20 @@ const MobileNavigation: React.FC<Props> = ({
                     <>
                       <button
                         className={cn(
-                          "flex w-full items-center justify-between rounded-md px-5 py-3 text-lg font-bold text-primary",
-                          (openDropdown || sublinkIsActive) &&
-                            "rounded-full bg-[#EBE9F4]",
+                          "flex w-full items-center rounded-md px-5 py-3 text-lg font-bold text-primary",
+                          {
+                            "rounded-xl bg-primary text-white":
+                              openDropdown || sublinkIsActive,
+                          },
                         )}
                         onClick={() => toggleDropdown()}
                       >
-                        <div
-                          className={cn(
-                            "flex items-center rounded-md text-lg font-bold text-primary",
-                            openDropdown ||
-                              (isActive && "rounded-full bg-[#EBE9F4]"),
-                          )}
-                        >
-                          {link.icon && <link.icon className="mr-5" />}
-                          <h4 className="text-lg font-bold text-primary">
-                            {link.label}
-                          </h4>
-                        </div>
+                        {link.icon && <link.icon className="mr-5" />}
+                        <h4 className="text-lg font-bold">{link.label}</h4>
                         <FaSortDown
                           className={cn(
-                            "size-4 text-tc-orange transition-all",
-                            {
-                              "rotate-180": openDropdown,
-                            },
+                            "ml-auto size-4 text-tc-orange transition-all",
+                            { "rotate-180": openDropdown },
                           )}
                         />
                       </button>
@@ -208,7 +198,7 @@ const MobileNavigation: React.FC<Props> = ({
                                               className={cn(
                                                 "flex items-center py-2 pl-3 text-lg font-bold text-primary",
                                                 {
-                                                  "rounded-full bg-[#EBE9F4]":
+                                                  "rounded-xl bg-primary text-white":
                                                     pathname.includes(
                                                       subsublink.url!,
                                                     ),
@@ -234,7 +224,7 @@ const MobileNavigation: React.FC<Props> = ({
                                     className={cn(
                                       "flex items-center px-5 py-2 text-lg font-bold text-primary",
                                       {
-                                        "rounded-full bg-[#EBE9F4]":
+                                        "rounded-xl bg-primary text-white":
                                           pathname.includes(sublink.url!),
                                       },
                                     )}
@@ -257,7 +247,7 @@ const MobileNavigation: React.FC<Props> = ({
                       href={link.url!}
                       className={cn(
                         "flex items-center px-5 py-2 text-lg font-bold text-primary",
-                        { "rounded-full bg-[#EBE9F4]": isActive },
+                        { "rounded-xl bg-primary text-white": isActive },
                       )}
                     >
                       {link.icon && <link.icon className="mr-5" />}
