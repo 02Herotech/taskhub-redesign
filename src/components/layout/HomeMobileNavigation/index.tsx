@@ -55,7 +55,7 @@ const HomeMobileNavigation = ({ showMobileNav, setShowMobileNav }: Props) => {
                       },
                     )}
                   >
-                    {link.icon && <span className="mr-8 w-5">{link.icon}</span>}
+                    {link.icon && <link.icon className="mr-8 w-5" />}
                     {link.label}
                   </Link>
                 </li>

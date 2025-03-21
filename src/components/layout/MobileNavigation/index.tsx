@@ -13,6 +13,7 @@ import {
 } from "@/lib/links";
 import { IoCloseCircleOutline } from "react-icons/io5";
 import { FiLogOut } from "react-icons/fi";
+import { IconType } from "react-icons";
 
 type Props = {
   showMobileNav: boolean;
@@ -22,7 +23,7 @@ type Props = {
 interface NavLink {
   label: string;
   url?: string;
-  icon?: React.ReactNode;
+  icon?: IconType;
   sublinks?: NavLink[];
 }
 
@@ -133,9 +134,7 @@ const MobileNavigation: React.FC<Props> = ({
                               (isActive && "rounded-full bg-[#EBE9F4]"),
                           )}
                         >
-                          {link.icon && (
-                            <span className="mr-5">{link.icon}</span>
-                          )}
+                          {link.icon && <link.icon className="mr-5" />}
                           <h4 className="text-lg font-bold text-primary">
                             {link.label}
                           </h4>
@@ -175,9 +174,7 @@ const MobileNavigation: React.FC<Props> = ({
                                       )}
                                     >
                                       {sublink.icon && (
-                                        <span className="mr-5">
-                                          {sublink.icon}
-                                        </span>
+                                        <sublink.icon className="mr-5" />
                                       )}
                                       <h4 className="text-lg font-bold text-primary">
                                         {sublink.label}
@@ -219,9 +216,7 @@ const MobileNavigation: React.FC<Props> = ({
                                               )}
                                             >
                                               {subsublink.icon && (
-                                                <span className="mr-5">
-                                                  {subsublink.icon}
-                                                </span>
+                                                <subsublink.icon className="mr-5" />
                                               )}
                                               {subsublink.label}
                                             </Link>
@@ -245,9 +240,7 @@ const MobileNavigation: React.FC<Props> = ({
                                     )}
                                   >
                                     {sublink.icon && (
-                                      <span className="mr-5">
-                                        {sublink.icon}
-                                      </span>
+                                      <sublink.icon className="mr-5" />
                                     )}
                                     {sublink.label}
                                   </Link>
@@ -267,7 +260,7 @@ const MobileNavigation: React.FC<Props> = ({
                         { "rounded-full bg-[#EBE9F4]": isActive },
                       )}
                     >
-                      {link.icon && <span className="mr-5">{link.icon}</span>}
+                      {link.icon && <link.icon className="mr-5" />}
                       {link.label}
                     </Link>
                   )}

@@ -45,16 +45,16 @@ export const customerDashboardLinks: DashboardLinks[] = [
     link: "#",
     icon: LuStore,
   },
-  {
-    label: "Create a listing",
-    link: "#",
-    icon: AiOutlineFileSearch,
-  },
-  {
-    label: "Explore tasks",
-    link: "#",
-    icon: LuClipboardPenLine,
-  },
+  // {
+  //   label: "Create a listing",
+  //   link: "#",
+  //   icon: AiOutlineFileSearch,
+  // },
+  // {
+  //   label: "Explore tasks",
+  //   link: "#",
+  //   icon: LuClipboardPenLine,
+  // },
   // {
   //   label: "Rewards",
   //   link: "/customer/rewards",
