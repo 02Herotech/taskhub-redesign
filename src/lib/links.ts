@@ -1,19 +1,4 @@
 import { FiLogOut } from "react-icons/fi";
-import {
-  AboutUsSvg,
-  BlogSvg,
-  BusinessHubSvg,
-  ContactUsSvg,
-  DashboardSvg,
-  HomeIcon,
-  HomeSvg,
-  LoginSvg,
-  MarketPlaceSvg,
-  MessagesSvg,
-  MonetizeSVG,
-  RentShopSvg,
-} from "./svgIcons";
-import React from "react";
 import { FiUser } from "react-icons/fi";
 import { LuClipboard, LuStore } from "react-icons/lu";
 import { IoWalletOutline } from "react-icons/io5";

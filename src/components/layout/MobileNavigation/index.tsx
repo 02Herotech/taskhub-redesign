@@ -14,6 +14,8 @@ import {
 import { IoCloseCircleOutline } from "react-icons/io5";
 import { FiLogOut } from "react-icons/fi";
 import { IconType } from "react-icons";
+import { useDispatch } from "react-redux";
+import { removeUserProfile } from "@/store/Features/userProfile";
 
 type Props = {
   showMobileNav: boolean;
@@ -39,6 +41,7 @@ const MobileNavigation: React.FC<Props> = ({
   const userRole = session?.data?.user?.user?.roles;
   const isServiceProvider = userRole && userRole[0] === "SERVICE_PROVIDER";
   const isAuth = session.status === "authenticated";
+  const dispatch = useDispatch();
 
   const currentLinks: NavLink[] = !isAuth
     ? homeLinks
@@ -48,6 +51,8 @@ const MobileNavigation: React.FC<Props> = ({
 
   const handleLogout = async () => {
     try {
+      dispatch(removeUserProfile());
+      localStorage.removeItem("auth");
       await signOut({ callbackUrl: `${process.env.NEXT_PUBLIC_URL}/home` });
       router.push("/home");
     } catch (error) {

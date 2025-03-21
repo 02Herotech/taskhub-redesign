@@ -39,6 +39,7 @@ const DashboardSidebar = () => {
     try {
       setAuth(initialAuthState);
       dispatch(removeUserProfile());
+      localStorage.removeItem("auth");
       await signOut({ callbackUrl: `${process.env.NEXT_PUBLIC_URL}/home` });
       router.push("/home");
     } catch (error: any) {
