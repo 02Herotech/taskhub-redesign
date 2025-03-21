@@ -29,6 +29,7 @@ interface NavLink {
   sublinks?: NavLink[];
 }
 
+/**Navigation sidebar for logged in users*/
 const MobileNavigation: React.FC<Props> = ({
   showMobileNav,
   setShowMobileNav,

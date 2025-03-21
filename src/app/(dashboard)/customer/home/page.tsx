@@ -3,7 +3,7 @@ import { CgProfile } from "react-icons/cg";
 import { IoIosAddCircle } from "react-icons/io";
 import PaymentHistory from "./PaymentHistory";
 import Tasks from "./Tasks";
-import Heading from "./Heading";
+import Heading from "../../Heading";
 import PostTask from "./PostTask";
 import Link from "next/link";
 
@@ -55,9 +55,9 @@ function Page() {
 
               <div className="h-full min-w-[250px] rounded-lg bg-primary text-white">
                 <div className="relative flex h-full items-center justify-center px-5">
-                  <p className="absolute left-1 top-1">Wallet</p>
+                  <p className="absolute left-2 top-1">Wallet</p>
                   <p className="text-6xl font-semibold ">$0.00</p>
-                  <button className="absolute bottom-1 right-1 z-10 rounded-full bg-white px-4 py-2 font-bold text-primary">
+                  <button className="absolute bottom-1 right-2 z-10 rounded-full bg-white px-4 py-2 font-bold text-primary">
                     Top up
                   </button>
                   <svg
