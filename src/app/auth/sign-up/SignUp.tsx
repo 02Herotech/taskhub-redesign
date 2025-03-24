@@ -226,7 +226,7 @@ function SignUp() {
                         <h2 className="text-sm font-semibold text-[#AC6905]">
                           {choice.title}
                         </h2>
-                        <small className="max-w-[70px] text-[12px] leading-3 text-[#4E5158]">
+                        <small className="max-w-[70px] text-[12px] font-medium leading-3 text-[#4E5158]">
                           {choice.description}
                         </small>
                       </div>
@@ -257,7 +257,7 @@ function SignUp() {
                         <h2 className="text-sm font-semibold text-primary">
                           {choice.title}
                         </h2>
-                        <small className="max-w-[70px] text-[12px] leading-3 text-[#4E5158]">
+                        <small className="max-w-[70px] text-[12px] font-medium leading-3 text-[#4E5158]">
                           {choice.description}
                         </small>
                       </div>
@@ -265,7 +265,7 @@ function SignUp() {
                   ))}
                 </div>
 
-                <div className="col-span-2 sm:col-span-1">
+                <div className="col-span-2 font-satoshiMedium sm:col-span-1">
                   <Input
                     id="abn"
                     maxLength={11}
@@ -395,7 +395,7 @@ function SignUp() {
             )}
           </AnimatePresence>
 
-          <p className="font-satoshiBold font-bold text-[#190E3F]">
+          <p className="font-satoshiBold mt-3 font-bold text-[#190E3F]">
             Have an existing account?{" "}
             <Link href="/auth/login" className="text-primary">
               Sign in

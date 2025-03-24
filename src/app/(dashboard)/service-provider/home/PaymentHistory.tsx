@@ -6,7 +6,7 @@ import { useGetServiceProviderPaymentHistoryQuery } from "@/services/stripe";
 function PaymentHistory() {
   const { data, isLoading } = useGetServiceProviderPaymentHistoryQuery({});
 
-//   console.log(data);
+  //   console.log(data);
 
   return <div>PaymentHistory</div>;
 }
