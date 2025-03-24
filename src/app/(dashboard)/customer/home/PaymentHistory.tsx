@@ -28,6 +28,7 @@ import { formatTimeFromDate } from "@/utils";
 //   );
 // };
 
+/**Component for payment history for customers */
 function PaymentHistory() {
   const { profile: user } = useSelector(
     (state: RootState) => state.userProfile,
