@@ -336,4 +336,5 @@ const Navigation = () => {
   );
 };
 
+Navigation.displayName = "DesktopNavigation";
 export default Navigation;
