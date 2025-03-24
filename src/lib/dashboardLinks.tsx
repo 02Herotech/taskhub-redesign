@@ -30,11 +30,11 @@ export const customerDashboardLinks: DashboardLinks[] = [
     link: "/customer/tasks",
     icon: LuClipboard,
   },
-  // {
-  //   label: "My Notifications",
-  //   link: "/customer/notifications",
-  //   icon: IoMdNotificationsOutline,
-  // },
+  {
+    label: "Notifications",
+    link: "/customer/notifications",
+    icon: IoMdNotificationsOutline,
+  },
   {
     label: "Payments",
     link: "/customer/payment?tab=paymentHistory",
@@ -84,11 +84,11 @@ export const serviceProviderDashboardLinks: DashboardLinks[] = [
     link: "/service-provider/jobs",
     icon: GoTasklist,
   },
-  // {
-  //   label: "My Notification",
-  //   link: "/service-provider/notification",
-  //   icon: NotificationIcon,
-  // },
+  {
+    label: "Notifications",
+    link: "/service-provider/notification",
+    icon: IoMdNotificationsOutline,
+  },
   {
     label: "Payment",
     link: "/service-provider/payment",
