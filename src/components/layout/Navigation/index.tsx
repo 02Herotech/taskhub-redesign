@@ -1,5 +1,4 @@
 "use client";
-
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
@@ -105,16 +104,6 @@ const Navigation = () => {
         );
       },
     },
-    // {
-    //   label: "Settings",
-    //   onClick: () => {
-    //     router.push(
-    //       isServiceProvider
-    //         ? "/service-provider/settings"
-    //         : "/customer/settings",
-    //     );
-    //   },
-    // },
     {
       label: "Logout",
       onClick: handleLogout,
