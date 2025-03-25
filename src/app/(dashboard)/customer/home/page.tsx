@@ -16,8 +16,8 @@ function Page() {
           <div>
             <h3 className="mb-2 font-semibold">Profile</h3>
             <Link
-              href="/customer/profile"
-              className="flex items-center gap-2 rounded-xl border border-[#0000001A] p-4 min-w-[250px]"
+              href="/customer/profile/edit-profile"
+              className="flex min-w-[250px] items-center gap-2 rounded-xl border border-[#0000001A] p-4"
             >
               <CgProfile strokeWidth={0.8} size={40} color="#2A1769" />
               <div>
@@ -57,9 +57,9 @@ function Page() {
                 <div className="relative flex h-full items-center justify-center px-5">
                   <p className="absolute left-2 top-1">Wallet</p>
                   <p className="text-6xl font-semibold ">$0.00</p>
-                  <button className="absolute bottom-1 right-2 z-10 rounded-full bg-white px-4 py-2 font-bold text-primary">
+                  {/* <button className="absolute bottom-1 right-2 z-10 rounded-full bg-white px-4 py-2 font-bold text-primary">
                     Top up
-                  </button>
+                  </button> */}
                   <svg
                     width="134"
                     height="115"

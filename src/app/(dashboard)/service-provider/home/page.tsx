@@ -16,7 +16,7 @@ function Page() {
           <div>
             <h3 className="mb-2 font-semibold">Profile</h3>
             <Link
-              href="/service-provider/profile"
+              href="/service-provider/profile/edit-profile"
               className="flex min-w-[250px] items-center gap-2 rounded-xl border border-[#0000001A] p-4"
             >
               <CgProfile strokeWidth={0.8} size={40} color="#2A1769" />

@@ -24,7 +24,7 @@ function Error({
       />
       <div className="text-center">
         <h4 className="mb-5 font-satoshiBold text-xl font-bold text-[#2A1769] md:text-3xl">
-          Opps! something went wrong.
+          Oops! something went wrong.
         </h4>
         <p className="mb-2 text-base md:text-2xl">
           We’re sorry, but an unexpected error has occurred.

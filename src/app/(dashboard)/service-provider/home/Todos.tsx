@@ -56,7 +56,7 @@ function Todos() {
   return (
     <section className="w-full md:w-2/5">
       <h3 className="mb-1 font-semibold text-[#0000009E]">To-do</h3>
-      <div className="relative h-[550px] overflow-y-auto rounded-2xl border border-[#0000001A] px-3">
+      <div className="relative h-[550px] overflow-y-hidden rounded-2xl border border-[#0000001A] px-3">
         {isLoading && (
           <div className="flex h-full w-full items-center justify-center">
             <Image
@@ -96,7 +96,7 @@ function Todos() {
               </div>
             ) : (
               <ul className="space-y-3 py-3">
-                {data.slice(0, 6).map((task) => (
+                {data.slice(0, 4).map((task) => (
                   <li
                     className="flex justify-between rounded-2xl border border-[#00000003] bg-[#EBE9F44D] p-3"
                     key={Math.random() * 1234}

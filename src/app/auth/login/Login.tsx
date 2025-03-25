@@ -13,7 +13,15 @@ import axios from "axios";
 import Button from "@/components/global/Button";
 import { MdVisibility, MdVisibilityOff } from "react-icons/md";
 
-const loginSchema = signupSchema.pick({ emailAddress: true, password: true });
+// const loginSchema = signupSchema.pick({ emailAddress: true, password: true });
+
+const loginSchema = z.object({
+  emailAddress: z
+    .string()
+    .min(1, "Email is required")
+    .email({ message: "Please enter a valid email address" }),
+  password: z.string().min(1, "Password is required"),
+});
 
 type LoginSchema = z.infer<typeof loginSchema>;
 
@@ -173,6 +181,13 @@ function Login() {
                 {error}
               </div>
             )}
+
+            <Link
+              href="/auth/forgot-password"
+              className="block text-right font-satoshiBold font-bold text-[#E58C06] underline"
+            >
+              Forgot password?
+            </Link>
             <div>
               <Button
                 type="submit"
@@ -186,7 +201,7 @@ function Login() {
           </form>
 
           <p className="mt-3 font-satoshiBold font-bold text-[#190E3F]">
-            Dont have an account?{" "}
+            Don&apos;t have an account?{" "}
             <Link href="/auth/sign-up" className="text-primary">
               Sign up
             </Link>
