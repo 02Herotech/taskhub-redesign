@@ -4,6 +4,8 @@ import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "@/store";
 import { setTaskDetail } from "@/store/Features/taskDetails";
 import { useRouter } from "next/navigation";
+import { IoArrowBackCircle } from "react-icons/io5";
+import { IoMdArrowRoundBack } from "react-icons/io";
 
 function Header() {
   const dispatch = useDispatch();
@@ -21,7 +23,16 @@ function Header() {
   return (
     <div>
       <div className="fixed left-0 top-20 z-20 hidden w-full border-t-2 bg-white shadow-md lg:block">
-        <div className="mb-3 flex justify-center space-x-5 pt-4">
+        <div className="relative mb-3 flex justify-center space-x-5 pt-4">
+          <div
+            className="absolute left-2 hidden rounded-lg bg-status-purpleBase p-1 text-white lg:block"
+            onClick={handleBackClick}
+          >
+            <IoMdArrowRoundBack
+              className=" cursor-pointer text-2xl"
+              size={27}
+            />
+          </div>
           <div
             className={`${
               currentStep === 1

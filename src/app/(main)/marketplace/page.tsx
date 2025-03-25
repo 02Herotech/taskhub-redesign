@@ -56,6 +56,7 @@ const MareketPlace = () => {
 
   useEffect(() => {
     if (session.data && getCookie("firstLogin")) {
+      //!TODO Would show it even if it's a different login
       setfirstTimePopup(true);
       deleteCookie("firstLogin");
     }
@@ -146,56 +147,6 @@ const MareketPlace = () => {
 
   return (
     <main className="mx-auto max-w-screen-2xl">
-      {/* <div>
-        {showPopup && (
-          <Popup
-            isOpen={showPopup}
-            onClose={() => {
-              setShowPopup(false);
-              setHasClosedPopup(true);
-            }}
-          >
-            <div className="relative h-[312px] w-full max-lg:mx-2 lg:w-[577px]">
-              <div className="flex h-full flex-col items-center justify-center space-y-7 text-center">
-                <h1 className="font-clashDisplay text-4xl font-semibold text-[#2A1769]">
-                  Welcome to Olójà
-                </h1>
-                <p className="mb-8 font-satoshi text-xl font-medium text-black">
-                  We are thrilled to have you! Please complete your profile to
-                  get access to all our features.
-                </p>
-                <Button
-                  className="rounded-full max-lg:text-sm lg:w-[151px] lg:py-6"
-                  onClick={() =>
-                    router.push(
-                      isServiceProvider
-                        ? "/service-provider/profile"
-                        : "/customer/profile",
-                    )
-                  }
-                >
-                  Go to Profile
-                </Button>
-              </div>
-              <Image
-                src="/assets/images/marketplace/complete-profile-2.png"
-                alt="image"
-                className="absolute bottom-1 left-1 size-1/4 lg:size-[160px] "
-                width={160}
-                height={160}
-              />
-              <Image
-                src="/assets/images/marketplace/complete-profile-1.png"
-                alt="image"
-                className="absolute bottom-0 right-0 size-[70px] lg:size-[110px]"
-                width={110}
-                height={110}
-              />
-            </div>
-          </Popup>
-        )}
-      </div> */}
-
       {!isFiltering && <MarketPlaceHeader />}
 
       <PopupNew
