@@ -188,8 +188,8 @@ const MareketPlace = () => {
             <Link
               href={
                 userType === "CUSTOMER"
-                  ? "/customer/profile"
-                  : "/service-provider/profile"
+                  ? "/customer/profile/edit-profile"
+                  : "/service-provider/profile/edit-profile"
               }
               className="w-full rounded-full bg-primary px-10 py-2 text-center font-satoshiBold font-bold text-white sm:w-max"
             >

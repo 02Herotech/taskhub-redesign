@@ -40,8 +40,9 @@ function Login() {
   } = useForm<LoginSchema>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
-      emailAddress: getCookie("emailAddress") || "",
-      password: getCookie("password") || "",
+      emailAddress:
+        isOnboarding === "true" ? getCookie("emailAddress") || "" : "",
+      password: isOnboarding === "true" ? getCookie("password") || "" : "",
     },
   });
 

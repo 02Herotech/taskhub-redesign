@@ -2,6 +2,9 @@
 import { useState } from "react";
 import axios from "axios";
 import { motion, AnimatePresence } from "framer-motion";
+import Popup from "@/components/global/Popup/PopupTwo";
+import Link from "next/link";
+import Image from "next/image";
 
 const fadeAnimationProps = {
   initial: { opacity: 0 },
@@ -47,13 +50,6 @@ function ResendEmail({ email }: { email: string }) {
           {isLoading ? "resending." : "resend email."}
         </button>
       </p>
-      {message && (
-        <AnimatePresence>
-          <motion.p {...fadeAnimationProps} className="text-[#55535A]">
-            {message}
-          </motion.p>
-        </AnimatePresence>
-      )}
       {error && (
         <AnimatePresence>
           <motion.p {...fadeAnimationProps} className="text-red-300">
@@ -61,6 +57,38 @@ function ResendEmail({ email }: { email: string }) {
           </motion.p>
         </AnimatePresence>
       )}
+      <Popup isOpen={Boolean(message)} onClose={() => setMessage("")}>
+        <div className="relative mt-6 max-h-[700px] min-w-[320px] max-w-[700px] bg-white p-5 sm:min-w-[500px]">
+          <Image
+            src="/assets/images/onboarding/new-mail.png"
+            alt="New mail"
+            width={486}
+            height={370}
+            className="mx-auto mb-5 w-2/3 object-cover sm:w-1/2"
+          />
+          <h3 className="mb-3 text-center font-clashMedium text-2xl md:text-4xl">
+            You’ve got mail!
+          </h3>
+          <p className="mb-5 max-w-[600px] text-center text-base font-medium text-[#55535A] md:text-2xl">
+            A link has been sent to{" "}
+            <span className="text-[#FE9B07]">{email}</span>, click on the link
+            to verify or{" "}
+            <Link
+              href="/auth/sign-up?action=change-email"
+              className="text-primary underline"
+            >
+              Change email
+            </Link>
+          </p>
+
+          <button
+            onClick={() => resendEmail(email)}
+            className="mx-auto block w-max rounded-full bg-[#381F8C] px-6 py-2 font-bold text-white"
+          >
+            Resend email
+          </button>
+        </div>
+      </Popup>
     </>
   );
 }
