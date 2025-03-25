@@ -39,6 +39,10 @@ function Login() {
     formState: { errors, isSubmitting },
   } = useForm<LoginSchema>({
     resolver: zodResolver(loginSchema),
+    defaultValues: {
+      emailAddress: getCookie("emailAddress") || "",
+      password: getCookie("password") || "",
+    },
   });
 
   const handleApiLogin = async (payload: LoginSchema) => {
