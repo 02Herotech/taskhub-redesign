@@ -427,14 +427,14 @@ function UploadIdPopup({
             <div className=" z-50 my-10 flex flex-col items-center justify-center gap-5 space-y-3 bg-white">
               <div className="space-y-4">
                 <div className="flex items-center gap-4">
-                  <button
+                  {/* <button
                     className=" rounded-full bg-violet-light px-4 py-2 font-medium text-violet-normal transition-all duration-300 hover:bg-violet-200"
                     onClick={() => {
                       setCameraActive(true);
                     }}
                   >
                     Take a Picture
-                  </button>
+                  </button> */}
                   <button
                     className=" rounded-full bg-violet-light px-4 py-2 font-medium text-violet-normal transition-all duration-300 hover:bg-violet-200"
                     onClick={() => {
