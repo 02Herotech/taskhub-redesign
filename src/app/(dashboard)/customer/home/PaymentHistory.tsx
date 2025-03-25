@@ -103,9 +103,9 @@ function PaymentHistory() {
                       <h5 className="font-satoshiBold text-lg font-bold text-[#140B31]">
                         {payment.bookingTitle}
                       </h5>
-                      <p className="font-satoshiMedium text-[#716F78]">
+                      {/* <p className="font-satoshiMedium text-[#716F78]">
                         I need a graphic designer
-                      </p>
+                      </p> */}
                     </div>
 
                     <div className="ml-auto space-y-2 text-right">

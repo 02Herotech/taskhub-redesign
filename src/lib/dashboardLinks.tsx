@@ -40,11 +40,11 @@ export const customerDashboardLinks: DashboardLinks[] = [
     link: "/customer/payment?tab=paymentHistory",
     icon: IoWalletOutline,
   },
-  {
-    label: "Marketplace",
-    link: "#",
-    icon: LuStore,
-  },
+  // {
+  //   label: "Marketplace",
+  //   link: "#",
+  //   icon: LuStore,
+  // },
   // {
   //   label: "Create a listing",
   //   link: "#",

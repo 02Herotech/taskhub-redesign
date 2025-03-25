@@ -5,6 +5,7 @@ import Heading from "../../Heading";
 import Link from "next/link";
 import WalletBalance from "@/components/dashboard/serviceProvider/Payment/WalletBalance";
 import PaymentHistory from "./PaymentHistory";
+import Todos from "./Todos";
 
 function Page() {
   return (
@@ -98,10 +99,10 @@ function Page() {
       <div className="flex gap-2">
         <PaymentHistory />
 
-        {/* Services  */}
+        <Todos />
       </div>
 
-      {/* Create button Listing here  */}
+      {/* Create listing button here  */}
     </section>
   );
 }
