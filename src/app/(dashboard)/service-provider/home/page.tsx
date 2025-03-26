@@ -11,7 +11,7 @@ function Page() {
   return (
     <section className="relative mt-[5rem] p-4">
       <Heading />
-      <div className="mb-4 overflow-x-auto">
+      <div className="mb-4 overflow-x-auto sm:overflow-x-hidden">
         <header className="mb-5 flex min-w-[500px] gap-2">
           <div>
             <h3 className="mb-2 font-semibold">Profile</h3>
@@ -32,7 +32,7 @@ function Page() {
             </Link>
           </div>
 
-          <div className="flex flex-col">
+          <div className="flex flex-grow flex-col">
             <h3 className="mb-2 font-semibold">Quick Actions</h3>
             <div className="flex flex-1 rounded-xl border border-[#0000001A]">
               <Link
@@ -53,7 +53,7 @@ function Page() {
                 </div>
               </Link>
 
-              <div className="h-full min-w-[250px] rounded-lg bg-primary text-white">
+              <div className="h-full min-w-[250px] flex-grow rounded-lg bg-primary text-white">
                 <div className="relative flex h-full items-center justify-center px-5">
                   <p className="absolute left-2 top-1">Wallet</p>
                   <p className="text-6xl font-semibold ">

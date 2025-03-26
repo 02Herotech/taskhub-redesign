@@ -19,7 +19,7 @@ interface DashboardLinks {
 }
 
 export const customerDashboardLinks: DashboardLinks[] = [
-  { label: "Home", link: "/customer/home", icon: TbSmartHome },
+  // { label: "Home", link: "/customer/home", icon: TbSmartHome },
   {
     label: "Profile",
     link: "/customer/profile",
@@ -68,7 +68,7 @@ export const customerDashboardLinks: DashboardLinks[] = [
 ];
 
 export const serviceProviderDashboardLinks: DashboardLinks[] = [
-  { label: "Home", link: "/service-provider/home", icon: TbSmartHome },
+  // { label: "Home", link: "/service-provider/home", icon: TbSmartHome },
   {
     label: "Profile",
     link: "/service-provider/profile",
