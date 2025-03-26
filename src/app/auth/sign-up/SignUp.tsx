@@ -156,9 +156,10 @@ function SignUp() {
 
     try {
       await signup(finalData).unwrap();
+      // await new Promise((resolve, reject) => setTimeout(resolve, 3000));
       setError("");
-      reset();
-      router.replace(
+      // reset();
+      router.push(
         `/auth/verify-email?email=${finalData.emailAddress}&abn=${Boolean(finalData.abn)}`,
       );
     } catch (error: any) {
@@ -395,7 +396,7 @@ function SignUp() {
             )}
           </AnimatePresence>
 
-          <p className="font-satoshiBold mt-3 font-bold text-[#190E3F]">
+          <p className="mt-3 font-satoshiBold font-bold text-[#190E3F]">
             Have an existing account?{" "}
             <Link href="/auth/login" className="text-primary">
               Sign in
