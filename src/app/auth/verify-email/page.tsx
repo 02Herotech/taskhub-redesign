@@ -2,44 +2,36 @@ import Carousel from "../Carousel";
 import Link from "next/link";
 import { Metadata } from "next";
 import ResendEmail from "./ResendEmail";
+import Image from "next/image";
 
 export const metadata: Metadata = {
   title: "Verify Email | Olójà",
 };
 
-const Page = ({
-  searchParams,
-}: {
-  searchParams: Record<string, string | string[] | undefined>;
-}) => {
-  const params = new URLSearchParams(searchParams as Record<string, string>);
-  const email = params.get("email");
-  const abn = params.get("abn");
+const Page = () => {
   return (
     <section className="mx-auto flex max-w-[1400px] flex-col p-3 lg:flex-row">
       <Carousel />
       <div className="flex flex-grow items-center justify-center">
-        <div className="w-full px-3 pt-8 sm:w-10/12 lg:px-0 lg:pt-0">
-          <h2 className="mb-7 font-clashMedium text-xl text-[#190E3F] md:text-4xl">
-            Verify Email
-          </h2>
-          <p className="mb-4 text-sm font-semibold text-[#55535A] md:text-2xl">
-            A link has been sent to{" "}
-            <span className="text-[#FE9B07]">{email}</span>, click on the link
-            to verify email{" "}
-            {abn == "false" && (
-              <span>
-                or{" "}
-                <Link
-                  href="/auth/sign-up?action=change-email"
-                  className="text-primary underline"
-                >
-                  Change email
-                </Link>
-              </span>
-            )}
-          </p>
-          <ResendEmail email={email} />
+        <div
+          className="relative w-full px-3 pt-8 sm:w-11/12 lg:px-0 lg:pt-0 lg:shadow"
+          style={{ boxShadow: "0px -3px 196px 0px #0000000A" }}
+        >
+          <Image
+            src="/assets/icons/polygon.svg"
+            alt="Icon"
+            className="relative z-20 hidden w-full lg:block"
+            width={666}
+            height={145}
+          />
+          <div className="absolute left-20 top-16 z-10 hidden size-24 rounded-full bg-primary blur-[100px] lg:block" />
+          <div className="absolute left-48 top-40 z-10 hidden size-24 rounded-full bg-[#B8AED6] blur-3xl lg:block" />
+          <div className="mx-auto py-2 lg:w-10/12 lg:py-5">
+            <h2 className="mb-2 mt-8 font-clashMedium text-xl text-primary md:text-3xl">
+              You’ve got mail!
+            </h2>
+            <ResendEmail />
+          </div>
         </div>
       </div>
     </section>
