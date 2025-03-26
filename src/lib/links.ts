@@ -2,17 +2,16 @@ import { FiLogOut } from "react-icons/fi";
 import { FiUser } from "react-icons/fi";
 import { LuClipboard, LuStore } from "react-icons/lu";
 import { IoWalletOutline } from "react-icons/io5";
-
 import { IconType } from "react-icons";
 import { TbSmartHome } from "react-icons/tb";
 import { MdMailOutline } from "react-icons/md";
 import { FiLogIn } from "react-icons/fi";
-
 import { IoMdInformationCircleOutline } from "react-icons/io";
-
 import { MdOutlineHub } from "react-icons/md";
 import { FaRegMoneyBillAlt } from "react-icons/fa";
 import { LuLayoutDashboard } from "react-icons/lu";
+import { GoTasklist } from "react-icons/go";
+import { IoMdNotificationsOutline } from "react-icons/io";
 import { IoSettingsOutline } from "react-icons/io5";
 
 export type LinkRouteTypes = {
@@ -30,11 +29,11 @@ export type LinkRouteTypes = {
 };
 
 export const homeMobileLinks: LinkRouteTypes[] = [
-  {
-    label: "Home",
-    url: "/home",
-    icon: TbSmartHome,
-  },
+  // {
+  //   label: "Home",
+  //   url: "/home",
+  //   icon: TbSmartHome,
+  // },
   {
     label: "Marketplace",
     url: "/marketplace",
@@ -134,46 +133,72 @@ export const homeLinks: LinkRouteTypes[] = [
 ];
 
 export const mobileServiceProviderLinks: LinkRouteTypes[] = [
+  // {
+  //   label: "Home",
+  //   url: "/service-provider/home",
+  //   icon: TbSmartHome,
+  // },
   {
-    label: "My Dashboard",
-    icon: LuLayoutDashboard,
-    sublinks: [
-      {
-        label: "Profile",
-        url: "/service-provider/profile",
-      },
-      {
-        label: "My Services",
-        url: "/service-provider/services",
-      },
-      {
-        label: "View Jobs",
-        url: "/service-provider/jobs",
-      },
-      {
-        label: "My Notifications",
-        url: "/service-provider/notification",
-      },
-      {
-        label: "Payment and wallet",
-        url: "/service-provider/payment",
-      },
-      {
-        label: "Settings",
-        url: "/service-provider/settings",
-        sublinks: [
-          {
-            label: "Change Password",
-            url: "/service-provider/settings/password",
-          },
-          {
-            label: "Notification settings",
-            url: "/service-provider/settings/notification",
-          },
-        ],
-      },
-    ],
+    label: "Profile",
+    url: "/service-provider/profile",
+    icon: FiUser,
   },
+  {
+    label: "View Jobs",
+    url: "/service-provider/jobs",
+    icon: GoTasklist,
+  },
+  {
+    label: "Notifications",
+    url: "/service-provider/notification",
+    icon: IoMdNotificationsOutline,
+  },
+  {
+    label: "Payment and wallet",
+    url: "/service-provider/payment",
+    icon: IoWalletOutline,
+  },
+
+  // {
+  //   label: "My Dashboard",
+  //   icon: LuLayoutDashboard,
+  //   sublinks: [
+  //     {
+  //       label: "Profile",
+  //       url: "/service-provider/profile",
+  //     },
+  //     {
+  //       label: "My Services",
+  //       url: "/service-provider/services",
+  //     },
+  //     {
+  //       label: "View Jobs",
+  //       url: "/service-provider/jobs",
+  //     },
+  //     {
+  //       label: "My Notifications",
+  //       url: "/service-provider/notification",
+  //     },
+  //     {
+  //       label: "Payment and wallet",
+  //       url: "/service-provider/payment",
+  //     },
+  //     {
+  //       label: "Settings",
+  //       url: "/service-provider/settings",
+  //       sublinks: [
+  //         {
+  //           label: "Change Password",
+  //           url: "/service-provider/settings/password",
+  //         },
+  //         {
+  //           label: "Notification settings",
+  //           url: "/service-provider/settings/notification",
+  //         },
+  //       ],
+  //     },
+  //   ],
+  // },
   {
     label: "Explore Tasks",
     url: "/explore",
@@ -189,6 +214,21 @@ export const mobileServiceProviderLinks: LinkRouteTypes[] = [
     url: "/message",
     icon: MdMailOutline,
   },
+  {
+    label: "Settings",
+    url: "/service-provider/settings",
+    icon: IoSettingsOutline,
+    sublinks: [
+      {
+        label: "Change Password",
+        url: "/service-provider/settings/password",
+      },
+      {
+        label: "Notification settings",
+        url: "/service-provider/settings/notification",
+      },
+    ],
+  },
   // {
   //   label: "Contact us",
   //   url: "/contact",
@@ -197,11 +237,11 @@ export const mobileServiceProviderLinks: LinkRouteTypes[] = [
 ];
 
 export const mobileCustomerLinks: LinkRouteTypes[] = [
-  {
-    label: "Home",
-    url: "/customer/home",
-    icon: TbSmartHome,
-  },
+  // {
+  //   label: "Home",
+  //   url: "/customer/home",
+  //   icon: TbSmartHome,
+  // },
   {
     label: "Profile",
     url: "/customer/profile",
