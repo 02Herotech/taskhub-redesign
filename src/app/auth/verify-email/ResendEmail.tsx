@@ -48,7 +48,10 @@ function ResendEmail() {
         {abn === "false" && (
           <span>
             or{" "}
-            <Link href="/auth/signup" className="text-primary underline">
+            <Link
+              href="/auth/sign-up?action=change-email"
+              className="text-primary underline"
+            >
               Change email
             </Link>
           </span>
