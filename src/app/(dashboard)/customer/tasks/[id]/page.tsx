@@ -273,11 +273,12 @@ const NewTaskDetails = ({ params }: { params: { id: string } }) => {
           </Popup>
         </>
       )}
-      {/* {offers && offers.length > 0 && (
-        <CustomerTaskOffers taskId={Number(id)} posterId={task.posterId} />
-      )} */}
-
       {offers && offers.length > 0 && (
+        <CustomerTaskOffers taskId={Number(id)} posterId={task.posterId} />
+      )}
+
+      {/* Change "offers && offers.length > 0" to false  */}
+      {false && (
         <div className="mt-14 min-h-96">
           <header className="mb-6 mt-10 text-[#E58C06]">
             <div className="mb-3 flex items-center justify-between">

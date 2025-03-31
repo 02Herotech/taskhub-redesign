@@ -240,9 +240,9 @@ const EditProfile = () => {
     // .map(([key]) => key);
     // .filter((key) => key !== "emailAddress");
 
-    console.log("selectedDocumentFront:", selectedDocumentFront);
+    // console.log("selectedDocumentFront:", selectedDocumentFront);
     // console.log("userDetails.idImageFront:", userDetails.idImageFront);
-    console.log("selectedDocumentBack:", selectedDocumentBack);
+    // console.log("selectedDocumentBack:", selectedDocumentBack);
     // console.log("userDetails.idImageBack:", userDetails.idImageBack);
 
     // const missingFields = Object.entries(data)
@@ -476,7 +476,7 @@ const EditProfile = () => {
         url = "customer/update";
       }
 
-      console.log("Final submitData:", JSON.stringify(submitData, null, 2));
+      // console.log("Final submitData:", JSON.stringify(submitData, null, 2));
 
       await authInstance.patch(url, submitData, {
         headers: { "Content-Type": "multipart/form-data" },
@@ -485,7 +485,7 @@ const EditProfile = () => {
       setIsFormModalShown(true);
       setIsEditingEnabled(true);
     } catch (error: any) {
-      console.log("Submission error:", error);
+      console.error("Submission error:", error);
       console.error(
         "Detailed error:",
         error.response ? error.response.data : error.message,
