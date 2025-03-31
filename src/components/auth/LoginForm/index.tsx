@@ -79,26 +79,22 @@ const LoginForm = () => {
       deleteCookie("redirectToExploreDetail");
     }
   };
-
-  const onSubmit: SubmitHandler<SignInRequest> = async (payload) => {
+  
+   const onSubmit: SubmitHandler<SignInRequest> = async (payload) => {
     setIsLoading(true);
     setError(null);
-
     try {
       const updatedPayload = {
         ...payload,
         emailAddress: payload.emailAddress.toLowerCase(),
       };
       const loginData = await handleApiLogin(updatedPayload);
-
       const authData = {
         token: loginData.accessToken,
         role: loginData.user.roles,
       };
       localStorage.setItem("auth", JSON.stringify(authData));
-
       await handleNextAuthSignIn(updatedPayload, loginData.user.roles[0]);
-
       handleRedirect();
     } catch (error: any) {
       setError(
@@ -109,7 +105,6 @@ const LoginForm = () => {
       setIsLoading(false);
     }
   };
-
   return (
     <section className="mx-auto w-full max-lg:p-5 xl:w-[554px]">
       <div className="space-y-10">
@@ -139,6 +134,12 @@ const LoginForm = () => {
               rules={["email", "required"]}
               type="email"
               className="shadow-sm"
+              onChange={(e) => {
+                e.currentTarget.value = e.currentTarget.value.replace(
+                  /\s/g,
+                  "",
+                );
+              }}
             />
             <Input
               name="password"
@@ -147,6 +148,12 @@ const LoginForm = () => {
               className="shadow-sm placeholder:text-dark"
               rules={["required", "password"]}
               type="password"
+              onChange={(e) => {
+                e.currentTarget.value = e.currentTarget.value.replace(
+                  /\s/g,
+                  "",
+                );
+              }}
             />
             {error && (
               <div className="my-1 text-base font-semibold text-status-error-100">

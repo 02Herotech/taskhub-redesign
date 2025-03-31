@@ -13,6 +13,9 @@ import {
 } from "@/lib/links";
 import { IoCloseCircleOutline } from "react-icons/io5";
 import { FiLogOut } from "react-icons/fi";
+import { IconType } from "react-icons";
+import { useDispatch } from "react-redux";
+import { removeUserProfile } from "@/store/Features/userProfile";
 
 type Props = {
   showMobileNav: boolean;
@@ -22,10 +25,11 @@ type Props = {
 interface NavLink {
   label: string;
   url?: string;
-  icon?: React.ReactNode;
+  icon?: IconType;
   sublinks?: NavLink[];
 }
 
+/**Navigation sidebar for logged in users*/
 const MobileNavigation: React.FC<Props> = ({
   showMobileNav,
   setShowMobileNav,
@@ -38,6 +42,7 @@ const MobileNavigation: React.FC<Props> = ({
   const userRole = session?.data?.user?.user?.roles;
   const isServiceProvider = userRole && userRole[0] === "SERVICE_PROVIDER";
   const isAuth = session.status === "authenticated";
+  const dispatch = useDispatch();
 
   const currentLinks: NavLink[] = !isAuth
     ? homeLinks
@@ -47,6 +52,8 @@ const MobileNavigation: React.FC<Props> = ({
 
   const handleLogout = async () => {
     try {
+      dispatch(removeUserProfile());
+      localStorage.removeItem("auth");
       await signOut({ callbackUrl: `${process.env.NEXT_PUBLIC_URL}/home` });
       router.push("/home");
     } catch (error) {
@@ -79,7 +86,7 @@ const MobileNavigation: React.FC<Props> = ({
           transition: { type: "tween", duration: 0.3 },
         }}
         exit={{ x: "-100%", transition: { type: "tween", duration: 0.3 } }}
-        className="fixed left-0 top-0 z-50 flex h-screen w-4/5 flex-col justify-between overflow-hidden rounded-br-xl rounded-tr-xl bg-white p-5 shadow drop-shadow-md"
+        className="fixed left-0 top-0 z-50 flex h-screen w-4/5 flex-col justify-between overflow-hidden rounded-br-xl rounded-tr-xl bg-[#EBE9F4] p-5 shadow drop-shadow-md"
       >
         <div className="pb-20">
           <div className="flex w-full items-center justify-between border-b border-primary pb-3">
@@ -120,32 +127,20 @@ const MobileNavigation: React.FC<Props> = ({
                     <>
                       <button
                         className={cn(
-                          "flex w-full items-center justify-between rounded-md px-5 py-3 text-lg font-bold text-primary",
-                          (openDropdown || sublinkIsActive) &&
-                            "rounded-full bg-[#EBE9F4]",
+                          "flex w-full items-center rounded-md px-5 py-3 text-lg font-bold text-primary",
+                          {
+                            "rounded-xl bg-primary text-white":
+                              openDropdown || sublinkIsActive,
+                          },
                         )}
                         onClick={() => toggleDropdown()}
                       >
-                        <div
-                          className={cn(
-                            "flex items-center rounded-md text-lg font-bold text-primary",
-                            openDropdown ||
-                              (isActive && "rounded-full bg-[#EBE9F4]"),
-                          )}
-                        >
-                          {link.icon && (
-                            <span className="mr-5">{link.icon}</span>
-                          )}
-                          <h4 className="text-lg font-bold text-primary">
-                            {link.label}
-                          </h4>
-                        </div>
+                        {link.icon && <link.icon className="mr-5" />}
+                        <h4 className="text-lg font-bold">{link.label}</h4>
                         <FaSortDown
                           className={cn(
-                            "size-4 text-tc-orange transition-all",
-                            {
-                              "rotate-180": openDropdown,
-                            },
+                            "ml-auto size-4 text-tc-orange transition-all",
+                            { "rotate-180": openDropdown },
                           )}
                         />
                       </button>
@@ -175,9 +170,7 @@ const MobileNavigation: React.FC<Props> = ({
                                       )}
                                     >
                                       {sublink.icon && (
-                                        <span className="mr-5">
-                                          {sublink.icon}
-                                        </span>
+                                        <sublink.icon className="mr-5" />
                                       )}
                                       <h4 className="text-lg font-bold text-primary">
                                         {sublink.label}
@@ -211,7 +204,7 @@ const MobileNavigation: React.FC<Props> = ({
                                               className={cn(
                                                 "flex items-center py-2 pl-3 text-lg font-bold text-primary",
                                                 {
-                                                  "rounded-full bg-[#EBE9F4]":
+                                                  "rounded-xl bg-primary text-white":
                                                     pathname.includes(
                                                       subsublink.url!,
                                                     ),
@@ -219,9 +212,7 @@ const MobileNavigation: React.FC<Props> = ({
                                               )}
                                             >
                                               {subsublink.icon && (
-                                                <span className="mr-5">
-                                                  {subsublink.icon}
-                                                </span>
+                                                <subsublink.icon className="mr-5" />
                                               )}
                                               {subsublink.label}
                                             </Link>
@@ -239,15 +230,13 @@ const MobileNavigation: React.FC<Props> = ({
                                     className={cn(
                                       "flex items-center px-5 py-2 text-lg font-bold text-primary",
                                       {
-                                        "rounded-full bg-[#EBE9F4]":
+                                        "rounded-xl bg-primary text-white":
                                           pathname.includes(sublink.url!),
                                       },
                                     )}
                                   >
                                     {sublink.icon && (
-                                      <span className="mr-5">
-                                        {sublink.icon}
-                                      </span>
+                                      <sublink.icon className="mr-5" />
                                     )}
                                     {sublink.label}
                                   </Link>
@@ -264,10 +253,10 @@ const MobileNavigation: React.FC<Props> = ({
                       href={link.url!}
                       className={cn(
                         "flex items-center px-5 py-2 text-lg font-bold text-primary",
-                        { "rounded-full bg-[#EBE9F4]": isActive },
+                        { "rounded-xl bg-primary text-white": isActive },
                       )}
                     >
-                      {link.icon && <span className="mr-5">{link.icon}</span>}
+                      {link.icon && <link.icon className="mr-5" />}
                       {link.label}
                     </Link>
                   )}

@@ -1,19 +1,12 @@
-import { FC, useEffect, useRef, useState } from "react";
-import { connectSocket } from "@/lib/socket";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
-import { FaChevronDown, FaStar } from "react-icons/fa6";
-import Button from "@/components/global/Button";
-import { IoIosCloseCircleOutline } from "react-icons/io";
+import { FaChevronDown } from "react-icons/fa6";
 import { useGetTasksOffersQuery } from "@/services/tasks";
-import { motion, AnimatePresence } from "framer-motion";
-import OfferMessage from "@/components/dashboard/customer/OfferMessage";
-import { FaCheck } from "react-icons/fa";
 import { formatTimeAgo } from "@/lib/utils";
 
 ////
 import { LiaReplySolid } from "react-icons/lia";
-import { IoClose } from "react-icons/io5";
 import Image from "next/image";
 import ReplyOfferForm from "./ReplyOfferForm";
 
@@ -26,34 +19,10 @@ interface OffersProps {
 
 function TaskOffersNew({ currentUserId, taskId, posterId }: OffersProps) {
   const [viewAll, setViewAll] = useState(false);
-  const [showReplyForm, setShowReplyForm] = useState(false);
-  const formRef = useRef<HTMLFormElement>(null);
-
-  ////////
-  const [replyText, setReplyText] = useState<string>("");
-  const [openReplyModal, setOpenReplyModal] = useState<{
-    [key: string]: boolean;
-  }>({});
-  const [showSuccessMessage, setShowSuccessMessage] = useState<boolean>(false);
   const { profile: user } = useSelector(
     (state: RootState) => state.userProfile,
   );
   const { data: offers, refetch } = useGetTasksOffersQuery(taskId);
-  const modalRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const handleResize = () => {
-      if (modalRef.current) {
-        modalRef.current.style.height = `${window.innerHeight}px`;
-      }
-    };
-
-    handleResize();
-    window.addEventListener("resize", handleResize);
-
-    return () => window.removeEventListener("resize", handleResize);
-  }, [openReplyModal]);
-
   useEffect(() => {
     const intervalId = setInterval(() => {
       refetch();
@@ -63,50 +32,15 @@ function TaskOffersNew({ currentUserId, taskId, posterId }: OffersProps) {
       clearInterval(intervalId);
     };
   }, []);
-
-  const handleReply = (offerId: string) => {
-    const socket = connectSocket(taskId);
-    const data = {
-      offerThreadList: [
-        {
-          taskId,
-          offerId,
-          userId: user?.serviceProviderId,
-          fullName: user?.firstName + " " + user?.lastName,
-          message: replyText,
-        },
-      ],
-    };
-
-    if (user && socket) {
-      try {
-        socket.emit("offer/replies", data, () => {
-          refetch();
-          setReplyText("");
-          setShowSuccessMessage(true);
-
-          // Delay the closing of the modal and hiding the success message
-          setTimeout(() => {
-            setShowSuccessMessage(false);
-            setOpenReplyModal((prev) => ({ ...prev, [offerId]: false }));
-          }, 3000);
-        });
-      } catch (error) {
-        console.error("Error submitting reply:", error);
-      }
-    } else {
-      console.error("Socket not connected or user not logged in");
-    }
-  };
   return (
     <section className="mt-14">
-      <header className="mb-6 text-[#E58C06]">
+      <header className="mb-8 text-[#E58C06]">
         <div className="mb-3 flex items-center justify-between">
           <h2 className="font-satoshiBold text-xl font-bold lg:text-3xl">
             Offers
           </h2>
           <button
-            className="flex items-center gap-3"
+            className="flex items-center gap-1 sm:gap-3"
             onClick={() => setViewAll(!viewAll)}
           >
             <span className="font-satoshiBold font-bold">
@@ -115,20 +49,6 @@ function TaskOffersNew({ currentUserId, taskId, posterId }: OffersProps) {
             <FaChevronDown />
           </button>
         </div>
-        <p className="font-satoshiBold text-base font-bold text-[#403E44] sm:text-lg">
-          <strong className="font-bold text-primary">Note: </strong>
-          Before you accept an Offer...
-        </p>
-        <p className="font-satoshiMedium text-[15px] text-[#55535A] sm:text-lg">
-          ✅ Converse with the service provider to ensure they’re the right fit.
-        </p>
-        <p className="font-satoshiMedium text-[15px] text-[#55535A] sm:text-lg">
-          ✅{" "}
-          <strong className="font-satoshiBold font-bold text-primary">
-            Edit your task details
-          </strong>{" "}
-          (if necessary)—especially the price—to match what you both agreed on.
-        </p>
       </header>
 
       <ul className="space-y-3">
@@ -151,7 +71,7 @@ function TaskOffersNew({ currentUserId, taskId, posterId }: OffersProps) {
                   <p className="font-satoshiMedium text-lg text-primary md:text-2xl">
                     {offer.fullName}
                   </p>
-                  <div className="flex gap-2 border-b border-[#F7DBB2] pb-2">
+                  {/* <div className="flex gap-2 border-b border-[#F7DBB2] pb-2">
                     <small>(4.5)</small>
                     <div className="flex items-center">
                       {Array.from({ length: 5 }).map((_) => (
@@ -162,7 +82,7 @@ function TaskOffersNew({ currentUserId, taskId, posterId }: OffersProps) {
                         />
                       ))}
                     </div>
-                  </div>
+                  </div> */}
                   <div className="mt-3 flex justify-between">
                     <p className="max-w-[150px] font-satoshiMedium text-sm text-[#140B31] sm:max-w-full sm:text-xl">
                       {offer.message}
@@ -174,9 +94,11 @@ function TaskOffersNew({ currentUserId, taskId, posterId }: OffersProps) {
                       <p className="block font-satoshiMedium text-xs text-primary sm:text-base">
                         {formatTimeAgo(offer.createdAt)}
                       </p>
-                      <p className="font-satoshiMedium text-sm text-[#E58C06] line-through md:text-xl">
-                        Price: $2500
-                      </p>
+                      {offer.offerAmount && (
+                        <p className="font-satoshiMedium text-sm text-[#E58C06] md:text-xl">
+                          Price: ${offer.offerAmount}
+                        </p>
+                      )}
                     </div>
                   </div>
                   {/* Display when offer has other messages  */}
@@ -184,8 +106,7 @@ function TaskOffersNew({ currentUserId, taskId, posterId }: OffersProps) {
                     <LiaReplySolid
                       strokeWidth={1.2}
                       stroke="#381F8C"
-                      size={25}
-                      className="absolute -bottom-5 -left-5 rotate-180"
+                      className="absolute -bottom-5 -left-5 rotate-180 text-base md:text-xl"
                     />
                   )}
                 </div>
@@ -213,9 +134,11 @@ function TaskOffersNew({ currentUserId, taskId, posterId }: OffersProps) {
                                 <p className="block font-satoshiMedium text-xs text-primary sm:text-base">
                                   {formatTimeAgo(offerThread.timeStamp)}
                                 </p>
-                                <p className="font-satoshiMedium text-sm text-[#E58C06] line-through md:text-xl">
-                                  Price: $2000
-                                </p>
+                                {offerThread.offerAmount && (
+                                  <p className="font-satoshiMedium text-sm text-[#E58C06] md:text-xl">
+                                    Price: ${offerThread.offerAmount}
+                                  </p>
+                                )}
                               </div>
                             </div>
                             <p className="max-w-[150px] font-satoshiMedium text-sm text-[#140B31] sm:max-w-full sm:text-xl">
@@ -229,7 +152,14 @@ function TaskOffersNew({ currentUserId, taskId, posterId }: OffersProps) {
                 )}
               </div>
             </div>
-            {offer.serviceProviderId === currentUserId && <ReplyOfferForm />}
+            {offer.serviceProviderId === currentUserId && (
+              <ReplyOfferForm
+                taskId={offer.taskId}
+                offerId={offer.id}
+                user={user}
+                refetch={refetch}
+              />
+            )}
           </li>
         ))}
       </ul>

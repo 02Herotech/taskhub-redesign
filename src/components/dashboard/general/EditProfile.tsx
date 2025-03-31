@@ -25,6 +25,7 @@ import useAxios from "@/hooks/useAxios";
 import { Calendar } from "primereact/calendar";
 import useSuburbData, { SurburbInfo } from "@/hooks/useSuburbData";
 import { CiLocationOn } from "react-icons/ci";
+import UploadIdPopup from "@/components/serviceProviderDashboard/profile/UploadIdPopup";
 
 const idTypeObject = [
   { label: "Medicare Card", value: "MEDICARE_CARD" },
@@ -239,9 +240,9 @@ const EditProfile = () => {
     // .map(([key]) => key);
     // .filter((key) => key !== "emailAddress");
 
-    console.log("selectedDocumentFront:", selectedDocumentFront);
+    // console.log("selectedDocumentFront:", selectedDocumentFront);
     // console.log("userDetails.idImageFront:", userDetails.idImageFront);
-    console.log("selectedDocumentBack:", selectedDocumentBack);
+    // console.log("selectedDocumentBack:", selectedDocumentBack);
     // console.log("userDetails.idImageBack:", userDetails.idImageBack);
 
     // const missingFields = Object.entries(data)
@@ -475,7 +476,7 @@ const EditProfile = () => {
         url = "customer/update";
       }
 
-      console.log("Final submitData:", JSON.stringify(submitData, null, 2));
+      // console.log("Final submitData:", JSON.stringify(submitData, null, 2));
 
       await authInstance.patch(url, submitData, {
         headers: { "Content-Type": "multipart/form-data" },
@@ -484,7 +485,7 @@ const EditProfile = () => {
       setIsFormModalShown(true);
       setIsEditingEnabled(true);
     } catch (error: any) {
-      console.log("Submission error:", error);
+      console.error("Submission error:", error);
       console.error(
         "Detailed error:",
         error.response ? error.response.data : error.message,
@@ -528,7 +529,7 @@ const EditProfile = () => {
         />
       )}
       <section className="relative lg:grid lg:grid-cols-12 lg:items-start lg:gap-6">
-        <EditProfileModal
+        <UploadIdPopup
           setIsFormModalShown={setIsFormModalShown}
           setDocumentImageFront={setDocumentImageFront}
           setDocumentImageBack={setDocumentImageBack}
@@ -546,6 +547,24 @@ const EditProfile = () => {
           setDocumentImage={setDocumentImage}
           handleRedirect={handleRedirect}
         />
+        {/* <EditProfileModal
+          setIsFormModalShown={setIsFormModalShown}
+          setDocumentImageFront={setDocumentImageFront}
+          setDocumentImageBack={setDocumentImageBack}
+          isFormModalShown={isFormModalShown}
+          isEditingProfilePicture={isEditingProfilePicture}
+          setisEditingProfilePicture={setIsEditingProfilePicture}
+          isEditingImageFront={isEditingImageFront}
+          setisEditingImageFront={setIsEditingImageFront}
+          isEditingImageBack={isEditingImageBack}
+          setisEditingImageBack={setIsEditingImageBack}
+          isProfileUpdatedSuccessfully={isProfileUpdatedSuccessfully}
+          setIsProfileUpdatedSuccessfully={setIsProfileUpdatedSuccessfully}
+          setSelectedDocumentFront={setSelectedDocumentFront}
+          setSelectedDocumentBack={setSelectedDocumentBack}
+          setDocumentImage={setDocumentImage}
+          handleRedirect={handleRedirect}
+        /> */}
 
         {/* Profile Image Section */}
         <section className="col-span-3 flex flex-col items-center justify-center gap-1 pb-8">

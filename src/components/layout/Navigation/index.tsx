@@ -1,5 +1,4 @@
 "use client";
-
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
@@ -68,6 +67,7 @@ const Navigation = () => {
     try {
       setAuth(initialAuthState);
       dispatch(removeUserProfile());
+      localStorage.removeItem("auth");
       await signOut({ callbackUrl: `${process.env.NEXT_PUBLIC_URL}/home` });
       router.push("/home");
     } catch (error: any) {
@@ -104,16 +104,6 @@ const Navigation = () => {
         );
       },
     },
-    // {
-    //   label: "Settings",
-    //   onClick: () => {
-    //     router.push(
-    //       isServiceProvider
-    //         ? "/service-provider/settings"
-    //         : "/customer/settings",
-    //     );
-    //   },
-    // },
     {
       label: "Logout",
       onClick: handleLogout,
@@ -184,9 +174,9 @@ const Navigation = () => {
       >
         <ChatSocket />
         {userProfile.authLoading ? (
-          <div className="container flex min-h-20 items-center justify-between px-7 py-4 lg:py-5 " />
+          <div className="flex min-h-20 items-center justify-between px-7 py-4 lg:py-5 " />
         ) : (
-          <div className="container flex items-center justify-between px-7 py-4 lg:py-5">
+          <div className="flex items-center justify-between px-4 py-4 sm:px-7 lg:py-5">
             <Link href="/" className="max-lg:hidden">
               <Logo />
             </Link>
@@ -195,7 +185,7 @@ const Navigation = () => {
             </Link>
             <div className="flex items-center gap-3 lg:hidden">
               <Link href="/message" className="relative cursor-pointer">
-                <BsChat className="size-6 text-black" />
+                <BsChat className="size-7 text-black" />
                 {totalUnreadMessages > 0 && (
                   <span className="absolute -right-1 -top-1 flex size-5 items-center justify-center rounded-full bg-tc-orange text-xs text-white">
                     {totalUnreadMessages}
@@ -206,7 +196,7 @@ const Navigation = () => {
                 className="relative cursor-pointer"
                 onClick={() => router.push(notificationRoute)}
               >
-                <IoMdNotificationsOutline className="size-7 text-black" />
+                <IoMdNotificationsOutline className="size-8 text-black" />
                 {/* display notification length here */}
                 {notifications.length > 0 && (
                   <div className="absolute -right-1 -top-1 flex size-5 items-center justify-center rounded-full bg-tc-orange text-xs text-white">
@@ -261,7 +251,7 @@ const Navigation = () => {
                 <>
                   {/* UnreadMessages */}
                   <Link href="/message" className="relative cursor-pointer">
-                    <BsChat className="size-7 text-black" />
+                    <BsChat className="size-7 text-primary" />
                     {totalUnreadMessages > 0 && (
                       <span className="absolute -right-1 -top-1 flex size-5 items-center justify-center rounded-full bg-tc-orange text-xs text-white">
                         {totalUnreadMessages}
@@ -272,7 +262,7 @@ const Navigation = () => {
                     className="relative cursor-pointer"
                     onClick={() => router.push(notificationRoute)}
                   >
-                    <IoMdNotificationsOutline className="size-8 text-black" />
+                    <IoMdNotificationsOutline className="size-8 text-primary" />
                     {/* display notification length here */}
                     {notifications.length > 0 && (
                       <div className="absolute -right-1 -top-1 flex size-5 items-center justify-center rounded-full bg-tc-orange text-xs text-white">
@@ -335,4 +325,5 @@ const Navigation = () => {
   );
 };
 
+Navigation.displayName = "DesktopNavigation";
 export default Navigation;

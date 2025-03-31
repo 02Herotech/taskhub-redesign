@@ -1,0 +1,31 @@
+<svg width="667" height="147" viewBox="0 0 667 147" fill="none" xmlns="http://www.w3.org/2000/svg">
+<foreignObject x="-99" y="-100" width="866" height="345"><div xmlns="http://www.w3.org/1999/xhtml" style="backdrop-filter:blur(50px);clip-path:url(#bgblur_0_10338_25833_clip_path);height:100%;width:100%"></div></foreignObject><g filter="url(#filter0_f_10338_25833)" data-figma-bg-blur-radius="100">
+<path d="M334 145C594.244 145 667 0 667 0H1C1 0 73.7563 145 334 145Z" fill="url(#paint0_linear_10338_25833)" fill-opacity="0.3"/>
+</g>
+<defs>
+<filter id="filter0_f_10338_25833" x="-99" y="-100" width="866" height="345" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+<feGaussianBlur stdDeviation="1" result="effect1_foregroundBlur_10338_25833"/>
+</filter>
+<clipPath id="bgblur_0_10338_25833_clip_path" transform="translate(99 100)"><path d="M334 145C594.244 145 667 0 667 0H1C1 0 73.7563 145 334 145Z"/>
+</clipPath><linearGradient id="paint0_linear_10338_25833" x1="667" y1="72.5" x2="1" y2="72.5" gradientUnits="userSpaceOnUse">
+<stop stop-color="#EAE7F3"/>
+<stop offset="0.185185" stop-color="#D7D2E8"/>
+<stop offset="0.342434" stop-color="#C5BEDE"/>
+<stop offset="0.474286" stop-color="#B3AAD3"/>
+<stop offset="0.58328" stop-color="#A297CA"/>
+<stop offset="0.671958" stop-color="#9284C0"/>
+<stop offset="0.742857" stop-color="#8373B7"/>
+<stop offset="0.798519" stop-color="#7463AF"/>
+<stop offset="0.841482" stop-color="#6754A7"/>
+<stop offset="0.874286" stop-color="#5C47A1"/>
+<stop offset="0.899471" stop-color="#513B9B"/>
+<stop offset="0.919577" stop-color="#493296"/>
+<stop offset="0.937143" stop-color="#412A92"/>
+<stop offset="0.954709" stop-color="#3C248E"/>
+<stop offset="0.974815" stop-color="#39208D"/>
+<stop offset="1" stop-color="#381F8C"/>
+</linearGradient>
+</defs>
+</svg>

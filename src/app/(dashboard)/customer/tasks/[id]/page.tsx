@@ -20,12 +20,15 @@ import { useSession } from "next-auth/react";
 import Popup from "@/components/global/Popup";
 import Link from "next/link";
 import useAxios from "@/hooks/useAxios";
+import { FaChevronDown, FaStar } from "react-icons/fa6";
+import Offer from "./Offer";
 
 const NewTaskDetails = ({ params }: { params: { id: string } }) => {
   const id = params.id;
   const session = useSession();
   const isEnabled = session.data?.user.user.enabled;
   const authInstance = useAxios();
+  const [viewAll, setViewAll] = useState(false);
 
   const {
     data: task,
@@ -41,6 +44,7 @@ const NewTaskDetails = ({ params }: { params: { id: string } }) => {
 
   useEffect(() => {
     const updateUserData = async () => {
+      if (isEnabled) return;
       try {
         const { data } = await authInstance.get("customer/profile");
         if (!data.isEnabled) return;
@@ -78,6 +82,24 @@ const NewTaskDetails = ({ params }: { params: { id: string } }) => {
     };
   }, [refetch]);
 
+  const date = task?.taskDate
+    ? new Date(task.taskDate[0], task.taskDate[1] - 1, task.taskDate[2])
+    : new Date();
+  const day = date.getDate();
+  const month = date.getMonth();
+  const monthName = monthNames[month];
+  const dayOfWeek = date.getDay();
+  const dayOfWeekName = dayOfWeekNames[dayOfWeek];
+  let daySuffix: string;
+  if (day === 11 || day === 12 || day === 13) {
+    daySuffix = "th";
+  } else {
+    daySuffix = suffixes[day % 10] || suffixes[0]; // Default to "th" if suffix is undefined
+  }
+  const formattedDate = `${dayOfWeekName}, ${monthName} ${day}${daySuffix}`;
+
+  const isAssigned = task?.taskStatus === "ASSIGNED";
+
   if (isLoading) {
     return (
       <div className="flex h-[full] w-full items-center justify-center">
@@ -98,33 +120,6 @@ const NewTaskDetails = ({ params }: { params: { id: string } }) => {
       </div>
     );
   }
-
-  const date = task?.taskDate
-    ? new Date(task.taskDate[0], task.taskDate[1] - 1, task.taskDate[2])
-    : new Date();
-  const day = date.getDate();
-  const month = date.getMonth();
-  const monthName = monthNames[month];
-  const dayOfWeek = date.getDay();
-  const dayOfWeekName = dayOfWeekNames[dayOfWeek];
-  let daySuffix;
-  if (day === 11 || day === 12 || day === 13) {
-    daySuffix = "th";
-  } else {
-    daySuffix = suffixes[day % 10] || suffixes[0]; // Default to "th" if suffix is undefined
-  }
-  const formattedDate = `${dayOfWeekName}, ${monthName} ${day}${daySuffix}`;
-  const hours = date.getHours();
-  const minutes = date.getMinutes();
-
-  let formattedTime;
-  if (hours >= 12) {
-    formattedTime = `${hours === 12 ? 12 : hours - 12}:${(minutes < 10 ? "0" : "") + minutes} PM`;
-  } else {
-    formattedTime = `${hours === 0 ? 12 : hours}:${(minutes < 10 ? "0" : "") + minutes} AM`;
-  }
-
-  const isAssigned = task?.taskStatus === "ASSIGNED";
 
   return (
     <section className="py-5 font-satoshi lg:px-10 lg:py-14">
@@ -280,6 +275,56 @@ const NewTaskDetails = ({ params }: { params: { id: string } }) => {
       )}
       {offers && offers.length > 0 && (
         <CustomerTaskOffers taskId={Number(id)} posterId={task.posterId} />
+      )}
+
+      {/* Change "offers && offers.length > 0" to false  */}
+      {false && (
+        <div className="mt-14 min-h-96">
+          <header className="mb-6 mt-10 text-[#E58C06]">
+            <div className="mb-3 flex items-center justify-between">
+              <h2 className="font-satoshiBold text-xl font-bold lg:text-3xl">
+                Offers
+              </h2>
+              <button
+                className="flex items-center gap-3"
+                onClick={() => setViewAll(!viewAll)}
+              >
+                <span className="font-satoshiBold font-bold">
+                  {viewAll ? "View less" : "View all"}
+                </span>
+                <FaChevronDown />
+              </button>
+            </div>
+            <p className="font-satoshiBold text-base font-bold text-[#403E44] sm:text-lg">
+              <strong className="font-bold text-primary">Note: </strong>
+              Before you accept an Offer...
+            </p>
+            <p className="font-satoshiMedium text-[15px] text-[#55535A] sm:text-lg">
+              ✅ Converse with the service provider to ensure they’re the right
+              fit.
+            </p>
+            <p className="font-satoshiMedium text-[15px] text-[#55535A] sm:text-lg">
+              ✅{" "}
+              <strong className="font-satoshiBold font-bold text-primary">
+                Edit your task details
+              </strong>{" "}
+              (if necessary)—especially the price—to match what you both agreed
+              on.
+            </p>
+          </header>
+
+          <ul className="space-y-3">
+            {offers?.map((offer) => (
+              <Offer
+                key={offer.id}
+                offer={offer}
+                taskId={Number(id)}
+                refetch={refetch}
+                isAssigned={isAssigned}
+              />
+            ))}
+          </ul>
+        </div>
       )}
       {showAssignForm && (
         <AssignOfferForm

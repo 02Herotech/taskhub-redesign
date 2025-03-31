@@ -1,5 +1,4 @@
 "use client";
-
 import { useEffect, useLayoutEffect, useState } from "react";
 import { FaHome } from "react-icons/fa";
 import { MdPersonalInjury } from "react-icons/md";
@@ -23,6 +22,9 @@ import Image from "next/image";
 import { defaultUserDetails } from "@/data/data";
 import BoxFilter from "@/components/main/marketplace/BoxFilter";
 import instance from "@/utils/axios.config";
+import PopupNew from "@/components/global/Popup/PopupTwo";
+import { getCookie, deleteCookie } from "cookies-next";
+import Link from "next/link";
 
 const categoryIcons = [
   FaHome,
@@ -50,6 +52,15 @@ const MareketPlace = () => {
   const [fetchedUserData, setFetchedUserData] = useState(defaultUserDetails);
   const [loadingProfile, setLoadingProfile] = useState(true);
   const [hasClosedPopup, setHasClosedPopup] = useState(false);
+  const [firstTimePopup, setfirstTimePopup] = useState(false);
+
+  useEffect(() => {
+    if (session.data && getCookie("firstLogin")) {
+      //!TODO Would show it even if it's a different login
+      setfirstTimePopup(true);
+      deleteCookie("firstLogin");
+    }
+  }, [session.data]);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -132,56 +143,61 @@ const MareketPlace = () => {
 
   const categoriesSlice = categories.slice(0, 8);
 
+  const userType = session.data?.user.user.roles[0];
+
   return (
     <main className="mx-auto max-w-screen-2xl">
-      {showPopup && (
-        <Popup
-          isOpen={showPopup}
-          onClose={() => {
-            setShowPopup(false);
-            setHasClosedPopup(true);
-          }}
-        >
-          <div className="relative h-[312px] w-full max-lg:mx-2 lg:w-[577px]">
-            <div className="flex h-full flex-col items-center justify-center space-y-7 text-center">
-              <h1 className="font-clashDisplay text-4xl font-semibold text-[#2A1769]">
-                Welcome to Olójà
-              </h1>
-              <p className="mb-8 font-satoshi text-xl font-medium text-black">
-                We are thrilled to have you! Please complete your profile to get
-                access to all our features.
-              </p>
-              <Button
-                className="rounded-full max-lg:text-sm lg:w-[151px] lg:py-6"
-                onClick={() =>
-                  router.push(
-                    isServiceProvider
-                      ? "/service-provider/profile"
-                      : "/customer/profile",
-                  )
-                }
-              >
-                Go to Profile
-              </Button>
-            </div>
-            <Image
-              src="/assets/images/marketplace/complete-profile-2.png"
-              alt="image"
-              className="absolute bottom-1 left-1 size-1/4 lg:size-[160px] "
-              width={160}
-              height={160}
-            />
-            <Image
-              src="/assets/images/marketplace/complete-profile-1.png"
-              alt="image"
-              className="absolute bottom-0 right-0 size-[70px] lg:size-[110px]"
-              width={110}
-              height={110}
-            />
-          </div>
-        </Popup>
-      )}
       {!isFiltering && <MarketPlaceHeader />}
+
+      <PopupNew
+        isOpen={firstTimePopup}
+        onClose={() => setfirstTimePopup(false)}
+      >
+        <div className="relative mt-6 max-h-[700px] min-w-[320px] max-w-[800px] bg-white p-5 sm:min-w-[560px]">
+          <h3 className="mb-2 text-center font-clashSemiBold text-2xl text-[#2A1769] md:mb-4 md:text-4xl">
+            Congratulations!!!
+          </h3>
+          <div className="mx-auto mb-6 max-w-[500px] space-y-3">
+            <p className="mb-2 text-center text-base font-semibold text-[#2A1769] md:text-2xl">
+              You’re officially welcome to the Hub
+            </p>
+            <p className="text-center text-sm text-[#55535A] sm:text-xl">
+              You just unlocked a world of opportunities🚀
+            </p>
+            <p className="text-center text-sm text-[#55535A] sm:text-xl">
+              <span className="font-semibold text-[#E58C06]">Next Steps?</span>{" "}
+              Complete your profile to stand out and start connecting with the
+              right people!
+            </p>
+          </div>
+          <div className="my-3 flex flex-col justify-center gap-3 sm:flex-row">
+            {userType && (
+              <Link
+                href={
+                  userType === "CUSTOMER"
+                    ? "/customer/add-task"
+                    : "/provide-service"
+                }
+                className="w-full rounded-full border border-primary bg-[#EBE9F4] px-10 py-2 text-center font-satoshiBold font-bold text-primary sm:w-max"
+              >
+                {userType === "CUSTOMER"
+                  ? "Post my first task"
+                  : "Create a listing"}
+              </Link>
+            )}
+            <Link
+              href={
+                userType === "CUSTOMER"
+                  ? "/customer/profile/edit-profile"
+                  : "/service-provider/profile/edit-profile"
+              }
+              className="w-full rounded-full bg-primary px-10 py-2 text-center font-satoshiBold font-bold text-white sm:w-max"
+            >
+              Update Profile
+            </Link>
+          </div>
+        </div>
+      </PopupNew>
 
       <div
         className={`mx-auto flex max-w-screen-xl flex-col px-6 md:px-16 ${isFiltering ? "pt-16 " : "lg:pt-32"}`}

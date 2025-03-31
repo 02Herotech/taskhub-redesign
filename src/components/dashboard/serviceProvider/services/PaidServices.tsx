@@ -40,7 +40,7 @@ const PaidServices = ({
       }));
       setRefresh((prev) => !prev);
     } catch (error: any) {
-      console.log(error.response.data);
+      console.error(error.response.data);
       setModalData((prev) => ({
         ...prev,
         isModalShown: true,

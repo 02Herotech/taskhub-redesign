@@ -1,23 +1,23 @@
 import { FiLogOut } from "react-icons/fi";
-import {
-  AboutUsSvg,
-  BlogSvg,
-  BusinessHubSvg,
-  ContactUsSvg,
-  DashboardSvg,
-  HomeSvg,
-  LoginSvg,
-  MarketPlaceSvg,
-  MessagesSvg,
-  MonetizeSVG,
-  RentShopSvg,
-} from "./svgIcons";
-import React from "react";
+import { FiUser } from "react-icons/fi";
+import { LuClipboard, LuStore } from "react-icons/lu";
+import { IoWalletOutline } from "react-icons/io5";
+import { IconType } from "react-icons";
+import { TbSmartHome } from "react-icons/tb";
+import { MdMailOutline } from "react-icons/md";
+import { FiLogIn } from "react-icons/fi";
+import { IoMdInformationCircleOutline } from "react-icons/io";
+import { MdOutlineHub } from "react-icons/md";
+import { FaRegMoneyBillAlt } from "react-icons/fa";
+import { LuLayoutDashboard } from "react-icons/lu";
+import { GoTasklist } from "react-icons/go";
+import { IoMdNotificationsOutline } from "react-icons/io";
+import { IoSettingsOutline } from "react-icons/io5";
 
 export type LinkRouteTypes = {
   label: string;
   url?: string;
-  icon?: React.ReactNode;
+  icon?: IconType;
   sublinks?: {
     label: string;
     url: string;
@@ -29,20 +29,20 @@ export type LinkRouteTypes = {
 };
 
 export const homeMobileLinks: LinkRouteTypes[] = [
-  {
-    label: "Home",
-    url: "/home",
-    icon: HomeSvg,
-  },
+  // {
+  //   label: "Home",
+  //   url: "/home",
+  //   icon: TbSmartHome,
+  // },
   {
     label: "Marketplace",
     url: "/marketplace",
-    icon: MarketPlaceSvg,
+    icon: LuStore,
   },
   {
     label: "Log in",
     url: "/auth/login",
-    icon: LoginSvg,
+    icon: FiLogIn,
   },
   // {
   //   label: "About us",
@@ -52,12 +52,12 @@ export const homeMobileLinks: LinkRouteTypes[] = [
   {
     label: "How Olója Works",
     url: "/how-oloja-works",
-    icon: AboutUsSvg,
+    icon: IoMdInformationCircleOutline,
   },
   {
     label: "Business Hub",
     url: "/business-hub",
-    icon: BusinessHubSvg,
+    icon: MdOutlineHub,
   },
   // {
   //   label: "Rent a shop",
@@ -67,7 +67,7 @@ export const homeMobileLinks: LinkRouteTypes[] = [
   {
     label: "Monetize your skills",
     url: "/monetize-your-skills",
-    icon: MonetizeSVG,
+    icon: FaRegMoneyBillAlt,
   },
 ];
 
@@ -133,60 +133,101 @@ export const homeLinks: LinkRouteTypes[] = [
 ];
 
 export const mobileServiceProviderLinks: LinkRouteTypes[] = [
+  // {
+  //   label: "Home",
+  //   url: "/service-provider/home",
+  //   icon: TbSmartHome,
+  // },
   {
-    label: "My Dashboard",
-    icon: DashboardSvg,
-    sublinks: [
-      {
-        label: "Profile",
-        url: "/service-provider/profile",
-      },
-      {
-        label: "My Services",
-        url: "/service-provider/services",
-      },
-      {
-        label: "View Jobs",
-        url: "/service-provider/jobs",
-      },
-      {
-        label: "My Notifications",
-        url: "/service-provider/notification",
-      },
-      {
-        label: "Payment and wallet",
-        url: "/service-provider/payment",
-      },
-      {
-        label: "Settings",
-        url: "/service-provider/settings",
-        sublinks: [
-          {
-            label: "Change Password",
-            url: "/service-provider/settings/password",
-          },
-          {
-            label: "Notification settings",
-            url: "/service-provider/settings/notification",
-          },
-        ],
-      },
-    ],
+    label: "Profile",
+    url: "/service-provider/profile",
+    icon: FiUser,
   },
+  {
+    label: "View Jobs",
+    url: "/service-provider/jobs",
+    icon: GoTasklist,
+  },
+  {
+    label: "Notifications",
+    url: "/service-provider/notification",
+    icon: IoMdNotificationsOutline,
+  },
+  {
+    label: "Payment and wallet",
+    url: "/service-provider/payment",
+    icon: IoWalletOutline,
+  },
+
+  // {
+  //   label: "My Dashboard",
+  //   icon: LuLayoutDashboard,
+  //   sublinks: [
+  //     {
+  //       label: "Profile",
+  //       url: "/service-provider/profile",
+  //     },
+  //     {
+  //       label: "My Services",
+  //       url: "/service-provider/services",
+  //     },
+  //     {
+  //       label: "View Jobs",
+  //       url: "/service-provider/jobs",
+  //     },
+  //     {
+  //       label: "My Notifications",
+  //       url: "/service-provider/notification",
+  //     },
+  //     {
+  //       label: "Payment and wallet",
+  //       url: "/service-provider/payment",
+  //     },
+  //     {
+  //       label: "Settings",
+  //       url: "/service-provider/settings",
+  //       sublinks: [
+  //         {
+  //           label: "Change Password",
+  //           url: "/service-provider/settings/password",
+  //         },
+  //         {
+  //           label: "Notification settings",
+  //           url: "/service-provider/settings/notification",
+  //         },
+  //       ],
+  //     },
+  //   ],
+  // },
   {
     label: "Explore Tasks",
     url: "/explore",
-    icon: MarketPlaceSvg,
+    icon: LuStore,
   },
   {
     label: "Marketplace",
     url: "/marketplace",
-    icon: MarketPlaceSvg,
+    icon: LuStore,
   },
   {
     label: "Messages",
     url: "/message",
-    icon: MessagesSvg,
+    icon: MdMailOutline,
+  },
+  {
+    label: "Settings",
+    url: "/service-provider/settings",
+    icon: IoSettingsOutline,
+    sublinks: [
+      {
+        label: "Change Password",
+        url: "/service-provider/settings/password",
+      },
+      {
+        label: "Notification settings",
+        url: "/service-provider/settings/notification",
+      },
+    ],
   },
   // {
   //   label: "Contact us",
@@ -196,51 +237,86 @@ export const mobileServiceProviderLinks: LinkRouteTypes[] = [
 ];
 
 export const mobileCustomerLinks: LinkRouteTypes[] = [
+  // {
+  //   label: "Home",
+  //   url: "/customer/home",
+  //   icon: TbSmartHome,
+  // },
   {
-    label: "My Dashboard",
-    icon: DashboardSvg,
-    sublinks: [
-      {
-        label: "Profile",
-        url: "/customer/profile",
-      },
-      {
-        label: "My Tasks",
-        url: "/customer/tasks",
-      },
-      {
-        label: "My Notifications",
-        url: "/customer/notifications",
-      },
-      {
-        label: "Payment",
-        url: "/customer/payment?tab=paymentHistory",
-      },
-      {
-        label: "Settings",
-        url: "/customer/settings",
-        sublinks: [
-          {
-            label: "Change Password",
-            url: "/customer/password",
-          },
-          {
-            label: "Notification settings",
-            url: "/customer/notification-settings",
-          },
-        ],
-      },
-    ],
+    label: "Profile",
+    url: "/customer/profile",
+    icon: FiUser,
   },
+  {
+    label: "My Tasks",
+    url: "/customer/tasks",
+    icon: LuClipboard,
+  },
+  {
+    label: "Payments",
+    url: "/customer/payment?tab=paymentHistory",
+    icon: IoWalletOutline,
+  },
+  // {
+  //   label: "My Dashboard",
+  //   icon: DashboardSvg,
+  //   sublinks: [
+  //     {
+  //       label: "Profile",
+  //       url: "/customer/profile",
+  //     },
+  //     {
+  //       label: "My Tasks",
+  //       url: "/customer/tasks",
+  //     },
+  //     {
+  //       label: "My Notifications",
+  //       url: "/customer/notifications",
+  //     },
+  //     {
+  //       label: "Payment",
+  //       url: "/customer/payment?tab=paymentHistory",
+  //     },
+  //     {
+  //       label: "Settings",
+  //       url: "/customer/settings",
+  //       sublinks: [
+  //         {
+  //           label: "Change Password",
+  //           url: "/customer/password",
+  //         },
+  //         {
+  //           label: "Notification settings",
+  //           url: "/customer/notification-settings",
+  //         },
+  //       ],
+  //     },
+  //   ],
+  // },
   {
     label: "Marketplace",
     url: "/marketplace",
-    icon: MarketPlaceSvg,
+    icon: LuStore,
   },
   {
     label: "Messages",
     url: "/message",
-    icon: MessagesSvg,
+    icon: MdMailOutline,
+  },
+  {
+    label: "Settings",
+    url: "/customer/settings",
+    icon: IoSettingsOutline,
+    sublinks: [
+      {
+        label: "Change Password",
+        url: "/customer/password",
+      },
+      {
+        label: "Notification settings",
+        url: "/customer/notification-settings",
+      },
+    ],
   },
   // {
   //   label: "Contact us",

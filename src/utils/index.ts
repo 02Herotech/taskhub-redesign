@@ -307,6 +307,7 @@ export const arrayToDate = (arr: number[]) => {
   const [year, month, day, hour, minute, second] = arr;
   return new Date(year, month - 1, day, hour, minute, second);
 };
+
 export const isToday = (arr: number[]) => {
   const date = arrayToDate(arr);
   const today = new Date();
