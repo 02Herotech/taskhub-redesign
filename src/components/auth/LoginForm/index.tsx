@@ -79,8 +79,8 @@ const LoginForm = () => {
       deleteCookie("redirectToExploreDetail");
     }
   };
-
-  const onSubmit: SubmitHandler<SignInRequest> = async (payload) => {
+  
+   const onSubmit: SubmitHandler<SignInRequest> = async (payload) => {
     setIsLoading(true);
     setError(null);
     try {
@@ -105,7 +105,6 @@ const LoginForm = () => {
       setIsLoading(false);
     }
   };
-
   return (
     <section className="mx-auto w-full max-lg:p-5 xl:w-[554px]">
       <div className="space-y-10">
