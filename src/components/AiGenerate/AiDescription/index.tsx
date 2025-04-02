@@ -11,6 +11,7 @@ import icon2 from "../../../../public/assets/images/serviceProvider/AiButton2.pn
 import aiLine from "../../../../public/assets/images/serviceProvider/AiLine.svg";
 import Image from "next/image";
 import { TypeAnimation } from "react-type-animation";
+import Popup from "@/components/global/Popup/PopupTwo";
 
 interface Message {
   id: number;
@@ -103,8 +104,8 @@ const AiDesciption: React.FC<AiGenerateProps> = ({
       const url = `${process.env.NEXT_PUBLIC_API_URL}/listing/create-listing/category/content-generate?category=${encodeURIComponent(aiQuery)}`;
       const response = await axios.get(url, {
         headers: {
-           Authorization: `Bearer ${userToken}`
-        }
+          Authorization: `Bearer ${userToken}`,
+        },
       });
       const data = await response.data[0]?.message?.content;
       setConversation([
@@ -140,8 +141,8 @@ const AiDesciption: React.FC<AiGenerateProps> = ({
       const url = `${process.env.NEXT_PUBLIC_API_URL}/listing/create-listing/category/content-generate?category=${encodeURIComponent(currentQuery)}`;
       const response = await axios.get(url, {
         headers: {
-           Authorization: `Bearer ${userToken}`
-        }
+          Authorization: `Bearer ${userToken}`,
+        },
       });
       const data = await response.data[0]?.message?.content;
       const newConversation: Message[] = [
@@ -175,8 +176,8 @@ const AiDesciption: React.FC<AiGenerateProps> = ({
       const url = `${process.env.NEXT_PUBLIC_API_URL}/listing/create-listing/category/content-generate?category=${encodeURIComponent(AiSuggestions[index])}`;
       const response = await axios.get(url, {
         headers: {
-           Authorization: `Bearer ${userToken}`
-        }
+          Authorization: `Bearer ${userToken}`,
+        },
       });
       const data = await response.data[0]?.message?.content;
       setConversation([
@@ -210,7 +211,6 @@ const AiDesciption: React.FC<AiGenerateProps> = ({
     }
   }, [isNewQuery, conversation]);
 
-
   useEffect(() => {
     if (aiChatView) {
       document.body.classList.add("no-AiScroll");
@@ -225,14 +225,16 @@ const AiDesciption: React.FC<AiGenerateProps> = ({
   const handleFocus = () => {
     document.body.style.overflow = "auto";
     setTimeout(() => {
-      textareaRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+      textareaRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
     }, 300); // Delay to account for keyboard animation
   };
 
   const handleBlur = () => {
     document.body.style.overflow = "hidden"; // Revert to non-scrollable
   };
-
 
   // const adjustTextareaHeight = () => {
   //   if (textareaRef.current) {
@@ -249,14 +251,13 @@ const AiDesciption: React.FC<AiGenerateProps> = ({
   //   }
   // };
 
-
   const adjustTextareaHeight = () => {
     // console.log(textareaRef.current.style.height)
     if (textareaRef.current && containerRef.current) {
       textareaRef.current.style.height = "auto";
       const newTextareaHeight = Math.min(
         textareaRef.current.scrollHeight,
-        window.innerWidth < 1024 ? 72 : 96
+        window.innerWidth < 1024 ? 72 : 96,
       );
       textareaRef.current.style.height = `${newTextareaHeight}px`;
     }
@@ -265,7 +266,6 @@ const AiDesciption: React.FC<AiGenerateProps> = ({
   useEffect(() => {
     adjustTextareaHeight();
   }, [aiQuery]);
-
 
   return (
     <div>
@@ -293,7 +293,7 @@ const AiDesciption: React.FC<AiGenerateProps> = ({
               </button>{" "}
             </span>
           </div>
-          <div className="hidden lg:block absolute right-2 top-[20%] h-full w-[20%] ">
+          <div className="absolute right-2 top-[20%] hidden h-full w-[20%] lg:block ">
             {Array.from({ length: 7 }).map((_, index) => (
               <div
                 key={index}
@@ -319,171 +319,140 @@ const AiDesciption: React.FC<AiGenerateProps> = ({
         </button>
       )}
 
-      {aiChatView && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 lg:py-2 py-1">
-          <div ref={containerRef} className="mx-auto flex flex-col justify-between h-full lg:h-[95%] w-[90%] rounded-[16px] bg-[#FFFFFF] lg:p-10 lg:pt-7 p-5 text-white md:w-[60%] lg:w-[50%]">
-            <div className="">
-              <div className=" flex justify-end">
-                <div
-                  className="flex h-[30px] w-[30px] items-center justify-center rounded-full bg-[#EBE9F4] hover:cursor-pointer"
-                  onClick={AiChatView}
-                >
-                  <IoCloseCircleOutline color="#4E5158" size={20} className="" />
-                </div>
-              </div>
-              <div>
-                <h2 className="font-clashBold text-[25px] text-primary lg:text-[35px]">
-                  Hello, {userName}
-                </h2>
-                <p className="pb-3 font-clashMedium text-[16px] text-[#716F78]">
-                  Here are some suggested questions you can ask me
-                </p>
-              </div>
-            </div>
+      <Popup isOpen={aiChatView} onClose={AiChatView}>
+        <div className="max-h-[650px] min-w-[320px] max-w-[600px] overflow-y-auto bg-white p-5 sm:max-h-[450px] sm:min-w-[560px]">
+          <div>
+            <h2 className="font-clashBold text-[25px] text-primary lg:text-[35px]">
+              Hello, {userName}
+            </h2>
+            <p className="pb-3 font-clashMedium text-[16px] text-[#716F78]">
+              Here are some suggested questions you can ask me
+            </p>
+          </div>
 
-            <div className="conversation lg:h-[70%] h-[55%] space-y-4 overflow-y-auto flex-1">
-              {conversation.length === 0 && (
-                <div className="mx-auto w-full justify-between space-y-3 lg:flex lg:space-y-0">
-                  {AiSuggestions.map((entry, index) => (
-                    <p
-                      key={index}
-                      className="mr-[5%] rounded-[13px] border border-primary bg-white p-2 font-satoshiMedium text-[14px] text-primary transition-all  duration-500 hover:translate-x-1 hover:translate-y-1 hover:transform hover:cursor-pointer lg:w-[49%] "
-                      onClick={() => getAiSuggestions(index)}
-                    >
-                      {entry}
-                    </p>
-                  ))}
-                </div>
-              )}
-
-              {conversation.map((entry, index) => (
-                <div key={index}>
-                  {entry.type === "user" && (
-                    <div className="flex justify-end">
-                      <p className="mr-[5%] rounded-[14px] bg-primary p-2 text-[16px] text-[#ffffff] w-[85%] lg:w-[50%] break-words">
-                        {entry.text}
-                      </p>
-                    </div>
-                  )}
-
-                  {entry.type === "ai" && index < conversation.length - 1 && (
-                    <div className="flex gap-2">
-                      <span className="ml-2 mt-1">
-                        <Image alt="" src={icon2} width={20} height={20} />
-                      </span>
-                      <p className="w-[85%] font-satoshiMedium text-primary">
-                        {" "}
-                        {entry.text}
-                      </p>
-                    </div>
-                  )}
-
-                  {entry.type === "ai" && index === conversation.length - 1 && (
-                    <div className="flex gap-2">
-                      <span className="ml-2 mt-1">
-                        <Image alt="" src={icon2} width={20} height={20} />
-                      </span>
-                      <p className="w-[85%] font-satoshiMedium text-primary">
-                        {isNewQuery ? (
-                          <TypeAnimation
-                            sequence={[entry.text]}
-                            speed={70}
-                            wrapper="span"
-                            style={{ fontSize: "16px", margin: "0" }}
-                            repeat={0}
-                            cursor={false}
-                          />
-                        ) : (
-                          entry.text
-                        )}
-                      </p>
-                    </div>
-                  )}
-
-                  {animationFinished[entry.id] && (
-                    <p
-                      className={`mt-6 ${entry.type === "user" ? "hidden" : "my-2 w-full"}`}
-                    >
-                      <span className="font-satoshi text-[15px] font-bold text-primary">
-                        Are you happy with this suggestion? you can
-                      </span>{" "}
-                      <span
-                        onClick={() => setServiceDetails(index)}
-                        className="mt-5 rounded-[20px] bg-[#FE9B07] px-4 py-1 text-[14px] text-white hover:cursor-pointer lg:mt-0 lg:p-2"
-                      >
-                        USE
-                      </span>{" "}
-                      <span
-                        onClick={getMoreSuggestions}
-                        className="font-satoshi text-[12px] font-bold text-primary underline hover:cursor-pointer"
-                      >
-                        or get more suggestions
-                      </span>
-                    </p>
-                  )}
-                  <div ref={conversationEndRef} />
-                </div>
-              ))}
-              <div ref={conversationEndRef} />
-            </div>
-
-            <div className="">
-              <p className="h-[15px] mb-1 ">
-                {AiLoading ? (
-                  <BeatLoader className="text-primary" size={12} />
-                ) : (
-                  ""
-                )}
-              </p>
-
-              <form className="flex items-center space-x-4 py-2 rounded-[20px] lg:px-4 px-2 font-medium border-[2px] border-primary">
-                <textarea
-                  name="aiQuery"
-                  placeholder="Enter a request here"
-                  onChange={handleInputChange}
-                  value={aiQuery}
-                  className="small-scrollbar max-h-20 w-full resize-none text-black rounded-md p-3 outline-none"
-                  required
-                  // rows={1}
-                  ref={textareaRef}
-                />
-                {/* <textarea
-                  className="small-scrollbar max-h-20 w-full resize-none text-black rounded-md p-3 outline-none"
-                  value={aiQuery}
-                  ref={textareaRef}
-                  onChange={handleInputChange}
-                  onFocus={handleFocus}
-                  onBlur={handleBlur}
-                  // onKeyDown={(event) => {
-                  //   if (event.key === "Enter") {
-                  //     sendMessage(message);
-                  //     setMessage("");
-                  //   }
-                  // }}
-                  placeholder="Enter a request here"
-                /> */}
-                <div
-                  className=""
-                  onClick={handleAiChatQuery}
-                >
-                  <BiSend
-                    size={26}
-                    className="transform text-primary ease-in-out hover:scale-110 hover:cursor-pointer"
-                  />
-                </div>
-              </form>
-              {emptyQuerryField && (
-                <span className="pt-1">
-
-                  <p className="font-clashDisplay text-center lg:text-lg text-xs text-red-500">
-                    Kindly enter your request
+          <div className="conversation h-[55%] flex-1 space-y-4 overflow-y-auto lg:h-[70%]">
+            {conversation.length === 0 && (
+              <div className="mx-auto w-full justify-between space-y-3 lg:flex lg:space-y-0">
+                {AiSuggestions.map((entry, index) => (
+                  <p
+                    key={index}
+                    className="mr-[5%] rounded-[13px] border border-primary bg-white p-2 font-satoshiMedium text-[14px] text-primary transition-all  duration-500 hover:translate-x-1 hover:translate-y-1 hover:transform hover:cursor-pointer lg:w-[49%] "
+                    onClick={() => getAiSuggestions(index)}
+                  >
+                    {entry}
                   </p>
-                </span>
+                ))}
+              </div>
+            )}
+
+            {conversation.map((entry, index) => (
+              <div key={index}>
+                {entry.type === "user" && (
+                  <div className="flex justify-end">
+                    <p className="mr-[5%] w-[85%] break-words rounded-[14px] bg-primary p-2 text-[16px] text-[#ffffff] lg:w-[50%]">
+                      {entry.text}
+                    </p>
+                  </div>
+                )}
+
+                {entry.type === "ai" && index < conversation.length - 1 && (
+                  <div className="flex gap-2">
+                    <span className="ml-2 mt-1">
+                      <Image alt="" src={icon2} width={20} height={20} />
+                    </span>
+                    <p className="w-[85%] font-satoshiMedium text-primary">
+                      {" "}
+                      {entry.text}
+                    </p>
+                  </div>
+                )}
+
+                {entry.type === "ai" && index === conversation.length - 1 && (
+                  <div className="flex gap-2">
+                    <span className="ml-2 mt-1">
+                      <Image alt="" src={icon2} width={20} height={20} />
+                    </span>
+                    <p className="w-[85%] font-satoshiMedium text-primary">
+                      {isNewQuery ? (
+                        <TypeAnimation
+                          sequence={[entry.text]}
+                          speed={70}
+                          wrapper="span"
+                          style={{ fontSize: "16px", margin: "0" }}
+                          repeat={0}
+                          cursor={false}
+                        />
+                      ) : (
+                        entry.text
+                      )}
+                    </p>
+                  </div>
+                )}
+
+                {animationFinished[entry.id] && (
+                  <p
+                    className={`mt-6 ${entry.type === "user" ? "hidden" : "my-2 w-full"}`}
+                  >
+                    <span className="font-satoshi text-[15px] font-bold text-primary">
+                      Are you happy with this suggestion? you can
+                    </span>{" "}
+                    <span
+                      onClick={() => setServiceDetails(index)}
+                      className="mt-5 rounded-[20px] bg-[#FE9B07] px-4 py-1 text-[14px] text-white hover:cursor-pointer lg:mt-0 lg:p-2"
+                    >
+                      USE
+                    </span>{" "}
+                    <span
+                      onClick={getMoreSuggestions}
+                      className="font-satoshi text-[12px] font-bold text-primary underline hover:cursor-pointer"
+                    >
+                      or get more suggestions
+                    </span>
+                  </p>
+                )}
+                <div ref={conversationEndRef} />
+              </div>
+            ))}
+            <div ref={conversationEndRef} />
+          </div>
+
+          <div className="">
+            <p className="mb-1 h-[15px] ">
+              {AiLoading ? (
+                <BeatLoader className="text-primary" size={12} />
+              ) : (
+                ""
               )}
+            </p>
+
+            <div className="flex items-center space-x-4 rounded-[20px] border-[2px] border-primary px-2 py-2 font-medium">
+              <textarea
+                name="aiQuery"
+                placeholder="Enter a request here"
+                onChange={handleInputChange}
+                value={aiQuery}
+                className="small-scrollbar max-h-20 w-full resize-none rounded-md p-1 text-black outline-none"
+                required
+                ref={textareaRef}
+              />
+
+              <div onClick={handleAiChatQuery}>
+                <BiSend
+                  size={26}
+                  className="transform text-primary ease-in-out hover:scale-110 hover:cursor-pointer"
+                />
+              </div>
             </div>
+            {emptyQuerryField && (
+              <span className="pt-1">
+                <p className="font-clashDisplay text-center text-xs text-red-500 lg:text-lg">
+                  Kindly enter your request
+                </p>
+              </span>
+            )}
           </div>
         </div>
-      )}
+      </Popup>
     </div>
   );
 };
