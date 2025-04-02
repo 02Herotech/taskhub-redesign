@@ -1,8 +1,6 @@
-import { defaultUserDetails } from "@/data/data";
 import Loading from "@/shared/loading";
 import { RootState } from "@/store";
 import { formatDateFromNumberArray } from "@/utils";
-import axios from "axios";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
@@ -11,15 +9,15 @@ import { CiEdit, CiLocationOn } from "react-icons/ci";
 import { useSelector } from "react-redux";
 import useAxios from "@/hooks/useAxios";
 
-
 const ProfileHeader = () => {
-  const [fetchedUserData, setFetchedUserData] = useState(defaultUserDetails);
   const userProfile = useSelector((state: RootState) => state.userProfile);
   const session = useSession();
   const user = session?.data?.user?.user;
   const token = session?.data?.user?.accessToken;
-  const userSignUpBonus = (session?.data?.user?.signUpBonusWallet?.balance ?? 0).toFixed(2);
-  const userRewardPoints = (session?.data?.user?.rewardsWallet?.balance ?? 0);
+  const userSignUpBonus = (
+    session?.data?.user?.signUpBonusWallet?.balance ?? 0
+  ).toFixed(2);
+  const userRewardPoints = session?.data?.user?.rewardsWallet?.balance ?? 0;
   const isServiceProvider = user?.roles[0] === "SERVICE_PROVIDER";
   const editProfileLink = isServiceProvider
     ? "/service-provider/profile/edit-profile"
@@ -28,41 +26,21 @@ const ProfileHeader = () => {
   const location = user?.address?.state || "Australia";
   const [rewardsWallet, setRewardsWallet] = useState<RewardsWallet>();
   const authInstance = useAxios();
-  
 
   const handleRewardsWallet = async () => {
     try {
-        // setLoading(true);
-        const { data } = await authInstance.get("rewards/wallet");
-        setRewardsWallet(data.data);
-        console.log("rewards", data.data);
-        } catch (error: any) {
-            console.error(error.response?.data || error);
-        } 
-            // setLoading(false);
+      // setLoading(true);
+      const { data } = await authInstance.get("rewards/wallet");
+      setRewardsWallet(data.data);
+      // console.log("rewards", data.data);
+    } catch (error: any) {
+      console.error(error.response?.data || error);
+    }
+    // setLoading(false);
   };
 
-  //! Data fetch thats not used
-  //Todo Re-visit
   useEffect(() => {
-    const fetchUserData = async () => {
-      if (!token) return;
-      try {
-        const url = `${process.env.NEXT_PUBLIC_API_URL}/service_provider/profile`;
-        const { data } = await axios.get(url, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "multipart/form-data",
-          },
-        });
-        setFetchedUserData(data);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
     handleRewardsWallet();
-    fetchUserData();
 
     const interval = setInterval(() => {
       handleRewardsWallet();
@@ -110,19 +88,27 @@ const ProfileHeader = () => {
               </p>
 
               {/* Bonus Cards */}
-              <div className="flex items-center gap-4 mt-2">
-                <div className="flex flex-col items-center justify-center w-28 h-24 bg-[#EBE9F4] rounded-lg shadow-md">
-                  <p className="text-3xl font-bold text-orange-normal">${userSignUpBonus}</p>
-                  <p className="text-md font-bold text-primary">Bonus credits</p>
+              <div className="mt-2 flex items-center gap-4">
+                <div className="flex h-24 w-28 flex-col items-center justify-center rounded-lg bg-[#EBE9F4] shadow-md">
+                  <p className="text-3xl font-bold text-orange-normal">
+                    ${userSignUpBonus}
+                  </p>
+                  <p className="text-md font-bold text-primary">
+                    Bonus credits
+                  </p>
                 </div>
-                <div className="h-24 w-[1px] bg-primary"></div> {/* Separator Line */}
-                <div className="flex flex-col items-center justify-center w-28 h-24 bg-[#EBE9F4] rounded-lg shadow-md">
-                  <p className="text-3xl font-bold text-orange-normal">{rewardsWallet?.balance}</p>
-                  <p className="text-md font-bold text-primary">Points reward </p>
+                <div className="h-24 w-[1px] bg-primary"></div>{" "}
+                {/* Separator Line */}
+                <div className="flex h-24 w-28 flex-col items-center justify-center rounded-lg bg-[#EBE9F4] shadow-md">
+                  <p className="text-3xl font-bold text-orange-normal">
+                    {rewardsWallet?.balance}
+                  </p>
+                  <p className="text-md font-bold text-primary">
+                    Points reward{" "}
+                  </p>
                 </div>
               </div>
             </div>
-
           </div>
 
           <div className="hidden flex-row gap-4 max-md:justify-between max-md:py-4 lg:flex lg:flex-col lg:items-end">
@@ -132,7 +118,7 @@ const ProfileHeader = () => {
             >
               Edit Account details
             </Link>
-            <p className="text-sm font-medium text-[#140B31] flex items-center gap-1">
+            <p className="flex items-center gap-1 text-sm font-medium text-[#140B31]">
               <CiLocationOn />
               {location}
             </p>

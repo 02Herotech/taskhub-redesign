@@ -3,7 +3,7 @@ declare interface ChatContactTypes {
   name: string;
   profilePicture: string | null;
   newMessages: number | null;
-  lastChatTimestamp: number| null;
+  lastChatTimestamp: number | null;
   lastMessage: string | null;
 }
 
@@ -33,8 +33,10 @@ declare interface Offer {
   fullName: string;
   message: string;
   createdAt: number;
+  offerAmount?: number;
   service_provider_profile_Image: string;
   offerThreadList: {
+    offerAmount?: number;
     taskId: number;
     offerId: string;
     message: string;

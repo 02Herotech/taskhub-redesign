@@ -12,6 +12,7 @@ function SessionTimeout() {
   const timeoutPopup = useSelector((state: RootState) => state.timeoutPopup);
   const dispatch = useDispatch();
   const resetAuth = (redirectTo = "/auth/login") => {
+    localStorage.removeItem("auth");
     dispatch(removeUserProfile());
     signOut({ callbackUrl: `${process.env.NEXT_PUBLIC_URL}${redirectTo}` });
     dispatch(setAuthStatus(false));

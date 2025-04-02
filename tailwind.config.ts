@@ -65,6 +65,7 @@ const config: Config = {
         clashMedium: "ClashMedium, sans-serif",
         clashSemiBold: "ClashSemiBold, sans-serif",
         clashBold: "ClashBold, sans-serif",
+        manrope: ["var(--font-manrope), sans-serif"],
       },
       container: {
         center: true,

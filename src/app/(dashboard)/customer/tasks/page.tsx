@@ -186,7 +186,7 @@ const CustomerTasksPage: React.FC = () => {
         ))}
       </div>
 
-      <div className="mt-10">{renderContent()}</div>
+      <div className="mt-10 pb-5">{renderContent()}</div>
     </div>
   );
 };

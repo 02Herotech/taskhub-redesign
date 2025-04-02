@@ -26,6 +26,7 @@ import { Calendar } from "primereact/calendar";
 import useSuburbData, { SurburbInfo } from "@/hooks/useSuburbData";
 import { CiLocationOn } from "react-icons/ci";
 import UploadIdPopup from "@/components/serviceProviderDashboard/profile/UploadIdPopup";
+import UploadProfilePicture from "./UploadProfilePicture";
 
 const idTypeObject = [
   { label: "Medicare Card", value: "MEDICARE_CARD" },
@@ -208,6 +209,8 @@ const EditProfile = () => {
     fetchUserData();
   }, [isServiceProvider, dispatch, reset, isEditingEnabled]);
 
+  //console.log(userDetails)
+
   const watchPostcode = watch("postcode");
 
   const formatDateAsYYYYMMDD = (date: Date): string => {
@@ -240,9 +243,9 @@ const EditProfile = () => {
     // .map(([key]) => key);
     // .filter((key) => key !== "emailAddress");
 
-    console.log("selectedDocumentFront:", selectedDocumentFront);
+    // console.log("selectedDocumentFront:", selectedDocumentFront);
     // console.log("userDetails.idImageFront:", userDetails.idImageFront);
-    console.log("selectedDocumentBack:", selectedDocumentBack);
+    // console.log("selectedDocumentBack:", selectedDocumentBack);
     // console.log("userDetails.idImageBack:", userDetails.idImageBack);
 
     // const missingFields = Object.entries(data)
@@ -476,7 +479,7 @@ const EditProfile = () => {
         url = "customer/update";
       }
 
-      console.log("Final submitData:", JSON.stringify(submitData, null, 2));
+      // console.log("Final submitData:", JSON.stringify(submitData, null, 2));
 
       await authInstance.patch(url, submitData, {
         headers: { "Content-Type": "multipart/form-data" },
@@ -485,7 +488,7 @@ const EditProfile = () => {
       setIsFormModalShown(true);
       setIsEditingEnabled(true);
     } catch (error: any) {
-      console.log("Submission error:", error);
+      console.error("Submission error:", error);
       console.error(
         "Detailed error:",
         error.response ? error.response.data : error.message,
@@ -516,6 +519,8 @@ const EditProfile = () => {
     setIsEditingImageFront(false);
     setIsFormModalShown(true);
   };
+
+  const [isOpenModal, setIsOpenModal] = useState(false);
 
   return (
     <main className="container py-8 lg:py-16">
@@ -568,9 +573,13 @@ const EditProfile = () => {
 
         {/* Profile Image Section */}
         <section className="col-span-3 flex flex-col items-center justify-center gap-1 pb-8">
+          <UploadProfilePicture
+            isOpenModal={isOpenModal}
+            closeModal={() => setIsOpenModal(false)}
+          />
           <button
             className="relative mx-auto size-32 rounded-full hover:shadow-md"
-            onClick={handleChangeProfilePicture}
+            onClick={() => setIsOpenModal(true)}
           >
             <span className="absolute right-3 top-[80%] z-20 rounded-full bg-[#EBE9F4] p-1 text-violet-normal">
               <BiCamera className="size-5" />
@@ -593,11 +602,9 @@ const EditProfile = () => {
             {user?.address?.state} Australia
           </p>
           <button
-            // onClick={() => setIsEditingEnabled((prev) => !prev)}
-            onClick={handleChangeProfilePicture}
+            onClick={() => setIsOpenModal(true)}
             className="rounded-full bg-violet-normal px-4 py-2 text-sm text-white transition-all duration-300 hover:opacity-90"
           >
-            {/* {isEditingEnabled ? "Editing ..." : "Edit Profile Picture"} */}
             Edit Profile Picture
           </button>
         </section>
@@ -711,22 +718,14 @@ const EditProfile = () => {
                           field.onChange(e.value);
                         }}
                       />
-                      {fieldState.error ? (
+                      {fieldState.error && (
                         <p className="mt-1 text-sm text-red-500">
                           {fieldState.error.message}
-                        </p>
-                      ) : (
-                        <p className="mt-1 text-sm text-red-500">
-                          You must be at least 18 years old
                         </p>
                       )}
                     </div>
                   )}
                 />
-
-                {/* {dateOfBirth && dateOfBirth > maxDate && (
-                  <small className="text-red-500">You must be at least 18 years old</small>
-                )} */}
               </div>
             </div>
           </section>

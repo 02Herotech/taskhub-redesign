@@ -10,11 +10,11 @@ type AuthLayoutProps = {
 
 const DashboardLayout = ({ children }: AuthLayoutProps) => {
   return (
-    <div className="relative mx-auto ">
+    <div className="relative mx-auto max-w-[1400px]">
       <Navigation />
       <DashboardSidebar />
       <SessionTimeout />
-      <main className="mt-[4rem] max-lg:container max-lg:mt-[4.8rem] lg:ml-72 ">
+      <main className="mt-[3.5rem] px-4 sm:px-7 lg:ml-64">
         <Suspense>{children}</Suspense>
       </main>
     </div>

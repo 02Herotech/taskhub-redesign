@@ -19,38 +19,31 @@ const handler = NextAuth({
         email: { label: "Email", type: "email" },
         password: { label: "Password", type: "password" },
       },
-
       async authorize(credentials) {
         const { email, password } = credentials as {
           email: string;
           password: string;
         };
-
         try {
           const response = await axios.post(
             `${process.env.NEXT_PUBLIC_API_URL}/auth/login`,
             { emailAddress: email, password },
           );
-
           const { data, status } = response;
           if (status === 200) {
-            //! BAD
             return { ...data, jwtt: data.token };
           } else {
-            // throw new Error(`Unexpected status error:, ${status}`);
-            console.log("Unexpected status error: ", status);
+            console.error(response.data);
             return null;
           }
         } catch (error) {
-          console.error("Request error: ", error);
+          console.error(error);
           return null;
         }
       },
     }),
   ],
-
   secret: process.env.JWT_SECRET,
-
   callbacks: {
     async jwt({ token, user, trigger, session }) {
       if (trigger === "update") {
