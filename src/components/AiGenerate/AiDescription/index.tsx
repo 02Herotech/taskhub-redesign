@@ -320,7 +320,7 @@ const AiDesciption: React.FC<AiGenerateProps> = ({
       )}
 
       <Popup isOpen={aiChatView} onClose={AiChatView}>
-        <div className="max-h-[650px] min-w-[320px] max-w-[600px] overflow-y-auto bg-white p-5 sm:max-h-[450px] sm:min-w-[560px]">
+        <div className="max-h-[530px] min-w-[320px] max-w-[600px] overflow-y-auto bg-white p-5 sm:max-h-[450px] sm:min-w-[560px]">
           <div>
             <h2 className="font-clashBold text-[25px] text-primary lg:text-[35px]">
               Hello, {userName}
