@@ -209,7 +209,7 @@ const EditProfile = () => {
     fetchUserData();
   }, [isServiceProvider, dispatch, reset, isEditingEnabled]);
 
-  console.log(userDetails)
+  //console.log(userDetails)
 
   const watchPostcode = watch("postcode");
 
