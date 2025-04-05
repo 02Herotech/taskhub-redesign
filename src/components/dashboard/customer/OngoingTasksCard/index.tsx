@@ -5,10 +5,10 @@ import Image from "next/image";
 import { useSession } from "next-auth/react";
 import Button from "@/components/global/Button";
 import Link from "next/link";
-import { OngoingTask } from "@/types/services/tasks";
+import { OngoingTask, TaskDetails } from "@/types/services/tasks";
 
 interface TaskCardProps {
-    task: OngoingTask;
+    task: TaskDetails;
 }
 
 const OngoingTasksCard = ({ task }: TaskCardProps) => {
@@ -18,22 +18,22 @@ const OngoingTasksCard = ({ task }: TaskCardProps) => {
     const lastName = session?.data?.user.user.lastName;
     const fullName = `${firstName} ${lastName}`;
 
-    const date = task?.createdAt ? new Date(task.createdAt[0], task.createdAt[1] - 1, task.createdAt[2]) : new Date();
-    const day = date.getDate();
-    const month = date.getMonth();
-    const monthName = monthNames[month];
-    const dayOfWeek = date.getDay();
-    const dayOfWeekName = dayOfWeekNames[dayOfWeek];
+    function formatDateString(isoString: string): string {
+        const date = new Date(isoString);
 
-    // Determine the correct suffix for the day
-    let daySuffix;
-    if (day === 11 || day === 12 || day === 13) {
-        daySuffix = "th";
-    } else {
-        daySuffix = suffixes[day % 10] || suffixes[0]; // Default to "th" if suffix is undefined
+        const day = date.getDate();
+        const dayOfWeek = new Intl.DateTimeFormat('en-US', { weekday: 'long' }).format(date);
+        const month = new Intl.DateTimeFormat('en-US', { month: 'long' }).format(date);
+
+        const getSuffix = (n: number): string => {
+            if (n >= 11 && n <= 13) return 'th';
+            const lastDigit = n % 10;
+            return ['th', 'st', 'nd', 'rd'][lastDigit] || 'th';
+        };
+
+        return `${dayOfWeek}, ${month} ${day}${getSuffix(day)}`;
     }
 
-    const formattedDate = `${dayOfWeekName}, ${monthName} ${day}${daySuffix}`;
 
     return (
         <div className="lg:rounded-4xl font-satoshi bg-white py-5 mb-4 flex flex-col lg:flex-row lg:justify-between border-b">
@@ -58,7 +58,7 @@ const OngoingTasksCard = ({ task }: TaskCardProps) => {
                 </Link>
             </div>
             <div className="flex flex-row max-sm:w-full lg:flex-col max-sm:!mt-4 lg:space-y-2 lg:text-right items-center justify-between text-center lg:items-end">
-                <h5 className="text-base text-tc-orange">{formattedDate}</h5>
+                <h5 className="text-base text-tc-orange">{formatDateString(task.createdAt)}</h5>
                 <h2 className="font-bold capitalize text-[#28272A] text-base">
                     Total Cost: {formatAmount(task.total, "USD", false)}
                 </h2>

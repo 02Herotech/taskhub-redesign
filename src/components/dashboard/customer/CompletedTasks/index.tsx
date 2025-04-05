@@ -20,13 +20,13 @@ const TaskList: React.FC = () => {
 
     return (
         <>
-            {!tasksData?.length && (
+            {!tasksData.content?.length && (
                 <div className="flex flex-col items-center justify-center space-y-5 h-[50vh]">
                     <h2 className="text-2xl font-bold text-primary text-center">No tasks completed</h2>
                 </div>
             )}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                {tasksData?.map((task, index) => (
+                {tasksData.content?.map((task, index) => (
                     <CompletedTasksCard key={index} task={task} />
                 ))}
             </div>

@@ -45,18 +45,52 @@ export type CustomerTasks = {
     active: boolean;
 }
 
+// export type OngoingTask = {
+//     invoiceId: number;
+//     bookingId: number;
+//     total: number;
+//     createdAt: [number, number, number, number, number, number, number];
+//     customerId: number;
+//     taskTime: [number, number];
+//     jobTitle: string;
+//     jobStatus: "IN_PROGRESS" | "PENDING" | "INSPECTION" | "COMPLETED"
+//     jobDescription: string;
+//     id: number
+// };
+
 export type OngoingTask = {
-    invoiceId: number;
+    totalElements: number;
+    totalPages: number;
+    pageNumber: number;
+    pageSize: number;
+    content: TaskDetails[];
+  };
+  
+  export type TaskTime = {
+    hour: number;
+    minute: number;
+    second: number;
+    nano: number;
+  };
+  
+  export type TaskDetails = {
+    id: number;
+    categoryId: number;
     bookingId: number;
+    createdAt: string;
+    deleted: boolean;
+    taskDate: string;
+    taskTime: TaskTime;
     total: number;
-    createdAt: [number, number, number, number, number, number, number];
+    jobStatus: "PENDING" | "ONGOING" | "COMPLETED";
+    providerId: number;
+    invoiceId: number;
     customerId: number;
-    taskTime: [number, number];
     jobTitle: string;
-    jobStatus: "IN_PROGRESS" | "PENDING" | "INSPECTION" | "COMPLETED"
+    jobAddress: string;
     jobDescription: string;
-    id: number
-};
+  };
+
 
 export type AllTask = {
     id: number;
@@ -83,7 +117,7 @@ export type AllTask = {
 
 export type GetAllCustomerTasksResponse = AllTask[];
 
-export type GetCustomerOngoingTasksResponse = OngoingTask[];
+export type GetCustomerOngoingTasksResponse = OngoingTask;
 
 export type GetCustomerTasksResponse = CustomerTasks[];
 
@@ -111,7 +145,7 @@ export type CompletedTask = {
     categoryId: number;
 }
 
-export type GetCustomerCompletedTasksResponse = CompletedTask[];
+export type GetCustomerCompletedTasksResponse = OngoingTask;
 
 export type GetSingleTasksResponse = Task;
 
