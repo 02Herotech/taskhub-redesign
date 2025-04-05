@@ -132,47 +132,57 @@
 
 // export default CustomerPaymentsPage
 
-"use client"
+"use client";
 
 import { useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import Invoices from "@/components/dashboard/customer/Offers";
-import CustomerPaymentHistory from "@/components/dashboard/customer/PaymentHistory";
+//import CustomerPaymentHistory from "@/components/dashboard/customer/PaymentHistory";
+import PaymentHistory from "@/components/dashboard/customer/PaymentHistory/PaymentHistory";
 
 const TransactionHistory = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const tab = searchParams.get('tab') || 'paymentHistory';
+  const tab = searchParams.get("tab") || "paymentHistory";
 
   useEffect(() => {
-    if (tab !== 'paymentHistory' && tab !== 'myInvoices') {
-      router.push('/customer/payment?tab=paymentHistory');
+    if (tab !== "paymentHistory" && tab !== "myInvoices") {
+      router.push("/customer/payment?tab=paymentHistory");
     }
   }, [tab, router]);
 
   const tabs = [
     { title: "Payment history", link: "/customer/payment?tab=paymentHistory" },
-    { title: "My offers", link: "/customer/payment?tab=myInvoices" }
+    { title: "My offers", link: "/customer/payment?tab=myInvoices" },
   ];
 
   return (
-    <div className='p-4 lg:px-14 mt-24'>
+    <div className="mt-24 p-4 lg:px-14">
       <div className="space-y-8">
         <div className="flex items-center space-x-10">
           {tabs.map((link, index) => (
-            <Link key={index} href={link.link} className="flex items-center space-x-3">
-              <div className={`size-5 rounded-full ${tab === link.link.split('=')[1] ? 'bg-primary' : 'bg-white border-primary border-4'}`} />
-              <h2 className="text-[#140B31] lg:text-lg font-satoshiMedium">{link.title}</h2>
+            <Link
+              key={index}
+              href={link.link}
+              className="flex items-center space-x-3"
+            >
+              <div
+                className={`size-5 rounded-full ${tab === link.link.split("=")[1] ? "bg-primary" : "border-4 border-primary bg-white"}`}
+              />
+              <h2 className="font-satoshiMedium text-[#140B31] lg:text-lg">
+                {link.title}
+              </h2>
             </Link>
           ))}
         </div>
 
-        {tab === 'paymentHistory' && <CustomerPaymentHistory />}
-        {tab === 'myInvoices' && <Invoices />}
+        {/* {tab === 'paymentHistory' && <CustomerPaymentHistory />} */}
+        {tab === "paymentHistory" && <PaymentHistory />}
+        {tab === "myInvoices" && <Invoices />}
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default TransactionHistory
+export default TransactionHistory;

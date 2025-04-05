@@ -6,6 +6,7 @@ import Tasks from "./Tasks";
 import Heading from "../../Heading";
 import PostTask from "./PostTask";
 import Link from "next/link";
+import WalletBalance from "./WalletBalance";
 
 function Page() {
   return (
@@ -56,7 +57,7 @@ function Page() {
               <div className="h-full min-w-[250px] flex-grow rounded-lg bg-primary text-white">
                 <div className="relative flex h-full items-center justify-center px-5">
                   <p className="absolute left-2 top-1">Wallet</p>
-                  <p className="text-6xl font-semibold ">$0.00</p>
+                  <WalletBalance />
                   {/* <button className="absolute bottom-1 right-2 z-10 rounded-full bg-white px-4 py-2 font-bold text-primary">
                     Top up
                   </button> */}
