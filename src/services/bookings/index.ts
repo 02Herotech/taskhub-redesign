@@ -1,4 +1,4 @@
-import { GetInvoiceByCustomerIdResponse, GetReceiptByCustomerIdResponse } from "@/types/services/invoice";
+import { CustomerReciepts, GetInvoiceByCustomerIdResponse, GetReceiptByCustomerIdResponse } from "@/types/services/invoice";
 import { AcceptInvoiceResponse, OngoingTask, PaymentIntentResponse, RejectInvoiceResponse } from "@/types/services/tasks";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { getSession } from "next-auth/react";
@@ -72,6 +72,10 @@ export const booking = createApi({
             query: (customerId) => getRequest(`/all-receipts/${customerId}`),
             providesTags: ["Booking"],
         }),
+        getCustomerReceipts: builder.query<CustomerReciepts, {customerId: number; size: number}>({
+            query: ({customerId, size}) => getRequest(`/all-receipts/${customerId}?size=${size}`),
+            providesTags: ["Booking"],
+        }),
         getJobById: builder.query<OngoingTask, number>({
             query: (jobId) => getRequest(`/job/${jobId}`),
             providesTags: ["Booking"],
@@ -108,6 +112,7 @@ export const booking = createApi({
 });
 
 export const {
+    useGetCustomerReceiptsQuery,
     useGetInvoiceByCustomerIdQuery,
     useGetReceiptsByCustomerIdQuery,
     useGetJobByIdQuery,
