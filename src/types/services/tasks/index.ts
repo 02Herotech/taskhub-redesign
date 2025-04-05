@@ -82,7 +82,13 @@ export type OngoingTask = {
     taskDate: string;
     taskTime: TaskTime;
     total: number;
-    jobStatus: "PENDING" | "ONGOING" | "COMPLETED";
+    jobStatus:
+      | "PENDING"
+      | "ONGOING"
+      | "COMPLETED"
+      | "IN_PROGRES"
+      | "CANCELED "
+      | "INSPECTION";
     providerId: number;
     invoiceId: number;
     customerId: number;
