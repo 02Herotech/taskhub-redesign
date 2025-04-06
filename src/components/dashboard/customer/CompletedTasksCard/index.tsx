@@ -41,45 +41,29 @@ const CompletedTasksCard = ({ task }: TaskCardProps) => {
   const [hoverRating, setHoverRating] = useState<number | 0>(0);
   const [wordCount, setWordCount] = useState(0);
   const dateArray = task.createdAt;
-  // const date = new Date(dateArray[0], dateArray[1] - 1, dateArray[2]);
-  // const day = date.getDate();
+  const date = new Date(dateArray[0], dateArray[1] - 1, dateArray[2]);
+  const day = date.getDate();
   const serviceProviderId = task.providerId;
   const categoryId = task.categoryId;
   const comment = review;
   const authInstance = useAxios();
   // Function to get the correct ordinal suffix
-  // function getOrdinalSuffix(day: any) {
-  //   if (day > 3 && day < 21) return "th";
-  //   switch (day % 10) {
-  //     case 1:
-  //       return "st";
-  //     case 2:
-  //       return "nd";
-  //     case 3:
-  //       return "rd";
-  //     default:
-  //       return "th";
-  //   }
-  // }
-
-  // const daySuffix = getOrdinalSuffix(day);
-  // const formattedDate = `On ${dayOfWeekNames[date.getDay()]}, ${monthNames[date.getMonth()]} ${day}${daySuffix}`;
-
-  function formatDateString(isoString: string): string {
-    const date = new Date(isoString);
-
-    const day = date.getDate();
-    const dayOfWeek = new Intl.DateTimeFormat('en-US', { weekday: 'long' }).format(date);
-    const month = new Intl.DateTimeFormat('en-US', { month: 'long' }).format(date);
-
-    const getSuffix = (n: number): string => {
-      if (n >= 11 && n <= 13) return 'th';
-      const lastDigit = n % 10;
-      return ['th', 'st', 'nd', 'rd'][lastDigit] || 'th';
-    };
-
-    return `${dayOfWeek}, ${month} ${day}${getSuffix(day)}`;
+  function getOrdinalSuffix(day: any) {
+    if (day > 3 && day < 21) return "th";
+    switch (day % 10) {
+      case 1:
+        return "st";
+      case 2:
+        return "nd";
+      case 3:
+        return "rd";
+      default:
+        return "th";
+    }
   }
+
+  const daySuffix = getOrdinalSuffix(day);
+  const formattedDate = `On ${dayOfWeekNames[date.getDay()]}, ${monthNames[date.getMonth()]} ${day}${daySuffix}`;
 
   const reviews = [
     "He/she stole an item in my home",
@@ -357,7 +341,7 @@ const CompletedTasksCard = ({ task }: TaskCardProps) => {
           <div className="flex items-end justify-between">
             <div className="flex items-center space-x-2 font-medium text-[#716F78]">
               <FiCalendar className="h-5 w-5 font-bold" />
-              <h5 className="text-[15px] lg:text-lg">{formatDateString(task.createdAt)}</h5>
+              <h5 className="text-[15px] lg:text-lg">{formattedDate}</h5>
             </div>
             <h2 className="text-2xl font-bold capitalize text-tc-orange lg:text-[20px]">
               {formatAmount(task.total, "USD", false)}
