@@ -8,6 +8,7 @@ import { FiClock } from "react-icons/fi";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
 import { useGetReceiptsByCustomerIdQuery } from "@/services/bookings";
+import { useGetCustomerReceiptsQuery } from "@/services/bookings";
 import { Receipt } from "@/types/services/invoice";
 import Loading from "@/components/global/loading/page";
 import DatePicker from "react-datepicker";
@@ -17,7 +18,6 @@ import PaymentReceipt from "../PaymentReceipt";
 import { PDFDownloadLink } from "@react-pdf/renderer";
 
 const PaymentHistory = () => {
-  const [visibleTransactions, setVisibleTransactions] = useState(4);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedPayment, setSelectedPayment] = useState<Receipt | null>(null);
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
@@ -26,12 +26,11 @@ const PaymentHistory = () => {
     (state: RootState) => state.userProfile,
   );
   const pdfRef = useRef(null);
-
-  const {
-    data: paymentHistoryData,
-    isLoading,
-    refetch,
-  } = useGetReceiptsByCustomerIdQuery(user?.customerId!);
+  const [size, setSize] = useState(10);
+  const { data, isLoading, refetch, isFetching } = useGetCustomerReceiptsQuery({
+    customerId: user?.customerId!,
+    size,
+  });
 
   useEffect(() => {
     if (user) {
@@ -40,7 +39,11 @@ const PaymentHistory = () => {
   }, [user]);
 
   const handleLoadMore = () => {
-    setVisibleTransactions((prevVisible) => prevVisible + 4);
+    if (!data) return;
+    const { totalElements, content } = data;
+    if (content.length < totalElements) {
+      setSize((currSize) => currSize + 10);
+    }
   };
 
   const handleCardClick = (payment: Receipt) => {
@@ -53,7 +56,7 @@ const PaymentHistory = () => {
     setSelectedPayment(null);
   };
 
-  if (!paymentHistoryData || isLoading) {
+  if (!data || isLoading) {
     return (
       <div className="flex h-[full] w-full items-center justify-center">
         <Loading />
@@ -116,8 +119,7 @@ const PaymentHistory = () => {
     );
   };
 
-  //@ts-ignore
-  const groupedReceipts = groupReceiptsByDate(paymentHistoryData.content, selectedDate);
+  const groupedReceipts = groupReceiptsByDate(data.content, selectedDate);
   const dateArray = selectedPayment?.createdAt;
   const formattedDate: string = dateArray
     ? new Date(
@@ -192,9 +194,8 @@ const PaymentHistory = () => {
           </h2>
         </div>
       ) : (
-        groupedReceipts
-          .slice(0, visibleTransactions)
-          .map(([date, dateReceipts]) => (
+        <>
+          {groupedReceipts.map(([date, dateReceipts]) => (
             <div key={date} className="mb-8">
               <h3 className="mb-5 font-satoshiBold text-base font-bold text-[#140B31]">
                 {date}
@@ -226,18 +227,23 @@ const PaymentHistory = () => {
                 ))}
               </div>
             </div>
-          ))
-      )}
-      {visibleTransactions < groupedReceipts.length && (
-        <div className="flex items-center justify-center">
-          <Button
-            onClick={handleLoadMore}
-            className="flex items-center space-x-2 rounded-full"
-          >
-            <FiClock className="text-white" />
-            <p>Load more...</p>
-          </Button>
-        </div>
+          ))}
+          <div className="flex items-center justify-center">
+            {!selectedDate && (
+              <Button
+                onClick={handleLoadMore}
+                className="flex items-center space-x-2 rounded-full"
+              >
+                <FiClock className="text-white" />
+                {isFetching ? (
+                  <span>Fetching...</span>
+                ) : (
+                  <span>Load more...</span>
+                )}
+              </Button>
+            )}
+          </div>
+        </>
       )}
 
       {isModalOpen && selectedPayment && (
@@ -260,7 +266,7 @@ const PaymentHistory = () => {
                     cy="35"
                     r="35"
                     fill="#C1F6C3"
-                    fillOpacity="0.6"
+                    fill-opacity="0.6"
                   />
                   <circle cx="34.5" cy="34.5" r="22.5" fill="#A6F8AA" />
                   <path

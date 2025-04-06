@@ -29,11 +29,11 @@ export type LinkRouteTypes = {
 };
 
 export const homeMobileLinks: LinkRouteTypes[] = [
-  // {
-  //   label: "Home",
-  //   url: "/home",
-  //   icon: TbSmartHome,
-  // },
+  {
+    label: "Home",
+    url: "/home",
+    icon: TbSmartHome,
+  },
   {
     label: "Marketplace",
     url: "/marketplace",
@@ -237,11 +237,11 @@ export const mobileServiceProviderLinks: LinkRouteTypes[] = [
 ];
 
 export const mobileCustomerLinks: LinkRouteTypes[] = [
-  // {
-  //   label: "Home",
-  //   url: "/customer/home",
-  //   icon: TbSmartHome,
-  // },
+  {
+    label: "Home",
+    url: "/customer/home",
+    icon: TbSmartHome,
+  },
   {
     label: "Profile",
     url: "/customer/profile",
