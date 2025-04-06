@@ -1,4 +1,8 @@
-import { GetInvoiceByCustomerIdResponse, GetReceiptByCustomerIdResponse } from "@/types/services/invoice";
+import {
+  CustomerReciepts,
+  GetInvoiceByCustomerIdResponse,
+  GetReceiptByCustomerIdResponse,
+} from "@/types/services/invoice";
 import {
   AcceptInvoiceResponse,
   PaymentIntentResponse,
@@ -83,6 +87,14 @@ export const booking = createApi({
       query: (customerId) => getRequest(`/all-receipts/${customerId}`),
       providesTags: ["Booking"],
     }),
+    getCustomerReceipts: builder.query<
+      CustomerReciepts,
+      { customerId: number; size: number }
+    >({
+      query: ({ customerId, size }) =>
+        getRequest(`/all-receipts/${customerId}?size=${size}`),
+      providesTags: ["Booking"],
+    }),
     getJobById: builder.query<TaskDetails, number>({
       query: (jobId) => getRequest(`/job/${jobId}`),
       providesTags: ["Booking"],
@@ -150,14 +162,14 @@ export const booking = createApi({
 });
 
 export const {
-    useGetInvoiceByCustomerIdQuery,
-    useGetReceiptsByCustomerIdQuery,
-    useGetJobByIdQuery,
-    useAcceptServiceMutation,
-    useInspectTaskMutation,
-    useRequestRevisionMutation,
-    useGeneratePaymentIntentMutation,
-    useAcceptInvoiceMutation,
-    useRejectInvoiceMutation,
-    useRebookJobMutation,
+  useGetInvoiceByCustomerIdQuery,
+  useGetReceiptsByCustomerIdQuery,
+  useGetJobByIdQuery,
+  useAcceptServiceMutation,
+  useInspectTaskMutation,
+  useRequestRevisionMutation,
+  useGeneratePaymentIntentMutation,
+  useAcceptInvoiceMutation,
+  useRejectInvoiceMutation,
+  useRebookJobMutation,
 } = booking;
