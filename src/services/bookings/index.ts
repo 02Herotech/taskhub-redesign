@@ -2,7 +2,6 @@
 import { CustomerReciepts, GetInvoiceByCustomerIdResponse, GetReceiptByCustomerIdResponse } from "@/types/services/invoice";
 import {
   AcceptInvoiceResponse,
-  OngoingTask,
   PaymentIntentResponse,
   RejectInvoiceResponse,
   TaskDetails,
