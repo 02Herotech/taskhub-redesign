@@ -9,6 +9,7 @@ import {
   RejectInvoiceResponse,
   TaskDetails,
 } from "@/types/services/tasks";
+
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { getSession } from "next-auth/react";
 
@@ -162,6 +163,7 @@ export const booking = createApi({
 });
 
 export const {
+  useGetCustomerReceiptsQuery,
   useGetInvoiceByCustomerIdQuery,
   useGetReceiptsByCustomerIdQuery,
   useGetJobByIdQuery,

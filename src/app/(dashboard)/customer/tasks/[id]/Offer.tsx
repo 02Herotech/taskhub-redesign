@@ -8,6 +8,10 @@ import { FaStar } from "react-icons/fa6";
 import ReplyForm from "./ReplyForm";
 import useAxios from "@/hooks/useAxios";
 import { BeatLoader } from "react-spinners";
+import { Elements } from "@stripe/react-stripe-js";
+import { loadStripe } from "@stripe/stripe-js";
+
+const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY);
 
 type Props = {
   offer: Offer;
@@ -26,7 +30,6 @@ type AcceptOfferData = {
 };
 
 function Offer({ offer, taskId, refetch, isAssigned }: Props) {
-  const [openPaymentModal, setOpenPaymentModal] = useState(false);
   const [confirmPaymentModal, setConfirmPaymentModal] = useState(false);
 
   const [clientSecret, setClientSecret] = useState<string | null>(null);
@@ -43,7 +46,6 @@ function Offer({ offer, taskId, refetch, isAssigned }: Props) {
         setConfirmPaymentModal(true);
       } else {
         setClientSecret(data.data.clientSecret);
-        setOpenPaymentModal(true);
       }
     } catch (error) {
       //Todo Error handling
@@ -163,11 +165,26 @@ function Offer({ offer, taskId, refetch, isAssigned }: Props) {
       {!isAssigned && (
         <ReplyForm taskId={taskId} offerId={offer.id} refetch={refetch} />
       )}
-      <SendPayment
-        open={openPaymentModal}
-        closeModal={() => setOpenPaymentModal(false)}
-        clientSecret={clientSecret}
-      />
+
+      {clientSecret && (
+        <Elements
+          stripe={stripePromise}
+          options={{
+            clientSecret,
+            appearance: {
+              variables: { colorPrimary: "#381f8c" },
+              theme: "flat",
+            },
+            loader: "always",
+          }}
+        >
+          <SendPayment
+            closeModal={() => setClientSecret(null)}
+            clientSecret={clientSecret}
+          />
+        </Elements>
+      )}
+
       {/* Todo Confirm payment modal  */}
     </li>
   );

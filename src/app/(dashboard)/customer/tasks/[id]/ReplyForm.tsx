@@ -10,7 +10,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 
 const offerSchema = z.object({
-  offerPrice: z
+  offerAmount: z
     .number({ invalid_type_error: "Offer amount is required" })
     .min(1, "Offer must be above $1"),
   message: z.string().min(1, "Please enter your message"),
@@ -51,7 +51,7 @@ function ReplyForm({ taskId, offerId, refetch }: Props) {
           userId: user.customerId,
           fullName: `${user.firstName} ${user.lastName}`,
           message: data.message,
-          offerPrice: data.offerPrice,
+          offerAmount: data.offerAmount,
         },
       ],
     };
@@ -119,7 +119,7 @@ function ReplyForm({ taskId, offerId, refetch }: Props) {
                   placeholder="0"
                   autoComplete="off"
                   className="max-w-14 appearance-none bg-transparent font-bold outline-none placeholder:text-[#E58C06] sm:max-w-24 sm:text-lg"
-                  {...register("offerPrice", { valueAsNumber: true })}
+                  {...register("offerAmount", { valueAsNumber: true })}
                 />
               </div>
               <button
@@ -137,7 +137,7 @@ function ReplyForm({ taskId, offerId, refetch }: Props) {
               <IoClose />
             </button>
             <div className="w-full text-red-500">
-              {errors.message?.message || errors.offerPrice?.message}
+              {errors.offerAmount?.message}
             </div>
           </motion.form>
         )}

@@ -61,7 +61,7 @@ function OfferForm({
       serviceProviderId: user?.serviceProviderId,
       fullName: user?.firstName + " " + user?.lastName,
       message: formData.message,
-      offerPrice: formData.offerPrice,
+      offerAmount: formData.offerPrice,
     };
 
     if (user && socket) {
