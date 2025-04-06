@@ -71,62 +71,53 @@ export const booking = createApi({
     },
   }),
   endpoints: (builder) => ({
-    getInvoiceByCustomerId: builder.query<
-      GetInvoiceByCustomerIdResponse,
-      number
-    >({
+    getInvoiceByCustomerId: builder.query<GetInvoiceByCustomerIdResponse, number>({
       query: (customerId) => getRequest(`/invoice/customer/${customerId}`),
       providesTags: ["Booking"],
     }),
-    endpoints: (builder) => ({
-        getInvoiceByCustomerId: builder.query<GetInvoiceByCustomerIdResponse, number>({
-            query: (customerId) => getRequest(`/invoice/customer/${customerId}`),
-            providesTags: ["Booking"],
-        }),
-        getReceiptsByCustomerId: builder.query<GetReceiptByCustomerIdResponse, number>({
-            query: (customerId) => getRequest(`/all-receipts/${customerId}`),
-            providesTags: ["Booking"],
-        }),
-        getCustomerReceipts: builder.query<CustomerReciepts, {customerId: number; size: number}>({
-            query: ({customerId, size}) => getRequest(`/all-receipts/${customerId}?size=${size}`),
-            providesTags: ["Booking"],
-        }),
-        getJobById: builder.query<TaskDetails,, number>({
-            query: (jobId) => getRequest(`/job/${jobId}`),
-            providesTags: ["Booking"],
-        }),
-        acceptService: builder.mutation<void, { jobId: number; }>({
-            query: ({ jobId }) => postRequest(`/accept-service?jobId=${jobId}`, {}),
-            invalidatesTags: ["Booking"],
-        }),
-        inspectTask: builder.mutation<void, { jobId: number; }>({
-            query: ({ jobId }) => postRequest(`/inspect-task?jobId=${jobId}`, {}),
-            invalidatesTags: ["Booking"],
-        }),
-        requestRevision: builder.mutation<void, { jobId: number; rejectionReason: string }>({
-            query: ({ jobId, rejectionReason }) => postRequest(`/revision-service`, { rejectionReason, jobId }),
-            invalidatesTags: ["Booking"],
-        }),
-        generatePaymentIntent: builder.mutation<PaymentIntentResponse, { invoiceId: number }>({
-            query: ({ invoiceId }) => postRequest(`/payment-intent-stripe/${invoiceId}`, {}),
-            invalidatesTags: ["Booking"],
-        }),
-        acceptInvoice: builder.mutation<AcceptInvoiceResponse, { invoiceId: number }>({
-            query: ({ invoiceId }) => postRequest(`/accept-invoice?invoiceId=${invoiceId}`, {}),
-            invalidatesTags: ["Booking"],
-        }),
-        rejectInvoice: builder.mutation<RejectInvoiceResponse, { invoiceId: number }>({
-            query: ({ invoiceId }) => postRequest(`/reject-invoice?invoiceId=${invoiceId}`, {}),
-            invalidatesTags: ["Booking"],
-        }),
-        rebookJob: builder.mutation<void, { jobId: number; date: string; time: string; description: string; amount: number; }>({
-            query: ({ jobId, date, time, description, amount }) => postRequest(`/re-booking/${jobId}`, { date, time, description, amount }),
-            invalidatesTags: ["Booking"],
-        }),
+    getReceiptsByCustomerId: builder.query<GetReceiptByCustomerIdResponse, number>({
+      query: (customerId) => getRequest(`/all-receipts/${customerId}`),
+      providesTags: ["Booking"],
+    }),
+    getCustomerReceipts: builder.query<CustomerReciepts, {customerId: number; size: number}>({
+      query: ({customerId, size}) => getRequest(`/all-receipts/${customerId}?size=${size}`),
+      providesTags: ["Booking"],
+    }),
+    getJobById: builder.query<TaskDetails, number>({
+      query: (jobId) => getRequest(`/job/${jobId}`),
+      providesTags: ["Booking"],
+    }),
+    acceptService: builder.mutation<void, { jobId: number; }>({
+      query: ({ jobId }) => postRequest(`/accept-service?jobId=${jobId}`, {}),
       invalidatesTags: ["Booking"],
     }),
-  }),
+    inspectTask: builder.mutation<void, { jobId: number; }>({
+      query: ({ jobId }) => postRequest(`/inspect-task?jobId=${jobId}`, {}),
+      invalidatesTags: ["Booking"],
+    }),
+    requestRevision: builder.mutation<void, { jobId: number; rejectionReason: string }>({
+      query: ({ jobId, rejectionReason }) => postRequest(`/revision-service`, { rejectionReason, jobId }),
+      invalidatesTags: ["Booking"],
+    }),
+    generatePaymentIntent: builder.mutation<PaymentIntentResponse, { invoiceId: number }>({
+      query: ({ invoiceId }) => postRequest(`/payment-intent-stripe/${invoiceId}`, {}),
+      invalidatesTags: ["Booking"],
+    }),
+    acceptInvoice: builder.mutation<AcceptInvoiceResponse, { invoiceId: number }>({
+      query: ({ invoiceId }) => postRequest(`/accept-invoice?invoiceId=${invoiceId}`, {}),
+      invalidatesTags: ["Booking"],
+    }),
+    rejectInvoice: builder.mutation<RejectInvoiceResponse, { invoiceId: number }>({
+      query: ({ invoiceId }) => postRequest(`/reject-invoice?invoiceId=${invoiceId}`, {}),
+      invalidatesTags: ["Booking"],
+    }),
+    rebookJob: builder.mutation<void, { jobId: number; date: string; time: string; description: string; amount: number; }>({
+      query: ({ jobId, date, time, description, amount }) => postRequest(`/re-booking/${jobId}`, { date, time, description, amount }),
+      invalidatesTags: ["Booking"],
+    }),
+  })
 });
+
 
 export const {
     useGetCustomerReceiptsQuery,
