@@ -66,21 +66,16 @@ export type OngoingTask = {
     content: TaskDetails[];
   };
   
-  export type TaskTime = {
-    hour: number;
-    minute: number;
-    second: number;
-    nano: number;
-  };
-  
+  export type TaskTime = [number, number, number];
+
   export type TaskDetails = {
     id: number;
     categoryId: number;
     bookingId: number;
-    createdAt: string;
+    createdAt: TaskTime;
     deleted: boolean;
-    taskDate: string;
-    taskTime: TaskTime;
+    taskDate: [number, number, number];
+    taskTime: [number, number];
     total: number;
     jobStatus:
       | "PENDING"
