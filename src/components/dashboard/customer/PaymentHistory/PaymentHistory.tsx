@@ -233,6 +233,7 @@ const PaymentHistory = () => {
               <Button
                 onClick={handleLoadMore}
                 className="flex items-center space-x-2 rounded-full"
+                disabled={data.content.length === data.totalElements}
               >
                 <FiClock className="text-white" />
                 {isFetching ? (
