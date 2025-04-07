@@ -19,10 +19,10 @@ const TaskList = () => {
     skip: !userId,
   });
 
-  if ( !userId || isLoading) {
+  if (!userId || isLoading) {
     return <Loading />;
   }
-
+  console.log(tasksData, "task")
   return (
     <>
       {tasksData?.length === 0 ? (
@@ -35,11 +35,11 @@ const TaskList = () => {
           </Link>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-        {tasksData?.map((task, index) => (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 mb-8">
+          {tasksData?.map((task, index) => (
             <AllTasksCard key={index} task={task} />
-        ))}
-        </div>    
+          ))}
+        </div>
       )}
     </>
   );

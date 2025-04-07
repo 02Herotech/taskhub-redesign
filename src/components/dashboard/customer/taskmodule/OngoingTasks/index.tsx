@@ -4,9 +4,9 @@ import { useGetCustomerOngoingTasksQuery } from "@/services/tasks";
 import Loading from "@/shared/loading";
 import Link from "next/link";
 import Button from "@/components/global/Button";
-import OngoingTasksCard from "../OngoingTasksCard";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
+import OngoingTasksCard from "../OngoingTasksCard";
 
 const TaskList = () => {
     const userProfile = useSelector((state: RootState) => state.userProfile);
@@ -34,8 +34,8 @@ const TaskList = () => {
                     </Link>
                 </div>
             ) : (
-                <div className="space-y-5">
-                        {tasksData?.content?.map((task, index) => (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 mb-8">
+                    {tasksData?.content?.map((task, index) => (
                         <OngoingTasksCard key={index} task={task} />
                     ))}
                 </div>
