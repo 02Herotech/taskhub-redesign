@@ -18,6 +18,7 @@ export default function TaskLayout({
 
   const tab = pathname.split("/")[3]
 
+
   const handleTabClick = (tab: string) => {
     router.push(tab)
   }
@@ -37,9 +38,12 @@ export default function TaskLayout({
     },
     {
       label: "Completed Tasks",
-      path: "/customer/task/completed-tasks",
+      path: "/customer/tasks/completed-tasks",
     },
   ];
+
+  const tabLabel = TabItems.find((tabitem) => tabitem.path.split("/").at(-1) === tab)
+
   return (
     <main className=" pt-8">
       <h1 className="text-2xl font-bold ">My Tasks</h1>
