@@ -82,8 +82,8 @@ const NewTaskDetails = ({ params }: { params: { id: string } }) => {
     };
   }, [refetch]);
 
-  const date = task?.taskDate
-    ? new Date(task.taskDate[0], task.taskDate[1] - 1, task.taskDate[2])
+  const date = task?.taskInfo?.taskDate
+    ? new Date(task?.taskInfo.taskDate[0], task?.taskInfo.taskDate[1] - 1, task?.taskInfo.taskDate[2])
     : new Date();
   const day = date.getDate();
   const month = date.getMonth();
@@ -98,7 +98,7 @@ const NewTaskDetails = ({ params }: { params: { id: string } }) => {
   }
   const formattedDate = `${dayOfWeekName}, ${monthName} ${day}${daySuffix}`;
 
-  const isAssigned = task?.taskStatus === "ASSIGNED";
+  const isAssigned = task?.taskInfo?.taskStatus === "ASSIGNED";
 
   if (isLoading) {
     return (
@@ -108,7 +108,7 @@ const NewTaskDetails = ({ params }: { params: { id: string } }) => {
     );
   }
 
-  if (!task || error) {
+  if (!task?.taskInfo || error) {
     return (
       <div className="flex h-[50vh] w-full flex-col items-center justify-center">
         <h2 className="font-satoshiBold text-xl font-bold text-primary lg:text-3xl">
@@ -139,20 +139,20 @@ const NewTaskDetails = ({ params }: { params: { id: string } }) => {
               Budget
             </p>
             <p className="p-2 font-satoshiMedium text-lg sm:p-3 md:text-2xl">
-              AUD$ {formatAmount(task?.customerBudget!, "jungle_coin", false)}
+              AUD$ {formatAmount(task?.taskInfo?.customerBudget!, "jungle_coin", false)}
             </p>
           </div> */}
           <div className="grid w-full grid-cols-1 gap-10 md:grid-cols-2 lg:space-x-5">
             <div className="space-y-7 font-satoshi lg:space-y-10">
               <h2 className="font-satoshiBold text-2xl font-black text-primary lg:text-4xl">
-                {task?.taskBriefDescription}
+                  {task?.taskInfo?.taskBriefDescription}
               </h2>
               <div className="space-y-3">
                 <h2 className="font-satoshiBold text-lg font-bold text-primary underline lg:text-2xl">
                   Task Description
                 </h2>
                 <p className="font-satoshiMedium text-base font-medium text-[#221354] lg:text-xl">
-                  {task?.taskDescription}
+                    {task?.taskInfo?.taskDescription}
                 </p>
               </div>
               <div className="space-y-5">
@@ -162,8 +162,8 @@ const NewTaskDetails = ({ params }: { params: { id: string } }) => {
                 <div className="flex w-full items-center space-x-2 text-[#716F78]">
                   <HiOutlineLocationMarker className="h-6 w-6 font-bold" />
                   <h5 className="font-satoshiMedium text-[15px] font-medium lg:text-xl">
-                    {task.state
-                      ? `${task.postCode}, ${task.suburb}, ${task.state}`
+                      {task?.taskInfo.state
+                        ? `${task?.taskInfo.postCode}, ${task?.taskInfo.suburb}, ${task?.taskInfo.state}`
                       : "Remote"}
                   </h5>
                 </div>
@@ -182,7 +182,7 @@ const NewTaskDetails = ({ params }: { params: { id: string } }) => {
                 <div className="flex items-center space-x-3 text-[#716F78] max-lg:text-xs">
                   <FiClock className="h-6 w-6" />
                   <h5 className="font-satoshiMedium text-[15px] font-medium lg:text-xl">
-                    {formatTime24Hour(task.taskTime) || "Flexible"}
+                      {formatTime24Hour(task?.taskInfo.taskTime) || "Flexible"}
                   </h5>
                 </div>
               </div>
@@ -196,7 +196,7 @@ const NewTaskDetails = ({ params }: { params: { id: string } }) => {
                 <div className="mb-6 mt-4 border-2 border-primary" />
                 <div className="flex w-full items-center justify-between">
                   <h2 className="font-satoshi text-lg font-bold text-primary lg:text-3xl">
-                    AUD {formatAmount(task?.customerBudget!, "USD", false)}
+                      AUD {formatAmount(task?.taskInfo?.customerBudget!, "USD", false)}
                   </h2>
                   <Button
                     onClick={() => {
@@ -213,9 +213,9 @@ const NewTaskDetails = ({ params }: { params: { id: string } }) => {
               <h2 className="font-satoshiBold text-xl font-bold text-primary lg:text-3xl">
                 Reference Image
               </h2>
-              {task.taskImage ? (
+                {task?.taskInfo.taskImage ? (
                 <Image
-                  src={task.taskImage}
+                    src={task?.taskInfo.taskImage}
                   width={200}
                   height={100}
                   alt="Explore task"
@@ -274,7 +274,7 @@ const NewTaskDetails = ({ params }: { params: { id: string } }) => {
         </>
       )}
       {offers && offers.length > 0 && (
-        <CustomerTaskOffers taskId={Number(id)} posterId={task.posterId} />
+        <CustomerTaskOffers taskId={Number(id)} posterId={task?.taskInfo.posterId} />
       )}
 
       {/* Change "offers && offers.length > 0" to false  */}
