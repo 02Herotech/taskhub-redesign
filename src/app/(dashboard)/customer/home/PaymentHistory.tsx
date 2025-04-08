@@ -99,7 +99,7 @@ function PaymentHistory() {
                 {data.content.slice(0, 7).map((payment) => (
                   <li className="flex gap-2" key={Math.random() * 5678}>
                     <Image
-                      src={"/assets/images/placeholder.png"}
+                      src={payment.image ?? "/assets/images/placeholder.png"}
                       alt="Profile picture"
                       width={40}
                       height={40}
