@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, use } from "react";
 import Image from "next/image";
 import { useGetReceiptsByCustomerIdQuery } from "@/services/bookings";
 import { useSelector } from "react-redux";
