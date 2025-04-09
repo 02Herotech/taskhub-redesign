@@ -106,7 +106,7 @@ const OnogoingTaskDetailsPage = ({ params }: { params: { id: string } }) => {
     e.preventDefault();
     setRevisionError("");
     const response = await requestRevision({
-      jobId: task.id,
+      jobId: task.jobInfo.id,
       rejectionReason: selectedRevision,
     });
     if (response.error) {
@@ -118,7 +118,7 @@ const OnogoingTaskDetailsPage = ({ params }: { params: { id: string } }) => {
     }
   };
 
-  const taskTime = formatTime24Hour(task.taskTime);
+  const taskTime = formatTime24Hour(task.jobInfo.taskTime);
 
   const humanReadableTime = taskTime;
 
@@ -130,7 +130,7 @@ const OnogoingTaskDetailsPage = ({ params }: { params: { id: string } }) => {
 
   const startInspection = async () => {
     setInspectionError("");
-    const response = await inspectTask({ jobId: task.id });
+    const response = await inspectTask({ jobId: task.jobInfo.id });
     if (response.error) {
       console.error(response.error);
       setInspectionError("Job has not been completed by Service Provider");
@@ -174,7 +174,7 @@ const OnogoingTaskDetailsPage = ({ params }: { params: { id: string } }) => {
   const handleApprovePayment = async () => {
     try {
       setPaymentError("");
-      const response = await approvePayment({ jobId: task.id });
+      const response = await approvePayment({ jobId: task.jobInfo.id });
 
       if (response.error) {
         console.error("Payment approval failed:", response.error);
@@ -213,11 +213,11 @@ const OnogoingTaskDetailsPage = ({ params }: { params: { id: string } }) => {
       <div className="p-6">
         {/* Status badge */}
         <div className="mb-4">
-          <span className="bg-indigo-100 text-primary border border-[#381F8C] px-4 py-1 rounded-full text-sm lowercase">{task.jobStatus}</span>
+          <span className="bg-indigo-100 text-primary border border-[#381F8C] px-4 py-1 rounded-full text-sm lowercase">{task.jobInfo.jobStatus}</span>
         </div>
 
         {/* Task title */}
-        <h1 className="text-2xl  md:text-3xl font-bold mb-4 capitalize ">{task.jobTitle}</h1>
+        <h1 className="text-2xl  md:text-3xl font-bold mb-4 capitalize ">{task.jobInfo.jobTitle}</h1>
 
         {/* Task details and inspect task in a flex container */}
         <div className="flex justify-between items-start mb-6">
@@ -229,11 +229,11 @@ const OnogoingTaskDetailsPage = ({ params }: { params: { id: string } }) => {
             </div>
             <div className="flex items-center">
               <CiCalendar className="w-4 h-4 mr-1" />
-              <span className="text-sm">{task.taskDate}</span>
+              <span className="text-sm">{task.jobInfo.taskDate}</span>
             </div>
             <div className="flex items-center">
               <PiCurrencyDollarSimple className="w-4 h-4 mr-1" />
-              <span className="text-sm text-primary font-bold">{task.total}</span>
+              <span className="text-sm text-primary font-bold">{task.jobInfo.total}</span>
             </div>
           </div>
 
@@ -276,7 +276,7 @@ const OnogoingTaskDetailsPage = ({ params }: { params: { id: string } }) => {
         {/* Task description */}
         <div className="mb-6 flex items-start justify-between gap-2">
           <span className="text-gray-800 flex-1">
-            {isExpanded ? task.jobDescription : `${task.jobDescription.substring(0, 200)}...`}
+            {isExpanded ? task.jobInfo.jobDescription : `${task.jobInfo.jobDescription.substring(0, 200)}...`}
           </span>
           <span className="text-gray-500 mt-1 cursor-pointer" onClick={() => setIsExpanded(!isExpanded)}>
             {isExpanded ? <BiChevronUp className="w-8 h-8" /> : <BiChevronDown className="w-8 h-8" />}
@@ -284,9 +284,9 @@ const OnogoingTaskDetailsPage = ({ params }: { params: { id: string } }) => {
         </div>
 
         {/* Image placeholder */}
-        {/* {task.taskImage && <div className="mb-6 border border-gray-200 rounded-md w-24 h-24 flex items-center justify-center bg-gray-50">
-          <Image src={task.taskImage} alt={task.jobDescription} className="w-10 h-10 text-gray-400" />
-        </div>} */}
+        {task.taskImage && <div className="mb-6 border border-gray-200 rounded-md w-24 h-24 flex items-center justify-center bg-gray-50">
+          <Image src={task.taskImage} alt={task.jobInfo.jobTitle} fill className="w-20 h-20 text-gray-400" />
+        </div>}
 
         <div className="flex flex-wrap justify-between items-start">
           {/* Empty div to maintain layout */}
@@ -296,8 +296,8 @@ const OnogoingTaskDetailsPage = ({ params }: { params: { id: string } }) => {
           <div className="mb-4">
             <p className="text-sm text-gray-500 mb-2">Assigned to</p>
             <div className="flex items-center">
-              <div className="w-8 h-8 rounded-full bg-indigo-600 flex items-center justify-center text-white text-xs mr-2">
-                { }
+              <div className=" flex items-center justify-center text-white text-xs mr-2">
+                {task.assignedDTO.fullName}
               </div>
               <div>
                 <p className="font-medium">{ }</p>
@@ -329,7 +329,7 @@ const OnogoingTaskDetailsPage = ({ params }: { params: { id: string } }) => {
         </div>
       </div>
 
-      {task.jobStatus === "INSPECTION" && (
+      {task.jobInfo.jobStatus === "INSPECTION" && (
         <InSpectionTimer
           inspectionStarted={inspectionStarted}
           selectedTime={selectedTime}
@@ -341,18 +341,18 @@ const OnogoingTaskDetailsPage = ({ params }: { params: { id: string } }) => {
       <CancelPopup
         cancelPopup={cancelPopup}
         setCancelPopup={setCancelPopup}
-        jobId={task.id} />
+        jobId={task.jobInfo.id} />
       <ApprovePopup
         approvePaymentPopup={approvePaymentPopup}
         setApprovePaymentPopup={setApprovePaymentPopup}
         paymentApproved={paymentApproved}
         setPaymentApproved={setPaymentApproved}
-        jobId={task.id} />
+        jobId={task.jobInfo.id} />
 
       <RequestReview
         requestRevisionPopup={requestRevisionPopup}
         setRequestRevisionPopup={setRequestRevisionPopup}
-        jobId={task.id} />
+        jobId={task.jobInfo.id} />
     </div>
   );
 };

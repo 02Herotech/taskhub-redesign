@@ -2,7 +2,7 @@
 
 import { useGetCustomerCompletedTasksQuery } from "@/services/tasks";
 import Loading from "@/shared/loading";
-import CompletedTasksCard from "../CompletedTasksCard";
+import CompletedTasksCard from "./CompletedTasksCard";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
 

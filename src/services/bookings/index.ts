@@ -5,6 +5,7 @@ import {
 } from "@/types/services/invoice";
 import {
   AcceptInvoiceResponse,
+  JobDataDetails,
   PaymentIntentResponse,
   RejectInvoiceResponse,
   TaskDetails,
@@ -96,7 +97,7 @@ export const booking = createApi({
         getRequest(`/all-receipts/${customerId}?size=${size}`),
       providesTags: ["Booking"],
     }),
-    getJobById: builder.query<TaskDetails, number>({
+    getJobById: builder.query<JobDataDetails, number>({
       query: (jobId) => getRequest(`/job/${jobId}`),
       providesTags: ["Booking"],
     }),

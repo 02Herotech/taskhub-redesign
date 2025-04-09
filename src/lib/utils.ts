@@ -217,6 +217,14 @@ export const revisions = [
   "Others",
 ];
 
+
+export const cancellationReasons = [
+  "I'm dissatisfied with the service",
+  "Task no longer needed",
+  "Change in priorities",
+  "Others",
+];
+
 export const inspectionTimes = [
   "1 hour",
   "3 hours",

@@ -5,12 +5,12 @@ import Image from "next/image";
 import { useSession } from "next-auth/react";
 import Button from "@/components/global/Button";
 import Link from "next/link";
-import { TaskDetails } from "@/types/services/tasks";
+import { OngoingTaskDetails, TaskDetails } from "@/types/services/tasks";
 import { getBorderColor, getStatusColor } from "@/shared/statusbadge";
 import { useRouter } from "next/navigation";
 
 interface TaskCardProps {
-    task: TaskDetails;
+    task: OngoingTaskDetails;
 }
 
 const OngoingTasksCard = ({ task }: TaskCardProps) => {
@@ -21,13 +21,13 @@ const OngoingTasksCard = ({ task }: TaskCardProps) => {
     const lastName = session?.data?.user.user.lastName;
     const fullName = `${firstName} ${lastName}`;
 
-    const date = task?.createdAt ? new Date(task.createdAt[0], task.createdAt[1] - 1, task.createdAt[2]) : new Date();
+    const date = task.jobInfo?.createdAt ? new Date(task.jobInfo.createdAt[0], task.jobInfo.createdAt[1] - 1, task.jobInfo.createdAt[2]) : new Date();
     const day = date.getDate();
     const month = date.getMonth();
     const monthName = monthNames[month];
     const dayOfWeek = date.getDay();
     const dayOfWeekName = dayOfWeekNames[dayOfWeek];
-
+    console.log(task.jobInfo, "task.jobInfo")
     // Determine the correct suffix for the day
     let daySuffix;
     if (day === 11 || day === 12 || day === 13) {
@@ -54,9 +54,9 @@ const OngoingTasksCard = ({ task }: TaskCardProps) => {
         //     <div className="space-y-1 w-full flex-1">
         //         <h2 className="font-satoshiMedium text-primary text-xl">{fullName}</h2>
         //         <h2 className="pb-4 text-base font-satoshi text-primary">
-        //             {task.jobDescription}
+        //             {task.jobInfo.jobDescription}
         //         </h2>
-        //         <Link href={`/customer/tasks/ongoing-task-details/${task.id}`}>
+        //         <Link href={`/customer/tasks/ongoing-task.jobInfo-details/${task.jobInfo.id}`}>
         //             <Button theme="outline" className="rounded-full">
         //                 View Service
         //             </Button>
@@ -65,22 +65,22 @@ const OngoingTasksCard = ({ task }: TaskCardProps) => {
         //     <div className="flex flex-row max-sm:w-full lg:flex-col max-sm:!mt-4 lg:space-y-2 lg:text-right items-center justify-between text-center lg:items-end">
         //         <h5 className="text-base text-tc-orange">{formattedDate}</h5>
         //         <h2 className="font-bold capitalize text-[#28272A] text-base">
-        //             Total Cost: {formatAmount(task.total, "USD", false)}
+        //             Total Cost: {formatAmount(task.jobInfo.total, "USD", false)}
         //         </h2>
         //     </div>
         // </div>
 
-        <div onClick={() => router.push(`/customer/tasks/ongoing-tasks/${task.id}`)} className={`relative flex flex-col border-l-[12px] cursor-pointer  shadow-[0px_-4px_132px_0px_#00000017] ${getBorderColor(task.jobStatus)} rounded-2xl shadow-sm bg-white overflow-hidden`}>
+        <div onClick={() => router.push(`/customer/tasks/ongoing-tasks/${task.jobInfo.id}`)} className={`relative flex flex-col border-l-[12px] cursor-pointer  shadow-[0px_-4px_132px_0px_#00000017] ${getBorderColor(task.taskStatus)} rounded-2xl shadow-sm bg-white overflow-hidden`}>
             <div className="p-4 pl-5 flex-1">
                 <div className="mb-2">
                     <span
-                        className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(task.jobStatus)}`}
+                        className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(task.taskStatus)}`}
                     >
-                        {task.jobStatus}
+                        {task.taskStatus}
                     </span>
                 </div>
-                <h3 className="text-xs font-semibold text-[#0F052E]">{task.jobTitle}</h3>
-                <p className="mt-1 text-sm text-[#110049] line-clamp-3">{task.jobDescription}...</p>
+                <h3 className="text-xs font-semibold text-[#0F052E]">{task.jobInfo.jobTitle}</h3>
+                <p className="mt-1 text-sm text-[#110049] line-clamp-3">{task.jobInfo.jobDescription}...</p>
 
                 <div className="mt-4 flex justify-between items-end">
                     <div className="flex flex-col space-y-1 text-xs text-gray-500">
@@ -102,7 +102,7 @@ const OngoingTasksCard = ({ task }: TaskCardProps) => {
                             <span>{formattedDate}</span>
                         </div>
 
-                        {task.jobAddress &&
+                        {task.jobInfo.jobAddress &&
                             <div className="flex items-center">
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
@@ -124,18 +124,18 @@ const OngoingTasksCard = ({ task }: TaskCardProps) => {
                                         d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
                                     />
                                 </svg>
-                                <span>{task.jobAddress}</span>
+                                <span>{task.jobInfo.jobAddress}</span>
                             </div>
                         }
                         <div>
-                            {/* <span>{task.taskType}</span> */}
+                            {/* <span>{task.jobInfo.taskType}</span> */}
                             <span>Task type</span>
                         </div>
 
                     </div>
 
                     <div className="text-right">
-                        <span className="text-3xl font-manrope font-bold text-[#381F8C]">${task.total}</span>
+                        <span className="text-3xl font-manrope font-bold text-[#381F8C]">${task.jobInfo.total}</span>
                     </div>
                 </div>
             </div>

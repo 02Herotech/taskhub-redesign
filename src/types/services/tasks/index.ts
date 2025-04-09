@@ -59,61 +59,107 @@ export type CustomerTasks = {
 // };
 
 export type OngoingTask = {
-    totalElements: number;
-    totalPages: number;
-    pageNumber: number;
-    pageSize: number;
-    content: TaskDetails[];
-  };
-  
-  export type TaskTime = [number, number, number];
+  totalElements: number;
+  totalPages: number;
+  pageNumber: number;
+  pageSize: number;
+  content: OngoingTaskDetails[];
+};
+export type CompletedTasks = {
+  totalElements: number;
+  totalPages: number;
+  pageNumber: number;
+  pageSize: number;
+  content: TaskDetails[];
+};
 
-  export type TaskDetails = {
-    id: number;
-    categoryId: number;
-    bookingId: number;
-    createdAt: TaskTime;
-    deleted: boolean;
-    taskDate: [number, number, number];
-    taskTime: [number, number];
-    total: number;
-    jobStatus:
-      | "PENDING"
-      | "ONGOING"
-      | "COMPLETED"
-      | "IN_PROGRES"
-      | "CANCELED "
-      | "INSPECTION";
-    providerId: number;
-    invoiceId: number;
-    customerId: number;
-    jobTitle: string;
-    jobAddress: string;
-    jobDescription: string;
-  };
+export type TaskTime = [number, number, number];
 
+export type OngoingTaskDetails = {
+  jobInfo: TaskDetails;
+  taskStatus: string;
+};
+export type TaskDetails = {
+  id: number;
+  categoryId: number;
+  bookingId: number;
+  createdAt: TaskTime;
+  deleted: boolean;
+  taskDate: [number, number, number];
+  taskTime: [number, number];
+  total: number;
+  jobStatus:
+    | "PENDING"
+    | "ONGOING"
+    | "COMPLETED"
+    | "IN_PROGRES"
+    | "CANCELED "
+    | "INSPECTION";
+  providerId: number;
+  invoiceId: number;
+  customerId: number;
+  jobTitle: string;
+  jobAddress: string;
+  jobDescription: string;
+};
+
+export type JobInfo = {
+  id: number;
+  invoiceId: number;
+  createdAt: string;
+  deleted: boolean;
+  total: number;
+  bookingId: number;
+  taskDate: [number, number, number];
+  taskTime: [number, number];
+  customerId: number;
+  jobStatus:
+    | "PENDING"
+    | "ONGOING"
+    | "COMPLETED"
+    | "IN_PROGRES"
+    | "CANCELED "
+    | "INSPECTION";
+  providerId: number;
+  jobTitle: string;
+  jobAddress: string;
+  jobDescription: string;
+  categoryId: number;
+};
+
+type AssignedDTO = {
+  id: number;
+  fullName: string;
+  profileImage: string;
+};
+
+export type JobDataDetails = {
+  jobInfo: JobInfo;
+  taskImage: string;
+  assignedDTO: AssignedDTO;
+};
 
 export type AllTask = {
+  id: number;
+  posterId: number;
+  taskBriefDescription: string;
+  taskDescription: string;
+  taskImage: any;
+  taskTime: [number, number];
+  taskDate: [number, number, number];
+  category: {
     id: number;
-    posterId: number;
-    taskBriefDescription: string;
-    taskDescription: string;
-    taskImage: any;
-    taskTime: [number, number];
-    taskDate: [number, number, number];
-    category: {
-        id: number;
-        categoryName: string;
-    }
-    hubTime: string | null;
-    taskType: string;
-    taskStatus: string;
-    state: string | null;
-    postCode: string | number | null;
-    suburb: string | null;
-    createdAt: [number, number, number];
-    customerBudget: number;
-    active: boolean;
+    categoryName: string;
+  };
+  hubTime: string | null;
+  taskType: string;
+  taskStatus: string;
+  state: string | null;
+  postCode: string | number | null;
+  suburb: string | null;
+  createdAt: [number, number, number];
+  customerBudget: number;
+  active: boolean;
 };
 
 export type GetAllCustomerTasksResponse = AllTask[];
@@ -125,28 +171,28 @@ export type GetCustomerTasksResponse = CustomerTasks[];
 export type GetTasksRequest = number;
 
 export type GetTasksResponse = {
-    totalElements: number;
-    totalPages: number;
-    pageNumber: number;
-    pageSize: string;
-    content: Task[];
+  totalElements: number;
+  totalPages: number;
+  pageNumber: number;
+  pageSize: string;
+  content: Task[];
 };
 
 export type CompletedTask = {
-    id: number;
-    invoiceId: number;
-    bookingId: number;
-    total: number;
-    createdAt: [number, number, number, number, number, number, number];
-    taskTime: [number, number];
-    customerId: number;
-    jobTitle: string;
-    jobDescription: string;
-    providerId: number;
-    categoryId: number;
-}
+  id: number;
+  invoiceId: number;
+  bookingId: number;
+  total: number;
+  createdAt: [number, number, number, number, number, number, number];
+  taskTime: [number, number];
+  customerId: number;
+  jobTitle: string;
+  jobDescription: string;
+  providerId: number;
+  categoryId: number;
+};
 
-export type GetCustomerCompletedTasksResponse = OngoingTask;
+export type GetCustomerCompletedTasksResponse = CompletedTasks;
 
 export type GetSingleTasksResponse = Task;
 
