@@ -14,6 +14,7 @@ import chatReducer from "./Features/chat";
 import exploreReducer from "./Features/explore";
 import authStatusReducer from "./Features/authStatus";
 import taskReducer from "./Features/taskDetails";
+import crumbReducer from "./Features/breadcrumbs";
 import { stripe } from "@/services/stripe";
 import profileProgressReducer from "@/services/profile";
 import { listing } from "@/services/listings";
@@ -41,6 +42,7 @@ export const store = configureStore({
     profileProgress: profileProgressReducer,
     timeoutPopup: authStatusReducer,
     taskDetails: persistedTaskReducer,
+    breadcrumbs: crumbReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

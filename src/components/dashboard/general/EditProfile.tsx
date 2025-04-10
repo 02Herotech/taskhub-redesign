@@ -319,10 +319,6 @@ const EditProfile = () => {
     // .map(([key]) => key)
     // .filter((key) => key !== "emailAddress"); // Exclude optional fields like email
 
-    console.log("Final missing fields:", missingFields);
-
-    console.log("ID Type:", data.idType); // Log the ID type before checking
-
     // if (missingFields.length > 0) {
     //   if (
     //     missingFields.length === 1 &&
@@ -675,7 +671,7 @@ const EditProfile = () => {
                     required: "You must be at least 18 years old",
                     validate: (value) => {
                       if (!value) return "Date of birth is required";
-
+                      
                       const enteredDate = new Date(value);
                       const today = new Date();
                       const minAllowedDate = new Date(
