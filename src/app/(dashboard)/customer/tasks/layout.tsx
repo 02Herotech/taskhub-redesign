@@ -46,7 +46,7 @@ export default function TaskLayout({
 
   return (
     <main className=" pt-8">
-      <h1 className="text-2xl font-bold ">My Tasks</h1>
+      <h1 className="text-2xl font-bold my-2  ">My Tasks</h1>
       <div className="flex items-center mb-3 gap-1">
         <button className="flex items-center text-gray-600 hover:text-gray-900">
           <MdArrowBackIos />

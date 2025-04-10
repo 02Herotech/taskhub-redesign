@@ -198,26 +198,6 @@ export type AllTask = {
   createdAt: [number, number, number];
   customerBudget: number;
   active: boolean;
-  id: number;
-  posterId: number;
-  taskBriefDescription: string;
-  taskDescription: string;
-  taskImage: any;
-  taskTime: [number, number];
-  taskDate: [number, number, number];
-  category: {
-    id: number;
-    categoryName: string;
-  };
-  hubTime: string | null;
-  taskType: string;
-  taskStatus: string;
-  state: string | null;
-  postCode: string | number | null;
-  suburb: string | null;
-  createdAt: [number, number, number];
-  customerBudget: number;
-  active: boolean;
 };
 
 export type GetAllCustomerTasksResponse = AllTask[];
@@ -229,11 +209,6 @@ export type GetCustomerTasksResponse = CustomerTasks[];
 export type GetTasksRequest = number;
 
 export type GetTasksResponse = {
-  totalElements: number;
-  totalPages: number;
-  pageNumber: number;
-  pageSize: string;
-  content: Task[];
   totalElements: number;
   totalPages: number;
   pageNumber: number;

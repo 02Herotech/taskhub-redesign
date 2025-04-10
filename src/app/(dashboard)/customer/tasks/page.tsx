@@ -5,7 +5,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import CompletedTasks from '@/components/dashboard/customer/CompletedTasks';
-import NewTasks from '@/components/dashboard/customer/taskmodule/NewTasks';
+import NewTasks from '@/components/dashboard/customer/taskmodule/PostedByMe';
 import OngoingTasks from '@/components/dashboard/customer/taskmodule/OngoingTasks';
 import AllTasks from '@/components/dashboard/customer/taskmodule/AllTasks';
 import { MdArrowBackIos } from 'react-icons/md';

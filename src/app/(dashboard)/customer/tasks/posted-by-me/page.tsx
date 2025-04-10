@@ -1,5 +1,5 @@
 import React from 'react'
-import NewTasks from '@/components/dashboard/customer/taskmodule/NewTasks';
+import NewTasks from '@/components/dashboard/customer/taskmodule/PostedByMe';
 
 const NewTaskPage = () => {
   return (
