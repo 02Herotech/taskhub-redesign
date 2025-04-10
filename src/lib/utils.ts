@@ -318,6 +318,7 @@ export const parseSlug = (
   };
 };
 
+/**Get image url from file */
 export function getImageUrl(file: File) {
   if (file instanceof File) {
     return URL.createObjectURL(file);

@@ -643,7 +643,7 @@ const EditProfile = () => {
                     required: "You must be at least 18 years old",
                     validate: (value) => {
                       if (!value) return "Date of birth is required";
-
+                      
                       const enteredDate = new Date(value);
                       const today = new Date();
                       const minAllowedDate = new Date(
