@@ -274,7 +274,7 @@ const OnogoingTaskDetailsPage = ({ params }: { params: { id: string } }) => {
         </div>
 
         {/* Task description */}
-        <div className="mb-6 flex items-start justify-between gap-2">
+        <div className="mb-6 flex flex-col sm:flex-row items-start justify-between gap-2">
           <span className="text-gray-800 flex-1">
             {isExpanded ? task.jobInfo.jobDescription : `${task.jobInfo.jobDescription.substring(0, 200)}...`}
           </span>
@@ -284,25 +284,24 @@ const OnogoingTaskDetailsPage = ({ params }: { params: { id: string } }) => {
         </div>
 
         {/* Image placeholder */}
-        {task.taskImage && <div className="mb-6 border border-gray-200 rounded-md w-24 h-24 flex items-center justify-center bg-gray-50">
+        {task.taskImage && <div className="mb-6 border relative border-gray-200 rounded-md w-48 h-48 flex items-center justify-center bg-gray-50">
           <Image src={task.taskImage} alt={task.jobInfo.jobTitle} fill className="w-20 h-20 text-gray-400" />
         </div>}
 
-        <div className="flex flex-wrap justify-between items-start">
-          {/* Empty div to maintain layout */}
-          <div></div>
-
+        <div className="flex flex-wrap justify-end">
           {/* Assigned to */}
-          <div className="mb-4">
-            <p className="text-sm text-gray-500 mb-2">Assigned to</p>
+          <div className="mb-4 flex flex-col">
+            <p className="text-sm text-primary mb-2 font-bold">Assigned to</p>
             <div className="flex items-center">
-              <div className=" flex items-center justify-center text-white text-xs mr-2">
-                {task.assignedDTO.fullName}
+              {task.assignedDTO.profileImage &&
+                <div className="flex relative items-center justify-center w-10 h-10 text-primary text-xs mr-2">
+                  <Image src={task.assignedDTO.profileImage} alt={task.assignedDTO.fullName} fill className="w-10 h-10 text-gray-400" />
               </div>
+              }
               <div>
-                <p className="font-medium">{ }</p>
-                <div className="flex items-center">
-                  <span className="text-sm text-gray-500 mr-1">{ }</span>
+                <p className="font-medium">{task.assignedDTO.fullName}</p>
+                <div className="flex items-center ">
+                  <span className="text-sm text-gray-500 mr-1">4.5</span>
                   <div className="flex">
                     {"★★★★★".split("").map((star, i) => (
                       <span key={i} className="text-amber-400 text-xs">

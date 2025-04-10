@@ -29,8 +29,8 @@ export default function TaskLayout({
       path: "/customer/tasks/all-tasks",
     },
     {
-      label: "New Tasks",
-      path: "/customer/tasks/new-tasks",
+      label: "Posted by Me",
+      path: "/customer/tasks/posted-by-me",
     },
     {
       label: "Ongoing Tasks",

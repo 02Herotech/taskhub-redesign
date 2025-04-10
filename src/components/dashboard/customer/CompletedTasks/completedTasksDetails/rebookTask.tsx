@@ -1,32 +1,63 @@
 "use client"
+import Button from '@/components/global/Button';
 import Popup from '@/components/global/Popup';
+import { SuccessIcon } from '@/icons/icons';
+import { useRebookJobMutation } from '@/services/bookings';
 import React, { useState } from 'react'
+import { useForm } from 'react-hook-form';
 
 
 type RebookTaskProps = {
   showRebookModalPopup: boolean;
   setShowRebookModalPopup: React.Dispatch<React.SetStateAction<boolean>>
+  currentStep: number
+  setCurrentStep: React.Dispatch<React.SetStateAction<number>>
+  jobId: number
 }
-const RebookTask = ({ showRebookModalPopup, setShowRebookModalPopup }: RebookTaskProps) => {
 
-  const [formData, setFormData] = useState({
+type FormData = {
+  date: string;
+  time: string;
+  amount: number;
+  description: string;
+};
+const RebookTask = ({ showRebookModalPopup, setShowRebookModalPopup, jobId, currentStep, setCurrentStep }: RebookTaskProps) => {
+  const [rebookTask, { isLoading: rebookTaskLoading, error: rebookTaskError }] = useRebookJobMutation();
+
+
+  const { register, handleSubmit, formState: { errors }, reset } = useForm<FormData>()
+
+  const [formData, setFormData] = useState<FormData>({
     date: "",
     time: "",
-    amount: "",
-    details: "",
+    amount: 0,
+    description: "",
   })
 
-  const [currentStep, setCurrentStep] = useState(1)
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }))
-  }
+  const timeOptions = [];
+  console.log(currentStep, "step")
+  const generateTimeOptions = () => {
+    const hours = ['12', '01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11'];
+    const amPm = ['AM', 'PM'];
+    const intervals = ['00', '15', '30', '45'];
 
-  const handleContinue = () => {
+    // Loop to generate time slots
+    hours.forEach((hour) => {
+      amPm.forEach((period) => {
+        intervals.forEach((minute) => {
+          timeOptions.push(`${hour}:${minute} ${period}`);
+        });
+      });
+    });
+  };
+
+  generateTimeOptions();
+  console.log(formData, "formData")
+  const handleContinue = (data: FormData) => {
+    setFormData((prev) => ({ ...prev, ...data }))
+
+    console.log(data, "form data")
     setCurrentStep(2)
   }
 
@@ -34,10 +65,15 @@ const RebookTask = ({ showRebookModalPopup, setShowRebookModalPopup }: RebookTas
     setCurrentStep(1)
   }
 
-  const handleSubmit = () => {
-    console.log("Form submitted:", formData)
-    // Here you would typically send the data to an API
-  }
+  const handleRebook = async () => {
+    try {
+      await rebookTask({ jobId, ...formData }).unwrap();
+      setCurrentStep(3)
+    } catch (error) {
+      console.error('Error re-booking task:', error);
+    }
+  };
+
 
   const formatDate = () => {
     if (!formData.date) return ""
@@ -46,14 +82,6 @@ const RebookTask = ({ showRebookModalPopup, setShowRebookModalPopup }: RebookTas
     return `Mon, ${monthNames[date.getMonth()]} ${date.getDate()}`
   }
 
-  const formatTime = () => {
-    if (!formData.time) return ""
-    const [hours, minutes] = formData.time.split(":")
-    const hour = Number.parseInt(hours)
-    const ampm = hour >= 12 ? "pm" : "am"
-    const hour12 = hour % 12 || 12
-    return `${hour12}:${minutes} ${ampm}`
-  }
 
   const formatAmount = () => {
     if (!formData.amount) return ""
@@ -64,37 +92,37 @@ const RebookTask = ({ showRebookModalPopup, setShowRebookModalPopup }: RebookTas
       isOpen={showRebookModalPopup}
       onClose={() => setShowRebookModalPopup(false)}
     >
-      <div className="relative min-h-[200px] p-6  max-h-[90vh] overflow-y-auto rounded-2xl bg-white font-satoshi lg:w-[520px]">
-        <h2 className="text-2xl font-bold text-[#3b1c8c] mb-4">Re-book task</h2>
+      <div className="relative min-h-[200px] p-2 sm:p-6  max-h-[90vh] overflow-y-auto rounded-2xl bg-white font-satoshi lg:w-[520px]">
+        {currentStep != 3 && <h2 className="text-2xl font-bold text-[#3b1c8c] mb-4">Re-book task</h2>}
 
-        {currentStep === 1 ? (
-          <>
+        {currentStep === 1 &&
+          <form>
             <p className="text-gray-700 mb-3">
               Please note that when you re-book a task or service, you&apos;ll only be charged once the task is completed.
             </p>
 
             <section className='flex items-center gap-4'>
-
               <div className="mb-4 w-full">
                 <label className="block mb-2 font-medium">Date</label>
                 <input
                   type="date"
                   name="date"
-                  value={formData.date}
-                  onChange={handleChange}
+                  {...register("date")}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#3b1c8c]"
                 />
               </div>
 
               <div className="mb-4 w-full">
                 <label className="block mb-2 font-medium">Time</label>
-                <input
-                  type="time"
-                  name="time"
-                  value={formData.time}
-                  onChange={handleChange}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#3b1c8c]"
-                />
+
+                <select className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#3b1c8c]"
+                  id="time" name="time"   {...register("time")}>
+                  {timeOptions.map((time, index) => (
+                    <option key={index} value={time}>
+                      {time}
+                    </option>
+                  ))}
+                </select>
               </div>
             </section>
 
@@ -103,8 +131,8 @@ const RebookTask = ({ showRebookModalPopup, setShowRebookModalPopup }: RebookTas
               <input
                 type="text"
                 name="amount"
-                value={formData.amount}
-                onChange={handleChange}
+                {...register("amount", { valueAsNumber: true })}
+
                 placeholder="0000 0000 0000 0000"
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#3b1c8c]"
               />
@@ -113,9 +141,8 @@ const RebookTask = ({ showRebookModalPopup, setShowRebookModalPopup }: RebookTas
             <div className="mb-6">
               <label className="block mb-2 font-medium">Details</label>
               <textarea
-                name="details"
-                value={formData.details}
-                onChange={handleChange}
+                name="description"
+                {...register("description")}
                 placeholder="Write reasons for re-booking here..."
                 className="w-full h-32 px-4 py-2 border border-gray-300 rounded-lg resize-none focus:outline-none focus:ring-1 focus:ring-[#3b1c8c]"
               ></textarea>
@@ -123,13 +150,15 @@ const RebookTask = ({ showRebookModalPopup, setShowRebookModalPopup }: RebookTas
 
             <button
               type="button"
-              onClick={handleContinue}
+              onClick={handleSubmit(handleContinue)}
               className="w-full py-3 px-4 bg-[#3b1c8c] text-white font-medium rounded-full hover:bg-[#2d1569] transition-colors"
             >
               Continue
             </button>
-          </>
-        ) : (
+          </form>
+        }
+
+        {currentStep === 2 &&
           <>
             <p className="text-gray-700 mb-6">
               Please be reminded: there will be a charge for re-booking a task once it&apos;s completed.
@@ -144,7 +173,7 @@ const RebookTask = ({ showRebookModalPopup, setShowRebookModalPopup }: RebookTas
 
             <div className="mb-2 flex">
               <span className="text-amber-500 font-medium w-28">Time:</span>
-              <span>{formatTime()}</span>
+            <span>{formData.time}</span>
             </div>
 
             <div className="mb-2 flex">
@@ -154,27 +183,42 @@ const RebookTask = ({ showRebookModalPopup, setShowRebookModalPopup }: RebookTas
 
             <div className="mb-6 flex">
               <span className="text-amber-500 font-medium w-28">Description:</span>
-              <span>{formData.details}</span>
+            <span>{formData.description}</span>
             </div>
 
             <div className="flex gap-4">
               <button
                 type="button"
                 onClick={handleBack}
-                className="flex-1 py-3 px-4 bg-[#f0edf9] text-[#3b1c8c] font-medium rounded-full hover:bg-[#e6e0f5] transition-colors"
+              className=" w-full flex-1 py-3 px-4 bg-[#f0edf9] text-[#3b1c8c] font-medium rounded-full hover:bg-[#e6e0f5] transition-colors"
               >
                 Back
               </button>
-              <button
-                type="button"
-                onClick={handleSubmit}
-                className="flex-1 py-3 px-4 bg-[#3b1c8c] text-white font-medium rounded-full hover:bg-[#2d1569] transition-colors"
-              >
-                Submit
-              </button>
+
+            <Button
+              className="w-full rounded-full"
+              onClick={handleRebook}
+              type="button"
+              loading={rebookTaskLoading}
+            >
+              Submit
+              </Button>
             </div>
           </>
-        )}
+        }
+
+        {currentStep === 3 &&
+          <div className=" w-full px-2 sm:px-6 relative flex flex-col items-center space-y-4">
+            <SuccessIcon />
+            <h2 className="text-2xl font-bold text-indigo-900 mb-3">Review Sent</h2>
+            <p className="text-center text-[#140B31] font-medium mb-6">
+              Re-Booking Proposal sent to Service Provider successfully
+            </p>
+            <button onClick={() => { setCurrentStep(null); setShowRebookModalPopup(false); reset(); }} className="bg-indigo-800 hover:bg-indigo-700 text-white font-medium py-2 px-10 rounded-full">
+              Done
+            </button>
+          </div>
+        }
       </div>
     </Popup>
   )

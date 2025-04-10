@@ -71,7 +71,7 @@ const NewTasksCard = ({ task }: TaskCardProps) => {
   ];
 
   return (
-    <div className={`relative flex flex-col border-l-[12px]  shadow-[0px_-4px_132px_0px_#00000017] ${getBorderColor(task.taskStatus)} rounded-2xl shadow-sm bg-white overflow-hidden`}>
+    <div onClick={() => router.push(`/customer/tasks/posted-by-me/${task.id}`)} className={`relative flex flex-col border-l-[12px]  shadow-[0px_-4px_132px_0px_#00000017] ${getBorderColor(task.taskStatus)} rounded-2xl shadow-sm bg-white overflow-hidden`}>
       <div className="p-4 pl-5 flex-1">
         <div className="mb-2">
           <span
