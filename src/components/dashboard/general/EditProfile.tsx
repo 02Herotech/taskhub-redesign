@@ -209,8 +209,6 @@ const EditProfile = () => {
     fetchUserData();
   }, [isServiceProvider, dispatch, reset, isEditingEnabled]);
 
-  //console.log(userDetails)
-
   const watchPostcode = watch("postcode");
 
   const formatDateAsYYYYMMDD = (date: Date): string => {
@@ -318,10 +316,6 @@ const EditProfile = () => {
     // })
     // .map(([key]) => key)
     // .filter((key) => key !== "emailAddress"); // Exclude optional fields like email
-
-    console.log("Final missing fields:", missingFields);
-
-    console.log("ID Type:", data.idType); // Log the ID type before checking
 
     // if (missingFields.length > 0) {
     //   if (
@@ -641,32 +635,6 @@ const EditProfile = () => {
                 <label htmlFor="dob" className="text-violet-normal">
                   Date of Birth
                 </label>
-                {/* <Controller
-      name="dateOfBirth"
-      control={control}
-      rules={{
-        required: "Date of Birth is required",
-        validate: (value) => {
-          if (!value) return "Date of Birth is required";
-          const enteredDate = new Date(value);
-          const today = new Date();
-          const minDate = new Date(today.setFullYear(today.getFullYear() - 18));
-
-          return enteredDate <= minDate || "You must be at least 18 years old";
-        },
-      }}
-      render={({ field }) => (
-        <Calendar
-          {...field}
-          id="dob"
-          dateFormat="dd/mm/yy"
-          showIcon
-          placeholder="DD/MM/YYYY"
-          maxDate={new Date(new Date().setFullYear(new Date().getFullYear() - 18))}
-          className="p-inputtext border w-full lg:max-w-sm border-slate-100 rounded-xl shadow hover:shadow-md"
-        />
-      )}
-  /> */}
 
                 <Controller
                   name="dateOfBirth"

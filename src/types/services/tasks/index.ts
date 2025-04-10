@@ -1,48 +1,86 @@
-
 export type Task = {
+  id: number;
+  posterId: number;
+  taskBriefDescription: string;
+  taskDescription: string;
+  taskImage: any;
+  category: {
     id: number;
-    posterId: number;
-    taskBriefDescription: string;
-    taskDescription: string;
-    taskImage: any;
-    category: {
-        id: number;
-        categoryName: string;
-    }
-    taskTime: [number, number];
-    taskDate: [number, number, number];
-    hubTime: string | null;
-    taskType: string;
-    taskStatus: string;
-    state: string | null;
-    postCode: string | number | null;
-    suburb: string | null;
-    createdAt: [number, number, number];
-    customerBudget: number;
-    active: boolean;
+    categoryName: string;
+  };
+  taskTime: [number, number];
+  taskDate: [number, number, number];
+  hubTime: string | null;
+  taskType: string;
+  taskStatus: string;
+  state: string | null;
+  postCode: string | number | null;
+  suburb: string | null;
+  createdAt: [number, number, number];
+  customerBudget: number;
+  active: boolean;
 };
 
 export type CustomerTasks = {
+  id: number;
+  posterId: number;
+  taskBriefDescription: string;
+  taskDescription: string;
+  taskImage: any;
+  taskTime: [number, number];
+  taskDate: [number, number, number];
+  category: {
     id: number;
-    posterId: number;
-    taskBriefDescription: string;
-    taskDescription: string;
-    taskImage: any;
-    taskTime: [number, number];
-    taskDate: [number, number, number];
-    category: {
-        id: number;
-        categoryName: string;
-    }
-    hubTime: string | null;
-    taskType: string;
-    taskStatus: string;
-    state: string | null;
-    postCode: string | number | null;
-    suburb: string | null;
-    createdAt: [number, number, number];
-    customerBudget: number;
-    active: boolean;
+    categoryName: string;
+  };
+  hubTime: string | null;
+  taskType: string;
+  taskStatus: string;
+  state: string | null;
+  postCode: string | number | null;
+  suburb: string | null;
+  createdAt: [number, number, number];
+  customerBudget: number;
+  active: boolean;
+};
+
+export interface TaskCategory {
+  id: number;
+  categoryName: string;
+}
+
+export interface TaskInfo {
+  id: number;
+  state: string;
+  taskImage: string;
+  suburb: string;
+  postCode: string;
+  taskType: string;
+  posterId: number;
+  category: TaskCategory;
+  taskStatus: string;
+  createdAt: string; // ISO date string e.g., '2025-04-08'
+  assignedTo: number;
+  taskDate: [number, number, number]; // ISO date string e.g., '2025-04-08'
+  taskTime: [number, number];
+  taskDescription: string;
+  taskBriefDescription: string;
+  termAccepted: boolean;
+  customerBudget: number;
+  deleted: boolean;
+  isActive: boolean;
+}
+
+export interface PosterInfo {
+  id: number;
+  fullName: string;
+  profileImage: string;
+  email: string;
+}
+
+export interface TaskResponse {
+  taskInfo: TaskInfo;
+  posterInfo: PosterInfo;
 }
 
 // export type OngoingTask = {
@@ -160,6 +198,26 @@ export type AllTask = {
   createdAt: [number, number, number];
   customerBudget: number;
   active: boolean;
+  id: number;
+  posterId: number;
+  taskBriefDescription: string;
+  taskDescription: string;
+  taskImage: any;
+  taskTime: [number, number];
+  taskDate: [number, number, number];
+  category: {
+    id: number;
+    categoryName: string;
+  };
+  hubTime: string | null;
+  taskType: string;
+  taskStatus: string;
+  state: string | null;
+  postCode: string | number | null;
+  suburb: string | null;
+  createdAt: [number, number, number];
+  customerBudget: number;
+  active: boolean;
 };
 
 export type GetAllCustomerTasksResponse = AllTask[];
@@ -171,6 +229,11 @@ export type GetCustomerTasksResponse = CustomerTasks[];
 export type GetTasksRequest = number;
 
 export type GetTasksResponse = {
+  totalElements: number;
+  totalPages: number;
+  pageNumber: number;
+  pageSize: string;
+  content: Task[];
   totalElements: number;
   totalPages: number;
   pageNumber: number;
@@ -194,46 +257,46 @@ export type CompletedTask = {
 
 export type GetCustomerCompletedTasksResponse = CompletedTasks;
 
-export type GetSingleTasksResponse = Task;
+export type GetSingleTasksResponse = TaskResponse;
 
 export type GetFilterTaskByPriceRequest = {
-    page: number;
-    minPrice: number;
-    maxPrice: number;
+  page: number;
+  minPrice: number;
+  maxPrice: number;
 };
 
 export type GetFilterTasksRequest = {
-    pageNumber: number;
-    category?: string;
-    location?: string;
-    typeOfService?: string;
-    minPrice?: number;
-    maxPrice?: number;
+  pageNumber: number;
+  category?: string;
+  location?: string;
+  typeOfService?: string;
+  minPrice?: number;
+  maxPrice?: number;
 };
 
 export type GetFilterTaskByTypeRequest = {
-    page: number;
-    type: string;
+  page: number;
+  type: string;
 };
 
 export type GetTaskByTextRequest = {
-    pageNumber: number;
-    text: string;
+  pageNumber: number;
+  text: string;
 };
 
 export type PaymentIntentResponse = {
-    intentID: string;
-    clientSecret: string;
+  intentID: string;
+  clientSecret: string;
 };
 
 export type AcceptInvoiceResponse = {
-    data: string | null;
-    message: string;
-    status: string;
-}
+  data: string | null;
+  message: string;
+  status: string;
+};
 
 export type RejectInvoiceResponse = {
-    data: string | null;
-    message: string;
-    status: string;
-}
+  data: string | null;
+  message: string;
+  status: string;
+};

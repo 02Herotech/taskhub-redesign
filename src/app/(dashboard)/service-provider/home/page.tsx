@@ -25,8 +25,8 @@ function Page() {
                   Complete your <br /> Profile
                 </h4>
                 <p className="max-w-[200px] text-sm font-medium text-[#0000007A]">
-                  Completing your profile helps you get matched to the best
-                  service providers for your needs
+                  Completing your profile helps you get connected to customers
+                  in need of your expertise.
                 </p>
               </div>
             </Link>
