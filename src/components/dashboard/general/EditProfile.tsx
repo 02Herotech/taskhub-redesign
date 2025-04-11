@@ -72,21 +72,6 @@ const EditProfile = () => {
 
   const [dateOfBirth, setDateOfBirth] = useState<Date | null>(null);
 
-  // const [suburb, setSuburb] = useState("");
-
-  // const [currentSuburb, setCurrentSuburb] = useState<SurburbInfo | null>(null);
-  // const {
-  //   suburbList,
-  //   setSuburbList,
-  //   error: suburbError,
-  //   isLoading,
-  // } = useSuburbData(suburb, currentSuburb);
-
-  // const [inputValue, setInputValue] = useState(field.value || "");
-  // const [currentSuburb, setCurrentSuburb] = useState<SurburbInfo | null>(null);
-  // const { suburbList, setSuburbList, error: suburbError, isLoading } = useSuburbData(inputValue, currentSuburb);
-
-  // const { suburbList, setSuburbList, error: suburbError, isLoading } = useSuburbData(inputValue, currentSuburb);
   const dispatch = useDispatch();
 
   const { data: session } = useSession();
@@ -140,19 +125,19 @@ const EditProfile = () => {
   const [currentSuburb, setCurrentSuburb] = useState<SurburbInfo | null>(null);
   const suburbValue = watch("suburb"); // Watch the suburb field
 
+  const {
+    suburbList,
+    setSuburbList,
+    error: suburbError,
+    isLoading,
+  } = useSuburbData(inputValue, currentSuburb, userDetails.suburbs);
+
   // Sync input value with react-hook-form's field value
   useEffect(() => {
     if (suburbValue) {
       setInputValue(suburbValue);
     }
   }, [suburbValue]);
-
-  const {
-    suburbList,
-    setSuburbList,
-    error: suburbError,
-    isLoading,
-  } = useSuburbData(inputValue, currentSuburb);
 
   const watchField = watch();
   const watchABN = watch("abn");
@@ -232,31 +217,6 @@ const EditProfile = () => {
     (data.idImageBack = "null"), (data.idImageFront = "null");
     if (!isServiceProvider) data.abn = "null";
 
-    // const missingFields = Object.entries(data)
-    // .filter(([key, value]) => value === "" || value == null)
-    // .map(([key]) => key);
-
-    // const missingFields = Object.entries(data)
-    // .filter(([key, value]) => value === "" || value == null)
-    // .map(([key]) => key);
-    // .filter((key) => key !== "emailAddress");
-
-    // console.log("selectedDocumentFront:", selectedDocumentFront);
-    // console.log("userDetails.idImageFront:", userDetails.idImageFront);
-    // console.log("selectedDocumentBack:", selectedDocumentBack);
-    // console.log("userDetails.idImageBack:", userDetails.idImageBack);
-
-    // const missingFields = Object.entries(data)
-    // .filter(([key, value]) => {
-    //   if (["idImageFront", "idImageBack"].includes(key)) {
-    //     return !selectedDocumentFront && !userDetails.idImageFront && key === "idImageFront" ||
-    //           !selectedDocumentBack && !userDetails.idImageBack && key === "idImageBack";
-    //   }
-    //   return value === "" || value == null;
-    // })
-    // .map(([key]) => key)
-    // .filter((key) => key !== "emailAddress");
-
     const missingFields = Object.entries(data)
       .filter(([key, value]) => {
         if (["idImageFront", "idImageBack"].includes(key)) {
@@ -296,111 +256,6 @@ const EditProfile = () => {
       console.log("Missing fields:", missingFields);
       return;
     }
-
-    // const missingFields = Object.entries(data)
-    // .filter(([key, value]) => {
-    //   if (["idImageFront", "idImageBack"].includes(key)) {
-    //     if (data.idType === "International Passport") {
-    //       // Only require idImageFront for international passports
-    //       return key === "idImageFront" && !selectedDocumentFront && !userDetails.idImageFront;
-    //     }
-
-    //     // Other ID types require both images
-    //     return (
-    //       (!selectedDocumentFront && !userDetails.idImageFront && key === "idImageFront") ||
-    //       (!selectedDocumentBack && !userDetails.idImageBack && key === "idImageBack")
-    //     );
-    //   }
-
-    //   return value === "" || value == null;
-    // })
-    // .map(([key]) => key)
-    // .filter((key) => key !== "emailAddress"); // Exclude optional fields like email
-
-    // if (missingFields.length > 0) {
-    //   if (
-    //     missingFields.length === 1 &&
-    //     data.idType.toLowerCase() === "international passport" &&
-    //     missingFields.includes("idImageBack")
-    //   ) {
-    //     console.log("Skipping idImageBack validation for International Passport");
-    //   } else {
-    //     setEditProfileError(`Missing required fields: ${missingFields.join(", ")}`);
-    //     console.log("Missing fields:", missingFields);
-    //     return;
-    //   }
-    // } else {
-    //   console.log("No missing fields, proceeding...");
-    // }
-
-    // if (
-    //   missingFields.length > 0 &&
-    //   data.idType.toLowerCase() === "international passport" &&
-    //   missingFields.includes("idImageBack")
-    // ) {
-    //   console.log("Skipping idImageBack validation for International Passport");
-    // } else {
-    //   setEditProfileError(`Missing required fields: ${missingFields.join(", ")}`);
-    //   console.log("Missing fields:", missingFields);
-    //   return;
-    // }
-
-    // if (missingFields.length > 0) {
-    //   setEditProfileError(`Missing required fields: ${missingFields.join(", ")}`);
-    //   console.log("Missing fields:", missingFields);
-    //   return;
-    // }
-    // if (
-    //   missingFields.length > 0 &&
-    //   data.idType === "INTERNATIONAL_PASSPORT" &&
-    //   missingFields.includes("idImageBack")
-    // ) {
-    //   console.log("Skipping idImageBack validation for International Passport");
-    // } else {
-    //   setEditProfileError(`Missing required fields: ${missingFields.join(", ")}`);
-    //   console.log("Missing fields:", missingFields);
-    //   return;
-    // }
-
-    // if (
-    //   missingFields.length === 1 &&
-    //   data.idType === "INTERNATIONAL_PASSPORT" &&
-    //   missingFields.includes("idImageBack")
-    // ) {
-    //   // Skip validation for idImageBack when idType is INTERNATIONAL_PASSPORT
-    //   console.log("Skipping idImageBack validation for International Passport");
-    // } else {
-    //   setEditProfileError(`Missing required fields: ${missingFields.join(", ")}`);
-    //   console.log("Missing fields:", missingFields);
-    //   return;
-    // }
-
-    // if (data.idType === "International Passport" && !selectedDocumentFront) {
-    //   setEditProfileError("Missing required field: idImageFront");
-    //   console.log("Missing field: idImageFront");
-    //   return;
-    // }
-    // if (data.idType === "International Passport" && !selectedDocumentFront && !data.idImageFront) {
-    //   setEditProfileError("Missing required field: idImageFront");
-    //   return;
-    // }
-
-    // if (data.idType !== "International Passport" && (!selectedDocumentBack || !selectedDocumentFront)) {
-    //   setEditProfileError("Missing required fields: idImageFront, idImageBack");
-    //   console.log("Missing fields: idImageFront, idImageBack");
-    //   return;
-    // }
-
-    // if (data.idType === "Medicare Card" && !selectedDocumentFront && !data.idImageFront) {
-    //   setEditProfileError("Missing required field: idImageFront");
-    //   return;
-    // }
-
-    // if (data.idType !== "Medicare Card" && (!selectedDocumentBack || !selectedDocumentFront)) {
-    //   setEditProfileError("Missing required fields: idImageFront, idImageBack");
-    //   console.log("Missing fields: idImageFront, idImageBack");
-    //   return;
-    // }
 
     setEditProfileError("");
     try {
@@ -473,8 +328,6 @@ const EditProfile = () => {
         url = "customer/update";
       }
 
-      // console.log("Final submitData:", JSON.stringify(submitData, null, 2));
-
       await authInstance.patch(url, submitData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
@@ -489,11 +342,6 @@ const EditProfile = () => {
       );
       setEditProfileError("Something went wrong, please try again");
     }
-  };
-
-  const handleChangeProfilePicture = () => {
-    setIsEditingProfilePicture({ isEditing: true, image: null });
-    setIsFormModalShown(true);
   };
 
   const handleChangeFront = () => {
@@ -723,20 +571,6 @@ const EditProfile = () => {
               Contact Information
             </h3>
             <div className="flex flex-wrap gap-6 lg:col-span-8 lg:grid lg:grid-cols-2">
-              {/* Phone number */}
-              {/* <label className="flex w-full flex-col gap-3 text-violet-normal">
-              <span className="flex items-center justify-between">
-                <span>Phone Number</span>
-                <BiCheck className="size-5 rounded-full bg-green-500 p-1 text-white" />
-              </span>
-              <input
-                type="text"
-                className="rounded-xl border border-slate-100 p-2 text-slate-700 shadow outline-none transition-shadow duration-300 hover:shadow-md lg:max-w-sm"
-                value={user?.phoneNumber}
-                readOnly
-                disabled
-              />
-            </label> */}
               {/* Email Address */}
               <label className="flex w-full flex-col gap-3 text-violet-normal">
                 <span className="flex items-center justify-between">
@@ -753,15 +587,6 @@ const EditProfile = () => {
               </label>
             </div>
           </section>
-
-          {/* <Controller
-            name="emailAddress"
-            control={control}
-            defaultValue={user?.emailAddress} // Ensure it's prefilled
-            render={({ field }) => (
-              <input {...field} disabled className="your-input-styles" />
-            )}
-          /> */}
 
           {/* Address Information */}
           <section className="flex flex-col gap-4">
