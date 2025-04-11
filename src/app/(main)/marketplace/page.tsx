@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useLayoutEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { FaHome } from "react-icons/fa";
 import { MdPersonalInjury } from "react-icons/md";
 import { GrPersonalComputer } from "react-icons/gr";
@@ -41,110 +41,20 @@ const MareketPlace = () => {
   const { categories, isFiltering, isFilteringLoading } = useSelector(
     (state: RootState) => state.market,
   );
-
   const session = useSession();
-  const router = useRouter();
-  const isAuth = session.status === "authenticated";
-  const token = session?.data?.user?.accessToken;
-  const isServiceProvider =
-    session?.data?.user?.user?.roles[0] === "SERVICE_PROVIDER";
-  const [showPopup, setShowPopup] = useState(false);
-  const [fetchedUserData, setFetchedUserData] = useState(defaultUserDetails);
-  const [loadingProfile, setLoadingProfile] = useState(true);
-  const [hasClosedPopup, setHasClosedPopup] = useState(false);
   const [firstTimePopup, setfirstTimePopup] = useState(false);
 
   useEffect(() => {
     if (session.data && getCookie("firstLogin")) {
-      //!TODO Would show it even if it's a different login
+      //!TODO Would still display if signed up user is diffeerent from logged in user
       setfirstTimePopup(true);
       deleteCookie("firstLogin");
     }
   }, [session.data]);
 
-  useEffect(() => {
-    const fetchUserData = async () => {
-      if (!token) return;
-      try {
-        const url = isServiceProvider
-          ? `service_provider/profile`
-          : `customer/profile`;
-        const { data } = await instance.get(url, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        setFetchedUserData(data);
-      } catch (error) {
-        console.error(error);
-      } finally {
-        setLoadingProfile(false);
-      }
-    };
-    fetchUserData();
-  }, [token, isServiceProvider]);
-
-  const { profile: user } = useSelector(
-    (state: RootState) => state.userProfile,
-  );
-
-  /* eslint-disable react-hooks/exhaustive-deps */
-  const profileProgressData = [
-    {
-      title: "Profile Picture",
-      status: user?.profileImage,
-    },
-    {
-      title: "Email Address",
-      status: user?.emailAddress,
-    },
-    {
-      title: "Address Information",
-      status: user?.address?.postCode,
-    },
-    // {
-    //   title: "Mobile Number",
-    //   status: user?.phoneNumber,
-    // },
-    {
-      title: "Identification Document",
-      status: fetchedUserData.idImageFront,
-    },
-    {
-      title: "Date of Birth",
-      status: fetchedUserData.dateOfBirth,
-    },
-    ...(fetchedUserData.idType !== "INTERNATIONAL_PASSPORT"
-      ? [
-          {
-            title: "Identification Document Back",
-            status: fetchedUserData?.idImageBack,
-          },
-        ]
-      : []),
-  ];
-
-  // Popup logic to show after profile data is fully loaded
-  useLayoutEffect(() => {
-    if (!loadingProfile && user && !hasClosedPopup) {
-      const isProfileComplete = profileProgressData.every(
-        (item) =>
-          item.status !== "" &&
-          item.status !== null &&
-          item.status !== undefined &&
-          item.status !== "null" && // Check for "null" string
-          item.status !== "undefined" && // Check for "undefined" string
-          !(typeof item.status === "string" && item.status.trim() === ""),
-      );
-
-      if (isAuth && isServiceProvider && !isProfileComplete) {
-        setShowPopup(true);
-      }
-    }
-  }, [loadingProfile, user, fetchedUserData, isAuth, profileProgressData]);
-
   const categoriesSlice = categories.slice(0, 8);
 
   const userType = session.data?.user.user.roles[0];
-
   return (
     <main className="mx-auto max-w-screen-2xl">
       {!isFiltering && <MarketPlaceHeader />}

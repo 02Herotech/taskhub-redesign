@@ -219,7 +219,7 @@ const ExploreCategoryLising: React.FC<ExploreCategoryLisingProps> = ({ category 
                     {buttonNumbers.map((item) => (
                         <button
                             key={item}
-                            className={` ${item === page.currentPage + 1 ? " bg-violet-normal  text-white" : ""} rounded-md px-5 py-3 hover:bg-violet-200 `}
+                            className={`${item === page.currentPage + 1 ? "bg-violet-normal text-white" : ""} rounded-md px-5 py-3 hover:bg-violet-200 `}
                             onClick={() =>
                                 setPage((prev) => ({
                                     ...prev,
