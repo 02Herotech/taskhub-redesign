@@ -36,7 +36,7 @@ function Page() {
     control,
     register,
     clearErrors,
-    formState: { errors },
+    formState: { errors, isSubmitting },
     setValue: setFormValue,
   } = methods;
 
@@ -51,7 +51,7 @@ function Page() {
     }
   }, [selectedIdType]);
 
-  const onSubmit: SubmitHandler<UpdateProfileSchema> = (data) => {
+  const onSubmit: SubmitHandler<UpdateProfileSchema> = async (data) => {
     console.log(data);
   };
 
@@ -92,7 +92,7 @@ function Page() {
             </div>
           </div>
         </header>
-        {/* <FormProvider {...methods}> */}
+
         <form className="pb-2" onSubmit={methods.handleSubmit(onSubmit)}>
           <div className="mb-3 space-y-5 rounded-2xl bg-white p-3 sm:bg-[#EBE9F4] sm:p-4">
             <div className="flex flex-col gap-2 sm:flex-row">
@@ -345,12 +345,15 @@ function Page() {
             </div>
           </div>
 
-          {/* Submit button  */}
-          <Button className="w-full rounded-full bg-primary px-7 py-3 font-medium text-white sm:w-max">
+          <Button
+            type="submit"
+            loading={isSubmitting}
+            disabled={isSubmitting}
+            className="w-full rounded-full bg-primary px-7 py-3 font-medium text-white sm:w-max"
+          >
             Save changes
           </Button>
         </form>
-        {/* </FormProvider> */}
       </div>
     </>
   );
