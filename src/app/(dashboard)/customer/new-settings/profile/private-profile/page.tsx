@@ -186,7 +186,7 @@ function Page() {
             </div>
 
             {/* Type of identity document and abn */}
-            <div className="flex flex-col items-center gap-3 sm:flex-row sm:gap-2">
+            <div className="flex flex-col items-start gap-3 sm:flex-row sm:gap-2">
               <div className="w-full sm:w-1/2">
                 <div className="w-full">
                   <label
