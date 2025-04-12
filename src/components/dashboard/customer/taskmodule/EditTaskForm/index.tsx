@@ -11,7 +11,7 @@ import React, {
 import { FaSortDown } from "react-icons/fa6";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { CustomerTasks } from "@/types/services/tasks";
+import { CustomerTasks, TaskResponse } from "@/types/services/tasks";
 import { PiSealCheckFill } from "react-icons/pi";
 import Image from "next/image";
 import { z } from "zod";
@@ -23,9 +23,10 @@ import { useUpdateTaskMutation } from "@/services/tasks";
 import useSuburbData, { SurburbInfo } from "@/hooks/useSuburbData";
 import { IoLocationOutline } from "react-icons/io5";
 import { CiLocationOn } from "react-icons/ci";
+import { RiEditBoxLine } from "react-icons/ri";
 
 interface TaskCardProps {
-  task: CustomerTasks;
+  taskDetails: TaskResponse;
   setShowEditModal: (value: boolean) => void;
 }
 
@@ -48,7 +49,9 @@ const taskSchema = z.object({
 
 type taskZodType = z.infer<typeof taskSchema>;
 
-const EditTaskForm = ({ task, setShowEditModal }: TaskCardProps) => {
+const EditTaskForm = ({ taskDetails, setShowEditModal }: TaskCardProps) => {
+  const { taskInfo: task } = taskDetails;
+  console.log(task, "from edittask")
   const [activeEditModalLink, setActiveEditModalLink] =
     useState<string>("Task Details");
   const [categories, setCategories] = useState<
@@ -76,10 +79,10 @@ const EditTaskForm = ({ task, setShowEditModal }: TaskCardProps) => {
   const initialTime = useMemo(() => {
     return task.taskTime
       ? (() => {
-          const date = new Date();
-          date.setHours(task.taskTime[0], task.taskTime[1]);
-          return date;
-        })()
+        const date = new Date();
+        date.setHours(task.taskTime[0], task.taskTime[1]);
+        return date;
+      })()
       : null;
   }, [task.taskTime]);
 
@@ -299,64 +302,80 @@ const EditTaskForm = ({ task, setShowEditModal }: TaskCardProps) => {
     </button>
   );
 
+  const SideNav = () => {
+    return (
+      <div className="hidden space-y-5 border-r-2 border-[#140B310A] pb-10 pr-4 pt-5 lg:block">
+        <div
+          className={`cursor-pointer text-lg text-center text-[#E58C06] font-bold ${activeEditModalLink === "Task Details" && "rounded-lg bg-[#FCF4E6] border border-[#E58C06] py-2 pl-2 pr-5 "}`}
+          onClick={() => setActiveEditModalLink("Task Details")}
+        >
+          Task Details
+        </div>
+        <div
+          className={`cursor-pointer text-lg text-center font-bold text-[#E58C06] ${activeEditModalLink === "Location" && "rounded-lg bg-[#FCF4E6] py-2 pl-2 pr-5 border border-[#E58C06]"}`}
+          onClick={() => setActiveEditModalLink("Location")}
+        >
+          Location and Budget
+        </div>
+      </div>
+    )
+  }
+
+  const SuccessConfirmation = () => {
+    return (
+      <section className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-70">
+        <div
+          onClick={() => {
+            setShowSuccessModal(false);
+            setShowEditModal(false);
+            router.refresh();
+          }}
+          className="absolute h-screen w-screen"
+        />
+        <div className=" relative z-10 flex flex-col items-center justify-center gap-4 rounded-lg bg-white p-5 max-sm:w-[70vw] lg:w-[600px] ">
+          <div className=" flex w-full max-w-lg flex-col items-center justify-center gap-4">
+            <div className="flex size-20 items-center justify-center rounded-full bg-[#C1F6C3] bg-opacity-60">
+              <div className=" flex size-14 items-center justify-center rounded-full bg-[#A6F8AA] p-2">
+                <PiSealCheckFill className="size-10 text-green-500" />
+              </div>
+            </div>
+            <p className="text-center font-satoshiBold text-2xl font-extrabold text-violet-normal">
+              Task edited successfully
+            </p>
+            <div className="flex items-center gap-6">
+              <button
+                onClick={() => {
+                  setShowSuccessModal(false);
+                  setShowEditModal(false);
+                  router.refresh();
+                }}
+                className="rounded-full bg-violet-active px-4 py-2 font-bold text-violet-dark max-sm:text-sm"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+    )
+  }
+
   return (
-    <div className="pt-14 lg:px-5">
+    <div className="pt-14 lg:px-5 font-manrope w-full">
       {showSuccessModal && (
-        <section className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-70">
-          <div
-            onClick={() => {
-              setShowSuccessModal(false);
-              setShowEditModal(false);
-              router.refresh();
-            }}
-            className="absolute h-screen w-screen"
-          />
-          <div className=" relative z-10 flex flex-col items-center justify-center gap-4 rounded-lg bg-white p-5 max-sm:w-[70vw] lg:w-[600px] ">
-            <div className=" flex w-full max-w-lg flex-col items-center justify-center gap-4">
-              <div className="flex size-20 items-center justify-center rounded-full bg-[#C1F6C3] bg-opacity-60">
-                <div className=" flex size-14 items-center justify-center rounded-full bg-[#A6F8AA] p-2">
-                  <PiSealCheckFill className="size-10 text-green-500" />
-                </div>
-              </div>
-              <p className="text-center font-satoshiBold text-2xl font-extrabold text-violet-normal">
-                Task edited successfully
-              </p>
-              {/* <p className="text-center font-semibold text-violet-darker">
-                                Great! You can now view the task on your dashboard.
-                            </p> */}
-              <div className="flex items-center gap-6">
-                <button
-                  onClick={() => {
-                    setShowSuccessModal(false);
-                    setShowEditModal(false);
-                    router.refresh();
-                  }}
-                  className="rounded-full bg-violet-active px-4 py-2 font-bold text-violet-dark max-sm:text-sm"
-                >
-                  Close
-                </button>
-              </div>
-            </div>
-          </div>
-        </section>
+        <SuccessConfirmation />
       )}
-      <div className="w-full border-b-2 border-[#140B31]" />
-      <div className="small-scrollbar max-h-[80vh] w-full overflow-y-auto rounded-2xl font-satoshi lg:w-[800px]">
+
+      <div className="w-full" />
+      <div className=" absolute top-4 left-4 flex items-center gap-3">
+        <RiEditBoxLine className=" h-10 w-10  bg-primary text-white rounded-[50%] p-2" />
+        <h1 className=" text-2xl text-[#140B31] font-bold">Edit task</h1>
+      </div>
+      <div className="small-scrollbar max-h-[80vh] w-full max-w-[400px]  overflow-y-auto rounded-2xl font-manrope  md:min-w-[700px]">
         <div className="h-full p-2 lg:flex lg:space-x-3">
-          <div className="hidden space-y-5 border-r-2 border-[#140B31] pb-10 pr-8 pt-5 lg:block">
-            <div
-              className={`cursor-pointer text-lg font-bold ${activeEditModalLink === "Task Details" ? "rounded-lg bg-tc-orange py-2 pl-2 pr-5 text-white" : "text-primary"}`}
-              onClick={() => setActiveEditModalLink("Task Details")}
-            >
-              Task Details
-            </div>
-            <div
-              className={`cursor-pointer text-lg font-bold ${activeEditModalLink === "Location" || activeEditModalLink === "Budget" ? "rounded-lg bg-tc-orange py-2 pl-2 pr-5 text-white" : "text-primary"}`}
-              onClick={() => setActiveEditModalLink("Location")}
-            >
-              Location and Budget
-            </div>
-          </div>
+
+          <SideNav />
+
           <form
             className="w-full flex-1 lg:px-5"
             onSubmit={handleSubmit(handleUpdateTask)}
@@ -375,35 +394,6 @@ const EditTaskForm = ({ task, setShowEditModal }: TaskCardProps) => {
                   ></textarea>
                 </div>
 
-                {/* <div className="relative grid space-y-4">
-                                    <label className="text-[13px] font-semibold text-status-darkpurple lg:text-[16px]">
-                                        What category best describes your task?
-                                    </label>
-                                    <Dropdown
-                                        trigger={() => (
-                                            <div className="flex h-full w-full cursor-pointer appearance-none justify-between rounded-2xl bg-[#EBE9F4] p-3 text-[13px] text-status-darkpurple border-none outline-none">
-                                                <h2>{selectedCategory}</h2>
-                                                <FaSortDown className="text-status-darkpurple" />
-                                            </div>
-                                        )}
-                                        className="small-scrollbar left-0 right-0 top-14 mx-auto max-h-64 overflow-y-auto bg-white transition-all duration-300"
-                                    >
-                                        {categories.map((category) => (
-                                            <button
-                                                type="button"
-                                                key={category.id}
-                                                className="block p-2 font-satoshiBold text-[13px] text-primary hover:text-tc-orange"
-                                                onClick={() => {
-                                                    setValue("category", category.categoryName)
-                                                    setSelectedCategory(category.categoryName)
-                                                }}
-                                            >
-                                                {category.categoryName}
-                                            </button>
-                                        ))}
-                                    </Dropdown>
-                                </div> */}
-
                 <div className="relative grid space-y-3">
                   <label className="text-[13px] font-semibold text-status-darkpurple lg:text-[16px]">
                     Give a description of your task
@@ -413,6 +403,104 @@ const EditTaskForm = ({ task, setShowEditModal }: TaskCardProps) => {
                     placeholder="Describe your task"
                     {...register("taskDescription")}
                   ></textarea>
+                </div>
+                <h2>hey a testing</h2>
+
+                <div className="space-y-3">
+                  <label className="text-[13px] font-semibold text-status-darkpurple lg:text-[16px]">
+                    Upload an Image (Optional)
+                  </label>
+                  <div className="flex w-full flex-col gap-3 text-lg  text-violet-normal lg:max-w-64 ">
+                    <div>
+                      <input
+                        type="file"
+                        accept=".png, .jpg, .jpeg, .gif"
+                        className="hidden"
+                        onChange={(event) =>
+                          handleOnImageInputChange({ event, index: 1 })
+                        }
+                        ref={imageRefs[0]}
+                      />
+                      <button
+                        type="button"
+                        className="my-2 flex items-end justify-center space-x-2 rounded-xl border border-dashed border-violet-normal"
+                        onClick={() => handleClickImageButton({ index: 1 })}
+                      >
+                        {/* Display a disabled input with message */}
+                        <Image
+                          src={
+                            watchField.taskImage ?? task.taskImage ?? ""
+                          }
+                          alt="Captured or Selected"
+                          width={300}
+                          height={300}
+                          className="size-40 rounded-xl object-cover"
+                        />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="space-y-5">
+                  <label className="text-[13px] font-semibold text-status-darkpurple lg:text-[16px]">
+                    Set Date and Time
+                  </label>
+                  <div className="grid   max-[480px]:grid-cols-2  min-[480px]:flex items-center flex-wrap gap-4">
+                    <div className="">
+                      <DatePicker
+                        selected={
+                          isFlexible ? null : updatedDate ?? initialDate
+                        }
+                        onChange={handleDateChange}
+                        dateFormat="dd-MM-yyyy"
+                        minDate={new Date()}
+                        placeholderText="Choose Date"
+                        id="taskDate"
+                        name="taskDate"
+                        disabled={isFlexible}
+                        customInput={<CustomInput />}
+                        className="w-full cursor-pointer rounded-2xl text-primary bg-[#EBE9F4] px-2 py-2 outline-none placeholder:text-[14px] placeholder:font-bold"
+                      />
+                    </div>
+
+                    <div className="">
+                      <DatePicker
+                        selected={
+                          isFlexible ? null : updatedTime ?? initialTime
+                        }
+                        onChange={handleTimeChange}
+                        showTimeSelect
+                        showTimeSelectOnly
+                        timeIntervals={15}
+                        timeFormat="HH:mm"
+                        dateFormat="h:mm aa"
+                        placeholderText="Choose Time"
+                        disabled={isFlexible}
+                        id="taskTime"
+                        name="taskTime"
+                        customInput={<CustomInputs />}
+                        className="w-full cursor-pointer text-primary rounded-2xl bg-[#EBE9F4] px-2 py-2 outline-none placeholder:text-[14px] placeholder:font-bold"
+                      />
+                    </div>
+
+                    <div className="flex items-center w-fit">
+                      <input
+                        type="checkbox"
+                        name="check"
+                        checked={isFlexible}
+                        // disabled={!!dateString || !!timeString}
+                        onChange={() => {
+                          setIsFlexible(!isFlexible);
+                          setUpdatedDate(null);
+                          setUpdatedTime(null);
+                        }}
+                        className="mr-2"
+                      />
+                      <span className="text-[12px] text-primary">
+                        I’m Flexible
+                      </span>
+                    </div>
+                  </div>
                 </div>
 
                 <div className="flex items-center justify-end space-x-3">
@@ -440,271 +528,152 @@ const EditTaskForm = ({ task, setShowEditModal }: TaskCardProps) => {
 
             {activeEditModalLink === "Location" && (
               <div className="w-full space-y-8">
-                <div className="space-y-3">
-                  <label className="text-[13px] font-semibold text-status-darkpurple lg:text-[16px]">
-                    Upload an Image (Optional)
-                  </label>
-                  <div className="flex w-full flex-col gap-3 text-lg  text-violet-normal lg:max-w-64 ">
-                    <div>
-                      <input
-                        type="file"
-                        accept=".png, .jpg, .jpeg, .gif"
-                        className="hidden"
-                        onChange={(event) =>
-                          handleOnImageInputChange({ event, index: 1 })
-                        }
-                        ref={imageRefs[0]}
-                      />
-                      <button
-                        type="button"
-                        className="my-2 flex items-end justify-center space-x-2 rounded-xl border border-dashed border-violet-normal"
-                        onClick={() => handleClickImageButton({ index: 1 })}
-                      >
-                        {/* Display a disabled input with message */}
-                        <Image
-                          src={
-                            watchField.taskImage ?? task?.taskImage?.[0] ?? ""
-                          }
-                          alt="Captured or Selected"
-                          width={300}
-                          height={300}
-                          className="size-40 rounded-xl object-cover"
-                        />
-                      </button>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="space-y-5">
-                  <label className="text-[13px] font-semibold text-status-darkpurple lg:text-[16px]">
-                    Set Date and Time
-                  </label>
-                  <div className="grid w-full grid-cols-2 gap-4 lg:grid-cols-3">
-                    <div>
-                      <DatePicker
-                        selected={
-                          isFlexible ? null : updatedDate ?? initialDate
-                        }
-                        onChange={handleDateChange}
-                        dateFormat="dd-MM-yyyy"
-                        minDate={new Date()}
-                        placeholderText="Choose Date"
-                        id="taskDate"
-                        name="taskDate"
-                        disabled={isFlexible}
-                        customInput={<CustomInput />}
-                        className="w-full cursor-pointer rounded-2xl bg-[#EBE9F4] px-2 py-1 outline-none placeholder:text-[14px] placeholder:font-bold"
-                      />
-                    </div>
-                    <div>
-                      <DatePicker
-                        selected={
-                          isFlexible ? null : updatedTime ?? initialTime
-                        }
-                        onChange={handleTimeChange}
-                        showTimeSelect
-                        showTimeSelectOnly
-                        timeIntervals={15}
-                        timeFormat="HH:mm"
-                        dateFormat="h:mm aa"
-                        placeholderText="Choose Time"
-                        disabled={isFlexible}
-                        id="taskTime"
-                        name="taskTime"
-                        customInput={<CustomInputs />}
-                        className="w-full cursor-pointer rounded-2xl bg-[#EBE9F4] px-2 py-1 outline-none placeholder:text-[14px] placeholder:font-bold"
-                      />
-                    </div>
-                    <div className="flex items-center">
-                      <input
-                        type="checkbox"
-                        name="check"
-                        checked={isFlexible}
-                        // disabled={!!dateString || !!timeString}
-                        onChange={() => {
-                          setIsFlexible(!isFlexible);
-                          setUpdatedDate(null);
-                          setUpdatedTime(null);
-                        }}
-                        className="mr-2"
-                      />
-                      <span className="text-[12px] text-status-darkpurple">
-                        I’m Flexible
-                      </span>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="flex items-center justify-end space-x-3">
-                  <Button
-                    theme="outline"
-                    onClick={() => setActiveEditModalLink("Task Details")}
-                    className="rounded-full px-10"
-                    type="button"
-                    size="sm"
-                  >
-                    Back
-                  </Button>
-                  <Button
-                    type="button"
-                    onClick={() => setActiveEditModalLink("Budget")}
-                    className="rounded-full px-10"
-                    size="sm"
-                  >
-                    Next
-                  </Button>
-                </div>
-              </div>
-            )}
-
-            {activeEditModalLink === "Budget" && (
-              <div className="space-y-8">
-                <div className="space-y-4">
-                  <h2 className="text-[13px] font-semibold text-status-darkpurple lg:text-[16px]">
-                    Type of Service{" "}
-                  </h2>
-                  <div className="flex flex-col gap-3 space-x-0 sm:flex-row sm:space-x-2">
-                    {typeData.map((item, index) => (
-                      <button
-                        key={index}
-                        type="button"
-                        className={`rounded-full border border-violet-normal px-4 py-2 font-satoshi text-sm font-normal  transition-opacity duration-300 hover:opacity-90 ${item.value === watchField.taskType ? "bg-violet-normal text-white" : "bg-violet-light text-violet-normal"} `}
-                        onClick={() => setValue("taskType", item.value)}
-                      >
-                        {item.label} Service
-                      </button>
-                    ))}
-                  </div>
-                </div>
-                <div className="space-y-5">
-                  {watchField.taskType === typeData[1].value && (
-                    <div className="relative">
-                      {/* Display previous suburb  */}
-                      <div className="mb-3 flex items-center gap-x-2 text-slate-600">
-                        <IoLocationOutline className="text-xl" />
-                        <span>
-                          {task.suburb}, {task.state}
-                        </span>
-                      </div>
-                      {/* Suburb input */}
-                      <div className="w-full space-y-4">
-                        <label
-                          className="text-[13px] font-semibold text-status-darkpurple lg:text-[16px]"
-                          htmlFor="suburb"
+                <div className="space-y-8">
+                  <div className="space-y-4">
+                    <h2 className="text-[13px] font-semibold text-status-darkpurple lg:text-[16px]">
+                      Type of Service{" "}
+                    </h2>
+                    <div className="flex flex-col gap-3 space-x-0 sm:flex-row sm:space-x-2">
+                      {typeData.map((item, index) => (
+                        <button
+                          key={index}
+                          type="button"
+                          className={`rounded-full border border-violet-normal px-4 py-2 font-satoshi text-sm font-normal  transition-opacity duration-300 hover:opacity-90 ${item.value === watchField.taskType ? "bg-violet-normal text-white" : "bg-violet-light text-violet-normal"} `}
+                          onClick={() => setValue("taskType", item.value)}
                         >
-                          Suburb
-                        </label>
-                        <input
-                          id="suburb"
-                          type="text"
-                          placeholder="Enter a new suburb..."
-                          autoComplete="off"
-                          className="w-full cursor-default rounded-2xl bg-violet-light p-3 pl-4 text-[13px] outline-none"
-                          {...register("suburb", {
-                            onChange: (e) => {
-                              if (currentSuburb) {
-                                setCurrentSuburb(null);
-                                const enteredInput = e.target.value.slice(-1);
-                                e.target.value = enteredInput;
-                                setValue("suburb", enteredInput);
-                              }
-                              setValue("suburb", e.target.value);
-                            },
-                          })}
-                        />
-                      </div>
-
-                      {/* Auto-complete modal  */}
-                      <div className="absolute left-0 z-10 w-full bg-white">
-                        {isLoading && (
-                          <p className="py-2 text-center font-satoshiMedium text-[#76757A61]">
-                            Loading...
-                          </p>
-                        )}
-                        {suburbError && !isLoading && (
-                          <p className="py-2 text-center font-satoshiMedium text-red-600">
-                            Error occured while loading suburb data
-                          </p>
-                        )}
-                        {suburbList.length > 1 && (
-                          <ul className="roundeed-lg max-h-52 overflow-y-auto overflow-x-hidden">
-                            {suburbList.map((suburb) => (
-                              <li
-                                className="flex cursor-pointer items-center gap-1 bg-white px-4 py-3 text-[13px]"
-                                key={Math.random() * 12345}
-                                onClick={() => {
-                                  setCurrentSuburb(suburb);
-                                  setValue(
-                                    "suburb",
-                                    `${suburb.name}, ${suburb.state.abbreviation}, Australia`,
-                                  );
-                                  setSuburbList([]);
-                                }}
-                              >
-                                <CiLocationOn
-                                  stroke="#0F052E"
-                                  size={20}
-                                  strokeWidth={1}
-                                />
-                                <span className="text-[#0F052E]">
-                                  {suburb.name},{" "}
-                                  {suburb.locality ? `${suburb.locality},` : ""}{" "}
-                                  {suburb.state.name}, AUS
-                                </span>
-                              </li>
-                            ))}
-                          </ul>
-                        )}
-                      </div>
-                    </div>
-                  )}
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-between">
-                      <label className="text-[13px] font-semibold text-status-darkpurple lg:text-[16px]">
-                        Budget{" "}
-                      </label>
-                      {/* {task.customerBudget && (
-                                                <div className="h-[16px] w-[16px] rounded-3xl bg-[#4CAF50] text-[16px] font-extrabold text-white">
-                                                    <GrFormCheckmark />
-                                                </div>
-                                            )} */}
-                    </div>
-                    <div className="flex items-center space-x-2 rounded-2xl bg-[#EBE9F4] p-3 text-[13px] ">
-                      <span>$</span>
-                      <input
-                        type="number"
-                        min="5"
-                        value={watchField.customerBudget}
-                        {...register("customerBudget")}
-                        className={`no-input-default-style border-none"} w-full appearance-none placeholder:font-bold`}
-                      />
+                          {item.label} Service
+                        </button>
+                      ))}
                     </div>
                   </div>
 
-                  {/* {errors && <div className="font-bold text-red-500">{errors.}</div>} */}
-                  <div className="flex items-center justify-center space-x-3 lg:justify-end">
-                    <Button
-                      theme="outline"
-                      onClick={() => setActiveEditModalLink("Location")}
-                      className="rounded-full px-10"
-                      type="button"
-                      size="sm"
-                    >
-                      Back
-                    </Button>
-                    <Button
-                      theme="primary"
-                      loading={isSubmitting}
-                      type="submit"
-                      className="rounded-full"
-                      size="sm"
-                    >
-                      Save changes
-                    </Button>
+                  <div className="space-y-5">
+                    {watchField.taskType === typeData[1].value && (
+                      <div className="relative">
+                        {/* Display previous suburb  */}
+                        <div className="mb-3 flex items-center gap-x-2 text-slate-600">
+                          <IoLocationOutline className="text-xl" />
+                          <span>
+                            {task.suburb}, {task.state}
+                          </span>
+                        </div>
+                        {/* Suburb input */}
+                        <div className="w-full space-y-4">
+                          <label
+                            className="text-[13px] font-semibold text-status-darkpurple lg:text-[16px]"
+                            htmlFor="suburb"
+                          >
+                            Suburb
+                          </label>
+                          <input
+                            id="suburb"
+                            type="text"
+                            placeholder="Enter a new suburb..."
+                            autoComplete="off"
+                            className="w-full cursor-default rounded-2xl bg-violet-light p-3 pl-4 text-[13px] outline-none"
+                            {...register("suburb", {
+                              onChange: (e) => {
+                                if (currentSuburb) {
+                                  setCurrentSuburb(null);
+                                  const enteredInput = e.target.value.slice(-1);
+                                  e.target.value = enteredInput;
+                                  setValue("suburb", enteredInput);
+                                }
+                                setValue("suburb", e.target.value);
+                              },
+                            })}
+                          />
+                        </div>
+
+                        {/* Auto-complete modal  */}
+                        <div className="absolute left-0 z-10 w-full bg-white">
+                          {isLoading && (
+                            <p className="py-2 text-center font-satoshiMedium text-[#76757A61]">
+                              Loading...
+                            </p>
+                          )}
+                          {suburbError && !isLoading && (
+                            <p className="py-2 text-center font-satoshiMedium text-red-600">
+                              Error occured while loading suburb data
+                            </p>
+                          )}
+                          {suburbList.length > 1 && (
+                            <ul className="roundeed-lg max-h-52 overflow-y-auto overflow-x-hidden">
+                              {suburbList.map((suburb) => (
+                                <li
+                                  className="flex cursor-pointer items-center gap-1 bg-white px-4 py-3 text-[13px]"
+                                  key={Math.random() * 12345}
+                                  onClick={() => {
+                                    setCurrentSuburb(suburb);
+                                    setValue(
+                                      "suburb",
+                                      `${suburb.name}, ${suburb.state.abbreviation}, Australia`,
+                                    );
+                                    setSuburbList([]);
+                                  }}
+                                >
+                                  <CiLocationOn
+                                    stroke="#0F052E"
+                                    size={20}
+                                    strokeWidth={1}
+                                  />
+                                  <span className="text-[#0F052E]">
+                                    {suburb.name},{" "}
+                                    {suburb.locality ? `${suburb.locality},` : ""}{" "}
+                                    {suburb.state.name}, AUS
+                                  </span>
+                                </li>
+                              ))}
+                            </ul>
+                          )}
+                        </div>
+                      </div>
+                    )}
+                    <div className="space-y-2">
+                      <div className="flex items-center justify-between">
+                        <label className="text-[13px] font-semibold text-status-darkpurple lg:text-[16px]">
+                          Budget{" "}
+                        </label>
+
+                      </div>
+                      <div className="flex items-center space-x-2 rounded-2xl bg-[#EBE9F4] p-3 text-[13px] ">
+                        <span>$</span>
+                        <input
+                          type="number"
+                          min="5"
+                          value={watchField.customerBudget}
+                          {...register("customerBudget")}
+                          className={`no-input-default-style border-none"} w-full appearance-none placeholder:font-bold`}
+                        />
+                      </div>
+                    </div>
+
+                    {/* {errors && <div className="font-bold text-red-500">{errors.}</div>} */}
+                    <div className="flex items-center justify-center space-x-3 lg:justify-end">
+                      <Button
+                        theme="outline"
+                        onClick={() => setActiveEditModalLink("Task Details")}
+                        className="rounded-full px-10"
+                        type="button"
+                        size="sm"
+                      >
+                        Back
+                      </Button>
+                      <Button
+                        theme="primary"
+                        loading={isSubmitting}
+                        type="submit"
+                        className="rounded-full"
+                        size="sm"
+                      >
+                        Save changes
+                      </Button>
+                    </div>
                   </div>
                 </div>
               </div>
             )}
+
           </form>
         </div>
       </div>

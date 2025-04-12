@@ -7,6 +7,8 @@ import { useGetJobByIdQuery } from "@/services/bookings"
 import Loading from "@/shared/loading"
 import PostReview from "./postReview"
 import RebookTask from "./rebookTask"
+import Popup from "@/components/global/Popup"
+import DeleteTask from "../../taskmodule/DeleteTask"
 
 
 
@@ -17,6 +19,7 @@ const CompletedTaskDetailsPage = ({
   const [isExpanded, setIsExpanded] = useState(false)
   const [showReviewModal, setShowReviewModal] = useState(false)
   const [showRobookModal, setShowRebookModal] = useState(false)
+  const [deleteModalOpen, setIsDeleteModalOpen] = useState(false)
   const [currentStep, setCurrentStep] = useState(1)
   const {
     data: completedTask,
@@ -141,12 +144,13 @@ const CompletedTaskDetailsPage = ({
           </button>
           <button onClick={() => { setShowRebookModal(true); setCurrentStep(1); }} className="rounded-[50px] px-4 py-2 text-sm bg-white font-semibold border border-primary">Rebook</button>
         </div>
-        <button type="button" className="text-red-500 hover:text-red-700 px-4 py-2 font-semibold text-sm">Delete task</button>
+        <button type="button" onClick={() => setIsDeleteModalOpen(true)} className="text-red-500 hover:text-red-700 px-4 py-2 font-semibold text-sm">Delete task</button>
       </div>
 
       <PostReview
         showReviewModalPopup={showReviewModal}
         setShowReviewModalPopup={setShowReviewModal}
+        jobDetails={completedTask}
       />
 
       <RebookTask
@@ -156,6 +160,10 @@ const CompletedTaskDetailsPage = ({
         setCurrentStep={setCurrentStep}
         jobId={completedTask.jobInfo.id}
       />
+
+      <Popup isOpen={deleteModalOpen} onClose={() => setIsDeleteModalOpen(false)}>
+        <DeleteTask setIsDeleteModalOpen={setIsDeleteModalOpen} jobDetails={completedTask} />
+      </Popup>
     </div>
   )
 }

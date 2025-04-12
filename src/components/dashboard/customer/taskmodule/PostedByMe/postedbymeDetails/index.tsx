@@ -12,6 +12,10 @@ import { useGetTaskByIdQuery, useGetTasksOffersQuery } from '@/services/tasks'
 import Image from 'next/image'
 import { FaRegShareFromSquare } from 'react-icons/fa6'
 import Offers from './Offers'
+import EditTaskForm from '../../EditTaskForm'
+import { truncateSync } from 'node:fs'
+import Popup from '@/components/global/Popup'
+import DeleteTask from '../../DeleteTask'
 
 
 const PostedByMe = ({ params }: { params: { id: string } }) => {
@@ -22,15 +26,14 @@ const PostedByMe = ({ params }: { params: { id: string } }) => {
     error,
   } = useGetTaskByIdQuery(id as unknown as number);
   const [viewAll, setViewAll] = useState(false);
-  const [showOffers, setShowOffers] = useState(true)
+  const [editModalOpen, setIsEditModalOpen] = useState(false)
+  const [deleteModalOpen, setIsDeleteModalOpen] = useState(false)
 
   const { data: offers, refetch } = useGetTasksOffersQuery(
     id as unknown as number,
   );
 
-  console.log(offers, "offers")
   const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false)
-  console.log(task)
   if (isLoading) {
     return (
       <div className="flex h-[full] w-full items-center justify-center">
@@ -119,6 +122,7 @@ const PostedByMe = ({ params }: { params: { id: string } }) => {
           <div className="flex items-center space-x-4 p-4">
 
             <button
+              onClick={() => setIsDeleteModalOpen(true)}
               className="text-red-500 hover:text-red-700 bg-red-50 p-2 rounded-full"
               aria-label="Delete task"
             >
@@ -126,6 +130,7 @@ const PostedByMe = ({ params }: { params: { id: string } }) => {
             </button>
 
             <button
+              onClick={() => setIsEditModalOpen(true)}
               className="bg-primary   max-[320px]:text-xs text-base text-white px-4 py-2  sm:px-12 sm:py-6 rounded-full  font-bold"
             >
               Edit task details
@@ -153,6 +158,14 @@ const PostedByMe = ({ params }: { params: { id: string } }) => {
       </div>}
 
       <Offers id={id} isAssigned={isAssigned} />
+
+      <Popup isOpen={editModalOpen} onClose={() => setIsEditModalOpen(false)}>
+        <EditTaskForm setShowEditModal={setIsEditModalOpen} taskDetails={task} />
+      </Popup>
+
+      <Popup isOpen={deleteModalOpen} onClose={() => setIsDeleteModalOpen(false)}>
+        <DeleteTask setIsDeleteModalOpen={setIsDeleteModalOpen} taskDetails={task} />
+      </Popup>
     </div>
   )
 }

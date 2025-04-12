@@ -9,7 +9,7 @@ import { motion } from "framer-motion";
 import { dayOfWeekNames, formatAmount, formatTime24Hour, monthNames, suffixes } from "@/lib/utils";
 import { CustomerTasks } from "@/types/services/tasks";
 import Popup from "@/components/global/Popup";
-import EditTaskForm from "../../EditTaskForm";
+import EditTaskForm from "../EditTaskForm";
 import { useRouter } from "next/navigation";
 import { IoEye } from "react-icons/io5";
 import { Category } from '../../../../../types/blog/post';

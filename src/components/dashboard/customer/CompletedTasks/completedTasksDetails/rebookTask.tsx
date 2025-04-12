@@ -101,7 +101,7 @@ const RebookTask = ({ showRebookModalPopup, setShowRebookModalPopup, jobId, curr
               Please note that when you re-book a task or service, you&apos;ll only be charged once the task is completed.
             </p>
 
-            <section className='flex items-center gap-4'>
+            <section className='flex flex-col sm:flex-row  items-center  gap-2 sm:gap-4'>
               <div className="mb-4 w-full">
                 <label className="block mb-2 font-medium">Date</label>
                 <input
