@@ -90,9 +90,31 @@ const AllTasksCard = ({ task }: TaskCardProps) => {
         return "bg-gray-100 text-gray-800"
     }
   }
-  return (
 
-    <div className={`relative flex flex-col border-l-[12px]  shadow-[0px_-4px_132px_0px_#00000017] ${getBorderColor()} rounded-2xl shadow-sm bg-white overflow-hidden`}>
+  // const handleTaskRoute = (status: string) => {
+  //   console.log(status)
+
+  //   switch (status) {
+  //     case "ONGOING":
+  //       router.push(`/customer/tasks/ongoing-tasks/${task.id}`)
+  //       break;
+  //     case "COMPLETED":
+  //       router.push(`/customer/tasks/completed-tasks/${task.id}`)
+  //       break;
+  //     case "OPEN":
+  //       router.push(`/customer/tasks/posted-by-me/${task.id}`)
+  //       break;
+  //     case "ASSIGNED":
+  //       router.push(`/customer/tasks/posted-by-me/${task.id}`)
+  //       break;
+  //     default:
+  //       router.push(`/customer/tasks/posted-by-me/${task.id}`)
+  //   }
+  // }
+
+
+  return (
+    <div className={`relative cursor-pointer flex flex-col border-l-[12px]  shadow-[0px_-4px_132px_0px_#00000017] ${getBorderColor()} rounded-2xl shadow-sm bg-white overflow-hidden`}>
       <div className="p-4 pl-5 flex-1">
         <div className="mb-2">
           <span
@@ -101,7 +123,7 @@ const AllTasksCard = ({ task }: TaskCardProps) => {
             {task.taskStatus}
           </span>
         </div>
-        <h3 className="text-xs font-semibold text-[#0F052E]">{task.taskBriefDescription}</h3>
+        <h3 className="text-xs cursor-pointer font-semibold text-[#0F052E]">{task.taskBriefDescription}</h3>
         <p className="mt-1 text-sm text-[#110049] line-clamp-3">{task.taskDescription}...</p>
 
         <div className="mt-4 flex justify-between items-end">

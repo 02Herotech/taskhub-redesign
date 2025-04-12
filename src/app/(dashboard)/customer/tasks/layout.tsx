@@ -47,14 +47,14 @@ export default function TaskLayout({
   return (
     <main className=" pt-8">
       <h1 className="text-2xl font-bold my-2  ">My Tasks</h1>
-      <div className="flex items-center mb-3 gap-1">
-        <button className="flex items-center text-gray-600 hover:text-gray-900">
+      <div className="flex items-center mb-3 gap-2">
+        <button onClick={() => router.back()} className="flex items-center text-gray-600 hover:text-gray-900">
           <MdArrowBackIos />
           Back
         </button>
         |
-        <span className="cursor-pointer text-[#55535A]" onClick={() => handleTabClick(tab)}>My Tasks</span>/
-        {tab && <span className="cursor-pointer text-[#55535A]" onClick={() => handleTabClick(tab)}>{tab}</span>}
+        <span className="cursor-pointer text-[#55535A]" onClick={() => router.push("/customer/tasks/all-tasks")}>My Tasks</span>/
+        {tab && <span className="cursor-pointer text-[#55535A]" onClick={() => handleTabClick(`/customer/tasks/${tab}`)}>{tab}</span>}
       </div>
 
       <div className="mb-6 overflow-x-auto">

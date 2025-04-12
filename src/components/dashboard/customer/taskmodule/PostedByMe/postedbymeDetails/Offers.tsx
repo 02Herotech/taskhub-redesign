@@ -15,6 +15,7 @@ const Offers = ({ id, isAssigned }: OffersProps) => {
   const { data: offers, refetch } = useGetTasksOffersQuery(
     id as unknown as number,
   );
+
   return (
     <div className="mb-4">
       <div className="mt-14 min-h-96">
@@ -58,7 +59,7 @@ const Offers = ({ id, isAssigned }: OffersProps) => {
               offer={offer}
               taskId={Number(id)}
               refetch={refetch}
-              isAssigned={false}
+              isAssigned={isAssigned}
             />
           ))}
         </ul>

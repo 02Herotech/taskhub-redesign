@@ -10,6 +10,9 @@ import useAxios from "@/hooks/useAxios";
 import { BeatLoader } from "react-spinners";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
+import { useAssignTaskMutation } from "@/services/tasks";
+import SuccessModal from "@/components/global/successmodal";
+import Popup from "@/components/global/Popup";
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY);
 
@@ -25,35 +28,49 @@ type AcceptOfferData = {
     clientSecret: string;
     hasCard: boolean;
   };
-  message: string;
+  message: string; 
   successful: boolean;
 };
 
 function Offer({ offer, taskId, refetch, isAssigned }: Props) {
   const [confirmPaymentModal, setConfirmPaymentModal] = useState(false);
-
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [clientSecret, setClientSecret] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const authInstance = useAxios();
 
-  async function acceptOffer(taskId: number, spId: number) {
+  const [assignTask, { isLoading: isAssignLoading, error }] = useAssignTaskMutation();
+
+
+  // async function acceptOffer(taskId: number, spId: number) {
+  //   try {
+  //     setIsLoading(true);
+  //     const { data } = await authInstance.put<AcceptOfferData>(
+  //       `task/accept-offer/${taskId}/${spId}`,
+  //     );
+  //     if (data.data.hasCard) {
+  //       setConfirmPaymentModal(true);
+  //     } else {
+  //       setClientSecret(data.data.clientSecret);
+  //     }
+  //   } catch (error) {
+  //     //Todo Error handling
+  //     console.error("Error occured while accepting task: ", error);
+  //   } finally {
+  //     setIsLoading(false);
+  //   }
+  // }
+
+  const handleConfirmAssign = async () => {
     try {
-      setIsLoading(true);
-      const { data } = await authInstance.put<AcceptOfferData>(
-        `task/accept-offer/${taskId}/${spId}`,
-      );
-      if (data.data.hasCard) {
-        setConfirmPaymentModal(true);
-      } else {
-        setClientSecret(data.data.clientSecret);
-      }
-    } catch (error) {
-      //Todo Error handling
-      console.error("Error occured while accepting task: ", error);
-    } finally {
-      setIsLoading(false);
+      await assignTask({ taskId, serviceProviderId: offer.serviceProviderId }).unwrap();
+      setShowSuccessModal(true);
+    } catch (error: any) {
+      console.error("Error assigning task:", error);
     }
-  }
+  };
+
+
   return (
     <li className="border-b border-[#C1BADB] pb-4" key={offer.id}>
       <div className="">
@@ -84,11 +101,11 @@ function Offer({ offer, taskId, refetch, isAssigned }: Props) {
         <div className="w-full my-3 ">
           <button
             type="submit"
-            className="block w-full  text-center rounded-full bg-primary px-5 py-2 font-satoshiBold text-sm font-bold text-white disabled:opacity-50 md:text-base"
+            className="block w-full cursor-pointer  text-center rounded-full bg-primary px-5 py-2 font-satoshiBold text-sm font-bold text-white disabled:opacity-50 md:text-base"
             disabled={isAssigned || isLoading}
-            onClick={() => acceptOffer(taskId, offer.serviceProviderId)}
+            onClick={() => handleConfirmAssign()}
           >
-            {isLoading ? <BeatLoader color="white" size={13} /> : "Accept"}
+            {isAssigned ? "Assigned" : isAssignLoading ? <BeatLoader color="white" size={13} /> : "Accept"}
           </button>
         </div>
 
@@ -106,14 +123,6 @@ function Offer({ offer, taskId, refetch, isAssigned }: Props) {
                 </p>
               </div>
             </div>
-
-            {/* {offer.offerThreadList.length > 0 && (
-              <LiaReplySolid
-                strokeWidth={1.2}
-                stroke="#381F8C"
-                className="absolute -bottom-5 -left-5 rotate-180 text-base md:text-xl"
-              />
-            )} */}
           </div>
 
           {/* Rest of the thread  */}
@@ -177,7 +186,10 @@ function Offer({ offer, taskId, refetch, isAssigned }: Props) {
         </Elements>
       )}
 
-      {/* Todo Confirm payment modal  */}
+      <Popup isOpen={showSuccessModal} onClose={() => setShowSuccessModal(false)}>
+        <SuccessModal onDone={() => setShowSuccessModal(false)} message={`Task assigned successfully to ${offer.fullName}`} />
+      </Popup>
+
     </li>
   );
 }
