@@ -96,7 +96,8 @@ const PostReview = ({ showReviewModalPopup, setShowReviewModalPopup, jobDetails:
             <div className="mb-6">
               <label className="block mb-2 font-medium">Describe your review</label>
               <textarea
-                className="w-full h-40 px-4 py-3 bg-gray-100 rounded-lg resize-none focus:outline-none"
+                rows={10}
+                className="w-full block  h-40 px-4 py-3 bg-gray-100 rounded-lg resize-none focus:outline-none"
                 placeholder="Write your review..."
                 onChange={(e) => setComment(e.target.value)}
               ></textarea>

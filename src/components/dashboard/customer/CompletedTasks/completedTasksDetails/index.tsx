@@ -9,6 +9,7 @@ import PostReview from "./postReview"
 import RebookTask from "./rebookTask"
 import Popup from "@/components/global/Popup"
 import DeleteTask from "../../taskmodule/DeleteTask"
+import ImageViewer from "@/components/imageviewer"
 
 
 
@@ -96,6 +97,10 @@ const CompletedTaskDetailsPage = ({
         {completedTask.taskImage && (
           <div className="mb-4">
             <div className="relative w-24 h-16 rounded-md overflow-hidden">
+              <ImageViewer
+                src={completedTask.taskImage}
+                alt="Modern living room with plants and orange chair"
+              />
               <Image src={completedTask.taskImage || "/placeholder.svg"} alt="Job thumbnail" fill className="object-cover" />
             </div>
           </div>

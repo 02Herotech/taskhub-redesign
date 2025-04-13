@@ -7,6 +7,7 @@ import Button from "@/components/global/Button";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
 import AllTasksCard from "../AllTasksCard";
+import Pagination from "@/components/pagination";
 
 const TaskList = () => {
   const { profile: user } = useSelector(
@@ -18,7 +19,7 @@ const TaskList = () => {
   const { data: tasksData, isLoading, error } = useGetAllTaskByCustomerIdQuery(userId!, {
     skip: !userId,
   });
-
+  //  console.log(taskData.)
   if (!userId || isLoading) {
     return <Loading />;
   }
@@ -35,11 +36,15 @@ const TaskList = () => {
           </Link>
         </div>
       ) : (
+          <>
+
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 mb-8">
           {tasksData?.map((task, index) => (
             <AllTasksCard key={index} task={task} />
           ))}
         </div>
+            <Pagination totalPages={10} pageNumber={2} pageSize={5} />
+          </>
       )}
     </>
   );

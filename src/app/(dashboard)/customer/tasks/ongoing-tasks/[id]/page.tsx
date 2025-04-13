@@ -4,6 +4,7 @@ import CountdownTimer from "@/components/dashboard/customer/CountdownTimer";
 import ConfirmationModal from "@/components/dashboard/customer/InspectionConfirmationModal";
 import Button from "@/components/global/Button";
 import Popup from "@/components/global/Popup";
+import ImageViewer from "@/components/imageviewer";
 import { CautionSvg, RevisionSvg } from "@/lib/svgIcons";
 import {
   clearLocalStorage,
@@ -284,8 +285,12 @@ const OnogoingTaskDetailsPage = ({ params }: { params: { id: string } }) => {
         </div>
 
         {/* Image placeholder */}
-        {task.taskImage && <div className="mb-6 border relative border-gray-200 rounded-md w-48 h-48 flex items-center justify-center bg-gray-50">
-          <Image src={task.taskImage} alt={task.jobInfo.jobTitle} fill className="w-20 h-20 text-gray-400" />
+        {task.taskImage && <div className="mb-6  relative  rounded-md w-48 h-48 flex items-center justify-center ">
+          {/* <Image src={task.taskImage} alt={task.jobInfo.jobTitle} fill className="w-20 h-20 text-gray-400" /> */}
+          <ImageViewer
+            src={task.taskImage}
+            alt="Modern living room with plants and orange chair"
+          />
         </div>}
 
         <div className="flex flex-wrap justify-end">
@@ -664,14 +669,14 @@ type RequestReviewProps = {
 
 const RequestReview = ({ requestRevisionPopup, setRequestRevisionPopup, jobId, }: RequestReviewProps) => {
 
-  const [requestRevision, { isLoading: isRevisionLoading }] =
+  const [requestRevision, { isLoading: isRevisionLoading, error }] =
     useRequestRevisionMutation();
   const [selectedRevision, setSelectedRevision] = useState("");
   const [revisionError, setRevisionError] = useState("");
   const [revisionSent, setRevisionSent] = useState(false);
 
   const handleRevisionSubmission = async (e: any) => {
-    e.preventDefault();
+    e.preventDefault();    
     setRevisionError("");
     const response = await requestRevision({
       jobId: jobId,
@@ -795,8 +800,7 @@ const RequestReview = ({ requestRevisionPopup, setRequestRevisionPopup, jobId, }
 
                 <Button
                   className={`w-full rounded-full py-6 max-lg:text-sm ${selectedRevision != "others" && " w-[70%] mx-auto"}`}
-                  type="submit"
-                  disabled={revisionError != ""}
+                    type="submit"
                   loading={isRevisionLoading}
                 >
                   Submit

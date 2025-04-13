@@ -18,7 +18,6 @@ const DeleteTask = ({ taskDetails, setIsDeleteModalOpen, jobDetails }: TaskCardP
   const [step, setStep] = useState(1)
   const router = useRouter()
   const handleDelete = async () => {
-    console.log("task", taskDetails?.taskInfo.id, "job", jobDetails?.jobInfo.id)
     try {
       jobDetails?.jobInfo.id ? await deleteJob(jobDetails?.jobInfo.id) :
         await deleteTask(taskDetails.taskInfo.id)
@@ -70,7 +69,7 @@ const DeleteTask = ({ taskDetails, setIsDeleteModalOpen, jobDetails }: TaskCardP
             Successfully Deleted
           </p>
 
-          <button onClick={() => { router.push("/customer/tasks/posted-by-me"); setIsDeleteModalOpen(false); }} className="bg-indigo-800 hover:bg-indigo-700 text-white font-medium py-2 px-10 rounded-full">
+          <button onClick={() => { router.push("/customer/tasks/completed-tasks"); setIsDeleteModalOpen(false); }} className="bg-indigo-800 hover:bg-indigo-700 text-white font-medium py-2 px-10 rounded-full">
             Done
           </button>
         </div>
