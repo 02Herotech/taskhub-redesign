@@ -140,8 +140,12 @@ export const task = createApi({
         getRequest(`/task/customer-completed-tasks/${customerId}`),
       providesTags: ["Task"],
     }),
-    deleteTask: builder.mutation<void, number>({
+    deleteJob: builder.mutation<void, number>({
       query: (id) => postRequest(`/booking/deleteCompletedJob/${id}`, {}),
+      invalidatesTags: ["Task"],
+    }),
+    deleteTask: builder.mutation<void, number>({
+      query: (id) => postRequest(`/task/${id}`, {}),
       invalidatesTags: ["Task"],
     }),
     searchTaskByText: builder.query<GetTasksResponse, GetTaskByTextRequest>({
@@ -196,6 +200,7 @@ export const {
   useGetCustomerOngoingTasksQuery,
   useGetCustomerCompletedTasksQuery,
   useDeleteTaskMutation,
+  useDeleteJobMutation,
   useSearchTaskByTextQuery,
   useFilterTasksQuery,
   useUpdateTaskMutation,
