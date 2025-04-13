@@ -1,5 +1,5 @@
 "use client"
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Loading from '@/shared/loading'
 import {
   FiCalendar as Calendar,
@@ -16,10 +16,12 @@ import EditTaskForm from '../../EditTaskForm'
 import { truncateSync } from 'node:fs'
 import Popup from '@/components/global/Popup'
 import DeleteTask from '../../DeleteTask'
+import { useRouter } from 'next/navigation'
 
 
 const PostedByMe = ({ params }: { params: { id: string } }) => {
   const id = params.id;
+  const router = useRouter()
   const {
     data: task,
     isLoading,
@@ -34,6 +36,13 @@ const PostedByMe = ({ params }: { params: { id: string } }) => {
   );
 
   const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false)
+
+  useEffect(() => {
+    if (task) {
+      router.push(`/customer/tasks/posted-by-me/${task.taskInfo.id}?title=${task.taskInfo.taskBriefDescription}`);
+    }
+  }, [task])
+
   if (isLoading) {
     return (
       <div className="flex h-[full] w-full items-center justify-center">
@@ -54,6 +63,7 @@ const PostedByMe = ({ params }: { params: { id: string } }) => {
       </div>
     );
   }
+
 
   const isAssigned = task?.taskInfo?.taskStatus === "ASSIGNED";
 

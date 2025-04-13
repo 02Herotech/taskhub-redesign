@@ -82,6 +82,12 @@ const OnogoingTaskDetailsPage = ({ params }: { params: { id: string } }) => {
     }
   }, [id]);
 
+  useEffect(() => {
+    if (task) {
+      router.push(`/customer/tasks/ongoing-tasks/${task.jobInfo.id}?title=${task.jobInfo.jobTitle}`);
+    }
+  }, [task])
+
   if (isLoading) {
     return (
       <div className="flex h-[full] w-full items-center justify-center">
