@@ -98,13 +98,14 @@ function SettingsHeader() {
       </div>
 
       {/* Navigation  */}
-      <nav className="hidden border-b border-[#0000001F] sm:block">
-        <ul className="flex items-center gap-3">
+
+      <nav className="mt-7 overflow-x-auto border-b border-[#0000001F] pb-2 md:mt-0">
+        <ul className="flex min-w-[550px] items-center gap-3">
           {headerLinks.map((link) => (
             <li
               className={
                 "border-[#FE9B07] px-2 " +
-                (pathname == link.url ? "border-b" : "")
+                (pathname == link.url ? "border-b text-[#FE9B07]" : "")
               }
               key={Math.random() * 4562278}
             >
