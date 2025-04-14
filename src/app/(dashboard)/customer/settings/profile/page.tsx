@@ -18,7 +18,7 @@ function Page() {
   return (
     <div className="max-h-[300px] flex-grow space-y-2 rounded-xl bg-[#EBE9F4] p-2">
       <Link
-        href="/customer/new-settings/profile/public-profile"
+        href="/customer/settings/profile/public-profile"
         className="flex items-center justify-between rounded-lg bg-white px-3 py-2 font-medium"
       >
         <span className="text-sm md:text-xl">Public profile</span>

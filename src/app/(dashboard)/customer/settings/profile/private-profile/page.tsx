@@ -210,27 +210,6 @@ function Page() {
                 >
                   Phone number
                 </label>
-                {/* <Controller
-                  name="phoneNumber"
-                  control={control}
-                  rules={{
-                    required: true,
-                    validate: isValidPhoneNumber,
-                  }}
-                  render={({ field }) => (
-                    <PhoneInput
-                      {...field}
-                      id="phone-number"
-                      defaultCountry="AU"
-                      placeholder="Enter phone number"
-                      international
-                      countryCallingCodeEditable={false}
-                      country="AU"
-                      countrySelectProps={{ disabled: true }}
-                      className="phone-input h-10 appearance-none rounded-xl bg-white p-2 px-3 shadow-md"
-                    />
-                  )}
-                /> */}
                 <PhoneInput
                   id="phone-number"
                   name="phoneNumber"
