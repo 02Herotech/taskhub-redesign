@@ -22,6 +22,7 @@ import axios from "axios";
 import Button from "@/components/global/Button";
 import useSuburbData, { SurburbInfo } from "@/hooks/useSuburbData";
 import { CiLocationOn } from "react-icons/ci";
+import useUserProfileData from "@/hooks/useUserProfileData";
 
 function Page() {
   const { profile } = useSelector((state: RootState) => state.userProfile);
@@ -33,6 +34,7 @@ function Page() {
   const profilePictureInputRef = useRef<HTMLInputElement>(null);
   const [initialImageUrl, setInitialImageUrl] = useState("");
   const [currentSuburb, setCurrentSuburb] = useState<SurburbInfo | null>(null);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     dispatch(
@@ -71,8 +73,17 @@ function Page() {
     defaultValues: {
       firstName: profile?.firstName,
       lastName: profile?.lastName,
+      location: profile?.address?.suburb || "",
     },
   });
+
+  const userProfileData = useUserProfileData();
+
+  useEffect(() => {
+    if (userProfileData?.suburbs) {
+      setValue("location", userProfileData.suburbs);
+    }
+  }, [userProfileData]);
 
   const location = watch("location");
 
@@ -81,13 +92,14 @@ function Page() {
     setSuburbList,
     error: suburbError,
     isLoading,
-  } = useSuburbData(location, currentSuburb);
+  } = useSuburbData(location, currentSuburb, userProfileData?.suburbs);
 
   const authInstance = useAxios();
 
   const imageFile = watch("profileImage");
 
   const onSubmit: SubmitHandler<PublicProfileSchema> = async (data) => {
+    setError("");
     try {
       if (data.profileImage) {
         await authInstance.post(
@@ -98,21 +110,19 @@ function Page() {
       }
 
       const submitData = {
-        firstName: data.firstName,
-        lastName: data.lastName,
         suburb: currentSuburb?.name || "",
-        state: currentSuburb?.state || "",
-        postCode:
-          currentSuburb.postcode.toString().length === 3
-            ? `0${currentSuburb.postcode}`
-            : currentSuburb.postcode,
+        state: currentSuburb?.state.name || "",
+        postCode: currentSuburb?.postcode
+          ? currentSuburb.postcode.toString().padStart(4, "0")
+          : "",
       };
 
-      await authInstance.post("/customer/update", submitData, {
+      console.log(submitData);
+      await authInstance.patch("/customer/update", submitData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
-      //Update redux value with
+      //Update redux value with latest data
       const profileUrl =
         `${process.env.NEXT_PUBLIC_API_URL}/user/user-profile/` + user?.id;
       const { data: profile } = await axios.get(profileUrl);
@@ -120,6 +130,7 @@ function Page() {
       dispatch(refreshUserProfile());
     } catch (error) {
       console.error(error);
+      setError("Something went wrong, try again later");
     }
   };
   return (
