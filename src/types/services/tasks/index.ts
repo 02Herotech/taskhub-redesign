@@ -110,9 +110,9 @@ export type CompletedTask = {
   categoryId: number;
 };
 
-export type GetCustomerCompletedTasksResponse = CompletedTasks;
+export type GetCustomerCompletedTasksResponse = CompletedTask;
 
-export type GetSingleTasksResponse = TaskResponse;
+export type GetSingleTasksResponse = Task;
 
 export type GetFilterTaskByPriceRequest = {
   page: number;
