@@ -44,9 +44,9 @@ function Page() {
       setBreadCrumbs({
         header: "Private Profile",
         links: [
-          { url: "/customer/new-settings/profile", text: "Profile" },
+          { url: "/customer/settings/profile", text: "Profile" },
           {
-            url: "/customer/new-settings/profile/private-profile",
+            url: "/customer/settings/profile/private-profile",
             text: "Private profile",
           },
         ],
@@ -119,7 +119,7 @@ function Page() {
       ...(idImageBack ? { idImageBack } : {}),
     };
 
-    console.log(submitData)
+    console.log(submitData);
     await authInstance.patch("/customer/update", submitData, {
       headers: { "Content-Type": "multipart/form-data" },
     });

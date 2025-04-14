@@ -79,12 +79,12 @@ function SettingsHeader() {
             <Link href="#">Profile</Link>
           </li>
           <li className="px-2">
-            <Link href="/customer/new-settings/notification-settings">
+            <Link href="/customer/settings/notification-settings">
               Notification preference
             </Link>
           </li>
           <li className="px-2">
-            <Link href="/customer/new-settings/password">Change password</Link>
+            <Link href="/customer/settings/password">Change password</Link>
           </li>
           <li className="px-2">
             <Link href="#">My badge</Link>

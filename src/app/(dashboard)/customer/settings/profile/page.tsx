@@ -25,7 +25,7 @@ function Page() {
         <FaChevronRight size={16} color="#381F8C" />
       </Link>
       <Link
-        href="/customer/new-settings/profile/private-profile"
+        href="/customer/settings/profile/private-profile"
         className="flex items-center justify-between rounded-lg bg-white px-3 py-2 font-medium"
       >
         <span className="text-sm md:text-xl">

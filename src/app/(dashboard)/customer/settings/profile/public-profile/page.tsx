@@ -41,9 +41,9 @@ function Page() {
       setBreadCrumbs({
         header: "Public Profile",
         links: [
-          { url: "/customer/new-settings/profile", text: "Profile" },
+          { url: "/customer/settings/profile", text: "Profile" },
           {
-            url: "/customer/new-settings/profile/public-profile",
+            url: "/customer/settings/profile/public-profile",
             text: "Public profile",
           },
         ],

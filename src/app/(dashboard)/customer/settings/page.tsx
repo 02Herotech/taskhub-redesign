@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 
 function Page() {
-  redirect("/new-settings/profile");
+  redirect("/customer/settings/profile");
   return <div>Settings</div>;
 }
 
