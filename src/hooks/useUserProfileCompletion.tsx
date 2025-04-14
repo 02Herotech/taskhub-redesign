@@ -31,6 +31,8 @@ export function useCustomerProfileCompletion() {
     { field: "Date of birth", available: Boolean(profile?.dateOfBirth) },
     { field: "Phone number", available: false },
     { field: "Identity document", available: profile?.enabled },
+
+    //! CHECK THE VERIFIED STATE WHETHER IT'S FROM EMAIL OR ID
     { field: "Verified", available: profile?.accountState === "VERIFIED" },
   ];
 
