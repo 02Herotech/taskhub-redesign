@@ -342,7 +342,7 @@ function Page() {
           </div>
 
           {error && (
-            <p className="font-semibold text-status-error-100">{error}</p>
+            <p className="font-semibold text-status-error-100 mb-3">{error}</p>
           )}
 
           <Button
