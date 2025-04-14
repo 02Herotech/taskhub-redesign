@@ -26,7 +26,7 @@ const TaskList = () => {
   console.log(tasksData, "task")
   return (
     <>
-      {tasksData?.length === 0 ? (
+      {tasksData?.content?.length === 0 ? (
         <div className="flex flex-col items-center justify-center space-y-5 h-[50vh]">
           <h2 className="text-2xl font-bold text-primary text-center">
             No tasks available, please click the button below to post a new task.
@@ -39,7 +39,7 @@ const TaskList = () => {
           <>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 mb-8">
-          {tasksData?.map((task, index) => (
+              {tasksData?.content?.map((task, index) => (
             <AllTasksCard key={index} task={task} />
           ))}
         </div>
