@@ -2,7 +2,7 @@ interface PaginationProps {
   totalElements?: number
   totalPages: number
   pageNumber: number
-  pageSize: number
+  pageSize?: number
   setPage: React.Dispatch<React.SetStateAction<number>>
 }
 
@@ -10,7 +10,6 @@ export default function Pagination({
   totalElements,
   totalPages,
   pageNumber,
-  pageSize,
   setPage
 }: PaginationProps) {
   // Convert zero-based pageNumber to one-based for display
@@ -84,7 +83,7 @@ export default function Pagination({
   }
 
   return (
-    <nav className="flex justify-center items-center space-x-2 my-8">
+    <nav className="flex justify-center items-center space-x-2 my-4">
       {/* Previous page button */}
       <button
         onClick={() => handlePrev()}

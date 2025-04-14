@@ -7,13 +7,16 @@ import Button from "@/components/global/Button";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
 import OngoingTasksCard from "../OngoingTasksCard";
+import Pagination from "@/components/pagination";
+import { useState } from "react";
 
 const TaskList = () => {
+    const [page, setPage] = useState(0)
     const userProfile = useSelector((state: RootState) => state.userProfile);
     const userId = userProfile.profile?.customerId
 
     // Make the query only when the userId is available
-    const { data: tasksData, isLoading } = useGetCustomerOngoingTasksQuery(userId!, {
+    const { data: tasksData, isLoading } = useGetCustomerOngoingTasksQuery({ customerId: userId!, page }, {
         skip: !userId,
     });
 
@@ -21,7 +24,7 @@ const TaskList = () => {
     if (!userId || isLoading) {
         return <Loading />;
     }
-
+    console.log(tasksData, "ongoing")
     return (
         <>
             {tasksData?.content?.length === 0 ? (
@@ -40,6 +43,9 @@ const TaskList = () => {
                     ))}
                 </div>
             )}
+
+            <Pagination pageNumber={tasksData?.pageNumber} setPage={setPage} totalPages={tasksData?.totalPages} />
+
         </>
     );
 };

@@ -5,13 +5,16 @@ import Loading from "@/shared/loading";
 import CompletedTasksCard from "./CompletedTasksCard";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
+import Pagination from "@/components/pagination";
+import { useState } from "react";
 
 const TaskList: React.FC = () => {
+    const [page, setPage] = useState(0)
     const userProfile = useSelector((state: RootState) => state.userProfile);
     const userId = userProfile.profile?.customerId
 
-    const { data: tasksData, isLoading } = useGetCustomerCompletedTasksQuery(userId!, {
-        skip: !userId, 
+    const { data: tasksData, isLoading } = useGetCustomerCompletedTasksQuery({ customerId: userId!, page }, {
+        skip: !userId,
     });
 
     if (!userId || isLoading) {
@@ -30,6 +33,7 @@ const TaskList: React.FC = () => {
                     <CompletedTasksCard key={index} task={task} />
                 ))}
             </div>
+            <Pagination pageNumber={tasksData?.pageNumber} setPage={setPage} totalPages={tasksData?.totalPages} />
         </>
     );
 };

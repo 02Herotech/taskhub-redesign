@@ -11,7 +11,7 @@ import Pagination from "@/components/pagination";
 import { useEffect, useState } from "react";
 
 const TaskList = () => {
-  const [page, setPage] = useState(1)
+  const [page, setPage] = useState(0)
   const { profile: user } = useSelector(
     (state: RootState) => state.userProfile,
   );
@@ -56,7 +56,7 @@ const TaskList = () => {
                 }
               })}
             </div>
-            <Pagination pageNumber={tasksData?.pageNumber} setPage={setPage} pageSize={5} totalPages={tasksData?.totalPages} />
+            <Pagination pageNumber={tasksData?.pageNumber} setPage={setPage} totalPages={tasksData?.totalPages} />
           </>
       )}
     </>

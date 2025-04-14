@@ -189,7 +189,7 @@ export type GetAllCustomerTasksResponse = AllTask;
 
 export type GetCustomerOngoingTasksResponse = OngoingTask;
 
-export type GetCustomerTasksResponse = CustomerTasks[];
+export type GetCustomerTasksResponse = AllTask;
 
 export type GetTasksRequest = number;
 

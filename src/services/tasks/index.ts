@@ -125,25 +125,34 @@ export const task = createApi({
         ),
       providesTags: ["Task"],
     }),
-    getTaskByCustomerId: builder.query<GetCustomerTasksResponse, number>({
-      query: (customerId) =>
-        getRequest(`/task/tasks-by-customerId/${customerId}`),
+    getTaskByCustomerId: builder.query<
+      GetCustomerTasksResponse,
+      { customerId: number; page: number }
+    >({
+      query: ({ customerId, page }) =>
+        getRequest(
+          `/task/tasks-by-customerId/${customerId}?page=${page}&size=${LIMIT_NINE}`,
+        ),
       providesTags: ["Task"],
     }),
     getCustomerOngoingTasks: builder.query<
       GetCustomerOngoingTasksResponse,
-      number
+      { customerId: number; page: number }
     >({
-      query: (customerId) =>
-        getRequest(`/task/customer-ongoing-tasks/${customerId}`),
+      query: ({ customerId, page }) =>
+        getRequest(
+          `/task/customer-ongoing-tasks/${customerId}?page=${page}&size=${LIMIT_NINE}`,
+        ),
       providesTags: ["Task"],
     }),
     getCustomerCompletedTasks: builder.query<
       GetCustomerCompletedTasksResponse,
-      number
+      { customerId: number; page: number }
     >({
-      query: (customerId) =>
-        getRequest(`/task/customer-completed-tasks/${customerId}`),
+      query: ({ customerId, page }) =>
+        getRequest(
+          `/task/customer-completed-tasks/${customerId}?page=${page}&size=${LIMIT_NINE}`,
+        ),
       providesTags: ["Task"],
     }),
     deleteJob: builder.mutation<void, number>({
