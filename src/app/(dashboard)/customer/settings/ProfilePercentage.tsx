@@ -18,8 +18,8 @@ function ProfilePercentage() {
   const pathname = usePathname();
   const shouldRender =
     pathname == "/customer/settings/profile" ||
-    pathname == "/customer/settings/prfile/public-profile" ||
-    pathname == "/customer/settings/prfile/private-profile";
+    pathname == "/customer/settings/profile/public-profile" ||
+    pathname == "/customer/settings/profile/private-profile";
 
   return (
     <>

@@ -38,8 +38,8 @@ function SettingsHeader() {
 
   const shouldRender =
     pathname == "/customer/settings/profile" ||
-    pathname == "/customer/settings/prfile/public-profile" ||
-    pathname == "/customer/settings/prfile/private-profile";
+    pathname == "/customer/settings/profile/public-profile" ||
+    pathname == "/customer/settings/profile/private-profile";
   return (
     <div>
       <h2 className="mb-2 hidden text-3xl font-semibold text-[#2A1769] sm:block">

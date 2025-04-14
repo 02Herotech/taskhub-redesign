@@ -13,7 +13,6 @@ import { PiSealCheckFill } from "react-icons/pi";
 import { BsExclamationTriangle } from "react-icons/bs";
 import useAxios from "@/hooks/useAxios";
 import { useDispatch } from "react-redux";
-import { RootState } from "@/store";
 import { setBreadCrumbs } from "@/store/Features/breadcrumbs";
 
 type ChangePasswordRequest = {
