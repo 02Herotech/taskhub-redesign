@@ -13,13 +13,22 @@ export type SurburbInfo = {
   longitude: number;
 };
 
-function useSuburbData(searchValue: string, currentSuburb: SurburbInfo | null) {
+function useSuburbData(
+  searchValue: string,
+  currentSuburb: SurburbInfo | null,
+  profileSuburb?: string,
+) {
   const [suburbList, setSuburbList] = useState<SurburbInfo[]>([]);
   const [error, setError] = useState<string>("");
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const fetchSuburbData = async () => {
+      //Clear suburb results from api when input is set to suburb value from user profile
+      if (profileSuburb && searchValue === profileSuburb) {
+        setSuburbList([]);
+        return;
+      }
       if (!searchValue || searchValue?.trim().length < 1 || currentSuburb) {
         setError("");
         setSuburbList([]);
@@ -52,8 +61,6 @@ function useSuburbData(searchValue: string, currentSuburb: SurburbInfo | null) {
 
     return () => clearTimeout(debounceFetchSuburb);
   }, [searchValue]);
-
-  // const Suburbs = () => <div></div>;
 
   return { suburbList, setSuburbList, error, isLoading };
 }
