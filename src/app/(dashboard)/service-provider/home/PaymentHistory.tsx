@@ -10,6 +10,7 @@ import { IoLocationOutline } from "react-icons/io5";
 import { CiCalendar } from "react-icons/ci";
 import Link from "next/link";
 import { formatTimeFromDate } from "@/utils";
+import { truncateText } from "@/utils/marketplace";
 
 /**Component for payment history for service provider */
 function PaymentHistory() {
@@ -23,7 +24,6 @@ function PaymentHistory() {
     { skip: !user?.serviceProviderId },
   );
 
-  console.log(data)
   // const [data, setData] = useState<undefined | JobsType[]>(undefined);
   // const [isLoading, setIsLoading] = useState(false);
   // const authInstance = useAxios();
@@ -91,39 +91,49 @@ function PaymentHistory() {
                 {/* <h4 className="mb-3 font-satoshiMedium text-[#756F6F]">
                   Today
                 </h4> */}
-                {data.content.slice(0, 7).map((payment) => (
-                  <li className="flex gap-2" key={Math.random() * 5678}>
-                    <Image
-                      src="/assets/images/placeholder.png"
-                      alt="Profile picture"
-                      width={40}
-                      height={40}
-                      className="size-10 rounded-full object-cover object-top md:size-14"
-                    />
-                    <div>
-                      <h5 className="font-satoshiBold text-lg font-bold text-[#140B31]">
-                        {payment.task.taskBriefDescription}
-                      </h5>
-                      {/* <p className="font-satoshiMedium text-[#716F78]">
-                        {payment.task.taskBriefDescription}
-                      </p> */}
-                    </div>
+                {data.content
+                  .slice(0, 7)
+                  .map(({ task, listing, transactionHistory }) => (
+                    <li className="flex gap-2" key={Math.random() * 5678}>
+                      <Image
+                        src={
+                          task?.taskImage ||
+                          listing?.businessPictures?.[0] ||
+                          "/assets/images/placeholder.png"
+                        }
+                        alt="Task picture"
+                        width={40}
+                        height={40}
+                        className="size-10 rounded-full object-cover object-top md:size-14"
+                      />
+                      <div>
+                        <h5 className="font-satoshiBold text-lg font-bold text-[#140B31]">
+                          {task
+                            ? task.taskBriefDescription
+                            : listing.listingTitle}
+                        </h5>
+                        <p className="font-satoshiMedium text-[#716F78]">
+                          {task
+                            ? truncateText(task.taskDescription, 35)
+                            : truncateText(listing.listingDescription, 35)}
+                        </p>
+                      </div>
 
-                    <div className="ml-auto space-y-2 text-right">
-                      <p className="text-sm text-[#5A5960]">
-                        {formatTimeFromDate(
-                          new Date(
-                            convertMonthInDateArray(
-                              payment.transactionHistory.transactionDate,
+                      <div className="ml-auto space-y-2 text-right">
+                        <p className="text-sm text-[#5A5960]">
+                          {formatTimeFromDate(
+                            new Date(
+                              convertMonthInDateArray(
+                                transactionHistory.transactionDate,
+                              ),
                             ),
-                          ),
-                        )}
-                      </p>
-                      {/* Colors: Successful -> #17A851, Pending -> #FEA621, Failed -> #EA323E */}
-                      {/* <p className="text-[#17A851]">Successful</p> */}
-                    </div>
-                  </li>
-                ))}
+                          )}
+                        </p>
+                        {/* Colors: Successful -> #17A851, Pending -> #FEA621, Failed -> #EA323E */}
+                        <p className="text-[#17A851]">Successful</p>
+                      </div>
+                    </li>
+                  ))}
               </ul>
             )}
           </>

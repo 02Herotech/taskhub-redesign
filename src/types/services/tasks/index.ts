@@ -160,6 +160,7 @@ export type Receipt = {
   task?: {
     id: number;
     taskBriefDescription: string;
+    taskDescription: string;
     taskImage?: null;
     taskTime?: null;
     taskDate?: null;
@@ -167,9 +168,9 @@ export type Receipt = {
   invoiceId: number;
   jobId: number;
   listing?: {
-    listingTItle: string;
+    listingTitle: string;
     listingDescription: string;
-    businessPictures: string;
+    businessPictures: string[];
   } | null;
   transactionHistory: {
     id: number;
