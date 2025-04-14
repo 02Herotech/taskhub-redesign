@@ -9,7 +9,7 @@ const publicProfileSchema = z.object({
     .refine((file) => {
       return file ? ACCEPTED_FILE_TYPES.includes(file?.type) : true;
     }, "Only images are allowed"),
-  bioDescription: z.string().min(1, "Bio description is required"),
+  bioDescription: z.string().optional(),
   firstName: z.string().min(1, "First name is required"),
   lastName: z.string().min(1, "Last name is required"),
   location: z.string().min(1, "Location is required"),
