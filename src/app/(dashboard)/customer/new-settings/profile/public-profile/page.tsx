@@ -341,6 +341,10 @@ function Page() {
             </div>
           </div>
 
+          {error && (
+            <p className="font-semibold text-status-error-100">{error}</p>
+          )}
+
           <Button
             loading={isSubmitting}
             disabled={isSubmitting}

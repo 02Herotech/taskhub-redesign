@@ -1,5 +1,4 @@
 "use client";
-
 import { FiAlertOctagon } from "react-icons/fi";
 import PhoneInput from "react-phone-number-input/react-hook-form";
 import Link from "next/link";
@@ -10,11 +9,19 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { UpdateProfileSchema, updateProfileSchema } from "./schema";
 import { isValidPhoneNumber } from "react-phone-number-input";
 import { getImageUrl } from "@/lib/utils";
+import { useDispatch, useSelector } from "react-redux";
 import Button from "@/components/global/Button";
 import { Calendar } from "primereact/calendar";
 import "react-phone-number-input/style.css";
 import "primereact/resources/themes/lara-light-blue/theme.css";
 import "primereact/resources/primereact.min.css";
+import useAxios from "@/hooks/useAxios";
+import { RootState } from "@/store";
+import { setBreadCrumbs } from "@/store/Features/breadcrumbs";
+import useUserProfileData from "@/hooks/useUserProfileData";
+import { formatDateAsYYYYMMDD } from "@/utils";
+import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 const idTypes: { label: string; value: string }[] = [
   { label: "Medicare Card", value: "MEDICARE_CARD" },
@@ -27,18 +34,62 @@ function Page() {
   const [value, setValue] = useState("");
   const frontImageInputRef = useRef<HTMLInputElement>(null);
   const backImageInputRef = useRef<HTMLInputElement>(null);
+  const { profile } = useSelector((state: RootState) => state.userProfile);
+  const dispatch = useDispatch();
+  const userProfileData = useUserProfileData();
+  const router = useRouter();
+
+  useEffect(() => {
+    dispatch(
+      setBreadCrumbs({
+        header: "Private Profile",
+        links: [
+          { url: "/customer/new-settings/profile", text: "Profile" },
+          {
+            url: "/customer/new-settings/profile/private-profile",
+            text: "Private profile",
+          },
+        ],
+      }),
+    );
+  }, []);
 
   const methods = useForm<UpdateProfileSchema>({
     resolver: zodResolver(updateProfileSchema),
+    defaultValues: {
+      email: profile?.emailAddress,
+      //@ts-ignore
+      phoneNumber: userProfileData.phoneNumber,
+      //@ts-ignore
+      idType: userProfileData.idType || "",
+    },
   });
+
   const {
     watch,
     control,
     register,
+    setError,
     clearErrors,
     formState: { errors, isSubmitting },
     setValue: setFormValue,
   } = methods;
+
+  useEffect(() => {
+    if (profile) {
+      setFormValue("email", profile.emailAddress);
+    }
+  }, [profile]);
+
+  useEffect(() => {
+    setFormValue("dateOfBirth", new Date(userProfileData?.dateOfBirth));
+    //@ts-ignore
+    setFormValue("phoneNumber", userProfileData?.phoneNumber);
+    //@ts-ignore
+    setFormValue("idType", userProfileData.idType);
+    setFormValue("idNumber", userProfileData.idNumber);
+    console.log(userProfileData);
+  }, [userProfileData]);
 
   const selectedIdType = watch("idType");
   const imageFront = watch("idImageFront");
@@ -48,11 +99,31 @@ function Page() {
   useEffect(() => {
     if (selectedIdType == "INTERNATIONAL_PASSPORT") {
       setFormValue("idImageBack", undefined);
+      clearErrors("idImageBack");
     }
   }, [selectedIdType]);
 
+  const authInstance = useAxios();
+
   const onSubmit: SubmitHandler<UpdateProfileSchema> = async (data) => {
-    console.log(data);
+    if (userProfileData.idImageFront) clearErrors("idImageFront");
+    if (userProfileData.idImageBack) clearErrors("idImageBack");
+
+    const { idImageFront, idImageBack } = data;
+    const submitData = {
+      dateOfBirth: formatDateAsYYYYMMDD(data.dateOfBirth as Date),
+      phoneNumber: data.phoneNumber,
+      idType: data.idType,
+      idNumber: data.idNumber,
+      ...(idImageFront ? { idImageFront } : {}),
+      ...(idImageBack ? { idImageBack } : {}),
+    };
+
+    console.log(submitData)
+    await authInstance.patch("/customer/update", submitData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+    router.refresh();
   };
 
   const today = new Date();
@@ -61,7 +132,6 @@ function Page() {
     today.getMonth(),
     today.getDate(),
   );
-
   return (
     <>
       <div className="flex-grow space-y-2 rounded-xl">
@@ -140,6 +210,27 @@ function Page() {
                 >
                   Phone number
                 </label>
+                {/* <Controller
+                  name="phoneNumber"
+                  control={control}
+                  rules={{
+                    required: true,
+                    validate: isValidPhoneNumber,
+                  }}
+                  render={({ field }) => (
+                    <PhoneInput
+                      {...field}
+                      id="phone-number"
+                      defaultCountry="AU"
+                      placeholder="Enter phone number"
+                      international
+                      countryCallingCodeEditable={false}
+                      country="AU"
+                      countrySelectProps={{ disabled: true }}
+                      className="phone-input h-10 appearance-none rounded-xl bg-white p-2 px-3 shadow-md"
+                    />
+                  )}
+                /> */}
                 <PhoneInput
                   id="phone-number"
                   name="phoneNumber"
@@ -178,10 +269,10 @@ function Page() {
               <input
                 id="email"
                 type="email"
-                className="w-full rounded-xl p-2 px-2 shadow-md outline-none sm:shadow-none"
+                className="w-full rounded-xl p-2 px-2 shadow-md outline-none disabled:bg-white sm:shadow-none"
                 placeholder="johndoe@gmail.com"
+                disabled
                 {...register("email")}
-                value={"johndoe@gmail.com"}
               />
             </div>
 
@@ -197,8 +288,9 @@ function Page() {
                   </label>
                   <select
                     id="document-type"
-                    className="w-full rounded-xl p-2 px-2 shadow-md outline-none sm:shadow-none"
+                    className="w-full rounded-xl p-2 px-2 shadow-md outline-none disabled:bg-white sm:shadow-none"
                     {...register("idType")}
+                    disabled={Boolean(userProfileData?.idType)}
                   >
                     <option value="">Select ID type</option>
                     {idTypes.map((idType) => (
@@ -231,9 +323,13 @@ function Page() {
                 <input
                   id="id-number"
                   type="text"
-                  className="w-full rounded-xl p-2 px-2 shadow-md outline-none sm:shadow-none"
+                  className="w-full rounded-xl p-2 px-2 shadow-md outline-none disabled:bg-white sm:shadow-none"
                   placeholder="123456789"
-                  {...register("idNumber")}
+                  {...register("idNumber", {
+                    // disabled:
+                    //   userProfileData.verificationStatus == "PENDING" ||
+                    //   userProfileData.verificationStatus == "VERIFIED",
+                  })}
                 />
                 {errors.idNumber && (
                   <p className="w-full text-sm font-medium text-red-500">
@@ -265,12 +361,21 @@ function Page() {
                           shouldValidate: true,
                         });
                       }}
+                      // disabled={
+                      //   userProfileData.verificationStatus == "PENDING" ||
+                      //   userProfileData.verificationStatus == "VERIFIED"
+                      // }
                     />
-                    {getImageUrl(imageFront) ? (
-                      <img
-                        src={getImageUrl(imageFront)}
+                    {getImageUrl(imageFront) || userProfileData.idImageFront ? (
+                      <Image
+                        src={
+                          getImageUrl(imageFront) ||
+                          userProfileData.idImageFront
+                        }
                         alt="Front of image ID"
                         className="h-full w-full object-cover"
+                        width={400}
+                        height={200}
                       />
                     ) : (
                       <div className="flex flex-col items-center justify-center gap-1 py-7">
@@ -311,10 +416,19 @@ function Page() {
                             shouldValidate: true,
                           });
                         }}
+                        // disabled={
+                        //   userProfileData.verificationStatus == "PENDING" ||
+                        //   userProfileData.verificationStatus == "VERIFIED"
+                        // }
                       />
-                      {getImageUrl(imageBack) ? (
-                        <img
-                          src={getImageUrl(imageBack)}
+                      {getImageUrl(imageBack) || userProfileData.idImageBack ? (
+                        <Image
+                          width={400}
+                          height={200}
+                          src={
+                            getImageUrl(imageBack) ||
+                            userProfileData.idImageBack
+                          }
                           alt="Back of image ID"
                           className="h-full w-full object-cover"
                         />
