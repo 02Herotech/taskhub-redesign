@@ -1,9 +1,8 @@
-import React from 'react'
+import { redirect } from "next/navigation";
 
-const CustomerSettingsPage = () => {
-  return (
-    <div>CustomerSettingsPage</div>
-  )
+function Page() {
+  redirect("/new-settings/profile");
+  return <div>Settings</div>;
 }
 
-export default CustomerSettingsPage
+export default Page;
