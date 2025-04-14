@@ -8,12 +8,15 @@ import {
   useCustomerProfileCompletion,
 } from "@/hooks/useUserProfileCompletion";
 import { usePathname } from "next/navigation";
+import useUserProfileData from "@/hooks/useUserProfileData";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 function ProfilePercentage() {
+  const userProfileData = useUserProfileData();
+
   const { profileData, data, completionPercentage } =
-    useCustomerProfileCompletion();
+    useCustomerProfileCompletion(userProfileData.verificationStatus);
 
   const pathname = usePathname();
   const shouldRender =
