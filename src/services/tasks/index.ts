@@ -8,6 +8,7 @@ import {
   GetTasksResponse,
   GetCustomerCompletedTasksResponse,
   GetAllCustomerTasksResponse,
+  ServiceProviderReciepts,
 } from "@/types/services/tasks";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { Middleware } from "@reduxjs/toolkit";
@@ -185,6 +186,15 @@ export const task = createApi({
         ),
       invalidatesTags: ["Task"],
     }),
+    getServiceProviderPaymentHistory: builder.query<
+      ServiceProviderReciepts,
+      { serviceProviderId: number }
+    >({
+      query: ({ serviceProviderId }) =>
+        getRequest(
+          `task/service-provider-payment-history/${serviceProviderId}?size=10`,
+        ),
+    }),
   }),
 });
 
@@ -206,4 +216,5 @@ export const {
   useUpdateTaskMutation,
   useGetTasksOffersQuery,
   useAssignTaskMutation,
+  useGetServiceProviderPaymentHistoryQuery
 } = task;

@@ -133,11 +133,11 @@ export const homeLinks: LinkRouteTypes[] = [
 ];
 
 export const mobileServiceProviderLinks: LinkRouteTypes[] = [
-  // {
-  //   label: "Home",
-  //   url: "/service-provider/home",
-  //   icon: TbSmartHome,
-  // },
+  {
+    label: "Home",
+    url: "/service-provider/home",
+    icon: TbSmartHome,
+  },
   {
     label: "Profile",
     url: "/service-provider/profile",

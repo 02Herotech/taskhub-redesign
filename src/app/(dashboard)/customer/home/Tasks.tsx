@@ -73,7 +73,8 @@ function Tasks() {
         )}
         {data && (
           <>
-            {data.length < 1 ? (
+            {/* @ts-ignore  */}
+            {data.content.length < 1 ? (
               <div className=" py-10">
                 <Image
                   src="/assets/images/dashboard/empty-task.jpg"
@@ -89,7 +90,7 @@ function Tasks() {
 
                 <Link
                   href="/customer/add-task"
-                  className="mx-auto w-max flex gap-2 rounded-full bg-[#E58C06] px-4 py-2 font-bold text-white"
+                  className="mx-auto flex w-max gap-2 rounded-full bg-[#E58C06] px-4 py-2 font-bold text-white"
                 >
                   <span>Post A Task</span>
                   <div className="rounded-full bg-white p-1">
@@ -99,7 +100,8 @@ function Tasks() {
               </div>
             ) : (
               <ul className="space-y-3 py-3">
-                {data.slice(0, 4).map((task) => (
+                {/* @ts-ignore  */}
+                {data.content.slice(0, 4).map((task) => (
                   <li
                     className="flex justify-between rounded-2xl border border-[#00000003] bg-[#EBE9F44D] p-3"
                     key={Math.random() * 1234}

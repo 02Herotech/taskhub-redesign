@@ -68,7 +68,7 @@ export const customerDashboardLinks: DashboardLinks[] = [
 ];
 
 export const serviceProviderDashboardLinks: DashboardLinks[] = [
-  // { label: "Home", link: "/service-provider/home", icon: TbSmartHome },
+  { label: "Home", link: "/service-provider/home", icon: TbSmartHome },
   {
     label: "Profile",
     link: "/service-provider/profile",
