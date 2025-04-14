@@ -17,6 +17,7 @@ import { truncateSync } from 'node:fs'
 import Popup from '@/components/global/Popup'
 import DeleteTask from '../../DeleteTask'
 import { useRouter } from 'next/navigation'
+import ImageViewer from '@/components/imageviewer'
 
 
 const PostedByMe = ({ params }: { params: { id: string } }) => {
@@ -147,7 +148,7 @@ const PostedByMe = ({ params }: { params: { id: string } }) => {
             </button>
           </div>
         </div>
-      </div>
+      </div> 
 
       {/* Location and Date */}
       <div className="flex flex-wrap gap-6 mb-4">
@@ -163,8 +164,12 @@ const PostedByMe = ({ params }: { params: { id: string } }) => {
       </div>
 
       {/*image */}
-      {task.taskInfo.taskImage && <div className="my-8 border relative border-gray-200 rounded-md w-32 h-32 sm:w-48 sm:h-48 flex items-center justify-center bg-gray-50">
-        <Image src={task.taskInfo.taskImage} alt="job image" fill className="w-20 h-20 text-gray-400" />
+      {task.taskInfo.taskImage && <div className="my-8  relative  w-32 h-32 sm:w-48 sm:h-48 flex items-center justify-center ">
+        {/* <Image src={task.taskInfo.taskImage} alt="job image" fill className="w-20 h-20 text-gray-400" /> */}
+        <ImageViewer
+          src={task.taskInfo.taskImage}
+          alt={task.taskInfo.taskBriefDescription}
+        />
       </div>}
 
       <Offers id={id} isAssigned={isAssigned} />

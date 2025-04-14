@@ -295,7 +295,7 @@ const OnogoingTaskDetailsPage = ({ params }: { params: { id: string } }) => {
           {/* <Image src={task.taskImage} alt={task.jobInfo.jobTitle} fill className="w-20 h-20 text-gray-400" /> */}
           <ImageViewer
             src={task.taskImage}
-            alt="Modern living room with plants and orange chair"
+            alt={task.jobInfo.jobTitle}
           />
         </div>}
 

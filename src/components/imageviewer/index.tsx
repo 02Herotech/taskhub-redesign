@@ -5,6 +5,7 @@ import type React from "react"
 import { useState, useRef, useEffect } from "react"
 
 import Image from "next/image"
+import { RiCloseCircleLine } from "react-icons/ri"
 
 interface ImageViewerProps {
   src: string
@@ -88,8 +89,8 @@ export default function ImageViewer({
             <Image
               src={src || "/placeholder.svg"}
               alt={alt}
-              width={1200}
-              height={1200}
+              width={2400}
+              height={2400}
               className={`h-auto max-h-[90vh] w-auto max-w-[90vw] object-contain transition-opacity duration-300 ${isLoaded ? "opacity-100" : "opacity-0"
                 }`}
               onLoad={handleImageLoad}
@@ -102,7 +103,7 @@ export default function ImageViewer({
               onClick={closeViewer}
               aria-label="Close image viewer"
             >
-              close
+              <RiCloseCircleLine className="h-5 w-5" />
               {/* <X className="h-5 w-5" /> */}
             </button>
           </div>

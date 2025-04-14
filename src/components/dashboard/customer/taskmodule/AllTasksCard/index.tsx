@@ -7,7 +7,7 @@ import { BsThreeDotsVertical } from "react-icons/bs";
 import { FaRegEdit } from "react-icons/fa";
 import { motion } from "framer-motion";
 import { dayOfWeekNames, formatAmount, formatTime24Hour, monthNames, suffixes } from "@/lib/utils";
-import { CustomerTasks } from "@/types/services/tasks";
+import { CustomerTasks, TaskInfo } from "@/types/services/tasks";
 import Popup from "@/components/global/Popup";
 import EditTaskForm from "../EditTaskForm";
 import { useRouter } from "next/navigation";
@@ -15,7 +15,7 @@ import { IoEye } from "react-icons/io5";
 import { Category } from '../../../../../types/blog/post';
 
 interface TaskCardProps {
-  task: CustomerTasks;
+  task: TaskInfo;
 }
 
 type DropDownItem = {
@@ -38,28 +38,6 @@ const AllTasksCard = ({ task }: TaskCardProps) => {
   } else {
     formattedDate = "Flexible";
   }
-
-  // const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  // const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-
-  // const dropDownItems: DropDownItem[] = [
-  //     {
-  //         title: "View Task",
-  //         onClick: () => {
-  //             router.push(`/customer/tasks/${task.id}`);
-  //             setIsDropdownOpen(false);
-  //         },
-  //         icon: <IoEye className="text-white size-4 cursor-pointer" />,
-  //     },
-  //     {
-  //         title: "Edit Task",
-  //         onClick: () => {
-  //             setIsEditModalOpen(true);
-  //             setIsDropdownOpen(false);
-  //         },
-  //         icon: <FaRegEdit className="text-white size-4 cursor-pointer" />,
-  //     },
-  // ];
 
   const getBorderColor = () => {
     switch (task.taskStatus) {
