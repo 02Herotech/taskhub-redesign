@@ -22,6 +22,8 @@ import useUserProfileData from "@/hooks/useUserProfileData";
 import { formatDateAsYYYYMMDD } from "@/utils";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { PiSealCheckFill } from "react-icons/pi";
+import Popup from "@/components/global/Popup/PopupTwo";
 
 const idTypes: { label: string; value: string }[] = [
   { label: "Medicare Card", value: "MEDICARE_CARD" },
@@ -38,6 +40,8 @@ function Page() {
   const dispatch = useDispatch();
   const userProfileData = useUserProfileData();
   const router = useRouter();
+  const [error, setError] = useState("");
+  const [openSuccessModal, setOpenSuccessModal] = useState(false);
 
   useEffect(() => {
     dispatch(
@@ -57,9 +61,8 @@ function Page() {
   const methods = useForm<UpdateProfileSchema>({
     resolver: zodResolver(updateProfileSchema),
     defaultValues: {
-      email: profile?.emailAddress,
-      //@ts-ignore
-      phoneNumber: userProfileData.phoneNumber,
+      // email: profile?.emailAddress,
+      phoneNumber: profile?.phoneNumber,
       //@ts-ignore
       idType: userProfileData.idType || "",
     },
@@ -69,7 +72,7 @@ function Page() {
     watch,
     control,
     register,
-    setError,
+    reset,
     clearErrors,
     formState: { errors, isSubmitting },
     setValue: setFormValue,
@@ -77,18 +80,22 @@ function Page() {
 
   useEffect(() => {
     if (profile) {
-      setFormValue("email", profile.emailAddress);
+      // setFormValue("email", profile.emailAddress);
+
+      reset({
+        phoneNumber: profile.phoneNumber || "",
+        email: profile.emailAddress,
+      });
+      // setFormValue("phoneNumber", profile?.phoneNumber);
     }
   }, [profile]);
 
   useEffect(() => {
     setFormValue("dateOfBirth", new Date(userProfileData?.dateOfBirth));
-    //@ts-ignore
-    setFormValue("phoneNumber", userProfileData?.phoneNumber);
+
     //@ts-ignore
     setFormValue("idType", userProfileData.idType);
     setFormValue("idNumber", userProfileData.idNumber);
-    console.log(userProfileData);
   }, [userProfileData]);
 
   const selectedIdType = watch("idType");
@@ -106,11 +113,14 @@ function Page() {
   const authInstance = useAxios();
 
   const onSubmit: SubmitHandler<UpdateProfileSchema> = async (data) => {
+    setError("");
     if (userProfileData.idImageFront) clearErrors("idImageFront");
     if (userProfileData.idImageBack) clearErrors("idImageBack");
 
     const { idImageFront, idImageBack } = data;
     const submitData = {
+      firstName: profile?.firstName,
+      lastName: profile?.lastName,
       dateOfBirth: formatDateAsYYYYMMDD(data.dateOfBirth as Date),
       phoneNumber: data.phoneNumber,
       idType: data.idType,
@@ -119,11 +129,15 @@ function Page() {
       ...(idImageBack ? { idImageBack } : {}),
     };
 
-    console.log(submitData);
-    await authInstance.patch("/customer/update", submitData, {
-      headers: { "Content-Type": "multipart/form-data" },
-    });
-    router.refresh();
+    try {
+      await authInstance.patch("/customer/update", submitData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+      router.refresh();
+    } catch (error) {
+      console.error(error);
+      setError("Something went wrong, please try again");
+    }
   };
 
   const today = new Date();
@@ -171,35 +185,37 @@ function Page() {
                 name="dateOfBirth"
                 control={methods.control}
                 rules={{ required: "You must enter your age" }}
-                render={({ field }) => (
-                  <div className="w-full sm:w-1/2">
-                    <label
-                      className="mb-1 block text-sm text-[#4E5158]"
-                      htmlFor="date-of-birth"
-                    >
-                      Date of birth
-                    </label>
-                    <div className="overflow-hidden rounded-xl bg-white px-3 shadow-md">
-                      <Calendar
-                        className="h-10 w-full bg-white"
-                        inputClassName=""
-                        inputId="date-of-birth"
-                        value={field.value ?? maxDate}
-                        dateFormat="dd/mm/yy"
-                        placeholder="DD/MM/YYYY"
-                        maxDate={maxDate}
-                        onChange={(e) => {
-                          field.onChange(e.value);
-                        }}
-                      />
+                render={({ field }) => {
+                  return (
+                    <div className="w-full sm:w-1/2">
+                      <label
+                        className="mb-1 block text-sm text-[#4E5158]"
+                        htmlFor="date-of-birth"
+                      >
+                        Date of birth
+                      </label>
+                      <div className="overflow-hidden rounded-xl bg-white px-3 shadow-md">
+                        <Calendar
+                          className="h-10 w-full bg-white"
+                          inputClassName=""
+                          inputId="date-of-birth"
+                          value={field.value ? new Date(field.value) : maxDate}
+                          dateFormat="dd/mm/yy"
+                          placeholder="DD/MM/YYYY"
+                          maxDate={maxDate}
+                          onChange={(e) => {
+                            field.onChange(e.value);
+                          }}
+                        />
+                      </div>
+                      {errors.dateOfBirth && (
+                        <p className="w-full text-sm font-medium text-red-500">
+                          {errors.dateOfBirth.message}
+                        </p>
+                      )}
                     </div>
-                    {errors.dateOfBirth && (
-                      <p className="w-full text-sm font-medium text-red-500">
-                        {errors.dateOfBirth.message}
-                      </p>
-                    )}
-                  </div>
-                )}
+                  );
+                }}
               />
 
               {/* Phone number input  */}
@@ -210,13 +226,15 @@ function Page() {
                 >
                   Phone number
                 </label>
+
                 <PhoneInput
                   id="phone-number"
                   name="phoneNumber"
                   defaultCountry="AU"
                   control={control}
                   placeholder="Enter phone number"
-                  value={value}
+                  defaultValue={(profile?.phoneNumber as unknown as any) || ""}
+                  // value={profile?.phoneNumber || ""}
                   international
                   countryCallingCodeEditable={false}
                   country="AU"
@@ -305,9 +323,9 @@ function Page() {
                   className="w-full rounded-xl p-2 px-2 shadow-md outline-none disabled:bg-white sm:shadow-none"
                   placeholder="123456789"
                   {...register("idNumber", {
-                    // disabled:
-                    //   userProfileData.verificationStatus == "PENDING" ||
-                    //   userProfileData.verificationStatus == "VERIFIED",
+                    disabled:
+                      userProfileData.verificationStatus == "PENDING" ||
+                      userProfileData.verificationStatus == "VERIFIED",
                   })}
                 />
                 {errors.idNumber && (
@@ -340,10 +358,10 @@ function Page() {
                           shouldValidate: true,
                         });
                       }}
-                      // disabled={
-                      //   userProfileData.verificationStatus == "PENDING" ||
-                      //   userProfileData.verificationStatus == "VERIFIED"
-                      // }
+                      disabled={
+                        userProfileData.verificationStatus == "PENDING" ||
+                        userProfileData.verificationStatus == "VERIFIED"
+                      }
                     />
                     {getImageUrl(imageFront) || userProfileData.idImageFront ? (
                       <Image
@@ -395,10 +413,10 @@ function Page() {
                             shouldValidate: true,
                           });
                         }}
-                        // disabled={
-                        //   userProfileData.verificationStatus == "PENDING" ||
-                        //   userProfileData.verificationStatus == "VERIFIED"
-                        // }
+                        disabled={
+                          userProfileData.verificationStatus == "PENDING" ||
+                          userProfileData.verificationStatus == "VERIFIED"
+                        }
                       />
                       {getImageUrl(imageBack) || userProfileData.idImageBack ? (
                         <Image
@@ -438,6 +456,10 @@ function Page() {
             </div>
           </div>
 
+          {error && (
+            <p className="mb-3 font-semibold text-status-error-100">{error}</p>
+          )}
+
           <Button
             type="submit"
             loading={isSubmitting}
@@ -448,6 +470,40 @@ function Page() {
           </Button>
         </form>
       </div>
+      <Popup
+        isOpen={openSuccessModal}
+        onClose={() => setOpenSuccessModal(false)}
+      >
+        <div className="relative mt-10 max-h-[750px] min-w-[320px] max-w-[750px] bg-white p-3 px-4 sm:mt-7 sm:min-w-[560px]">
+          <div className=" flex flex-col items-center justify-center gap-4 pb-4">
+            <div className="flex size-20 items-center justify-center rounded-full bg-[#C1F6C3] bg-opacity-60">
+              <div className=" flex size-14 items-center justify-center rounded-full bg-[#A6F8AA] p-2">
+                <PiSealCheckFill className="size-10 text-green-500" />
+              </div>
+            </div>
+            <p className="text-center font-satoshiBold text-2xl font-extrabold text-violet-normal">
+              Request Sent!
+            </p>
+            <p className="text-center font-semibold text-violet-darker">
+              Your profile has been updated successfully
+            </p>
+            <div className="flex items-center gap-6">
+              <button
+                onClick={() => setOpenSuccessModal(false)}
+                className="rounded-full bg-violet-active px-4 py-2 font-bold text-violet-dark max-sm:text-sm"
+              >
+                Close
+              </button>
+              <button
+                onClick={() => router.push("/marketplace")}
+                className="rounded-full bg-violet-normal px-4 py-2 font-bold text-white max-sm:text-sm"
+              >
+                Proceed to marketplace
+              </button>
+            </div>
+          </div>
+        </div>
+      </Popup>
     </>
   );
 }

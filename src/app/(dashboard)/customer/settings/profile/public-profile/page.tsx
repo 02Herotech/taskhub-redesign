@@ -23,6 +23,8 @@ import Button from "@/components/global/Button";
 import useSuburbData, { SurburbInfo } from "@/hooks/useSuburbData";
 import { CiLocationOn } from "react-icons/ci";
 import useUserProfileData from "@/hooks/useUserProfileData";
+import {  PiSealCheckFill } from "react-icons/pi";
+import { useRouter } from "next/navigation";
 
 function Page() {
   const { profile } = useSelector((state: RootState) => state.userProfile);
@@ -34,7 +36,9 @@ function Page() {
   const profilePictureInputRef = useRef<HTMLInputElement>(null);
   const [initialImageUrl, setInitialImageUrl] = useState("");
   const [currentSuburb, setCurrentSuburb] = useState<SurburbInfo | null>(null);
+  const [openSuccessModal, setOpenSuccessModal] = useState(false);
   const [error, setError] = useState("");
+  const router = useRouter();
 
   useEffect(() => {
     dispatch(
@@ -123,6 +127,7 @@ function Page() {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
+      setOpenSuccessModal(true);
       //Update redux value with latest data
       const profileUrl =
         `${process.env.NEXT_PUBLIC_API_URL}/user/user-profile/` + user?.id;
@@ -342,7 +347,7 @@ function Page() {
           </div>
 
           {error && (
-            <p className="font-semibold text-status-error-100 mb-3">{error}</p>
+            <p className="mb-3 font-semibold text-status-error-100">{error}</p>
           )}
 
           <Button
@@ -392,6 +397,41 @@ function Page() {
             </div>
           </main>
         </section>
+      </Popup>
+
+      <Popup
+        isOpen={openSuccessModal}
+        onClose={() => setOpenSuccessModal(false)}
+      >
+        <div className="relative mt-10 max-h-[750px] min-w-[320px] max-w-[750px] bg-white p-3 px-4 sm:mt-7 sm:min-w-[560px]">
+          <div className=" flex flex-col items-center justify-center gap-4 pb-4">
+            <div className="flex size-20 items-center justify-center rounded-full bg-[#C1F6C3] bg-opacity-60">
+              <div className=" flex size-14 items-center justify-center rounded-full bg-[#A6F8AA] p-2">
+                <PiSealCheckFill className="size-10 text-green-500" />
+              </div>
+            </div>
+            <p className="text-center font-satoshiBold text-2xl font-extrabold text-violet-normal">
+              Request Sent!
+            </p>
+            <p className="text-center font-semibold text-violet-darker">
+              Your profile has been updated successfully
+            </p>
+            <div className="flex items-center gap-6">
+              <button
+                onClick={() => setOpenSuccessModal(false)}
+                className="rounded-full bg-violet-active px-4 py-2 font-bold text-violet-dark max-sm:text-sm"
+              >
+                Close
+              </button>
+              <button
+                onClick={() => router.push("/marketplace")}
+                className="rounded-full bg-violet-normal px-4 py-2 font-bold text-white max-sm:text-sm"
+              >
+                Proceed to marketplace
+              </button>
+            </div>
+          </div>
+        </div>
       </Popup>
     </>
   );
