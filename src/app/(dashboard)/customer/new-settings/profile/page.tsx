@@ -21,14 +21,14 @@ function Page() {
         href="/customer/new-settings/profile/public-profile"
         className="flex items-center justify-between rounded-lg bg-white px-3 py-2 font-medium"
       >
-        <span className="text-sm md:text-2xl">Public profile</span>
+        <span className="text-sm md:text-xl">Public profile</span>
         <FaChevronRight size={16} color="#381F8C" />
       </Link>
       <Link
         href="/customer/new-settings/profile/private-profile"
         className="flex items-center justify-between rounded-lg bg-white px-3 py-2 font-medium"
       >
-        <span className="text-sm md:text-2xl">
+        <span className="text-sm md:text-xl">
           Update personal profile information
         </span>
         <FaChevronRight size={16} color="#381F8C" />

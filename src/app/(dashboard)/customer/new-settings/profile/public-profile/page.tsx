@@ -20,6 +20,8 @@ import {
 } from "@/store/Features/userProfile";
 import axios from "axios";
 import Button from "@/components/global/Button";
+import useSuburbData, { SurburbInfo } from "@/hooks/useSuburbData";
+import { CiLocationOn } from "react-icons/ci";
 
 function Page() {
   const { profile } = useSelector((state: RootState) => state.userProfile);
@@ -30,7 +32,7 @@ function Page() {
   const [openProfilePreview, setOpenProfilePreview] = useState(false);
   const profilePictureInputRef = useRef<HTMLInputElement>(null);
   const [initialImageUrl, setInitialImageUrl] = useState("");
-  const authInstance = useAxios();
+  const [currentSuburb, setCurrentSuburb] = useState<SurburbInfo | null>(null);
 
   useEffect(() => {
     dispatch(
@@ -66,12 +68,26 @@ function Page() {
     formState: { errors, isSubmitting },
   } = useForm<PublicProfileSchema>({
     resolver: zodResolver(publicProfileSchema),
+    defaultValues: {
+      firstName: profile?.firstName,
+      lastName: profile?.lastName,
+    },
   });
+
+  const location = watch("location");
+
+  const {
+    suburbList,
+    setSuburbList,
+    error: suburbError,
+    isLoading,
+  } = useSuburbData(location, currentSuburb);
+
+  const authInstance = useAxios();
 
   const imageFile = watch("profileImage");
 
   const onSubmit: SubmitHandler<PublicProfileSchema> = async (data) => {
-    console.log(data);
     try {
       if (data.profileImage) {
         await authInstance.post(
@@ -81,8 +97,20 @@ function Page() {
         );
       }
 
-      // Send the rest of the information
-      await authInstance.post("/customer/update", { data: "" });
+      const submitData = {
+        firstName: data.firstName,
+        lastName: data.lastName,
+        suburb: currentSuburb?.name || "",
+        state: currentSuburb?.state || "",
+        postCode:
+          currentSuburb.postcode.toString().length === 3
+            ? `0${currentSuburb.postcode}`
+            : currentSuburb.postcode,
+      };
+
+      await authInstance.post("/customer/update", submitData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
 
       //Update redux value with
       const profileUrl =
@@ -170,12 +198,12 @@ function Page() {
             </header>
 
             {/* Bio details  */}
-            <div>
+            {/* <div>
               <label
                 htmlFor="bio-detail"
                 className="mb-2 block text-[15px] font-black"
               >
-                Bio Details
+                Bio Details(Optional)
               </label>
               <textarea
                 id="bio-detail"
@@ -189,7 +217,7 @@ function Page() {
                   {errors.bioDescription.message}
                 </p>
               )}
-            </div>
+            </div> */}
 
             {/* First name and last name  */}
             <div className="flex flex-col items-center gap-3 sm:flex-row sm:gap-2">
@@ -235,15 +263,68 @@ function Page() {
               >
                 Location
               </label>
-              <div className="flex items-center overflow-hidden rounded-xl bg-white px-2 py-1 shadow-md sm:shadow-none">
-                <IoLocationOutline color="#BFBDC6" />
-                <input
-                  id="location"
-                  type="text"
-                  className="h-full w-full appearance-none p-2 outline-none "
-                  placeholder="Albion, Queensland"
-                  {...register("location")}
-                />
+              <div className="relative">
+                <div className="flex items-center overflow-hidden rounded-xl bg-white px-2 py-1 shadow-md sm:shadow-none">
+                  <IoLocationOutline color="#BFBDC6" />
+                  <input
+                    id="location"
+                    type="text"
+                    className="h-full w-full appearance-none p-2 outline-none "
+                    placeholder="Enter a suburb"
+                    {...register("location", {
+                      onChange: (e) => {
+                        if (currentSuburb) {
+                          setCurrentSuburb(null);
+                          const enteredInput = e.target.value.slice(-1);
+                          e.target.value = enteredInput;
+                          setValue("location", enteredInput);
+                        }
+                        setValue("location", e.target.value);
+                      },
+                    })}
+                  />
+                </div>
+                <div className="absolute left-0 z-10 w-full rounded-b-lg bg-white shadow-lg">
+                  {isLoading && (
+                    <p className="py-2 text-center font-satoshiMedium text-[#76757A61]">
+                      Loading...
+                    </p>
+                  )}
+                  {suburbError && !isLoading && (
+                    <p className="py-2 text-center font-satoshiMedium text-red-600">
+                      Error occured while loading suburb data
+                    </p>
+                  )}
+                  {suburbList.length > 1 && (
+                    <ul className="roundeed-lg max-h-52 overflow-y-auto overflow-x-hidden">
+                      {suburbList.map((suburb) => (
+                        <li
+                          className="flex cursor-pointer items-center gap-1 bg-white px-4 py-3 text-[13px]"
+                          key={Math.random() * 12345}
+                          onClick={() => {
+                            setCurrentSuburb(suburb);
+                            setValue(
+                              "location",
+                              `${suburb.name}, ${suburb.state.abbreviation}, Australia`,
+                            );
+                            setSuburbList([]);
+                          }}
+                        >
+                          <CiLocationOn
+                            stroke="#0F052E"
+                            size={20}
+                            strokeWidth={1}
+                          />
+                          <span className="text-[#0F052E]">
+                            {suburb.name},{" "}
+                            {suburb.locality ? `${suburb.locality},` : ""}{" "}
+                            {suburb.state.name}, AUS
+                          </span>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
               </div>
             </div>
           </div>
