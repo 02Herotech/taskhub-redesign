@@ -110,6 +110,8 @@ function Page() {
       }
 
       const submitData = {
+        firstName: data.firstName,
+        lastName: data.lastName,
         suburb: currentSuburb?.name || "",
         state: currentSuburb?.state.name || "",
         postCode: currentSuburb?.postcode
@@ -117,7 +119,6 @@ function Page() {
           : "",
       };
 
-      console.log(submitData);
       await authInstance.patch("/customer/update", submitData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
