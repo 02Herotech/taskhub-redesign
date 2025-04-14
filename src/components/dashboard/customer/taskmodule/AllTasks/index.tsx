@@ -7,6 +7,7 @@ import Button from "@/components/global/Button";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
 import AllTasksCard from "../AllTasksCard";
+import Pagination from "@/components/pagination";
 
 const TaskList = () => {
   const { profile: user } = useSelector(
@@ -18,14 +19,14 @@ const TaskList = () => {
   const { data: tasksData, isLoading, error } = useGetAllTaskByCustomerIdQuery(userId!, {
     skip: !userId,
   });
-
-  if ( !userId || isLoading) {
+  //  console.log(taskData.)
+  if (!userId || isLoading) {
     return <Loading />;
   }
-
+  console.log(tasksData, "task")
   return (
     <>
-      {tasksData?.length === 0 ? (
+      {tasksData?.content?.length === 0 ? (
         <div className="flex flex-col items-center justify-center space-y-5 h-[50vh]">
           <h2 className="text-2xl font-bold text-primary text-center">
             No tasks available, please click the button below to post a new task.
@@ -35,11 +36,15 @@ const TaskList = () => {
           </Link>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-        {tasksData?.map((task, index) => (
+          <>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 mb-8">
+              {tasksData?.content?.map((task, index) => (
             <AllTasksCard key={index} task={task} />
-        ))}
-        </div>    
+          ))}
+        </div>
+            <Pagination totalPages={10} pageNumber={2} pageSize={5} />
+          </>
       )}
     </>
   );

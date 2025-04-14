@@ -15,10 +15,12 @@ import { DeleteTaskSvg, DropReviewSvg, RebookSvg } from "@/lib/svgIcons";
 import Popup from "@/components/global/Popup";
 import Button from "@/components/global/Button";
 import { useDeleteTaskMutation } from "@/services/tasks";
-import RebookForm from "../RebookForm";
+import RebookForm from "../../RebookForm";
 import Image from "next/image";
 import imags from "../../../../../public/assets/images/tickk.png";
 import useAxios from "@/hooks/useAxios";
+import { useRouter } from "next/navigation";
+import { getBorderColor, getStatusColor } from "@/shared/statusbadge";
 
 interface TaskCardProps {
   task: TaskDetails;
@@ -47,6 +49,7 @@ const CompletedTasksCard = ({ task }: TaskCardProps) => {
   const categoryId = task.categoryId;
   const comment = review;
   const authInstance = useAxios();
+  const router = useRouter()
   // Function to get the correct ordinal suffix
   function getOrdinalSuffix(day: any) {
     if (day > 3 && day < 21) return "th";
@@ -129,7 +132,7 @@ const CompletedTasksCard = ({ task }: TaskCardProps) => {
 
   return (
     <>
-      {rebookTaskPopup && (
+      {/* {rebookTaskPopup && (
         <Popup
           isOpen={rebookTaskPopup}
           onClose={() => setRebookTaskPopup(false)}
@@ -280,8 +283,8 @@ const CompletedTasksCard = ({ task }: TaskCardProps) => {
             )}
           </div>
         </Popup>
-      )}
-      <motion.div
+      )} */}
+      {/* <motion.div
         className="lg:rounded-4xl mb-4 flex h-full flex-col justify-between rounded-xl bg-[#EBE9F4] p-4 font-satoshi"
         whileHover={{ scale: 1.02, transition: { duration: 0.2 } }}
       >
@@ -326,18 +329,7 @@ const CompletedTasksCard = ({ task }: TaskCardProps) => {
           {task.jobDescription}
         </p>
         <div className="mt-auto">
-          {/* <div className="flex justify-between items-center my-2">
-                        <HiOutlineLocationMarker className="h-5 w-5 font-bold text-[#716F78]" />
-                        <div className="flex items-center space-x-2 font-medium text-[#716F78] w-2/3">
-                            <p className="overflow-hidden truncate text-ellipsis whitespace-nowrap text-[15px] lg:text-lg">
-                                {task. || `No location`}
-                            </p>
-                        </div>
-                        <div className="flex items-center space-x-2 font-medium text-[#716F78]">
-                            <FiClock className="h-5 w-5 font-bold" />
-                            <h5 className="text-[15px] lg:text-lg">{task.taskTime || "Flexible"}</h5>
-                        </div>
-                    </div> */}
+
           <div className="flex items-end justify-between">
             <div className="flex items-center space-x-2 font-medium text-[#716F78]">
               <FiCalendar className="h-5 w-5 font-bold" />
@@ -348,7 +340,77 @@ const CompletedTasksCard = ({ task }: TaskCardProps) => {
             </h2>
           </div>
         </div>
-      </motion.div>
+      </motion.div> */}
+      <div onClick={() => router.push(`/customer/tasks/completed-tasks/${task.id}`)} className={`relative flex flex-col border-l-[12px] cursor-pointer  shadow-[0px_-4px_132px_0px_#00000017] ${getBorderColor(task.jobStatus)} rounded-2xl shadow-sm bg-white overflow-hidden`}>
+        <div className="p-4 pl-5 flex-1">
+          <div className="mb-2">
+            <span
+              className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(task.jobStatus)}`}
+            >
+              {task.jobStatus}
+            </span>
+          </div>
+          <h3 className="text-xs font-semibold text-[#0F052E]">{task.jobTitle}</h3>
+          <p className="mt-1 text-sm text-[#110049] line-clamp-3">{task.jobDescription}...</p>
+
+          <div className="mt-4 flex justify-between items-end">
+            <div className="flex flex-col space-y-1 text-xs text-gray-500">
+              <div className="flex items-center">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-4 w-4 mr-1"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                  />
+                </svg>
+                <span>{formattedDate}</span>
+              </div>
+
+              {task.jobAddress &&
+                <div className="flex items-center">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-4 w-4 mr-1"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+                    />
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+                    />
+                  </svg>
+                  <span>{task.jobAddress}</span>
+                </div>
+              }
+              <div>
+                {/* <span>{task.taskType}</span> */}
+                <span>Task type</span>
+              </div>
+
+            </div>
+
+            <div className="text-right">
+              <span className="text-3xl font-manrope font-bold text-[#381F8C]">${task.total}</span>
+            </div>
+          </div>
+        </div>
+      </div>
     </>
   );
 };

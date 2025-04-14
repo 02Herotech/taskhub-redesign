@@ -72,7 +72,7 @@ function ReplyForm({ taskId, offerId, refetch }: Props) {
       <AnimatePresence initial={false} mode="wait">
         {!showReplyForm ? (
           <motion.button
-            className="mt-3 flex items-center gap-1 text-primary sm:gap-2"
+            className=" flex items-center gap-1 text-primary sm:gap-2 pl-10"
             key="button"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -83,7 +83,7 @@ function ReplyForm({ taskId, offerId, refetch }: Props) {
               strokeWidth={1.2}
               className="rotate-180 text-base md:text-xl"
             />
-            <span className="font-satoshiBold text-base font-bold sm:text-xl ">
+            <span className="font-satoshiBold text-base font-semibold sm:text-xl ">
               Reply
             </span>
           </motion.button>

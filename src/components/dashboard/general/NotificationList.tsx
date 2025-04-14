@@ -30,37 +30,37 @@ const notificationRoute = [
   {
     type: "TASK",
     subtype: "ASSIGNED",
-    customerRoute: "/customer/tasks?tab=New tasks",
+    customerRoute: "/customer/tasks/posted-by-me",
     providerRoute: "/service-provider/jobs",
   },
   {
     type: "TASK",
     subtype: "COMPLETED",
-    customerRoute: "/customer/tasks?tab=Completed tasks",
+    customerRoute: "/customer/tasks/completed-tasks",
     providerRoute: "",
   },
   {
     type: "TASK",
     subtype: "OFFER",
-    customerRoute: "/customer/tasks?tab=New tasks",
+    customerRoute: "/customer/tasks/posted-by-me",
     providerRoute: "",
   },
   {
     type: "JOB",
     subtype: "PENDING",
-    customerRoute: "/customer/tasks?tab=Ongoing tasks",
+    customerRoute: "/customer/tasks/ongoing-tasks",
     providerRoute: "",
   },
   {
     type: "JOB",
     subtype: "ONGOING",
-    customerRoute: "/customer/tasks?tab=Ongoing tasks",
+    customerRoute: "/customer/tasks/ongoing-tasks",
     providerRoute: "",
   },
   {
     type: "JOB",
     subtype: "COMPLETED",
-    customerRoute: "/customer/tasks?tab=Completed tasks",
+    customerRoute: "/customer/tasks/completed-tasks",
     providerRoute: "/service-provider/services",
   },
   {

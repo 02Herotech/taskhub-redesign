@@ -27,7 +27,7 @@ export const customerDashboardLinks: DashboardLinks[] = [
   },
   {
     label: "My Tasks",
-    link: "/customer/tasks",
+    link: "/customer/tasks/all-tasks",
     icon: LuClipboard,
   },
   {
