@@ -1,7 +1,7 @@
 "use client"
 import { Suspense } from "react";
 import { MdArrowBackIos } from "react-icons/md";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 
 type AuthLayoutProps = {
@@ -15,8 +15,10 @@ export default function TaskLayout({
 }>) {
   const pathname = usePathname()
   const router = useRouter()
+  const searchParams = useSearchParams()
 
   const tab = pathname.split("/")[3]
+  const title = searchParams.get("title")
 
 
   const handleTabClick = (tab: string) => {
@@ -54,7 +56,10 @@ export default function TaskLayout({
         </button>
         |
         <span className="cursor-pointer text-[#55535A]" onClick={() => router.push("/customer/tasks/all-tasks")}>My Tasks</span>/
+
         {tab && <span className="cursor-pointer text-[#55535A]" onClick={() => handleTabClick(`/customer/tasks/${tab}`)}>{tab}</span>}
+
+        {title && <span className="cursor-pointer text-[#55535A] capitalize w-20 truncate md:w-64"> {"/  "}{title}</span>}
       </div>
 
       <div className="mb-6 overflow-x-auto">
