@@ -137,7 +137,7 @@ export type GetAllCustomerTasksResponse = {
   pageSize: number;
   totalElements: number;
   totalPages: number;
-} & { content: AllTask };
+} & { content: AllTask[] };
 
 export type GetCustomerOngoingTasksResponse = OngoingTask;
 
