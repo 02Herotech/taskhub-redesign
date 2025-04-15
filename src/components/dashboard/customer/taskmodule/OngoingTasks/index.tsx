@@ -24,7 +24,6 @@ const TaskList = () => {
     if (!userId || isLoading) {
         return <Loading />;
     }
-    console.log(tasksData, "ongoing")
     return (
         <>
             {tasksData?.content?.length === 0 ? (

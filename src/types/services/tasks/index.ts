@@ -59,7 +59,7 @@ export interface TaskInfo {
   posterId: number;
   category: TaskCategory;
   taskStatus: string;
-  createdAt: string; // ISO date string e.g., '2025-04-08'
+  createdAt: [number, number, number]; // ISO date string e.g., '2025-04-08'
   assignedTo: number;
   taskDate: [number, number, number]; // ISO date string e.g., '2025-04-08'
   taskTime: [number, number];
