@@ -103,7 +103,7 @@ function PaymentHistory() {
                       alt="Profile picture"
                       width={40}
                       height={40}
-                      className="size-10 rounded-full object-cover object-top md:size-14"
+                      className="size-10 rounded-full bg-[#c1badb] object-cover object-top md:size-14"
                     />
                     <div>
                       <h5 className="font-satoshiBold text-lg font-bold text-[#140B31]">
