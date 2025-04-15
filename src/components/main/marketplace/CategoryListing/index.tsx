@@ -43,9 +43,7 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
       }
       let url, content;
       if (category === "All") {
-        url =
-          `${process.env.NEXT_PUBLIC_API_URL}/listing/all-active-listings/` +
-          currentPage;
+        url = `${process.env.NEXT_PUBLIC_API_URL}/listing/all-active-listings/${currentPage}?size=12`;
       } else if (categoryId) {
         url =
           `${process.env.NEXT_PUBLIC_API_URL}/listing/filter-listings/` +
