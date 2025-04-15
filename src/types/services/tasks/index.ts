@@ -132,7 +132,12 @@ export type AllTask = {
   active: boolean;
 };
 
-export type GetAllCustomerTasksResponse = AllTask;
+export type GetAllCustomerTasksResponse = {
+  pageNumber: number;
+  pageSize: number;
+  totalElements: number;
+  totalPages: number;
+} & { content: AllTask };
 
 export type GetCustomerOngoingTasksResponse = OngoingTask;
 
