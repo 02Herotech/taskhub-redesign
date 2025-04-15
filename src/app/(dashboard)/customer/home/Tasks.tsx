@@ -136,7 +136,7 @@ function Tasks() {
                 ))}
                 <div className="w-full bg-white">
                   <Link
-                    href="/customer/tasks"
+                    href="/customer/tasks/all-tasks"
                     className="ml-auto block w-max font-satoshiBold font-bold text-primary"
                   >
                     View all
