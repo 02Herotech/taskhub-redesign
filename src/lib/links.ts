@@ -133,11 +133,11 @@ export const homeLinks: LinkRouteTypes[] = [
 ];
 
 export const mobileServiceProviderLinks: LinkRouteTypes[] = [
-  // {
-  //   label: "Home",
-  //   url: "/service-provider/home",
-  //   icon: TbSmartHome,
-  // },
+  {
+    label: "Home",
+    url: "/service-provider/home",
+    icon: TbSmartHome,
+  },
   {
     label: "Profile",
     url: "/service-provider/profile",
@@ -305,18 +305,8 @@ export const mobileCustomerLinks: LinkRouteTypes[] = [
   },
   {
     label: "Settings",
-    url: "/customer/settings",
+    url: "/customer/settings/profile",
     icon: IoSettingsOutline,
-    sublinks: [
-      {
-        label: "Change Password",
-        url: "/customer/password",
-      },
-      {
-        label: "Notification settings",
-        url: "/customer/notification-settings",
-      },
-    ],
   },
   // {
   //   label: "Contact us",

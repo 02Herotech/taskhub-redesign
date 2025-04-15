@@ -60,15 +60,15 @@ export const customerDashboardLinks: DashboardLinks[] = [
   //   link: "/customer/rewards",
   //   icon: PaymentIcon,
   // },
-  // {
-  //   label: "Settings",
-  //   link: "/customer/settings",
-  //   icon: SettingsIcon,
-  // },
+  {
+    label: "Settings",
+    link: "/customer/settings/profile",
+    icon: IoSettingsOutline,
+  },
 ];
 
 export const serviceProviderDashboardLinks: DashboardLinks[] = [
-  // { label: "Home", link: "/service-provider/home", icon: TbSmartHome },
+  { label: "Home", link: "/service-provider/home", icon: TbSmartHome },
   {
     label: "Profile",
     link: "/service-provider/profile",
