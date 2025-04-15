@@ -287,7 +287,7 @@ function Page() {
                     id="document-type"
                     className="w-full rounded-xl p-2 px-2 shadow-md outline-none disabled:bg-white sm:shadow-none"
                     {...register("idType")}
-                    disabled={Boolean(userProfileData?.idType)}
+                    // disabled={Boolean(userProfileData?.idType)}
                   >
                     <option value="">Select ID type</option>
                     {idTypes.map((idType) => (
@@ -323,9 +323,9 @@ function Page() {
                   className="w-full rounded-xl p-2 px-2 shadow-md outline-none disabled:bg-white sm:shadow-none"
                   placeholder="123456789"
                   {...register("idNumber", {
-                    disabled:
-                      userProfileData.verificationStatus == "PENDING" ||
-                      userProfileData.verificationStatus == "VERIFIED",
+                    // disabled:
+                    //   userProfileData.verificationStatus == "PENDING" ||
+                    //   userProfileData.verificationStatus == "VERIFIED",
                   })}
                 />
                 {errors.idNumber && (
@@ -358,10 +358,10 @@ function Page() {
                           shouldValidate: true,
                         });
                       }}
-                      disabled={
-                        userProfileData.verificationStatus == "PENDING" ||
-                        userProfileData.verificationStatus == "VERIFIED"
-                      }
+                      // disabled={
+                      //   userProfileData.verificationStatus == "PENDING" ||
+                      //   userProfileData.verificationStatus == "VERIFIED"
+                      // }
                     />
                     {getImageUrl(imageFront) || userProfileData.idImageFront ? (
                       <Image
@@ -413,10 +413,10 @@ function Page() {
                             shouldValidate: true,
                           });
                         }}
-                        disabled={
-                          userProfileData.verificationStatus == "PENDING" ||
-                          userProfileData.verificationStatus == "VERIFIED"
-                        }
+                        // disabled={
+                        //   userProfileData.verificationStatus == "PENDING" ||
+                        //   userProfileData.verificationStatus == "VERIFIED"
+                        // }
                       />
                       {getImageUrl(imageBack) || userProfileData.idImageBack ? (
                         <Image
