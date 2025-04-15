@@ -37,7 +37,7 @@ function Tasks() {
     skip: !userId,
   });
 
-  type TaskType = NonNullable<typeof data>[number];
+  type TaskType = NonNullable<typeof data.content>[number];
 
   function displayTaskStatus(task: TaskType) {
     if (task.taskStatus == "COMPLETED") {
@@ -73,7 +73,6 @@ function Tasks() {
         )}
         {data && (
           <>
-            {/* @ts-ignore  */}
             {data.content.length < 1 ? (
               <div className=" py-10">
                 <Image
@@ -100,7 +99,6 @@ function Tasks() {
               </div>
             ) : (
               <ul className="space-y-3 py-3">
-                {/* @ts-ignore  */}
                 {data.content.slice(0, 4).map((task) => (
                   <li
                     className="flex justify-between rounded-2xl border border-[#00000003] bg-[#EBE9F44D] p-3"
