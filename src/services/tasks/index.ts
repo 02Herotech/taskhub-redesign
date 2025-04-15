@@ -13,6 +13,7 @@ import {
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { Middleware } from "@reduxjs/toolkit";
 import { getSession } from "next-auth/react";
+import { LIMIT_NINE } from "@/utils/constant";
 
 const getRequest = <T>(url: string, params?: T) => {
   const paramsReducer = (acc: any, [key, value]: any) => {
@@ -115,30 +116,44 @@ export const task = createApi({
       query: (pageNumber) => getRequest(`/task/task-price-desc/${pageNumber}`),
       providesTags: ["Task"],
     }),
-    getAllTaskByCustomerId: builder.query<GetAllCustomerTasksResponse, number>({
-      query: (customerId) =>
-        getRequest(`/task/all-tasks-by-customerId/${customerId}`),
+    getAllTaskByCustomerId: builder.query<
+      GetAllCustomerTasksResponse,
+      { customerId: number; page: number }
+    >({
+      query: ({ customerId, page }) =>
+        getRequest(
+          `/task/all-tasks-by-customerId/${customerId}?page=${page}&size=${LIMIT_NINE}`,
+        ),
       providesTags: ["Task"],
     }),
-    getTaskByCustomerId: builder.query<GetCustomerTasksResponse, number>({
-      query: (customerId) =>
-        getRequest(`/task/tasks-by-customerId/${customerId}`),
+    getTaskByCustomerId: builder.query<
+      GetCustomerTasksResponse,
+      { customerId: number; page: number }
+    >({
+      query: ({ customerId, page }) =>
+        getRequest(
+          `/task/tasks-by-customerId/${customerId}?page=${page}&size=${LIMIT_NINE}`,
+        ),
       providesTags: ["Task"],
     }),
     getCustomerOngoingTasks: builder.query<
       GetCustomerOngoingTasksResponse,
-      number
+      { customerId: number; page: number }
     >({
-      query: (customerId) =>
-        getRequest(`/task/customer-ongoing-tasks/${customerId}`),
+      query: ({ customerId, page }) =>
+        getRequest(
+          `/task/customer-ongoing-tasks/${customerId}?page=${page}&size=${LIMIT_NINE}`,
+        ),
       providesTags: ["Task"],
     }),
     getCustomerCompletedTasks: builder.query<
       GetCustomerCompletedTasksResponse,
-      number
+      { customerId: number; page: number }
     >({
-      query: (customerId) =>
-        getRequest(`/task/customer-completed-tasks/${customerId}`),
+      query: ({ customerId, page }) =>
+        getRequest(
+          `/task/customer-completed-tasks/${customerId}?page=${page}&size=${LIMIT_NINE}`,
+        ),
       providesTags: ["Task"],
     }),
     deleteJob: builder.mutation<void, number>({

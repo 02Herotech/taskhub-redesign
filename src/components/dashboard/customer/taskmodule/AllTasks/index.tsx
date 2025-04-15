@@ -8,21 +8,29 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/store";
 import AllTasksCard from "../AllTasksCard";
 import Pagination from "@/components/pagination";
+import { useEffect, useState } from "react";
 
 const TaskList = () => {
+  const [page, setPage] = useState(0)
   const { profile: user } = useSelector(
     (state: RootState) => state.userProfile,
   );
   const userId = user?.customerId
 
   // Make the query only when the userId is available
-  const { data: tasksData, isLoading, error } = useGetAllTaskByCustomerIdQuery(userId!, {
+  const { data: tasksData, isLoading, error } = useGetAllTaskByCustomerIdQuery({ customerId: userId!, page }, {
     skip: !userId,
   });
-  //  console.log(taskData.)
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, [page]);
+
+
   if (!userId || isLoading) {
     return <Loading />;
   }
+
   console.log(tasksData, "task")
   return (
     <>
@@ -38,12 +46,17 @@ const TaskList = () => {
       ) : (
           <>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 mb-8">
-              {tasksData?.content?.map((task, index) => (
-            <AllTasksCard key={index} task={task} />
-          ))}
-        </div>
-            <Pagination totalPages={10} pageNumber={2} pageSize={5} />
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 mb-8">
+              {tasksData?.content?.map((task, index) => {
+                const isDeleted = task.deleted;
+                if (!isDeleted) {
+                  return (
+                    <AllTasksCard key={index} task={task} />
+                  )
+                }
+              })}
+            </div>
+            <Pagination pageNumber={tasksData?.pageNumber} setPage={setPage} totalPages={tasksData?.totalPages} />
           </>
       )}
     </>

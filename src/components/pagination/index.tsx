@@ -2,14 +2,15 @@ interface PaginationProps {
   totalElements?: number
   totalPages: number
   pageNumber: number
-  pageSize: number
+  pageSize?: number
+  setPage: React.Dispatch<React.SetStateAction<number>>
 }
 
 export default function Pagination({
-  totalElements = 0,
-  totalPages = 0,
-  pageNumber = 0,
-  pageSize = 0,
+  totalElements,
+  totalPages,
+  pageNumber,
+  setPage
 }: PaginationProps) {
   // Convert zero-based pageNumber to one-based for display
   const currentPage = pageNumber + 1
@@ -69,10 +70,23 @@ export default function Pagination({
 
   const pageNumbers = getPageNumbers()
 
+  const handleNext = () => {
+    if (pageNumber < totalPages - 1) {
+      setPage(pageNumber + 1)
+    }
+  }
+
+  const handlePrev = () => {
+    if (pageNumber > 0) {
+      setPage(pageNumber - 1)
+    }
+  }
+
   return (
-    <nav className="flex justify-center items-center space-x-2 my-8">
+    <nav className="flex justify-center items-center space-x-2 my-4">
       {/* Previous page button */}
       <button
+        onClick={() => handlePrev()}
         className="w-10 h-10 flex items-center justify-center rounded-md bg-gray-100 text-indigo-800"
         aria-label="Go to previous page"
       >
@@ -100,6 +114,7 @@ export default function Pagination({
         return (
           <button
             key={`page-${page}`}
+            onClick={() => setPage(page - 1)}
             className={`w-10 h-10 flex items-center justify-center rounded-md ${isCurrentPage
               ? "bg-indigo-800 text-white"
               : "bg-white border border-gray-300 text-gray-700 hover:bg-gray-50"
@@ -114,6 +129,7 @@ export default function Pagination({
 
       {/* Next page button */}
       <button
+        onClick={() => handleNext()}
         className="w-10 h-10 flex items-center justify-center rounded-md bg-indigo-800 text-white"
         aria-label="Go to next page"
       >

@@ -27,7 +27,6 @@ const OngoingTasksCard = ({ task }: TaskCardProps) => {
     const monthName = monthNames[month];
     const dayOfWeek = date.getDay();
     const dayOfWeekName = dayOfWeekNames[dayOfWeek];
-    console.log(task.jobInfo, "task.jobInfo")
     // Determine the correct suffix for the day
     let daySuffix;
     if (day === 11 || day === 12 || day === 13) {
@@ -41,34 +40,6 @@ const OngoingTasksCard = ({ task }: TaskCardProps) => {
 
 
     return (
-        // <div className="lg:rounded-4xl font-satoshi bg-white py-5 mb-4 flex flex-col lg:flex-row lg:justify-between border-b">
-        //     <div className="lg:mr-5">
-        //         <Image
-        //             src={profileImage || "/assets/images/placeholder.jpeg"}
-        //             alt="Profile"
-        //             className="object-cover rounded-full w-24 h-24 border border-gray-300"
-        //             width={100}
-        //             height={100}
-        //         />
-        //     </div>
-        //     <div className="space-y-1 w-full flex-1">
-        //         <h2 className="font-satoshiMedium text-primary text-xl">{fullName}</h2>
-        //         <h2 className="pb-4 text-base font-satoshi text-primary">
-        //             {task.jobInfo.jobDescription}
-        //         </h2>
-        //         <Link href={`/customer/tasks/ongoing-task.jobInfo-details/${task.jobInfo.id}`}>
-        //             <Button theme="outline" className="rounded-full">
-        //                 View Service
-        //             </Button>
-        //         </Link>
-        //     </div>
-        //     <div className="flex flex-row max-sm:w-full lg:flex-col max-sm:!mt-4 lg:space-y-2 lg:text-right items-center justify-between text-center lg:items-end">
-        //         <h5 className="text-base text-tc-orange">{formattedDate}</h5>
-        //         <h2 className="font-bold capitalize text-[#28272A] text-base">
-        //             Total Cost: {formatAmount(task.jobInfo.total, "USD", false)}
-        //         </h2>
-        //     </div>
-        // </div>
 
         <div onClick={() => router.push(`/customer/tasks/ongoing-tasks/${task.jobInfo.id}`)} className={`relative flex flex-col border-l-[12px] cursor-pointer  shadow-[0px_-4px_132px_0px_#00000017] ${getBorderColor(task.taskStatus)} rounded-2xl shadow-sm bg-white overflow-hidden`}>
             <div className="p-4 pl-5 flex-1">

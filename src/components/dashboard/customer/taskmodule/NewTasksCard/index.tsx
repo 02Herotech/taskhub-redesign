@@ -13,7 +13,7 @@ import {
   monthNames,
   suffixes,
 } from "@/lib/utils";
-import { CustomerTasks } from "@/types/services/tasks";
+import { TaskInfo } from "@/types/services/tasks";
 import Popup from "@/components/global/Popup";
 import EditTaskForm from "../EditTaskForm";
 import { useRouter } from "next/navigation";
@@ -21,7 +21,7 @@ import { IoEye } from "react-icons/io5";
 import { getBorderColor, getStatusColor } from "@/shared/statusbadge";
 
 interface TaskCardProps {
-  task: CustomerTasks;
+  task: TaskInfo;
 }
 
 type DropDownItem = {

@@ -18,6 +18,7 @@ import Popup from '@/components/global/Popup'
 import DeleteTask from '../../DeleteTask'
 import { useRouter } from 'next/navigation'
 import ImageViewer from '@/components/imageviewer'
+import { formatDateFromArray } from '@/utils'
 
 
 const PostedByMe = ({ params }: { params: { id: string } }) => {
@@ -64,7 +65,6 @@ const PostedByMe = ({ params }: { params: { id: string } }) => {
       </div>
     );
   }
-
 
   const isAssigned = task?.taskInfo?.taskStatus === "ASSIGNED";
 
@@ -159,7 +159,7 @@ const PostedByMe = ({ params }: { params: { id: string } }) => {
 
         <div className="flex items-center text-gray-600">
           <Calendar className="h-4 w-4 mr-2" />
-          <span>{task.taskInfo.taskDate}</span>
+          <span>{formatDateFromArray(task.taskInfo.createdAt)}</span>
         </div>
       </div>
 

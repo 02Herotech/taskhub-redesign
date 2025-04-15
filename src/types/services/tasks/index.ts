@@ -44,6 +44,58 @@ export type CustomerTasks = {
   active: boolean;
 };
 
+export interface TaskCategory {
+  id: number;
+  categoryName: string;
+}
+
+export interface TaskInfo {
+  id: number;
+  state: string;
+  taskImage: string;
+  suburb: string;
+  postCode: string;
+  taskType: string;
+  posterId: number;
+  category: TaskCategory;
+  taskStatus: string;
+  createdAt: [number, number, number]; // ISO date string e.g., '2025-04-08'
+  assignedTo: number;
+  taskDate: [number, number, number]; // ISO date string e.g., '2025-04-08'
+  taskTime: [number, number];
+  taskDescription: string;
+  taskBriefDescription: string;
+  termAccepted: boolean;
+  customerBudget: number;
+  deleted: boolean;
+  isActive: boolean;
+}
+
+export interface PosterInfo {
+  id: number;
+  fullName: string;
+  profileImage: string;
+  email: string;
+}
+
+export interface TaskResponse {
+  taskInfo: TaskInfo;
+  posterInfo: PosterInfo;
+}
+
+// export type OngoingTask = {
+//     invoiceId: number;
+//     bookingId: number;
+//     total: number;
+//     createdAt: [number, number, number, number, number, number, number];
+//     customerId: number;
+//     taskTime: [number, number];
+//     jobTitle: string;
+//     jobStatus: "IN_PROGRESS" | "PENDING" | "INSPECTION" | "COMPLETED"
+//     jobDescription: string;
+//     id: number
+// };
+
 export type OngoingTask = {
   invoiceId: number;
   bookingId: number;
@@ -84,7 +136,7 @@ export type GetAllCustomerTasksResponse = AllTask;
 
 export type GetCustomerOngoingTasksResponse = OngoingTask;
 
-export type GetCustomerTasksResponse = CustomerTasks[];
+export type GetCustomerTasksResponse = AllTask;
 
 export type GetTasksRequest = number;
 
