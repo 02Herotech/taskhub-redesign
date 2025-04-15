@@ -133,6 +133,7 @@ function Page() {
       await authInstance.patch("/customer/update", submitData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
+      setOpenSuccessModal(true);
       router.refresh();
     } catch (error) {
       console.error(error);
