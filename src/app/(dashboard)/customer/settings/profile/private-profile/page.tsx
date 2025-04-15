@@ -86,6 +86,8 @@ function Page() {
         phoneNumber: profile.phoneNumber || "",
         email: profile.emailAddress,
       });
+
+      setValue(profile.phoneNumber);
       // setFormValue("phoneNumber", profile?.phoneNumber);
     }
   }, [profile]);
