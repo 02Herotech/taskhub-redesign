@@ -33,7 +33,7 @@ function Tasks() {
     (state: RootState) => state.userProfile,
   );
   const userId = user?.customerId;
-  const { data, isLoading, error } = useGetAllTaskByCustomerIdQuery(userId!, {
+  const { data, isLoading, error } = useGetAllTaskByCustomerIdQuery({customerId: userId, page: 0}, {
     skip: !userId,
   });
 
