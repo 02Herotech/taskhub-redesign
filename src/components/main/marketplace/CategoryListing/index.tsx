@@ -36,6 +36,7 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
   const dispatch = useDispatch();
 
   const handleFetchCategory = async (currentPage: number) => {
+    console.log("Handle fetch category");
     const categoryId = categories.find(
       (item) => item.categoryName === category,
     );
@@ -56,7 +57,6 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
       }
       const { data } = await axios.get(url as string);
       content = data.content;
-      setPage((prev) => ({ ...prev, totalPages: data.totalPages }));
       if (url) {
         setallListsting(content);
         setDisplayListing(content);
@@ -125,15 +125,16 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
         let newIndex;
         do {
           newIndex = Math.floor(Math.random() * emptyCategoryMessages.length);
-        } while (newIndex === currentMessageIndex); // Prevent picking the same message consecutively
+        } while (newIndex === currentMessageIndex);
         return newIndex;
       });
-    }, 120000); // Every 2 minutes
+    }, 120000);
 
     return () => clearInterval(intervalId);
   }, [currentMessageIndex]);
 
   const handleFilterByCategory = async (currentPage: number) => {
+    console.log("Filter by category runs");
     const categoryId = categories.find(
       (item) => item.categoryName === category,
     );
@@ -141,7 +142,7 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
     try {
       let url: string;
       if (category === "All") {
-        url = `${process.env.NEXT_PUBLIC_API_URL}/listing/all-active-listings/${currentPage}?size=12`;
+        url = `${process.env.NEXT_PUBLIC_API_URL}/listing/all-active-listings/${currentPage}?pageNumber=${currentPage}&size=12`;
       } else if (categoryId) {
         url =
           `${process.env.NEXT_PUBLIC_API_URL}/listing/filter-listings/` +
@@ -164,7 +165,6 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
 
   useEffect(() => {
     handleFetchCategory(page.currentPage);
-    // eslint-disable-next-line
   }, [category, page.currentPage]);
 
   useEffect(() => {
@@ -184,7 +184,11 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
           <div className="mb-3 flex items-center justify-between">
             <div className="flex w-full items-center justify-between gap-4">
               <h1 className="text-xl font-bold text-violet-darkHover md:text-2xl">
-                {isFiltering && category === "All" ? "All" : category}
+                {!isFiltering
+                  ? category
+                  : filteredData.length > 0
+                    ? filteredData[0].category.categoryName
+                    : ""}
               </h1>
               {(isFiltering
                 ? filteredData.length > 3
