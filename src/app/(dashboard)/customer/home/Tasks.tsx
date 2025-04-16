@@ -33,11 +33,11 @@ function Tasks() {
     (state: RootState) => state.userProfile,
   );
   const userId = user?.customerId;
-  const { data, isLoading, error } = useGetAllTaskByCustomerIdQuery({customerId: userId, page: 0}, {
+  const { data, isLoading, error } = useGetAllTaskByCustomerIdQuery({ customerId: userId, page: 0 }, {
     skip: !userId,
   });
 
-  type TaskType = NonNullable<typeof data>[number];
+  type TaskType = NonNullable<typeof data.content>[number];
 
   function displayTaskStatus(task: TaskType) {
     if (task.taskStatus == "COMPLETED") {
@@ -73,7 +73,6 @@ function Tasks() {
         )}
         {data && (
           <>
-            {/* @ts-ignore  */}
             {data.content.length < 1 ? (
               <div className=" py-10">
                 <Image
@@ -100,7 +99,6 @@ function Tasks() {
               </div>
             ) : (
               <ul className="space-y-3 py-3">
-                {/* @ts-ignore  */}
                 {data.content.slice(0, 4).map((task) => (
                   <li
                     className="flex justify-between rounded-2xl border border-[#00000003] bg-[#EBE9F44D] p-3"
@@ -136,7 +134,7 @@ function Tasks() {
                 ))}
                 <div className="w-full bg-white">
                   <Link
-                      href="/customer/tasks/all-tasks"
+                    href="/customer/tasks/all-tasks"
                     className="ml-auto block w-max font-satoshiBold font-bold text-primary"
                   >
                     View all
