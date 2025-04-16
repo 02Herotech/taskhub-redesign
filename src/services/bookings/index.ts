@@ -5,10 +5,10 @@ import {
 } from "@/types/services/invoice";
 import {
   AcceptInvoiceResponse,
+  GetJobsByIdResponse,
   JobDataDetails,
   PaymentIntentResponse,
   RejectInvoiceResponse,
-  TaskDetails,
 } from "@/types/services/tasks";
 
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
@@ -97,7 +97,7 @@ export const booking = createApi({
         getRequest(`/all-receipts/${customerId}?size=${size}`),
       providesTags: ["Booking"],
     }),
-    getJobById: builder.query<JobDataDetails, number>({
+    getJobById: builder.query<GetJobsByIdResponse, number>({
       query: (jobId) => getRequest(`/job/${jobId}`),
       providesTags: ["Booking"],
     }),

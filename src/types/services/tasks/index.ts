@@ -140,12 +140,44 @@ export type GetCustomerTasksResponse = AllTask;
 
 export type GetTasksRequest = number;
 
+export type GetJobsByIdResponse = JobDataDetails;
+
 export type GetTasksResponse = {
   totalElements: number;
   totalPages: number;
   pageNumber: number;
   pageSize: string;
   content: Task[];
+};
+
+export type JobDataDetails = {
+  jobInfo: JobInfo;
+  assignedDTO: AssignedDTO;
+  taskImage: string;
+};
+
+export type JobInfo = {
+  id: number;
+  bookingId: number;
+  total: number;
+  deleted: boolean;
+  taskDate: string; // YYYY-MM-DD format
+  createdAt: [number, number, number, number, number, number, number];
+  taskTime: [number, number];
+  providerId: number;
+  customerId: number;
+  invoiceId: number;
+  jobStatus: string;
+  categoryId: number;
+  jobTitle: string;
+  jobAddress: string;
+  jobDescription: string;
+};
+
+export type AssignedDTO = {
+  id: number;
+  fullName: string;
+  profileImage: string;
 };
 
 export type CompletedTask = {
