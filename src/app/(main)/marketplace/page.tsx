@@ -31,7 +31,7 @@ const categoryIcons = [
   MdLocalGroceryStore,
 ];
 
-const MareketPlace = () => {
+const MarketPlace = () => {
   const { categories, isFiltering, isFilteringLoading } = useSelector(
     (state: RootState) => state.market,
   );
@@ -123,38 +123,36 @@ const MareketPlace = () => {
               ) : (
                 <div>
                   <CategoryListing category="All" />
-                  <CategoryListing category={categories[0]?.categoryName} />
-                  <CategoryListing category={categories[1]?.categoryName} />
+                  <div className="my-10 md:my-0">
+                    <h1 className=" py-4 text-[20px] font-bold text-black md:text-[28px]  ">
+                      Browse by category
+                    </h1>
+                    <div className="my-5 flex flex-wrap gap-3 max-sm:grid max-sm:grid-cols-2 ">
+                      {categoriesSlice.map((item, index) => (
+                        <BoxFilter
+                          key={item.id}
+                          id={item.id}
+                          category={item.categoryName}
+                          Icon={categoryIcons[index % categoryIcons.length]}
+                        />
+                      ))}
+                    </div>
+                  </div>
+
+                  {categories.length < 1 ? (
+                    <Loading />
+                  ) : (
+                    <div>
+                      {categories.map((category) => (
+                        <CategoryListing
+                          key={category.id}
+                          category={category.categoryName}
+                        />
+                      ))}
+                    </div>
+                  )}
                 </div>
               )}
-
-              <div className="my-10 md:my-0">
-                <h1 className=" py-4 text-[20px] font-bold text-black md:text-[28px]  ">
-                  Browse by category
-                </h1>
-                <div className="my-5 flex flex-wrap gap-3 max-sm:grid max-sm:grid-cols-2 ">
-                  {categoriesSlice.map((item, index) => (
-                    <BoxFilter
-                      key={item.id}
-                      id={item.id}
-                      category={item.categoryName}
-                      Icon={categoryIcons[index % categoryIcons.length]}
-                    />
-                  ))}
-                </div>
-              </div>
-
-              <div>
-                {categories.length < 1 ? (
-                  <Loading />
-                ) : (
-                  <div>
-                    <CategoryListing category={categories[2]?.categoryName} />
-                    <CategoryListing category={categories[3]?.categoryName} />
-                    <CategoryListing category={categories[4]?.categoryName} />
-                  </div>
-                )}
-              </div>
             </div>
           )}
         </div>
@@ -163,4 +161,4 @@ const MareketPlace = () => {
   );
 };
 
-export default MareketPlace;
+export default MarketPlace;
