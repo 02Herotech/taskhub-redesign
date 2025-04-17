@@ -35,25 +35,21 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
   const [showCategory, setShowCategory] = useState(false);
   const dispatch = useDispatch();
 
+  console.log(isLoading);
+
   const handleFetchCategory = async (currentPage: number) => {
-    console.log("Handle fetch category");
+    if (isFiltering) return;
     const categoryId = categories.find(
       (item) => item.categoryName === category,
     );
     setIsLoading(true);
     try {
-      if (!category) {
-        return;
-      }
+      if (!category) return;
       let url: string, content;
       if (category === "All") {
-        url = `${process.env.NEXT_PUBLIC_API_URL}/listing/all-active-listings/${2}?pageNumber=${currentPage}&size=12`;
+        url = `${process.env.NEXT_PUBLIC_API_URL}/listing/all-active-listings?pageNumber=${currentPage}&size=12`;
       } else if (categoryId) {
-        url =
-          `${process.env.NEXT_PUBLIC_API_URL}/listing/filter-listings/` +
-          currentPage +
-          "?category=" +
-          categoryId.categoryName;
+        url = `${process.env.NEXT_PUBLIC_API_URL}/listing/filter-listings?category=${categoryId.categoryName}`;
       }
       const { data } = await axios.get(url as string);
       content = data.content;
@@ -65,6 +61,7 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
         filterMarketPlace({ data: data.content, totalPages: data.totalPages }),
       );
       dispatch(setFilterParams(`?category=${category}`));
+      setIsLoading(false);
     } catch (error) {
       setErrorMsg("Error searching listing");
     } finally {
@@ -80,7 +77,6 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
     const half = Math.floor(5 / 2);
     let start = Math.max(page.currentPage - half, 1);
     let end = start + 4;
-    // Adjust start and end if they exceed boundaries
     if (end > page.totalPages) {
       end = page.totalPages;
       start = Math.max(end - 4, 1);
@@ -134,7 +130,6 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
   }, [currentMessageIndex]);
 
   const handleFilterByCategory = async (currentPage: number) => {
-    console.log("Filter by category runs");
     const categoryId = categories.find(
       (item) => item.categoryName === category,
     );
@@ -142,13 +137,9 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
     try {
       let url: string;
       if (category === "All") {
-        url = `${process.env.NEXT_PUBLIC_API_URL}/listing/all-active-listings/${currentPage}?pageNumber=${currentPage}&size=12`;
+        url = `${process.env.NEXT_PUBLIC_API_URL}/listing/all-active-listings?pageNumber=${currentPage}&size=12`;
       } else if (categoryId) {
-        url =
-          `${process.env.NEXT_PUBLIC_API_URL}/listing/filter-listings/` +
-          currentPage +
-          "?category=" +
-          categoryId.categoryName;
+        url = `${process.env.NEXT_PUBLIC_API_URL}/listing/filter-listings?category=${categoryId.categoryName}`;
       }
       const { data } = await axios.get(url);
       setallListsting(data.content as ListingDataType[]);
@@ -176,7 +167,6 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
       setShowCategory(true);
     }
   }, [displayListing]);
-  //!Bug Fix title when isFiltering is activated
   return (
     <>
       {showCategory && (
@@ -184,11 +174,12 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
           <div className="mb-3 flex items-center justify-between">
             <div className="flex w-full items-center justify-between gap-4">
               <h1 className="text-xl font-bold text-violet-darkHover md:text-2xl">
-                {!isFiltering
+                {/* {!isFiltering
                   ? category
                   : filteredData.length > 0
                     ? filteredData[0].category.categoryName
-                    : ""}
+                    : ""} */}
+                {category}
               </h1>
               {(isFiltering
                 ? filteredData.length > 3
@@ -225,7 +216,8 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
           )}
 
           {isLoading ? (
-            <Loading />
+            // <Loading />
+            <p>HI Loader </p>
           ) : isFiltering ? (
             !ErrorMsg && filteredData.length === 0 ? (
               <div className="flex min-h-40 flex-col items-center justify-center gap-4 py-10">

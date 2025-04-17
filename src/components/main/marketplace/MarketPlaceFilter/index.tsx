@@ -45,7 +45,6 @@ const MarketPlaceFilter = () => {
   const [isMobileFilterModalShown, setIsMobileFilterModalShown] =
     useState(false);
 
-  // done and working
   useEffect(() => {
     const fetchData = async () => {
       const categoryData: CategoryType[] =
@@ -58,8 +57,10 @@ const MarketPlaceFilter = () => {
 
   useEffect(() => {
     if (categories.length > 0) {
-      const filtered = categories.filter(category =>
-        category.categoryName.toLowerCase().includes(categorySearchQuery.toLowerCase())
+      const filtered = categories.filter((category) =>
+        category.categoryName
+          .toLowerCase()
+          .includes(categorySearchQuery.toLowerCase()),
       );
       setFilteredCategories(filtered);
     }
@@ -106,8 +107,7 @@ const MarketPlaceFilter = () => {
       dispatch(setFilterLoadingState(true));
       const { category, location, typeOfService, minPrice, maxPrice } =
         filterDataStructure;
-      let url =
-        `${process.env.NEXT_PUBLIC_API_URL}/listing/filter-listings/0?`;
+      let url = `${process.env.NEXT_PUBLIC_API_URL}/listing/filter-listings/0?`;
       const params = [];
 
       if (category) {
@@ -250,8 +250,12 @@ const MarketPlaceFilter = () => {
                   onClick={() => handleShowDropdown("category")}
                 >
                   <div
-                    className={`fixed left-0 top-0 h-screen w-screen ${isDropdownOpen.isOpened && isDropdownOpen.category === "category" ? "block" : "hidden"
-                      }`}
+                    className={`fixed left-0 top-0 h-screen w-screen ${
+                      isDropdownOpen.isOpened &&
+                      isDropdownOpen.category === "category"
+                        ? "block"
+                        : "hidden"
+                    }`}
                     onClick={() => handleShowDropdown("category")}
                   />
                   {filterDataStructure.category === ""
@@ -265,10 +269,12 @@ const MarketPlaceFilter = () => {
                   </span>
                 </button>
                 <div
-                  className={`small-scrollbar absolute top-[calc(100%+1rem)] flex max-h-0 min-w-[700px] flex-col rounded-md bg-violet-50 transition-all duration-300 ${isDropdownOpen.category === "category" && isDropdownOpen.isOpened
+                  className={`small-scrollbar absolute top-[calc(100%+1rem)] flex max-h-0 min-w-[700px] flex-col rounded-md bg-violet-50 transition-all duration-300 ${
+                    isDropdownOpen.category === "category" &&
+                    isDropdownOpen.isOpened
                       ? "max-h-[500px] overflow-y-auto border border-slate-200"
                       : "max-h-0 overflow-hidden"
-                    }`}
+                  }`}
                 >
                   {/* Category Search Input */}
                   <div className="sticky top-0 z-10 bg-violet-50 p-2">
@@ -280,7 +286,7 @@ const MarketPlaceFilter = () => {
                         placeholder="Search categories..."
                         className="w-full rounded-md border border-violet-200 p-4 text-violet-normal placeholder-violet-300 placeholder:text-lg focus:border-violet-normal focus:outline-none"
                       />
-                      <FiSearch className="absolute right-3 top-1/2 -translate-y-1/2 text-violet-300 size-6" />
+                      <FiSearch className="absolute right-3 top-1/2 size-6 -translate-y-1/2 text-violet-300" />
                     </div>
                   </div>
 
@@ -288,10 +294,10 @@ const MarketPlaceFilter = () => {
                   <div className="grid grid-cols-2 gap-2 py-4">
                     {filteredCategories.map((item) => (
                       <button
-                        className="relative whitespace-nowrap font-medium rounded-md px-6 py-3 text-left text-base text-violet-normal transition-colors duration-300 hover:text-tc-orange"
+                        className="relative whitespace-nowrap rounded-md px-6 py-3 text-left text-base font-medium text-violet-normal transition-colors duration-300 hover:text-tc-orange"
                         key={item.id}
                         onClick={() => {
-                          handleShowDropdown("category")
+                          handleShowDropdown("category");
                           setfilterDataStructure((prev) => ({
                             ...prev,
                             category: item.categoryName,
