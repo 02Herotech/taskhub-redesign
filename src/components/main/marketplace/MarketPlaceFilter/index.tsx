@@ -137,7 +137,7 @@ const MarketPlaceFilter = () => {
       );
       dispatch(setFilterParams(`?${params.join("&")}`));
     } catch (error: any) {
-      console.log(error.response.data || error);
+      console.error(error.response.data || error);
     } finally {
       dispatch(setFilterLoadingState(false));
     }
