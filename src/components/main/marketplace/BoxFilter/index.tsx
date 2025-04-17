@@ -30,7 +30,7 @@ const BoxFilter: React.FC<BoxFilterProper> = ({ category, Icon, id }) => {
       );
       dispatch(setFilterParams(`?category=${category}`));
     } catch (error: any) {
-      console.log(error.response.message || error);
+      console.error(error.response.message || error);
     } finally {
       dispatch(setFilterLoadingState(false));
     }
