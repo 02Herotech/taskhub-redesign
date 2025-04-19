@@ -24,7 +24,7 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
   const { categories, isFiltering, filteredData, totalPages, filterParams } =
     useSelector((state: RootState) => state.market);
 
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [allListsting, setallListsting] = useState<ListingDataType[]>([]);
   const [displayListing, setDisplayListing] = useState<ListingDataType[]>([]);
 
@@ -34,8 +34,6 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
   const [currentMessageIndex, setCurrentMessageIndex] = useState(0);
   const [showCategory, setShowCategory] = useState(false);
   const dispatch = useDispatch();
-
-  console.log(isLoading);
 
   const handleFetchCategory = async (currentPage: number) => {
     if (isFiltering) return;
@@ -148,7 +146,7 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
       );
       dispatch(setFilterParams(`?category=${category}`));
     } catch (error: any) {
-      console.error(error.response.message || error);
+      console.error(error?.response || error);
     } finally {
       dispatch(setFilterLoadingState(false));
     }
@@ -216,8 +214,7 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
           )}
 
           {isLoading ? (
-            // <Loading />
-            <p>HI Loader </p>
+            <Loading />
           ) : isFiltering ? (
             !ErrorMsg && filteredData.length === 0 ? (
               <div className="flex min-h-40 flex-col items-center justify-center gap-4 py-10">
