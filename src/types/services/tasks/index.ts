@@ -139,13 +139,21 @@ export type GetAllCustomerTasksResponse = {
   totalPages: number;
 } & { content: AllTask[] };
 
-export type GetCustomerOngoingTasksResponse = OngoingTask;
+export type GetCustomerOngoingTasksResponse = OngoingTaskResponse;
 
-export type GetCustomerTasksResponse = AllTask;
+export type GetCustomerTasksResponse = GetAllCustomerTasksResponse;
 
 export type GetTasksRequest = number;
 
 export type GetJobsByIdResponse = JobDataDetails;
+
+export type OngoingTaskResponse = {
+  totalElements: number;
+  totalPages: number;
+  pageNumber: number;
+  pageSize: string;
+  content: OngoingTask[];
+};
 
 export type GetTasksResponse = {
   totalElements: number;

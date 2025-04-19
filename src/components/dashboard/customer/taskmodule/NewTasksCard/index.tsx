@@ -13,15 +13,14 @@ import {
   monthNames,
   suffixes,
 } from "@/lib/utils";
-import { TaskInfo } from "@/types/services/tasks";
-import Popup from "@/components/global/Popup";
-import EditTaskForm from "../EditTaskForm";
+import { AllTask, TaskInfo } from "@/types/services/tasks";
+
 import { useRouter } from "next/navigation";
 import { IoEye } from "react-icons/io5";
 import { getBorderColor, getStatusColor } from "@/shared/statusbadge";
 
 interface TaskCardProps {
-  task: TaskInfo;
+  task: AllTask;
 }
 
 type DropDownItem = {
@@ -71,7 +70,7 @@ const NewTasksCard = ({ task }: TaskCardProps) => {
   ];
 
   return (
-    <div onClick={() => router.push(`/customer/tasks/posted-by-me/${task.id}`)} className={`relative flex flex-col border-l-[12px]  shadow-[0px_-4px_132px_0px_#00000017] ${getBorderColor(task.taskStatus)} rounded-2xl shadow-sm bg-white overflow-hidden`}>
+    <div onClick={() => router.push(`/customer/tasks/posted-by-me/${task.id}`)} className={`relative flex flex-col border-l-[12px] hover:bg-[#E6F3FF] cursor-pointer  shadow-[0px_-4px_132px_0px_#00000017] ${getBorderColor(task.taskStatus)} rounded-2xl shadow-sm bg-white overflow-hidden`}>
       <div className="p-4 pl-5 flex-1">
         <div className="mb-2">
           <span
@@ -81,10 +80,10 @@ const NewTasksCard = ({ task }: TaskCardProps) => {
           </span>
         </div>
         <h3 className="text-xs font-semibold text-[#0F052E]">{task.taskBriefDescription}</h3>
-        <p className="mt-1 text-sm text-[#110049] line-clamp-3">{task.taskDescription}...</p>
+        {/* <p className="mt-1 text-sm text-[#110049] line-clamp-3">{task.taskDescription}...</p> */}
 
         <div className="mt-4 flex justify-between items-end">
-          <div className="flex flex-col space-y-1 text-xs text-gray-500">
+          <div className="flex flex-col space-y-2 text-xs text-gray-500">
             <div className="flex items-center">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -128,9 +127,9 @@ const NewTasksCard = ({ task }: TaskCardProps) => {
                 <span>{task.state}</span>
               </div>
             }
-            <div>
+            {/* <div>
               <span>{task.taskType}</span>
-            </div>
+            </div> */}
 
           </div>
 
