@@ -10,6 +10,11 @@ import RebookTask from "./rebookTask"
 import Popup from "@/components/global/Popup"
 import DeleteTask from "../../taskmodule/DeleteTask"
 import ImageViewer from "@/components/imageviewer"
+import { BiNotepad } from "react-icons/bi"
+import MoreButtonDropdown from "../../taskmodule/components/dropdown"
+import { formatDateFromArray } from "@/utils"
+import { FaCalendar } from "react-icons/fa"
+import RecurringTaskForm from "./reoccuringtask"
 
 
 
@@ -21,6 +26,7 @@ const CompletedTaskDetailsPage = ({
   const [showReviewModal, setShowReviewModal] = useState(false)
   const [showRobookModal, setShowRebookModal] = useState(false)
   const [deleteModalOpen, setIsDeleteModalOpen] = useState(false)
+  const [showReoccuringModal, setShowReoccuringModal] = useState(false)
   const [currentStep, setCurrentStep] = useState(1)
   const {
     data: completedTask,
@@ -54,13 +60,36 @@ const CompletedTaskDetailsPage = ({
     );
   }
 
+  const dropdownItems = [
+    {
+      id: 2,
+      icon: FaCalendar,
+      label: "Make Task Reoccurning",
+      onClick: () => setShowReoccuringModal(true),
+    },
+    {
+      id: 3,
+      icon: BiNotepad,
+      label: "Rebook ",
+      onClick: () => setShowRebookModal(true),
+    },
+    // {
+    //   id: 3,
+    //   icon: MdPostAdd,
+    //   label: "Post as new ",
+    //   onClick: () => setCancelPopup(true),
+    // },
+  ]
+
   return (
-    <div className="flex flex-col min-h-[60vh] justify-between ">
+    <div className="max-w-3xl mx-auto flex flex-col min-h-[60vh] justify-between ">
       <div className="">
-        <div className="mb-4">
-          <span className="bg-indigo-100 text-primary border border-[#381F8C] px-4 py-1 rounded-full text-sm lowercase">
+        <div className="mb-4 flex items-center justify-between">
+          <p className="bg-indigo-100 text-primary border border-[#381F8C] px-4 py-1 rounded-full text-sm lowercase">
             {completedTask.jobInfo.jobStatus}
-          </span>
+          </p>
+
+          <MoreButtonDropdown dropdownItems={dropdownItems} />
         </div>
 
         <div className="flex justify-between items-center mb-4">
@@ -75,7 +104,7 @@ const CompletedTaskDetailsPage = ({
           </div>
           <div className="flex items-center gap-1">
             <FiCalendar className="w-4 h-4" />
-            <span>{completedTask.jobInfo.taskDate}</span>
+            <span>{formatDateFromArray(completedTask.jobInfo.createdAt)}</span>
           </div>
           <div className="flex items-center gap-1">
             <FiDollarSign className="w-4 h-4" />
@@ -84,7 +113,7 @@ const CompletedTaskDetailsPage = ({
         </div>
 
         <div className="mb-4">
-          <p className="text-gray-700">
+          <p className="text-primary font-medium whitespace-pre-line">
             {isExpanded ? completedTask.jobInfo.jobDescription : completedTask.jobInfo.jobDescription?.length > 100 ? `${completedTask.jobInfo.jobDescription.substring(0, 150)}...` : completedTask.jobInfo.jobDescription}
           </p>
           {completedTask.jobInfo.jobDescription?.length > 150 && (
@@ -147,9 +176,9 @@ const CompletedTaskDetailsPage = ({
           <button type="button" onClick={() => setShowReviewModal(true)} className="text-white rounded-[50px] px-4 py-2 text-sm bg-primary" >
             Post a review
           </button>
-          <button onClick={() => { setShowRebookModal(true); setCurrentStep(1); }} className="rounded-[50px] px-4 py-2 text-sm bg-white font-semibold border border-primary">Rebook</button>
+          {/* <button onClick={() => { setShowRebookModal(true); setCurrentStep(1); }} className="rounded-[50px] px-4 py-2 text-sm bg-white font-semibold border border-primary">Rebook</button> */}
         </div>
-        <button type="button" onClick={() => setIsDeleteModalOpen(true)} className="text-red-500 hover:text-red-700 px-4 py-2 font-semibold text-sm">Delete task</button>
+        {/* <button type="button" onClick={() => setIsDeleteModalOpen(true)} className="text-red-500 hover:text-red-700 px-4 py-2 font-semibold text-sm">Delete task</button> */}
       </div>
 
       <PostReview
@@ -164,6 +193,11 @@ const CompletedTaskDetailsPage = ({
         currentStep={currentStep}
         setCurrentStep={setCurrentStep}
         jobId={completedTask.jobInfo.id}
+      />
+
+      <RecurringTaskForm
+        showReoccuringModal={showReoccuringModal}
+        setShowReoccuringModal={setShowReoccuringModal}
       />
 
       <Popup isOpen={deleteModalOpen} onClose={() => setIsDeleteModalOpen(false)}>

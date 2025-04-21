@@ -21,6 +21,13 @@ export type Task = {
   active: boolean;
 };
 
+
+export type DropdownItems = {
+  id: number;
+  icon: any;
+  label: string;
+  onClick: () => void;
+}[];
 export type CustomerTasks = {
   id: number;
   posterId: number;
@@ -152,9 +159,13 @@ export type OngoingTaskResponse = {
   totalPages: number;
   pageNumber: number;
   pageSize: string;
-  content: OngoingTask[];
+  content: OngoingTaskDetails[];
 };
 
+export type OngoingTaskDetails = {
+  jobInfo: JobInfo;
+  taskStatus: string;
+};
 export type GetTasksResponse = {
   totalElements: number;
   totalPages: number;
@@ -194,6 +205,14 @@ export type AssignedDTO = {
 };
 
 export type CompletedTask = {
+  totalElements: number;
+  totalPages: number;
+  pageNumber: number;
+  pageSize: string;
+  content: CompletedTaskDetails[];
+};
+
+export type CompletedTaskDetails = {
   id: number;
   invoiceId: number;
   bookingId: number;
@@ -202,6 +221,8 @@ export type CompletedTask = {
   taskTime: [number, number];
   customerId: number;
   jobTitle: string;
+  jobStatus: string;
+  jobAddress: string;
   jobDescription: string;
   providerId: number;
   categoryId: number;
@@ -209,7 +230,7 @@ export type CompletedTask = {
 
 export type GetCustomerCompletedTasksResponse = CompletedTask;
 
-export type GetSingleTasksResponse = Task;
+export type GetSingleTasksResponse = TaskResponse;
 
 export type GetFilterTaskByPriceRequest = {
   page: number;

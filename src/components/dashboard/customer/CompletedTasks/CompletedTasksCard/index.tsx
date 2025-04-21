@@ -9,7 +9,7 @@ import {
 import { FiCalendar } from "react-icons/fi";
 import { motion } from "framer-motion";
 import { BsThreeDotsVertical } from "react-icons/bs";
-import { CompletedTask, Task, TaskDetails } from "@/types/services/tasks";
+import { CompletedTask, CompletedTaskDetails, Task, } from "@/types/services/tasks";
 import { useState } from "react";
 import { DeleteTaskSvg, DropReviewSvg, RebookSvg } from "@/lib/svgIcons";
 import Popup from "@/components/global/Popup";
@@ -23,7 +23,7 @@ import { useRouter } from "next/navigation";
 import { getBorderColor, getStatusColor } from "@/shared/statusbadge";
 
 interface TaskCardProps {
-  task: TaskDetails;
+  task: CompletedTaskDetails;
 }
 
 type DropDownItem = {
@@ -133,7 +133,7 @@ const CompletedTasksCard = ({ task }: TaskCardProps) => {
   return (
     <>
 
-      <div onClick={() => router.push(`/customer/tasks/completed-tasks/${task.id}`)} className={`relative flex flex-col border-l-[12px] cursor-pointer  shadow-[0px_-4px_132px_0px_#00000017] ${getBorderColor(task.jobStatus)} rounded-2xl shadow-sm bg-white overflow-hidden`}>
+      <div onClick={() => router.push(`/customer/tasks/completed-tasks/${task.id}`)} className={`relative flex flex-col hover:bg-[#E5FAEA] border-l-[12px] cursor-pointer  shadow-[0px_-4px_132px_0px_#00000017] ${getBorderColor(task.jobStatus)} rounded-2xl shadow-sm bg-white overflow-hidden`}>
         <div className="p-4 pl-5 flex-1">
           <div className="mb-2">
             <span
@@ -142,11 +142,10 @@ const CompletedTasksCard = ({ task }: TaskCardProps) => {
               {task.jobStatus}
             </span>
           </div>
-          <h3 className="text-xs font-semibold text-[#0F052E]">{task.jobTitle}</h3>
-          <p className="mt-1 text-sm text-[#110049] line-clamp-3">{task.jobDescription}...</p>
+          <h3 className="text-xs font-semibold cursor-pointer text-[#0F052E]">{task.jobTitle}</h3>
 
           <div className="mt-4 flex justify-between items-end">
-            <div className="flex flex-col space-y-1 text-xs text-gray-500">
+            <div className="flex flex-col space-y-2 text-xs text-gray-500">
               <div className="flex items-center">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -190,10 +189,7 @@ const CompletedTasksCard = ({ task }: TaskCardProps) => {
                   <span>{task.jobAddress}</span>
                 </div>
               }
-              <div>
-                {/* <span>{task.taskType}</span> */}
-                <span>Task type</span>
-              </div>
+
 
             </div>
 

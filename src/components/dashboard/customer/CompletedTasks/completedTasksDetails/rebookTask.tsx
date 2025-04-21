@@ -90,7 +90,7 @@ const RebookTask = ({ showRebookModalPopup, setShowRebookModalPopup, jobId, curr
   return (
     <Popup
       isOpen={showRebookModalPopup}
-      onClose={() => setShowRebookModalPopup(false)}
+      onClose={() => { setShowRebookModalPopup(false); setCurrentStep(1) }}
     >
       <div className="relative min-h-[200px] p-2 sm:p-6  max-h-[90vh] overflow-y-auto rounded-2xl bg-white font-satoshi lg:w-[520px]">
         {currentStep != 3 && <h2 className="text-2xl font-bold text-[#3b1c8c] mb-4">Re-book task</h2>}
@@ -187,13 +187,13 @@ const RebookTask = ({ showRebookModalPopup, setShowRebookModalPopup, jobId, curr
             </div>
 
             <div className="flex gap-4">
-              <button
+            <Button
                 type="button"
                 onClick={handleBack}
-              className=" w-full flex-1 py-3 px-4 bg-[#f0edf9] text-[#3b1c8c] font-medium rounded-full hover:bg-[#e6e0f5] transition-colors"
+              className=" w-full  py-3 px-4 bg-[#f0edf9] text-[#3b1c8c] border-transparent font-medium rounded-full hover:bg-[#e6e0f5] transition-colors"
               >
                 Back
-              </button>
+            </Button>
 
             <Button
               className="w-full rounded-full"

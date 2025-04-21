@@ -5,7 +5,7 @@ import Image from "next/image";
 import { useSession } from "next-auth/react";
 import Button from "@/components/global/Button";
 import Link from "next/link";
-import { OngoingTaskDetails, TaskDetails } from "@/types/services/tasks";
+import { OngoingTaskDetails } from "@/types/services/tasks";
 import { getBorderColor, getStatusColor } from "@/shared/statusbadge";
 import { useRouter } from "next/navigation";
 
@@ -41,7 +41,7 @@ const OngoingTasksCard = ({ task }: TaskCardProps) => {
 
     return (
 
-        <div onClick={() => router.push(`/customer/tasks/ongoing-tasks/${task.jobInfo.id}`)} className={`relative flex flex-col border-l-[12px] cursor-pointer  shadow-[0px_-4px_132px_0px_#00000017] ${getBorderColor(task.taskStatus)} rounded-2xl shadow-sm bg-white overflow-hidden`}>
+        <div onClick={() => router.push(`/customer/tasks/ongoing-tasks/${task.jobInfo.id}`)} className={`relative flex flex-col hover:bg-[#F3F0FF] border-l-[12px] cursor-pointer  shadow-[0px_-4px_132px_0px_#00000017] ${getBorderColor(task.taskStatus)} rounded-2xl shadow-sm bg-white overflow-hidden`}>
             <div className="p-4 pl-5 flex-1">
                 <div className="mb-2">
                     <span
@@ -51,7 +51,7 @@ const OngoingTasksCard = ({ task }: TaskCardProps) => {
                     </span>
                 </div>
                 <h3 className="text-xs font-semibold text-[#0F052E]">{task.jobInfo.jobTitle}</h3>
-                <p className="mt-1 text-sm text-[#110049] line-clamp-3">{task.jobInfo.jobDescription}...</p>
+                {/* <p className="mt-1 text-sm text-[#110049] line-clamp-3">{task.jobInfo.jobDescription}...</p> */}
 
                 <div className="mt-4 flex justify-between items-end">
                     <div className="flex flex-col space-y-1 text-xs text-gray-500">
@@ -100,7 +100,6 @@ const OngoingTasksCard = ({ task }: TaskCardProps) => {
                         }
                         <div>
                             {/* <span>{task.jobInfo.taskType}</span> */}
-                            <span>Task type</span>
                         </div>
 
                     </div>

@@ -9,16 +9,15 @@ import {
   FiTrash2 as Trash2,
 } from "react-icons/fi"
 import { useGetTaskByIdQuery, useGetTasksOffersQuery } from '@/services/tasks'
-import Image from 'next/image'
 import { FaRegShareFromSquare } from 'react-icons/fa6'
 import Offers from './Offers'
 import EditTaskForm from '../../EditTaskForm'
-import { truncateSync } from 'node:fs'
 import Popup from '@/components/global/Popup'
 import DeleteTask from '../../DeleteTask'
 import { useRouter } from 'next/navigation'
 import ImageViewer from '@/components/imageviewer'
 import { formatDateFromArray } from '@/utils'
+import MoreButtonDropdown from '../../components/dropdown'
 
 
 const PostedByMe = ({ params }: { params: { id: string } }) => {
@@ -66,6 +65,17 @@ const PostedByMe = ({ params }: { params: { id: string } }) => {
     );
   }
 
+
+
+  const dropdownItems = [
+    {
+      id: 2,
+      icon: Trash2,
+      label: "Delete Task",
+      onClick: () => setIsDeleteModalOpen(true),
+    },
+
+  ]
   const isAssigned = task?.taskInfo?.taskStatus === "ASSIGNED";
 
   // Truncate description if it's too long and not expanded
@@ -74,12 +84,13 @@ const PostedByMe = ({ params }: { params: { id: string } }) => {
     !isDescriptionExpanded && shouldTruncate ? `${task.taskInfo.taskDescription.substring(0, 150)}...` : task.taskInfo.taskDescription
 
   return (
-    <div className="w-full">
+    <div className="w-full max-w-3xl mx-auto">
       {/* Posted by badge */}
-      <div className="flex justify-between items-start mb-4">
-        <span className="inline-block bg-blue-100 text-blue-600 text-xs px-3 py-1 rounded-full">
+      <div className="flex items-center justify-between  mb-4">
+        <p className="inline-block bg-blue-100 text-blue-600 text-xs px-3 py-1 rounded-full">
           Posted by me
-        </span>
+        </p>
+        <MoreButtonDropdown dropdownItems={dropdownItems} />
       </div>
 
       {/* Title */}
@@ -97,7 +108,7 @@ const PostedByMe = ({ params }: { params: { id: string } }) => {
           </button>
         </div>
 
-        <p className="text-primary tracking-[0%] font-medium">{displayDescription}</p>
+        <p className="text-primary tracking-[0%] font-medium whitespace-pre-line">{displayDescription}</p>
 
         {shouldTruncate && (
           <button
@@ -110,7 +121,7 @@ const PostedByMe = ({ params }: { params: { id: string } }) => {
               </>
             ) : (
               <>
-                Show more <ChevronDown className="h-4 w-4 ml-1" />
+                  <ChevronDown className="h-4 w-4 ml-1" />
               </>
             )}
           </button>
@@ -132,13 +143,13 @@ const PostedByMe = ({ params }: { params: { id: string } }) => {
 
           <div className="flex items-center space-x-4 p-4">
 
-            <button
+            {/* <button
               onClick={() => setIsDeleteModalOpen(true)}
               className="text-red-500 hover:text-red-700 bg-red-50 p-2 rounded-full"
               aria-label="Delete task"
             >
               <Trash2 className="h-5 w-5" />
-            </button>
+            </button> */}
 
             <button
               onClick={() => setIsEditModalOpen(true)}
