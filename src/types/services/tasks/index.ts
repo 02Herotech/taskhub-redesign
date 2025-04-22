@@ -21,6 +21,13 @@ export type Task = {
   active: boolean;
 };
 
+
+export type DropdownItems = {
+  id: number;
+  icon: any;
+  label: string;
+  onClick: () => void;
+}[];
 export type CustomerTasks = {
   id: number;
   posterId: number;
@@ -58,6 +65,7 @@ export interface TaskInfo {
   taskType: string;
   posterId: number;
   category: TaskCategory;
+  displayPictures: string[];
   taskStatus: string;
   createdAt: [number, number, number]; // ISO date string e.g., '2025-04-08'
   assignedTo: number;
@@ -139,12 +147,26 @@ export type GetAllCustomerTasksResponse = {
   totalPages: number;
 } & { content: AllTask[] };
 
-export type GetCustomerOngoingTasksResponse = OngoingTask;
+export type GetCustomerOngoingTasksResponse = OngoingTaskResponse;
 
-export type GetCustomerTasksResponse = AllTask;
+export type GetCustomerTasksResponse = GetAllCustomerTasksResponse;
 
 export type GetTasksRequest = number;
 
+export type GetJobsByIdResponse = JobDataDetails;
+
+export type OngoingTaskResponse = {
+  totalElements: number;
+  totalPages: number;
+  pageNumber: number;
+  pageSize: string;
+  content: OngoingTaskDetails[];
+};
+
+export type OngoingTaskDetails = {
+  jobInfo: JobInfo;
+  taskStatus: string;
+};
 export type GetTasksResponse = {
   totalElements: number;
   totalPages: number;
@@ -153,7 +175,45 @@ export type GetTasksResponse = {
   content: Task[];
 };
 
+export type JobDataDetails = {
+  jobInfo: JobInfo;
+  assignedDTO: AssignedDTO;
+  taskImage: string;
+};
+
+export type JobInfo = {
+  id: number;
+  bookingId: number;
+  total: number;
+  deleted: boolean;
+  taskDate: string; // YYYY-MM-DD format
+  createdAt: [number, number, number];
+  taskTime: [number, number];
+  providerId: number;
+  customerId: number;
+  invoiceId: number;
+  jobStatus: string;
+  categoryId: number;
+  jobTitle: string;
+  jobAddress: string;
+  jobDescription: string;
+};
+
+export type AssignedDTO = {
+  id: number;
+  fullName: string;
+  profileImage: string;
+};
+
 export type CompletedTask = {
+  totalElements: number;
+  totalPages: number;
+  pageNumber: number;
+  pageSize: string;
+  content: CompletedTaskDetails[];
+};
+
+export type CompletedTaskDetails = {
   id: number;
   invoiceId: number;
   bookingId: number;
@@ -162,6 +222,8 @@ export type CompletedTask = {
   taskTime: [number, number];
   customerId: number;
   jobTitle: string;
+  jobStatus: string;
+  jobAddress: string;
   jobDescription: string;
   providerId: number;
   categoryId: number;
@@ -169,7 +231,7 @@ export type CompletedTask = {
 
 export type GetCustomerCompletedTasksResponse = CompletedTask;
 
-export type GetSingleTasksResponse = Task;
+export type GetSingleTasksResponse = TaskResponse;
 
 export type GetFilterTaskByPriceRequest = {
   page: number;
@@ -244,4 +306,121 @@ export type ServiceProviderReciepts = {
   totalElements: number;
   totalPages: number;
   content: Receipt[];
+};
+
+export type BookingRequestResponse = {
+  totalElements: number;
+  totalPages: number;
+  pageNumber: number;
+  pageSize: number;
+  content: Booking[];
+};
+
+export type Booking = {
+  id: number;
+  userAddress: Address;
+  customer: {
+    id: number;
+    user: User;
+  };
+  bookingStage: string;
+  listing: Listing;
+  bookingTitle: string;
+  startDate: string;
+  startTime: Time;
+  price: number;
+  bookingDescription: string;
+  updatedAt: string;
+  bookedAt: string;
+  invoiceSent: boolean;
+};
+
+export type Address = {
+  id: number;
+  state: string;
+  suburb: string;
+  postCode: string;
+  streetNumber: string;
+  unitNumber: string;
+  streetName: string;
+};
+
+export type User = {
+  id: number;
+  stripeId: string;
+  userAddress: Address;
+  emailAddress: string;
+  firstName: string;
+  password: string;
+  lastName: string;
+  dateOfBirth: string;
+  accountState: string;
+  roles: string[];
+  profileImage: string;
+  deactivatedAt: string;
+  phoneNumber: string;
+  lastPasswordChangeDate: string;
+  createdAt: string;
+  isEnabled: boolean;
+};
+
+export type Listing = {
+  id: number;
+  state: string;
+  planOneDescription: string;
+  planOnePrice: number;
+  planTwoDescription: string;
+  planTwoPrice: number;
+  planThreeDescription: string;
+  planThreePrice: number;
+  suburb: string;
+  postCode: string;
+  taskType: string;
+  businessPictures: string[];
+  stripeId: string;
+  category: {
+    id: number;
+    categoryName: string;
+  };
+  serviceProvider: {
+    id: number;
+    user: User;
+  };
+  availableDays: string[];
+  listingDescription: string;
+  listingTitle: string;
+  available: boolean;
+  subCategory: {
+    id: number;
+    name: string;
+  };
+  reviews: Review[];
+  negotiable: boolean;
+};
+
+export type Review = {
+  id: number;
+  comment: string;
+  serviceProvider: {
+    id: number;
+    user: User;
+  };
+  customer: {
+    id: number;
+    user: User;
+  };
+  createdAt: string;
+  reviewerUserId: number;
+  rating: number;
+  serviceCategory: {
+    id: number;
+    categoryName: string;
+  };
+};
+
+export type Time = {
+  hour: number;
+  minute: number;
+  second: number;
+  nano: number;
 };

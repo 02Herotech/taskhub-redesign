@@ -42,6 +42,7 @@
     "react-phone-number-input": "^3.4.1",
     "react-redux": "^9.1.2",
     "react-scroll-to-bottom": "^4.2.0",
+    "react-simple-image-viewer": "^1.2.2",
     "react-slick": "^0.30.2",
     "react-slider": "^2.0.6",
     "react-spinners": "^0.13.8",

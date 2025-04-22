@@ -6,7 +6,7 @@ import Link from "next/link";
 import Button from "@/components/global/Button";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
-import OngoingTasksCard from "../OngoingTasksCard";
+import OngoingTasksCard from "./OngoingTasksCard";
 import Pagination from "@/components/pagination";
 import { useState } from "react";
 

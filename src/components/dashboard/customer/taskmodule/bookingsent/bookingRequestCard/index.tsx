@@ -13,14 +13,13 @@ import {
   monthNames,
   suffixes,
 } from "@/lib/utils";
-import { AllTask, TaskInfo } from "@/types/services/tasks";
+import { Booking, } from "@/types/services/tasks";
 
 import { useRouter } from "next/navigation";
-import { IoEye } from "react-icons/io5";
 import { getBorderColor, getStatusColor } from "@/shared/statusbadge";
 
-interface TaskCardProps {
-  task: AllTask;
+interface BookingRequestCardProps {
+  request: Booking;
 }
 
 type DropDownItem = {
@@ -29,57 +28,40 @@ type DropDownItem = {
   icon?: React.ReactNode;
 };
 
-const NewTasksCard = ({ task }: TaskCardProps) => {
+const BookingRequestCard = ({ request }: BookingRequestCardProps) => {
   const router = useRouter();
-  const dateArray = task.taskDate;
-  let date: Date;
-  let formattedDate: string;
+  // const dateArray = task.taskDate;
+  // let date: Date;
+  // let formattedDate: string;
 
-  if (dateArray && Array.isArray(dateArray) && dateArray.length >= 3) {
-    date = new Date(dateArray[0], dateArray[1] - 1, dateArray[2]);
-    const day = date.getDate();
-    const daySuffix =
-      day === 11 || day === 12 || day === 13
-        ? "th"
-        : suffixes[day % 10] || suffixes[0];
-    formattedDate = `On ${dayOfWeekNames[date.getDay()]}, ${monthNames[date.getMonth()]} ${day}${daySuffix}`;
-  } else {
-    formattedDate = "Flexible";
-  }
+  // if (dateArray && Array.isArray(dateArray) && dateArray.length >= 3) {
+  //   date = new Date(dateArray[0], dateArray[1] - 1, dateArray[2]);
+  //   const day = date.getDate();
+  //   const daySuffix =
+  //     day === 11 || day === 12 || day === 13
+  //       ? "th"
+  //       : suffixes[day % 10] || suffixes[0];
+  //   formattedDate = `On ${dayOfWeekNames[date.getDay()]}, ${monthNames[date.getMonth()]} ${day}${daySuffix}`;
+  // } else {
+  //   formattedDate = "Flexible";
+  // }
 
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
-  const dropDownItems: DropDownItem[] = [
-    {
-      title: "View Task",
-      onClick: () => {
-        router.push(`/customer/tasks/${task.id}`);
-        setIsDropdownOpen(false);
-      },
-      icon: <IoEye className="size-4 cursor-pointer text-white" />,
-    },
-    {
-      title: "Edit Task",
-      onClick: () => {
-        setIsEditModalOpen(true);
-        setIsDropdownOpen(false);
-      },
-      icon: <FaRegEdit className="size-4 cursor-pointer text-white" />,
-    },
-  ];
+
 
   return (
-    <div onClick={() => router.push(`/customer/tasks/posted-by-me/${task.id}`)} className={`relative flex flex-col border-l-[12px] hover:bg-[#E6F3FF] cursor-pointer  shadow-[0px_-4px_132px_0px_#00000017] ${getBorderColor(task.taskStatus)} rounded-2xl shadow-sm bg-white overflow-hidden`}>
+    <div className={`relative flex flex-col border-l-[12px] hover:bg-[#E6F3FF] cursor-pointer  shadow-[0px_-4px_132px_0px_#00000017] ${getBorderColor(request.bookingStage)} rounded-2xl shadow-sm bg-white overflow-hidden`}>
       <div className="p-4 pl-5 flex-1">
         <div className="mb-2">
           <span
-            className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(task.taskStatus)}`}
-        >
-            {task.taskStatus}
+            className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(request.bookingStage)}`}
+          >
+            {request.bookingStage}
           </span>
         </div>
-        <h3 className="text-xs font-semibold text-[#0F052E]">{task.taskBriefDescription}</h3>
+        <h3 className="text-xs font-semibold text-[#0F052E]">{request.bookingTitle}</h3>
         {/* <p className="mt-1 text-sm text-[#110049] line-clamp-3">{task.taskDescription}...</p> */}
 
         <div className="mt-4 flex justify-between items-end">
@@ -99,10 +81,10 @@ const NewTasksCard = ({ task }: TaskCardProps) => {
                   d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
                 />
               </svg>
-              <span>{formattedDate}</span>
-          </div>
+              <span>{request.bookedAt}</span>
+            </div>
 
-            {task.state &&
+            {request.bookingTitle &&
               <div className="flex items-center">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -124,7 +106,7 @@ const NewTasksCard = ({ task }: TaskCardProps) => {
                     d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
                   />
                 </svg>
-                <span>{task.state}</span>
+                <span>{"Address"}</span>
               </div>
             }
             {/* <div>
@@ -134,7 +116,7 @@ const NewTasksCard = ({ task }: TaskCardProps) => {
           </div>
 
           <div className="text-right">
-            <span className="text-3xl font-manrope font-bold text-[#381F8C]">${task.customerBudget}</span>
+            <span className="text-3xl font-manrope font-bold text-[#381F8C]">${request.price}</span>
           </div>
         </div>
       </div>
@@ -142,4 +124,4 @@ const NewTasksCard = ({ task }: TaskCardProps) => {
   );
 };
 
-export default NewTasksCard;
+export default BookingRequestCard;
