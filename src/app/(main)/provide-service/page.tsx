@@ -1044,16 +1044,14 @@ const ProvideService: React.FC = () => {
                         </p>
                       )}
                       {suburbList.length > 1 && (
-                        <ul className="roundeed-lg max-h-52 overflow-y-auto overflow-x-hidden">
+                        <ul className="max-h-52 overflow-y-auto overflow-x-hidden rounded-lg">
                           {suburbList.map((suburb) => (
                             <li
                               className="flex cursor-pointer items-center gap-1 bg-white px-4 py-3 text-[13px]"
                               key={Math.random() * 12345}
                               onClick={() => {
                                 setCurrentSuburb(suburb);
-                                setSuburb(
-                                  `${suburb.name}, ${suburb.state.abbreviation}, Australia`,
-                                );
+                                setSuburb(suburb.formattedAddress);
                                 setSuburbList([]);
                               }}
                             >
@@ -1063,9 +1061,7 @@ const ProvideService: React.FC = () => {
                                 strokeWidth={1}
                               />
                               <span className="text-[#0F052E]">
-                                {suburb.name},{" "}
-                                {suburb.locality ? `${suburb.locality},` : ""}{" "}
-                                {suburb.state.name}, AUS
+                                {suburb.formattedAddress}
                               </span>
                             </li>
                           ))}
@@ -1552,7 +1548,7 @@ const ProvideService: React.FC = () => {
               route.push("/marketplace");
             }}
           >
-            <div className="px-5 py-5 lg:px-24 overflow-hidden">
+            <div className="overflow-hidden px-5 py-5 lg:px-24">
               <div className="relative grid items-center justify-center space-y-3">
                 <div className="flex justify-center text-[1px] text-white">
                   <Image src={imag} alt="image" />
@@ -1575,7 +1571,7 @@ const ProvideService: React.FC = () => {
                 />
                 <div className="flex justify-center">
                   <Link href="/marketplace">
-                    <Button className="rounded-full font-bold bg-status-purpleBase px-4 text-[14px] text-white outline-none">
+                    <Button className="rounded-full bg-status-purpleBase px-4 text-[14px] font-bold text-white outline-none">
                       Go to marketplace
                     </Button>
                   </Link>
