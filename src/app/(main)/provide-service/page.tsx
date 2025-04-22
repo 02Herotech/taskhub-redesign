@@ -1018,7 +1018,7 @@ const ProvideService: React.FC = () => {
                         id="suburb"
                         type="text"
                         className="-ml-2 block w-full appearance-none bg-transparent p-3 placeholder-[#76757A61] outline-none placeholder:font-satoshiMedium"
-                        placeholder="Enter a suburb"
+                        placeholder="Enter your address"
                         value={suburb}
                         autoComplete="off"
                         onChange={(e) => {
