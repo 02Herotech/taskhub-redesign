@@ -526,127 +526,124 @@ const EditTaskForm = ({ taskDetails, setShowEditModal }: TaskCardProps) => {
               </div>
             )}
 
-            {activeEditModalLink === "Location" && (
-              <div className="w-full space-y-8">
-                <div className="space-y-8">
-                  <div className="space-y-4">
-                    <h2 className="text-[13px] font-semibold text-status-darkpurple lg:text-[16px]">
-                      Type of Service{" "}
-                    </h2>
-                    <div className="flex flex-col gap-3 space-x-0 sm:flex-row sm:space-x-2">
-                      {typeData.map((item, index) => (
-                        <button
-                          key={index}
-                          type="button"
-                          className={`rounded-full border border-violet-normal px-4 py-2 font-satoshi text-sm font-normal  transition-opacity duration-300 hover:opacity-90 ${item.value === watchField.taskType ? "bg-violet-normal text-white" : "bg-violet-light text-violet-normal"} `}
-                          onClick={() => setValue("taskType", item.value)}
-                        >
-                          {item.label} Service
-                        </button>
-                      ))}
-                    </div>
+            {activeEditModalLink === "Budget" && (
+              <div className="space-y-8">
+                <div className="space-y-4">
+                  <h2 className="text-[13px] font-semibold text-status-darkpurple lg:text-[16px]">
+                    Type of Service{" "}
+                  </h2>
+                  <div className="flex flex-col gap-3 space-x-0 sm:flex-row sm:space-x-2">
+                    {typeData.map((item, index) => (
+                      <button
+                        key={index}
+                        type="button"
+                        className={`rounded-full border border-violet-normal px-4 py-2 font-satoshi text-sm font-normal  transition-opacity duration-300 hover:opacity-90 ${item.value === watchField.taskType ? "bg-violet-normal text-white" : "bg-violet-light text-violet-normal"} `}
+                        onClick={() => setValue("taskType", item.value)}
+                      >
+                        {item.label} Service
+                      </button>
+                    ))}
                   </div>
-
-                  <div className="space-y-5">
-                    {watchField.taskType === typeData[1].value && (
-                      <div className="relative">
-                        {/* Display previous suburb  */}
-                        <div className="mb-3 flex items-center gap-x-2 text-slate-600">
-                          <IoLocationOutline className="text-xl" />
-                          <span>
-                            {task.suburb}, {task.state}
-                          </span>
-                        </div>
-                        {/* Suburb input */}
-                        <div className="w-full space-y-4">
-                          <label
-                            className="text-[13px] font-semibold text-status-darkpurple lg:text-[16px]"
-                            htmlFor="suburb"
-                          >
-                            Suburb
-                          </label>
-                          <input
-                            id="suburb"
-                            type="text"
-                            placeholder="Enter a new suburb..."
-                            autoComplete="off"
-                            className="w-full cursor-default rounded-2xl bg-violet-light p-3 pl-4 text-[13px] outline-none"
-                            {...register("suburb", {
-                              onChange: (e) => {
-                                if (currentSuburb) {
-                                  setCurrentSuburb(null);
-                                  const enteredInput = e.target.value.slice(-1);
-                                  e.target.value = enteredInput;
-                                  setValue("suburb", enteredInput);
-                                }
-                                setValue("suburb", e.target.value);
-                              },
-                            })}
-                          />
-                        </div>
-
-                        {/* Auto-complete modal  */}
-                        <div className="absolute left-0 z-10 w-full bg-white">
-                          {isLoading && (
-                            <p className="py-2 text-center font-satoshiMedium text-[#76757A61]">
-                              Loading...
-                            </p>
-                          )}
-                          {suburbError && !isLoading && (
-                            <p className="py-2 text-center font-satoshiMedium text-red-600">
-                              Error occured while loading suburb data
-                            </p>
-                          )}
-                          {suburbList.length > 1 && (
-                            <ul className="roundeed-lg max-h-52 overflow-y-auto overflow-x-hidden">
-                              {suburbList.map((suburb) => (
-                                <li
-                                  className="flex cursor-pointer items-center gap-1 bg-white px-4 py-3 text-[13px]"
-                                  key={Math.random() * 12345}
-                                  onClick={() => {
-                                    setCurrentSuburb(suburb);
-                                    setValue(
-                                      "suburb",
-                                      `${suburb.name}, ${suburb.state.abbreviation}, Australia`,
-                                    );
-                                    setSuburbList([]);
-                                  }}
-                                >
-                                  <CiLocationOn
-                                    stroke="#0F052E"
-                                    size={20}
-                                    strokeWidth={1}
-                                  />
-                                  <span className="text-[#0F052E]">
-                                    {suburb.name},{" "}
-                                    {suburb.locality ? `${suburb.locality},` : ""}{" "}
-                                    {suburb.state.name}, AUS
-                                  </span>
-                                </li>
-                              ))}
-                            </ul>
-                          )}
-                        </div>
+                </div>
+                <div className="space-y-5">
+                  {watchField.taskType === typeData[1].value && (
+                    <div className="relative">
+                      {/* Display previous suburb  */}
+                      <div className="mb-3 flex items-center gap-x-2 text-slate-600">
+                        <IoLocationOutline className="text-xl" />
+                        <span>
+                          {task.suburb}, {task.state}
+                        </span>
                       </div>
-                    )}
-                    <div className="space-y-2">
-                      <div className="flex items-center justify-between">
-                        <label className="text-[13px] font-semibold text-status-darkpurple lg:text-[16px]">
-                          Budget{" "}
+                      {/* Suburb input */}
+                      <div className="w-full space-y-4">
+                        <label
+                          className="text-[13px] font-semibold text-status-darkpurple lg:text-[16px]"
+                          htmlFor="suburb"
+                        >
+                          Suburb
                         </label>
-
-                      </div>
-                      <div className="flex items-center space-x-2 rounded-2xl bg-[#EBE9F4] p-3 text-[13px] ">
-                        <span>$</span>
                         <input
-                          type="number"
-                          min="5"
-                          value={watchField.customerBudget}
-                          {...register("customerBudget")}
-                          className={`no-input-default-style border-none"} w-full appearance-none placeholder:font-bold`}
+                          id="suburb"
+                          type="text"
+                          placeholder="Enter your address"
+                          autoComplete="off"
+                          className="w-full cursor-default rounded-2xl bg-violet-light p-3 pl-4 text-[13px] outline-none"
+                          {...register("suburb", {
+                            onChange: (e) => {
+                              if (currentSuburb) {
+                                setCurrentSuburb(null);
+                                const enteredInput = e.target.value.slice(-1);
+                                e.target.value = enteredInput;
+                                setValue("suburb", enteredInput);
+                              }
+                              setValue("suburb", e.target.value);
+                            },
+                          })}
                         />
                       </div>
+
+                      {/* Auto-complete modal  */}
+                      <div className="absolute left-0 z-10 w-full bg-white">
+                        {isLoading && (
+                          <p className="py-2 text-center font-satoshiMedium text-[#76757A61]">
+                            Loading...
+                          </p>
+                        )}
+                        {suburbError && !isLoading && (
+                          <p className="py-2 text-center font-satoshiMedium text-red-600">
+                            Error occured while loading suburb data
+                          </p>
+                        )}
+                        {suburbList.length > 1 && (
+                          <ul className="roundeed-lg max-h-52 overflow-y-auto overflow-x-hidden">
+                            {suburbList.map((suburb) => (
+                              <li
+                                className="flex cursor-pointer items-center gap-1 bg-white px-4 py-3 text-[13px]"
+                                key={Math.random() * 12345}
+                                onClick={() => {
+                                  setCurrentSuburb(suburb);
+                                  setValue("suburb", suburb.formattedAddress);
+                                  setSuburbList([]);
+                                }}
+                              >
+                                <CiLocationOn
+                                  stroke="#0F052E"
+                                  size={20}
+                                  strokeWidth={1}
+                                />
+                                <span className="text-[#0F052E]">
+                                  {suburb.formattedAddress}
+                                </span>
+                              </li>
+                            ))}
+                          </ul>
+                        )}
+                      </div>
                     </div>
+                  )}
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between">
+                      <label className="text-[13px] font-semibold text-status-darkpurple lg:text-[16px]">
+                        Budget{" "}
+                      </label>
+                      {/* {task.customerBudget && (
+                                                <div className="h-[16px] w-[16px] rounded-3xl bg-[#4CAF50] text-[16px] font-extrabold text-white">
+                                                    <GrFormCheckmark />
+                                                </div>
+                                            )} */}
+                    </div>
+                    <div className="flex items-center space-x-2 rounded-2xl bg-[#EBE9F4] p-3 text-[13px] ">
+                      <span>$</span>
+                      <input
+                        type="number"
+                        min="5"
+                        value={watchField.customerBudget}
+                        {...register("customerBudget")}
+                        className={`no-input-default-style border-none"} w-full appearance-none placeholder:font-bold`}
+                      />
+                    </div>
+                  </div>
 
                     {/* {errors && <div className="font-bold text-red-500">{errors.}</div>} */}
                     <div className="flex items-center justify-center space-x-3 lg:justify-end">
