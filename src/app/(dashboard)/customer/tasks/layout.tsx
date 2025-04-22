@@ -66,20 +66,19 @@ export default function TaskLayout({
         {title && <span className="cursor-pointer text-[#55535A] capitalize w-20 truncate md:w-64"> {"/  "}{title}</span>}
       </div>
 
-      <div className="mb-6 overflow-x-auto">
+      <div className="mb-6 overflow-x-auto font-manrope">
         <div className="flex space-x-1 min-w-max border-b border-gray-200">
           {(TabItems).map((tabName) => {
 
-            const activeTab = pathname === tabName.path
+            const activeTab = pathname.split("/").includes(tabName.path.split("/").at(-1))
             return (
               <Link
                 href={tabName.path}
                 key={tabName.label}
                 className={`px-4 py-2 text-sm font-medium whitespace-nowrap ${activeTab
-                  ? "text-blue-600 border-b-2 border-blue-600"
+                  ? "text-primary border-b-2 border-[#FE9B07]"
                   : "text-gray-500 hover:text-gray-700 hover:border-b hover:border-gray-300"
                   }`}
-              // onClick={() => handleTabClick(tabName.path)}
               >
                 {tabName.label}
               </Link>

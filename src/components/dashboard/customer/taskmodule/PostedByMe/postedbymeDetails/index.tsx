@@ -1,5 +1,5 @@
 "use client"
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import Loading from '@/shared/loading'
 import {
   FiCalendar as Calendar,
@@ -15,9 +15,11 @@ import EditTaskForm from '../../EditTaskForm'
 import Popup from '@/components/global/Popup'
 import DeleteTask from '../../DeleteTask'
 import { useRouter } from 'next/navigation'
-import ImageViewer from '@/components/imageviewer'
+// import ImageViewer from '@/components/imageviewer'
 import { formatDateFromArray } from '@/utils'
 import MoreButtonDropdown from '../../components/dropdown'
+import ImageViewer from 'react-simple-image-viewer';
+import Image from 'next/image'
 
 
 const PostedByMe = ({ params }: { params: { id: string } }) => {
@@ -31,12 +33,18 @@ const PostedByMe = ({ params }: { params: { id: string } }) => {
   const [viewAll, setViewAll] = useState(false);
   const [editModalOpen, setIsEditModalOpen] = useState(false)
   const [deleteModalOpen, setIsDeleteModalOpen] = useState(false)
+  const [currentImage, setCurrentImage] = useState(0);
+  const [isViewerOpen, setIsViewerOpen] = useState(false);
 
   const { data: offers, refetch } = useGetTasksOffersQuery(
     id as unknown as number,
   );
 
   const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false)
+  const openImageViewer = useCallback((index: number) => {
+    setCurrentImage(index);
+    setIsViewerOpen(true);
+  }, []);
 
   useEffect(() => {
     if (task) {
@@ -66,7 +74,10 @@ const PostedByMe = ({ params }: { params: { id: string } }) => {
   }
 
 
-
+  const closeImageViewer = () => {
+    setCurrentImage(0);
+    setIsViewerOpen(false);
+  };
   const dropdownItems = [
     {
       id: 2,
@@ -142,15 +153,6 @@ const PostedByMe = ({ params }: { params: { id: string } }) => {
           <div className="h-16 w-px bg-gray-200 mx-2"></div>
 
           <div className="flex items-center space-x-4 p-4">
-
-            {/* <button
-              onClick={() => setIsDeleteModalOpen(true)}
-              className="text-red-500 hover:text-red-700 bg-red-50 p-2 rounded-full"
-              aria-label="Delete task"
-            >
-              <Trash2 className="h-5 w-5" />
-            </button> */}
-
             <button
               onClick={() => setIsEditModalOpen(true)}
               className="bg-primary   max-[320px]:text-xs text-base text-white px-4 py-2  sm:px-12 sm:py-6 rounded-full  font-bold"
@@ -175,12 +177,24 @@ const PostedByMe = ({ params }: { params: { id: string } }) => {
       </div>
 
       {/*image */}
-      {task.taskInfo.taskImage && <div className="my-8  relative  w-32 h-32 sm:w-48 sm:h-48 flex items-center justify-center ">
-        {/* <Image src={task.taskInfo.taskImage} alt="job image" fill className="w-20 h-20 text-gray-400" /> */}
-        <ImageViewer
-          src={task.taskInfo.taskImage}
-          alt={task.taskInfo.taskBriefDescription}
+      {task.taskInfo.displayPictures.length > 0 && <div className="my-8  relative  w-32 h-32 sm:w-48 sm:h-48 flex items-center justify-center ">
+        {task.taskInfo.displayPictures.map((picture, index) =>
+          <Image onClick={() => openImageViewer(index)} key={picture} src={picture} alt="job image" fill className="w-20 h-20 text-gray-400" />
+        )}
+
+        {isViewerOpen && (
+          <ImageViewer
+            src={task.taskInfo.displayPictures}
+            currentIndex={currentImage}
+            disableScroll={false}
+            closeOnClickOutside={true}
+            onClose={closeImageViewer}
+            backgroundStyle={{
+              backgroundColor: 'rgba(0, 0, 0, 0.85)',
+              zIndex: 1000
+            }}
         />
+        )}
       </div>}
 
       <Offers id={id} isAssigned={isAssigned} />

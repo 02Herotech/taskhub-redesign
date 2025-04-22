@@ -33,10 +33,9 @@ const RebookTask = ({ showRebookModalPopup, setShowRebookModalPopup, jobId, curr
     amount: 0,
     description: "",
   })
-
+  const [formFieldError, setFormFieldError] = useState("")
 
   const timeOptions = [];
-  console.log(currentStep, "step")
   const generateTimeOptions = () => {
     const hours = ['12', '01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11'];
     const amPm = ['AM', 'PM'];
@@ -53,11 +52,12 @@ const RebookTask = ({ showRebookModalPopup, setShowRebookModalPopup, jobId, curr
   };
 
   generateTimeOptions();
-  console.log(formData, "formData")
   const handleContinue = (data: FormData) => {
     setFormData((prev) => ({ ...prev, ...data }))
-
-    console.log(data, "form data")
+    if (!data.date || !data.time || !data.amount || !data.description) {
+      setFormFieldError("Please fill out the form")
+      return
+    }
     setCurrentStep(2)
   }
 
@@ -66,6 +66,7 @@ const RebookTask = ({ showRebookModalPopup, setShowRebookModalPopup, jobId, curr
   }
 
   const handleRebook = async () => {
+
     try {
       await rebookTask({ jobId, ...formData }).unwrap();
       setCurrentStep(3)
@@ -139,7 +140,7 @@ const RebookTask = ({ showRebookModalPopup, setShowRebookModalPopup, jobId, curr
             </div>
 
             <div className="mb-6">
-              <label className="block mb-2 font-medium">Details</label>
+              <label className="block font-medium">Details</label>
               <textarea
                 name="description"
                 {...register("description")}
@@ -147,6 +148,8 @@ const RebookTask = ({ showRebookModalPopup, setShowRebookModalPopup, jobId, curr
                 className="w-full h-32 px-4 py-2 border border-gray-300 rounded-lg resize-none focus:outline-none focus:ring-1 focus:ring-[#3b1c8c]"
               ></textarea>
             </div>
+
+            <p className='text-sm mb-2 font-medium text-red-500'>{formFieldError}</p>
 
             <button
               type="button"

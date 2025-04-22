@@ -34,7 +34,7 @@ export default function MoreButtonDropdown({
   return (
     <div className="relative" ref={dropdownRef}>
       <button onClick={toggleDropdown} aria-label="More options">
-        <CgMoreVertical className="w-10 h-10 p-2 bg-transparent text-[#E58C06] rounded-[50%] bg-[#DECEB5]" />
+        <CgMoreVertical className="w-10 h-10 p-2  text-[#E58C06] rounded-[50%] bg-[#DECEB5]" />
       </button>
 
       {isOpen && (

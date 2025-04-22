@@ -7,6 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { format } from "date-fns"
 import Popup from "@/components/global/Popup"
 import { recurringFormSchema, RecurringFormValues } from "../../taskmodule/taskschema"
+import { generateTimeOptions } from "@/utils"
 
 
 
@@ -160,18 +161,16 @@ export default function RecurringTaskForm({ setShowReoccuringModal, showReoccuri
                     </div>
                   )}
 
-                  <div className="flex-1">
-                    <label className="block text-gray-700 mb-1">Time</label>
-                    <div className="relative">
-                      <input
-                        type="time"
-                        {...register("time")}
-                        className={`w-full p-3 border ${errors.time ? "border-red-500" : "border-gray-300"
-                          } rounded-lg appearance-none bg-white focus:outline-none focus:ring-2 ${errors.time ? "focus:ring-red-500" : "focus:ring-indigo-500"
-                          }`}
-                      />
-                    </div>
-                    {errors.time && <p className="text-red-500 text-sm mt-1">{errors.time.message}</p>}
+                  <div className="mb-4 w-full">
+                    <label className="block mb-2 font-medium">Time</label>
+                    <select className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#3b1c8c]"
+                      id="time" name="time"   {...register("time")}>
+                      {generateTimeOptions().map((time, index) => (
+                        <option key={index} value={time}>
+                          {time}
+                        </option>
+                      ))}
+                    </select>
                   </div>
                 </div>
               </div>

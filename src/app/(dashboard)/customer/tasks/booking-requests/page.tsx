@@ -1,8 +1,9 @@
+import BookingRequestPage from '@/components/dashboard/customer/taskmodule/bookingsent'
 import React from 'react'
 
 const BookingRequest = () => {
   return (
-    <div>BookingRequest</div>
+    <BookingRequestPage />
   )
 }
 

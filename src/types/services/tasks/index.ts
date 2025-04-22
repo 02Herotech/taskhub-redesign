@@ -65,6 +65,7 @@ export interface TaskInfo {
   taskType: string;
   posterId: number;
   category: TaskCategory;
+  displayPictures: string[];
   taskStatus: string;
   createdAt: [number, number, number]; // ISO date string e.g., '2025-04-08'
   assignedTo: number;
@@ -186,7 +187,7 @@ export type JobInfo = {
   total: number;
   deleted: boolean;
   taskDate: string; // YYYY-MM-DD format
-  createdAt: [number, number, number, number, number, number, number];
+  createdAt: [number, number, number];
   taskTime: [number, number];
   providerId: number;
   customerId: number;
@@ -305,4 +306,121 @@ export type ServiceProviderReciepts = {
   totalElements: number;
   totalPages: number;
   content: Receipt[];
+};
+
+export type BookingRequestResponse = {
+  totalElements: number;
+  totalPages: number;
+  pageNumber: number;
+  pageSize: number;
+  content: Booking[];
+};
+
+export type Booking = {
+  id: number;
+  userAddress: Address;
+  customer: {
+    id: number;
+    user: User;
+  };
+  bookingStage: string;
+  listing: Listing;
+  bookingTitle: string;
+  startDate: string;
+  startTime: Time;
+  price: number;
+  bookingDescription: string;
+  updatedAt: string;
+  bookedAt: string;
+  invoiceSent: boolean;
+};
+
+export type Address = {
+  id: number;
+  state: string;
+  suburb: string;
+  postCode: string;
+  streetNumber: string;
+  unitNumber: string;
+  streetName: string;
+};
+
+export type User = {
+  id: number;
+  stripeId: string;
+  userAddress: Address;
+  emailAddress: string;
+  firstName: string;
+  password: string;
+  lastName: string;
+  dateOfBirth: string;
+  accountState: string;
+  roles: string[];
+  profileImage: string;
+  deactivatedAt: string;
+  phoneNumber: string;
+  lastPasswordChangeDate: string;
+  createdAt: string;
+  isEnabled: boolean;
+};
+
+export type Listing = {
+  id: number;
+  state: string;
+  planOneDescription: string;
+  planOnePrice: number;
+  planTwoDescription: string;
+  planTwoPrice: number;
+  planThreeDescription: string;
+  planThreePrice: number;
+  suburb: string;
+  postCode: string;
+  taskType: string;
+  businessPictures: string[];
+  stripeId: string;
+  category: {
+    id: number;
+    categoryName: string;
+  };
+  serviceProvider: {
+    id: number;
+    user: User;
+  };
+  availableDays: string[];
+  listingDescription: string;
+  listingTitle: string;
+  available: boolean;
+  subCategory: {
+    id: number;
+    name: string;
+  };
+  reviews: Review[];
+  negotiable: boolean;
+};
+
+export type Review = {
+  id: number;
+  comment: string;
+  serviceProvider: {
+    id: number;
+    user: User;
+  };
+  customer: {
+    id: number;
+    user: User;
+  };
+  createdAt: string;
+  reviewerUserId: number;
+  rating: number;
+  serviceCategory: {
+    id: number;
+    categoryName: string;
+  };
+};
+
+export type Time = {
+  hour: number;
+  minute: number;
+  second: number;
+  nano: number;
 };
