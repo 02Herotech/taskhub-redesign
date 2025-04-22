@@ -1,6 +1,7 @@
 declare interface CategoryType {
   id: number;
   categoryName: string;
+  description: string;
 }
 
 declare interface PosterType {
@@ -27,7 +28,7 @@ declare interface SubCategoryType {
 
 interface Review {
   rating: number;
-};
+}
 
 declare interface ListingDataType {
   id: number;
@@ -61,6 +62,14 @@ declare interface ListingDataType {
     name: string;
   };
   deleted: boolean;
+}
+
+declare interface ServicesResult {
+  content: ListingDataType[];
+  pageNumber: number;
+  pageSize: number;
+  totalElements: number;
+  totalPages: number;
 }
 
 declare interface ListingDataType2 {

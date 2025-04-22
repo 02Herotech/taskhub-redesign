@@ -9,18 +9,19 @@ import ReactSlider from "react-slider";
 
 interface ModalProp {
   isMobileFilterModalShown: boolean;
+  categories?: CategoryType[];
   setIsMobileFilterModalShown: Dispatch<SetStateAction<boolean>>;
   setfilterDataStructure: Dispatch<SetStateAction<FilterDataStructureTypes>>;
   filterDataStructure: FilterDataStructureTypes;
 }
 
 const MobileFilterModal = ({
+  categories,
   isMobileFilterModalShown,
   setIsMobileFilterModalShown,
   setfilterDataStructure,
   filterDataStructure,
 }: ModalProp) => {
-  const { categories } = useSelector((state: RootState) => state.market);
 
   return (
     <section
@@ -44,7 +45,7 @@ const MobileFilterModal = ({
           </h2>
           <div className="flex flex-col  gap-2">
             {categories &&
-              categories.map((item) => (
+              categories?.map((item) => (
                 <button
                   key={item.id}
                   className={`flex w-fit items-center gap-2 rounded-md px-4 py-2 text-violet-normal transition-colors duration-300 ${filterDataStructure.category === item.categoryName ? "bg-violet-normal text-white" : "bg-transparent text-violet-normal"} `}
