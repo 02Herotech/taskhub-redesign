@@ -51,7 +51,7 @@ type taskZodType = z.infer<typeof taskSchema>;
 
 const EditTaskForm = ({ taskDetails, setShowEditModal }: TaskCardProps) => {
   const { taskInfo: task } = taskDetails;
-  console.log(task, "from edittask")
+  console.log(task, "from edittask");
   const [activeEditModalLink, setActiveEditModalLink] =
     useState<string>("Task Details");
   const [categories, setCategories] = useState<
@@ -79,10 +79,10 @@ const EditTaskForm = ({ taskDetails, setShowEditModal }: TaskCardProps) => {
   const initialTime = useMemo(() => {
     return task.taskTime
       ? (() => {
-        const date = new Date();
-        date.setHours(task.taskTime[0], task.taskTime[1]);
-        return date;
-      })()
+          const date = new Date();
+          date.setHours(task.taskTime[0], task.taskTime[1]);
+          return date;
+        })()
       : null;
   }, [task.taskTime]);
 
@@ -306,20 +306,20 @@ const EditTaskForm = ({ taskDetails, setShowEditModal }: TaskCardProps) => {
     return (
       <div className="hidden space-y-5 border-r-2 border-[#140B310A] pb-10 pr-4 pt-5 lg:block">
         <div
-          className={`cursor-pointer text-lg text-center text-[#E58C06] font-bold ${activeEditModalLink === "Task Details" && "rounded-lg bg-[#FCF4E6] border border-[#E58C06] py-2 pl-2 pr-5 "}`}
+          className={`cursor-pointer text-center text-lg font-bold text-[#E58C06] ${activeEditModalLink === "Task Details" && "rounded-lg border border-[#E58C06] bg-[#FCF4E6] py-2 pl-2 pr-5 "}`}
           onClick={() => setActiveEditModalLink("Task Details")}
         >
           Task Details
         </div>
         <div
-          className={`cursor-pointer text-lg text-center font-bold text-[#E58C06] ${activeEditModalLink === "Location" && "rounded-lg bg-[#FCF4E6] py-2 pl-2 pr-5 border border-[#E58C06]"}`}
+          className={`cursor-pointer text-center text-lg font-bold text-[#E58C06] ${activeEditModalLink === "Location" && "rounded-lg border border-[#E58C06] bg-[#FCF4E6] py-2 pl-2 pr-5"}`}
           onClick={() => setActiveEditModalLink("Location")}
         >
           Location and Budget
         </div>
       </div>
-    )
-  }
+    );
+  };
 
   const SuccessConfirmation = () => {
     return (
@@ -357,23 +357,20 @@ const EditTaskForm = ({ taskDetails, setShowEditModal }: TaskCardProps) => {
           </div>
         </div>
       </section>
-    )
-  }
+    );
+  };
 
   return (
-    <div className="pt-14 lg:px-5 font-manrope w-full">
-      {showSuccessModal && (
-        <SuccessConfirmation />
-      )}
+    <div className="w-full pt-14 font-manrope lg:px-5">
+      {showSuccessModal && <SuccessConfirmation />}
 
       <div className="w-full" />
-      <div className=" absolute top-4 left-4 flex items-center gap-3">
-        <RiEditBoxLine className=" h-10 w-10  bg-primary text-white rounded-[50%] p-2" />
-        <h1 className=" text-2xl text-[#140B31] font-bold">Edit task</h1>
+      <div className=" absolute left-4 top-4 flex items-center gap-3">
+        <RiEditBoxLine className=" h-10 w-10  rounded-[50%] bg-primary p-2 text-white" />
+        <h1 className=" text-2xl font-bold text-[#140B31]">Edit task</h1>
       </div>
       <div className="small-scrollbar max-h-[80vh] w-full max-w-[400px]  overflow-y-auto rounded-2xl font-manrope  md:min-w-[700px]">
         <div className="h-full p-2 lg:flex lg:space-x-3">
-
           <SideNav />
 
           <form
@@ -428,9 +425,7 @@ const EditTaskForm = ({ taskDetails, setShowEditModal }: TaskCardProps) => {
                       >
                         {/* Display a disabled input with message */}
                         <Image
-                          src={
-                            watchField.taskImage ?? task.taskImage ?? ""
-                          }
+                          src={watchField.taskImage ?? task.taskImage ?? ""}
                           alt="Captured or Selected"
                           width={300}
                           height={300}
@@ -445,7 +440,7 @@ const EditTaskForm = ({ taskDetails, setShowEditModal }: TaskCardProps) => {
                   <label className="text-[13px] font-semibold text-status-darkpurple lg:text-[16px]">
                     Set Date and Time
                   </label>
-                  <div className="grid   max-[480px]:grid-cols-2  min-[480px]:flex items-center flex-wrap gap-4">
+                  <div className="grid   flex-wrap  items-center gap-4 max-[480px]:grid-cols-2 min-[480px]:flex">
                     <div className="">
                       <DatePicker
                         selected={
@@ -459,7 +454,7 @@ const EditTaskForm = ({ taskDetails, setShowEditModal }: TaskCardProps) => {
                         name="taskDate"
                         disabled={isFlexible}
                         customInput={<CustomInput />}
-                        className="w-full cursor-pointer rounded-2xl text-primary bg-[#EBE9F4] px-2 py-2 outline-none placeholder:text-[14px] placeholder:font-bold"
+                        className="w-full cursor-pointer rounded-2xl bg-[#EBE9F4] px-2 py-2 text-primary outline-none placeholder:text-[14px] placeholder:font-bold"
                       />
                     </div>
 
@@ -479,11 +474,11 @@ const EditTaskForm = ({ taskDetails, setShowEditModal }: TaskCardProps) => {
                         id="taskTime"
                         name="taskTime"
                         customInput={<CustomInputs />}
-                        className="w-full cursor-pointer text-primary rounded-2xl bg-[#EBE9F4] px-2 py-2 outline-none placeholder:text-[14px] placeholder:font-bold"
+                        className="w-full cursor-pointer rounded-2xl bg-[#EBE9F4] px-2 py-2 text-primary outline-none placeholder:text-[14px] placeholder:font-bold"
                       />
                     </div>
 
-                    <div className="flex items-center w-fit">
+                    <div className="flex w-fit items-center">
                       <input
                         type="checkbox"
                         name="check"
@@ -527,123 +522,124 @@ const EditTaskForm = ({ taskDetails, setShowEditModal }: TaskCardProps) => {
             )}
 
             {activeEditModalLink === "Budget" && (
-              <div className="space-y-8">
-                <div className="space-y-4">
-                  <h2 className="text-[13px] font-semibold text-status-darkpurple lg:text-[16px]">
-                    Type of Service{" "}
-                  </h2>
-                  <div className="flex flex-col gap-3 space-x-0 sm:flex-row sm:space-x-2">
-                    {typeData.map((item, index) => (
-                      <button
-                        key={index}
-                        type="button"
-                        className={`rounded-full border border-violet-normal px-4 py-2 font-satoshi text-sm font-normal  transition-opacity duration-300 hover:opacity-90 ${item.value === watchField.taskType ? "bg-violet-normal text-white" : "bg-violet-light text-violet-normal"} `}
-                        onClick={() => setValue("taskType", item.value)}
-                      >
-                        {item.label} Service
-                      </button>
-                    ))}
-                  </div>
-                </div>
-                <div className="space-y-5">
-                  {watchField.taskType === typeData[1].value && (
-                    <div className="relative">
-                      {/* Display previous suburb  */}
-                      <div className="mb-3 flex items-center gap-x-2 text-slate-600">
-                        <IoLocationOutline className="text-xl" />
-                        <span>
-                          {task.suburb}, {task.state}
-                        </span>
-                      </div>
-                      {/* Suburb input */}
-                      <div className="w-full space-y-4">
-                        <label
-                          className="text-[13px] font-semibold text-status-darkpurple lg:text-[16px]"
-                          htmlFor="suburb"
+              <div>
+                <div className="space-y-8">
+                  <div className="space-y-4">
+                    <h2 className="text-[13px] font-semibold text-status-darkpurple lg:text-[16px]">
+                      Type of Service{" "}
+                    </h2>
+                    <div className="flex flex-col gap-3 space-x-0 sm:flex-row sm:space-x-2">
+                      {typeData.map((item, index) => (
+                        <button
+                          key={index}
+                          type="button"
+                          className={`rounded-full border border-violet-normal px-4 py-2 font-satoshi text-sm font-normal  transition-opacity duration-300 hover:opacity-90 ${item.value === watchField.taskType ? "bg-violet-normal text-white" : "bg-violet-light text-violet-normal"} `}
+                          onClick={() => setValue("taskType", item.value)}
                         >
-                          Suburb
-                        </label>
-                        <input
-                          id="suburb"
-                          type="text"
-                          placeholder="Enter your address"
-                          autoComplete="off"
-                          className="w-full cursor-default rounded-2xl bg-violet-light p-3 pl-4 text-[13px] outline-none"
-                          {...register("suburb", {
-                            onChange: (e) => {
-                              if (currentSuburb) {
-                                setCurrentSuburb(null);
-                                const enteredInput = e.target.value.slice(-1);
-                                e.target.value = enteredInput;
-                                setValue("suburb", enteredInput);
-                              }
-                              setValue("suburb", e.target.value);
-                            },
-                          })}
-                        />
-                      </div>
-
-                      {/* Auto-complete modal  */}
-                      <div className="absolute left-0 z-10 w-full bg-white">
-                        {isLoading && (
-                          <p className="py-2 text-center font-satoshiMedium text-[#76757A61]">
-                            Loading...
-                          </p>
-                        )}
-                        {suburbError && !isLoading && (
-                          <p className="py-2 text-center font-satoshiMedium text-red-600">
-                            Error occured while loading suburb data
-                          </p>
-                        )}
-                        {suburbList.length > 1 && (
-                          <ul className="roundeed-lg max-h-52 overflow-y-auto overflow-x-hidden">
-                            {suburbList.map((suburb) => (
-                              <li
-                                className="flex cursor-pointer items-center gap-1 bg-white px-4 py-3 text-[13px]"
-                                key={Math.random() * 12345}
-                                onClick={() => {
-                                  setCurrentSuburb(suburb);
-                                  setValue("suburb", suburb.formattedAddress);
-                                  setSuburbList([]);
-                                }}
-                              >
-                                <CiLocationOn
-                                  stroke="#0F052E"
-                                  size={20}
-                                  strokeWidth={1}
-                                />
-                                <span className="text-[#0F052E]">
-                                  {suburb.formattedAddress}
-                                </span>
-                              </li>
-                            ))}
-                          </ul>
-                        )}
-                      </div>
+                          {item.label} Service
+                        </button>
+                      ))}
                     </div>
-                  )}
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-between">
-                      <label className="text-[13px] font-semibold text-status-darkpurple lg:text-[16px]">
-                        Budget{" "}
-                      </label>
-                      {/* {task.customerBudget && (
+                  </div>
+                  <div className="space-y-5">
+                    {watchField.taskType === typeData[1].value && (
+                      <div className="relative">
+                        {/* Display previous suburb  */}
+                        <div className="mb-3 flex items-center gap-x-2 text-slate-600">
+                          <IoLocationOutline className="text-xl" />
+                          <span>
+                            {task.suburb}, {task.state}
+                          </span>
+                        </div>
+                        {/* Suburb input */}
+                        <div className="w-full space-y-4">
+                          <label
+                            className="text-[13px] font-semibold text-status-darkpurple lg:text-[16px]"
+                            htmlFor="suburb"
+                          >
+                            Suburb
+                          </label>
+                          <input
+                            id="suburb"
+                            type="text"
+                            placeholder="Enter your address"
+                            autoComplete="off"
+                            className="w-full cursor-default rounded-2xl bg-violet-light p-3 pl-4 text-[13px] outline-none"
+                            {...register("suburb", {
+                              onChange: (e) => {
+                                if (currentSuburb) {
+                                  setCurrentSuburb(null);
+                                  const enteredInput = e.target.value.slice(-1);
+                                  e.target.value = enteredInput;
+                                  setValue("suburb", enteredInput);
+                                }
+                                setValue("suburb", e.target.value);
+                              },
+                            })}
+                          />
+                        </div>
+
+                        {/* Auto-complete modal  */}
+                        <div className="absolute left-0 z-10 w-full bg-white">
+                          {isLoading && (
+                            <p className="py-2 text-center font-satoshiMedium text-[#76757A61]">
+                              Loading...
+                            </p>
+                          )}
+                          {suburbError && !isLoading && (
+                            <p className="py-2 text-center font-satoshiMedium text-red-600">
+                              Error occured while loading suburb data
+                            </p>
+                          )}
+                          {suburbList.length > 1 && (
+                            <ul className="roundeed-lg max-h-52 overflow-y-auto overflow-x-hidden">
+                              {suburbList.map((suburb) => (
+                                <li
+                                  className="flex cursor-pointer items-center gap-1 bg-white px-4 py-3 text-[13px]"
+                                  key={Math.random() * 12345}
+                                  onClick={() => {
+                                    setCurrentSuburb(suburb);
+                                    setValue("suburb", suburb.formattedAddress);
+                                    setSuburbList([]);
+                                  }}
+                                >
+                                  <CiLocationOn
+                                    stroke="#0F052E"
+                                    size={20}
+                                    strokeWidth={1}
+                                  />
+                                  <span className="text-[#0F052E]">
+                                    {suburb.formattedAddress}
+                                  </span>
+                                </li>
+                              ))}
+                            </ul>
+                          )}
+                        </div>
+                      </div>
+                    )}
+                    <div className="space-y-2">
+                      <div className="flex items-center justify-between">
+                        <label className="text-[13px] font-semibold text-status-darkpurple lg:text-[16px]">
+                          Budget{" "}
+                        </label>
+                        {/* {task.customerBudget && (
                                                 <div className="h-[16px] w-[16px] rounded-3xl bg-[#4CAF50] text-[16px] font-extrabold text-white">
                                                     <GrFormCheckmark />
                                                 </div>
                                             )} */}
+                      </div>
+                      <div className="flex items-center space-x-2 rounded-2xl bg-[#EBE9F4] p-3 text-[13px] ">
+                        <span>$</span>
+                        <input
+                          type="number"
+                          min="5"
+                          value={watchField.customerBudget}
+                          {...register("customerBudget")}
+                          className={`no-input-default-style border-none"} w-full appearance-none placeholder:font-bold`}
+                        />
+                      </div>
                     </div>
-                    <div className="flex items-center space-x-2 rounded-2xl bg-[#EBE9F4] p-3 text-[13px] ">
-                      <span>$</span>
-                      <input
-                        type="number"
-                        min="5"
-                        value={watchField.customerBudget}
-                        {...register("customerBudget")}
-                        className={`no-input-default-style border-none"} w-full appearance-none placeholder:font-bold`}
-                      />
-                    </div>
-                  </div>
 
                     {/* {errors && <div className="font-bold text-red-500">{errors.}</div>} */}
                     <div className="flex items-center justify-center space-x-3 lg:justify-end">
@@ -670,7 +666,6 @@ const EditTaskForm = ({ taskDetails, setShowEditModal }: TaskCardProps) => {
                 </div>
               </div>
             )}
-
           </form>
         </div>
       </div>
