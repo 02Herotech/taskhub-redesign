@@ -5,11 +5,13 @@ import {
 } from "@/types/services/invoice";
 import {
   AcceptInvoiceResponse,
+  BookingRequestResponse,
+  GetJobsByIdResponse,
   JobDataDetails,
   PaymentIntentResponse,
   RejectInvoiceResponse,
-  TaskDetails,
 } from "@/types/services/tasks";
+import { LIMIT_NINE } from "@/utils/constant";
 
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { getSession } from "next-auth/react";
@@ -97,7 +99,7 @@ export const booking = createApi({
         getRequest(`/all-receipts/${customerId}?size=${size}`),
       providesTags: ["Booking"],
     }),
-    getJobById: builder.query<JobDataDetails, number>({
+    getJobById: builder.query<GetJobsByIdResponse, number>({
       query: (jobId) => getRequest(`/job/${jobId}`),
       providesTags: ["Booking"],
     }),
@@ -160,6 +162,14 @@ export const booking = createApi({
         }),
       invalidatesTags: ["Booking"],
     }),
+    getBookingRequest: builder.query<
+      BookingRequestResponse,
+      { page: number; customerId: number }
+    >({
+      query: ({ page, customerId }) =>
+        getRequest(`/customer/${customerId}?page=${page}&size=${LIMIT_NINE}`),
+      providesTags: ["Booking"],
+    }),
   }),
 });
 
@@ -175,4 +185,5 @@ export const {
   useAcceptInvoiceMutation,
   useRejectInvoiceMutation,
   useRebookJobMutation,
+  useGetBookingRequestQuery,
 } = booking;

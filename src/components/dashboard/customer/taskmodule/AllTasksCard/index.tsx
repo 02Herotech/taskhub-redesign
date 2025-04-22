@@ -13,6 +13,7 @@ import EditTaskForm from "../EditTaskForm";
 import { useRouter } from "next/navigation";
 import { IoEye } from "react-icons/io5";
 import { Category } from '../../../../../types/blog/post';
+import { getBorderColor, getStatusColor } from "@/shared/statusbadge";
 
 interface TaskCardProps {
   task: TaskInfo;
@@ -39,35 +40,35 @@ const AllTasksCard = ({ task }: TaskCardProps) => {
     formattedDate = "Flexible";
   }
 
-  const getBorderColor = () => {
-    switch (task.taskStatus) {
-      case "ONGOING":
-        return "border-[#381F8C]"
-      case "COMPLETED":
-        return "border-[#22973C]"
-      case "OPEN":
-        return "border-[#F59315]"
-      case "Posted by me":
-        return "border-[#0887FF]"
-      default:
-        return "border-gray-300"
-    }
-  }
+  // const getBorderColor = () => {
+  //   switch (task.taskStatus) {
+  //     case "ONGOING":
+  //       return "border-[#381F8C]"
+  //     case "COMPLETED":
+  //       return "border-[#22973C]"
+  //     case "OPEN":
+  //       return "border-[#F59315]"
+  //     case "Posted by me":
+  //       return "border-[#0887FF]"
+  //     default:
+  //       return "border-gray-300"
+  //   }
+  // }
 
-  const getStatusColor = () => {
-    switch (task.taskStatus) {
-      case "ONGOING":
-        return "bg-indigo-100 text-indigo-800"
-      case "COMPLETED":
-        return "bg-green-100 text-green-800"
-      case "OPEN":
-        return "bg-orange-100 text-orange-800"
-      case "Posted by me":
-        return "bg-blue-100 text-blue-800"
-      default:
-        return "bg-gray-100 text-gray-800"
-    }
-  }
+  // const getStatusColor = () => {
+  //   switch (task.taskStatus) {
+  //     case "ONGOING":
+  //       return "bg-indigo-100 text-indigo-800"
+  //     case "COMPLETED":
+  //       return "bg-green-100 text-green-800"
+  //     case "OPEN":
+  //       return "bg-orange-100 text-orange-800"
+  //     case "Posted by me":
+  //       return "bg-blue-100 text-blue-800"
+  //     default:
+  //       return "bg-gray-100 text-gray-800"
+  //   }
+  // }
 
   // const handleTaskRoute = (status: string) => {
   //   console.log(status)
@@ -92,20 +93,19 @@ const AllTasksCard = ({ task }: TaskCardProps) => {
 
 
   return (
-    <div className={`relative cursor-pointer flex flex-col border-l-[12px]  shadow-[0px_-4px_132px_0px_#00000017] ${getBorderColor()} rounded-2xl shadow-sm bg-white overflow-hidden`}>
+    <div className={`relative cursor-pointer flex flex-col border-l-[12px]  shadow-[0px_-4px_132px_0px_#00000017] ${getBorderColor(task.taskStatus)} rounded-2xl shadow-sm bg-white overflow-hidden`}>
       <div className="p-4 pl-5 flex-1">
         <div className="mb-2">
           <span
-            className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor()}`}
+            className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(task.taskStatus)}`}
           >
             {task.taskStatus}
           </span>
         </div>
         <h3 className="text-xs cursor-pointer font-semibold text-[#0F052E]">{task.taskBriefDescription}</h3>
-        <p className="mt-1 text-sm text-[#110049] line-clamp-3">{task.taskDescription}...</p>
 
         <div className="mt-4 flex justify-between items-end">
-          <div className="flex flex-col space-y-1 text-xs text-gray-500">
+          <div className="flex flex-col space-y-2 text-xs text-gray-500">
             <div className="flex items-center">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -149,9 +149,7 @@ const AllTasksCard = ({ task }: TaskCardProps) => {
                 <span>{task.state}</span>
               </div>
             }
-            <div>
-              <span>{task.taskType}</span>
-            </div>
+
 
           </div>
 
