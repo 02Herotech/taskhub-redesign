@@ -106,7 +106,7 @@ declare interface ListingDataType2 {
   businessPictures: string[];
 }
 
-declare interface FilterDataStructureTypes {
+declare interface FilterDataStructure {
   category: string;
   location: string;
   typeOfService: string;

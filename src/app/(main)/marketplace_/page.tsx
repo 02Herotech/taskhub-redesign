@@ -1,5 +1,4 @@
 "use client";
-
 import React from "react";
 import { useGetCategoriesQuery } from "@/services/listings";
 import { useEffect, useState } from "react";
@@ -33,13 +32,25 @@ const categoryIcons = [
   MdLocalGroceryStore,
 ];
 
+const initialFilterData = {
+  category: "",
+  location: "",
+  typeOfService: "",
+  typeOfServiceDisplay: "",
+  minPrice: 5,
+  maxPrice: 1000,
+};
+
 function Page() {
-  const { data: categories, isLoading: isFetchingCategories } =
-    useGetCategoriesQuery();
+  const { data: categories, isLoading } = useGetCategoriesQuery();
 
   const session = useSession();
 
   const [firstTimePopup, setfirstTimePopup] = useState(false);
+
+  //To prevent 'MarketplaceFilter' component from throwing error
+  const [filterData, setFilterData] =
+    useState<FilterDataStructure>(initialFilterData);
 
   useEffect(() => {
     if (session.data && getCookie("firstLogin")) {
@@ -110,9 +121,13 @@ function Page() {
       <div
         className={`mx-auto flex max-w-screen-xl flex-col px-6 md:px-16 ${!isMarketPlacePage ? "pt-16 " : "lg:pt-32"}`}
       >
-        <MarketPlaceFilter categories={categories} />
+        <MarketPlaceFilter
+          filterDataStructure={filterData}
+          setFilterDataStructure={setFilterData}
+          categories={categories}
+        />
 
-        {isFetchingCategories && (
+        {isLoading && (
           <div className="flex min-h-80 items-center justify-center">
             <Loading />
           </div>

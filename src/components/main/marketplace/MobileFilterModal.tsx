@@ -1,18 +1,15 @@
 "use client";
 
 import { locationData, typeData } from "@/data/marketplace/data";
-import { RootState } from "@/store";
-import axios from "axios";
-import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React, { Dispatch, SetStateAction } from "react";
 import ReactSlider from "react-slider";
 
 interface ModalProp {
   isMobileFilterModalShown: boolean;
   categories?: CategoryType[];
   setIsMobileFilterModalShown: Dispatch<SetStateAction<boolean>>;
-  setfilterDataStructure: Dispatch<SetStateAction<FilterDataStructureTypes>>;
-  filterDataStructure: FilterDataStructureTypes;
+  setfilterDataStructure: Dispatch<SetStateAction<FilterDataStructure>>;
+  filterDataStructure: FilterDataStructure;
 }
 
 const MobileFilterModal = ({
@@ -22,7 +19,6 @@ const MobileFilterModal = ({
   setfilterDataStructure,
   filterDataStructure,
 }: ModalProp) => {
-
   return (
     <section
       className={`fixed left-0 top-0 z-50 flex h-screen w-screen items-center justify-center bg-black bg-opacity-70 transition-all duration-300 ${isMobileFilterModalShown ? "pointer-events-auto opacity-100 " : " pointer-events-none opacity-0"} `}
@@ -48,9 +44,9 @@ const MobileFilterModal = ({
               categories?.map((item) => (
                 <button
                   key={item.id}
-                  className={`flex w-fit items-center gap-2 rounded-md px-4 py-2 text-violet-normal transition-colors duration-300 ${filterDataStructure.category === item.categoryName ? "bg-violet-normal text-white" : "bg-transparent text-violet-normal"} `}
+                  className={`flex w-fit items-center gap-2 rounded-md px-4 py-2 text-violet-normal transition-colors duration-300 ${filterDataStructure?.category === item.categoryName ? "bg-violet-normal text-white" : "bg-transparent text-violet-normal"} `}
                   onClick={() => {
-                    filterDataStructure.category === item.categoryName
+                    filterDataStructure?.category === item.categoryName
                       ? setfilterDataStructure((prev) => ({
                           ...prev,
                           category: "",
@@ -77,7 +73,7 @@ const MobileFilterModal = ({
             {locationData.map((item) => (
               <button
                 key={item}
-                className={`flex w-fit items-center gap-2 rounded-md px-4 py-2 text-violet-normal transition-colors duration-300 ${filterDataStructure.location === item ? "bg-violet-normal text-white" : "bg-transparent text-violet-normal"} `}
+                className={`flex w-fit items-center gap-2 rounded-md px-4 py-2 text-violet-normal transition-colors duration-300 ${filterDataStructure?.location === item ? "bg-violet-normal text-white" : "bg-transparent text-violet-normal"} `}
                 onClick={() => {
                   filterDataStructure.location === item
                     ? setfilterDataStructure((prev) => ({
@@ -106,7 +102,7 @@ const MobileFilterModal = ({
             {typeData.map((item) => (
               <button
                 key={item.value}
-                className={`flex w-fit items-center gap-2 rounded-md px-4 py-2 text-violet-normal transition-colors duration-300 ${item.label === filterDataStructure.typeOfServiceDisplay ? "bg-violet-normal text-white" : "bg-transparent text-violet-normal"} `}
+                className={`flex w-fit items-center gap-2 rounded-md px-4 py-2 text-violet-normal transition-colors duration-300 ${item.label === filterDataStructure?.typeOfServiceDisplay ? "bg-violet-normal text-white" : "bg-transparent text-violet-normal"} `}
                 onClick={() => {
                   {
                     filterDataStructure.typeOfServiceDisplay === item.label
@@ -136,16 +132,16 @@ const MobileFilterModal = ({
             <p className="text-sm text-violet-normal ">Price range</p>
             <div className="min-w-64 p-4">
               <p className="mb-6 text-center font-bold text-violet-normal">
-                ${filterDataStructure.minPrice} - $
-                {filterDataStructure.maxPrice}
+                ${filterDataStructure?.minPrice} - $
+                {filterDataStructure?.maxPrice}
               </p>
               <ReactSlider
                 className="relative h-2 w-full rounded-md bg-[#FE9B07]"
                 thumbClassName="absolute h-6 w-6 bg-[#FE9B07] rounded-full cursor-grab transform -translate-y-1/2 top-1/2"
                 trackClassName="top-1/2 bg-[#FE9B07]"
                 value={[
-                  filterDataStructure.minPrice,
-                  filterDataStructure.maxPrice,
+                  filterDataStructure?.minPrice,
+                  filterDataStructure?.maxPrice,
                 ]}
                 min={5}
                 max={1000}
