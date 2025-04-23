@@ -491,7 +491,7 @@ const EditProfile = () => {
                     required: "You must be at least 18 years old",
                     validate: (value) => {
                       if (!value) return "Date of birth is required";
-                      
+
                       const enteredDate = new Date(value);
                       const today = new Date();
                       const minAllowedDate = new Date(
@@ -664,7 +664,7 @@ const EditProfile = () => {
                           id="suburb"
                           type="text"
                           className="w-full rounded-xl border-none bg-white p-2 text-slate-700 shadow-none outline-none"
-                          placeholder="Enter your address"
+                          placeholder="Enter a suburb"
                           value={inputValue}
                           onChange={(e) => {
                             if (currentSuburb) {
@@ -701,7 +701,10 @@ const EditProfile = () => {
                                 key={Math.random() * 12345}
                                 onClick={() => {
                                   setCurrentSuburb(suburb);
-                                  setInputValue(suburb.formattedAddress);
+                                  setInputValue(
+                                    `${suburb.name}, ${suburb.state.abbreviation}, Australia`,
+                                  );
+                                  //!
                                   field.onChange(suburb.name); // Update form value
                                   setValue("postcode", String(suburb.postcode)); // Auto-update postcode field
                                   setValue("state", suburb.state.name);
@@ -714,7 +717,9 @@ const EditProfile = () => {
                                   strokeWidth={1}
                                 />
                                 <span className="text-[#0F052E]">
-                                  {suburb.formattedAddress}
+                                  {suburb.name},{" "}
+                                  {suburb.locality ? `${suburb.locality},` : ""}{" "}
+                                  {suburb.state.name}, AUS
                                 </span>
                               </li>
                             ))}
