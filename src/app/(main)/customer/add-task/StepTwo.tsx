@@ -20,6 +20,7 @@ import Link from "next/link";
 import Image from "next/image";
 import Loading from "@/components/global/loading/page";
 import { setCookie, getCookie, deleteCookie } from "cookies-next";
+import { FaLocationDot } from "react-icons/fa6";
 
 type TaskType = "PHYSICAL_SERVICE" | "REMOTE_SERVICE";
 
@@ -48,6 +49,8 @@ function StepTwo() {
     resolver: zodResolver(stepTwoSchema),
     defaultValues: { customerBudget: customerBudget as unknown as number },
   });
+
+  const [showManualAddress, setShowManualAddress] = useState(false);
 
   const watchForm = watch();
 
@@ -95,11 +98,22 @@ function StepTwo() {
   const submitForm: SubmitHandler<StepTwoSchema> = async (data) => {
     //@ts-ignore
     clearErrors("root");
+
+    const { suburbName, postcode, state } = data;
     if (data.taskType == "PHYSICAL_SERVICE" && !currentSuburb) {
-      //@ts-ignore
-      setError("root", { message: "Please select a suburb" });
-      return;
+      if (!showManualAddress) {
+        //@ts-ignore
+        setError("root", { message: "Please select a suburb" });
+        return;
+      } else if (!suburbName || !postcode || !state) {
+        //@ts-ignore
+        setError("root", {
+          message: "Please enter your state, suburb and postcode",
+        });
+        return;
+      }
     }
+
     // Save all values from this step in browser memory
     dispatch(setTaskDetail({ key: "taskType", value: data.taskType }));
     dispatch(
@@ -113,6 +127,7 @@ function StepTwo() {
       setPopupState({ open: true, status: "authentication" });
       return;
     }
+
     // Information from previous step in redux
     const {
       taskBriefDescription,
@@ -121,6 +136,7 @@ function StepTwo() {
       taskDate,
       taskTime,
     } = savedTask;
+    
     // Information in current step from form state
     const { taskType, customerBudget } = data;
 
@@ -131,9 +147,9 @@ function StepTwo() {
       taskDate: taskDate ? formatDate(new Date(taskDate)) : "",
       taskTime: taskTime ? formatTimeFromDate(new Date(taskTime)) : "",
       taskType,
-      suburb: currentSuburb?.name || "",
-      state: currentSuburb?.state.name || "",
-      postCode: currentSuburb?.postcode || "",
+      suburb: currentSuburb?.name || suburbName || "",
+      state: currentSuburb?.state.name || state || "",
+      postCode: currentSuburb?.postcode || postcode || "",
       customerBudget,
       termAccepted: true,
     };
@@ -205,41 +221,46 @@ function StepTwo() {
           )}
           {watchForm.taskType === "PHYSICAL_SERVICE" && (
             <div className="relative !mt-4 w-full">
-              <label
-                htmlFor="suburb"
-                className="mb-2 block font-satoshiBold text-[13px] font-bold text-status-darkpurple lg:text-[16px]"
-              >
-                Where do you need this done{" "}
-                <span className="font-extrabold text-[#ff0000]">*</span>
-              </label>
-              <div
-                className={
-                  "flex items-center rounded-lg bg-[#EBE9F4] px-3 pl-2 focus-within:bg-white " +
-                  (errors.suburb
-                    ? "border border-[#ff0000] outline-[#FF0000]"
-                    : "border-primary outline-none focus-within:border")
-                }
-              >
-                <CiLocationOn fill="#76757A61" size={22} />
-                <input
-                  id="suburb"
-                  type="text"
-                  className="-ml-2 block w-full appearance-none bg-transparent p-3 placeholder-[#76757A61] outline-none placeholder:font-satoshiMedium"
-                  placeholder="Enter a suburb"
-                  autoComplete="off"
-                  {...register("suburb", {
-                    onChange: (e) => {
-                      if (currentSuburb) {
-                        setCurrentSuburb(null);
-                        const enteredInput = e.target.value.slice(-1);
-                        e.target.value = enteredInput;
-                        setValue("suburb", enteredInput);
-                      }
-                      setValue("suburb", e.target.value);
-                    },
-                  })}
-                />
-              </div>
+              {!showManualAddress && (
+                <>
+                  <label
+                    htmlFor="suburb"
+                    className="mb-2 block font-satoshiBold text-[13px] font-bold text-status-darkpurple lg:text-[16px]"
+                  >
+                    Where do you need this done{" "}
+                    <span className="font-extrabold text-[#ff0000]">*</span>
+                  </label>
+                  <div
+                    className={
+                      "flex items-center rounded-lg bg-[#EBE9F4] px-3 pl-2 focus-within:bg-white " +
+                      (errors.suburb
+                        ? "border border-[#ff0000] outline-[#FF0000]"
+                        : "border-primary outline-none focus-within:border")
+                    }
+                  >
+                    <CiLocationOn fill="#76757A61" size={22} />
+                    <input
+                      id="suburb"
+                      type="text"
+                      className="-ml-2 block w-full appearance-none bg-transparent p-3 placeholder-[#76757A61] outline-none placeholder:font-satoshiMedium"
+                      placeholder="Enter a suburb"
+                      autoComplete="off"
+                      {...register("suburb", {
+                        onChange: (e) => {
+                          if (currentSuburb) {
+                            setCurrentSuburb(null);
+                            const enteredInput = e.target.value.slice(-1);
+                            e.target.value = enteredInput;
+                            setValue("suburb", enteredInput);
+                          }
+                          setValue("suburb", e.target.value);
+                        },
+                      })}
+                    />
+                  </div>
+                </>
+              )}
+              {/* Autocomplete dropdown  */}
               <div className="absolute left-0 z-10 w-full bg-white">
                 {isLoading && (
                   <p className="py-2 text-center font-satoshiMedium text-[#76757A61]">
@@ -252,7 +273,7 @@ function StepTwo() {
                   </p>
                 )}
                 {suburbList.length > 1 && (
-                  <ul className="roundeed-lg max-h-52 overflow-y-auto overflow-x-hidden">
+                  <ul className="max-h-52 overflow-y-auto overflow-x-hidden rounded-lg">
                     {suburbList.map((suburb) => (
                       <li
                         className="flex cursor-pointer items-center gap-1 bg-white px-4 py-3 text-[13px]"
@@ -280,10 +301,89 @@ function StepTwo() {
                     ))}
                   </ul>
                 )}
+                {watchForm.suburb && !currentSuburb && !showManualAddress && (
+                  <div
+                    className="flex max-w-sm cursor-pointer items-center gap-3 p-2 font-satoshiBold font-bold shadow-sm"
+                    onClick={() => {
+                      setShowManualAddress(true);
+                      setSuburbList([]);
+                    }}
+                  >
+                    <FaLocationDot color="#2D1970" size={25} />
+                    <div>
+                      <h6 className="">Can&apos;t find your address?</h6>
+                      <p className="font-satoshiMedium text-sm text-[#4E5158]">
+                        Enter manually{" "}
+                        <span className="text-primary">here</span>
+                      </p>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           )}
         </div>
+
+        {/* Manual address input */}
+        {showManualAddress && (
+          <div className="grid grid-cols-2 gap-2">
+            <div className="col-span-2 mb-3">
+              <label
+                htmlFor="state"
+                className="mb-2 block font-satoshiBold text-[13px] font-bold text-status-darkpurple lg:text-[16px]"
+              >
+                State / Territory
+                <span className="font-extrabold text-[#ff0000]">*</span>
+              </label>
+              <div className="rounded-lg bg-[#EBE9F4] px-3 pl-2">
+                <input
+                  id="state"
+                  type="text"
+                  className="-ml-2 block w-full appearance-none bg-transparent p-3 placeholder-[#76757A61] outline-none placeholder:font-satoshiMedium"
+                  placeholder="Queensland"
+                  {...register("state")}
+                />
+              </div>
+            </div>
+            <div>
+              <label
+                htmlFor="postcode"
+                className="mb-2 block font-satoshiBold text-[13px] font-bold text-status-darkpurple lg:text-[16px]"
+              >
+                Post Code
+                <span className="font-extrabold text-[#ff0000]">*</span>
+              </label>
+              <div className="rounded-lg bg-[#EBE9F4] px-3 pl-2">
+                <input
+                  id="postcode"
+                  type="text"
+                  className="-ml-2 block w-full appearance-none bg-transparent p-3 placeholder-[#76757A61] outline-none placeholder:font-satoshiMedium"
+                  placeholder="4280"
+                  {...register("postcode")}
+                />
+              </div>
+            </div>
+            <div>
+              <label
+                htmlFor="suburb"
+                className="mb-2 block font-satoshiBold text-[13px] font-bold text-status-darkpurple lg:text-[16px]"
+              >
+                Suburb
+                <span className="font-extrabold text-[#ff0000]">*</span>
+              </label>
+              <div className="rounded-lg bg-[#EBE9F4] px-3 pl-2">
+                <input
+                  id="suburb"
+                  type="text"
+                  className="-ml-2 block w-full appearance-none bg-transparent p-3 placeholder-[#76757A61] outline-none placeholder:font-satoshiMedium"
+                  placeholder="Flagstone"
+                  {...register("suburbName")}
+                />
+              </div>
+            </div>
+          </div>
+        )}
+
         <div className="relative grid space-y-4 font-bold text-status-darkpurple">
           <div className="flex items-center justify-between">
             <label className="text-[13px] lg:text-[16px]">
@@ -309,6 +409,13 @@ function StepTwo() {
           <p className="absolute left-3 top-8 md:top-9">$</p>
         </div>
 
+        {/* @ts-ignore  */}
+        {errors.root && (
+          <div className="font-satoshiMedium text-red-600">
+            {/* @ts-ignore  */}
+            {errors.root.message}
+          </div>
+        )}
         <div className="flex flex-wrap-reverse justify-between gap-3">
           <button
             type="submit"
@@ -326,11 +433,6 @@ function StepTwo() {
             Back
           </button>
         </div>
-        {/* @ts-ignore  */}
-        {errors.root && (
-          // @ts-ignore
-          <div className="text-red-500">{errors.root.message}</div>
-        )}
       </motion.form>
       <PopupTwo
         isOpen={popupState.open && popupState.status === "authentication"}
