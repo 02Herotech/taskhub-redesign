@@ -2,10 +2,8 @@
 
 import { createSlug } from "@/lib/utils";
 import { truncateText } from "@/utils/marketplace";
-import axios from "axios";
 import Image from "next/image";
 import Link from "next/link";
-import React, { useState, useEffect } from "react";
 import { BsStarFill } from "react-icons/bs";
 import { FaRegUser, FaStar } from "react-icons/fa6";
 
@@ -54,7 +52,7 @@ const SingleListingCard = ({
 
   return (
     <Link
-      href={`/marketplace/${listingId}-${createSlug(businessName)}`}
+      href={`/marketplace_/${listingId}-${createSlug(businessName)}`}
       onClick={() => handlestoreListingId(listingId, posterId)}
       className="group transition-transform duration-300 hover:-translate-y-2 "
     >

@@ -2,62 +2,73 @@ import { FiSearch } from "react-icons/fi";
 import axios from "axios";
 import {
   filterMarketPlace,
-  resetFilter,
   setFilterLoadingState,
   setFilterParams,
 } from "@/store/Features/marketplace";
 import { BsTriangleFill, BsX } from "react-icons/bs";
 import { FormEvent, useEffect, useState } from "react";
-import { fetchAllMarketplaseCategories } from "@/lib/marketplace";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store";
-import { updateCategories } from "@/store/Features/marketplace";
 import ReactSlider from "react-slider";
 import { GiSettingsKnobs } from "react-icons/gi";
-import MobileFilterModal from "../MobileFilterModal";
+import MobileFilterModal from "@/components/main/marketplace/MobileFilterModal";
 import { truncateText } from "@/utils/marketplace";
-import { locationData, typeData } from "@/data/marketplace/data";
+import { usePathname, useRouter } from "next/navigation";
+import { Dispatch, SetStateAction } from "react";
 
-const MarketPlaceFilter = () => {
+const locationData = [
+  "Western Australia",
+  "Northern Territory",
+  "South Australia",
+  "Queensland",
+  "New South Wales",
+  "Victoria",
+  "Tasmania",
+  "Australian Capital Territory",
+];
+
+const typeData = [
+  { label: "Remote", value: "REMOTE_SERVICE" },
+  { label: "Physical", value: "PHYSICAL_SERVICE" },
+];
+
+type Props = {
+  categories?: CategoryType[];
+  filterDataStructure?: FilterDataStructure;
+  setFilterDataStructure?: Dispatch<SetStateAction<FilterDataStructure>>;
+  resetFilters?: () => void;
+};
+
+/**
+ * Filter component for changing query params...
+ * This would either appear at the top of marketplace page or the page showing the categories
+ */
+function MarketPlaceFilter({
+  categories,
+  filterDataStructure,
+  setFilterDataStructure,
+  resetFilters,
+}: Props) {
+  const isMarketPlacePage = usePathname() === "/marketplace_";
   const dispatch = useDispatch();
-  const { categories, isFiltering } = useSelector(
-    (state: RootState) => state.market,
-  );
+  const { isFiltering } = useSelector((state: RootState) => state.market);
   const [categorySearchQuery, setCategorySearchQuery] = useState("");
   const [filteredCategories, setFilteredCategories] = useState(categories);
   const [isDropdownOpen, setIsDropdownOpen] = useState({
     isOpened: false,
     category: "",
   });
-  const [filterDataStructure, setfilterDataStructure] =
-    useState<FilterDataStructureTypes>({
-      category: "",
-      location: "",
-      typeOfService: "",
-      typeOfServiceDisplay: "",
-      minPrice: 5,
-      maxPrice: 1000,
-    });
 
-  const [isMounted, setIsMounted] = useState(false);
+  const router = useRouter();
+
   const [searchInputData, setSearchInputData] = useState("");
 
   const [isMobileFilterModalShown, setIsMobileFilterModalShown] =
     useState(false);
 
   useEffect(() => {
-    const fetchData = async () => {
-      const categoryData: CategoryType[] =
-        await fetchAllMarketplaseCategories();
-      dispatch(updateCategories(categoryData));
-    };
-    fetchData();
-    // eslint-disable-next-line
-  }, []);
-
-  useEffect(() => {
-    if (categories.length > 0) {
-      const filtered = categories.filter((category) =>
+    if (categories?.length > 0) {
+      const filtered = categories?.filter((category) =>
         category.categoryName
           .toLowerCase()
           .includes(categorySearchQuery.toLowerCase()),
@@ -66,14 +77,7 @@ const MarketPlaceFilter = () => {
     }
   }, [categorySearchQuery, categories]);
 
-  useEffect(() => {
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth",
-    });
-  }, [isFiltering]);
-
-  // done and working
+  // Shop category dropdown
   const handleShowDropdown = (category: string) => {
     if (isDropdownOpen.category === category && isDropdownOpen.isOpened) {
       setIsDropdownOpen((prev) => ({ ...prev, isOpened: false, category }));
@@ -82,7 +86,7 @@ const MarketPlaceFilter = () => {
     }
   };
 
-  //  handled and working
+  // Search Input API Request
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     try {
@@ -93,92 +97,22 @@ const MarketPlaceFilter = () => {
       const { data } = await axios.get(url);
       dispatch(setFilterParams(`?text=${searchInputData}`));
       dispatch(
-        filterMarketPlace({ data: data.content, totalPages: data.totalPages }),
-      );
-    } catch (error: any) {
-      console.log(error.response?.data || error);
-    } finally {
-      dispatch(setFilterLoadingState(false));
-    }
-  };
-
-  const handleFilter = async () => {
-    try {
-      dispatch(setFilterLoadingState(true));
-      const { category, location, typeOfService, minPrice, maxPrice } =
-        filterDataStructure;
-      let url = `${process.env.NEXT_PUBLIC_API_URL}/listing/filter-listings/0?`;
-      const params = [];
-
-      if (category) {
-        params.push(`category=${category}`);
-      }
-      if (location) {
-        params.push(`location=${location}`);
-      }
-      if (typeOfService) {
-        params.push(`typeOfService=${typeOfService}`);
-      }
-      if (minPrice > 5) {
-        params.push(`minPrice=${minPrice}`);
-      }
-      if (maxPrice < 1000) {
-        params.push(`maxPrice=${maxPrice}`);
-      }
-      if (params.length > 0) {
-        url += params.join("&");
-      }
-      const response = await axios.get(url);
-      dispatch(
         filterMarketPlace({
-          data: response.data.content,
-          totalPages: response.data.totalPages,
+          data: data.content,
+          totalPages: data.totalPages,
         }),
       );
-      dispatch(setFilterParams(`?${params.join("&")}`));
     } catch (error: any) {
-      console.error(error.response.data || error);
+      console.error(error.response?.data || error);
     } finally {
       dispatch(setFilterLoadingState(false));
     }
   };
 
-  const handleResetFilters = () => {
-    setfilterDataStructure({
-      category: "",
-      location: "",
-      typeOfService: "",
-      minPrice: 5,
-      maxPrice: 1000,
-      typeOfServiceDisplay: "",
-    });
-    dispatch(resetFilter());
-  };
-
-  useEffect(() => {
-    if (isMounted) {
-      if (
-        filterDataStructure.category ||
-        filterDataStructure.location ||
-        filterDataStructure.typeOfService ||
-        filterDataStructure.typeOfServiceDisplay ||
-        filterDataStructure.minPrice !== 5 ||
-        filterDataStructure.maxPrice !== 1000
-      ) {
-        handleFilter();
-      } else {
-        dispatch(resetFilter());
-      }
-    } else {
-      setIsMounted(true);
-    }
-    // eslint-disable-next-line
-  }, [filterDataStructure]);
-
   return (
-    <div className=" flex flex-col space-y-4 pt-5 lg:space-y-8 lg:py-10">
+    <div className="flex flex-col space-y-4 pt-5 lg:space-y-8 lg:py-10">
       <div className=" flex flex-col space-y-8">
-        {!isFiltering && (
+        {isMarketPlacePage && (
           <div className="flex flex-col space-y-2">
             <h1 className="text-2xl font-bold text-violet-darkHover md:text-3xl">
               Our Various Categories
@@ -191,15 +125,16 @@ const MarketPlaceFilter = () => {
 
         <div className="relative flex justify-center md:hidden ">
           <MobileFilterModal
+            categories={categories}
             isMobileFilterModalShown={isMobileFilterModalShown}
             setIsMobileFilterModalShown={setIsMobileFilterModalShown}
-            setfilterDataStructure={setfilterDataStructure}
+            setfilterDataStructure={setFilterDataStructure}
             filterDataStructure={filterDataStructure}
-            // handleResetFilters={handleResetFilters}
+            // handleResetFilters={resetFilters}
           />
           <div className="flex gap-4">
             <button
-              className={`flex  items-center justify-center gap-3 rounded-full border border-violet-normal bg-violet-light px-6 py-2 font-bold text-violet-normal ${isFiltering ? "w-auto" : "w-full min-w-72"}`}
+              className={`flex items-center justify-center gap-3 rounded-full border border-violet-normal bg-violet-light px-6 py-2 font-bold text-violet-normal ${isFiltering ? "w-auto" : "w-full min-w-72"}`}
               onClick={() => setIsMobileFilterModalShown(true)}
             >
               <span>
@@ -210,7 +145,7 @@ const MarketPlaceFilter = () => {
             {isFiltering && (
               <button
                 className="min-w-40 flex-grow cursor-pointer rounded-3xl bg-orange-normal px-4 py-2 text-base font-bold text-white"
-                onClick={handleResetFilters}
+                onClick={resetFilters}
               >
                 Reset filters
               </button>
@@ -219,113 +154,128 @@ const MarketPlaceFilter = () => {
         </div>
 
         <section className="flex flex-col gap-5">
-          <div className={`max-md:hidden  ${isFiltering ? "order-2" : ""} `}>
+          <div
+            className={`max-md:hidden ${!isMarketPlacePage ? "order-2" : ""} `}
+          >
             <div className="flex flex-wrap gap-4 space-x-2 text-xs lg:space-x-6 ">
               <button
                 className="cursor-pointer rounded-3xl bg-violet-normal px-4 py-2 text-base  font-bold text-white"
-                onClick={() => {
-                  handleResetFilters();
-                }}
+                onClick={resetFilters}
               >
                 All
               </button>
-              {/* -------------------------------- */}
+
               {/* Category */}
-              <div className="relative">
-                {filterDataStructure.category !== "" && (
-                  <button
-                    className="pointer-events-auto absolute -right-1 -top-1 flex size-6 items-center justify-center rounded-full bg-violet-normal text-white"
-                    onClick={() => {
-                      setfilterDataStructure((prev) => ({
-                        ...prev,
-                        category: "",
-                      }));
-                    }}
-                  >
-                    <BsX />
-                  </button>
-                )}
-                <button
-                  className="flex items-center gap-2 rounded-3xl border border-violet-normal bg-violet-light px-4 py-2 text-base font-bold text-violet-normal transition-colors duration-300 hover:bg-violet-200"
-                  onClick={() => handleShowDropdown("category")}
-                >
-                  <div
-                    className={`fixed left-0 top-0 h-screen w-screen ${
-                      isDropdownOpen.isOpened &&
-                      isDropdownOpen.category === "category"
-                        ? "block"
-                        : "hidden"
-                    }`}
-                    onClick={() => handleShowDropdown("category")}
-                  />
-                  {filterDataStructure.category === ""
-                    ? "Category"
-                    : truncateText(filterDataStructure.category, 12)}
-                  <span>
-                    <BsTriangleFill
-                      fill="rgb(56 31 140)"
-                      className="size-2 rotate-[60deg] text-violet-normal"
-                    />
-                  </span>
-                </button>
-                <div
-                  className={`small-scrollbar absolute top-[calc(100%+1rem)] flex max-h-0 min-w-[700px] flex-col rounded-md bg-violet-50 transition-all duration-300 ${
-                    isDropdownOpen.category === "category" &&
-                    isDropdownOpen.isOpened
-                      ? "max-h-[500px] overflow-y-auto border border-slate-200"
-                      : "max-h-0 overflow-hidden"
-                  }`}
-                >
-                  {/* Category Search Input */}
-                  <div className="sticky top-0 z-10 bg-violet-50 p-2">
-                    <div className="relative mb-2">
-                      <input
-                        type="text"
-                        value={categorySearchQuery}
-                        onChange={(e) => setCategorySearchQuery(e.target.value)}
-                        placeholder="Search categories..."
-                        className="w-full rounded-md border border-violet-200 p-4 text-violet-normal placeholder-violet-300 placeholder:text-lg focus:border-violet-normal focus:outline-none"
-                      />
-                      <FiSearch className="absolute right-3 top-1/2 size-6 -translate-y-1/2 text-violet-300" />
-                    </div>
-                  </div>
-
-                  {/* Filtered Categories */}
-                  <div className="grid grid-cols-2 gap-2 py-4">
-                    {filteredCategories.map((item) => (
-                      <button
-                        className="relative z-10 whitespace-nowrap rounded-md px-6 py-3 text-left text-base font-medium text-violet-normal transition-colors duration-300 hover:text-tc-orange"
-                        key={item.id}
-                        onClick={() => {
-                          handleShowDropdown("category");
-                          setfilterDataStructure((prev) => ({
-                            ...prev,
-                            category: item.categoryName,
-                          }));
-                          setCategorySearchQuery("");
-                        }}
-                      >
-                        {item.categoryName}
-                      </button>
-                    ))}
-                  </div>
-
-                  {/* No Results Message */}
-                  {filteredCategories.length === 0 && (
-                    <div className="px-8 py-4 text-center text-violet-normal">
-                      No categories found
-                    </div>
+              {isMarketPlacePage && (
+                <div className="relative">
+                  {filterDataStructure?.category !== "" && (
+                    <button
+                      className="pointer-events-auto absolute -right-1 -top-1 flex size-6 items-center justify-center rounded-full bg-violet-normal text-white"
+                      onClick={() => {
+                        setFilterDataStructure((prev) => ({
+                          ...prev,
+                          category: "",
+                        }));
+                      }}
+                    >
+                      <BsX />
+                    </button>
                   )}
+                  <button
+                    className="flex items-center gap-2 rounded-3xl border border-violet-normal bg-violet-light px-4 py-2 text-base font-bold text-violet-normal transition-colors duration-300 hover:bg-violet-200"
+                    onClick={() => handleShowDropdown("category")}
+                  >
+                    <div
+                      className={`fixed left-0 top-0 h-screen w-screen ${
+                        isDropdownOpen.isOpened &&
+                        isDropdownOpen.category === "category"
+                          ? "block"
+                          : "hidden"
+                      }`}
+                      onClick={() => handleShowDropdown("category")}
+                    />
+                    {filterDataStructure?.category === ""
+                      ? "Category"
+                      : truncateText(filterDataStructure?.category, 12)}
+                    <span>
+                      <BsTriangleFill
+                        fill="rgb(56 31 140)"
+                        className="size-2 rotate-[60deg] text-violet-normal"
+                      />
+                    </span>
+                  </button>
+                  <div
+                    className={`small-scrollbar absolute top-[calc(100%+1rem)] z-10 flex max-h-0 min-w-[700px] flex-col rounded-md bg-violet-50 transition-all duration-300 ${
+                      isDropdownOpen.category === "category" &&
+                      isDropdownOpen.isOpened
+                        ? "max-h-[500px] overflow-y-auto border border-slate-200"
+                        : "max-h-0 overflow-hidden"
+                    }`}
+                  >
+                    {/* Category Search Input */}
+                    <div className="sticky top-0 z-20 bg-violet-50 p-2">
+                      <div className="relative mb-2">
+                        <input
+                          type="text"
+                          value={categorySearchQuery}
+                          onChange={(e) =>
+                            setCategorySearchQuery(e.target.value)
+                          }
+                          placeholder="Search categories..."
+                          className="w-full rounded-md border border-violet-200 p-4 text-violet-normal placeholder-violet-300 placeholder:text-lg focus:border-violet-normal focus:outline-none"
+                        />
+                        <FiSearch className="absolute right-3 top-1/2 size-6 -translate-y-1/2 text-violet-300" />
+                      </div>
+                    </div>
+
+                    {/* Filtered Categories */}
+                    <ul
+                      className="grid grid-cols-2 gap-2 py-4"
+                      aria-label="Available categories of services"
+                    >
+                      {filteredCategories?.map((item) => (
+                        <li key={item.id}>
+                          <button
+                            className="relative z-10 whitespace-nowrap rounded-md px-6 py-3 text-left text-base font-medium text-violet-normal transition-colors duration-300 hover:text-tc-orange"
+                            onClick={() => {
+                              handleShowDropdown("category");
+                              if (isMarketPlacePage) {
+                                router.push(
+                                  "/marketplace_/category?selected=" +
+                                    item.categoryName,
+                                );
+                                return;
+                              }
+                              setFilterDataStructure((prev) => ({
+                                ...prev,
+                                category: item.categoryName,
+                              }));
+                              setCategorySearchQuery("");
+                            }}
+                          >
+                            {item.categoryName}
+                          </button>
+                        </li>
+                      ))}
+                    </ul>
+
+                    {/* No Results Message */}
+                    {filteredCategories?.length === 0 && (
+                      <div className="px-8 py-4 text-center text-violet-normal">
+                        No categories found
+                      </div>
+                    )}
+                  </div>
                 </div>
-              </div>
-              {/* -------------------------------- */}
-              {/* location */}
+              )}
+
+              {/* Location */}
               <div className="relative">
-                {filterDataStructure.location !== "" && (
+                {filterDataStructure?.location !== "" && (
                   <button
                     className="absolute -right-1 -top-1 flex size-6 items-center justify-center rounded-full bg-violet-normal text-white"
                     onClick={() =>
-                      setfilterDataStructure((prev) => ({
+                      setFilterDataStructure((prev) => ({
                         ...prev,
                         location: "",
                       }))
@@ -335,16 +285,16 @@ const MarketPlaceFilter = () => {
                   </button>
                 )}
                 <button
-                  className=" flex items-center gap-2 rounded-3xl border border-violet-normal  bg-violet-light px-4 py-2 text-base font-bold text-violet-normal transition-colors duration-300 hover:bg-violet-200 "
+                  className="flex items-center gap-2 rounded-3xl border border-violet-normal bg-violet-light px-4 py-2 text-base font-bold text-violet-normal transition-colors duration-300 hover:bg-violet-200"
                   onClick={() => handleShowDropdown("location")}
                 >
                   <div
                     className={`fixed left-0 top-0 h-screen w-screen ${isDropdownOpen.isOpened && isDropdownOpen.category === "location" ? "block" : "hidden"} `}
                     onClick={() => handleShowDropdown("location")}
                   ></div>
-                  {filterDataStructure.location === ""
+                  {filterDataStructure?.location === ""
                     ? "Location"
-                    : truncateText(filterDataStructure.location, 12)}
+                    : truncateText(filterDataStructure?.location, 12)}
                   <span>
                     <BsTriangleFill
                       fill="rgb(56 31 140)"
@@ -353,7 +303,7 @@ const MarketPlaceFilter = () => {
                   </span>
                 </button>
                 <div
-                  className={`small-scrollbar absolute top-[calc(100%+1rem)] flex max-h-0 min-w-full flex-col rounded-md bg-violet-50 transition-all duration-300 ${isDropdownOpen.category === "location" && isDropdownOpen.isOpened ? "max-h-64 overflow-y-auto border border-slate-200 " : "max-h-0  overflow-hidden "} `}
+                  className={`small-scrollbar absolute top-[calc(100%+1rem)] z-10 flex max-h-0 min-w-full flex-col rounded-md bg-violet-50 transition-all duration-300 ${isDropdownOpen.category === "location" && isDropdownOpen.isOpened ? "max-h-64 overflow-y-auto border border-slate-200 " : "max-h-0  overflow-hidden "}`}
                 >
                   {locationData.map((item, index) => (
                     <button
@@ -361,7 +311,11 @@ const MarketPlaceFilter = () => {
                       key={index}
                       onClick={() => {
                         handleShowDropdown("location");
-                        setfilterDataStructure((prev) => ({
+                        if (isMarketPlacePage) {
+                          router.push("/marketplace_/category?selected=All");
+                          return;
+                        }
+                        setFilterDataStructure((prev) => ({
                           ...prev,
                           location: item,
                         }));
@@ -372,13 +326,14 @@ const MarketPlaceFilter = () => {
                   ))}
                 </div>
               </div>
+
               {/* Type of service */}
               <div className="relative">
-                {filterDataStructure.typeOfService !== "" && (
+                {filterDataStructure?.typeOfService !== "" && (
                   <button
                     className="pointer-events-auto absolute -right-1 -top-1 flex size-6 items-center justify-center rounded-full bg-violet-normal text-white "
                     onClick={() => {
-                      setfilterDataStructure((prev) => ({
+                      setFilterDataStructure((prev) => ({
                         ...prev,
                         typeOfService: "",
                         typeOfServiceDisplay: "",
@@ -396,10 +351,10 @@ const MarketPlaceFilter = () => {
                     className={`fixed left-0 top-0 h-screen w-screen ${isDropdownOpen.isOpened && isDropdownOpen.category === "type" ? "block" : "hidden"} `}
                     onClick={() => handleShowDropdown("type")}
                   ></div>
-                  {filterDataStructure.typeOfServiceDisplay === ""
+                  {filterDataStructure?.typeOfServiceDisplay === ""
                     ? "Type of service"
                     : truncateText(
-                        filterDataStructure.typeOfServiceDisplay,
+                        filterDataStructure?.typeOfServiceDisplay,
                         12,
                       )}
                   <span>
@@ -418,7 +373,11 @@ const MarketPlaceFilter = () => {
                       key={index}
                       onClick={() => {
                         handleShowDropdown("type");
-                        setfilterDataStructure((prev) => ({
+                        if (isMarketPlacePage) {
+                          router.push("/marketplace_/category?selected=All");
+                          return;
+                        }
+                        setFilterDataStructure((prev) => ({
                           ...prev,
                           typeOfService: item.value,
                           typeOfServiceDisplay: item.label,
@@ -430,15 +389,15 @@ const MarketPlaceFilter = () => {
                   ))}
                 </div>
               </div>
-              {/* ----------------------------------------- */}
+
               {/* Pricing */}
               <div className="relative">
-                {(filterDataStructure.minPrice !== 5 ||
-                  filterDataStructure.maxPrice !== 1000) && (
+                {(filterDataStructure?.minPrice !== 5 ||
+                  filterDataStructure?.maxPrice !== 1000) && (
                   <button
                     className="absolute -right-1 -top-1 flex size-6 items-center justify-center rounded-full bg-violet-normal text-white"
                     onClick={() =>
-                      setfilterDataStructure((prev) => ({
+                      setFilterDataStructure((prev) => ({
                         ...prev,
                         minPrice: 5,
                         maxPrice: 1000,
@@ -470,22 +429,26 @@ const MarketPlaceFilter = () => {
                   <div className="space-y-4 p-4">
                     <div className="min-w-64 p-4">
                       <div className="mb-6 text-center text-2xl font-bold text-violet-normal">
-                        ${filterDataStructure.minPrice} - $
-                        {filterDataStructure.maxPrice}
+                        ${filterDataStructure?.minPrice} - $
+                        {filterDataStructure?.maxPrice}
                       </div>
                       <ReactSlider
                         className="relative h-2 w-full rounded-md bg-[#FE9B07]"
                         thumbClassName="absolute h-6 w-6 bg-[#FE9B07] rounded-full cursor-grab transform -translate-y-1/2 top-1/2"
                         trackClassName="top-1/2 bg-[#FE9B07]"
                         value={[
-                          filterDataStructure.minPrice,
-                          filterDataStructure.maxPrice,
+                          filterDataStructure?.minPrice,
+                          filterDataStructure?.maxPrice,
                         ]}
                         min={5}
                         max={1000}
                         step={5}
                         onChange={(newValues: number[]) => {
-                          setfilterDataStructure((prev) => ({
+                          if (isMarketPlacePage) {
+                            router.push("/marketplace_/category?selected=All");
+                            return;
+                          }
+                          setFilterDataStructure((prev) => ({
                             ...prev,
                             minPrice: newValues[0],
                             maxPrice: newValues[1],
@@ -498,13 +461,17 @@ const MarketPlaceFilter = () => {
                       className="my-1 w-full rounded-full border border-orange-normal p-3 text-center outline-none "
                       max={99999}
                       min={5}
-                      onChange={(event) =>
-                        setfilterDataStructure((prev) => ({
+                      onChange={(event) => {
+                        if (isMarketPlacePage) {
+                          router.replace("/marketplace_/category?selected=All");
+                          return;
+                        }
+                        setFilterDataStructure((prev) => ({
                           ...prev,
                           minPrice: Number(event.target.value),
                           maxPrice: Number(event.target.value),
-                        }))
-                      }
+                        }));
+                      }}
                     />
                     <div className="flex items-center gap-4 ">
                       <button
@@ -520,7 +487,7 @@ const MarketPlaceFilter = () => {
 
               <button
                 className="min-w-40 cursor-pointer rounded-3xl bg-orange-normal px-4 py-2 text-base  font-bold text-white"
-                onClick={handleResetFilters}
+                onClick={resetFilters}
               >
                 Reset filters
               </button>
@@ -566,6 +533,6 @@ const MarketPlaceFilter = () => {
       </div>
     </div>
   );
-};
+}
 
 export default MarketPlaceFilter;

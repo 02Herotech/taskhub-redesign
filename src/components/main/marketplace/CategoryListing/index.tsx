@@ -153,6 +153,7 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
   };
 
   useEffect(() => {
+    // if(isFiltering) {}
     handleFetchCategory(page.currentPage);
   }, [category, page.currentPage]);
 
@@ -299,7 +300,7 @@ const CategoryListing: React.FC<CategoryListingProps> = ({ category }) => {
               {buttonNumbers.map((item) => (
                 <button
                   key={item}
-                  className={` ${item === page.currentPage + 1 ? " bg-violet-normal  text-white" : ""} rounded-md px-3.5 py-1 hover:bg-violet-200 `}
+                  className={`${item === page.currentPage + 1 ? " bg-violet-normal  text-white" : ""} rounded-md px-3.5 py-1 hover:bg-violet-200 `}
                   onClick={() =>
                     setPage((prev) => ({
                       ...prev,
