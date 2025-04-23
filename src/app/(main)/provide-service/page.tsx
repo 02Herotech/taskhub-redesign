@@ -541,68 +541,63 @@ const ProvideService: React.FC = () => {
     event.preventDefault();
     setLoading(true);
     if (validateField2()) {
-      if (isEnabled) {
-        try {
-          let finalTask = { ...task };
-
-          if (isOpen && activeButtonIndex === 1) {
-            const type = "REMOTE_SERVICE";
-            finalTask = { ...finalTask, taskType: type };
-          } else {
-            finalTask = {
-              ...finalTask,
-              taskType: "PHYSICAL_SERVICE",
-              suburb: currentSuburb?.name || suburbName,
-              postCode: currentSuburb ? String(currentSuburb?.postcode) : postCode,
-              state: currentSuburb?.state?.name || stateName,
-            };
-          }
-
-          if (selectedDays) {
-            finalTask = { ...finalTask, availableDays: selectedDays };
-          }
-
-          finalTask = { ...finalTask, negotiable: negotiable };
-
-          await axios.post(
-            `${process.env.NEXT_PUBLIC_API_URL}/listing/create-listing?userId=${id}`,
-            finalTask,
-            { headers: { "Content-Type": "multipart/form-data" } },
-          );
-          setTask({
-            listingTitle: "",
-            listingDescription: "",
-            planOneDescription: "",
-            planTwoDescription: "",
-            planThreeDescription: "",
-            image1: null,
-            image2: null,
-            image3: null,
-            image4: null,
-            taskType: "",
-            planOnePrice: null,
-            planTwoPrice: null,
-            planThreePrice: null,
-            availableDays: [],
-            suburb: "",
-            postCode: "",
-            state: "",
-            categoryId: null,
-            subCategoryId: null,
-            negotiable: false,
-          });
-          setIsSuccessPopupOpen(true);
-        } catch (error: any) {
-          console.error("Error submitting form:", error);
-          setErrorMessage(
-            error.response?.data.message ||
-              "An error occurred, please try again",
-          );
-        } finally {
-          setLoading(false);
+      try {
+        let finalTask = { ...task };
+        if (isOpen && activeButtonIndex === 1) {
+          const type = "REMOTE_SERVICE";
+          finalTask = { ...finalTask, taskType: type };
+        } else {
+          finalTask = {
+            ...finalTask,
+            taskType: "PHYSICAL_SERVICE",
+            suburb: currentSuburb?.name || suburbName,
+            postCode: currentSuburb
+              ? String(currentSuburb?.postcode)
+              : postCode,
+            state: currentSuburb?.state?.name || stateName,
+          };
         }
-      } else {
-        setIsEnabledPopup(true);
+
+        if (selectedDays) {
+          finalTask = { ...finalTask, availableDays: selectedDays };
+        }
+
+        finalTask = { ...finalTask, negotiable: negotiable };
+
+        await axios.post(
+          `${process.env.NEXT_PUBLIC_API_URL}/listing/create-listing?userId=${id}`,
+          finalTask,
+          { headers: { "Content-Type": "multipart/form-data" } },
+        );
+        setTask({
+          listingTitle: "",
+          listingDescription: "",
+          planOneDescription: "",
+          planTwoDescription: "",
+          planThreeDescription: "",
+          image1: null,
+          image2: null,
+          image3: null,
+          image4: null,
+          taskType: "",
+          planOnePrice: null,
+          planTwoPrice: null,
+          planThreePrice: null,
+          availableDays: [],
+          suburb: "",
+          postCode: "",
+          state: "",
+          categoryId: null,
+          subCategoryId: null,
+          negotiable: false,
+        });
+        setIsSuccessPopupOpen(true);
+      } catch (error: any) {
+        console.error("Error submitting form:", error);
+        setErrorMessage(
+          error.response?.data.message || "An error occurred, please try again",
+        );
+      } finally {
         setLoading(false);
       }
     } else {
