@@ -85,30 +85,6 @@ function MarketPlaceFilter({
       setIsDropdownOpen((prev) => ({ ...prev, isOpened: true, category }));
     }
   };
-
-  // Search Input API Request
-  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    try {
-      dispatch(setFilterLoadingState(true));
-      const url =
-        `${process.env.NEXT_PUBLIC_API_URL}/listing/text/0?text=` +
-        searchInputData;
-      const { data } = await axios.get(url);
-      dispatch(setFilterParams(`?text=${searchInputData}`));
-      dispatch(
-        filterMarketPlace({
-          data: data.content,
-          totalPages: data.totalPages,
-        }),
-      );
-    } catch (error: any) {
-      console.error(error.response?.data || error);
-    } finally {
-      dispatch(setFilterLoadingState(false));
-    }
-  };
-
   return (
     <div className="flex flex-col space-y-4 pt-5 lg:space-y-8 lg:py-10">
       <div className=" flex flex-col space-y-8">
@@ -508,7 +484,12 @@ function MarketPlaceFilter({
             </div>
 
             <form
-              onSubmit={(event) => handleSubmit(event)}
+              onSubmit={(event) => {
+                event.preventDefault();
+                router.push(
+                  `/marketplace_/search?searchText=${searchInputData}`,
+                );
+              }}
               className="flex w-full items-center gap-2  lg:max-w-sm"
             >
               <div className="w-full">

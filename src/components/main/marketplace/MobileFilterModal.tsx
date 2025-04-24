@@ -146,13 +146,13 @@ const MobileFilterModal = ({
                 min={5}
                 max={1000}
                 step={5}
-                onChange={(newValues: number[]) =>
+                onChange={(newValues: number[]) => {
                   setfilterDataStructure((prev) => ({
                     ...prev,
                     minPrice: newValues[0],
                     maxPrice: newValues[1],
-                  }))
-                }
+                  }));
+                }}
               />
             </div>
             {/* <input
