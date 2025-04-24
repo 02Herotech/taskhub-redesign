@@ -1049,6 +1049,9 @@ const ProvideService: React.FC = () => {
                                 setSuburb(
                                   `${suburb.name}, ${suburb.state.abbreviation}, Australia`,
                                 );
+                                setSuburb(
+                                  `${suburb.name}, ${suburb.state.abbreviation}, Australia`,
+                                );
                                 setSuburbList([]);
                               }}
                             >
@@ -1058,6 +1061,9 @@ const ProvideService: React.FC = () => {
                                 strokeWidth={1}
                               />
                               <span className="text-[#0F052E]">
+                                {suburb.name},{" "}
+                                {suburb.locality ? `${suburb.locality},` : ""}{" "}
+                                {suburb.state.name}, AUS
                                 {suburb.name},{" "}
                                 {suburb.locality ? `${suburb.locality},` : ""}{" "}
                                 {suburb.state.name}, AUS

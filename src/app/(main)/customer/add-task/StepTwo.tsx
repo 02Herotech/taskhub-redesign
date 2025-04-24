@@ -284,6 +284,10 @@ function StepTwo() {
                             "suburb",
                             `${suburb.name}, ${suburb.state.abbreviation}, Australia`,
                           );
+                          setValue(
+                            "suburb",
+                            `${suburb.name}, ${suburb.state.abbreviation}, Australia`,
+                          );
                           setSuburbList([]);
                         }}
                       >
@@ -293,6 +297,9 @@ function StepTwo() {
                           strokeWidth={1}
                         />
                         <span className="text-[#0F052E]">
+                          {suburb.name},{" "}
+                          {suburb.locality ? `${suburb.locality},` : ""}{" "}
+                          {suburb.state.name}, AUS
                           {suburb.name},{" "}
                           {suburb.locality ? `${suburb.locality},` : ""}{" "}
                           {suburb.state.name}, AUS
