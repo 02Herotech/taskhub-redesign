@@ -187,7 +187,7 @@ const EditProfile = () => {
             : "No Bio needed for customer",
           abn: isServiceProvider ? data.abn || "" : "",
         });
-        setSuburbList([])
+        setSuburbList([]);
       } catch (error) {
         console.error("Error fetching user data:", error);
         setErr("Failed to load user data. Please try again.");
@@ -203,7 +203,6 @@ const EditProfile = () => {
     const dd = String(date.getDate()).padStart(2, "0");
     return `${yyyy}-${mm}-${dd}`;
   };
-  // console.log(currentSuburb);
 
   const handleSubmitUserData: SubmitHandler<UserDataType> = async (data) => {
     if (isServiceProvider && !isValidABN) {
@@ -635,18 +634,18 @@ const EditProfile = () => {
                           </div>
 
                           {/* Suburb Dropdown */}
-                          {suburbList.length > 0 && (
-                            <div className="absolute left-0 z-10 w-full rounded-lg bg-white shadow-lg">
-                              {isLoading && (
-                                <p className="py-2 text-center font-satoshiMedium text-[#76757A61]">
-                                  Loading...
-                                </p>
-                              )}
-                              {suburbError && !isLoading && (
-                                <p className="py-2 text-center font-satoshiMedium text-red-600">
-                                  Error occurred while loading suburb data
-                                </p>
-                              )}
+                          <div className="absolute left-0 z-10 w-full rounded-lg bg-white shadow-lg">
+                            {isLoading && (
+                              <p className="py-2 text-center font-satoshiMedium text-[#76757A61]">
+                                Loading...
+                              </p>
+                            )}
+                            {suburbError && !isLoading && (
+                              <p className="py-2 text-center font-satoshiMedium text-red-600">
+                                Error occurred while loading suburb data
+                              </p>
+                            )}
+                            {suburbList.length > 0 && (
                               <ul className="max-h-52 overflow-y-auto overflow-x-hidden">
                                 {suburbList.map((suburb) => (
                                   <li
@@ -678,26 +677,26 @@ const EditProfile = () => {
                                   </li>
                                 ))}
                               </ul>
-                              <div
-                                className="flex max-w-sm cursor-pointer items-center gap-3 p-2 font-satoshiBold font-bold shadow-sm"
-                                onClick={() => {
-                                  setShowManualAddress(true);
-                                  setSuburbList([]);
-                                }}
-                              >
-                                <FaLocationDot color="#2D1970" size={25} />
-                                <div>
-                                  <h6 className="">
-                                    Can&apos;t find your address?
-                                  </h6>
-                                  <p className="font-satoshiMedium text-sm text-[#4E5158]">
-                                    Enter manually{" "}
-                                    <span className="text-primary">here</span>
-                                  </p>
-                                </div>
+                            )}
+                            <div
+                              className="flex max-w-sm cursor-pointer items-center gap-3 p-2 font-satoshiBold font-bold shadow-sm"
+                              onClick={() => {
+                                setShowManualAddress(true);
+                                setSuburbList([]);
+                              }}
+                            >
+                              <FaLocationDot color="#2D1970" size={25} />
+                              <div>
+                                <h6 className="">
+                                  Can&apos;t find your address?
+                                </h6>
+                                <p className="font-satoshiMedium text-sm text-[#4E5158]">
+                                  Enter manually{" "}
+                                  <span className="text-primary">here</span>
+                                </p>
                               </div>
                             </div>
-                          )}
+                          </div>
                         </div>
                       </>
                     )}
