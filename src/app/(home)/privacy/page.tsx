@@ -5,19 +5,19 @@ export default function PrivacyPage() {
   return (
     <div className=" p-6 bg-[#EBE9F4]">
       <div className=" font-manrope  text-[#190E3F] max-w-3xl mx-auto mt-14 p-2 md:p-6">
-        <h1 className="text-xl font-bold text-[#381F8C] font-clashSemiBold mb-4">Oloja Hub Privacy Policy</h1>
+        <h1 className="text-xl font-bold text-[#381F8C] font-clashSemiBold mb-4"><span className="font-bold">Oloja Hub</span> Privacy Policy</h1>
 
         <p className="mb-3">Effective Date: April 23, 2025</p>
 
         <p className="mb-4">
-          Oloja Hub manages the information that we collect from you in accordance with applicable privacy legislation.
-          This Privacy Policy explains how Oloja Hub collects, uses, shares, and handles your personal data and sets out
-          the rights and obligations of both you and Oloja Hub in relation to your personal data.
+          <span className="font-bold">Oloja Hub</span> manages the information that we collect from you in accordance with applicable privacy legislation.
+          This Privacy Policy explains how <span className="font-bold">Oloja Hub</span> collects, uses, shares, and handles your personal data and sets out
+          the rights and obligations of both you and <span className="font-bold">Oloja Hub</span> in relation to your personal data.
         </p>
 
         <p className="mb-6">
           By accessing   <Link href="http://www.oloja.com.au" target="_blank" className="underline text-blue-500">www.oloja.com.au</Link> or using our mobile applications (together, the "Services"), you accept and
-          agree to the Terms and Conditions of Oloja Hub's User Agreement ("User Agreement") and acknowledge that your
+          agree to the <Link href={"/terms-and-condition"} className="underline text-blue-500">Terms and Conditions</Link> of <span className="font-bold">Oloja Hub's</span> User Agreement ("User Agreement") and acknowledge that your
           personal data may be collected, used, and disclosed in accordance with this Privacy Policy. If you do not
           agree with the terms of this Privacy Policy, please do not use the Services.
         </p>
@@ -27,7 +27,7 @@ export default function PrivacyPage() {
             <p className="font-bold">1. Collection of Your Personal Data</p>
             <p className="font-bold mt-2">Information We Collect Directly from You</p>
             <p className="mt-1">
-              Oloja Hub collects personal data when you register with us, submit a task, or engage with other services.
+              <span className="font-bold"> Oloja Hub</span> collects personal data when you register with us, submit a task, or engage with other services.
               This includes:
             </p>
             <ul className="list-disc pl-8 space-y-2 mt-2">
@@ -89,7 +89,7 @@ export default function PrivacyPage() {
 
           <div>
             <p className="font-bold">2. How We Use Your Personal Data</p>
-            <p className="mt-1">Oloja Hub uses your personal data for the following purposes:</p>
+            <p className="mt-1"><span className="font-bold">Oloja Hub</span> uses your personal data for the following purposes:</p>
             <ul className="list-disc pl-8 space-y-2 mt-2">
               <li>
                 <p>
@@ -148,7 +148,7 @@ export default function PrivacyPage() {
               </li>
               <li>
                 <p>
-                  <span className="font-bold">Business Transactions:</span> If Oloja Hub is involved in a merger,
+                  <span className="font-bold">Business Transactions:</span> If <span className="font-bold">Oloja Hub</span> is involved in a merger,
                   acquisition, or sale of assets, your personal data may be transferred as part of the transaction.
                 </p>
               </li>
@@ -158,9 +158,9 @@ export default function PrivacyPage() {
           <div>
             <p className="font-bold">4. Payment Information</p>
             <p className="mt-1">
-              Oloja Hub does not directly process payments or store sensitive financial information such as bank
-              accounts or credit card details. All payment transactions are processed securely through a third-party
-              payment system provider. By using our Services, you acknowledge and agree that your payment information,
+              <span className="font-bold"> Oloja Hub</span> does <span className="font-bold">not</span> directly process payments or store sensitive financial information such as bank
+              accounts or credit card details. All payment transactions are processed securely through a <span className="font-bold">third-party
+                payment system provider</span>. By using our Services, you acknowledge and agree that your payment information,
               including credit card or bank details, will be collected, stored, and processed by our trusted third-party
               payment provider in accordance with their privacy and security policies. We do not store or have access to
               your financial details, and any payment-related data is handled by the third-party provider under their
@@ -180,7 +180,7 @@ export default function PrivacyPage() {
 
           <div>
             <p className="font-bold">6. Cookies and Similar Technologies</p>
-            <p className="mt-1">Oloja Hub uses cookies and similar tracking technologies for various purposes:</p>
+            <p className="mt-1"><span className="font-bold">Oloja Hub</span> uses cookies and similar tracking technologies for various purposes:</p>
             <ul className="list-disc pl-8 space-y-2 mt-2">
               <li>
                 <p>
@@ -243,13 +243,15 @@ export default function PrivacyPage() {
                 </p>
               </li>
             </ul>
-            <p className="mt-2">To exercise these rights, please contact us at operations@jacinthsolutions.com.au.</p>
+            <p className="mt-2">To exercise these rights, please contact us at  <Link className="underline font-bold text-blue-500" href="mailto:operations@jacinthsolutions.com.au">
+              operations@jacinthsolutions.com.au
+            </Link> </p>
           </div>
 
           <div>
             <p className="font-bold">8. What Other Information Users Can See About You</p>
             <p className="mt-1">
-              You are not anonymous to us when you log into the Services or post any content (including tasks, items to
+              You are <span className="font-bold">not anonymous</span> to us when you log into the Services or post any content (including tasks, items to
               be supplied, bids, comments, or feedback) on the Services or any associated forum.
             </p>
             <p className="mt-2">When you:</p>
@@ -265,13 +267,13 @@ export default function PrivacyPage() {
               </li>
             </ul>
             <p className="mt-2">
-              Your user ID and all the material that you post is visible and searchable to us, other Oloja Hub users,
+              Your <span className="font-bold">user ID</span> and all the material that you post is visible and searchable to us, other <span className="font-bold">Oloja Hub</span> users,
               and is also publicly available to other internet users. We strongly encourage you to use caution and
               discretion when posting and carefully consider whether and what to post or how you identify yourself on
               the Services.
             </p>
             <p className="mt-2">
-              Oloja Hub does not in any way control, and does not accept any responsibility or liability whatsoever for,
+              <span className="font-bold"> Oloja Hub</span> does not in any way control, and does not accept any responsibility or liability whatsoever for,
               the disclosure or use of personal data which is voluntarily posted by you in a publicly accessible area of
               the Services.
             </p>
@@ -306,13 +308,13 @@ export default function PrivacyPage() {
           </div>
 
           <div>
-            <p className="font-bold">12. Contact Us</p>
-            <p className="mt-1">
-              If you have any questions about this Privacy Policy or the manner in which we process your personal data,
-              please contact us:
+            <p>
+              <span className="font-bold uppercase text-xl">12. Contact Information</span> 
             </p>
-            <p className="mt-2">Oloja Hub Operations</p>
-            <p>Email:<Link href="mailto:operations@jacinthsolutions.com.au">
+            <p> If you have any questions or concerns about
+              these T&C, you can contact us at:</p>
+            <p className="mt-1 font-bold">Oloja Hub Operations</p>
+            <p>Email: <Link className="underline text-blue-500" href="mailto:operations@jacinthsolutions.com.au">
               operations@jacinthsolutions.com.au
             </Link></p>
             <p>Location: Queensland, Australia</p>
@@ -324,7 +326,7 @@ export default function PrivacyPage() {
             <p className="mt-1">
               This Privacy Policy is also governed by the Privacy Act 1988 (Cth). If you wish to access, correct, or
               delete your personal data, you can do so by contacting us directly. If you have concerns, you may lodge a
-              complaint with the Office of the Australian Information Commissioner (OAIC).
+              complaint with the <span className="font-bold">Office of the Australian Information Commissioner (OAIC).</span>
             </p>
           </div>
         </div>
