@@ -49,7 +49,7 @@ function MarketPlaceFilter({
   setFilterDataStructure,
   resetFilters,
 }: Props) {
-  const isMarketPlacePage = usePathname() === "/marketplace_";
+  const isMarketPlacePage = usePathname() === "/marketplace";
   const dispatch = useDispatch();
   const { isFiltering } = useSelector((state: RootState) => state.market);
   const [categorySearchQuery, setCategorySearchQuery] = useState("");
@@ -217,7 +217,7 @@ function MarketPlaceFilter({
                               handleShowDropdown("category");
                               if (isMarketPlacePage) {
                                 router.push(
-                                  "/marketplace_/category?selected=" +
+                                  "/marketplace/category?selected=" +
                                     item.categoryName,
                                 );
                                 return;
@@ -288,7 +288,7 @@ function MarketPlaceFilter({
                       onClick={() => {
                         handleShowDropdown("location");
                         if (isMarketPlacePage) {
-                          router.push("/marketplace_/category?selected=All");
+                          router.push("/marketplace/category?selected=All");
                           return;
                         }
                         setFilterDataStructure((prev) => ({
@@ -350,7 +350,7 @@ function MarketPlaceFilter({
                       onClick={() => {
                         handleShowDropdown("type");
                         if (isMarketPlacePage) {
-                          router.push("/marketplace_/category?selected=All");
+                          router.push("/marketplace/category?selected=All");
                           return;
                         }
                         setFilterDataStructure((prev) => ({
@@ -421,7 +421,7 @@ function MarketPlaceFilter({
                         step={5}
                         onChange={(newValues: number[]) => {
                           if (isMarketPlacePage) {
-                            router.push("/marketplace_/category?selected=All");
+                            router.push("/marketplace/category?selected=All");
                             return;
                           }
                           setFilterDataStructure((prev) => ({
@@ -439,7 +439,7 @@ function MarketPlaceFilter({
                       min={5}
                       onChange={(event) => {
                         if (isMarketPlacePage) {
-                          router.replace("/marketplace_/category?selected=All");
+                          router.replace("/marketplace/category?selected=All");
                           return;
                         }
                         setFilterDataStructure((prev) => ({
@@ -487,7 +487,7 @@ function MarketPlaceFilter({
               onSubmit={(event) => {
                 event.preventDefault();
                 router.push(
-                  `/marketplace_/search?searchText=${searchInputData}`,
+                  `/marketplace/search?searchText=${searchInputData}`,
                 );
               }}
               className="flex w-full items-center gap-2  lg:max-w-sm"

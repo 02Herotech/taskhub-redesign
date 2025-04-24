@@ -16,7 +16,7 @@ type Props = {
 
 /**Renders all listing and pagination */
 function Category({ setPage, category, data, isLoading, error }: Props) {
-  const isMarketPlacePage = usePathname() === "/marketplace_";
+  const isMarketPlacePage = usePathname() === "/marketplace";
   return (
     <>
       {(!data ||
@@ -31,8 +31,8 @@ function Category({ setPage, category, data, isLoading, error }: Props) {
                 <Link
                   href={
                     isMarketPlacePage
-                      ? "/marketplace_/category?selected=" + category
-                      : "/marketplace_"
+                      ? "/marketplace/category?selected=" + category
+                      : "/marketplace"
                   }
                   className="flex items-center gap-2 border-b-2 border-violet-normal text-sm font-bold  text-violet-normal"
                 >
