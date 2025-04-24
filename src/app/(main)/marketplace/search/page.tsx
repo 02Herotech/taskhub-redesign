@@ -14,8 +14,11 @@ function Page() {
   const [searchInput, setSearchInput] = useState(searchText_);
   const [searchText, setSearchText] = useState(searchText_);
   const [pageNumber, setPageNumber] = useState(0);
-  const { data, isLoading, error, isFetching } =
-    useGetListingsBySearchQuery(searchText);
+  const { data, isLoading, error, isFetching } = useGetListingsBySearchQuery({
+    pageSize: 12,
+    pageNumber,
+    text: searchText,
+  });
 
   const updateQuery = (newValue: string) => {
     const params = new URLSearchParams(searchParams.toString());
@@ -101,13 +104,13 @@ function Page() {
           ))}
       </ul>
 
-      {/* {data && (
+      {data && (
         <Pagination
           pageNumber={data?.pageNumber}
-          setPage={setPage}
+          setPage={setPageNumber}
           totalPages={data?.totalPages}
         />
-      )} */}
+      )}
     </div>
   );
 }
