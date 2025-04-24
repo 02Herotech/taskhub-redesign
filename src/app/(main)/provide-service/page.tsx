@@ -543,7 +543,6 @@ const ProvideService: React.FC = () => {
     if (validateField2()) {
       try {
         let finalTask = { ...task };
-
         if (isOpen && activeButtonIndex === 1) {
           const type = "REMOTE_SERVICE";
           finalTask = { ...finalTask, taskType: type };
