@@ -187,6 +187,7 @@ const EditProfile = () => {
             : "No Bio needed for customer",
           abn: isServiceProvider ? data.abn || "" : "",
         });
+        setSuburbList([])
       } catch (error) {
         console.error("Error fetching user data:", error);
         setErr("Failed to load user data. Please try again.");
