@@ -1,13 +1,7 @@
 import { FiSearch } from "react-icons/fi";
-import axios from "axios";
-import {
-  filterMarketPlace,
-  setFilterLoadingState,
-  setFilterParams,
-} from "@/store/Features/marketplace";
 import { BsTriangleFill, BsX } from "react-icons/bs";
-import { FormEvent, useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import { RootState } from "@/store";
 import ReactSlider from "react-slider";
 import { GiSettingsKnobs } from "react-icons/gi";
@@ -50,7 +44,6 @@ function MarketPlaceFilter({
   resetFilters,
 }: Props) {
   const isMarketPlacePage = usePathname() === "/marketplace";
-  const dispatch = useDispatch();
   const { isFiltering } = useSelector((state: RootState) => state.market);
   const [categorySearchQuery, setCategorySearchQuery] = useState("");
   const [filteredCategories, setFilteredCategories] = useState(categories);

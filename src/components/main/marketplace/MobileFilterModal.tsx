@@ -1,8 +1,8 @@
 "use client";
-
 import { locationData, typeData } from "@/data/marketplace/data";
 import React, { Dispatch, SetStateAction } from "react";
 import ReactSlider from "react-slider";
+import { useRouter, usePathname } from "next/navigation";
 
 interface ModalProp {
   isMobileFilterModalShown: boolean;
@@ -19,6 +19,9 @@ const MobileFilterModal = ({
   setfilterDataStructure,
   filterDataStructure,
 }: ModalProp) => {
+  const router = useRouter();
+  const isMarketPlacePage = usePathname() === "/marketplace";
+
   return (
     <section
       className={`fixed left-0 top-0 z-50 flex h-screen w-screen items-center justify-center bg-black bg-opacity-70 transition-all duration-300 ${isMobileFilterModalShown ? "pointer-events-auto opacity-100 " : " pointer-events-none opacity-0"} `}
@@ -46,6 +49,12 @@ const MobileFilterModal = ({
                   key={item.id}
                   className={`flex w-fit items-center gap-2 rounded-md px-4 py-2 text-violet-normal transition-colors duration-300 ${filterDataStructure?.category === item.categoryName ? "bg-violet-normal text-white" : "bg-transparent text-violet-normal"} `}
                   onClick={() => {
+                    if (isMarketPlacePage) {
+                      router.push(
+                        "/marketplace/category?selected=" + item.categoryName,
+                      );
+                      return;
+                    }
                     filterDataStructure?.category === item.categoryName
                       ? setfilterDataStructure((prev) => ({
                           ...prev,
@@ -75,6 +84,10 @@ const MobileFilterModal = ({
                 key={item}
                 className={`flex w-fit items-center gap-2 rounded-md px-4 py-2 text-violet-normal transition-colors duration-300 ${filterDataStructure?.location === item ? "bg-violet-normal text-white" : "bg-transparent text-violet-normal"} `}
                 onClick={() => {
+                  if (isMarketPlacePage) {
+                    router.push("/marketplace/category?selected=" + item);
+                    return;
+                  }
                   filterDataStructure.location === item
                     ? setfilterDataStructure((prev) => ({
                         ...prev,
@@ -104,6 +117,10 @@ const MobileFilterModal = ({
                 key={item.value}
                 className={`flex w-fit items-center gap-2 rounded-md px-4 py-2 text-violet-normal transition-colors duration-300 ${item.label === filterDataStructure?.typeOfServiceDisplay ? "bg-violet-normal text-white" : "bg-transparent text-violet-normal"} `}
                 onClick={() => {
+                  if (isMarketPlacePage) {
+                    router.push("/marketplace/category?selected=All");
+                    return;
+                  }
                   {
                     filterDataStructure.typeOfServiceDisplay === item.label
                       ? setfilterDataStructure((prev) => ({
@@ -147,6 +164,10 @@ const MobileFilterModal = ({
                 max={1000}
                 step={5}
                 onChange={(newValues: number[]) => {
+                  if (isMarketPlacePage) {
+                    router.push("/marketplace/category?selected=All");
+                    return;
+                  }
                   setfilterDataStructure((prev) => ({
                     ...prev,
                     minPrice: newValues[0],
@@ -155,19 +176,6 @@ const MobileFilterModal = ({
                 }}
               />
             </div>
-            {/* <input
-              type="number"
-              className="my-1 w-full rounded-full border border-orange-normal p-3 text-center outline-none "
-              max={99999}
-              min={5}
-              onChange={(event) =>
-                setfilterDataStructure((prev) => ({
-                  ...prev,
-                  minPrice: Number(event.target.value),
-                  maxPrice: Number(event.target.value),
-                }))
-              }
-            /> */}
           </div>
         </div>
 

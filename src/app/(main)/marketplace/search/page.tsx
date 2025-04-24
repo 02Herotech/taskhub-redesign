@@ -13,6 +13,7 @@ function Page() {
   const searchText_ = searchParams.get("searchText");
   const [searchInput, setSearchInput] = useState(searchText_);
   const [searchText, setSearchText] = useState(searchText_);
+  const [pageNumber, setPageNumber] = useState(0);
   const { data, isLoading, error, isFetching } =
     useGetListingsBySearchQuery(searchText);
 
