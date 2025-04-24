@@ -14,8 +14,11 @@ function Page() {
   const [searchInput, setSearchInput] = useState(searchText_);
   const [searchText, setSearchText] = useState(searchText_);
   const [pageNumber, setPageNumber] = useState(0);
-  const { data, isLoading, error, isFetching } =
-    useGetListingsBySearchQuery(searchText);
+  const { data, isLoading, error, isFetching } = useGetListingsBySearchQuery({
+    pageSize: 12,
+    pageNumber,
+    text: searchText,
+  });
 
   const updateQuery = (newValue: string) => {
     const params = new URLSearchParams(searchParams.toString());
@@ -43,6 +46,7 @@ function Page() {
             const searchInput_ = searchInput.trim();
             if (searchInput_.length < 3) return;
             setSearchText(searchInput_);
+            setPageNumber(0)
             updateQuery(searchInput_);
           }}
         >
@@ -75,7 +79,13 @@ function Page() {
         </div>
       )}
 
-      {data?.content.length < 1 && !isFetching && <div>No search results</div>}
+      {data?.content.length < 1 && !isFetching && (
+        <div className="min-h-[40vh]">
+          <h4 className="font-satoshiBold text-4xl font-bold">
+            No search results
+          </h4>
+        </div>
+      )}
 
       <ul
         aria-label="List of services"
@@ -101,13 +111,13 @@ function Page() {
           ))}
       </ul>
 
-      {/* {data && (
+      {data && (
         <Pagination
           pageNumber={data?.pageNumber}
-          setPage={setPage}
+          setPage={setPageNumber}
           totalPages={data?.totalPages}
         />
-      )} */}
+      )}
     </div>
   );
 }

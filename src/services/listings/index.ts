@@ -57,6 +57,8 @@ type FilterServiceParams = {
 
 type AllServiceParams = Pick<FilterServiceParams, "pageNumber" | "size">;
 
+type SearchParams = { pageNumber: number; pageSize: number; text: string };
+
 export const listing = createApi({
   reducerPath: "listing",
   tagTypes: ["Listing"],
@@ -79,8 +81,8 @@ export const listing = createApi({
     getCategories: builder.query<CategoryType[], void>({
       query: () => getRequest("/util/all-categories"),
     }),
-    getListingsBySearch: builder.query<ServicesResult, string>({
-      query: (text) => getRequest(`/listing/text/0?text=${text}`),
+    getListingsBySearch: builder.query<ServicesResult, SearchParams>({
+      query: (params) => getRequest("/listing/text", params),
     }),
   }),
 });
@@ -90,5 +92,5 @@ export const {
   useGetCategoriesQuery,
   useGetAllServicesQuery,
   useGetServicesByFiltersQuery,
-  useGetListingsBySearchQuery
+  useGetListingsBySearchQuery,
 } = listing;

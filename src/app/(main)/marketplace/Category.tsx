@@ -87,7 +87,7 @@ function Category({ setPage, category, data, isLoading, error }: Props) {
           </ul>
 
           {/* Pagination (Display when not on marketplace page) */}
-          {data && (
+          {data && !isMarketPlacePage && (
             <Pagination
               pageNumber={data?.pageNumber}
               setPage={setPage}
