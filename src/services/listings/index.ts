@@ -79,6 +79,9 @@ export const listing = createApi({
     getCategories: builder.query<CategoryType[], void>({
       query: () => getRequest("/util/all-categories"),
     }),
+    getListingsBySearch: builder.query<ServicesResult, string>({
+      query: (text) => getRequest(`/listing/text/0?text=${text}`),
+    }),
   }),
 });
 
@@ -87,4 +90,5 @@ export const {
   useGetCategoriesQuery,
   useGetAllServicesQuery,
   useGetServicesByFiltersQuery,
+  useGetListingsBySearchQuery
 } = listing;
