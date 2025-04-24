@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 /* eslint-disable react/no-unescaped-entities */
 export default function PrivacyPage() {
   return (
@@ -14,7 +16,7 @@ export default function PrivacyPage() {
         </p>
 
         <p className="mb-6">
-          By accessing www.oloja.com.au or using our mobile applications (together, the "Services"), you accept and
+          By accessing   <Link href="http://www.oloja.com.au" target="_blank" className="underline text-blue-500">www.oloja.com.au</Link> or using our mobile applications (together, the "Services"), you accept and
           agree to the Terms and Conditions of Oloja Hub's User Agreement ("User Agreement") and acknowledge that your
           personal data may be collected, used, and disclosed in accordance with this Privacy Policy. If you do not
           agree with the terms of this Privacy Policy, please do not use the Services.
@@ -310,7 +312,9 @@ export default function PrivacyPage() {
               please contact us:
             </p>
             <p className="mt-2">Oloja Hub Operations</p>
-            <p>Email: operations@jacinthsolutions.com.au</p>
+            <p>Email:<Link href="mailto:operations@jacinthsolutions.com.au">
+              operations@jacinthsolutions.com.au
+            </Link></p>
             <p>Location: Queensland, Australia</p>
           </div>
 
