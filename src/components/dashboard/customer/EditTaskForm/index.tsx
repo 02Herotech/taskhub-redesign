@@ -597,7 +597,7 @@ const EditTaskForm = ({ task, setShowEditModal }: TaskCardProps) => {
                         <input
                           id="suburb"
                           type="text"
-                          placeholder="Enter your address"
+                          placeholder="Enter a suburb"
                           autoComplete="off"
                           className="w-full cursor-default rounded-2xl bg-violet-light p-3 pl-4 text-[13px] outline-none"
                           {...register("suburb", {
@@ -634,7 +634,10 @@ const EditTaskForm = ({ task, setShowEditModal }: TaskCardProps) => {
                                 key={Math.random() * 12345}
                                 onClick={() => {
                                   setCurrentSuburb(suburb);
-                                  setValue("suburb", suburb.formattedAddress);
+                                  setValue(
+                                    "suburb",
+                                    `${suburb.name}, ${suburb.state.abbreviation}, Australia`,
+                                  );
                                   setSuburbList([]);
                                 }}
                               >
@@ -644,7 +647,9 @@ const EditTaskForm = ({ task, setShowEditModal }: TaskCardProps) => {
                                   strokeWidth={1}
                                 />
                                 <span className="text-[#0F052E]">
-                                  {suburb.formattedAddress}
+                                  {suburb.name},{" "}
+                                  {suburb.locality ? `${suburb.locality},` : ""}{" "}
+                                  {suburb.state.name}, AUS
                                 </span>
                               </li>
                             ))}

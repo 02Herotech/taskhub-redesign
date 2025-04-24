@@ -1018,7 +1018,7 @@ const ProvideService: React.FC = () => {
                         id="suburb"
                         type="text"
                         className="-ml-2 block w-full appearance-none bg-transparent p-3 placeholder-[#76757A61] outline-none placeholder:font-satoshiMedium"
-                        placeholder="Enter your address"
+                        placeholder="Enter a suburb"
                         value={suburb}
                         autoComplete="off"
                         onChange={(e) => {
@@ -1051,7 +1051,9 @@ const ProvideService: React.FC = () => {
                               key={Math.random() * 12345}
                               onClick={() => {
                                 setCurrentSuburb(suburb);
-                                setSuburb(suburb.formattedAddress);
+                                setSuburb(
+                                  `${suburb.name}, ${suburb.state.abbreviation}, Australia`,
+                                );
                                 setSuburbList([]);
                               }}
                             >
@@ -1061,7 +1063,9 @@ const ProvideService: React.FC = () => {
                                 strokeWidth={1}
                               />
                               <span className="text-[#0F052E]">
-                                {suburb.formattedAddress}
+                                {suburb.name},{" "}
+                                {suburb.locality ? `${suburb.locality},` : ""}{" "}
+                                {suburb.state.name}, AUS
                               </span>
                             </li>
                           ))}

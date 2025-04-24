@@ -701,7 +701,9 @@ const EditProfile = () => {
                                 key={Math.random() * 12345}
                                 onClick={() => {
                                   setCurrentSuburb(suburb);
-                                  setInputValue(suburb.formattedAddress);
+                                  setInputValue(
+                                    `${suburb.name}, ${suburb.state.abbreviation}, Australia`,
+                                  );
                                   field.onChange(suburb.name); // Update form value
                                   setValue("postcode", String(suburb.postcode)); // Auto-update postcode field
                                   setValue("state", suburb.state.name);
@@ -714,7 +716,9 @@ const EditProfile = () => {
                                   strokeWidth={1}
                                 />
                                 <span className="text-[#0F052E]">
-                                  {suburb.formattedAddress}
+                                  {suburb.name},{" "}
+                                  {suburb.locality ? `${suburb.locality},` : ""}{" "}
+                                  {suburb.state.name}, AUS
                                 </span>
                               </li>
                             ))}

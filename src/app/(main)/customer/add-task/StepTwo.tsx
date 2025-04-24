@@ -225,7 +225,7 @@ function StepTwo() {
                   id="suburb"
                   type="text"
                   className="-ml-2 block w-full appearance-none bg-transparent p-3 placeholder-[#76757A61] outline-none placeholder:font-satoshiMedium"
-                  placeholder="Enter your address"
+                  placeholder="Enter a suburb"
                   autoComplete="off"
                   {...register("suburb", {
                     onChange: (e) => {
@@ -259,7 +259,10 @@ function StepTwo() {
                         key={Math.random() * 12345}
                         onClick={() => {
                           setCurrentSuburb(suburb);
-                          setValue("suburb", suburb.formattedAddress);
+                          setValue(
+                            "suburb",
+                            `${suburb.name}, ${suburb.state.abbreviation}, Australia`,
+                          );
                           setSuburbList([]);
                         }}
                       >
@@ -269,7 +272,9 @@ function StepTwo() {
                           strokeWidth={1}
                         />
                         <span className="text-[#0F052E]">
-                          {suburb.formattedAddress}
+                          {suburb.name},{" "}
+                          {suburb.locality ? `${suburb.locality},` : ""}{" "}
+                          {suburb.state.name}, AUS
                         </span>
                       </li>
                     ))}
