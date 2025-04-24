@@ -802,7 +802,7 @@ const AddTaskForm: React.FC = () => {
                         Error occured while loading suburb data
                       </p>
                     )}
-                    {suburbList.length > 1 && (
+                    {suburbList.length > 0 && (
                       <ul className="roundeed-lg max-h-52 overflow-y-auto overflow-x-hidden">
                         {suburbList.map((suburb) => (
                           <li
