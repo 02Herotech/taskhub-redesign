@@ -579,51 +579,56 @@ const EditTaskForm = ({ taskDetails, setShowEditModal }: TaskCardProps) => {
                           />
                         </div>
 
-                        {/* Auto-complete modal  */}
-                        <div className="absolute left-0 z-10 w-full bg-white">
-                          {isLoading && (
-                            <p className="py-2 text-center font-satoshiMedium text-[#76757A61]">
-                              Loading...
-                            </p>
-                          )}
-                          {suburbError && !isLoading && (
-                            <p className="py-2 text-center font-satoshiMedium text-red-600">
-                              Error occured while loading suburb data
-                            </p>
-                          )}
-                          {suburbList.length > 1 && (
-                            <ul className="roundeed-lg max-h-52 overflow-y-auto overflow-x-hidden">
-                              {suburbList.map((suburb) => (
-                                <li
-                                  className="flex cursor-pointer items-center gap-1 bg-white px-4 py-3 text-[13px]"
-                                  key={Math.random() * 12345}
-                                  onClick={() => {
-                                    setCurrentSuburb(suburb);
-                                    setValue("suburb", suburb.formattedAddress);
-                                    setSuburbList([]);
-                                  }}
-                                >
-                                  <CiLocationOn
-                                    stroke="#0F052E"
-                                    size={20}
-                                    strokeWidth={1}
-                                  />
-                                  <span className="text-[#0F052E]">
-                                    {suburb.formattedAddress}
-                                  </span>
-                                </li>
-                              ))}
-                            </ul>
-                          )}
-                        </div>
+                      {/* Auto-complete modal  */}
+                      <div className="absolute left-0 z-10 w-full bg-white">
+                        {isLoading && (
+                          <p className="py-2 text-center font-satoshiMedium text-[#76757A61]">
+                            Loading...
+                          </p>
+                        )}
+                        {suburbError && !isLoading && (
+                          <p className="py-2 text-center font-satoshiMedium text-red-600">
+                            Error occured while loading suburb data
+                          </p>
+                        )}
+                        {suburbList.length > 0 && (
+                          <ul className="roundeed-lg max-h-52 overflow-y-auto overflow-x-hidden">
+                            {suburbList.map((suburb) => (
+                              <li
+                                className="flex cursor-pointer items-center gap-1 bg-white px-4 py-3 text-[13px]"
+                                key={Math.random() * 12345}
+                                onClick={() => {
+                                  setCurrentSuburb(suburb);
+                                  setValue(
+                                    "suburb",
+                                    `${suburb.name}, ${suburb.state.abbreviation}, Australia`,
+                                  );
+                                  setSuburbList([]);
+                                }}
+                              >
+                                <CiLocationOn
+                                  stroke="#0F052E"
+                                  size={20}
+                                  strokeWidth={1}
+                                />
+                                <span className="text-[#0F052E]">
+                                  {suburb.name},{" "}
+                                  {suburb.locality ? `${suburb.locality},` : ""}{" "}
+                                  {suburb.state.name}, AUS
+                                </span>
+                              </li>
+                            ))}
+                          </ul>
+                        )}
                       </div>
-                    )}
-                    <div className="space-y-2">
-                      <div className="flex items-center justify-between">
-                        <label className="text-[13px] font-semibold text-status-darkpurple lg:text-[16px]">
-                          Budget{" "}
-                        </label>
-                        {/* {task.customerBudget && (
+                    </div>
+                  )}
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between">
+                      <label className="text-[13px] font-semibold text-status-darkpurple lg:text-[16px]">
+                        Budget{" "}
+                      </label>
+                      {/* {task.customerBudget && (
                                                 <div className="h-[16px] w-[16px] rounded-3xl bg-[#4CAF50] text-[16px] font-extrabold text-white">
                                                     <GrFormCheckmark />
                                                 </div>

@@ -1038,8 +1038,8 @@ const ProvideService: React.FC = () => {
                           Error occured while loading suburb data
                         </p>
                       )}
-                      {suburbList.length > 1 && (
-                        <ul className="max-h-52 overflow-y-auto overflow-x-hidden rounded-lg">
+                      {suburbList.length > 0 && (
+                        <ul className="roundeed-lg max-h-52 overflow-y-auto overflow-x-hidden">
                           {suburbList.map((suburb) => (
                             <li
                               className="flex cursor-pointer items-center gap-1 bg-white px-4 py-3 text-[13px]"

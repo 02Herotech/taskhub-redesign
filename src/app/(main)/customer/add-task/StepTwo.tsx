@@ -272,7 +272,7 @@ function StepTwo() {
                     Error occured while loading suburb data
                   </p>
                 )}
-                {suburbList.length > 1 && (
+                {suburbList.length > 0 && (
                   <ul className="max-h-52 overflow-y-auto overflow-x-hidden rounded-lg">
                     {suburbList.map((suburb) => (
                       <li
