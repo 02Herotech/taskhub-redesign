@@ -1,254 +1,280 @@
+import Link from "next/link";
+
 /* eslint-disable react/no-unescaped-entities */
 export default function TermsAndConditionPage() {
   return (
     <div className="  p-6 bg-[#EBE9F4]">
-      <div className=" font-manrope font-semibold text-[#190E3F] max-w-3xl mx-auto mt-14 p-2 md:p-6">
-        <h1 className="text-xl font-bold text-[#381F8C] font-clashSemiBold mb-4">Terms & Conditions</h1>
+      <div className=" font-manrope  text-[#190E3F] max-w-3xl mx-auto mt-14 p-2 md:p-6">
+        <h1 className="text-3xl font-bold  mb-4">Oloja Hub Terms and Conditions</h1>
 
         <p className="mb-3">Effective Date: April 23, 2025</p>
 
-        <div className="space-y-4">
-          <div>
-            <p>
-              <span className="">1. Introduction</span> Welcome to Oloja Hub! These Terms and Conditions
-              ("T&C" or "Agreement") govern your access and use of the Oloja Hub platform, including its website, mobile
-              applications, tools, services, and all associated features (collectively referred to as the "Platform").
-              By accessing or using Oloja Hub, you agree to comply with these T&C. If you do not agree to these T&C, do
-              not use the Platform.
-            </p>
-          </div>
+        <p className="mb-3">Welcome to Oloja Hub!</p>
 
-          <div>
-            <p>
-              <span className="">2. Binding Agreement:</span> This is a legally binding contract between you
-              and Oloja Hub. By using the Platform, you acknowledge and agree to the terms outlined in this document. If
-              you are using the Platform on behalf of a business, you confirm that you have the authority to bind the
-              business to these terms.
-            </p>
-          </div>
+        <p className="mb-6">
+          These Terms and Conditions ("Agreement") govern your use of our platform, including our website {" "}
+          <Link href="http://www.oloja.com.au" target="_blank" className="underline text-blue-500">www.oloja.com.au</Link>, mobile applications, and associated services (together, the "Services"). By accessing or
+          using the Services, you agree to be bound by this Agreement. If you do not agree to the terms, do not use the
+          Services.
+        </p>
 
+        <div className="space-y-6">
           <div>
-            <p>
-              <span className="">3. Use of the Oloja Hub Platform</span>
-            </p>
-            <ul className="list-disc pl-8 space-y-4 mt-2">
+            <p className="font-bold text-xl ">1. Definitions</p>
+            <p className="mt-1">In this Agreement:</p>
+            <ul className="list-disc pl-8 space-y-2 mt-2">
               <li>
-                <p>
-                  <span className="">Eligibility:</span> You must be at least 18 years of age to use Oloja
-                  Hub. By accessing the Platform, you represent and warrant that you meet this requirement.
-                </p>
+                <p>"Oloja" "Oloja Hub", "we", "us", or "our" refers to the platform provider, Jacinth Solutions.</p>
               </li>
               <li>
-                <p>
-                  <span className="">Account Creation:</span> To access certain services, you may be required
-                  to create an account. You agree to provide accurate, current, and complete information during
-                  registration and keep it up-to-date.
-                </p>
+                <p>"User", "you", or "your" refers to any individual or entity accessing or using the Services.</p>
               </li>
               <li>
-                <p>
-                  <span className="">Account Termination:</span> You may terminate your account at any time
-                  by following the instructions in your account settings. Oloja Hub reserves the right to suspend or
-                  terminate your account for violations of these T&C.
-                </p>
+                <p>"Service Provider" refers to users offering services through Oloja Hub.</p>
+              </li>
+              <li>
+                <p>"Client" refers to users seeking or hiring services via Oloja Hub.</p>
               </li>
             </ul>
           </div>
 
           <div>
-            <p>
-              <span className="">4. User Responsibilities</span> By using the Platform, you agree to:
+            <p className="font-bold text-xl ">2. Acceptance of Terms</p>
+            <p className="mt-1">
+              By accessing and using the Services, you acknowledge and agree to these Terms and Conditions, as well as
+              our Privacy Policy, which governs our collection and use of your personal information.
             </p>
-            <ul className="list-disc pl-8 space-y-4 mt-2">
+            <p className="mt-2">
+              We reserve the right to update or change these Terms at any time. Changes will be posted on this page, and
+              the revised Terms will be effective immediately upon posting. Please review these Terms periodically to
+              stay informed of any changes.
+            </p>
+          </div>
+
+          <div>
+            <p className="font-bold text-xl ">3. SCOPE OF OLOJA HUB SERVICES</p>
+            <p className="mt-1">
+              3.1 Oloja Hub provides an online platform to connect Service Providers ("Providers") with Clients who
+              require services ("Clients").
+            </p>
+            <p className="mt-1">
+              3.2 Providers can offer services by responding to posted tasks by Clients. Certain information, such as
+              service details and offers, may be made publicly available.
+            </p>
+            <p className="mt-1">
+              3.3 Clients may cancel or modify posted tasks at any time before accepting a Provider's offer. Oloja Hub
+              reserves the right to cancel offers made prior to the task modification.
+            </p>
+            <p className="mt-1">
+              3.4 Upon accepting a Provider's offer, a task contract is created between the Client and the Provider
+              ("Task Contract").
+            </p>
+            <p className="mt-1">
+              3.5 The Client is required to pay the agreed amount for the task into a secure payment account upon
+              creation of the Task Contract.
+            </p>
+            <p className="mt-1">
+              3.6 Oloja Hub charges a service fee ("Service Fee") for facilitating the connection and transaction.
+            </p>
+            <p className="mt-1">
+              3.7 Once the task is completed, the Client will be notified and must confirm task completion or dispute
+              within 10 days. If no response is received, the task will be automatically marked as completed, and
+              payment will be released to the Provider.
+            </p>
+            <p className="mt-1">3.8 After task completion confirmation, the Provider's service fee will be paid.</p>
+            <p className="mt-1">
+              3.9 Providers and Clients are encouraged to leave feedback on each other's services via the platform.
+            </p>
+          </div>
+
+          <div>
+            <p className="font-bold text-xl ">4. OLOJA HUB'S ROLE AND OBLIGATIONS</p>
+            <p className="mt-1">
+              4.1 Oloja Hub operates as a platform facilitating connections between Clients and Providers but does not
+              directly perform the services listed.
+            </p>
+            <p className="mt-1">4.2 Only individuals aged 18 or older are allowed to use the platform.</p>
+            <p className="mt-1">
+              4.3 Oloja Hub may suspend or remove any account that violates these Terms, engages in fraudulent behavior,
+              or breaches applicable laws.
+            </p>
+            <p className="mt-1">
+              4.4 Oloja Hub does not verify or guarantee the truthfulness, accuracy, or performance of any task posted
+              or completed via the platform. Clients and Providers are responsible for performing their due diligence.
+            </p>
+            <p className="mt-1">
+              4.5 Oloja Hub is not liable for any disputes or interactions between Clients and Providers.
+            </p>
+          </div>
+
+          <div>
+            <p className="font-bold text-xl ">5. USER OBLIGATIONS</p>
+            <p className="mt-1">5.1 Users must:</p>
+            <ul className="list-disc pl-8 space-y-2 mt-2">
               <li>
-                <p>Comply with all applicable laws and regulations.</p>
+                <p>Comply with these Terms and all applicable laws.</p>
               </li>
               <li>
-                <p>Not engage in unlawful, fraudulent, or malicious activities.</p>
+                <p>Ensure accuracy when posting tasks or offers.</p>
               </li>
               <li>
-                <p>Not interfere with the operation or security of the Platform.</p>
+                <p>Maintain control over their account and not allow others to use it.</p>
               </li>
             </ul>
-          </div>
-
-          <div>
-            <p>
-              <span className="">5. Your Content</span>
+            <p className="mt-2">
+              5.2 Users agree that content uploaded to Oloja Hub cannot be used for third-party commercial purposes
+              without prior written consent.
             </p>
-            <ul className="list-disc pl-8 space-y-4 mt-2">
-              <li>
-                <p>
-                  <span className="">Ownership:</span> You retain ownership of the content you submit to
-                  Oloja Hub, including images, reviews, messages, and other materials ("Your Content").
-                </p>
-              </li>
-              <li>
-                <p>
-                  <span className="">License to Oloja Hub:</span> By posting or submitting content, you grant
-                  Oloja Hub a worldwide, non-exclusive, royalty-free license to use, display, modify, and distribute
-                  Your Content for the purposes of operating the Platform.
-                </p>
-              </li>
-              <li>
-                <p>
-                  <span className="">Content Responsibilities:</span> You are solely responsible for ensuring
-                  that Your Content does not violate any third-party rights, including copyright and intellectual
-                  property rights.
-                </p>
-              </li>
-            </ul>
-          </div>
-
-          <div>
-            <p>
-              <span className="">6. Third-Party Content, Services, and Providers</span> Oloja Hub may link to
-              or integrate with third-party websites and services. We do not endorse or control these third parties and
-              are not responsible for their content, services, or conduct.
+            <p className="mt-1">
+              5.3 Users must not engage in illegal, harmful, or unethical activities while using the platform.
+            </p>
+            <p className="mt-1">
+              5.4 Users grant Oloja Hub a license to use and modify content uploaded to the platform for the purpose of
+              providing services and promoting the platform.
             </p>
           </div>
 
           <div>
-            <p>
-              <span className="">7. Payments and Fees</span>
+            <p className="font-bold text-xl ">6. FEES</p>
+            <p className="mt-1">
+              6.1 Oloja Hub charges a service fee for connecting Clients with Providers. This fee is deducted from the
+              payment made for each task.
             </p>
-            <ul className="list-disc pl-8 space-y-4 mt-2">
-              <li>
-                <p>
-                  <span className="">Transactions:</span> Certain services on Oloja Hub may require payment.
-                  By engaging in any transaction, you agree to pay the amounts specified and comply with the associated
-                  payment terms.
-                </p>
-              </li>
-              <li>
-                <p>
-                  <span className="">Taxes and Fees:</span> You are responsible for any applicable taxes or
-                  additional fees associated with transactions on the Platform.
-                </p>
-              </li>
-            </ul>
+            <p className="mt-1">6.2 Fees for Oloja Hub services are inclusive of any applicable taxes.</p>
+            <p className="mt-1">
+              6.3 The Oloja Hub platform reserves the right to adjust fees at any time, with updates posted on the
+              website.
+            </p>
           </div>
 
           <div>
-            <p>
-              <span className="">8. Disclaimers and Limitations of Liability</span>
+            <p className="font-bold text-xl ">7. PAYMENTS, REFUNDS, AND CANCELLATIONS</p>
+            <p className="mt-1">
+              7.1 If a task contract is canceled before services begin, the Client may be refunded via Oloja Hub credits
+              or the original payment method, depending on the situation.
             </p>
-            <ul className="list-disc pl-8 space-y-4 mt-2">
-              <li>
-                <p>
-                  <span className="">As-Is Basis:</span> The Platform is provided "as-is," with no warranties
-                  or guarantees. Oloja Hub makes no representations regarding the accuracy, availability, or reliability
-                  of the Platform or its content.
-                </p>
-              </li>
-              <li>
-                <p>
-                  <span className="">Limitation of Liability:</span> To the fullest extent permitted by law,
-                  Oloja Hub's liability is limited to the amount you paid for the service in question, or $100 AUD,
-                  whichever is greater. Oloja Hub will not be liable for indirect, incidental, consequential, or
-                  punitive damages.
-                </p>
-              </li>
-            </ul>
+            <p className="mt-1">
+              7.2 Cancellations after service completion will be subject to specific terms based on the circumstances.
+            </p>
+            <p className="mt-1">
+              7.3 Oloja Hub may charge a cancellation fee if the cancellation is initiated by either the Client or
+              Provider.
+            </p>
+            <p className="mt-1">
+              7.4 Refunds will be processed within 5-7 business days, depending on the nature of the task and the
+              payment method used.
+            </p>
           </div>
 
           <div>
-            <p>
-              <span className="">9. Indemnification</span> You agree to indemnify, defend, and hold harmless
-              Oloja Hub, its affiliates, employees, and agents from any claim, liability, damage, or expense arising out
-              of:
+            <p className="font-bold text-xl ">8. THIRD PARTY PAYMENTS AND PROCESSING</p>
+            <p className="mt-1">
+              8.1 Payments are processed via a third-party provider, and Oloja Hub does not store or handle sensitive
+              payment information.
             </p>
-            <ul className="list-disc pl-8 space-y-4 mt-2">
-              <li>
-                <p>Your use of the Platform.</p>
-              </li>
-              <li>
-                <p>Any breach of these T&C.</p>
-              </li>
-              <li>
-                <p>Violation of third-party rights, including intellectual property or privacy rights.</p>
-              </li>
-              <li>
-                <p>Your Content or any actions taken on your account.</p>
-              </li>
-            </ul>
+            <p className="mt-1">
+              8.2 The third-party payment provider's terms and conditions will apply, and Users must agree to those
+              terms prior to making payments on the platform.
+            </p>
           </div>
 
           <div>
-            <p>
-              <span className="">10. Dispute Resolution & Governing Law</span>
+            <p className="font-bold text-xl ">9. VERIFICATION & BADGES</p>
+            <p className="mt-1">
+              9.1 Oloja Hub may offer optional badges or verification features, but Oloja Hub does not guarantee the
+              authenticity or reliability of these badges.
             </p>
-            <ul className="list-disc pl-8 space-y-4 mt-2">
-              <li>
-                <p>
-                  <span className="">Arbitration:</span> Any disputes arising from this Agreement will be
-                  resolved through binding arbitration, and not in court. The arbitration will be governed by the rules
-                  of the Australian Centre for International Commercial Arbitration (ACICA), and conducted in
-                  Queensland, Australia.
-                </p>
-              </li>
-              <li>
-                <p>
-                  <span className="">Class Action Waiver:</span> You agree to waive any right to participate
-                  in class or representative actions in connection with any dispute.
-                </p>
-              </li>
-              <li>
-                <p>
-                  <span className="">Governing Law:</span> This Agreement is governed by the laws of
-                  Queensland, Australia, and any applicable federal laws, without regard to conflict-of-law principles.
-                  If you are located outside of Australia, the local consumer protection laws may also apply.
-                </p>
-              </li>
-            </ul>
+            <p className="mt-1">
+              9.2 Providers and Clients are encouraged to perform their own checks and ensure the qualifications and
+              credibility of the other party before entering into a task agreement.
+            </p>
           </div>
 
           <div>
-            <p>
-              <span className="">11. Communications</span> By using the Platform, you consent to receiving
-              communications from Oloja Hub, including transactional and promotional emails. You can opt out of
-              marketing emails at any time by following the instructions in those emails.
+            <p className="font-bold text-xl ">10. LIMITATION OF LIABILITY</p>
+            <p className="mt-1">
+              10.1 To the maximum extent permitted by law, Oloja Hub is not liable for any indirect, incidental,
+              special, or consequential damages related to tasks performed via the platform.
+            </p>
+            <p className="mt-1">
+              10.2 The total liability of Oloja Hub for any claims arising from the use of the Services will not exceed
+              the total amount paid for the specific task giving rise to the claim.
+            </p>
+          </div>
+
+          <div>
+            <p className="font-bold text-xl ">11. DISPUTES AND MEDIATION</p>
+            <p className="mt-1">
+              11.1 Users should attempt to resolve disputes directly. If a resolution is not possible, Oloja Hub may
+              assist in mediating the dispute.
+            </p>
+            <p className="mt-1">11.2 Oloja Hub may choose to withhold any payments until disputes are resolved.</p>
+            <p className="mt-1">
+              11.3 Oloja Hub may provide access to third-party dispute resolution services at its discretion.
+            </p>
+          </div>
+
+          <div>
+            <p className="font-bold text-xl ">12. TERM AND TERMINATION</p>
+            <p className="mt-1">
+              12.1 Oloja Hub reserves the right to terminate accounts or restrict access to the platform at its
+              discretion.
+            </p>
+            <p className="mt-1">
+              12.2 Either party may terminate the agreement at any time, but all Task Contracts that have been formed
+              prior to termination will remain in effect.
+            </p>
+          </div>
+
+          <div>
+            <p className="font-bold text-xl ">13. PRIVACY AND DATA SECURITY</p>
+            <p className="mt-1">13.1 Oloja Hub collects personal data in accordance with our Privacy Policy.</p>
+            <p className="mt-1">
+              13.2 Users must update their personal information if it changes, including contact details, and ensure
+              that information is accurate and up to date.
+            </p>
+            <p className="mt-1">
+              13.3 By using the platform, users consent to Oloja Hub collecting and processing their personal data as
+              described in the Privacy Policy.
+            </p>
+          </div>
+
+          <div>
+            <p className="font-bold text-xl ">14. MODIFICATIONS</p>
+            <p className="mt-1">
+              14.1 Oloja Hub reserves the right to modify or update these Terms at any time. Changes will be posted on
+              the platform, and your continued use of the platform after changes are made signifies your acceptance of
+              those changes.
+            </p>
+          </div>
+
+          <div>
+            <p className="font-bold text-xl ">15. GOVERNING LAW</p>
+            <p className="mt-1">
+              15.1 These Terms are governed by the laws of Queensland, Australia. Any disputes will be subject to the
+              jurisdiction of the courts in Queensland.
             </p>
           </div>
 
           <div>
             <p>
-              <span className="">12. Miscellaneous</span>
+              <span className="font-bold uppercase text-xl">16. Contact Information</span> 
             </p>
-            <ul className="list-disc pl-8 space-y-4 mt-2">
-              <li>
-                <p>
-                  <span className="">Modifications:</span> Oloja Hub reserves the right to modify these T&C
-                  at any time. Any changes will be posted on the Platform, and your continued use of the Platform
-                  constitutes acceptance of those changes.
-                </p>
-              </li>
-              <li>
-                <p>
-                  <span className="">Severability:</span> If any provision of these T&C is found to be
-                  unenforceable, the remaining provisions will continue in full force.
-                </p>
-              </li>
-              <li>
-                <p>
-                  <span className="">Entire Agreement:</span> This Agreement constitutes the entire agreement
-                  between you and Oloja Hub regarding the use of the Platform.
-                </p>
-              </li>
-            </ul>
-          </div>
-
-          <div>
-            <p>
-              <span className="">13. Contact Information</span> If you have any questions or concerns about
-              these T&C, you can contact us at:
-            </p>
+            <p> If you have any questions or concerns about
+              these T&C, you can contact us at:</p>
             <p className="mt-1">Oloja Hub Operations</p>
-            <p>Email: operations@jacinthsolutions.com.au</p>
+            <p>Email:<Link href="mailto:operations@jacinthsolutions.com.au">
+              operations@jacinthsolutions.com.au
+            </Link></p>
             <p>Location: Queensland, Australia</p>
           </div>
         </div>
       </div>
     </div>
+
   )
 }
+
+
+
+
