@@ -335,12 +335,12 @@ const EditProfile = () => {
         url = "customer/update";
       }
 
-      // await authInstance.patch(url, submitData, {
-      //   headers: { "Content-Type": "multipart/form-data" },
-      // });
-      // setIsProfileUpdatedSuccessfully(true);
-      // setIsFormModalShown(true);
-      // setIsEditingEnabled(true);
+      await authInstance.patch(url, submitData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+      setIsProfileUpdatedSuccessfully(true);
+      setIsFormModalShown(true);
+      setIsEditingEnabled(true);
     } catch (error: any) {
       console.error("Submission error:", error);
       console.error(
