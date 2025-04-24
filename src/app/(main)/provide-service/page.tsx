@@ -28,6 +28,7 @@ import useUserProfileData from "@/hooks/useUserProfileData";
 import ProfileIncomplete from "@/components/global/Popup/ProfileIncomplete";
 import useSuburbData, { SurburbInfo } from "@/hooks/useSuburbData";
 import { CiLocationOn } from "react-icons/ci";
+import { FaLocationDot } from "react-icons/fa6";
 
 interface FormData {
   listingTitle: string;
@@ -50,14 +51,6 @@ interface FormData {
   categoryId: number | null;
   subCategoryId: number | null;
   negotiable: boolean;
-}
-
-interface PostalCodeData {
-  Name: string;
-  Postcode: string;
-  State: string;
-  StateShort: string;
-  Type: string;
 }
 
 interface Item {
@@ -103,7 +96,7 @@ const ProvideService: React.FC = () => {
     null,
   );
   const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
-  const [selectedCity, setSelectedCity] = useState("Suburb");
+  // const [selectedCity, setSelectedCity] = useState("Suburb");
   const [isRemote, setIsRemote] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const [negotiable, setnegotiable] = useState(false);
@@ -167,6 +160,10 @@ const ProvideService: React.FC = () => {
   const isEnabled = session.data?.user.user.enabled;
   const [isEnabledPopup, setIsEnabledPopup] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [showManualAddress, setShowManualAddress] = useState(false);
+  const [stateName, setStateName] = useState("");
+  const [postCode, setPostCode] = useState("");
+  const [suburbName, setSuburbName] = useState("");
 
   const [errs, setErrs] = useState({
     image1: "",
@@ -330,14 +327,14 @@ const ProvideService: React.FC = () => {
       error.price = "Please fill out all required fields";
     }
     if (activeButtonIndex === 0) {
-      if (!currentSuburb) {
+      if (!currentSuburb && (!stateName || !postCode || !suburb)) {
         error.suburb = "Please fill out all required fields";
       }
     }
     if (activeButtonIndex === 0) {
-      if (!selectedCity) {
-        error.city = "Please fill out all required fields";
-      }
+      // if (!selectedCity) {
+      //   error.city = "Please fill out all required fields";
+      // }
     }
 
     setError(error);
@@ -384,12 +381,6 @@ const ProvideService: React.FC = () => {
     setActivePlanIndex(index);
     setIsOpen(true);
     setInputDisabled(!inputDisabled);
-  };
-  const handleCode = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSelectedCode(event.target.value);
-  };
-  const handleCity = (data: any) => {
-    setSelectedCity(data);
   };
 
   const handleTickChange = (daysOfWeek: any) => {
@@ -550,71 +541,63 @@ const ProvideService: React.FC = () => {
     event.preventDefault();
     setLoading(true);
     if (validateField2()) {
-      //Todo Check if user is logged in
-      if (isEnabled) {
-        try {
-          let finalTask = { ...task };
-
-          if (isOpen && activeButtonIndex === 1) {
-            const type = "REMOTE_SERVICE";
-            finalTask = { ...finalTask, taskType: type };
-          } else {
-            const { state, postcode, name } = currentSuburb;
-
-            finalTask = {
-              ...finalTask,
-              taskType: "PHYSICAL_SERVICE",
-              suburb: name,
-              postCode: String(postcode),
-              state: state.name,
-            };
-          }
-
-          if (selectedDays) {
-            finalTask = { ...finalTask, availableDays: selectedDays };
-          }
-
-          finalTask = { ...finalTask, negotiable: negotiable };
-
-          await axios.post(
-            `${process.env.NEXT_PUBLIC_API_URL}/listing/create-listing?userId=${id}`,
-            finalTask,
-            { headers: { "Content-Type": "multipart/form-data" } },
-          );
-          setTask({
-            listingTitle: "",
-            listingDescription: "",
-            planOneDescription: "",
-            planTwoDescription: "",
-            planThreeDescription: "",
-            image1: null,
-            image2: null,
-            image3: null,
-            image4: null,
-            taskType: "",
-            planOnePrice: null,
-            planTwoPrice: null,
-            planThreePrice: null,
-            availableDays: [],
-            suburb: "",
-            postCode: "",
-            state: "",
-            categoryId: null,
-            subCategoryId: null,
-            negotiable: false,
-          });
-          setIsSuccessPopupOpen(true);
-        } catch (error: any) {
-          console.error("Error submitting form:", error);
-          setErrorMessage(
-            error.response.data.message ||
-              "An error occurred, please try again",
-          );
-        } finally {
-          setLoading(false);
+      try {
+        let finalTask = { ...task };
+        if (isOpen && activeButtonIndex === 1) {
+          const type = "REMOTE_SERVICE";
+          finalTask = { ...finalTask, taskType: type };
+        } else {
+          finalTask = {
+            ...finalTask,
+            taskType: "PHYSICAL_SERVICE",
+            suburb: currentSuburb?.name || suburbName,
+            postCode: currentSuburb
+              ? String(currentSuburb?.postcode)
+              : postCode,
+            state: currentSuburb?.state?.name || stateName,
+          };
         }
-      } else {
-        setIsEnabledPopup(true);
+
+        if (selectedDays) {
+          finalTask = { ...finalTask, availableDays: selectedDays };
+        }
+
+        finalTask = { ...finalTask, negotiable: negotiable };
+
+        await axios.post(
+          `${process.env.NEXT_PUBLIC_API_URL}/listing/create-listing?userId=${id}`,
+          finalTask,
+          { headers: { "Content-Type": "multipart/form-data" } },
+        );
+        setTask({
+          listingTitle: "",
+          listingDescription: "",
+          planOneDescription: "",
+          planTwoDescription: "",
+          planThreeDescription: "",
+          image1: null,
+          image2: null,
+          image3: null,
+          image4: null,
+          taskType: "",
+          planOnePrice: null,
+          planTwoPrice: null,
+          planThreePrice: null,
+          availableDays: [],
+          suburb: "",
+          postCode: "",
+          state: "",
+          categoryId: null,
+          subCategoryId: null,
+          negotiable: false,
+        });
+        setIsSuccessPopupOpen(true);
+      } catch (error: any) {
+        console.error("Error submitting form:", error);
+        setErrorMessage(
+          error.response?.data.message || "An error occurred, please try again",
+        );
+      } finally {
         setLoading(false);
       }
     } else {
@@ -1004,40 +987,46 @@ const ProvideService: React.FC = () => {
                 )}
                 {isOpen && activeButtonIndex === 0 && (
                   <div className="relative w-full">
-                    <label
-                      htmlFor="suburb"
-                      className="mb-2 block font-satoshiMedium text-base text-[#140B31] sm:text-lg"
-                    >
-                      Where do you need this done{" "}
-                      <span className="font-extrabold text-[#ff0000]">*</span>
-                    </label>
-                    <div
-                      className={
-                        "flex items-center rounded-lg bg-[#EBE9F4] px-3 pl-2 focus-within:bg-white " +
-                        (error.suburb
-                          ? "border border-[#ff0000] outline-[#FF0000]"
-                          : "border-primary outline-none focus-within:border")
-                      }
-                    >
-                      <CiLocationOn fill="#76757A61" size={22} />
-                      <input
-                        id="suburb"
-                        type="text"
-                        className="-ml-2 block w-full appearance-none bg-transparent p-3 placeholder-[#76757A61] outline-none placeholder:font-satoshiMedium"
-                        placeholder="Enter a suburb"
-                        value={suburb}
-                        autoComplete="off"
-                        onChange={(e) => {
-                          if (currentSuburb) {
-                            setCurrentSuburb(null);
-                            const enteredInput = e.target.value.slice(-1);
-                            e.target.value = enteredInput;
-                            setSuburb(enteredInput);
+                    {!showManualAddress && (
+                      <>
+                        <label
+                          htmlFor="suburb"
+                          className="mb-2 block font-satoshiMedium text-base text-[#140B31] sm:text-lg"
+                        >
+                          Where are you located{" "}
+                          <span className="font-extrabold text-[#ff0000]">
+                            *
+                          </span>
+                        </label>
+                        <div
+                          className={
+                            "flex items-center rounded-lg bg-[#EBE9F4] px-3 pl-2 focus-within:bg-white " +
+                            (error.suburb
+                              ? "border border-[#ff0000] outline-[#FF0000]"
+                              : "border-primary outline-none focus-within:border")
                           }
-                          setSuburb(e.target.value);
-                        }}
-                      />
-                    </div>
+                        >
+                          <CiLocationOn fill="#76757A61" size={22} />
+                          <input
+                            id="suburb"
+                            type="text"
+                            className="-ml-2 block w-full appearance-none bg-transparent p-3 placeholder-[#76757A61] outline-none placeholder:font-satoshiMedium"
+                            placeholder="Enter a suburb"
+                            value={suburb}
+                            autoComplete="off"
+                            onChange={(e) => {
+                              if (currentSuburb) {
+                                setCurrentSuburb(null);
+                                const enteredInput = e.target.value.slice(-1);
+                                e.target.value = enteredInput;
+                                setSuburb(enteredInput);
+                              }
+                              setSuburb(e.target.value);
+                            }}
+                          />
+                        </div>
+                      </>
+                    )}
                     <div className="absolute left-0 w-full bg-white">
                       {isLoading && (
                         <p className="py-2 text-center font-satoshiMedium text-[#76757A61]">
@@ -1049,7 +1038,7 @@ const ProvideService: React.FC = () => {
                           Error occured while loading suburb data
                         </p>
                       )}
-                      {suburbList.length > 1 && (
+                      {suburbList.length > 0 && (
                         <ul className="roundeed-lg max-h-52 overflow-y-auto overflow-x-hidden">
                           {suburbList.map((suburb) => (
                             <li
@@ -1077,9 +1066,91 @@ const ProvideService: React.FC = () => {
                           ))}
                         </ul>
                       )}
+                      {suburb && !currentSuburb && !showManualAddress && (
+                        <div
+                          className="flex max-w-sm cursor-pointer items-center gap-3 p-2 font-satoshiBold font-bold shadow-sm"
+                          onClick={() => {
+                            setShowManualAddress(true);
+                            setSuburbList([]);
+                          }}
+                        >
+                          <FaLocationDot color="#2D1970" size={25} />
+                          <div>
+                            <h6 className="">Can&apos;t find your address?</h6>
+                            <p className="font-satoshiMedium text-sm text-[#4E5158]">
+                              Enter manually{" "}
+                              <span className="text-primary">here</span>
+                            </p>
+                          </div>
+                        </div>
+                      )}
                     </div>
                   </div>
                 )}
+
+                {/* Manual address input */}
+                {showManualAddress && (
+                  <div className="grid grid-cols-2 gap-2">
+                    <div className="col-span-2 mb-3">
+                      <label
+                        htmlFor="state"
+                        className="mb-2 block font-satoshiBold text-[13px] font-bold text-status-darkpurple lg:text-[16px]"
+                      >
+                        State / Territory
+                        <span className="font-extrabold text-[#ff0000]">*</span>
+                      </label>
+                      <div className="rounded-lg bg-[#EBE9F4] px-3 pl-2">
+                        <input
+                          id="state"
+                          type="text"
+                          value={stateName}
+                          onChange={(e) => setStateName(e.target.value)}
+                          className="-ml-2 block w-full appearance-none bg-transparent p-3 placeholder-[#76757A61] outline-none placeholder:font-satoshiMedium"
+                          placeholder="Queensland"
+                        />
+                      </div>
+                    </div>
+                    <div>
+                      <label
+                        htmlFor="postcode"
+                        className="mb-2 block font-satoshiBold text-[13px] font-bold text-status-darkpurple lg:text-[16px]"
+                      >
+                        Post Code
+                        <span className="font-extrabold text-[#ff0000]">*</span>
+                      </label>
+                      <div className="rounded-lg bg-[#EBE9F4] px-3 pl-2">
+                        <input
+                          id="postcode"
+                          type="text"
+                          className="-ml-2 block w-full appearance-none bg-transparent p-3 placeholder-[#76757A61] outline-none placeholder:font-satoshiMedium"
+                          placeholder="4280"
+                          value={postCode}
+                          onChange={(e) => setPostCode(e.target.value)}
+                        />
+                      </div>
+                    </div>
+                    <div>
+                      <label
+                        htmlFor="suburb"
+                        className="mb-2 block font-satoshiBold text-[13px] font-bold text-status-darkpurple lg:text-[16px]"
+                      >
+                        Suburb
+                        <span className="font-extrabold text-[#ff0000]">*</span>
+                      </label>
+                      <div className="rounded-lg bg-[#EBE9F4] px-3 pl-2">
+                        <input
+                          id="suburb"
+                          type="text"
+                          className="-ml-2 block w-full appearance-none bg-transparent p-3 placeholder-[#76757A61] outline-none placeholder:font-satoshiMedium"
+                          placeholder="Flagstone"
+                          value={suburbName}
+                          onChange={(e) => setSuburbName(e.target.value)}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                )}
+
                 <div className="text-[#FF0000]">
                   {error.planDetails ||
                     error.price ||

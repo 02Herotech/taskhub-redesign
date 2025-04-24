@@ -27,6 +27,7 @@ import useSuburbData, { SurburbInfo } from "@/hooks/useSuburbData";
 import { CiLocationOn } from "react-icons/ci";
 import UploadIdPopup from "@/components/serviceProviderDashboard/profile/UploadIdPopup";
 import UploadProfilePicture from "./UploadProfilePicture";
+import { FaLocationDot } from "react-icons/fa6";
 
 const idTypeObject = [
   { label: "Medicare Card", value: "MEDICARE_CARD" },
@@ -72,21 +73,6 @@ const EditProfile = () => {
 
   const [dateOfBirth, setDateOfBirth] = useState<Date | null>(null);
 
-  // const [suburb, setSuburb] = useState("");
-
-  // const [currentSuburb, setCurrentSuburb] = useState<SurburbInfo | null>(null);
-  // const {
-  //   suburbList,
-  //   setSuburbList,
-  //   error: suburbError,
-  //   isLoading,
-  // } = useSuburbData(suburb, currentSuburb);
-
-  // const [inputValue, setInputValue] = useState(field.value || "");
-  // const [currentSuburb, setCurrentSuburb] = useState<SurburbInfo | null>(null);
-  // const { suburbList, setSuburbList, error: suburbError, isLoading } = useSuburbData(inputValue, currentSuburb);
-
-  // const { suburbList, setSuburbList, error: suburbError, isLoading } = useSuburbData(inputValue, currentSuburb);
   const dispatch = useDispatch();
 
   const { data: session } = useSession();
@@ -139,6 +125,7 @@ const EditProfile = () => {
   const [inputValue, setInputValue] = useState(""); // Initialize state for input
   const [currentSuburb, setCurrentSuburb] = useState<SurburbInfo | null>(null);
   const suburbValue = watch("suburb"); // Watch the suburb field
+  const [showManualAddress, setShowManualAddress] = useState(false);
 
   // Sync input value with react-hook-form's field value
   useEffect(() => {
@@ -178,7 +165,7 @@ const EditProfile = () => {
           // phoneNumber: data.phoneNumber || "",
           emailAddress: data.emailAddress || user?.emailAddress || "",
           postcode: data.postalCode || "",
-          suburb: data.suburbs || "",
+          suburb: data.suburbs ? `${data.suburbs}, ${data.state}` : "",
           state: data.state || "",
           idType:
             idTypeObject.find((item) => item.value === data.idType)?.label ||
@@ -200,6 +187,9 @@ const EditProfile = () => {
             : "No Bio needed for customer",
           abn: isServiceProvider ? data.abn || "" : "",
         });
+        //@ts-ignore
+        //Stops API from making the request when suburb input is prefilled
+        setCurrentSuburb({});
       } catch (error) {
         console.error("Error fetching user data:", error);
         setErr("Failed to load user data. Please try again.");
@@ -208,10 +198,6 @@ const EditProfile = () => {
 
     fetchUserData();
   }, [isServiceProvider, dispatch, reset, isEditingEnabled]);
-
-  //console.log(userDetails)
-
-  const watchPostcode = watch("postcode");
 
   const formatDateAsYYYYMMDD = (date: Date): string => {
     const yyyy = date.getFullYear();
@@ -233,31 +219,6 @@ const EditProfile = () => {
     }
     (data.idImageBack = "null"), (data.idImageFront = "null");
     if (!isServiceProvider) data.abn = "null";
-
-    // const missingFields = Object.entries(data)
-    // .filter(([key, value]) => value === "" || value == null)
-    // .map(([key]) => key);
-
-    // const missingFields = Object.entries(data)
-    // .filter(([key, value]) => value === "" || value == null)
-    // .map(([key]) => key);
-    // .filter((key) => key !== "emailAddress");
-
-    // console.log("selectedDocumentFront:", selectedDocumentFront);
-    // console.log("userDetails.idImageFront:", userDetails.idImageFront);
-    // console.log("selectedDocumentBack:", selectedDocumentBack);
-    // console.log("userDetails.idImageBack:", userDetails.idImageBack);
-
-    // const missingFields = Object.entries(data)
-    // .filter(([key, value]) => {
-    //   if (["idImageFront", "idImageBack"].includes(key)) {
-    //     return !selectedDocumentFront && !userDetails.idImageFront && key === "idImageFront" ||
-    //           !selectedDocumentBack && !userDetails.idImageBack && key === "idImageBack";
-    //   }
-    //   return value === "" || value == null;
-    // })
-    // .map(([key]) => key)
-    // .filter((key) => key !== "emailAddress");
 
     const missingFields = Object.entries(data)
       .filter(([key, value]) => {
@@ -299,115 +260,6 @@ const EditProfile = () => {
       return;
     }
 
-    // const missingFields = Object.entries(data)
-    // .filter(([key, value]) => {
-    //   if (["idImageFront", "idImageBack"].includes(key)) {
-    //     if (data.idType === "International Passport") {
-    //       // Only require idImageFront for international passports
-    //       return key === "idImageFront" && !selectedDocumentFront && !userDetails.idImageFront;
-    //     }
-
-    //     // Other ID types require both images
-    //     return (
-    //       (!selectedDocumentFront && !userDetails.idImageFront && key === "idImageFront") ||
-    //       (!selectedDocumentBack && !userDetails.idImageBack && key === "idImageBack")
-    //     );
-    //   }
-
-    //   return value === "" || value == null;
-    // })
-    // .map(([key]) => key)
-    // .filter((key) => key !== "emailAddress"); // Exclude optional fields like email
-
-    console.log("Final missing fields:", missingFields);
-
-    console.log("ID Type:", data.idType); // Log the ID type before checking
-
-    // if (missingFields.length > 0) {
-    //   if (
-    //     missingFields.length === 1 &&
-    //     data.idType.toLowerCase() === "international passport" &&
-    //     missingFields.includes("idImageBack")
-    //   ) {
-    //     console.log("Skipping idImageBack validation for International Passport");
-    //   } else {
-    //     setEditProfileError(`Missing required fields: ${missingFields.join(", ")}`);
-    //     console.log("Missing fields:", missingFields);
-    //     return;
-    //   }
-    // } else {
-    //   console.log("No missing fields, proceeding...");
-    // }
-
-    // if (
-    //   missingFields.length > 0 &&
-    //   data.idType.toLowerCase() === "international passport" &&
-    //   missingFields.includes("idImageBack")
-    // ) {
-    //   console.log("Skipping idImageBack validation for International Passport");
-    // } else {
-    //   setEditProfileError(`Missing required fields: ${missingFields.join(", ")}`);
-    //   console.log("Missing fields:", missingFields);
-    //   return;
-    // }
-
-    // if (missingFields.length > 0) {
-    //   setEditProfileError(`Missing required fields: ${missingFields.join(", ")}`);
-    //   console.log("Missing fields:", missingFields);
-    //   return;
-    // }
-    // if (
-    //   missingFields.length > 0 &&
-    //   data.idType === "INTERNATIONAL_PASSPORT" &&
-    //   missingFields.includes("idImageBack")
-    // ) {
-    //   console.log("Skipping idImageBack validation for International Passport");
-    // } else {
-    //   setEditProfileError(`Missing required fields: ${missingFields.join(", ")}`);
-    //   console.log("Missing fields:", missingFields);
-    //   return;
-    // }
-
-    // if (
-    //   missingFields.length === 1 &&
-    //   data.idType === "INTERNATIONAL_PASSPORT" &&
-    //   missingFields.includes("idImageBack")
-    // ) {
-    //   // Skip validation for idImageBack when idType is INTERNATIONAL_PASSPORT
-    //   console.log("Skipping idImageBack validation for International Passport");
-    // } else {
-    //   setEditProfileError(`Missing required fields: ${missingFields.join(", ")}`);
-    //   console.log("Missing fields:", missingFields);
-    //   return;
-    // }
-
-    // if (data.idType === "International Passport" && !selectedDocumentFront) {
-    //   setEditProfileError("Missing required field: idImageFront");
-    //   console.log("Missing field: idImageFront");
-    //   return;
-    // }
-    // if (data.idType === "International Passport" && !selectedDocumentFront && !data.idImageFront) {
-    //   setEditProfileError("Missing required field: idImageFront");
-    //   return;
-    // }
-
-    // if (data.idType !== "International Passport" && (!selectedDocumentBack || !selectedDocumentFront)) {
-    //   setEditProfileError("Missing required fields: idImageFront, idImageBack");
-    //   console.log("Missing fields: idImageFront, idImageBack");
-    //   return;
-    // }
-
-    // if (data.idType === "Medicare Card" && !selectedDocumentFront && !data.idImageFront) {
-    //   setEditProfileError("Missing required field: idImageFront");
-    //   return;
-    // }
-
-    // if (data.idType !== "Medicare Card" && (!selectedDocumentBack || !selectedDocumentFront)) {
-    //   setEditProfileError("Missing required fields: idImageFront, idImageBack");
-    //   console.log("Missing fields: idImageFront, idImageBack");
-    //   return;
-    // }
-
     setEditProfileError("");
     try {
       let submitData: any;
@@ -419,12 +271,17 @@ const EditProfile = () => {
           dateOfBirth: data.dateOfBirth
             ? formatDateAsYYYYMMDD(data.dateOfBirth as Date)
             : "",
-          suburb: data.suburb,
+          suburb: data.suburbName || currentSuburb?.name || userDetails.suburbs,
           // phoneNumber: data.phoneNumber,
-          state: data.state,
+          state: data.state || currentSuburb?.state.name || userDetails.state,
           // postCode: data.postcode,
-          postCode:
-            data.postcode.length === 3 ? `0${data.postcode}` : data.postcode,
+          postCode: (
+            data.postcode ??
+            currentSuburb?.postcode ??
+            userDetails.postalCode
+          )
+            .toString()
+            .padStart(4, "0"),
           ...(selectedDocumentFront
             ? { idImageFront: selectedDocumentFront }
             : {}),
@@ -435,12 +292,6 @@ const EditProfile = () => {
           idNumber: data.idNumber,
           bio: data.bio,
           abn: data.abn,
-          // }).reduce((acc, [key, value]) => {
-          //   if (value !== null && value !== undefined && value !== "") {
-          //     acc[key] = value;
-          //   }
-          //   return acc;
-          // }, {});
           ...(isServiceProvider ? { abn: data.abn } : {}), // Include ABN only if service provider
         }).reduce((acc, [key, value]) => {
           if (value !== null && value !== undefined && value !== "") {
@@ -457,11 +308,17 @@ const EditProfile = () => {
           dateOfBirth: data.dateOfBirth
             ? formatDateAsYYYYMMDD(data.dateOfBirth as Date)
             : "",
-          suburb: data.suburb,
+          suburb: data.suburbName || currentSuburb?.name || userDetails.suburbs,
           // emailAddress: data.emailAddress || user?.emailAddress || "",
           // phoneNumber: data.phoneNumber,
-          state: data.state,
-          postCode: data.postcode,
+          state: data.state || currentSuburb?.state.name || userDetails.state,
+          postCode: (
+            currentSuburb?.postcode ??
+            data.postcode ??
+            userDetails.postalCode
+          )
+            .toString()
+            .padStart(4, "0"),
           ...(selectedDocumentFront
             ? { idImageFront: selectedDocumentFront }
             : {}),
@@ -478,8 +335,6 @@ const EditProfile = () => {
         }, {});
         url = "customer/update";
       }
-
-      // console.log("Final submitData:", JSON.stringify(submitData, null, 2));
 
       await authInstance.patch(url, submitData, {
         headers: { "Content-Type": "multipart/form-data" },
@@ -552,24 +407,6 @@ const EditProfile = () => {
           setDocumentImage={setDocumentImage}
           handleRedirect={handleRedirect}
         />
-        {/* <EditProfileModal
-          setIsFormModalShown={setIsFormModalShown}
-          setDocumentImageFront={setDocumentImageFront}
-          setDocumentImageBack={setDocumentImageBack}
-          isFormModalShown={isFormModalShown}
-          isEditingProfilePicture={isEditingProfilePicture}
-          setisEditingProfilePicture={setIsEditingProfilePicture}
-          isEditingImageFront={isEditingImageFront}
-          setisEditingImageFront={setIsEditingImageFront}
-          isEditingImageBack={isEditingImageBack}
-          setisEditingImageBack={setIsEditingImageBack}
-          isProfileUpdatedSuccessfully={isProfileUpdatedSuccessfully}
-          setIsProfileUpdatedSuccessfully={setIsProfileUpdatedSuccessfully}
-          setSelectedDocumentFront={setSelectedDocumentFront}
-          setSelectedDocumentBack={setSelectedDocumentBack}
-          setDocumentImage={setDocumentImage}
-          handleRedirect={handleRedirect}
-        /> */}
 
         {/* Profile Image Section */}
         <section className="col-span-3 flex flex-col items-center justify-center gap-1 pb-8">
@@ -641,32 +478,6 @@ const EditProfile = () => {
                 <label htmlFor="dob" className="text-violet-normal">
                   Date of Birth
                 </label>
-                {/* <Controller
-      name="dateOfBirth"
-      control={control}
-      rules={{
-        required: "Date of Birth is required",
-        validate: (value) => {
-          if (!value) return "Date of Birth is required";
-          const enteredDate = new Date(value);
-          const today = new Date();
-          const minDate = new Date(today.setFullYear(today.getFullYear() - 18));
-
-          return enteredDate <= minDate || "You must be at least 18 years old";
-        },
-      }}
-      render={({ field }) => (
-        <Calendar
-          {...field}
-          id="dob"
-          dateFormat="dd/mm/yy"
-          showIcon
-          placeholder="DD/MM/YYYY"
-          maxDate={new Date(new Date().setFullYear(new Date().getFullYear() - 18))}
-          className="p-inputtext border w-full lg:max-w-sm border-slate-100 rounded-xl shadow hover:shadow-md"
-        />
-      )}
-  /> */}
 
                 <Controller
                   name="dateOfBirth"
@@ -755,20 +566,6 @@ const EditProfile = () => {
               Contact Information
             </h3>
             <div className="flex flex-wrap gap-6 lg:col-span-8 lg:grid lg:grid-cols-2">
-              {/* Phone number */}
-              {/* <label className="flex w-full flex-col gap-3 text-violet-normal">
-              <span className="flex items-center justify-between">
-                <span>Phone Number</span>
-                <BiCheck className="size-5 rounded-full bg-green-500 p-1 text-white" />
-              </span>
-              <input
-                type="text"
-                className="rounded-xl border border-slate-100 p-2 text-slate-700 shadow outline-none transition-shadow duration-300 hover:shadow-md lg:max-w-sm"
-                value={user?.phoneNumber}
-                readOnly
-                disabled
-              />
-            </label> */}
               {/* Email Address */}
               <label className="flex w-full flex-col gap-3 text-violet-normal">
                 <span className="flex items-center justify-between">
@@ -786,169 +583,173 @@ const EditProfile = () => {
             </div>
           </section>
 
-          {/* <Controller
-            name="emailAddress"
-            control={control}
-            defaultValue={user?.emailAddress} // Ensure it's prefilled
-            render={({ field }) => (
-              <input {...field} disabled className="your-input-styles" />
-            )}
-          /> */}
-
           {/* Address Information */}
           <section className="flex flex-col gap-4">
             <h3 className="text-lg font-bold text-primary">
               Address Information
             </h3>
             <div className="flex flex-wrap gap-6 lg:col-span-8 lg:grid lg:grid-cols-2">
-              <div className="hidden">
-                <FormField
-                  label="Postal Code"
-                  name="postcode"
-                  watch={watch}
-                  register={register}
-                  errors={errors}
-                  watchField={watchField}
-                  disabled={!isEditingEnabled || !!userDetails.postalCode}
-                />
-              </div>
-              {/* <Controller
-                name="suburb"
-                control={control}
-                render={({ field }) => (
-                  <div className="flex w-full flex-col gap-3 text-violet-normal">
-                    <label
-                      htmlFor="suburb"
-                      className="flex items-center justify-between"
-                    >
-                      <span>Suburb</span>
-                      {!errors.suburb && field.value && (
-                        <BiCheck className="size-5 rounded-full bg-green-500 p-1 text-white" />
-                      )}
-                    </label>
-                    <select
-                      {...field}
-                      className="rounded-xl border border-slate-100 p-2 py-2.5 text-slate-700 shadow outline-none transition-shadow duration-300 hover:shadow-md"
-                      disabled={
-                        !isEditingEnabled ||
-                        suburbList.length === 0 ||
-                        !!userDetails.suburbs
-                      }
-                    >
-                      {suburbList.map((item) => (
-                        <option value={item} key={item}>
-                          {item}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                )}
-              /> */}
               <Controller
                 name="suburb"
                 control={control}
                 render={({ field }) => (
                   <div className="relative flex w-full flex-col gap-3 text-violet-normal">
-                    <label
-                      htmlFor="suburb"
-                      className="flex items-center justify-between"
-                    >
-                      <span>Suburb</span>
-                      {!errors.suburb && field.value && (
-                        <BiCheck className="size-5 rounded-full bg-green-500 p-1 text-white" />
-                      )}
-                    </label>
-
-                    {/* Suburb Input Field */}
-                    <div className="relative w-full lg:max-w-sm">
-                      <div
-                        className={`flex items-center rounded-xl border border-slate-100 bg-white px-3 shadow outline-none transition-shadow duration-300 hover:shadow-md ${
-                          errors.suburb ? "border-red-500" : ""
-                        }`}
-                      >
-                        <CiLocationOn fill="#76757A61" size={22} />
-                        <input
-                          id="suburb"
-                          type="text"
-                          className="w-full rounded-xl border-none bg-white p-2 text-slate-700 shadow-none outline-none"
-                          placeholder="Enter a suburb"
-                          value={inputValue}
-                          onChange={(e) => {
-                            if (currentSuburb) {
-                              setCurrentSuburb(null);
-                              const enteredInput = e.target.value.slice(-1);
-                              e.target.value = enteredInput;
-                              setInputValue(enteredInput);
-                            } else {
-                              setInputValue(e.target.value);
-                            }
-                            field.onChange(e.target.value); // Sync with react-hook-form
-                          }}
-                          autoComplete="off"
-                        />
-                      </div>
-
-                      {/* Suburb Dropdown */}
-                      {suburbList.length > 0 && (
-                        <div className="absolute left-0 z-10 w-full rounded-lg bg-white shadow-lg">
-                          {isLoading && (
-                            <p className="py-2 text-center font-satoshiMedium text-[#76757A61]">
-                              Loading...
-                            </p>
+                    {!showManualAddress && (
+                      <>
+                        <label
+                          htmlFor="suburb"
+                          className="flex items-center justify-between"
+                        >
+                          <span>Suburb</span>
+                          {!errors.suburb && field.value && (
+                            <BiCheck className="size-5 rounded-full bg-green-500 p-1 text-white" />
                           )}
-                          {suburbError && !isLoading && (
-                            <p className="py-2 text-center font-satoshiMedium text-red-600">
-                              Error occurred while loading suburb data
-                            </p>
-                          )}
-                          <ul className="max-h-52 overflow-y-auto overflow-x-hidden">
-                            {suburbList.map((suburb) => (
-                              <li
-                                className="flex cursor-pointer items-center gap-1 bg-white px-4 py-3 text-[13px] hover:bg-gray-100"
-                                key={Math.random() * 12345}
-                                onClick={() => {
-                                  setCurrentSuburb(suburb);
-                                  setInputValue(
-                                    `${suburb.name}, ${suburb.state.abbreviation}, Australia`,
-                                  );
-                                  field.onChange(suburb.name); // Update form value
-                                  setValue("postcode", String(suburb.postcode)); // Auto-update postcode field
-                                  setValue("state", suburb.state.name);
-                                  setSuburbList([]); // Clear dropdown
-                                }}
-                              >
-                                <CiLocationOn
-                                  stroke="#0F052E"
-                                  size={20}
-                                  strokeWidth={1}
-                                />
-                                <span className="text-[#0F052E]">
-                                  {suburb.name},{" "}
-                                  {suburb.locality ? `${suburb.locality},` : ""}{" "}
-                                  {suburb.state.name}, AUS
-                                </span>
-                              </li>
-                            ))}
-                          </ul>
+                        </label>
+
+                        {/* Suburb Input Field */}
+                        <div className="relative w-full lg:max-w-sm">
+                          <div
+                            className={`flex items-center rounded-xl border border-slate-100 bg-white px-3 shadow outline-none transition-shadow duration-300 hover:shadow-md ${
+                              errors.suburb ? "border-red-500" : ""
+                            }`}
+                          >
+                            <CiLocationOn fill="#76757A61" size={22} />
+                            <input
+                              id="suburb"
+                              type="text"
+                              className="w-full rounded-xl border-none bg-white p-2 text-slate-700 shadow-none outline-none"
+                              placeholder="Enter a suburb"
+                              value={inputValue}
+                              onChange={(e) => {
+                                if (currentSuburb) {
+                                  setCurrentSuburb(null);
+                                  const enteredInput = e.target.value.slice(-1);
+                                  e.target.value = enteredInput;
+                                  setInputValue(enteredInput);
+                                } else {
+                                  setInputValue(e.target.value);
+                                }
+                                field.onChange(e.target.value); // Sync with react-hook-form
+                              }}
+                              autoComplete="off"
+                            />
+                          </div>
+
+                          {/* Suburb Dropdown */}
+                          <div className="absolute left-0 z-10 w-full rounded-lg bg-white shadow-lg">
+                            {isLoading && (
+                              <p className="py-2 text-center font-satoshiMedium text-[#76757A61]">
+                                Loading...
+                              </p>
+                            )}
+                            {suburbError && !isLoading && (
+                              <p className="py-2 text-center font-satoshiMedium text-red-600">
+                                Error occurred while loading suburb data
+                              </p>
+                            )}
+                            {suburbList.length > 0 && (
+                              <ul className="max-h-52 overflow-y-auto overflow-x-hidden">
+                                {suburbList.map((suburb) => (
+                                  <li
+                                    className="flex cursor-pointer items-center gap-1 bg-white px-4 py-3 text-[13px] hover:bg-gray-100"
+                                    key={Math.random() * 12345}
+                                    onClick={() => {
+                                      setCurrentSuburb(suburb);
+                                      setInputValue(
+                                        `${suburb.name}, ${suburb.state.abbreviation}, Australia`,
+                                      );
+                                      field.onChange(
+                                        `${suburb.name}, ${suburb.state.abbreviation}, Australia`,
+                                      );
+                                      setSuburbList([]);
+                                    }}
+                                  >
+                                    <CiLocationOn
+                                      stroke="#0F052E"
+                                      size={20}
+                                      strokeWidth={1}
+                                    />
+                                    <span className="text-[#0F052E]">
+                                      {suburb.name},{" "}
+                                      {suburb.locality
+                                        ? `${suburb.locality},`
+                                        : ""}{" "}
+                                      {suburb.state.name}, AUS
+                                    </span>
+                                  </li>
+                                ))}
+                              </ul>
+                            )}
+                            {watchField.suburb &&
+                              !showManualAddress &&
+                              (!currentSuburb ||
+                                Object.keys(currentSuburb).length > 0) && (
+                                <div
+                                  className="flex max-w-sm cursor-pointer items-center gap-3 p-2 font-satoshiBold font-bold shadow-sm"
+                                  onClick={() => {
+                                    setShowManualAddress(true);
+                                    setSuburbList([]);
+                                  }}
+                                >
+                                  <FaLocationDot color="#2D1970" size={25} />
+                                  <div>
+                                    <h6 className="">
+                                      Can&apos;t find your address?
+                                    </h6>
+                                    <p className="font-satoshiMedium text-sm text-[#4E5158]">
+                                      Enter manually{" "}
+                                      <span className="text-primary">here</span>
+                                    </p>
+                                  </div>
+                                </div>
+                              )}
+                          </div>
                         </div>
-                      )}
-                    </div>
+                      </>
+                    )}
                   </div>
                 )}
               />
-
-              <div className="hidden">
-                <FormField
-                  label="State"
-                  name="state"
-                  watch={watch}
-                  register={register}
-                  errors={errors}
-                  watchField={watchField}
-                  disabled={true}
-                />
-              </div>
             </div>
+            {showManualAddress && (
+              <div className="grid grid-cols-2 gap-5">
+                <div className="col-span-2 md:col-span-1">
+                  <FormField
+                    label="State / Territory"
+                    name="state"
+                    watch={watch}
+                    register={register}
+                    errors={errors}
+                    watchField={watchField}
+                    disabled={false}
+                  />
+                </div>
+
+                <div className="col-span-2 md:col-span-1">
+                  <FormField
+                    label="Postal Code"
+                    name="postcode"
+                    watch={watch}
+                    register={register}
+                    errors={errors}
+                    watchField={watchField}
+                    disabled={false}
+                  />
+                </div>
+
+                <div className="col-span-2 md:col-span-1">
+                  <FormField
+                    label="Suburb"
+                    name="suburbName"
+                    watch={watch}
+                    register={register}
+                    errors={errors}
+                    watchField={watchField}
+                    disabled={false}
+                  />
+                </div>
+              </div>
+            )}
           </section>
 
           {/* Bio Section (for Service Providers) */}
