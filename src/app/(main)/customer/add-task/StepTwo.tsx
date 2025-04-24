@@ -300,9 +300,6 @@ function StepTwo() {
                           {suburb.name},{" "}
                           {suburb.locality ? `${suburb.locality},` : ""}{" "}
                           {suburb.state.name}, AUS
-                          {suburb.name},{" "}
-                          {suburb.locality ? `${suburb.locality},` : ""}{" "}
-                          {suburb.state.name}, AUS
                         </span>
                       </li>
                     ))}
