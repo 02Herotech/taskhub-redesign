@@ -46,6 +46,7 @@ function Page() {
             const searchInput_ = searchInput.trim();
             if (searchInput_.length < 3) return;
             setSearchText(searchInput_);
+            setPageNumber(0)
             updateQuery(searchInput_);
           }}
         >
@@ -78,7 +79,13 @@ function Page() {
         </div>
       )}
 
-      {data?.content.length < 1 && !isFetching && <div>No search results</div>}
+      {data?.content.length < 1 && !isFetching && (
+        <div className="min-h-[40vh]">
+          <h4 className="font-satoshiBold text-4xl font-bold">
+            No search results
+          </h4>
+        </div>
+      )}
 
       <ul
         aria-label="List of services"
