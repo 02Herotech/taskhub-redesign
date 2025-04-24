@@ -53,8 +53,6 @@ function useSuburbData(searchValue: string, currentSuburb: SurburbInfo | null) {
     return () => clearTimeout(debounceFetchSuburb);
   }, [searchValue]);
 
-  // const Suburbs = () => <div></div>;
-
   return { suburbList, setSuburbList, error, isLoading };
 }
 

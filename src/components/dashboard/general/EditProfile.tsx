@@ -187,7 +187,9 @@ const EditProfile = () => {
             : "No Bio needed for customer",
           abn: isServiceProvider ? data.abn || "" : "",
         });
-        setSuburbList([]);
+        //@ts-ignore
+        //Stops API from making the request when suburb input is prefilled
+        setCurrentSuburb({});
       } catch (error) {
         console.error("Error fetching user data:", error);
         setErr("Failed to load user data. Please try again.");
@@ -678,24 +680,29 @@ const EditProfile = () => {
                                 ))}
                               </ul>
                             )}
-                            <div
-                              className="flex max-w-sm cursor-pointer items-center gap-3 p-2 font-satoshiBold font-bold shadow-sm"
-                              onClick={() => {
-                                setShowManualAddress(true);
-                                setSuburbList([]);
-                              }}
-                            >
-                              <FaLocationDot color="#2D1970" size={25} />
-                              <div>
-                                <h6 className="">
-                                  Can&apos;t find your address?
-                                </h6>
-                                <p className="font-satoshiMedium text-sm text-[#4E5158]">
-                                  Enter manually{" "}
-                                  <span className="text-primary">here</span>
-                                </p>
-                              </div>
-                            </div>
+                            {watchField.suburb &&
+                              !showManualAddress &&
+                              (!currentSuburb ||
+                                Object.keys(currentSuburb).length > 0) && (
+                                <div
+                                  className="flex max-w-sm cursor-pointer items-center gap-3 p-2 font-satoshiBold font-bold shadow-sm"
+                                  onClick={() => {
+                                    setShowManualAddress(true);
+                                    setSuburbList([]);
+                                  }}
+                                >
+                                  <FaLocationDot color="#2D1970" size={25} />
+                                  <div>
+                                    <h6 className="">
+                                      Can&apos;t find your address?
+                                    </h6>
+                                    <p className="font-satoshiMedium text-sm text-[#4E5158]">
+                                      Enter manually{" "}
+                                      <span className="text-primary">here</span>
+                                    </p>
+                                  </div>
+                                </div>
+                              )}
                           </div>
                         </div>
                       </>
