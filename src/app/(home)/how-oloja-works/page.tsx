@@ -329,7 +329,7 @@ function Page() {
         </section>
 
         {/* New Section One  */}
-        <section className="relative mx-auto mt-20 mb-10 sm:mb-20 w-[93%] overflow-clip rounded-xl bg-[#FAFAFA] px-6 py-10 text-primary sm:w-[85%]">
+        <section className="relative mx-auto mb-10 mt-20 w-[93%] overflow-clip rounded-xl bg-[#FAFAFA] px-6 py-10 text-primary sm:mb-20 sm:w-[85%]">
           <h2 className="mb-5 text-center font-clashSemiBold text-2xl sm:text-4xl">
             Olójà Hub Fees & Charges:{" "}
           </h2>
@@ -370,7 +370,7 @@ function Page() {
                 whileInView={{ x: 0, opacity: 1 }}
                 viewport={{ once: true }}
                 transition={{ delay: 0.5, duration: 0.4 }}
-                className="mb-10 sm:mb-14 ml-20 flex items-center gap-3 rounded-lg bg-[#EBE9F4] px-3 py-2 text-sm sm:text-xl"
+                className="mb-10 ml-20 flex items-center gap-3 rounded-lg bg-[#EBE9F4] px-3 py-2 text-sm sm:mb-14 sm:text-xl"
               >
                 {/* 24 x 24  */}
                 <Image
@@ -387,7 +387,7 @@ function Page() {
                 </p>
               </motion.div>
 
-              <h3 className="mb-5 w-max rounded-xl px-3 py-2 font-clashSemiBold text-lg text-[#EBE9F4] sm:mb-7 bg-[#E58C06] sm:text-2xl">
+              <h3 className="mb-5 w-max rounded-xl bg-[#E58C06] px-3 py-2 font-clashSemiBold text-lg text-[#EBE9F4] sm:mb-7 sm:text-2xl">
                 As a Service Provider
               </h3>
               <motion.div
@@ -504,7 +504,7 @@ function Page() {
             {perks.map((perk, i) => (
               <li
                 className={
-                  "relative flex flex-col justify-center gap-4 overflow-clip rounded-3xl bg-[#E1DDEE] px-6 py-10 text-xl shadow-xl " +
+                  "relative flex cursor-pointer flex-col justify-center gap-4 overflow-clip rounded-3xl bg-[#E1DDEE] px-6 py-10 text-xl shadow-xl " +
                   (hoveredIndex == i ? "text-white" : "text-primary")
                 }
                 key={Math.random() * 1234}

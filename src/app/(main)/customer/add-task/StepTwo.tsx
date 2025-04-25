@@ -284,6 +284,10 @@ function StepTwo() {
                             "suburb",
                             `${suburb.name}, ${suburb.state.abbreviation}, Australia`,
                           );
+                          setValue(
+                            "suburb",
+                            `${suburb.name}, ${suburb.state.abbreviation}, Australia`,
+                          );
                           setSuburbList([]);
                         }}
                       >
@@ -498,7 +502,7 @@ function StepTwo() {
         isOpen={popupState.open && popupState.status === "success"}
         onClose={() => {
           dispatch(resetSavedTask());
-          router.push("/customer/tasks");
+          router.push("/customer/tasks/all-tasks");
           setPopupState({ open: false, status: "" });
         }}
       >
@@ -514,7 +518,7 @@ function StepTwo() {
           </p>
           <div className="flex justify-center gap-3 sm:gap-5">
             <Link
-              href="/customer/tasks"
+              href="/customer/tasks/all-tasks"
               onClick={() => dispatch(resetSavedTask())}
               className="rounded-full border-[0.5px] border-primary bg-[#EBE9F4] px-3 py-2 font-bold text-primary"
             >

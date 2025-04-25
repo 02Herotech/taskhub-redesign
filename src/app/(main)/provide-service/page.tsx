@@ -634,7 +634,7 @@ const ProvideService: React.FC = () => {
                     value={task.listingTitle}
                     onChange={handleChange}
                     placeholder="Casual Babysitting"
-                    className={`rounded-2xl bg-[#EBE9F4] p-3 text-[13px] placeholder:font-satoshi placeholder:font-medium placeholder:text-status-darkpurple ${errors.lisitingTitle ? "border border-[#ff0000] outline-[#FF0000]" : "border-none outline-none"}`}
+                    className={`rounded-2xl bg-[#EBE9F4] p-3 text-[13px] placeholder:font-satoshi placeholder:font-medium placeholder:text-[#C1BADB] ${errors.lisitingTitle ? "border border-[#ff0000] outline-[#FF0000]" : "border-none outline-none"}`}
                   />
                 </div>
                 {/* <div className="relative grid space-y-4">
@@ -737,7 +737,7 @@ const ProvideService: React.FC = () => {
                     )}
                   </div>
                   <textarea
-                    className={` h-[350px] rounded-2xl bg-[#EBE9F4] p-3 placeholder:font-satoshi placeholder:text-[12px] placeholder:text-status-darkpurple ${errors.description ? "border border-[#ff0000] outline-[#FF0000]" : "border-none outline-none"}`}
+                    className={` h-[350px] rounded-2xl bg-[#EBE9F4] p-3 placeholder:font-satoshi placeholder:text-[#C1BADB] ${errors.description ? "border border-[#ff0000] outline-[#FF0000]" : "border-none outline-none"}`}
                     placeholder="Casual Babysitting"
                     name="description"
                     value={task.listingDescription}
@@ -1046,6 +1046,9 @@ const ProvideService: React.FC = () => {
                               key={Math.random() * 12345}
                               onClick={() => {
                                 setCurrentSuburb(suburb);
+                                setSuburb(
+                                  `${suburb.name}, ${suburb.state.abbreviation}, Australia`,
+                                );
                                 setSuburb(
                                   `${suburb.name}, ${suburb.state.abbreviation}, Australia`,
                                 );
@@ -1622,91 +1625,44 @@ const ProvideService: React.FC = () => {
           </div>
         </div>
         <div>
-          {complete ? (
-            <Popup
-              isOpen={isSuccessPopupOpen}
-              onClose={() => setIsSuccessPopupOpen(false)}
-            >
-              <div className="px-14 py-10 lg:px-24">
-                <div className="relative grid items-center justify-center space-y-5">
-                  <p className="font-clashDisplay text-center text-[20px] font-extrabold text-[#2A1769] md:text-[36px] lg:text-[37px] ">
-                    You are almost done!!!
-                  </p>
-                  <div>
-                    <p className="text-center text-[14px] lg:text-[20px]">
-                      Please proceed to update your profile
-                    </p>
-                    <p className="text-center text-[14px] lg:text-[20px]">
-                      before you can make a listing
-                    </p>
-                  </div>
-                  <Image
-                    src={image}
-                    alt="image"
-                    className="absolute -right-14 top-28 w-24 lg:-right-12 lg:top-2/3 lg:w-24 "
-                  />
-                  <Image
-                    src={img}
-                    alt="image"
-                    className="absolute -left-12 top-12 w-12 lg:-left-[53px] lg:top-8 lg:w-16"
-                  />
-                  <div className="flex justify-center space-x-3 md:justify-around">
-                    <Link href="/marketplace?">
-                      <button className="rounded-2xl border-2 border-status-purpleBase p-2 text-[14px] font-semibold text-status-purpleBase outline-none md:w-[100px]">
-                        Back
-                      </button>
-                    </Link>
-
-                    <button
-                      onClick={handleProfile}
-                      className="rounded-2xl bg-status-purpleBase p-2 text-[14px] text-white outline-none md:w-[100px]"
-                    >
-                      Go to profile
-                    </button>
-                  </div>
+          <Popup
+            isOpen={isSuccessPopupOpen}
+            onClose={() => {
+              setIsSuccessPopupOpen(false);
+              route.push("/marketplace");
+            }}
+          >
+            <div className="overflow-hidden px-5 py-5 lg:px-24">
+              <div className="relative grid items-center justify-center space-y-3">
+                <div className="flex justify-center text-[1px] text-white">
+                  <Image src={imag} alt="image" />
+                </div>
+                <p className=" text-center font-clashBold text-[28px] font-extrabold text-[#2A1769] lg:text-[42px]">
+                  Service created
+                </p>
+                <div className="text-center font-satoshiMedium lg:hidden lg:text-[20px]">
+                  Your Service Listing has been created! please click on the
+                  button to proceed to marketplace
+                </div>
+                <div className="hidden text-center font-satoshiMedium lg:block lg:text-[20px]">
+                  Your Service Listing has been created!
+                  <p>please click on the button to proceed to marketplace</p>
+                </div>
+                <Image
+                  src={image}
+                  alt="image"
+                  className="lg:top-54 absolute -right-5 top-56  w-20 font-satoshiMedium lg:-right-24 lg:top-44 lg:w-28"
+                />
+                <div className="flex justify-center">
+                  <Link href="/marketplace">
+                    <Button className="rounded-full bg-status-purpleBase px-4 text-[14px] font-bold text-white outline-none">
+                      Go to marketplace
+                    </Button>
+                  </Link>
                 </div>
               </div>
-            </Popup>
-          ) : (
-            <Popup
-              isOpen={isSuccessPopupOpen}
-              onClose={() => {
-                route.push("/marketplace");
-                setIsSuccessPopupOpen(false);
-              }}
-            >
-              <div className="px-5 py-10 lg:px-24">
-                <div className="relative grid items-center justify-center space-y-3">
-                  <div className="flex justify-center text-[1px] text-white">
-                    <Image src={imag} alt="image" />
-                  </div>
-                  <p className=" text-center font-clashBold text-[28px] font-extrabold text-[#2A1769] lg:text-[42px]">
-                    Service created
-                  </p>
-                  <div className="text-center font-satoshiMedium lg:hidden lg:text-[20px]">
-                    Your Service Listing has been created! please click on the
-                    button to proceed to marketplace
-                  </div>
-                  <div className="hidden text-center font-satoshiMedium lg:block lg:text-[20px]">
-                    Your Service Listing has been created!
-                    <p>please click on the button to proceed to marketplace</p>
-                  </div>
-                  <Image
-                    src={image}
-                    alt="image"
-                    className="lg:top-54 absolute -right-5 top-56  w-20 font-satoshiMedium lg:-right-24 lg:top-44 lg:w-28"
-                  />
-                  <div className="flex justify-center">
-                    <Link href="/marketplace">
-                      <button className="w-[100px] rounded-2xl bg-status-purpleBase p-2 text-[14px] text-white outline-none">
-                        Go Home
-                      </button>
-                    </Link>
-                  </div>
-                </div>
-              </div>
-            </Popup>
-          )}
+            </div>
+          </Popup>
         </div>
       </div>
       {isAuth ? (

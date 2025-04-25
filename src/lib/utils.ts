@@ -117,6 +117,7 @@ export function convertAmountToSubunit(
 }
 
 export function formatCardNumber(cardNumber: string): string {
+  if (!cardNumber) return;
   const formattedCardNumber = cardNumber.replace(/(\d{4})(?=\d)/g, "$1 ");
   return formattedCardNumber;
 }
@@ -217,6 +218,14 @@ export const revisions = [
   "Others",
 ];
 
+
+export const cancellationReasons = [
+  "I'm dissatisfied with the service",
+  "Task no longer needed",
+  "Change in priorities",
+  "Others",
+];
+
 export const inspectionTimes = [
   "1 hour",
   "3 hours",
@@ -277,7 +286,7 @@ export const formatTimeAgo = (timestamp: number): string => {
 
 export function formatTime24Hour(timeArray: [number, number] | null): string {
   // Check if the input is null
-  if (timeArray === null) {
+  if (!timeArray) {
     return "Flexible";
   }
 
@@ -296,6 +305,7 @@ export function formatTime24Hour(timeArray: [number, number] | null): string {
 
 // Utility function to create a URL-friendly slug
 export const createSlug = (text: string): string => {
+  if (!text) return;
   return text
     .toLowerCase() // Convert to lowercase
     .trim() // Remove leading and trailing whitespace
@@ -316,6 +326,7 @@ export const parseSlug = (
   };
 };
 
+/**Get image url from file */
 export function getImageUrl(file: File) {
   if (file instanceof File) {
     return URL.createObjectURL(file);
