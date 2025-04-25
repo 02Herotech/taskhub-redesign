@@ -309,10 +309,10 @@ export default function PrivacyPage() {
 
           <div>
             <p>
-              <span className="font-bold uppercase text-xl">12. Contact Information</span> 
+              <span className="font-bold ">12. Contact Information</span> 
             </p>
             <p> If you have any questions or concerns about
-              these T&C, you can contact us at:</p>
+              privacy, you can contact us at:</p>
             <p className="mt-1 font-bold">Oloja Hub Operations</p>
             <p>Email: <Link className="underline text-blue-500" href="mailto:operations@jacinthsolutions.com.au">
               operations@jacinthsolutions.com.au

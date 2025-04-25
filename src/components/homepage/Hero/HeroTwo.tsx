@@ -24,9 +24,7 @@ function HeroTwo() {
             IN A FEW <span className="font-clash">CLICKS.</span>{" "}
           </h1>
           <p className="mb-10 text-center font-satoshiMedium text-xl text-[#444248] sm:text-left lg:max-w-[500px]">
-            Whether you need tasks handled, want to earn{" "}
-            <br className="hidden sm:block" /> doing what you love, or learn to
-            start your business, Olójà is your platform to succeed.
+            Need help?. Choose an expert. Task Done!{" "}
           </p>
           <div className="flex flex-col gap-3 sm:flex-row">
             <Link
@@ -39,7 +37,7 @@ function HeroTwo() {
               href="/monetize-your-skills"
               className="rounded-full bg-[#FE9B07] px-4 py-3 text-center font-satoshiBold font-bold text-[#EBE9F4]"
             >
-              Monetize your skills
+              Make money on Oloja
             </Link>
           </div>
         </div>
