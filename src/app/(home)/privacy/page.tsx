@@ -3,9 +3,9 @@ import Link from "next/link";
 /* eslint-disable react/no-unescaped-entities */
 export default function PrivacyPage() {
   return (
-    <div className=" p-6 bg-[#EBE9F4]">
-      <div className=" font-manrope  text-[#190E3F] max-w-3xl mx-auto mt-14 p-2 md:p-6">
-        <h1 className="text-xl font-bold text-[#381F8C] font-clashSemiBold mb-4"><span className="font-bold">Oloja Hub</span> Privacy Policy</h1>
+    <div className=" p-6 ">
+      <div className=" font-manrope   max-w-3xl mx-auto mt-14 p-2 md:p-6">
+        <h1 className="text-xl font-bold  mb-4"><span className="font-bold">Oloja Hub</span> Privacy Policy</h1>
 
         <p className="mb-3">Effective Date: April 23, 2025</p>
 

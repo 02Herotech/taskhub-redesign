@@ -38,8 +38,8 @@ const Footer = () => {
   const link_3 = [
     // { label: "FAQs", url: "/home#FAQSection" },
     { label: "Contact us", url: "/contact" },
-    { label: "Terms and Condition", url: "/terms-and-condition" },
-    { label: "Privacy", url: "/privacy" },
+    { label: "Terms and Conditions", url: "/terms-and-condition" },
+    { label: "Privacy Policy", url: "/privacy" },
   ];
 
   const handleFilterByCategory = async (category: string) => {

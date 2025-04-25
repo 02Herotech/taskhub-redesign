@@ -3,8 +3,8 @@ import Link from "next/link";
 /* eslint-disable react/no-unescaped-entities */
 export default function TermsAndConditionPage() {
   return (
-    <div className="  p-6 bg-[#EBE9F4]">
-      <div className=" font-manrope  text-[#190E3F] max-w-3xl mx-auto mt-14 p-2 md:p-6">
+    <div className="  p-6 ">
+      <div className=" font-manrope  max-w-3xl mx-auto mt-14 p-2 md:p-6">
         <h1 className="text-3xl font-bold  mb-4">Oloja Hub Terms and Conditions</h1>
 
         <p className="mb-3 font-bold">Effective Date: April 23, 2025</p>
