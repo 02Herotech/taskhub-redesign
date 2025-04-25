@@ -6,7 +6,7 @@ import { setAuthStatus } from "@/store/Features/authStatus";
 import { RootState } from "@/store";
 
 const authInstance = axios.create({
-  timeout: 20000,
+  timeout: 600000,
   baseURL: process.env.NEXT_PUBLIC_API_URL,
 });
 

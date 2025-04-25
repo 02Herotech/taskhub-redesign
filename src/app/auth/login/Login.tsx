@@ -101,6 +101,8 @@ function Login() {
       };
       localStorage.setItem("auth", JSON.stringify(authData));
       await handleNextAuthSignIn(payload);
+      //Todo
+      //Delete login details from cookies
       if (isOnboarding === "true") {
         setCookie("firstLogin", true, { maxAge: 60 * 10 });
       }
@@ -113,7 +115,6 @@ function Login() {
       );
     }
   };
-
   return (
     <section className="mx-auto flex max-w-[1400px] flex-col p-3 lg:flex-row">
       <Carousel />

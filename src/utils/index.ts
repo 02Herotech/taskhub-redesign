@@ -351,6 +351,7 @@ export function formatTime(timestamp: string) {
 }
 
 import { useState, useEffect } from "react";
+import { dayOfWeekNames, monthNames } from "./constant";
 
 // Custom hook to format ISO 8601 timestamp and show only the time
 export const useTimestampWithSpinner = (isoTimestamp: string | null) => {
@@ -391,15 +392,16 @@ export const useTimestampWithSpinner = (isoTimestamp: string | null) => {
   return { formattedTime, isLoading };
 };
 
-
 export function formatTimestamp(timestamp: number | string): string {
   let dateObject: Date;
 
   // Handle different timestamp formats
-  if (typeof timestamp === 'number') {
+  if (typeof timestamp === "number") {
     // Check if the timestamp is in seconds (Unix timestamp) or milliseconds
-    dateObject = new Date(timestamp > 9999999999 ? timestamp : timestamp * 1000);
-  } else if (typeof timestamp === 'string') {
+    dateObject = new Date(
+      timestamp > 9999999999 ? timestamp : timestamp * 1000,
+    );
+  } else if (typeof timestamp === "string") {
     dateObject = new Date(timestamp);
   } else {
     return "Flexible";
@@ -421,7 +423,7 @@ export function formatTimestamp(timestamp: number | string): string {
   const timeString = dateObject.toLocaleTimeString(undefined, {
     hour: "2-digit",
     minute: "2-digit",
-    hour12: true
+    hour12: true,
   });
 
   // Handle cases for today, yesterday, this week, etc.
@@ -436,16 +438,85 @@ export function formatTimestamp(timestamp: number | string): string {
     return `${differenceInDays} days ago`;
   } else if (differenceInDays < 30 || differenceInDays < 365) {
     // This month or this year
-    return dateObject.toLocaleDateString(undefined, {
-      month: "short",
-      day: "numeric",
-    }) + ` at ${timeString}`;
+    return (
+      dateObject.toLocaleDateString(undefined, {
+        month: "short",
+        day: "numeric",
+      }) + ` at ${timeString}`
+    );
   } else {
     // Earlier years
-    return dateObject.toLocaleDateString(undefined, {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-    }) + ` at ${timeString}`;
+    return (
+      dateObject.toLocaleDateString(undefined, {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+      }) + ` at ${timeString}`
+    );
   }
 }
+
+const getDaySuffix = (day: number): string => {
+  if (day >= 11 && day <= 13) return "th";
+  switch (day % 10) {
+    case 1:
+      return "st";
+    case 2:
+      return "nd";
+    case 3:
+      return "rd";
+    default:
+      return "th";
+  }
+};
+
+export const formatDateFromArray = (
+  dateArray: [number, number, number],
+): string => {
+  if (!dateArray) {
+    return;
+  }
+  const date = dateArray
+    ? new Date(dateArray[0], dateArray[1] - 1, dateArray[2])
+    : new Date();
+
+  const day = date.getDate();
+  const monthName = monthNames[date.getMonth()];
+  const dayOfWeekName = dayOfWeekNames[date.getDay()];
+  const suffix = getDaySuffix(day);
+
+  return `${dayOfWeekName}, ${monthName} ${day}${suffix}`;
+};
+
+
+export const generateTimeOptions = () => {
+  const timeOptions = [];
+  const hours = [
+    "12",
+    "01",
+    "02",
+    "03",
+    "04",
+    "05",
+    "06",
+    "07",
+    "08",
+    "09",
+    "10",
+    "11",
+  ];
+  const amPm = ["AM", "PM"];
+  const intervals = ["00", "15", "30", "45"];
+
+  // Loop to generate time slots
+  hours.forEach((hour) => {
+    amPm.forEach((period) => {
+      intervals.forEach((minute) => {
+        timeOptions.push(`${hour}:${minute} ${period}`);
+      });
+    });
+  });
+
+  return timeOptions;
+};
+

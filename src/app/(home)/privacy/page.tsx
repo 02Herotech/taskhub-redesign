@@ -306,7 +306,6 @@ export default function PrivacyPage() {
               contact us immediately, and we will take steps to delete that information.
             </p>
           </div>
-
           <div>
             <p>
               <span className="font-bold ">12. Contact Information</span> 
@@ -319,7 +318,6 @@ export default function PrivacyPage() {
             </Link></p>
             <p>Location: Queensland, Australia</p>
           </div>
-
           <div>
             <p className="font-bold">Appendix A: Terms</p>
             <p className=" mt-2">Australian Privacy Terms</p>

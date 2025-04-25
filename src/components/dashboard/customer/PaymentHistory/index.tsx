@@ -116,7 +116,8 @@ const PaymentHistory = () => {
     );
   };
 
-  const groupedReceipts = groupReceiptsByDate(paymentHistoryData, selectedDate);
+  //@ts-ignore
+  const groupedReceipts = groupReceiptsByDate(paymentHistoryData.content, selectedDate);
   const dateArray = selectedPayment?.createdAt;
   const formattedDate: string = dateArray
     ? new Date(
@@ -259,7 +260,7 @@ const PaymentHistory = () => {
                     cy="35"
                     r="35"
                     fill="#C1F6C3"
-                    fill-opacity="0.6"
+                    fillOpacity="0.6"
                   />
                   <circle cx="34.5" cy="34.5" r="22.5" fill="#A6F8AA" />
                   <path

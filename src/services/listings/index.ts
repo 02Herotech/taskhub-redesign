@@ -45,6 +45,20 @@ const putRequest = (url: string, details: unknown) => ({
   body: details,
 });
 
+type FilterServiceParams = {
+  pageNumber?: number;
+  size?: number;
+  category?: string;
+  location?: string;
+  typeOfService?: string;
+  minPrice?: string;
+  maxPrice?: string;
+};
+
+type AllServiceParams = Pick<FilterServiceParams, "pageNumber" | "size">;
+
+type SearchParams = { pageNumber: number; pageSize: number; text: string };
+
 export const listing = createApi({
   reducerPath: "listing",
   tagTypes: ["Listing"],
@@ -56,7 +70,27 @@ export const listing = createApi({
       query: (serviceId) => getRequest(`/listing/${serviceId}`),
       providesTags: ["Listing"],
     }),
+    getAllServices: builder.query<ServicesResult, AllServiceParams>({
+      query: (params) => getRequest("/listing/all-active-listings", params),
+    }),
+    getServicesByFilters: builder.query<ServicesResult, FilterServiceParams>({
+      query: (params) => {
+        return getRequest(`/listing/filter-listings`, params);
+      },
+    }),
+    getCategories: builder.query<CategoryType[], void>({
+      query: () => getRequest("/util/all-categories"),
+    }),
+    getListingsBySearch: builder.query<ServicesResult, SearchParams>({
+      query: (params) => getRequest("/listing/text", params),
+    }),
   }),
 });
 
-export const { useGetServiceByIdQuery } = listing;
+export const {
+  useGetServiceByIdQuery,
+  useGetCategoriesQuery,
+  useGetAllServicesQuery,
+  useGetServicesByFiltersQuery,
+  useGetListingsBySearchQuery,
+} = listing;
