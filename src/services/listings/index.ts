@@ -1,4 +1,7 @@
+import { GetServiceProviderListingResponse } from "@/types/services/serviceprovider";
+import { LIMIT_NINE } from "@/utils/constant";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { useSession } from "next-auth/react";
 
 const getRequest = <T>(url: string, params?: T) => {
   const paramsReducer = (acc: any, [key, value]: any) => {
@@ -64,6 +67,16 @@ export const listing = createApi({
   tagTypes: ["Listing"],
   baseQuery: fetchBaseQuery({
     baseUrl: process.env.NEXT_PUBLIC_API_URL,
+    prepareHeaders: (headers) => {
+      const authString = localStorage.getItem("auth");
+      const auth = authString ? JSON.parse(authString) : null;
+
+      if (auth?.token) {
+        headers.set("Authorization", `Bearer ${auth.token}`);
+      }
+
+      return headers;
+    },
   }),
   endpoints: (builder) => ({
     getServiceById: builder.query<ListingDataType, number>({
@@ -72,6 +85,15 @@ export const listing = createApi({
     }),
     getAllServices: builder.query<ServicesResult, AllServiceParams>({
       query: (params) => getRequest("/listing/all-active-listings", params),
+    }),
+    getAllServicesByServicesProvider: builder.query<
+      GetServiceProviderListingResponse,
+      { page: number }
+    >({
+      query: ({ page }) =>
+        getRequest(
+          `/listing/service-provider?pageNumber=${page}&pageSize=${LIMIT_NINE}`,
+        ),
     }),
     getServicesByFilters: builder.query<ServicesResult, FilterServiceParams>({
       query: (params) => {
@@ -93,4 +115,5 @@ export const {
   useGetAllServicesQuery,
   useGetServicesByFiltersQuery,
   useGetListingsBySearchQuery,
+  useGetAllServicesByServicesProviderQuery,
 } = listing;
