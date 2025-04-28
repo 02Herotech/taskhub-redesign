@@ -3,8 +3,8 @@ import Link from "next/link";
 /* eslint-disable react/no-unescaped-entities */
 export default function TermsAndConditionPage() {
   return (
-    <div className="  p-6 bg-[#EBE9F4]">
-      <div className=" font-manrope  text-[#190E3F] max-w-3xl mx-auto mt-14 p-2 md:p-6">
+    <div className="  p-6 ">
+      <div className=" font-manrope  max-w-3xl mx-auto mt-14 p-2 md:p-6">
         <h1 className="text-3xl font-bold  mb-4">Oloja Hub Terms and Conditions</h1>
 
         <p className="mb-3 font-bold">Effective Date: April 23, 2025</p>
@@ -20,7 +20,7 @@ export default function TermsAndConditionPage() {
 
         <div className="space-y-6">
           <div>
-            <p className="font-bold text-xl ">1. Definitions</p>
+            <p className="font-bold text-xl uppercase ">1. Definitions</p>
             <p className="mt-1">In this Agreement:</p>
             <ul className="list-disc pl-8 space-y-2 mt-2">
               <li>
@@ -39,7 +39,7 @@ export default function TermsAndConditionPage() {
           </div>
 
           <div>
-            <p className="font-bold text-xl ">2. Acceptance of Terms</p>
+            <p className="font-bold text-xl uppercase ">2. Acceptance of Terms</p>
             <p className="mt-1">
               By accessing and using the Services, you acknowledge and agree to these Terms and Conditions, as well as
               our <Link href={"/privacy"} className="text-blue-500 underline">Privacy Policy</Link>, which governs our collection and use of your personal information.
