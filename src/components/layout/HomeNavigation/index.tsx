@@ -92,7 +92,7 @@ const HomeNavigation = () => {
 
             <Link href="/monetize-your-skills">
               <Button theme="secondary" className="rounded-full">
-                Monetize your skills
+                Earn Today on Oloja
               </Button>
             </Link>
           </div>

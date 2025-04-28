@@ -31,7 +31,6 @@ const Footer = () => {
     { id: 4, categoryName: "Events" },
     { id: 5, categoryName: "Art and Craft" },
     { id: 6, categoryName: "Petcare" },
-    { id: 7, categoryName: "Custodian" },
     { id: 8, categoryName: "Grocery" },
   ];
 
