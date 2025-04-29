@@ -24,7 +24,7 @@ function HeroTwo() {
             IN A FEW <span className="font-clash">CLICKS.</span>{" "}
           </h1>
           <p className="mb-10 text-center font-satoshiMedium text-xl text-[#444248] sm:text-left lg:max-w-[500px]">
-            Need help?. Choose an expert. Task Done!
+            Need help?. Choose an expert. Task Done!{" "}
           </p>
           <div className="flex flex-col gap-3 sm:flex-row">
             <Link
