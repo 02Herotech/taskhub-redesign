@@ -3,9 +3,9 @@ import Link from "next/link";
 /* eslint-disable react/no-unescaped-entities */
 export default function PrivacyPage() {
   return (
-    <div className=" p-6 bg-[#EBE9F4]">
-      <div className=" font-manrope  text-[#190E3F] max-w-3xl mx-auto mt-14 p-2 md:p-6">
-        <h1 className="text-xl font-bold text-[#381F8C] font-clashSemiBold mb-4"><span className="font-bold">Oloja Hub</span> Privacy Policy</h1>
+    <div className=" p-6 ">
+      <div className=" font-manrope   max-w-3xl mx-auto mt-14 p-2 md:p-6">
+        <h1 className="text-xl font-bold  mb-4"><span className="font-bold">Oloja Hub</span> Privacy Policy</h1>
 
         <p className="mb-3">Effective Date: April 23, 2025</p>
 
@@ -306,20 +306,18 @@ export default function PrivacyPage() {
               contact us immediately, and we will take steps to delete that information.
             </p>
           </div>
-
           <div>
             <p>
-              <span className="font-bold uppercase text-xl">12. Contact Information</span> 
+              <span className="font-bold ">12. Contact Information</span> 
             </p>
             <p> If you have any questions or concerns about
-              these T&C, you can contact us at:</p>
+              privacy, you can contact us at:</p>
             <p className="mt-1 font-bold">Oloja Hub Operations</p>
             <p>Email: <Link className="underline text-blue-500" href="mailto:operations@jacinthsolutions.com.au">
               operations@jacinthsolutions.com.au
             </Link></p>
             <p>Location: Queensland, Australia</p>
           </div>
-
           <div>
             <p className="font-bold">Appendix A: Terms</p>
             <p className=" mt-2">Australian Privacy Terms</p>

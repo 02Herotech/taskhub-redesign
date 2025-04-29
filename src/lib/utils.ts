@@ -15,6 +15,10 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
+export function genID() {
+  return Date.now().toString(36) + Math.random().toString(36).substring(2, 8);
+}
+
 function debugLog(message: string) {
   const debugElement =
     document.getElementById("debug-output") || createDebugElement();
