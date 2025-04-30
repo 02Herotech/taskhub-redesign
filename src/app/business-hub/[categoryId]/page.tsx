@@ -50,13 +50,13 @@ export const revalidate = 60;
 
 async function Page({ params }: Props) {
   const result = await fetch(
-    `${process.env.BLOG_API}/postCategory?where[slug][equals]=${params.categoryId}`,
+    `${process.env.BLOG_API}/postCategory?where[slug][equals]=${params.categoryId}&sort=createdAt`,
   );
   const categories: { docs: Category[] } = await result.json();
   const currentCategory = categories.docs[0];
 
   const postsResult = await fetch(
-    `${process.env.BLOG_API}/posts?where[category][equals]=${currentCategory.id}`,
+    `${process.env.BLOG_API}/posts?where[category][equals]=${currentCategory.id}&sort=createdAt`,
   );
   const posts: { docs: Post[] } = await postsResult.json();
   return (
