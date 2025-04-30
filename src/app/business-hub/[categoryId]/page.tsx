@@ -46,6 +46,8 @@ type Post = {
   slug: string;
 };
 
+export const revalidate = 60;
+
 async function Page({ params }: Props) {
   const result = await fetch(
     `${process.env.BLOG_API}/postCategory?where[slug][equals]=${params.categoryId}`,

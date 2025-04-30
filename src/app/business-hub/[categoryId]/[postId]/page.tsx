@@ -66,6 +66,8 @@ type Post = {
   populatedAuthors: any[];
 };
 
+export const revalidate = 60;
+
 async function Page({ params }: Props) {
   const result = await fetch(
     `${process.env.BLOG_API}/posts?where[slug][equals]=${params.postId}`,
