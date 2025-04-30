@@ -9,6 +9,8 @@ export const metadata: Metadata = {
     "Discover expert insights, tips, and inspiring stories on business growth, entrepreneurship, and achieving success. Stay ahead with our curated business hub.",
 };
 
+export const revalidate = 60;
+
 export default async function RootLayout({
   children,
 }: Readonly<{
