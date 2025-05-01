@@ -72,16 +72,24 @@ const RichTextRenderer: React.FC<RichTextRendererProps> = ({ content }) => {
       case "ul":
         return (
           <ul key={index} className="my-4 list-disc pl-6">
-            {block.children.map((child, childIndex) => (
-              <li key={childIndex}>{renderText(child)}</li>
-            ))}
+            {block.children.map((child, childIndex) => {
+              return (
+                <li key={genID()}>
+                  {/* @ts-ignore  */}
+                  {renderText(child.children[0].children[0])}
+                </li>
+              );
+            })}
           </ul>
         );
       case "ol":
         return (
           <ol key={index} className="my-4 list-decimal pl-6">
             {block.children.map((child, childIndex) => (
-              <li key={childIndex}>{renderText(child)}</li>
+              <li key={genID()}>
+                {/* @ts-ignore  */}
+                {renderText(child.children[0].children[0])}
+              </li>
             ))}
           </ol>
         );
