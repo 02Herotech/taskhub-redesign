@@ -1,12 +1,13 @@
 import { dayOfWeekNames, monthNames } from '@/lib/utils';
 import { getBorderColor, getStatusColor } from '@/shared/statusbadge';
-import { JobItem } from '@/types/services/jobs';
+import { Booking, JobItem } from '@/types/services/jobs';
 import { useRouter } from 'next/navigation';
 import React from 'react'
+import { PiAddressBook } from 'react-icons/pi';
 
-const CompletedTaskCard = ({ completedJob }: { completedJob: JobItem }) => {
+const AssignedTaskCard = ({ booking }: { booking: JobItem }) => {
   const router = useRouter()
-  const dateArray = completedJob.jobInfo.createdAt;
+  const dateArray = booking.jobInfo.createdAt;
   const date = new Date(dateArray[0], dateArray[1] - 1, dateArray[2]);
   const day = date.getDate();
   function getOrdinalSuffix(day: any) {
@@ -27,16 +28,16 @@ const CompletedTaskCard = ({ completedJob }: { completedJob: JobItem }) => {
   const formattedDate = `On ${dayOfWeekNames[date.getDay()]}, ${monthNames[date.getMonth()]} ${day}${daySuffix}`;
   return (
     <>
-      <div onClick={() => router.push(`/service-provider/services/completed/${completedJob.jobInfo.id}`)} className={`relative flex flex-col hover:bg-[#E5FAEA] border-l-[12px] cursor-pointer  shadow-[0px_-4px_132px_0px_#00000017] ${getBorderColor("COMPLETED")} rounded-2xl shadow-sm bg-white overflow-hidden`}>
+      <div onClick={() => router.push(`/service-provider/services/assigned-task/${booking.jobInfo.id}`)} className={`relative flex flex-col hover:bg-[#FBF1E2] border-l-[12px] cursor-pointer  border-[#F59315] rounded-2xl shadow-sm bg-white overflow-hidden`}>
         <div className="p-4 pl-5 flex-1">
           <div className="mb-2">
             <span
-              className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor("COMPLETED")}`}
+              className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium text-[#E68A13] bg-[#FBF1E2] border border-[##FBF1E2]`}
             >
-              {"COMPLETED"}
+              {booking.jobInfo.jobStatus}
             </span>
           </div>
-          <h3 className="text-xs font-semibold cursor-pointer text-[#0F052E] capitalize">{completedJob.jobInfo.jobTitle}</h3>
+          <h3 className="text-xs font-semibold cursor-pointer text-[#0F052E] capitalize">{booking.jobInfo.jobTitle}</h3>
 
           <div className="mt-4 flex justify-between items-end">
             <div className="flex flex-col space-y-2 text-xs text-gray-500">
@@ -58,35 +59,18 @@ const CompletedTaskCard = ({ completedJob }: { completedJob: JobItem }) => {
                 <span>{formattedDate}</span>
               </div>
 
-              {completedJob.jobInfo.jobAddress &&
+              {booking.jobInfo.jobAddress && (
                 <div className="flex items-center">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-4 w-4 mr-1"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
-                    />
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
-                    />
-                  </svg>
-                  <span>{completedJob.jobInfo.jobAddress}</span>
+                  <PiAddressBook />
+                  <span>
+                    {booking.jobInfo.jobAddress}
+                  </span>
                 </div>
-              }
+              )}
             </div>
 
             <div className="text-right">
-              <span className="text-3xl font-manrope font-bold text-[#381F8C]">${completedJob.jobInfo.total}</span>
+              <span className="text-3xl font-manrope font-bold text-[#381F8C]">${booking.jobInfo.total}</span>
             </div>
           </div>
         </div>
@@ -95,4 +79,4 @@ const CompletedTaskCard = ({ completedJob }: { completedJob: JobItem }) => {
   )
 }
 
-export default CompletedTaskCard
+export default AssignedTaskCard

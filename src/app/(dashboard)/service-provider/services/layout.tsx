@@ -42,7 +42,7 @@ export default function ServicesLayout({
     },
     {
       label: "Assigned",
-      path: "/service-provider/services/assigned",
+      path: "/service-provider/services/assigned-task",
     },
     {
       label: "Ongoing",
@@ -65,9 +65,9 @@ export default function ServicesLayout({
           Back
         </button>
         |
-        <span className="cursor-pointer text-[#55535A]" onClick={() => router.push("/service-provider/service/all-tasks")}>My Tasks</span>/
+        <span className="cursor-pointer text-[#55535A]" onClick={() => router.push("/service-provider/service/all-services")}>My Services</span>/
 
-        {tab && <span className="cursor-pointer text-[#55535A]" onClick={() => handleTabClick(`/service-provider/service/${tab}`)}>{tab}</span>}
+        {tab && <span className="cursor-pointer text-[#55535A]" onClick={() => handleTabClick(`/service-provider/services/${tab}`)}>{tab}</span>}
 
         {title && <span className="cursor-pointer text-[#55535A] capitalize w-20 truncate md:w-64"> {"/  "}{title}</span>}
       </div>

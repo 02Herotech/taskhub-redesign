@@ -1,10 +1,11 @@
 import { dayOfWeekNames, monthNames, suffixes } from '@/lib/utils';
 import { getBorderColor, getStatusColor } from '@/shared/statusbadge'
 import { Listing } from '@/types/services/serviceprovider'
+import { useRouter } from 'next/navigation';
 import React from 'react'
 
 const PostedByMeCard = ({ listing }: { listing: Listing }) => {
-
+  const router = useRouter()
   const dateArray = listing.createdAt;
   let date: Date;
   let formattedDate: string;
@@ -22,7 +23,7 @@ const PostedByMeCard = ({ listing }: { listing: Listing }) => {
   }
 
   return (
-    <div className={`relative flex flex-col border-l-[12px] hover:bg-[#E6F3FF] cursor-pointer  shadow-[0px_-4px_132px_0px_#00000017] ${getBorderColor("Posted by me")} rounded-2xl shadow-sm bg-white overflow-hidden`}>
+    <div onClick={() => router.push(`/service-provider/services/posted-by-me/${listing.id}`)} className={`relative flex flex-col border-l-[12px] hover:bg-[#E6F3FF] cursor-pointer  shadow-[0px_-4px_132px_0px_#00000017] ${getBorderColor("Posted by me")} rounded-2xl shadow-sm bg-white overflow-hidden`}>
       <div className="p-4 pl-5 flex-1">
         <div className="mb-2">
           <span

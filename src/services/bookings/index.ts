@@ -4,10 +4,14 @@ import {
   GetReceiptByCustomerIdResponse,
 } from "@/types/services/invoice";
 import {
+  Booking,
+  GetServiceProviderOngoingJobsResponse,
+  GetServiceProviderPendingJobsResponse,
+} from "@/types/services/jobs";
+import {
   AcceptInvoiceResponse,
   BookingRequestResponse,
   GetJobsByIdResponse,
-  JobDataDetails,
   PaymentIntentResponse,
   RejectInvoiceResponse,
 } from "@/types/services/tasks";
@@ -84,6 +88,25 @@ export const booking = createApi({
       query: (customerId) => getRequest(`/invoice/customer/${customerId}`),
       providesTags: ["Booking"],
     }),
+    getServiceProviderJobs: builder.query<
+      GetServiceProviderOngoingJobsResponse,
+      { serviceProviderId: number }
+    >({
+      query: ({ serviceProviderId }) =>
+        getRequest(`/job/service-provider/${serviceProviderId}`),
+      providesTags: ["Booking"],
+    }),
+    getAllServiceProviderAcceptedJobs: builder.query<
+      GetServiceProviderPendingJobsResponse,
+      void
+    >({
+      query: () => getRequest(`/service-provider`),
+      providesTags: ["Booking"],
+    }),
+    getBookingDetails: builder.query<Booking, { booking_id: string }>({
+      query: ({ booking_id }) => getRequest(`/${booking_id}`),
+      providesTags: ["Booking"],
+    }),
     getReceiptsByCustomerId: builder.query<
       GetReceiptByCustomerIdResponse,
       number
@@ -105,6 +128,14 @@ export const booking = createApi({
     }),
     acceptService: builder.mutation<void, { jobId: number }>({
       query: ({ jobId }) => postRequest(`/accept-service?jobId=${jobId}`, {}),
+      invalidatesTags: ["Booking"],
+    }),
+    startTask: builder.mutation<void, { jobId: string }>({
+      query: ({ jobId }) => postRequest(`/start-task?jobId=${jobId}`, {}),
+      invalidatesTags: ["Booking"],
+    }),
+    completeTask: builder.mutation<void, { jobId: string }>({
+      query: ({ jobId }) => postRequest(`/complete-task?jobId=${jobId}`, {}),
       invalidatesTags: ["Booking"],
     }),
     inspectTask: builder.mutation<void, { jobId: number }>({
@@ -186,4 +217,9 @@ export const {
   useRejectInvoiceMutation,
   useRebookJobMutation,
   useGetBookingRequestQuery,
+  useGetServiceProviderJobsQuery,
+  useGetAllServiceProviderAcceptedJobsQuery,
+  useGetBookingDetailsQuery,
+  useStartTaskMutation,
+  useCompleteTaskMutation,
 } = booking;

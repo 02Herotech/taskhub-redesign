@@ -32,7 +32,7 @@ const daysData: string[] = [
 
 type listingZodType = z.infer<typeof listingZodSchema>;
 
-const EditListing = () => {
+const EditListing = ({ params }: { params: { id: string } }) => {
   const [currentListing, setCurrentListing] = useState<ListingDataType>();
   const [showDropdown, setShowDropdown] = useState({
     name: "",
@@ -310,7 +310,7 @@ const EditListing = () => {
         />
       )}
       <h1 className="text-2xl font-extrabold text-orange-normal">
-        Edit Service
+        Edit Service {params.id}
       </h1>
       <form
         onSubmit={handleSubmit(handleUpdateListing)}
