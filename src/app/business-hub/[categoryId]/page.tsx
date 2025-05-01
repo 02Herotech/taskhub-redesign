@@ -3,9 +3,10 @@ import Link from "next/link";
 import Image from "next/image";
 import { truncateText } from "@/utils/marketplace";
 
-//Todo 
 export async function generateStaticParams() {
-  return [""];
+  const result = await fetch(`${process.env.BLOG_API}/postCategory`);
+  const categories: { docs: Category[] } = await result.json();
+  return categories.docs.map(({ slug }) => ({ categoryId: slug }));
 }
 
 type Props = { params: { categoryId: string } };
@@ -60,7 +61,7 @@ async function Page({ params }: Props) {
   );
   const posts: { docs: Post[] } = await postsResult.json();
   return (
-    <main className="px-5 md:px-20 max-w-7xl mx-auto">
+    <main className="mx-auto max-w-7xl px-5 md:px-20">
       <header className="my-10">
         <h1 className="mb-8 text-center font-clashSemiBold text-4xl font-black uppercase md:text-6xl">
           {currentCategory.longTitle}
