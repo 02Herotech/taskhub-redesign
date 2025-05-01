@@ -10,6 +10,7 @@ interface RichTextRendererProps {
 
 const RichTextRenderer: React.FC<RichTextRendererProps> = ({ content }) => {
   const renderText = (text: ChildText) => {
+    if (!text) return <span />;
     return (
       <span
         className={`
@@ -75,8 +76,10 @@ const RichTextRenderer: React.FC<RichTextRendererProps> = ({ content }) => {
             {block.children.map((child, childIndex) => {
               return (
                 <li key={genID()}>
-                  {/* @ts-ignore  */}
-                  {renderText(child.children[0].children[0])}
+                  {renderText(
+                    // @ts-ignore
+                    child.children?.[0].children?.[0] || child.children?.[0],
+                  )}
                 </li>
               );
             })}
@@ -85,12 +88,14 @@ const RichTextRenderer: React.FC<RichTextRendererProps> = ({ content }) => {
       case "ol":
         return (
           <ol key={index} className="my-4 list-decimal pl-6">
-            {block.children.map((child, childIndex) => (
-              <li key={genID()}>
-                {/* @ts-ignore  */}
-                {renderText(child.children[0].children[0])}
-              </li>
-            ))}
+            {block.children.map((child, childIndex) => {
+              return (
+                <li key={genID()}>
+                  {/* @ts-ignore  */}
+                  {renderText(child.children?.[0].children?.[0])}
+                </li>
+              );
+            })}
           </ol>
         );
       case "li":
@@ -116,7 +121,7 @@ const RichTextRenderer: React.FC<RichTextRendererProps> = ({ content }) => {
               height={block.value.height}
               quality={100}
               loading="lazy"
-              className="my-4 w-full rounded-lg"
+              className="my-4 h-[300px] w-full rounded-lg object-cover"
             />
           );
         }

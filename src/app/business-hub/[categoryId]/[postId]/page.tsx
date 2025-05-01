@@ -3,7 +3,7 @@ import Image from "next/image";
 import RichTextRenderer from "@/components/blog/RichText";
 
 type Props = {
-  params: { categoryId: "business"; postId: "business--finance" };
+  params: { categoryId: string; postId: string };
 };
 
 type Image = {
@@ -65,6 +65,15 @@ type Post = {
   updatedAt: string;
   populatedAuthors: any[];
 };
+
+export async function generateStaticParams() {
+  const result = await fetch(`${process.env.BLOG_API}/posts`);
+  const posts: { docs: Post[] } = await result.json();
+  return posts.docs.map(({ slug, category }) => ({
+    postId: slug,
+    categoryId: category.slug,
+  }));
+}
 
 export const revalidate = 60;
 
