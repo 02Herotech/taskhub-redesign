@@ -1,6 +1,7 @@
 import React from "react";
 import Image from "next/image";
 import RichTextRenderer from "@/components/blog/RichText";
+import { Metadata } from "next";
 
 type Props = {
   params: { categoryId: string; postId: string };
@@ -44,6 +45,8 @@ type Author = {
 };
 
 type Meta = {
+  title: string;
+  description: string;
   image: Image;
 };
 
@@ -59,7 +62,7 @@ type Post = {
   publishedAt: string;
   authors: Author[];
   slug: string;
-  meta: Meta;
+  meta: Meta | undefined;
   _status: string;
   createdAt: string;
   updatedAt: string;
@@ -73,6 +76,20 @@ export async function generateStaticParams() {
     postId: slug,
     categoryId: category.slug,
   }));
+}
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const result = await fetch(
+    `${process.env.BLOG_API}/posts?where[slug][equals]=${params.postId}`,
+  );
+  const posts: { docs: Post[] } = await result.json();
+  const post = posts.docs[0];
+  const { title, postSummary, image, meta } = post;
+  return {
+    title: meta?.title || title,
+    description: meta?.description || postSummary,
+    openGraph: { images: [meta?.image.url || image.url] },
+  };
 }
 
 export const revalidate = 60;
