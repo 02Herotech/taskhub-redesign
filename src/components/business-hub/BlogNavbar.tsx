@@ -11,7 +11,7 @@ function BlogNavbar({ links }: Props) {
   const pathname = usePathname();
   const categorySlug = pathname.split("/").filter(Boolean);
   return (
-    <div className="mx-auto mt-20 max-w-7xl md:mt-[86px]">
+    <div className="mx-auto mt-16 max-w-7xl sm:mt-20 md:mt-[86px]">
       <nav className="hidden items-center gap-2 border-b border-t px-5 md:block md:px-20">
         <ul className="flex w-full items-center gap-7 py-3 font-satoshiMedium">
           {/* <li className="text-lg">
