@@ -14,6 +14,7 @@ import {
   Risk,
   Legal,
 } from "@/components/business-hub/svg";
+import { redirect } from "next/navigation";
 
 type Category = { icon: () => React.JSX.Element; link: "#"; text: string };
 
@@ -84,7 +85,11 @@ function HorizontalInfo({ title, content, color, imgUrl }: Blog) {
   );
 }
 
-function Page() {
+async function Page() {
+  const result = await fetch(process.env.BLOG_API + "/postCategory");
+  const categories_: { docs: { title: string; slug: string }[] } =
+    await result.json();
+  redirect(`/business-hub/${categories_.docs[0].slug}`);
   return (
     <div className="">
       {/* Hero section  */}

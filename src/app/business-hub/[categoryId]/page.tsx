@@ -96,7 +96,7 @@ async function Page({ params }: Props) {
                   width={post.image.width}
                   height={post.image.height}
                   alt="Blog image"
-                  className="mb-3 rounded-xl object-cover"
+                  className="mb-3 h-[200px] rounded-xl object-cover"
                 />
                 <h2 className="mb-2 font-clashSemiBold text-2xl">
                   {post.title}
