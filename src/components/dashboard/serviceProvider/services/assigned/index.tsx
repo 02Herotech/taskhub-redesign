@@ -1,16 +1,17 @@
 "use client"
-import { useGetAllServiceProviderAcceptedJobsQuery, useGetServiceProviderJobsQuery } from '@/services/bookings'
+import { useGetServiceProviderJobsQuery } from '@/services/bookings'
 import Loading from '@/shared/loading'
-import React from 'react'
+import React, { useState } from 'react'
 import AssignedTaskCard from './assigned-task-card'
 import { useSelector } from 'react-redux'
 import { RootState } from '@/store'
 
 const AssignedTask = () => {
+  const [page, setPage] = useState(0)
   const { profile: user } = useSelector(
     (state: RootState) => state.userProfile,
   );
-  const { data, isLoading } = useGetServiceProviderJobsQuery({ serviceProviderId: user?.serviceProviderId }, {
+  const { data, isLoading } = useGetServiceProviderJobsQuery({ serviceProviderId: user?.serviceProviderId, page }, {
     skip: !user?.serviceProviderId
   })
 

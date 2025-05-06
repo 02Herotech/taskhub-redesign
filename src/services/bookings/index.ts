@@ -8,6 +8,7 @@ import {
   GetServiceProviderOngoingJobsResponse,
   GetServiceProviderPendingJobsResponse,
 } from "@/types/services/jobs";
+import { GetServiceProviderCompletedJobsResponse } from "@/types/services/serviceprovider";
 import {
   AcceptInvoiceResponse,
   BookingRequestResponse,
@@ -90,10 +91,12 @@ export const booking = createApi({
     }),
     getServiceProviderJobs: builder.query<
       GetServiceProviderOngoingJobsResponse,
-      { serviceProviderId: number }
+      { serviceProviderId: number; page: number }
     >({
-      query: ({ serviceProviderId }) =>
-        getRequest(`/job/service-provider/${serviceProviderId}`),
+      query: ({ serviceProviderId, page }) =>
+        getRequest(
+          `/job/service-provider/${serviceProviderId}?pageSize=${LIMIT_NINE}&page=${page}`,
+        ),
       providesTags: ["Booking"],
     }),
     getAllServiceProviderAcceptedJobs: builder.query<
@@ -101,6 +104,26 @@ export const booking = createApi({
       void
     >({
       query: () => getRequest(`/service-provider`),
+      providesTags: ["Booking"],
+    }),
+    getServiceProviderOngoingJobs: builder.query<
+      GetServiceProviderOngoingJobsResponse,
+      { page: number; providerId: number }
+    >({
+      query: ({ page, providerId }) =>
+        getRequest(
+          `/service-provider-ongoing-service/${providerId}?size=${LIMIT_NINE}&page=${page}`,
+        ),
+      providesTags: ["Booking"],
+    }),
+    getServiceProviderCompletedJobs: builder.query<
+      GetServiceProviderCompletedJobsResponse,
+      { page: number; providerId: number }
+    >({
+      query: ({ page, providerId }) =>
+        getRequest(
+          `/service-provider-completed-service/${providerId}?size=${LIMIT_NINE}&page=${page}`,
+        ),
       providesTags: ["Booking"],
     }),
     getBookingDetails: builder.query<Booking, { booking_id: string }>({
@@ -222,4 +245,6 @@ export const {
   useGetBookingDetailsQuery,
   useStartTaskMutation,
   useCompleteTaskMutation,
+  useGetServiceProviderCompletedJobsQuery,
+  useGetServiceProviderOngoingJobsQuery,
 } = booking;

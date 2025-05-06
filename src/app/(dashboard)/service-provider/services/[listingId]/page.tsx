@@ -1,5 +1,4 @@
 "use client";
-import AiDesciption from "@/components/AiGenerate/AiDescription";
 import { typeData } from "@/data/marketplace/data";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";

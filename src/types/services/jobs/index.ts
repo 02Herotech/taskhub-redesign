@@ -29,7 +29,7 @@ export interface JobInfo {
   taskTime: [number, number] | null; // [hour, minute]
   invoiceId: number;
   customerId: number;
-  jobStatus: "IN_PROGRESS" | "COMPLETED" | string;
+  jobStatus: string;
   providerId: number;
   total: number;
   jobTitle: string;
@@ -46,7 +46,7 @@ export interface AssignedDTO {
 
 export interface JobItem {
   jobInfo: JobInfo;
-  taskImage: string[] | null;
+  taskImage: string[];
   assignedDTO: AssignedDTO;
 }
 

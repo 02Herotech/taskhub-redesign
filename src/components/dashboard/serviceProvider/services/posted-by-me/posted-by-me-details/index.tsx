@@ -11,6 +11,7 @@ import { BsTrash2 } from 'react-icons/bs';
 import { FaStar } from 'react-icons/fa';
 import { FaRegShareFromSquare } from 'react-icons/fa6';
 import ImageViewer from 'react-simple-image-viewer';
+import EditListing from '../edit-listing';
 
 const reviews = [
   {
@@ -42,11 +43,10 @@ const PostedByMeDetails = ({ params }: { params: { id: string } }) => {
     error,
   } = useGetServiceByIdQuery(id as unknown as number);
   const [viewAll, setViewAll] = useState(false);
-  const [editModalOpen, setIsEditModalOpen] = useState(false)
   const [deleteModalOpen, setIsDeleteModalOpen] = useState(false)
   const [currentImage, setCurrentImage] = useState(0);
   const [isViewerOpen, setIsViewerOpen] = useState(false);
-
+  const [showEditModal, setShowEditModal] = useState(false)
 
 
   const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false)
@@ -163,7 +163,7 @@ const PostedByMeDetails = ({ params }: { params: { id: string } }) => {
 
           <div className="flex items-center space-x-4 p-4">
             <button
-              onClick={() => setIsEditModalOpen(true)}
+              onClick={() => setShowEditModal(true)}
               className="bg-primary   max-[320px]:text-xs text-base text-white px-4 py-2  sm:px-12 sm:py-6 rounded-full  font-bold"
             >
               Edit service details
@@ -219,6 +219,8 @@ const PostedByMeDetails = ({ params }: { params: { id: string } }) => {
           ))}
         </div>
       </div>
+
+      <EditListing showEditModal={showEditModal} setShowEditModal={setShowEditModal} />
     </div>
   )
 }

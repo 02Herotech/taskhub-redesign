@@ -5,7 +5,7 @@ import { RootState } from '@/store';
 import React, { useState } from 'react'
 import { useSelector } from 'react-redux';
 
-import { useGetServiceProviderJobsQuery } from '@/services/bookings';
+import { useGetServiceProviderCompletedJobsQuery } from '@/services/bookings';
 import CompletedTaskCard from './completed-task-card';
 import Pagination from '@/components/pagination';
 
@@ -14,7 +14,7 @@ const CompletedTasksPage = () => {
   const { profile: user } = useSelector(
     (state: RootState) => state.userProfile,
   );
-  const { data, isLoading: isLoadingjobs } = useGetServiceProviderJobsQuery({ serviceProviderId: user?.serviceProviderId }, {
+  const { data: completedJobs, isLoading: isLoadingjobs } = useGetServiceProviderCompletedJobsQuery({ providerId: user?.serviceProviderId, page }, {
     skip: !user?.serviceProviderId
   })
 
@@ -22,14 +22,12 @@ const CompletedTasksPage = () => {
   if (!user?.serviceProviderId || isLoadingjobs) {
     return <Loading />;
   }
-  console.log(data, "data")
 
-  const completedJobs = data.content?.filter((job) => job.jobInfo.jobStatus === "COMPLETED")
 
   return (
     <>
 
-      {completedJobs?.length === 0 ? (
+      {completedJobs?.content?.length === 0 ? (
         <div className="flex flex-col items-center justify-center space-y-5 h-[50vh]">
           <h2 className="text-2xl font-bold text-primary text-center">
             No tasks available, please click the button below to post a new task.
@@ -37,12 +35,12 @@ const CompletedTasksPage = () => {
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 mb-8">
-            {completedJobs?.map((completedJob, index) => (
+            {completedJobs?.content?.map((completedJob, index) => (
               <CompletedTaskCard key={index} completedJob={completedJob} />
           ))}
         </div>
       )}
-      <Pagination pageNumber={data?.pageNumber} setPage={setPage} totalPages={data?.totalPages} />
+      <Pagination pageNumber={completedJobs?.pageNumber} setPage={setPage} totalPages={completedJobs?.totalPages} />
     </>
   )
 }

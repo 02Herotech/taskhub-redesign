@@ -139,56 +139,47 @@ export interface Customer {
 }
 
 
-
-
-
-
-export interface GetServiceProviderOngoingTasksResponse {
+export interface GetServiceProviderOngoingJobsResponse {
   totalElements: number;
   totalPages: number;
   pageNumber: number;
   pageSize: number;
-  content: Task[];
+  content: JobItem[];
 }
-export interface GetServiceProviderCompletedTasksResponse {
+export interface GetServiceProviderCompletedJobsResponse {
   totalElements: number;
   totalPages: number;
   pageNumber: number;
   pageSize: number;
-  content: Task[];
+  content: JobItem[];
 }
 
-export interface Task {
+export interface JobItem {
+  jobInfo: JobInfo;
+  taskImage: string[];
+  assignedDTO: AssignedDTO;
+}
+
+export interface JobInfo {
   id: number;
-  state: string;
-  taskBriefDescription: string;
-  displayPictures: string[];
-  posterId: number;
-  taskDate: string; // ISO date string
-  taskTime: TaskTime;
-  taskDescription: string;
-  taskStatus: "OPEN"; // or union type if more statuses exist
-  createdAt: [number, number, number]
-  assignedTo: number;
-  category: Category;
-  taskImage: string;
-  termAccepted: boolean;
-  taskType: "PHYSICAL_SERVICE"; // or union type if there are other types
-  postCode: string;
-  suburb: string;
-  customerBudget: number;
   deleted: boolean;
-  isActive: boolean;
+  jobStatus: string;
+  taskDate: [number, number, number] | null
+  taskTime: [number, number] | null;
+  total: number;
+  providerId: number;
+  customerId: number;
+  bookingId: number;
+  createdAt: [number, number, number, number, number, number, number]; // e.g. [2025, 4, 22, 11, 15, 31, 616872000]
+  invoiceId: number;
+  jobTitle: string;
+  jobAddress: string;
+  jobDescription: string;
+  categoryId: number;
 }
 
-export interface TaskTime {
-  hour: number;
-  minute: number;
-  second: number;
-  nano: number;
-}
-
-export interface Category {
+export interface AssignedDTO {
   id: number;
-  categoryName: string;
+  fullName: string;
+  profileImage: string | null;
 }

@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-const listingZodSchema = z.object({
+export const listingZodSchema = z.object({
   listingTitle: z
     .string()
     .min(3, "Minimum of 3 characters")
@@ -28,5 +28,5 @@ const listingZodSchema = z.object({
   image2: z.string().optional(),
   image3: z.string().optional(),
   image4: z.string().optional(),
-}); 
+});
 export default listingZodSchema;

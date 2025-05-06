@@ -5,7 +5,7 @@ import { useGetJobByIdQuery } from '@/services/bookings';
 import Loading from '@/shared/loading';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import { BiChevronDown, BiChevronUp, BiXCircle } from 'react-icons/bi';
 import { CiCalendar, CiLocationOn } from 'react-icons/ci';
 import { FiRefreshCw } from 'react-icons/fi';
@@ -99,7 +99,7 @@ const OngoingTask = ({ params }: { params: { id: string } }) => {
       <div className="max-w-3xl mx-auto">
         {/* Status badge */}
         <div className="mb-4 flex items-center justify-between">
-          <p className="bg-indigo-100 text-primary border border-[#381F8C] px-4 py-1 rounded-full text-sm uppercase">ONGOING</p>
+          <p className="bg-indigo-100 text-primary border border-[#381F8C] px-4 py-1 rounded-full text-sm uppercase">{task.jobInfo.jobStatus}</p>
           <MoreButtonDropdown dropdownItems={dropdownItems} />
         </div>
 
@@ -184,12 +184,14 @@ const OngoingTask = ({ params }: { params: { id: string } }) => {
         </div>
 
         {/* Action buttons */}
+        {task.jobInfo.jobStatus === "IN_PROGRESS" &&
         <div className=" flex flex-col min-[400px]:flex-row items-center justify-center min-[400px]:justify-between mt-6">
-          <div className=" flex flex-col min-[400px]:flex-row  gap-3">
-            <button onClick={() => setCompleteTaskPopup(true)}
-              className="bg-primary text-white px-4 font-semibold py-2 rounded-[50px] whitespace-nowrap">Complete Task</button>
+            <div className=" flex flex-col min-[400px]:flex-row  gap-3">
+              <button onClick={() => setCompleteTaskPopup(true)}
+                className="bg-primary text-white px-4 font-semibold py-2 rounded-[50px] whitespace-nowrap">Complete Task</button>
+            </div>
           </div>
-        </div>
+        }
       </div>
 
       <CompleteTaskModal completeTaskPopup={completeTaskPopup} setCompleteTaskPopup={setCompleteTaskPopup} />
