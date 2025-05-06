@@ -21,13 +21,12 @@ const HomeNavigation = () => {
       label: "Home",
       url: "/home",
     },
-
     {
       label: "Marketplace",
       url: "/marketplace",
     },
     {
-      label: "Business Hub",
+      label: "Blog",
       url: "/business-hub",
     },
     {
