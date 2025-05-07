@@ -16,7 +16,7 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const result = await fetch(process.env.BLOG_API + "/postCategory");
+  const result = await fetch(process.env.BLOG_API + "/postCategory?sort=createdAt");
   const categories: { docs: { title: string; slug: string }[] } =
     await result.json();
   return (
