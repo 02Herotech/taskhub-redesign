@@ -86,7 +86,9 @@ function HorizontalInfo({ title, content, color, imgUrl }: Blog) {
 }
 
 async function Page() {
-  const result = await fetch(process.env.BLOG_API + "/postCategory");
+  const result = await fetch(
+    process.env.BLOG_API + "/postCategory?sort=createdAt",
+  );
   const categories_: { docs: { title: string; slug: string }[] } =
     await result.json();
   redirect(`/business-hub/${categories_.docs[0].slug}`);
