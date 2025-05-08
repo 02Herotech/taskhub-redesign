@@ -59,7 +59,7 @@ export interface Listing {
   serviceProvider: ServiceProvider;
   stripeId: string;
   available: boolean;
-  createdAt: string;
+  createdAt: [number, number, number];
   category: Category;
   availableDays: string[]; // or enum if you want ("MONDAY", etc.)
   listingDescription: string;
@@ -71,7 +71,7 @@ export interface Listing {
   planThreeDescription: string;
   planThreePrice: number;
   businessPictures: string[];
-  taskType: "PHYSICAL_SERVICE"; // could be union if there are other task types
+  taskType: string
   postCode: string;
   suburb: string;
   reviews: Review[];

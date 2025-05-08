@@ -1,9 +1,11 @@
 import { dayOfWeekNames, monthNames, suffixes } from '@/lib/utils';
 import { getBorderColor, getStatusColor } from '@/shared/statusbadge';
 import { Booking } from '@/types/services/tasks';
+import { formatDateFromNumberArray } from '@/utils';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import React from 'react'
+import { CiCalendar, CiLocationOn } from 'react-icons/ci';
 import { FaAddressBook } from 'react-icons/fa';
 
 const BookingRequestCard = ({ bookingRequest }: { bookingRequest: Booking }) => {
@@ -13,24 +15,6 @@ const BookingRequestCard = ({ bookingRequest }: { bookingRequest: Booking }) => 
   const firstName = session?.data?.user.user.firstName;
   const lastName = session?.data?.user.user.lastName;
   const fullName = `${firstName} ${lastName}`;
-
-  const date = bookingRequest?.bookedAt ? new Date(bookingRequest.bookedAt[0], bookingRequest.bookedAt[1] - 1, bookingRequest.bookedAt[2]) : new Date();
-  const day = date.getDate();
-  const month = date.getMonth();
-  const monthName = monthNames[month];
-  const dayOfWeek = date.getDay();
-  const dayOfWeekName = dayOfWeekNames[dayOfWeek];
-  // Determine the correct suffix for the day
-  let daySuffix;
-  if (day === 11 || day === 12 || day === 13) {
-    daySuffix = "th";
-  } else {
-    daySuffix = suffixes[day % 10] || suffixes[0]; // Default to "th" if suffix is undefined
-  }
-
-  const formattedDate = `${dayOfWeekName}, ${monthName} ${day}${daySuffix}`;
-
-
 
   return (
 
@@ -49,26 +33,13 @@ const BookingRequestCard = ({ bookingRequest }: { bookingRequest: Booking }) => 
         <div className="mt-4 flex justify-between items-end">
           <div className="flex flex-col space-y-1 text-xs text-gray-500">
             <div className="flex items-center">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-4 w-4 mr-1"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                />
-              </svg>
-              <span>{formattedDate}</span>
+              <CiCalendar />
+              <span>{formatDateFromNumberArray(bookingRequest.bookedAt)}</span>
             </div>
 
             {bookingRequest.userAddress &&
               <div className="flex items-center">
-                <FaAddressBook />
+                <CiLocationOn />
                 <span>{`${bookingRequest.userAddress.state || ""} ${bookingRequest.userAddress.suburb || ""} ${bookingRequest.userAddress.postCode || ""}`}</span>
               </div>
             }

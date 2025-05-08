@@ -7,6 +7,8 @@ import { dayOfWeekNames, monthNames, suffixes } from '@/lib/utils';
 import { JobItem } from '@/types/services/jobs';
 import { FaAddressBook } from 'react-icons/fa6';
 import { FaCalendarAlt } from 'react-icons/fa';
+import { CiCalendar, CiLocationOn } from 'react-icons/ci';
+import { formatDateFromNumberArray } from '@/utils';
 
 const jobCard = ({ job }: { job: JobItem }) => {
   const session = useSession();
@@ -15,24 +17,6 @@ const jobCard = ({ job }: { job: JobItem }) => {
   const firstName = session?.data?.user.user.firstName;
   const lastName = session?.data?.user.user.lastName;
   const fullName = `${firstName} ${lastName}`;
-
-  const date = job.jobInfo?.createdAt ? new Date(job.jobInfo.createdAt[0], job.jobInfo.createdAt[1] - 1, job.jobInfo.createdAt[2]) : new Date();
-  const day = date.getDate();
-  const month = date.getMonth();
-  const monthName = monthNames[month];
-  const dayOfWeek = date.getDay();
-  const dayOfWeekName = dayOfWeekNames[dayOfWeek];
-  // Determine the correct suffix for the day
-  let daySuffix;
-  if (day === 11 || day === 12 || day === 13) {
-    daySuffix = "th";
-  } else {
-    daySuffix = suffixes[day % 10] || suffixes[0]; // Default to "th" if suffix is undefined
-  }
-
-  const formattedDate = `${dayOfWeekName}, ${monthName} ${day}${daySuffix}`;
-
-
 
   return (
 
@@ -50,13 +34,13 @@ const jobCard = ({ job }: { job: JobItem }) => {
         <div className="mt-4 flex justify-between items-end">
           <div className="flex flex-col space-y-1 text-xs text-gray-500">
             <div className="flex items-center">
-              <FaCalendarAlt />
-              <span>{formattedDate}</span>
+              <CiCalendar />
+              <span>{formatDateFromNumberArray(job.jobInfo.createdAt)}</span>
             </div>
 
             {job.jobInfo.jobAddress &&
               <div className="flex items-center">
-                <FaAddressBook />
+                <CiLocationOn />
                 <span>{job.jobInfo.jobAddress}</span>
               </div>
             }
