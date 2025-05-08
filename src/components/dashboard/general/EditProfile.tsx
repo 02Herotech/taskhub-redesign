@@ -20,7 +20,6 @@ import FormField from "./FormField";
 import Notice from "./Notice";
 import axios from "axios";
 import useValidateABN from "@/hooks/useValidateABN";
-import Information from "@/components/business-hub/Information";
 import useAxios from "@/hooks/useAxios";
 import { Calendar } from "primereact/calendar";
 import useSuburbData, { SurburbInfo } from "@/hooks/useSuburbData";
@@ -600,7 +599,7 @@ const EditProfile = () => {
                           htmlFor="suburb"
                           className="flex items-center justify-between"
                         >
-                          <span>Suburb</span>
+                          <span>Address</span>
                           {!errors.suburb && field.value && (
                             <BiCheck className="size-5 rounded-full bg-green-500 p-1 text-white" />
                           )}
@@ -618,7 +617,7 @@ const EditProfile = () => {
                               id="suburb"
                               type="text"
                               className="w-full rounded-xl border-none bg-white p-2 text-slate-700 shadow-none outline-none"
-                              placeholder="Enter a suburb"
+                              placeholder="Enter your address"
                               value={inputValue}
                               onChange={(e) => {
                                 if (currentSuburb) {
@@ -655,12 +654,8 @@ const EditProfile = () => {
                                     key={Math.random() * 12345}
                                     onClick={() => {
                                       setCurrentSuburb(suburb);
-                                      setInputValue(
-                                        `${suburb.name}, ${suburb.state.abbreviation}, Australia`,
-                                      );
-                                      field.onChange(
-                                        `${suburb.name}, ${suburb.state.abbreviation}, Australia`,
-                                      );
+                                      setInputValue(suburb.formattedAddress);
+                                      field.onChange(suburb.formattedAddress);
                                       setSuburbList([]);
                                     }}
                                   >
@@ -670,11 +665,7 @@ const EditProfile = () => {
                                       strokeWidth={1}
                                     />
                                     <span className="text-[#0F052E]">
-                                      {suburb.name},{" "}
-                                      {suburb.locality
-                                        ? `${suburb.locality},`
-                                        : ""}{" "}
-                                      {suburb.state.name}, AUS
+                                      {suburb.formattedAddress}
                                     </span>
                                   </li>
                                 ))}
