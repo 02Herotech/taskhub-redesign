@@ -333,7 +333,7 @@ const ProvideService: React.FC = () => {
       error.price = "Please fill out all required fields";
     }
     if (activeButtonIndex === 0) {
-      if (!currentSuburb) {
+      if (!currentSuburb && (!altPostCode || !altState || !altPostCode)) {
         error.suburb = "Please fill out all required fields";
       }
     }
@@ -561,14 +561,13 @@ const ProvideService: React.FC = () => {
           const type = "REMOTE_SERVICE";
           finalTask = { ...finalTask, taskType: type };
         } else {
-          const { state, postcode, name } = currentSuburb;
 
           finalTask = {
             ...finalTask,
             taskType: "PHYSICAL_SERVICE",
             suburb: currentSuburb?.name || altSuburb || "",
-            postCode: currentSuburb?.postcode ? String(postcode) : altPostCode,
-            state: currentSuburb?.state ? state.name : altState,
+            postCode: currentSuburb?.postcode ? String(currentSuburb.postcode) : altPostCode,
+            state: currentSuburb?.state ? currentSuburb.state.name : altState,
           };
         }
 
@@ -1025,7 +1024,7 @@ const ProvideService: React.FC = () => {
                             id="suburb"
                             type="text"
                             className="-ml-2 block w-full appearance-none bg-transparent p-3 placeholder-[#76757A61] outline-none placeholder:font-satoshiMedium"
-                            placeholder="Enter a suburb"
+                            placeholder="Enter your address"
                             value={suburb}
                             autoComplete="off"
                             onChange={(e) => {
