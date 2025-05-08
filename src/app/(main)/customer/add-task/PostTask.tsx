@@ -1,7 +1,10 @@
 "use client";
+import { useEffect } from "react";
 import { AnimatePresence } from "framer-motion";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "@/store";
+import { useSearchParams } from "next/navigation";
+import { setTaskDetail } from "@/store/Features/taskDetails";
 
 //Components
 import Header from "./Header";
@@ -9,8 +12,16 @@ import StepOne from "./StepOne";
 import StepTwo from "./StepTwo";
 
 function PostTask() {
+  const searchParams = useSearchParams();
   const savedTask = useSelector((state: RootState) => state.taskDetails);
+  const marketplaceDescription = searchParams.get("marketplaceDescription");
+  const dispatch = useDispatch();
 
+  useEffect(() => {
+    if (marketplaceDescription) {
+      dispatch(setTaskDetail({ key: "currentStep", value: 1 }));
+    }
+  }, []);
   return (
     <div className="relative z-40">
       <Header />

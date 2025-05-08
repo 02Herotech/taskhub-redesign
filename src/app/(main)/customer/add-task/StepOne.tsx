@@ -7,14 +7,16 @@ import { GrFormCheckmark } from "react-icons/gr";
 import { PiFileArrowDownDuotone } from "react-icons/pi";
 import DatePicker from "react-datepicker";
 import { CustomDateInput, CustomTimeInput } from "./DateInputs";
-import { getImageUrl, base64ToFile } from "@/lib/utils";
+import { getImageUrl } from "@/lib/utils";
 import { useDispatch, useSelector } from "react-redux";
 import { setTaskDetail } from "@/store/Features/taskDetails";
 import { RootState } from "@/store";
 import { motion } from "framer-motion";
 import Button from "@/components/global/Button";
+import { useSearchParams } from "next/navigation";
 
 function StepOne() {
+  const searchParams = useSearchParams();
   const [wordCount, setWordCount] = useState({ title: 0, description: 0 });
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [selectedTime, setSelectedTime] = useState<Date | null>(null);
@@ -32,7 +34,8 @@ function StepOne() {
   } = useForm<StepOneSchema>({
     resolver: zodResolver(stepOneSchema),
     defaultValues: {
-      taskBriefDescription,
+      taskBriefDescription:
+        searchParams.get("marketplaceDescription") || taskBriefDescription,
       taskDescription,
       isFlexible,
       taskDate,
@@ -42,7 +45,7 @@ function StepOne() {
   });
 
   const watchForm = watch();
-  
+
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
@@ -182,11 +185,11 @@ function StepOne() {
         </label>
         {imageUrl ? (
           <div className="flex items-end ">
-            <div className="relative flex h-48 w-1/2 items-center justify-center rounded-lg border-2 border-dashed border-[#EBE9F4] p-4">
+            <div className="relative flex h-48 w-1/2 items-center justify-center rounded-lg border-2 border-dashed border-[#EBE9F4]">
               <img
                 src={imageUrl}
                 alt="Uploaded Task"
-                className="h-full w-full object-contain"
+                className="h-full w-full object-cover max-w-[350px]"
                 width="100%"
                 height="100%"
               />
