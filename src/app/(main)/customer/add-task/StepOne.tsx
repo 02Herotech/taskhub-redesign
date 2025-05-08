@@ -185,11 +185,11 @@ function StepOne() {
         </label>
         {imageUrl ? (
           <div className="flex items-end ">
-            <div className="relative flex h-48 w-1/2 items-center justify-center rounded-lg border-2 border-dashed border-[#EBE9F4] p-4">
+            <div className="relative flex h-48 w-1/2 items-center justify-center rounded-lg border-2 border-dashed border-[#EBE9F4]">
               <img
                 src={imageUrl}
                 alt="Uploaded Task"
-                className="h-full w-full object-contain"
+                className="h-full w-full object-cover max-w-[350px]"
                 width="100%"
                 height="100%"
               />

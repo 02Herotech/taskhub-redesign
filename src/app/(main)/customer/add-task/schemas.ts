@@ -12,7 +12,7 @@ const taskSchema = z.object({
     .any()
     .optional()
     .refine((file) => {
-      return file?.length > 0 && typeof file != "string"
+      return typeof file !== "string"
         ? ACCEPTED_FILE_TYPES.includes(file?.type)
         : true;
     }, "Only images are allowed")
