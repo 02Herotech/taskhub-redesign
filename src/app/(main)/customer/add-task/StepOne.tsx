@@ -199,6 +199,7 @@ function StepOne() {
               className="rounded-lg bg-tc-gray px-3 py-1 text-white"
               onClick={() => {
                 setFormData("taskImage", null);
+                clearErrors("taskImage");
                 dispatch(setTaskDetail({ key: "taskImage", value: "" }));
               }}
             >
