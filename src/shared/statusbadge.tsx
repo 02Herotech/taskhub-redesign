@@ -3,7 +3,7 @@ export const getBorderColor = (status: string) => {
     case "ONGOING":
       return "border-[#381F8C]"
     case "COMPLETED":
-      return "border-[#22973C]"
+      return "border-green-600"
     case "OPEN":
       return "border-[#0887FF]"
     case "Posted by me":

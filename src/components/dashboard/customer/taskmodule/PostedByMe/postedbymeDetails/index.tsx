@@ -46,6 +46,11 @@ const PostedByMe = ({ params }: { params: { id: string } }) => {
     setIsViewerOpen(true);
   }, []);
 
+  const closeImageViewer = () => {
+    setCurrentImage(0);
+    setIsViewerOpen(false);
+  };
+
   useEffect(() => {
     if (task) {
       router.push(`/customer/tasks/posted-by-me/${task.taskInfo.id}?title=${task.taskInfo.taskBriefDescription}`);
@@ -74,10 +79,7 @@ const PostedByMe = ({ params }: { params: { id: string } }) => {
   }
 
 
-  const closeImageViewer = () => {
-    setCurrentImage(0);
-    setIsViewerOpen(false);
-  };
+
   const dropdownItems = [
     {
       id: 2,

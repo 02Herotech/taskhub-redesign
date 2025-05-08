@@ -331,7 +331,7 @@ export type Booking = {
   price: number;
   bookingDescription: string;
   updatedAt: string;
-  bookedAt: string;
+  bookedAt: [number, number, number];
   invoiceSent: boolean;
 };
 

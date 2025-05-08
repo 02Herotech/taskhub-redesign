@@ -474,7 +474,7 @@ export const formatDateFromArray = (
   dateArray: [number, number, number],
 ): string => {
   if (!dateArray) {
-    return;
+    return "Flexible";
   }
   const date = dateArray
     ? new Date(dateArray[0], dateArray[1] - 1, dateArray[2])

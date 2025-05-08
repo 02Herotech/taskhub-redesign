@@ -4,10 +4,15 @@ import {
   GetReceiptByCustomerIdResponse,
 } from "@/types/services/invoice";
 import {
+  Booking,
+  GetServiceProviderOngoingJobsResponse,
+  GetServiceProviderPendingJobsResponse,
+} from "@/types/services/jobs";
+import { GetServiceProviderCompletedJobsResponse } from "@/types/services/serviceprovider";
+import {
   AcceptInvoiceResponse,
   BookingRequestResponse,
   GetJobsByIdResponse,
-  JobDataDetails,
   PaymentIntentResponse,
   RejectInvoiceResponse,
 } from "@/types/services/tasks";
@@ -84,6 +89,47 @@ export const booking = createApi({
       query: (customerId) => getRequest(`/invoice/customer/${customerId}`),
       providesTags: ["Booking"],
     }),
+    getServiceProviderJobs: builder.query<
+      GetServiceProviderOngoingJobsResponse,
+      { serviceProviderId: number; page: number }
+    >({
+      query: ({ serviceProviderId, page }) =>
+        getRequest(
+          `/job/service-provider/${serviceProviderId}?pageSize=${LIMIT_NINE}&page=${page}`,
+        ),
+      providesTags: ["Booking"],
+    }),
+    getAllServiceProviderAcceptedJobs: builder.query<
+      GetServiceProviderPendingJobsResponse,
+      void
+    >({
+      query: () => getRequest(`/service-provider`),
+      providesTags: ["Booking"],
+    }),
+    getServiceProviderOngoingJobs: builder.query<
+      GetServiceProviderOngoingJobsResponse,
+      { page: number; providerId: number }
+    >({
+      query: ({ page, providerId }) =>
+        getRequest(
+          `/service-provider-ongoing-service/${providerId}?size=${LIMIT_NINE}&page=${page}`,
+        ),
+      providesTags: ["Booking"],
+    }),
+    getServiceProviderCompletedJobs: builder.query<
+      GetServiceProviderCompletedJobsResponse,
+      { page: number; providerId: number }
+    >({
+      query: ({ page, providerId }) =>
+        getRequest(
+          `/service-provider-completed-service/${providerId}?size=${LIMIT_NINE}&page=${page}`,
+        ),
+      providesTags: ["Booking"],
+    }),
+    getBookingDetails: builder.query<Booking, { booking_id: string }>({
+      query: ({ booking_id }) => getRequest(`/${booking_id}`),
+      providesTags: ["Booking"],
+    }),
     getReceiptsByCustomerId: builder.query<
       GetReceiptByCustomerIdResponse,
       number
@@ -105,6 +151,14 @@ export const booking = createApi({
     }),
     acceptService: builder.mutation<void, { jobId: number }>({
       query: ({ jobId }) => postRequest(`/accept-service?jobId=${jobId}`, {}),
+      invalidatesTags: ["Booking"],
+    }),
+    startTask: builder.mutation<void, { jobId: string }>({
+      query: ({ jobId }) => postRequest(`/start-task?jobId=${jobId}`, {}),
+      invalidatesTags: ["Booking"],
+    }),
+    completeTask: builder.mutation<void, { jobId: string }>({
+      query: ({ jobId }) => postRequest(`/complete-task?jobId=${jobId}`, {}),
       invalidatesTags: ["Booking"],
     }),
     inspectTask: builder.mutation<void, { jobId: number }>({
@@ -170,6 +224,23 @@ export const booking = createApi({
         getRequest(`/customer/${customerId}?page=${page}&size=${LIMIT_NINE}`),
       providesTags: ["Booking"],
     }),
+    getServiceProviderBookingRequest: builder.query<
+      BookingRequestResponse,
+      { page: number; providerId: number }
+    >({
+      query: ({ page, providerId }) =>
+        getRequest(
+          `/service-provider/booked-listing/${providerId}?page=${page}&size=${LIMIT_NINE}`,
+        ),
+      providesTags: ["Booking"],
+    }),
+    getServiceProviderBookingRequestDetails: builder.query<
+      Booking,
+      { bookingId: string }
+    >({
+      query: ({ bookingId }) => getRequest(`/${bookingId}`),
+      providesTags: ["Booking"],
+    }),
   }),
 });
 
@@ -186,4 +257,13 @@ export const {
   useRejectInvoiceMutation,
   useRebookJobMutation,
   useGetBookingRequestQuery,
+  useGetServiceProviderJobsQuery,
+  useGetAllServiceProviderAcceptedJobsQuery,
+  useGetBookingDetailsQuery,
+  useStartTaskMutation,
+  useCompleteTaskMutation,
+  useGetServiceProviderCompletedJobsQuery,
+  useGetServiceProviderOngoingJobsQuery,
+  useGetServiceProviderBookingRequestQuery,
+  useGetServiceProviderBookingRequestDetailsQuery,
 } = booking;

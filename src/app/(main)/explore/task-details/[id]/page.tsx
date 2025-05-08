@@ -180,7 +180,6 @@ const TaskDetailsPage = ({ params }: { params: { id: string } }) => {
     daySuffix = suffixes[day % 10] || suffixes[0]; // Default to "th" if suffix is undefined
   }
   const formattedDate = `${dayOfWeekName}, ${monthName} ${day}${daySuffix}`;
-
   return (
     <section className="container py-20 font-satoshi">
       {isLoading ? (
@@ -342,8 +341,7 @@ const TaskDetailsPage = ({ params }: { params: { id: string } }) => {
                       aria-haspopup="true"
                       className="rounded-full"
                       disabled={
-                        task?.taskInfo?.taskStatus === "ASSIGNED" ||
-                        !fetchedUserData.firstName
+                        task?.taskInfo?.taskStatus === "ASSIGNED" 
                       }
                     >
                       Make an offer
