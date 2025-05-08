@@ -16,7 +16,7 @@ import imag from "../../../../public/assets/images/tickk.png";
 import AiDesciption from "@/components/AiGenerate/AiDescription";
 import { useSession } from "next-auth/react";
 import { GrFormCheckmark } from "react-icons/gr";
-import { FaSortDown } from "react-icons/fa6";
+import { FaLocationDot, FaSortDown } from "react-icons/fa6";
 import Dropdown from "@/components/global/Dropdown";
 import { useRouter } from "next/navigation";
 import Loading from "@/components/global/loading/page";
@@ -124,6 +124,9 @@ const ProvideService: React.FC = () => {
   const [selectedDay, setSelectedDay] = useState("");
   const [selectedDays, setSelectedDays] = useState<string[]>([]);
   const maxSize = 5 * 1024 * 1024;
+  const [altSuburb, setAltSuburb] = useState("");
+  const [altState, setAltState] = useState("");
+  const [altPostCode, setAltPostCode] = useState("");
 
   const [suburb, setSuburb] = useState("");
   const [currentSuburb, setCurrentSuburb] = useState<SurburbInfo | null>(null);
@@ -164,9 +167,9 @@ const ProvideService: React.FC = () => {
   const fetchedUserData = useUserProfileData(setLoadingProfile);
   const [hasClosedPopup, setHasClosedPopup] = useState(false);
   const isAuth = session.status === "authenticated";
-  const isEnabled = session.data?.user.user.enabled;
   const [isEnabledPopup, setIsEnabledPopup] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [showManualAddress, setShowManualAddress] = useState(false);
 
   const [errs, setErrs] = useState({
     image1: "",
@@ -563,9 +566,9 @@ const ProvideService: React.FC = () => {
           finalTask = {
             ...finalTask,
             taskType: "PHYSICAL_SERVICE",
-            suburb: name,
-            postCode: String(postcode),
-            state: state.name,
+            suburb: currentSuburb?.name || altSuburb || "",
+            postCode: currentSuburb?.postcode ? String(postcode) : altPostCode,
+            state: currentSuburb?.state ? state.name : altState,
           };
         }
 
@@ -998,40 +1001,46 @@ const ProvideService: React.FC = () => {
                 )}
                 {isOpen && activeButtonIndex === 0 && (
                   <div className="relative w-full">
-                    <label
-                      htmlFor="suburb"
-                      className="mb-2 block font-satoshiMedium text-base text-[#140B31] sm:text-lg"
-                    >
-                      Where do you need this done{" "}
-                      <span className="font-extrabold text-[#ff0000]">*</span>
-                    </label>
-                    <div
-                      className={
-                        "flex items-center rounded-lg bg-[#EBE9F4] px-3 pl-2 focus-within:bg-white " +
-                        (error.suburb
-                          ? "border border-[#ff0000] outline-[#FF0000]"
-                          : "border-primary outline-none focus-within:border")
-                      }
-                    >
-                      <CiLocationOn fill="#76757A61" size={22} />
-                      <input
-                        id="suburb"
-                        type="text"
-                        className="-ml-2 block w-full appearance-none bg-transparent p-3 placeholder-[#76757A61] outline-none placeholder:font-satoshiMedium"
-                        placeholder="Enter a suburb"
-                        value={suburb}
-                        autoComplete="off"
-                        onChange={(e) => {
-                          if (currentSuburb) {
-                            setCurrentSuburb(null);
-                            const enteredInput = e.target.value.slice(-1);
-                            e.target.value = enteredInput;
-                            setSuburb(enteredInput);
+                    {!showManualAddress && (
+                      <>
+                        <label
+                          htmlFor="suburb"
+                          className="mb-2 block font-satoshiMedium text-base text-[#140B31] sm:text-lg"
+                        >
+                          Where are you located{" "}
+                          <span className="font-extrabold text-[#ff0000]">
+                            *
+                          </span>
+                        </label>
+                        <div
+                          className={
+                            "flex items-center rounded-lg bg-[#EBE9F4] px-3 pl-2 focus-within:bg-white " +
+                            (error.suburb
+                              ? "border border-[#ff0000] outline-[#FF0000]"
+                              : "border-primary outline-none focus-within:border")
                           }
-                          setSuburb(e.target.value);
-                        }}
-                      />
-                    </div>
+                        >
+                          <CiLocationOn fill="#76757A61" size={22} />
+                          <input
+                            id="suburb"
+                            type="text"
+                            className="-ml-2 block w-full appearance-none bg-transparent p-3 placeholder-[#76757A61] outline-none placeholder:font-satoshiMedium"
+                            placeholder="Enter a suburb"
+                            value={suburb}
+                            autoComplete="off"
+                            onChange={(e) => {
+                              if (currentSuburb) {
+                                setCurrentSuburb(null);
+                                const enteredInput = e.target.value.slice(-1);
+                                e.target.value = enteredInput;
+                                setSuburb(enteredInput);
+                              }
+                              setSuburb(e.target.value);
+                            }}
+                          />
+                        </div>
+                      </>
+                    )}
                     <div className="absolute left-0 w-full bg-white">
                       {isLoading && (
                         <p className="py-2 text-center font-satoshiMedium text-[#76757A61]">
@@ -1043,7 +1052,7 @@ const ProvideService: React.FC = () => {
                           Error occured while loading suburb data
                         </p>
                       )}
-                      {suburbList.length > 1 && (
+                      {suburbList.length > 0 && (
                         <ul className="roundeed-lg max-h-52 overflow-y-auto overflow-x-hidden">
                           {suburbList.map((suburb) => (
                             <li
@@ -1051,12 +1060,7 @@ const ProvideService: React.FC = () => {
                               key={Math.random() * 12345}
                               onClick={() => {
                                 setCurrentSuburb(suburb);
-                                setSuburb(
-                                  `${suburb.name}, ${suburb.state.abbreviation}, Australia`,
-                                );
-                                setSuburb(
-                                  `${suburb.name}, ${suburb.state.abbreviation}, Australia`,
-                                );
+                                setSuburb(suburb.formattedAddress);
                                 setSuburbList([]);
                               }}
                             >
@@ -1066,15 +1070,99 @@ const ProvideService: React.FC = () => {
                                 strokeWidth={1}
                               />
                               <span className="text-[#0F052E]">
-                                {suburb.name},{" "}
-                                {suburb.locality ? `${suburb.locality},` : ""}{" "}
-                                {suburb.state.name}, AUS
+                                {suburb.formattedAddress}
                               </span>
                             </li>
                           ))}
                         </ul>
                       )}
+                      {suburb && !currentSuburb && !showManualAddress && (
+                        <div
+                          className="flex max-w-sm cursor-pointer items-center gap-3 p-2 font-satoshiBold font-bold shadow-sm"
+                          onClick={() => {
+                            setShowManualAddress(true);
+                            setSuburbList([]);
+                          }}
+                        >
+                          <FaLocationDot color="#2D1970" size={25} />
+                          <div>
+                            <h6 className="">Can&apos;t find your address?</h6>
+                            <p className="font-satoshiMedium text-sm text-[#4E5158]">
+                              Enter manually{" "}
+                              <span className="text-primary">here</span>
+                            </p>
+                          </div>
+                        </div>
+                      )}
                     </div>
+                    {/* Manual address input */}
+                    {showManualAddress && (
+                      <div className="grid grid-cols-2 gap-2">
+                        <div className="col-span-2 mb-3">
+                          <label
+                            htmlFor="state"
+                            className="mb-2 block font-satoshiBold text-[13px] font-bold text-status-darkpurple lg:text-[16px]"
+                          >
+                            State / Territory
+                            <span className="font-extrabold text-[#ff0000]">
+                              *
+                            </span>
+                          </label>
+                          <div className="rounded-lg bg-[#EBE9F4] px-3 pl-2">
+                            <input
+                              id="state"
+                              type="text"
+                              className="-ml-2 block w-full appearance-none bg-transparent p-3 placeholder-[#76757A61] outline-none placeholder:font-satoshiMedium"
+                              placeholder=""
+                              value={altState}
+                              onChange={(e) => setAltState(e.target.value)}
+                            />
+                          </div>
+                        </div>
+                        <div>
+                          <label
+                            htmlFor="postcode"
+                            className="mb-2 block font-satoshiBold text-[13px] font-bold text-status-darkpurple lg:text-[16px]"
+                          >
+                            Post Code
+                            <span className="font-extrabold text-[#ff0000]">
+                              *
+                            </span>
+                          </label>
+                          <div className="rounded-lg bg-[#EBE9F4] px-3 pl-2">
+                            <input
+                              id="postcode"
+                              type="text"
+                              className="-ml-2 block w-full appearance-none bg-transparent p-3 placeholder-[#76757A61] outline-none placeholder:font-satoshiMedium"
+                              placeholder=""
+                              value={altPostCode}
+                              onChange={(e) => setAltPostCode(e.target.value)}
+                            />
+                          </div>
+                        </div>
+                        <div>
+                          <label
+                            htmlFor="suburb"
+                            className="mb-2 block font-satoshiBold text-[13px] font-bold text-status-darkpurple lg:text-[16px]"
+                          >
+                            Suburb
+                            <span className="font-extrabold text-[#ff0000]">
+                              *
+                            </span>
+                          </label>
+                          <div className="rounded-lg bg-[#EBE9F4] px-3 pl-2">
+                            <input
+                              id="suburb"
+                              type="text"
+                              className="-ml-2 block w-full appearance-none bg-transparent p-3 placeholder-[#76757A61] outline-none placeholder:font-satoshiMedium"
+                              placeholder=""
+                              value={altSuburb}
+                              onChange={(e) => setAltSuburb(e.target.value)}
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 )}
                 <div className="text-[#FF0000]">
