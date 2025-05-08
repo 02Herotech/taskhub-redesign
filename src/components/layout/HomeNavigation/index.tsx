@@ -21,13 +21,12 @@ const HomeNavigation = () => {
       label: "Home",
       url: "/home",
     },
-
     {
       label: "Marketplace",
       url: "/marketplace",
     },
     {
-      label: "Business Hub",
+      label: "Blog",
       url: "/business-hub",
     },
     {
@@ -50,10 +49,10 @@ const HomeNavigation = () => {
     <>
       <nav className="fixed left-0 right-0 top-0 z-50 w-full bg-[#EBE9F4]">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-7 py-4 lg:py-5">
-          <Link href="/" className="max-sm:hidden">
+          <Link href="/home" className="max-sm:hidden">
             <Logo />
           </Link>
-          <Link href="/" className="lg:hidden">
+          <Link href="/home" className="lg:hidden">
             <SmallLogo />
           </Link>
           <ul className="hidden items-center space-x-8 lg:flex">
