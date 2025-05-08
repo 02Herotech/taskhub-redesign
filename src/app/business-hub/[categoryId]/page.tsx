@@ -72,7 +72,7 @@ async function Page({ params }: Props) {
   const currentCategory = categories.docs[0];
 
   const postsResult = await fetch(
-    `${process.env.BLOG_API}/posts?where[category][equals]=${currentCategory.id}&sort=createdAt`,
+    `${process.env.BLOG_API}/posts?where[category][equals]=${currentCategory.id}&sort=createdAt&limit=0`,
   );
   const posts: { docs: Post[] } = await postsResult.json();
   return (
