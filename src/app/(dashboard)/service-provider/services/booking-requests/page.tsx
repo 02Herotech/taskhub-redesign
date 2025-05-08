@@ -1,9 +1,10 @@
+import BookingRequests from '@/components/dashboard/serviceProvider/services/booking-request'
 import React from 'react'
 
-const BookingRequests = () => {
+const BookingRequestsPage = () => {
   return (
-    <div>BookingRequests</div>
+    <BookingRequests />
   )
 }
 
-export default BookingRequests
+export default BookingRequestsPage

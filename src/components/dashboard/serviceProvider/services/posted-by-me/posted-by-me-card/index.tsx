@@ -23,13 +23,13 @@ const PostedByMeCard = ({ listing }: { listing: Listing }) => {
   }
 
   return (
-    <div onClick={() => router.push(`/service-provider/services/posted-by-me/${listing.id}`)} className={`relative flex flex-col border-l-[12px] hover:bg-[#E6F3FF] cursor-pointer  shadow-[0px_-4px_132px_0px_#00000017] ${getBorderColor("Posted by me")} rounded-2xl shadow-sm bg-white overflow-hidden`}>
+    <div onClick={() => router.push(`/service-provider/services/posted-by-me/${listing.id}`)} className={`relative flex flex-col border-l-[12px] hover:bg-[#E6F3FF] cursor-pointer  shadow-[0px_-4px_132px_0px_#00000017] border-[#0887FF] rounded-2xl  bg-white overflow-hidden`}>
       <div className="p-4 pl-5 flex-1">
         <div className="mb-2">
           <span
-            className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor("Posted by me")}`}
+            className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium text-[#0887FF] border-[#0887FF] bg-[#BEDFFE]`}
           >
-            posted by me
+            Posted by me
           </span>
         </div>
         <h3 className="text-xs font-semibold text-[#0F052E]">{listing.listingTitle}</h3>

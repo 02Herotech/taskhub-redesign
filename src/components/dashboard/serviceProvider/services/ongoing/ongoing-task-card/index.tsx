@@ -6,6 +6,7 @@ import { getBorderColor, getStatusColor } from '@/shared/statusbadge';
 import { dayOfWeekNames, monthNames, suffixes } from '@/lib/utils';
 import { JobItem } from '@/types/services/jobs';
 import { FaAddressBook } from 'react-icons/fa6';
+import { FaCalendarAlt } from 'react-icons/fa';
 
 const jobCard = ({ job }: { job: JobItem }) => {
   const session = useSession();
@@ -45,25 +46,11 @@ const jobCard = ({ job }: { job: JobItem }) => {
           </span>
         </div>
         <h3 className="text-xs font-semibold text-[#0F052E]">{job.jobInfo.jobTitle}</h3>
-        {/* <p className="mt-1 text-sm text-[#110049] line-clamp-3">{job.jobInfo.jobInfo.jobDescription}...</p> */}
 
         <div className="mt-4 flex justify-between items-end">
           <div className="flex flex-col space-y-1 text-xs text-gray-500">
             <div className="flex items-center">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-4 w-4 mr-1"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                />
-              </svg>
+              <FaCalendarAlt />
               <span>{formattedDate}</span>
             </div>
 
@@ -74,7 +61,6 @@ const jobCard = ({ job }: { job: JobItem }) => {
               </div>
             }
             <div>
-              {/* <span>{job.jobInfo.jobInfo.taskType}</span> */}
             </div>
 
           </div>

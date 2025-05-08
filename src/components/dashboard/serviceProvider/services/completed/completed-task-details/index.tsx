@@ -75,12 +75,6 @@ const CompletedTaskDetails = ({ params }: { params: { id: string } }) => {
       label: "Rebook ",
       onClick: () => setShowRebookModal(true),
     },
-    // {
-    //   id: 3,
-    //   icon: MdPostAdd,
-    //   label: "Post as new ",
-    //   onClick: () => setCancelPopup(true),
-    // },
   ]
 
   return (
@@ -186,9 +180,7 @@ const CompletedTaskDetails = ({ params }: { params: { id: string } }) => {
           <button type="button" onClick={() => setShowReviewModal(true)} className="text-white rounded-[50px] px-4 py-2 text-sm bg-primary" >
             Post a review
           </button>
-          {/* <button onClick={() => { setShowRebookModal(true); setCurrentStep(1); }} className="rounded-[50px] px-4 py-2 text-sm bg-white font-semibold border border-primary">Rebook</button> */}
         </div>
-        {/* <button type="button" onClick={() => setIsDeleteModalOpen(true)} className="text-red-500 hover:text-red-700 px-4 py-2 font-semibold text-sm">Delete task</button> */}
       </div>
 
     </div>

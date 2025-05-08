@@ -1,9 +1,12 @@
+"use client"
 import React from 'react'
+import MyOffers from '@/components/dashboard/serviceProvider/services/my-offers'
 
-const MyOffers = () => {
+
+const MyOfferspage = () => {
   return (
-    <div>MyOffers</div>
+    <MyOffers />
   )
 }
 
-export default MyOffers
+export default MyOfferspage

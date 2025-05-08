@@ -224,6 +224,23 @@ export const booking = createApi({
         getRequest(`/customer/${customerId}?page=${page}&size=${LIMIT_NINE}`),
       providesTags: ["Booking"],
     }),
+    getServiceProviderBookingRequest: builder.query<
+      BookingRequestResponse,
+      { page: number; providerId: number }
+    >({
+      query: ({ page, providerId }) =>
+        getRequest(
+          `/service-provider/booked-listing/${providerId}?page=${page}&size=${LIMIT_NINE}`,
+        ),
+      providesTags: ["Booking"],
+    }),
+    getServiceProviderBookingRequestDetails: builder.query<
+      Booking,
+      { bookingId: string }
+    >({
+      query: ({ bookingId }) => getRequest(`/${bookingId}`),
+      providesTags: ["Booking"],
+    }),
   }),
 });
 
@@ -247,4 +264,6 @@ export const {
   useCompleteTaskMutation,
   useGetServiceProviderCompletedJobsQuery,
   useGetServiceProviderOngoingJobsQuery,
+  useGetServiceProviderBookingRequestQuery,
+  useGetServiceProviderBookingRequestDetailsQuery,
 } = booking;
