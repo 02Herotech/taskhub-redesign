@@ -1,6 +1,8 @@
 import React from "react";
 import Image from "next/image";
 import RichTextRenderer from "@/components/blog/RichText";
+import { Metadata } from "next";
+import Link from "next/link";
 
 type Props = {
   params: { categoryId: string; postId: string };
@@ -44,8 +46,12 @@ type Author = {
 };
 
 type Meta = {
+  title: string;
+  description: string;
   image: Image;
 };
+
+type CTA = { text: string; url: string };
 
 type Post = {
   id: string;
@@ -59,11 +65,12 @@ type Post = {
   publishedAt: string;
   authors: Author[];
   slug: string;
-  meta: Meta;
+  meta: Meta | undefined;
   _status: string;
   createdAt: string;
   updatedAt: string;
   populatedAuthors: any[];
+  CTA: CTA | null;
 };
 
 export async function generateStaticParams() {
@@ -73,6 +80,20 @@ export async function generateStaticParams() {
     postId: slug,
     categoryId: category.slug,
   }));
+}
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const result = await fetch(
+    `${process.env.BLOG_API}/posts?where[slug][equals]=${params.postId}`,
+  );
+  const posts: { docs: Post[] } = await result.json();
+  const post = posts.docs[0];
+  const { title, postSummary, image, meta } = post;
+  return {
+    title: meta?.title || title,
+    description: meta?.description || postSummary,
+    openGraph: { images: [{ url: meta?.image?.url || image.url }] },
+  };
 }
 
 export const revalidate = 60;
@@ -95,12 +116,22 @@ async function Page({ params }: Props) {
             src={post.image.url}
             width={post.image.width}
             height={post.image.height}
-            alt="Business page header image"
+            alt={post.image.alt || "Blog header image"}
             className="mx-auto h-[250px] w-full rounded-3xl object-cover object-center md:h-[400px]"
           />
         </header>
         <div className="mx-auto max-w-screen-sm pb-10 text-base font-medium md:text-lg">
           <RichTextRenderer content={post.postContent} />
+          {post.CTA?.text && post.CTA?.url && (
+            <div className="mt-7">
+              <Link
+                href={post.CTA.url}
+                className="rounded-full bg-primary px-6 py-3 font-clashMedium text-white"
+              >
+                {post.CTA.text}
+              </Link>
+            </div>
+          )}
         </div>
       </article>
     </main>

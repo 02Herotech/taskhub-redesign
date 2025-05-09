@@ -11,6 +11,7 @@ export type SurburbInfo = {
   locality: string | null;
   latitude: number;
   longitude: number;
+  formattedAddress: string;
 };
 
 function useSuburbData(searchValue: string, currentSuburb: SurburbInfo | null) {
@@ -30,7 +31,7 @@ function useSuburbData(searchValue: string, currentSuburb: SurburbInfo | null) {
         if (suburbList.length < 1) setIsLoading(true);
         const { data } = await axios.get<SurburbInfo[]>(
           process.env.NEXT_PUBLIC_API_URL +
-            "/util/locations?suburb=" +
+            "/util/addresses?query=" +
             searchValue,
         );
         setIsLoading(false);

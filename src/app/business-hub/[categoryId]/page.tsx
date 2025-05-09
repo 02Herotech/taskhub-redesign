@@ -2,14 +2,7 @@ import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { truncateText } from "@/utils/marketplace";
-
-export async function generateStaticParams() {
-  const result = await fetch(`${process.env.BLOG_API}/postCategory`);
-  const categories: { docs: Category[] } = await result.json();
-  return categories.docs.map(({ slug }) => ({ categoryId: slug }));
-}
-
-type Props = { params: { categoryId: string } };
+import { Metadata } from "next";
 
 type Image = {
   id: string;
@@ -47,7 +40,29 @@ type Post = {
   slug: string;
 };
 
+type Props = { params: { categoryId: string } };
+
 export const revalidate = 60;
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const result = await fetch(
+    `${process.env.BLOG_API}/postCategory?where[slug][equals]=${params.categoryId}&sort=createdAt`,
+  );
+  const categories: { docs: Category[] } = await result.json();
+  const currentCategory = categories.docs[0];
+  const { title, shortDescription, image } = currentCategory;
+  return {
+    title,
+    description: shortDescription,
+    openGraph: { images: [{ url: image.url }] },
+  };
+}
+
+export async function generateStaticParams() {
+  const result = await fetch(`${process.env.BLOG_API}/postCategory`);
+  const categories: { docs: Category[] } = await result.json();
+  return categories.docs.map(({ slug }) => ({ categoryId: slug }));
+}
 
 async function Page({ params }: Props) {
   const result = await fetch(
@@ -57,7 +72,7 @@ async function Page({ params }: Props) {
   const currentCategory = categories.docs[0];
 
   const postsResult = await fetch(
-    `${process.env.BLOG_API}/posts?where[category][equals]=${currentCategory.id}&sort=createdAt`,
+    `${process.env.BLOG_API}/posts?where[category][equals]=${currentCategory.id}&sort=createdAt&limit=0`,
   );
   const posts: { docs: Post[] } = await postsResult.json();
   return (
@@ -96,7 +111,7 @@ async function Page({ params }: Props) {
                   width={post.image.width}
                   height={post.image.height}
                   alt="Blog image"
-                  className="mb-3 rounded-xl object-cover"
+                  className="mb-3 h-[200px] rounded-xl object-cover"
                 />
                 <h2 className="mb-2 font-clashSemiBold text-2xl">
                   {post.title}
