@@ -2,6 +2,7 @@ import React from "react";
 import Image from "next/image";
 import RichTextRenderer from "@/components/blog/RichText";
 import { Metadata } from "next";
+import Link from "next/link";
 
 type Props = {
   params: { categoryId: string; postId: string };
@@ -50,6 +51,8 @@ type Meta = {
   image: Image;
 };
 
+type CTA = { text: string; url: string };
+
 type Post = {
   id: string;
   title: string;
@@ -67,6 +70,7 @@ type Post = {
   createdAt: string;
   updatedAt: string;
   populatedAuthors: any[];
+  CTA: CTA | null;
 };
 
 export async function generateStaticParams() {
@@ -112,12 +116,22 @@ async function Page({ params }: Props) {
             src={post.image.url}
             width={post.image.width}
             height={post.image.height}
-            alt="Business page header image"
+            alt={post.image.alt || "Blog header image"}
             className="mx-auto h-[250px] w-full rounded-3xl object-cover object-center md:h-[400px]"
           />
         </header>
         <div className="mx-auto max-w-screen-sm pb-10 text-base font-medium md:text-lg">
           <RichTextRenderer content={post.postContent} />
+          {post.CTA?.text && post.CTA?.url && (
+            <div className="mt-7">
+              <Link
+                href={post.CTA.url}
+                className="rounded-full bg-primary px-6 py-3 font-clashMedium text-white"
+              >
+                {post.CTA.text}
+              </Link>
+            </div>
+          )}
         </div>
       </article>
     </main>
