@@ -15,7 +15,7 @@ export const user = createApi({
     prepareHeaders: async (headers) => {
       const session = await getSession();
       //@ts-ignore
-      const token = session?.user?.jwtToken;
+      const token = session?.user?.accessToken;
 
       if (token) {
         headers.set("Authorization", `Bearer ${token}`);

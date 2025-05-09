@@ -76,7 +76,7 @@ export const serviceProviderDashboardLinks: DashboardLinks[] = [
   },
   {
     label: "My Services",
-    link: "/service-provider/services",
+    link: "/service-provider/services/all-services",
     icon: LuClipboard,
   },
   {

@@ -14,6 +14,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { Middleware } from "@reduxjs/toolkit";
 import { getSession } from "next-auth/react";
 import { LIMIT_NINE } from "@/utils/constant";
+import { GetAllTasksByServicesProviderResponse } from "@/types/services/serviceprovider";
 
 const getRequest = <T>(url: string, params?: T) => {
   const paramsReducer = (acc: any, [key, value]: any) => {
@@ -126,6 +127,17 @@ export const task = createApi({
         ),
       providesTags: ["Task"],
     }),
+    getAllTaskByServiceProvider: builder.query<
+      GetAllTasksByServicesProviderResponse,
+      { serviceProviderId: number; page: number }
+    >({
+      query: ({ serviceProviderId, page }) =>
+        getRequest(
+          `/task/all-task-by-service-provider/${serviceProviderId}?page=${page}&size=${LIMIT_NINE}`,
+        ),
+      providesTags: ["Task"],
+    }),
+
     getTaskByCustomerId: builder.query<
       GetCustomerTasksResponse,
       { customerId: number; page: number }
@@ -231,5 +243,6 @@ export const {
   useUpdateTaskMutation,
   useGetTasksOffersQuery,
   useAssignTaskMutation,
-  useGetServiceProviderPaymentHistoryQuery
+  useGetAllTaskByServiceProviderQuery,
+  useGetServiceProviderPaymentHistoryQuery,
 } = task;
