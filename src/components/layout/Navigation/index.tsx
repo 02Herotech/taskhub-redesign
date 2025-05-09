@@ -177,10 +177,10 @@ const Navigation = () => {
           <div className="flex min-h-20 items-center justify-between px-7 py-4 lg:py-5 " />
         ) : (
           <div className="flex items-center justify-between px-4 py-4 sm:px-7 lg:py-5">
-            <Link href="/" className="max-lg:hidden">
+            <Link href="/home" className="max-lg:hidden">
               <Logo />
             </Link>
-            <Link href="/" className="lg:hidden">
+            <Link href="/home" className="lg:hidden">
               <SmallLogo />
             </Link>
             <div className="flex items-center gap-3 lg:hidden">
