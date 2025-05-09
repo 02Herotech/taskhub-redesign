@@ -6,6 +6,13 @@ const config: Config = {
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
+  safelist: [
+    "border-l-[#381F8C]",
+    "border-l-green-600",
+    "border-l-[#0887FF]",
+    "border-l-gray-300",
+    "border-l-[#F59315]",
+  ],
   theme: {
     extend: {
       screens: {
