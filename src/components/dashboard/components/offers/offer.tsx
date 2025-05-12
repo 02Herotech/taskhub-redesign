@@ -86,7 +86,7 @@ function Offer({ offer, taskId, refetch, isAssigned }: Props) {
             disabled={isAssigned || isLoading}
             onClick={() => handleConfirmAssign()}
           >
-            {isAssigned ? "Assigned" : isAssignLoading ? <BeatLoader color="white" size={13} /> : "Accept"}
+            {isAssigned ? "Assigned" : isAssignLoading ? <BeatLoader color="white" size={13} /> : "Send final Offer"}
           </button>
         </div>
 
