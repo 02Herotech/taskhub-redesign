@@ -8,6 +8,7 @@ import { BiNotepad } from 'react-icons/bi';
 import { FaCalendar } from 'react-icons/fa';
 import ImageViewer from 'react-simple-image-viewer';
 import { FiCalendar, FiChevronDown, FiChevronUp, FiDollarSign, FiMapPin } from 'react-icons/fi';
+import PostReview from '@/components/dashboard/customer/CompletedTasks/completedTasksDetails/postReview';
 
 const CompletedTaskDetails = ({ params }: { params: { id: string } }) => {
   const id = params.id;
@@ -62,21 +63,6 @@ const CompletedTaskDetails = ({ params }: { params: { id: string } }) => {
     );
   }
 
-  const dropdownItems = [
-    {
-      id: 2,
-      icon: FaCalendar,
-      label: "Make Task Reoccurning",
-      onClick: () => setShowReoccuringModal(true),
-    },
-    {
-      id: 3,
-      icon: BiNotepad,
-      label: "Rebook ",
-      onClick: () => setShowRebookModal(true),
-    },
-  ]
-
   return (
     <div className="max-w-3xl mx-auto flex flex-col min-h-[60vh] justify-between ">
       <div className="">
@@ -89,7 +75,6 @@ const CompletedTaskDetails = ({ params }: { params: { id: string } }) => {
 
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-xl md:text-2xl font-bold">{completedTask.jobInfo.jobTitle}</h2>
-          <button className="text-sm text-primary font-semibold rounded-full px-4 py-1 border border-primary">Post as new</button>
         </div>
 
         <div className="flex flex-wrap gap-4 mb-4 text-sm text-gray-600">
@@ -178,11 +163,16 @@ const CompletedTaskDetails = ({ params }: { params: { id: string } }) => {
       <div className="flex justify-between p-4 md:p-6 mt-2">
         <div className="flex gap-2">
           <button type="button" onClick={() => setShowReviewModal(true)} className="text-white rounded-[50px] px-4 py-2 text-sm bg-primary" >
-            Post a review
+            Review Customer
           </button>
         </div>
       </div>
 
+      <PostReview
+        showReviewModalPopup={showReviewModal}
+        setShowReviewModalPopup={setShowReviewModal}
+        jobDetails={completedTask}
+      />
     </div>
   )
 }
