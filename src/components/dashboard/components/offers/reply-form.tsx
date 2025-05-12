@@ -48,7 +48,7 @@ function ReplyForm({ taskId, offerId, refetch }: Props) {
         {
           taskId,
           offerId,
-          userId: user.serviceProviderId || user.customerId,
+          userId: user.serviceProviderId,
           fullName: `${user.firstName} ${user.lastName}`,
           message: data.message,
           offerAmount: data.offerAmount,
@@ -56,7 +56,6 @@ function ReplyForm({ taskId, offerId, refetch }: Props) {
       ],
     };
 
-    console.log(payload, "payload")
     try {
       socket.emit("offer/replies", payload, () => {
         reset();
