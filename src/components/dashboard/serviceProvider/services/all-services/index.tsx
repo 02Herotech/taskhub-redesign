@@ -23,7 +23,6 @@ const AllServicesPage = () => {
     skip: !user?.serviceProviderId
   })
 
-  console.log(allServices, "alltask", listings, "listings")
 
   if (isLoading) {
     return <Loading />;
