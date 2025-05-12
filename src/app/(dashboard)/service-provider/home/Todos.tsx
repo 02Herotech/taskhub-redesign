@@ -9,7 +9,7 @@ import { CiCalendar } from "react-icons/ci";
 import { truncateText } from "@/utils/marketplace";
 import Link from "next/link";
 import { useGetServiceProviderJobsQuery } from "@/services/bookings";
-import { ServiceProviderBooking } from "@/types/services/tasks";
+import { JobItem } from "@/types/services/jobs";
 
 function getOrdinalSuffix(day: number) {
   if (day > 3 && day < 21) return "th";
@@ -30,16 +30,14 @@ function convertMonthInDateArray(dates: number[]) {
 }
 
 function Todos() {
-  const [data, setData] = useState<undefined | ServiceProviderBooking[]>(
-    undefined,
-  );
+  const [data, setData] = useState<undefined | JobItem[]>(undefined);
 
   const { profile: user } = useSelector(
     (state: RootState) => state.userProfile,
   );
 
   const { data: jobs, isLoading } = useGetServiceProviderJobsQuery(
-    user?.serviceProviderId,
+    { serviceProviderId: user?.serviceProviderId, page: 0 },
     { skip: !user?.serviceProviderId },
   );
 
