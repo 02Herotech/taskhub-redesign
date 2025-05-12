@@ -38,7 +38,7 @@ function Page() {
             <div className="flex flex-1 rounded-xl border border-[#0000001A]">
               <Link
                 href="/customer/add-task"
-                className="hidden items-center gap-2 border-r border-r-[#0000003D] py-4 pl-2 pr-8 md:flex"
+                className="hidden w-1/2 items-center gap-2 border-r border-r-[#0000003D] py-4 pl-2 pr-8 md:flex"
                 role="button"
               >
                 <IoIosAddCircle color="#2A1769" size={40} />
@@ -54,7 +54,7 @@ function Page() {
                 </div>
               </Link>
 
-              <div className="h-full min-w-[250px] flex-grow rounded-lg bg-primary text-white">
+              <div className="h-full w-1/2 max-w-[270px] flex-grow rounded-lg bg-primary text-white sm:max-w-full">
                 <div className="relative flex h-full items-center justify-center px-5">
                   <p className="absolute left-2 top-1">Wallet</p>
                   <WalletBalance />
