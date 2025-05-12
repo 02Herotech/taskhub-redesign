@@ -179,7 +179,7 @@ function UploadIdPopup({
       if (selectedFile && isEditingProfilePicture.isEditing) {
         setIsUploadImageLoading(true);
         let url = isServiceProvider
-          ? "service_provider/profile_picture"
+          ? "service-provider/profile-picture"
           : "customer/profile_picture";
         try {
           await authInstance.post(

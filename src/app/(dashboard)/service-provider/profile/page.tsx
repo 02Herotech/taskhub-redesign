@@ -17,7 +17,7 @@ const Page = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const { data } = await authInstance.get("service_provider/profile");
+        const { data } = await authInstance.get("service-provider/profile");
         setFetchedUserData(data);
       } catch (error) {
         console.error(error);

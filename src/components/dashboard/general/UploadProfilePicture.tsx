@@ -45,7 +45,7 @@ function UploadProfilePicture({ isOpenModal, closeModal }: Props) {
     try {
       setIsLoading(true);
       let url = isServiceProvider
-        ? "service_provider/profile_picture"
+        ? "service-provider/profile_picture"
         : "customer/profile_picture";
       await authInstance.post(
         url,
