@@ -15,6 +15,7 @@ import Button from "@/components/global/Button";
 import { Input, PasswordInput } from "./Inputs";
 import { RiErrorWarningLine } from "react-icons/ri";
 import { setCookie, getCookie } from "cookies-next";
+import { GoArrowLeft } from "react-icons/go";
 
 /**Animation properties for transitioning between components */
 const animationProps = (from: "left" | "right" = "left") => {
@@ -171,9 +172,15 @@ function SignUp() {
   return (
     <section className="mx-auto flex max-w-[1400px] flex-col p-3 lg:flex-row">
       <Carousel />
-      <div className="flex flex-grow items-center justify-center">
+      <div className="flex flex-grow items-center justify-center lg:min-w-[780px]">
         <div className="w-full pt-8 sm:w-10/12 lg:pt-0">
-          <h2 className="mb-2 text-xl font-semibold text-[#190E3F] md:text-3xl">
+          {step == 1 && (
+            <Link href="/home" className="flex items-center gap-2 font-bold">
+              <GoArrowLeft strokeWidth={1.7} className="text-[#2D1970]" />
+              <span className="text-primary">Go back home</span>
+            </Link>
+          )}
+          <h2 className="mb-2 mt-4 text-xl font-semibold text-[#190E3F] md:text-3xl">
             Create account
           </h2>
           <h3 className="font-clashMedium text-sm text-[#55535A] md:text-xl">
@@ -205,10 +212,10 @@ function SignUp() {
                   error={form.formState.errors.lastName?.message}
                   {...allowLetters}
                 />
-                <p className="col-span-2 -mb-2">
+                {/* <p className="col-span-2 -mb-2">
                   What do you want to do on Olójà at this time?
-                </p>
-                <div className="col-span-2 flex cursor-pointer flex-col items-start gap-3 sm:flex-row sm:items-center">
+                </p> */}
+                <div className="col-span-2 mt-4 flex cursor-pointer flex-col items-start gap-3 sm:flex-row sm:items-center">
                   {actionChoices.map((choice) => (
                     <div
                       className="flex w-full items-center gap-3 rounded-lg border border-[#EBE9F4] p-2 sm:w-1/2"
@@ -217,26 +224,34 @@ function SignUp() {
                       }}
                       key={Math.random() * 124345}
                     >
-                      <div className="flex size-5 flex-shrink-0 items-center justify-center rounded-full border-2 border-[#E58C06] bg-white p-1">
+                      <div
+                        className="flex size-5 flex-shrink-0 items-center justify-center rounded-full border-2 border-[#E58C06] bg-white p-1"
+                        style={{ borderColor: choice.color }}
+                      >
                         {actionChoice == choice.action && (
-                          <div className=" aspect-square w-10/12 rounded-full bg-[#E58C06]" />
+                          <div
+                            style={{ backgroundColor: choice.color }}
+                            className="aspect-square w-10/12 rounded-full"
+                          />
                         )}
                       </div>
-                      <img src={choice.imageUrl} alt="Icon" />
+                      <img
+                        src={choice.imageUrl}
+                        alt="Icon"
+                        className="size-9"
+                      />
                       <div>
-                        <h2 className="text-sm font-semibold text-[#AC6905]">
+                        <h2 className="text-sm font-semibold text-[#140B31]">
                           {choice.title}
                         </h2>
-                        <small className="max-w-[70px] text-[12px] font-medium leading-3 text-[#4E5158]">
+                        <small className="max-w-[70px] text-[10px] font-medium leading-3 text-[#4E5158]">
                           {choice.description}
                         </small>
                       </div>
                     </div>
                   ))}
                 </div>
-                <p className="col-span-2 -mb-2">
-                  How would you describe yourself?
-                </p>
+                <p className="col-span-2">How would you describe yourself?</p>
                 <div className="col-span-2 flex flex-col items-start gap-3 sm:flex-row sm:items-center">
                   {userTypes.map((choice) => (
                     <div
@@ -244,21 +259,27 @@ function SignUp() {
                       onClick={() => form.setValue("userType", choice.action)}
                       key={Math.random() * 5678}
                     >
-                      <div className="flex size-5 flex-shrink-0 items-center justify-center rounded-full border-2 border-primary bg-white p-1">
+                      <div
+                        className="flex size-5 flex-shrink-0 items-center justify-center rounded-full border-2 border-primary bg-white p-1"
+                        style={{ borderColor: choice.color }}
+                      >
                         {form.watch("userType") == choice.action && (
-                          <div className=" aspect-square w-10/12 rounded-full bg-primary" />
+                          <div
+                            className=" aspect-square w-10/12 rounded-full"
+                            style={{ backgroundColor: choice.color }}
+                          />
                         )}
                       </div>
                       <img
                         src={choice.imageUrl}
                         alt="Icon"
-                        className="size-10 object-cover"
+                        className="size-10 object-cover object-left-top"
                       />
                       <div>
-                        <h2 className="text-sm font-semibold text-primary">
+                        <h2 className="text-sm font-semibold text-[#140B31]">
                           {choice.title}
                         </h2>
-                        <small className="max-w-[70px] text-[12px] font-medium leading-3 text-[#4E5158]">
+                        <small className="max-w-[70px] text-[10px] font-medium leading-3 text-[#4E5158]">
                           {choice.description}
                         </small>
                       </div>
@@ -283,7 +304,7 @@ function SignUp() {
                   <button
                     type="submit"
                     ref={nextButtonRef}
-                    className="w-full rounded-full bg-primary px-10 py-2 font-satoshiBold font-bold text-white sm:w-max"
+                    className="w-full rounded-full bg-[#7600CC] px-10 py-2 font-satoshiBold font-bold text-white sm:w-max"
                   >
                     Next
                   </button>
@@ -291,7 +312,7 @@ function SignUp() {
               </motion.form>
             ) : (
               <motion.form
-                className="space-y-3 py-7"
+                className="space-y-3 py-5"
                 key="step-two"
                 onSubmit={handleSubmit(submitFinalForm)}
                 {...animationProps("right")}
@@ -345,13 +366,13 @@ function SignUp() {
                     I agree to all{" "}
                     <Link
                       href="/terms-and-condition"
-                      className="text-primary underline"
+                      className="text-[#7600CC] underline"
                     >
                       {" "}
                       Terms of service
                     </Link>{" "}
                     and{" "}
-                    <Link href="/privacy" className="text-primary underline">
+                    <Link href="/privacy" className="text-[#7600CC] underline">
                       Privacy.
                     </Link>
                   </label>
@@ -374,12 +395,12 @@ function SignUp() {
                     {error}
                   </div>
                 )}
-                <div className="my-3 flex gap-3">
+                <div className="mt-3 flex gap-3">
                   <button
                     type="button"
                     onClick={() => setStep(1)}
                     disabled={isSubmitting}
-                    className="w-full rounded-full border border-primary bg-[#EBE9F4] px-10 py-2 font-satoshiBold font-bold text-primary sm:w-max"
+                    className="w-full rounded-full border border-[#7600cc] bg-[#EBE9F4] px-10 py-2 font-satoshiBold font-bold text-[#7600CC] sm:w-max"
                   >
                     Back
                   </button>
@@ -387,7 +408,7 @@ function SignUp() {
                     type="submit"
                     disabled={isSubmitting}
                     loading={isSubmitting}
-                    className="w-full rounded-full px-10 py-2 font-satoshiBold font-bold sm:w-max"
+                    className="w-full rounded-full border-0 bg-[#7600CC] px-10 py-2 font-satoshiBold font-bold sm:w-max"
                   >
                     Submit
                   </Button>
@@ -396,10 +417,10 @@ function SignUp() {
             )}
           </AnimatePresence>
 
-          <p className="mt-3 font-satoshiBold font-bold text-[#190E3F]">
+          <p className="font-satoshiBold font-bold text-[#190E3F]">
             Have an existing account?{" "}
-            <Link href="/auth/login" className="text-primary">
-              Sign in
+            <Link href="/auth/login" className="text-[#7600CC]">
+              Log in
             </Link>
           </p>
         </div>
