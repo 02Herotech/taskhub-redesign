@@ -1,4 +1,8 @@
-import { GetServiceProvidersOfferResponse } from "@/types/chat";
+import {
+  BookingRequest,
+  GetServiceProvidersOfferResponse,
+  Offer,
+} from "@/types/chat";
 import { ReviewRequest, ReviewResponse } from "@/types/user";
 import { LIMIT_NINE } from "@/utils/constant";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
@@ -65,7 +69,27 @@ export const chat = createApi({
         ),
       providesTags: ["Chat"],
     }),
+    getServiceProviderOfferChats: builder.query<
+      Offer[],
+      { taskId: string; serviceProviderId: number }
+    >({
+      query: ({ taskId, serviceProviderId }) =>
+        getRequest(`/specific-tasks-chat/${taskId}/${serviceProviderId}`),
+      providesTags: ["Chat"],
+    }),
+    getServiceProviderBookingsChats: builder.query<
+      BookingRequest[],
+      { listingId: string; customerId: number }
+    >({
+      query: ({ listingId, customerId }) =>
+        getRequest(`/specific-booking-chat/${listingId}/${customerId}`),
+      providesTags: ["Chat"],
+    }),
   }),
 });
 
-export const { useGetServiceProvidersOfferQuery } = chat;
+export const {
+  useGetServiceProvidersOfferQuery,
+  useGetServiceProviderOfferChatsQuery,
+  useGetServiceProviderBookingsChatsQuery,
+} = chat;

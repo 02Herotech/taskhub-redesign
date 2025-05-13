@@ -11,6 +11,7 @@ import { CiCalendar, CiLocationOn } from 'react-icons/ci'
 import { FiRefreshCw } from 'react-icons/fi'
 import { MdWarning } from 'react-icons/md'
 import { PiCurrencyDollarSimple, PiSealWarningFill } from 'react-icons/pi'
+import Requests from './booking-request-chat'
 
 const BookingRequestDetails = ({ params }: { params: { id: string } }) => {
   const [currentImage, setCurrentImage] = useState(0);
@@ -18,8 +19,6 @@ const BookingRequestDetails = ({ params }: { params: { id: string } }) => {
   const [isExpanded, setIsExpanded] = useState(false)
 
   const { data: bookingRequest, isLoading, error } = useGetServiceProviderBookingRequestDetailsQuery({ bookingId: params.id })
-
-  if (isLoading) return <Loading />
 
   console.log(bookingRequest, "data")
 
@@ -48,7 +47,7 @@ const BookingRequestDetails = ({ params }: { params: { id: string } }) => {
         <h2 className="font-satoshiBold text-xl font-bold text-primary lg:text-3xl">
           You have no booking requests
         </h2>
-        <p className="font-satoshiMedium text-lg text-[#140B31] lg:text-xl">
+        <p className="font-satoshiMedium text-lg text-[#646466] lg:text-xl">
           Something went wrong, please try again later.
         </p>
       </div>
@@ -58,13 +57,12 @@ const BookingRequestDetails = ({ params }: { params: { id: string } }) => {
   return (
     <div className="">
 
-      <div className='bg-[#E5E0F8]  flex items-start gap-2 p-2 rounded-md mb-4'>
+      {/* <div className='bg-[#E5E0F8]  flex items-start gap-2 p-2 rounded-md mb-4'>
         <MdWarning />
         <p className=' text-primary flex-1 max-w-[900px]'>This convo’s public, so keep it clean—no sensitive stuff! Lock in the deal, send a custom quote, and once it’s accepted, slide into a private chat.
         </p>
-      </div>
+      </div> */}
       <div className="max-w-3xl mx-auto">
-
         <div className="mb-4 flex items-center justify-between">
           <p className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-[#F7D5C5] border border-[#974722]  text-[#974722]`}>Booking Request</p>
         </div>
@@ -112,29 +110,7 @@ const BookingRequestDetails = ({ params }: { params: { id: string } }) => {
             {isExpanded ? <BiChevronUp className="w-8 h-8" /> : <BiChevronDown className="w-8 h-8" />}
           </span>
         </div>
-
-
-        {/* {Array.isArray(bookingRequest.) && task.taskImage.length > 0 && <div className="my-8  relative  w-24 h-24 flex items-center justify-center ">
-              {task.taskImage?.map((picture, index) =>
-                <Image onClick={() => openImageViewer(index)} key={picture} src={picture} alt="job image" fill className="w-20 h-20 text-gray-400" />
-              )}
-    
-              {isViewerOpen && (
-                <ImageViewer
-                  src={task.taskImage}
-                  currentIndex={currentImage}
-                  disableScroll={false}
-                  closeOnClickOutside={true}
-                  onClose={closeImageViewer}
-                  backgroundStyle={{
-                    backgroundColor: 'rgba(0, 0, 0, 0.85)',
-                    zIndex: 1000
-                  }}
-                />
-              )}
-            </div>} */}
-
-
+        <Requests listingId={bookingRequest.listing.id} customerId={bookingRequest.customer.id} />
       </div>
     </div>
   )

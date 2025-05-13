@@ -79,7 +79,9 @@ export interface Booking {
       profileImage: string | null;
     };
   };
-  listing: any | null;
+  listing: {
+    id: string;
+  };
   bookingTitle: string;
   bookedAt: DateTuple;
   invoiceSent: boolean;

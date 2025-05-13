@@ -3,6 +3,9 @@ import { useGetTasksOffersQuery } from '@/services/tasks';
 import React, { useState } from 'react'
 import { FaChevronDown } from 'react-icons/fa';
 import Offer from './offer';
+import { useGetServiceProviderOfferChatsQuery } from '@/services/chat';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/store';
 
 
 type OffersProps = {
@@ -10,13 +13,16 @@ type OffersProps = {
   isAssigned: boolean
 }
 const Offers = ({ id, isAssigned }: OffersProps) => {
+  const { profile: user } = useSelector(
+    (state: RootState) => state.userProfile,
+  );
   const [viewAll, setViewAll] = useState(false);
   const [showOffers, setShowOffers] = useState(true)
+  const { data: offers, isLoading, refetch } = useGetServiceProviderOfferChatsQuery({ taskId: id, serviceProviderId: user?.serviceProviderId }, { skip: !user?.serviceProviderId })
 
-  const { data: offers, refetch } = useGetTasksOffersQuery(
-    id as unknown as number,
-  );
-
+  // const { data: offers, refetch } = useGetTasksOffersQuery(
+  //   id as unknown as number,
+  // );
   return (
     <div className="mb-4">
       <div className="mt-14 min-h-96">

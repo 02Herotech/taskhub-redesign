@@ -87,7 +87,6 @@ const OngoingTask = ({ params }: { params: { id: string } }) => {
   return (
     <div className="">
 
-      {/* Notification banner */}
       <div className="bg-[#FFF0DA] p-2 mb-4 rounded-t-lg flex gap-1  warningshadow">
         <PiSealWarningFill className="w-5 h-5 text-amber-700" />
         <p className="text-[#FE9B07] text-sm font-[500] font-manrope">
@@ -97,18 +96,14 @@ const OngoingTask = ({ params }: { params: { id: string } }) => {
       </div>
 
       <div className="max-w-3xl mx-auto">
-        {/* Status badge */}
         <div className="mb-4 flex items-center justify-between">
           <p className="bg-indigo-100 text-primary border border-[#381F8C] px-4 py-1 rounded-full text-sm uppercase">{task.jobInfo.jobStatus}</p>
           <MoreButtonDropdown dropdownItems={dropdownItems} />
         </div>
 
-        {/* Task title */}
         <h1 className="text-2xl  md:text-3xl font-bold mb-4 capitalize ">{task.jobInfo.jobTitle}</h1>
 
-        {/* Task details and inspect task in a flex container */}
         <div className="flex justify-between items-start mb-6">
-          {/* Task details */}
           <div className="flex flex-wrap gap-4 text-gray-600">
             <div className="flex items-center">
               <CiLocationOn className="w-4 h-4 mr-1" />
@@ -125,7 +120,6 @@ const OngoingTask = ({ params }: { params: { id: string } }) => {
           </div>
         </div>
 
-        {/* Task description */}
         <div className="mb-6 flex flex-col  items-start justify-between gap-2">
           <p className="text-primary font-medium text-lg  flex-1 whitespace-pre-line">
             {isExpanded ? task.jobInfo.jobDescription : `${task.jobInfo.jobDescription.substring(0, 200)}...`}
