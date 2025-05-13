@@ -90,8 +90,9 @@ const OffersDetails = ({ params }: { params: { id: string } }) => {
 
             <div className="flex items-center space-x-4 p-4">
               <button
+                disabled
                 // onClick={() => setShowEditModal(true)}
-                className="bg-primary   max-[320px]:text-xs text-base text-white px-4 py-2  sm:px-12 sm:py-6 rounded-full  font-bold"
+                className="bg-primary/50  max-[320px]:text-xs text-base text-white px-4 py-2  sm:px-12 sm:py-6 rounded-full  font-bold"
               >
                 Edit service details
               </button>

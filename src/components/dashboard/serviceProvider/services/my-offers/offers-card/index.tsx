@@ -3,6 +3,7 @@ import { Task } from '@/types/chat'
 import { formatDateFromArray } from '@/utils'
 import { useRouter } from 'next/navigation'
 import React from 'react'
+import { CiCalendar, CiLocationOn } from 'react-icons/ci'
 import { FaCalendarAlt, FaMapMarkerAlt } from 'react-icons/fa'
 
 const OfferCard = ({ offer }: { offer: Task }) => {
@@ -23,14 +24,14 @@ const OfferCard = ({ offer }: { offer: Task }) => {
         <div className="mt-4 flex justify-between items-end">
           <div className="flex flex-col space-y-1 text-xs text-gray-500">
             <div className="flex items-center gap-1">
-              <FaCalendarAlt />
+              <CiCalendar />
               <span>{formatDateFromArray(offer.createdAt)}</span>
             </div>
 
-            {offer.state || offer.suburb || offer.postCode &&
+            {offer.state && offer.suburb && offer.postCode &&
               <div className="flex items-center gap-1">
-                <FaMapMarkerAlt />
-                <span>{`${offer.state || ""}, ${offer.suburb || ""}, ${offer.postCode || ""}`}</span>
+                <CiLocationOn />
+                <span className='max-w-[130px] truncate'>{`${offer.state || ""}, ${offer.suburb || ""}, ${offer.postCode || ""}`}</span>
               </div>
             }
             <div>

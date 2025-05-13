@@ -14,6 +14,7 @@ import SuccessModal from "@/components/global/successmodal";
 import Popup from "@/components/global/Popup";
 import ReplyForm from "./reply-form";
 import SendPayment from "@/app/(dashboard)/customer/tasks/[id]/SendPayment";
+// import { Offer } from "@/types/chat";
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY);
 

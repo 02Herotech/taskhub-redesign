@@ -193,12 +193,16 @@ const NotificationList = ({
           </div>
           <div className="flex items-center justify-center">
             {currentRoute && (
-              <Link
-                href={currentRoute}
-                className="rounded-full bg-violet-normal px-4 py-2 text-white"
-              >
-                View
-              </Link>
+              // <Link
+              //   href={currentRoute}
+              //   className="rounded-full bg-violet-normal px-4 py-2 text-white"
+              // >
+              //   View
+              // </Link>
+              <p
+                className="cursor-pointer font-bold text-[#140B31]"
+                dangerouslySetInnerHTML={{ __html: currentRoute }}
+              />
             )}
           </div>
         </div>
@@ -232,9 +236,10 @@ const NotificationList = ({
               {/* </div> */}
               <div className="space-y-">
                 <div className="flex items-start gap-2 ">
-                  <p className="cursor-pointer font-bold text-[#140B31]">
-                    {item.message}
-                  </p>
+                  <p
+                    className="cursor-pointer font-bold text-[#140B31]"
+                    dangerouslySetInnerHTML={{ __html: item.message }}
+                  />
                 </div>
               </div>
             </div>

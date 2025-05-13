@@ -55,7 +55,6 @@ function ReplyForm({ taskId, offerId, refetch }: Props) {
         },
       ],
     };
-
     try {
       socket.emit("offer/replies", payload, () => {
         reset();
