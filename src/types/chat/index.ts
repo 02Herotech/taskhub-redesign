@@ -45,6 +45,33 @@ export type OfferThread = {
   timeStamp: number;
 };
 
+export type BookingRequest = {
+  id: string;
+  taskId: number;
+  customerId: number;
+  serviceProviderId: number;
+  fullName: string;
+  message: string;
+  bookingAmount: number | null;
+  createdAt: number;
+  service_provider_profile_Image: string;
+  acceptedOffer: boolean;
+  bookingThreadList: bookingThread[];
+  paid: boolean;
+  mine: boolean;
+  finalSent: boolean;
+};
+export type bookingThread = {
+  taskId: number;
+  bookingId: string;
+  bookingrAmount: number | null;
+  message: string;
+  fullName: string;
+  userId: number;
+  userProfileImage: string;
+  timeStamp: number;
+};
+
 export type Offer = {
   id: string;
   taskId: number;
