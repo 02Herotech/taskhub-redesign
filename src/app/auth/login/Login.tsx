@@ -123,9 +123,6 @@ function Login() {
           <h2 className="mb-2 text-lg font-semibold text-[#190E3F] md:text-4xl">
             Login
           </h2>
-          <h3 className="font-clashMedium text-sm text-[#55535A] md:text-2xl">
-            Join us for exclusive access to our services
-          </h3>
           <form
             onSubmit={handleSubmit(submitForm)}
             className="mt-5 space-y-5"
@@ -199,7 +196,7 @@ function Login() {
                 type="submit"
                 disabled={isSubmitting}
                 loading={isSubmitting}
-                className="w-full rounded-full bg-[#7600CC] px-10 py-2 font-satoshiBold font-bold sm:w-max border-0"
+                className="w-full rounded-full border-0 bg-[#7600CC] px-10 py-2 font-satoshiBold font-bold sm:w-max"
               >
                 Submit
               </Button>
