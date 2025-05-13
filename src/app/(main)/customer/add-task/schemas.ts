@@ -12,7 +12,7 @@ const taskSchema = z.object({
     .any()
     .optional()
     .refine((file) => {
-      return file?.length > 0 && typeof file != "string"
+      return typeof file !== "string"
         ? ACCEPTED_FILE_TYPES.includes(file?.type)
         : true;
     }, "Only images are allowed")
@@ -29,6 +29,9 @@ const taskSchema = z.object({
   }),
   suburb: z.string().optional(),
   customerBudget: z.number(),
+  state: z.string().optional(),
+  postcode: z.string().optional(),
+  suburbName: z.string().optional(),
 });
 
 export const stepOneSchema = taskSchema
@@ -63,8 +66,11 @@ export const stepTwoSchema = taskSchema
     taskType: true,
     suburb: true,
     customerBudget: true,
+    state: true,
+    postcode: true,
+    suburbName: true,
   })
-  .superRefine(({ taskType, suburb }, ctx) => {
+  .superRefine(({ taskType, suburb, state, postcode, suburbName }, ctx) => {
     if (taskType === "PHYSICAL_SERVICE" && !suburb) {
       ctx.addIssue({
         path: ["suburb"],

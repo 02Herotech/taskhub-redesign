@@ -55,7 +55,7 @@ export const homeMobileLinks: LinkRouteTypes[] = [
     icon: IoMdInformationCircleOutline,
   },
   {
-    label: "Business Hub",
+    label: "Blog",
     url: "/business-hub",
     icon: MdOutlineHub,
   },

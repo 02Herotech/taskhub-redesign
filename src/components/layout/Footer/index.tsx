@@ -31,15 +31,14 @@ const Footer = () => {
     { id: 4, categoryName: "Events" },
     { id: 5, categoryName: "Art and Craft" },
     { id: 6, categoryName: "Petcare" },
-    { id: 7, categoryName: "Custodian" },
     { id: 8, categoryName: "Grocery" },
   ];
 
   const link_3 = [
     // { label: "FAQs", url: "/home#FAQSection" },
     { label: "Contact us", url: "/contact" },
-    { label: "Terms and Condition", url: "/terms-and-condition" },
-    { label: "Privacy", url: "/privacy" },
+    { label: "Terms and Conditions", url: "/terms-and-condition" },
+    { label: "Privacy Policy", url: "/privacy" },
   ];
 
   const handleFilterByCategory = async (category: string) => {

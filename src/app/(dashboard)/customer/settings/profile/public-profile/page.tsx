@@ -23,7 +23,7 @@ import Button from "@/components/global/Button";
 import useSuburbData, { SurburbInfo } from "@/hooks/useSuburbData";
 import { CiLocationOn } from "react-icons/ci";
 import useUserProfileData from "@/hooks/useUserProfileData";
-import {  PiSealCheckFill } from "react-icons/pi";
+import { PiSealCheckFill } from "react-icons/pi";
 import { useRouter } from "next/navigation";
 
 function Page() {
@@ -161,12 +161,12 @@ function Page() {
                 </p>
               </div>
             </div>
-            <button
+            {/* <button
               className="w-full rounded-xl border border-primary px-5 py-1 font-medium text-primary sm:w-max"
               onClick={() => setOpenProfilePreview(true)}
             >
               Preview profile
-            </button>
+            </button> */}
           </div>
         </header>
 
@@ -287,7 +287,7 @@ function Page() {
                     id="location"
                     type="text"
                     className="h-full w-full appearance-none p-2 outline-none "
-                    placeholder="Enter a suburb"
+                    placeholder="Enter your address"
                     {...register("location", {
                       onChange: (e) => {
                         if (currentSuburb) {
