@@ -28,6 +28,13 @@ export type DropdownItems = {
   label: string;
   onClick: () => void;
 }[];
+
+export type DropdownItems = {
+  id: number;
+  icon: any;
+  label: string;
+  onClick: () => void;
+}[];
 export type CustomerTasks = {
   id: number;
   posterId: number;
@@ -306,6 +313,36 @@ export type ServiceProviderReciepts = {
   totalElements: number;
   totalPages: number;
   content: Receipt[];
+};
+
+export type ServiceProviderBookingsResponse = {
+  pageNumber: number;
+  pageSize: number;
+  totalElements: number;
+  totalPages: number;
+  content: ServiceProviderBooking[];
+};
+
+export type ServiceProviderBooking = {
+  assignedDTO: { fullName: string; id: number; profileImage: string | null };
+  jobInfo: {
+    bookingId: number;
+    categoryId: number;
+    createdAt: number[];
+    customerId: number;
+    deleted: number;
+    id: number;
+    invoiceId: number;
+    jobAddress: string;
+    jobDescription: string;
+    jobStatus: "PENDING" | "COMPLETED";
+    jobTitle: string;
+    providerId: number;
+    taskDate: number[] | null;
+    taskTime: [number, number] | null;
+    total: number;
+  };
+  taskImage: string[] | null;
 };
 
 export type BookingRequestResponse = {
