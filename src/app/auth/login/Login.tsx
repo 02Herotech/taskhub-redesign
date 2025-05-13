@@ -198,7 +198,7 @@ function Login() {
                 type="submit"
                 disabled={isSubmitting}
                 loading={isSubmitting}
-                className="w-full rounded-full px-10 py-2 font-satoshiBold font-bold sm:w-max"
+                className="w-full rounded-full bg-[#7600CC] px-10 py-2 font-satoshiBold font-bold sm:w-max border-0"
               >
                 Submit
               </Button>
@@ -207,7 +207,7 @@ function Login() {
 
           <p className="mt-3 font-satoshiBold font-bold text-[#190E3F]">
             Don&apos;t have an account?{" "}
-            <Link href="/auth/sign-up" className="text-primary">
+            <Link href="/auth/sign-up" className="text-[#7600CC]">
               Sign up
             </Link>
           </p>
