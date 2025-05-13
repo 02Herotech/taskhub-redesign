@@ -39,6 +39,8 @@ import ApprovePopup from "./approvepopup";
 import RequestReview from "./requestreview";
 import { FiRefreshCw } from "react-icons/fi";
 import MoreButtonDropdown from "../../components/dropdown";
+import { formatDateFromArray } from "@/utils";
+import jobCard from "@/components/dashboard/serviceProvider/services/ongoing/ongoing-task-card";
 
 const OnogoingTaskDetailsPage = ({ params }: { params: { id: string } }) => {
   const id = params.id;
@@ -222,7 +224,7 @@ const OnogoingTaskDetailsPage = ({ params }: { params: { id: string } }) => {
             </div>
             <div className="flex items-center">
               <CiCalendar className="w-4 h-4 mr-1" />
-              <span className="text-sm">{task.jobInfo.taskDate}</span>
+              <span className="text-sm">{formatDateFromArray(task.jobInfo.createdAt)}</span>
             </div>
             <div className="flex items-center">
               <PiCurrencyDollarSimple className="w-4 h-4 mr-1" />

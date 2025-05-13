@@ -9,12 +9,14 @@ import {
   GetCustomerCompletedTasksResponse,
   GetAllCustomerTasksResponse,
   ServiceProviderReciepts,
+  AcceptOfferData,
 } from "@/types/services/tasks";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { Middleware } from "@reduxjs/toolkit";
 import { getSession } from "next-auth/react";
 import { LIMIT_NINE } from "@/utils/constant";
 import { GetAllTasksByServicesProviderResponse } from "@/types/services/serviceprovider";
+import { Offer } from "@/types/chat";
 
 const getRequest = <T>(url: string, params?: T) => {
   const paramsReducer = (acc: any, [key, value]: any) => {
@@ -213,6 +215,17 @@ export const task = createApi({
         ),
       invalidatesTags: ["Task"],
     }),
+    acceptOffer: builder.mutation<
+      AcceptOfferData,
+      { taskId: number; serviceProviderId: number }
+    >({
+      query: (credentials) =>
+        putRequest(
+          `/task/accept-offer/${credentials.taskId}/${credentials.serviceProviderId}`,
+          {},
+        ),
+      invalidatesTags: ["Task"],
+    }),
     getServiceProviderPaymentHistory: builder.query<
       ServiceProviderReciepts,
       { serviceProviderId: number }
@@ -245,4 +258,5 @@ export const {
   useAssignTaskMutation,
   useGetAllTaskByServiceProviderQuery,
   useGetServiceProviderPaymentHistoryQuery,
+  useAcceptOfferMutation,
 } = task;

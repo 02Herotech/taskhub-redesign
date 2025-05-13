@@ -154,14 +154,12 @@ function StepTwo() {
       termAccepted: true,
     };
     try {
-      await Promise.race([
-        authInstance.post("task/post", finalTask, {
+      await authInstance.post("task/post", finalTask, {
           headers: {
             "Content-Type": "multipart/form-data",
           },
         }),
-        timeout(10000),
-      ]);
+
       setPopupState({ open: true, status: "success" });
       reset();
     } catch (error) {
