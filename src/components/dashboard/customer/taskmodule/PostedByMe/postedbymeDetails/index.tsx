@@ -157,7 +157,8 @@ const PostedByMe = ({ params }: { params: { id: string } }) => {
           <div className="flex items-center space-x-4 p-4">
             <button
               onClick={() => setIsEditModalOpen(true)}
-              className="bg-primary   max-[320px]:text-xs text-base text-white px-4 py-2  sm:px-12 sm:py-6 rounded-full  font-bold"
+              disabled={isAssigned}
+              className={`bg-primary  max-[320px]:text-xs text-base text-white px-4 py-2  sm:px-12 sm:py-6 rounded-full  font-bold ${isAssigned ? "cursor-not-allowed opacity-20" : ""}`}
             >
               Edit task details
             </button>
