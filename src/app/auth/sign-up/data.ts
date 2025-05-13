@@ -15,38 +15,40 @@ type Option<T> = {
   title: string;
   description: string;
   action: T;
+  color?: string;
 };
 
 export const actionChoices: Option<ActionChoice>[] = [
   {
-    imageUrl: "/assets/images/onboarding/business-tasklist.svg",
+    imageUrl: "/assets/images/onboarding/get_tasks_done.png",
     title: "Get tasks done",
-    description:
-      "Need a job done? Post a task and hire the right expert in minutes!",
+    description: "Need help?. Choose an expert. Task Done!",
     action: "GET_TASKS_DONE",
+    color: "#7600CC",
   },
   {
-    imageUrl: "/assets/images/onboarding/money-investment.svg",
-    title: "Monetize my skills",
-    description:
-      "Turn your skills into cash—list your services and start earning today!",
+    imageUrl: "/assets/images/onboarding/earn_on_oloja.png",
+    title: "Earn on Olójá",
+    description: "Got skills? Start earning—list your services today!",
     action: "MONETIZE_YOUR_SKILLS",
+    color: "#FFD700",
   },
 ];
 
 export const userTypes: Option<UserType>[] = [
   {
-    imageUrl: "/assets/images/onboarding/user-wink.gif",
+    imageUrl: "/assets/images/onboarding/individual.png",
     title: "Individual",
-    description: "Just me—ready to hire or get hired and make things happen!",
+    description: "Here to hire, get hired, and make it happen",
     action: "INDIVIDUAL",
+    color: "#7600CC",
   },
   {
-    imageUrl: "/assets/images/onboarding/business-choice.svg",
+    imageUrl: "/assets/images/onboarding/business.png",
     title: "Business",
-    description:
-      "Representing a business? Find top talent or connect with new clients effortlessly!",
+    description: "Hire top talent or win new clients with ease!",
     action: "BUSINESS",
+    color: "#FFD700",
   },
 ];
 

@@ -123,11 +123,6 @@ function StepOne() {
             Write a short title for the task you need done{" "}
             <span className="font-extrabold text-[#ff0000]">*</span>
           </label>
-          {wordCount.title > 3 && (
-            <div className="h-[16px] w-[16px] rounded-3xl bg-[#4CAF50] text-[16px] font-extrabold text-white">
-              <GrFormCheckmark />
-            </div>
-          )}
         </div>
         <textarea
           className={`h-full w-full rounded-2xl bg-[#EBE9F4] p-3 placeholder:text-[#C1BADB]  ${
@@ -137,32 +132,22 @@ function StepOne() {
           }`}
           placeholder="e.g, I need a junior league coach."
           {...register("taskBriefDescription")}
-          onChange={(event) => {
-            const wordArray = event.target.value.split(/\s+/).filter(Boolean);
-            //Todo Make sure user cant type beyond 10 words
-            if (wordArray.length <= 10) {
-              setWordCount({ ...wordCount, title: wordArray.length });
-            }
-          }}
           style={{ resize: "none", overflow: "hidden" }}
         ></textarea>
-        <div className="text-right text-sm text-status-darkpurple">
-          {wordCount.title}/10 words
-        </div>
+        {errors.taskBriefDescription && (
+          <div className="text-sm text-status-error-100">
+            {errors.taskBriefDescription?.message}
+          </div>
+        )}
       </div>
 
       {/* Task description  */}
-      <div className="relative grid space-y-3">
+      <div className="relative grid space-y-2">
         <div className="flex items-center justify-between">
           <label className="flex text-[13px] font-semibold lg:text-[16px]">
             Give a description of your task {""}{" "}
             <span className="font-extrabold text-[#ff0000]">*</span>
           </label>
-          {wordCount.description > 15 && (
-            <div className="h-[16px] w-[16px] rounded-3xl bg-[#4CAF50] text-[16px] font-extrabold text-white">
-              <GrFormCheckmark />
-            </div>
-          )}
         </div>
         <textarea
           className={` h-[150px] rounded-2xl bg-[#EBE9F4] p-3 placeholder:text-[#C1BADB] ${
@@ -172,11 +157,12 @@ function StepOne() {
           }`}
           placeholder="Arts and Craft"
           {...register("taskDescription")}
-          onChange={(event) => {
-            const wordArray = event.target.value.split(/\s+/).filter(Boolean);
-            setWordCount({ ...wordCount, description: wordArray.length });
-          }}
         ></textarea>
+        {errors.taskDescription && (
+          <div className="text-sm text-status-error-100">
+            {errors.taskDescription?.message}
+          </div>
+        )}
       </div>
 
       <div className="space-y-3">
@@ -189,7 +175,7 @@ function StepOne() {
               <img
                 src={imageUrl}
                 alt="Uploaded Task"
-                className="h-full w-full object-cover max-w-[350px]"
+                className="h-full w-full max-w-[350px] object-cover"
                 width="100%"
                 height="100%"
               />

@@ -29,12 +29,7 @@ export type Task = {
 //   onClick: () => void;
 // }[];
 
-export type DropdownItems = {
-  id: number;
-  icon: any;
-  label: string;
-  onClick: () => void;
-}[];
+
 export type CustomerTasks = {
   id: number;
   posterId: number;
