@@ -1,5 +1,6 @@
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
+import useUserProfileData from "./useUserProfileData";
 
 export const options = {
   cutout: "70%",
@@ -13,6 +14,7 @@ export const options = {
 
 export function useCustomerProfileCompletion(verificationState?: string) {
   const { profile } = useSelector((state: RootState) => state.userProfile);
+  const userProfileData = useUserProfileData();
 
   const profileData: { field: string; available: boolean }[] = [
     {
@@ -23,12 +25,19 @@ export function useCustomerProfileCompletion(verificationState?: string) {
     // { field: "Bio details", available: false },
     { field: "Picture upload", available: Boolean(profile?.profileImage) },
     { field: "Location", available: Boolean(profile?.address.state) },
-    //@ts-ignore
-    { field: "Date of birth", available: Boolean(profile?.dateOfBirth) },
+    {
+      field: "Date of birth",
+      available: Boolean(userProfileData?.dateOfBirth),
+    },
     { field: "Phone number", available: Boolean(profile?.phoneNumber) },
-    { field: "Identity document", available: profile?.enabled },
-
-    { field: "Verified", available: verificationState === "VERIFIED" },
+    {
+      field: "Identity document",
+      available: Boolean(userProfileData?.idImageFront),
+    },
+    {
+      field: "Verified",
+      available: userProfileData.verificationStatus === "VERIFIED",
+    },
   ];
 
   const chartData = {

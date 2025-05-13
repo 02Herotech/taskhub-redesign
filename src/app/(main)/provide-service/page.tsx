@@ -561,12 +561,18 @@ const ProvideService: React.FC = () => {
           const type = "REMOTE_SERVICE";
           finalTask = { ...finalTask, taskType: type };
         } else {
+<<<<<<<<< Temporary merge branch 1
+          const { state, postcode, name } = currentSuburb;
+=========
+>>>>>>>>> Temporary merge branch 2
 
           finalTask = {
             ...finalTask,
             taskType: "PHYSICAL_SERVICE",
             suburb: currentSuburb?.name || altSuburb || "",
-            postCode: currentSuburb?.postcode ? String(currentSuburb.postcode) : altPostCode,
+            postCode: currentSuburb?.postcode
+              ? String(currentSuburb.postcode)
+              : altPostCode,
             state: currentSuburb?.state ? currentSuburb.state.name : altState,
           };
         }

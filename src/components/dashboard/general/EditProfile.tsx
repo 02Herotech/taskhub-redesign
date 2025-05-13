@@ -124,13 +124,6 @@ const EditProfile = () => {
   const [inputValue, setInputValue] = useState(""); // Initialize state for input
   const [currentSuburb, setCurrentSuburb] = useState<SurburbInfo | null>(null);
   const suburbValue = watch("suburb"); // Watch the suburb field
-
-  const {
-    suburbList,
-    setSuburbList,
-    error: suburbError,
-    isLoading,
-  } = useSuburbData(inputValue, currentSuburb, userDetails.suburbs);
   const [showManualAddress, setShowManualAddress] = useState(false);
 
   // Sync input value with react-hook-form's field value
@@ -139,6 +132,13 @@ const EditProfile = () => {
       setInputValue(suburbValue);
     }
   }, [suburbValue]);
+
+  const {
+    suburbList,
+    setSuburbList,
+    error: suburbError,
+    isLoading,
+  } = useSuburbData(inputValue, currentSuburb);
 
   const watchField = watch();
   const watchABN = watch("abn");
@@ -349,6 +349,11 @@ const EditProfile = () => {
       );
       setEditProfileError("Something went wrong, please try again");
     }
+  };
+
+  const handleChangeProfilePicture = () => {
+    setIsEditingProfilePicture({ isEditing: true, image: null });
+    setIsFormModalShown(true);
   };
 
   const handleChangeFront = () => {
