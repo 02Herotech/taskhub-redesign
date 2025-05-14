@@ -22,7 +22,7 @@ export const actionChoices: Option<ActionChoice>[] = [
   {
     imageUrl: "/assets/images/onboarding/get_tasks_done.png",
     title: "Get tasks done",
-    description: "Need help?. Choose an expert. Task Done!",
+    description: "Need help? Choose an expert. Task Done!",
     action: "GET_TASKS_DONE",
     color: "#7600CC",
   },
