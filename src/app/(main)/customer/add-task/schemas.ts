@@ -15,7 +15,7 @@ const taskSchema = z.object({
     .string()
     .min(1, "Task description is required")
     .min(30, "Minimum of 30 characters is required")
-    .min(500, "Maximum of 500 characters is allowed"),
+    .max(500, "Maximum of 500 characters is allowed"),
   taskImage: z
     .any()
     .optional()
