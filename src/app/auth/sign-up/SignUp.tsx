@@ -181,7 +181,7 @@ function SignUp() {
             </Link>
           )}
           <h2 className="mb-2 mt-4 text-xl font-semibold text-[#190E3F] md:text-3xl">
-            Create account
+            Create your account
           </h2>
           <h3 className="font-clashMedium text-sm text-[#55535A] md:text-xl">
             Join us for exclusive access to our services
@@ -241,7 +241,7 @@ function SignUp() {
                         className="size-9"
                       />
                       <div>
-                        <h2 className="text-sm font-semibold text-[#140B31]">
+                        <h2 className="text-sm sm:text-base font-semibold text-[#140B31]">
                           {choice.title}
                         </h2>
                         <small className="max-w-[70px] text-[10px] font-medium leading-3 text-[#4E5158]">
@@ -276,7 +276,7 @@ function SignUp() {
                         className="size-10 object-cover object-left-top"
                       />
                       <div>
-                        <h2 className="text-sm font-semibold text-[#140B31]">
+                        <h2 className="text-sm sm:text-base font-semibold text-[#140B31]">
                           {choice.title}
                         </h2>
                         <small className="max-w-[70px] text-[10px] font-medium leading-3 text-[#4E5158]">
