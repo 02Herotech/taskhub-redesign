@@ -19,6 +19,7 @@ import { stripe } from "@/services/stripe";
 import profileProgressReducer from "@/services/profile";
 import { listing } from "@/services/listings";
 import apiErrorMiddleware from "./apiMiddleware";
+import { profile } from "@/services/user-profile";
 
 const persistConfig = {
   key: "taskDetails",
@@ -35,6 +36,7 @@ export const store = configureStore({
     [blog.reducerPath]: blog.reducer,
     [listing.reducerPath]: listing.reducer,
     [stripe.reducerPath]: stripe.reducer,
+    [profile.reducerPath]: profile.reducer,
     market: marketReducer,
     userProfile: userProfileReducer,
     chat: chatReducer,
@@ -56,6 +58,7 @@ export const store = configureStore({
       blog.middleware,
       stripe.middleware,
       listing.middleware,
+      profile.middleware,
       apiErrorMiddleware,
     ),
 });
