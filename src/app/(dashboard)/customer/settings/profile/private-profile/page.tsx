@@ -86,7 +86,7 @@ function Page() {
     resolver: zodResolver(updateProfileSchema),
     defaultValues: {
       phoneNumber: profile?.phoneNumber,
-      idType: userProfileData?.idType
+      idType: userProfileData?.idType,
     },
   });
 
@@ -100,15 +100,15 @@ function Page() {
     setValue: setFormValue,
   } = methods;
 
-  useEffect(() => {
-    if (profile) {
-      reset({
-        phoneNumber: profile.phoneNumber || "",
-        email: profile.emailAddress,
-      });
-      setValue(profile.phoneNumber);
-    }
-  }, [profile]);
+  // useEffect(() => {
+  //   if (profile) {
+  //     reset({
+  //       phoneNumber: profile.phoneNumber || "",
+  //       email: profile.emailAddress,
+  //     });
+  //     setValue(profile.phoneNumber);
+  //   }
+  // }, [profile]);
 
   useEffect(() => {
     if (userProfileData) {
