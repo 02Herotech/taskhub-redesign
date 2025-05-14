@@ -22,12 +22,12 @@ export type Task = {
 };
 
 
-export type DropdownItems = {
-  id: number;
-  icon: any;
-  label: string;
-  onClick: () => void;
-}[];
+// export type DropdownItems = {
+//   id: number;
+//   icon: any;
+//   label: string;
+//   onClick: () => void;
+// }[];
 
 
 export type CustomerTasks = {
@@ -93,6 +93,14 @@ export interface TaskResponse {
   posterInfo: PosterInfo;
 }
 
+export type AcceptOfferData = {
+  data: {
+    clientSecret: string;
+    hasCard: boolean;
+  };
+  message: string;
+  successful: boolean;
+};
 // export type OngoingTask = {
 //     invoiceId: number;
 //     bookingId: number;
