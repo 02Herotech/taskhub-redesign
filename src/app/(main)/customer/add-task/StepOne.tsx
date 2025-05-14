@@ -42,6 +42,7 @@ function StepOne() {
       taskImage,
       taskTime,
     },
+    mode: "onChange",
   });
 
   const watchForm = watch();
