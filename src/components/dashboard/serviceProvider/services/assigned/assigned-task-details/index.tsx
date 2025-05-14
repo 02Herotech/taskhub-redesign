@@ -1,6 +1,6 @@
 "use client"
 import MoreButtonDropdown from '@/components/dashboard/customer/taskmodule/components/dropdown'
-import { useGetBookingDetailsQuery } from '@/services/bookings'
+import { useGetBookingDetailsQuery, useGetJobByIdQuery } from '@/services/bookings'
 import { task } from '@/services/tasks'
 import Loading from '@/shared/loading'
 import { formatDateFromArray } from '@/utils'
@@ -15,7 +15,10 @@ import StartTaskModal from './StartTask'
 
 
 const AssignedTaskDetails = ({ params }: { params: { id: string } }) => {
-  const { data: bookingDetails, isLoading } = useGetBookingDetailsQuery({ booking_id: params.id })
+  console.log(params.id)
+  // const { data: bookingDetails, isLoading } = useGetBookingDetailsQuery({ booking_id: params.id })
+  const { data: jobDetails, isLoading } = useGetJobByIdQuery(params.id)
+  console.log(jobDetails, "jobDetails")
 
   const [currentImage, setCurrentImage] = useState(0);
   const [isViewerOpen, setIsViewerOpen] = useState(false);
@@ -46,37 +49,37 @@ const AssignedTaskDetails = ({ params }: { params: { id: string } }) => {
 
 
 
-  const shouldTruncate = bookingDetails.bookingDescription.length > 150
+  const shouldTruncate = jobDetails.jobInfo.jobDescription.length > 150
   const displayDescription =
-    !isDescriptionExpanded && shouldTruncate ? `${bookingDetails.bookingDescription.substring(0, 150)}...` : bookingDetails.bookingDescription
+    !isDescriptionExpanded && shouldTruncate ? `${jobDetails.jobInfo.jobDescription.substring(0, 150)}...` : jobDetails.jobInfo.jobDescription
 
   return (
     <div className="w-full max-w-3xl mx-auto">
       {/* Posted by badge */}
       <div className="flex items-center justify-between  mb-4">
         <p className="inline-block bg-blue-100 text-blue-600 text-xs px-3 py-1 rounded-full">
-          {bookingDetails.bookingStage}
+          {jobDetails.jobInfo.jobStatus}
         </p>
         {/* <MoreButtonDropdown dropdownItems={dropdownItems} /> */}
       </div>
 
       {/* Title */}
-      <h2 className="text-xl md:text-2xl font-manrope font-bold text-gray-900 mb-2">{bookingDetails.bookingTitle}</h2>
+      <h2 className="text-xl md:text-2xl font-manrope font-bold text-gray-900 mb-2">{jobDetails.jobInfo.jobTitle}</h2>
 
       <div className="flex justify-between items-start mb-6">
         {/* Task details */}
         <div className="flex flex-wrap gap-4 text-gray-600">
           <div className="flex items-center">
             <CiLocationOn className="w-4 h-4 mr-1" />
-            <span className="text-sm">{`${bookingDetails?.userAddress?.state || ""} ${bookingDetails?.userAddress?.suburb || ""} ${bookingDetails?.userAddress?.postCode || ""}`}</span>
+            <span className="text-sm">{jobDetails.jobInfo.jobAddress}</span>
           </div>
           <div className="flex items-center">
             <CiCalendar className="w-4 h-4 mr-1" />
-            <span>{formatDateFromArray(bookingDetails?.bookedAt)}</span>
+            <span>{formatDateFromArray(jobDetails?.jobInfo.createdAt)}</span>
           </div>
           <div className="flex items-center">
             <PiCurrencyDollarSimple className="w-4 h-4 mr-1" />
-            <span className="text-sm text-primary font-bold">{`${bookingDetails.price}`}</span>
+            <span className="text-sm text-primary font-bold">{`${jobDetails.jobInfo.total}`}</span>
           </div>
         </div>
       </div>
@@ -114,9 +117,9 @@ const AssignedTaskDetails = ({ params }: { params: { id: string } }) => {
       </div>
 
       {/*image */}
-      {bookingDetails?.task?.displayPictures?.length > 0 &&
+      {jobDetails?.taskImage?.length > 0 &&
         <div className="my-8  relative   flex items-center  gap-2 ">
-          {Array.isArray(bookingDetails?.task?.displayPictures) && bookingDetails?.task?.displayPictures?.map((picture, index) =>
+          {Array.isArray(jobDetails?.taskImage) && jobDetails?.taskImage?.map((picture, index) =>
             <div className='w-24 h-24 relative'>
               <Image onClick={() => openImageViewer(index)} key={picture} src={picture} alt="job image" fill className="w-10 h-10 object-cover text-gray-400" />
             </div>
@@ -124,7 +127,7 @@ const AssignedTaskDetails = ({ params }: { params: { id: string } }) => {
 
           {isViewerOpen && (
             <ImageViewer
-              src={bookingDetails?.task?.displayPictures}
+              src={jobDetails?.taskImage}
               currentIndex={currentImage}
               disableScroll={false}
               closeOnClickOutside={true}
@@ -138,16 +141,11 @@ const AssignedTaskDetails = ({ params }: { params: { id: string } }) => {
         </div>
       }
 
-
-      {
-        bookingDetails.bookingStage === 'PAID' &&
         <div className=" flex flex-col min-[400px]:flex-row items-center justify-center min-[400px]:justify-between mt-8">
           <div className=" flex flex-col min-[400px]:flex-row  gap-3">
             <button onClick={() => setStartTaskPopup(true)} className="bg-primary text-white px-8 font-semibold py-2 rounded-[50px] whitespace-nowrap">Start Task</button>
           </div>
-        </div>
-      }
-
+      </div>
       <StartTaskModal startTaskPopup={startTaskPopup} setStartTaskPopup={setStartTaskPopup} />
     </div>
   )

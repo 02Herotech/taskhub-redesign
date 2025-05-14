@@ -145,8 +145,18 @@ export const booking = createApi({
         getRequest(`/all-receipts/${customerId}?size=${size}`),
       providesTags: ["Booking"],
     }),
-    getJobById: builder.query<GetJobsByIdResponse, number>({
+    getJobById: builder.query<GetJobsByIdResponse, string>({
       query: (jobId) => getRequest(`/job/${jobId}`),
+      providesTags: ["Booking"],
+    }),
+    getServiceProviderAssignedJobs: builder.query<
+      GetServiceProviderOngoingJobsResponse,
+      { serviceProviderId: number; page: number }
+    >({
+      query: ({ serviceProviderId, page }) =>
+        getRequest(
+          `/service-provider/assigned-to/${serviceProviderId}?page=${page}&size=${LIMIT_NINE}`,
+        ),
       providesTags: ["Booking"],
     }),
     acceptService: builder.mutation<void, { jobId: number }>({
@@ -266,4 +276,5 @@ export const {
   useGetServiceProviderOngoingJobsQuery,
   useGetServiceProviderBookingRequestQuery,
   useGetServiceProviderBookingRequestDetailsQuery,
+  useGetServiceProviderAssignedJobsQuery,
 } = booking;
