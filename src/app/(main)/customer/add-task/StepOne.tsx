@@ -246,6 +246,7 @@ function StepOne() {
               minDate={new Date()}
               id="taskDate"
               name="taskDate"
+              popperPlacement="top-end"
               disabled={watchForm.isFlexible}
               customInput={<CustomDateInput errors={errors} />}
               className="w-full cursor-pointer rounded-2xl bg-[#EBE9F4] px-2 py-1 outline-none placeholder:text-[14px] placeholder:font-bold"
