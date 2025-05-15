@@ -79,18 +79,18 @@ function Page() {
         <h1 className="mb-10 pt-28 text-center font-clashSemiBold text-3xl text-[#381F8C] sm:text-4xl">
           Get Tasks Done. <br /> Compare Offers. <br /> Save time and energy
         </h1>
-        <div className="mx-auto w-max space-x-1 font-satoshiBold sm:space-x-4">
+        <div className="mx-auto relative z-20 w-max space-x-1 font-satoshiBold sm:space-x-4">
           <Link
-            href="/auth"
+            href="/auth/sign-up"
             className="rounded-full bg-[#381F8C] px-3 py-3 font-bold text-[#EBE9F4] sm:px-5"
           >
             Get started now
           </Link>
           <Link
-            href="/monetize-your-skills"
+            href="/auth/sign-up"
             className="rounded-full border-[0.5px] border-[#381F8C] px-3 py-3 font-bold text-[#381F8C] sm:px-5"
           >
-            Monetize your skills
+            Make money on Oloja
           </Link>
         </div>
       </header>
@@ -329,7 +329,7 @@ function Page() {
         </section>
 
         {/* New Section One  */}
-        <section className="relative mx-auto mt-20 mb-10 sm:mb-20 w-[93%] overflow-clip rounded-xl bg-[#FAFAFA] px-6 py-10 text-primary sm:w-[85%]">
+        <section className="relative mx-auto mb-10 mt-20 w-[93%] overflow-clip rounded-xl bg-[#FAFAFA] px-6 py-10 text-primary sm:mb-20 sm:w-[85%]">
           <h2 className="mb-5 text-center font-clashSemiBold text-2xl sm:text-4xl">
             Olójà Hub Fees & Charges:{" "}
           </h2>
@@ -370,7 +370,7 @@ function Page() {
                 whileInView={{ x: 0, opacity: 1 }}
                 viewport={{ once: true }}
                 transition={{ delay: 0.5, duration: 0.4 }}
-                className="mb-10 sm:mb-14 ml-20 flex items-center gap-3 rounded-lg bg-[#EBE9F4] px-3 py-2 text-sm sm:text-xl"
+                className="mb-10 ml-20 flex items-center gap-3 rounded-lg bg-[#EBE9F4] px-3 py-2 text-sm sm:mb-14 sm:text-xl"
               >
                 {/* 24 x 24  */}
                 <Image
@@ -387,7 +387,7 @@ function Page() {
                 </p>
               </motion.div>
 
-              <h3 className="mb-5 w-max rounded-xl px-3 py-2 font-clashSemiBold text-lg text-[#EBE9F4] sm:mb-7 bg-[#E58C06] sm:text-2xl">
+              <h3 className="mb-5 w-max rounded-xl bg-[#E58C06] px-3 py-2 font-clashSemiBold text-lg text-[#EBE9F4] sm:mb-7 sm:text-2xl">
                 As a Service Provider
               </h3>
               <motion.div
@@ -542,10 +542,10 @@ function Page() {
               Get started now
             </Link>
             <Link
-              href="/monetize-your-skills"
+              href="/auth/sign-up"
               className="rounded-full border-[0.5px] border-[#381F8C] px-3 py-3 font-satoshiBold font-bold text-[#381F8C] sm:px-5"
             >
-              Monetize your skills
+              Make money on Oloja
             </Link>
           </div>
         </section>
