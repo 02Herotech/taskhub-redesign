@@ -170,7 +170,7 @@ const NotificationList = ({
 
   return (
     <div className="flex flex-col gap-4 pb-4">
-      <dialog
+      {/* <dialog
         ref={dialogRef}
         onClick={handleBackdropClick}
         className="bg-transparent"
@@ -206,7 +206,7 @@ const NotificationList = ({
             )}
           </div>
         </div>
-      </dialog>
+      </dialog> */}
 
       <h1 className="border-b border-violet-light py-3 font-satoshiBold text-2xl font-bold text-violet-normal">
         {heading}
