@@ -49,12 +49,12 @@ function SettingsHeader() {
       {/* Header with back navigation for mobile */}
       <div className="relative mb-4 flex justify-center sm:hidden">
         <FaChevronLeft
-          size={14}
+          size={18}
           className="absolute left-1 top-1/2 -translate-y-1/2"
           color="black"
           onClick={router.back}
         />
-        <p className="text-lg font-bold text-[#2A1769]">{header}</p>
+        <p className="text-xl font-bold text-[#2A1769]">{header}</p>
       </div>
 
       {/* Profile completion for mobile */}
@@ -69,7 +69,7 @@ function SettingsHeader() {
               </p>
             </div>
           </div>
-          <p className="text-sm font-medium text-[#E58C06]">
+          <p className="text-lg font-medium text-[#E58C06]">
             Complete your profile
           </p>
         </div>
@@ -98,7 +98,6 @@ function SettingsHeader() {
       </div>
 
       {/* Navigation  */}
-
       <nav className="mt-7 overflow-x-auto border-b border-[#0000001F] pb-2 md:mt-0">
         <ul className="flex min-w-[550px] items-center gap-3">
           {headerLinks.map((link) => (
@@ -109,7 +108,7 @@ function SettingsHeader() {
               }
               key={Math.random() * 4562278}
             >
-              <Link href={link.url}>{link.text}</Link>
+              <Link href={link.url} className="text-lg">{link.text}</Link>
             </li>
           ))}
         </ul>

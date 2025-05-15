@@ -18,7 +18,6 @@ import "primereact/resources/primereact.min.css";
 import useAxios from "@/hooks/useAxios";
 import { RootState } from "@/store";
 import { setBreadCrumbs } from "@/store/Features/breadcrumbs";
-import useUserProfileData from "@/hooks/useUserProfileData";
 import { formatDateAsYYYYMMDD } from "@/utils";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
@@ -66,7 +65,6 @@ function Page() {
   const [error, setError] = useState("");
   const [openSuccessModal, setOpenSuccessModal] = useState(false);
   const { data: userProfileData, refetch } = useGetCustomerProfileQuery();
-  console.log(profile);
 
   useEffect(() => {
     dispatch(
@@ -102,12 +100,9 @@ function Page() {
     setValue: setFormValue,
   } = methods;
 
-  console.log(errors)
-
   useEffect(() => {
     if (userProfileData) {
       setFormValue("dateOfBirth", new Date(userProfileData.dateOfBirth));
-
       //@ts-ignore
       setFormValue("idType", userProfileData.idType);
       setFormValue("idNumber", userProfileData.idNumber);
@@ -134,6 +129,10 @@ function Page() {
       userProfileData.verificationStatus !== "VERIFIED" &&
       userProfileData.verificationStatus !== "PENDING"
     ) {
+      if (!data.idType) {
+        setFormError("idType", { message: "Please select an ID type" });
+        return;
+      }
       //Do image verifications
       if (!imageFront) {
         setFormError("idImageFront", { message: "Image is required" });
