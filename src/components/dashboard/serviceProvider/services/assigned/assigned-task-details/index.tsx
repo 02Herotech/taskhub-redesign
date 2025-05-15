@@ -18,7 +18,6 @@ const AssignedTaskDetails = ({ params }: { params: { id: string } }) => {
   console.log(params.id)
   // const { data: bookingDetails, isLoading } = useGetBookingDetailsQuery({ booking_id: params.id })
   const { data: jobDetails, isLoading } = useGetJobByIdQuery(params.id)
-  console.log(jobDetails, "jobDetails")
 
   const [currentImage, setCurrentImage] = useState(0);
   const [isViewerOpen, setIsViewerOpen] = useState(false);
@@ -92,7 +91,7 @@ const AssignedTaskDetails = ({ params }: { params: { id: string } }) => {
             onClick={() => setIsDescriptionExpanded(!isDescriptionExpanded)}
             className="text-indigo-600 hover:text-indigo-800"
           >
-            <FaRegShareFromSquare className='w-4 h-4' />
+            {/* <FaRegShareFromSquare className='w-4 h-4' /> */}
           </button>
         </div>
 
