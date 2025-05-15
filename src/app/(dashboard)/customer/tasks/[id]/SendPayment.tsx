@@ -39,7 +39,7 @@ function SendPayment({ closeModal, clientSecret }: Props) {
         elements,
         clientSecret,
         confirmParams: {
-          return_url: `${window.location.origin}/${pathname}`,
+          return_url: `${window.location.origin}/customer/tasks/posted-by-me/payment-success`,
         },
       });
 

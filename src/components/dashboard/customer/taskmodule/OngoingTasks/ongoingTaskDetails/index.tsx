@@ -3,18 +3,12 @@
 import CountdownTimer from "@/components/dashboard/customer/CountdownTimer";
 import ConfirmationModal from "@/components/dashboard/customer/InspectionConfirmationModal";
 import Button from "@/components/global/Button";
-import Popup from "@/components/global/Popup";
-import ImageViewer from "@/components/imageviewer";
-import { CautionSvg, RevisionSvg } from "@/lib/svgIcons";
 import {
   clearLocalStorage,
-  formatAmount,
   getFromLocalStorage,
   inspectionTimes,
-  revisions,
   saveToLocalStorage,
   formatTime24Hour,
-  cancellationReasons,
 } from "@/lib/utils";
 import {
   useAcceptServiceMutation,
@@ -26,13 +20,11 @@ import { useGetTaskByIdQuery } from "@/services/tasks";
 import Loading from "@/shared/loading";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { BiCalendar, BiChevronDown, BiChevronUp, BiMapPin, BiXCircle } from "react-icons/bi";
-import { BsTriangleFill } from "react-icons/bs";
+
 import { CiCalendar, CiLocationOn } from "react-icons/ci";
-import { FaDollarSign } from "react-icons/fa";
-import { HiOutlineExclamationCircle } from "react-icons/hi";
-import { IoArrowBackSharp } from "react-icons/io5";
+
 import { PiCurrencyDollarSimple, PiSealWarningFill } from "react-icons/pi";
 import CancelPopup from "./cancelpopup";
 import ApprovePopup from "./approvepopup";
@@ -40,7 +32,7 @@ import RequestReview from "./requestreview";
 import { FiRefreshCw } from "react-icons/fi";
 import MoreButtonDropdown from "../../components/dropdown";
 import { formatDateFromArray } from "@/utils";
-import jobCard from "@/components/dashboard/serviceProvider/services/ongoing/ongoing-task-card";
+import ImageViewer from 'react-simple-image-viewer';
 
 const OnogoingTaskDetailsPage = ({ params }: { params: { id: string } }) => {
   const id = params.id;
@@ -60,21 +52,30 @@ const OnogoingTaskDetailsPage = ({ params }: { params: { id: string } }) => {
   const [paymentError, setPaymentError] = useState("");
   const [isExpanded, setIsExpanded] = useState(false)
   const [cancelPopup, setCancelPopup] = useState(false)
+  const [currentImage, setCurrentImage] = useState(0);
+  const [isViewerOpen, setIsViewerOpen] = useState(false);
   const {
     data: task,
     isLoading,
     error,
-  } = useGetJobByIdQuery(id as unknown as number);
-
-  // const { data: task,
-  //   isLoading,
-  //   error, } = useGetTaskByIdQuery(id as unknown as number);
+  } = useGetJobByIdQuery(id);
   const [approvePayment, { isLoading: isApproveLoading }] =
     useAcceptServiceMutation();
   const [inspectTask, { isLoading: inspectTaskLoading }] =
     useInspectTaskMutation();
   const [requestRevision, { isLoading: isRevisionLoading }] =
     useRequestRevisionMutation();
+
+  const openImageViewer = useCallback((index: number) => {
+    setCurrentImage(index);
+    setIsViewerOpen(true);
+  }, []);
+
+  const closeImageViewer = () => {
+    setCurrentImage(0);
+    setIsViewerOpen(false);
+  };
+
 
   useEffect(() => {
     const storedData = getFromLocalStorage();
@@ -215,7 +216,7 @@ const OnogoingTaskDetailsPage = ({ params }: { params: { id: string } }) => {
         <h1 className="text-2xl  md:text-3xl font-bold mb-4 capitalize ">{task.jobInfo.jobTitle}</h1>
 
         {/* Task details and inspect task in a flex container */}
-        <div className="flex justify-between items-start mb-6">
+        <div className="flex flex-col sm:flex-row gap-y-4 justify-between items-start mb-6">
           {/* Task details */}
           <div className="flex flex-wrap gap-4 text-gray-600">
             <div className="flex items-center">
@@ -233,7 +234,7 @@ const OnogoingTaskDetailsPage = ({ params }: { params: { id: string } }) => {
           </div>
 
           {/* Inspect task dropdown */}
-          <div className="relative ">
+          <div className="relative  ">
             <button
               className="bg-indigo-100 flex items-center gap-1 text-primary border border-[#381F8C] px-2 py-1 rounded-full text-sm uppercase whitespace-nowrap"
               onClick={() => setIsDropdownOpen(!isDropdownOpen)}
@@ -279,12 +280,24 @@ const OnogoingTaskDetailsPage = ({ params }: { params: { id: string } }) => {
         </div>
 
         {/* Image placeholder */}
-        {task.taskImage && <div className="mb-6  relative  rounded-md w-48 h-48 flex items-center justify-center ">
-          {/* <Image src={task.taskImage} alt={task.jobInfo.jobTitle} fill className="w-20 h-20 text-gray-400" /> */}
-          <ImageViewer
-            src={task.taskImage}
-            alt={task.jobInfo.jobTitle}
-          />
+        {Array.isArray(task.taskImage) && task.taskImage.length > 0 && <div className="my-8  relative  w-24 h-24 flex items-center justify-center ">
+          {task.taskImage?.map((picture, index) =>
+            <Image onClick={() => openImageViewer(index)} key={picture} src={picture} alt="job image" fill className="w-20 h-20 text-gray-400" />
+          )}
+
+          {isViewerOpen && (
+            <ImageViewer
+              src={task.taskImage}
+              currentIndex={currentImage}
+              disableScroll={false}
+              closeOnClickOutside={true}
+              onClose={closeImageViewer}
+              backgroundStyle={{
+                backgroundColor: 'rgba(0, 0, 0, 0.85)',
+                zIndex: 1000
+              }}
+            />
+          )}
         </div>}
 
         <div className="flex flex-wrap justify-end">
@@ -315,16 +328,16 @@ const OnogoingTaskDetailsPage = ({ params }: { params: { id: string } }) => {
         </div>
 
         {/* Action buttons */}
+        {task.jobInfo.jobStatus === "INSPECTION" && (
         <div className="f flex flex-col min-[400px]:flex-row items-center justify-center min-[400px]:justify-between mt-6">
           <div className=" flex flex-col min-[400px]:flex-row  gap-3">
             <button onClick={() => {
               setApprovePaymentPopup(true);
             }}
-              className="bg-primary text-white px-4 font-semibold py-2 rounded-[50px] whitespace-nowrap">Approve payment</button>
-            {/* <button onClick={() => setRequestRevisionPopup(true)} className="border border-primary font-semibold text-primary px-8 py-3 rounded-[50px] whitespace-nowrap">Request revision</button> */}
-          </div>
-          {/* <button onClick={() => setCancelPopup(true)} className="text-red-600 px-4 py-2">Cancel Task</button> */}
+                className="bg-primary text-white px-4 font-semibold py-2 rounded-[50px] whitespace-nowrap">Approve payment</button>
+            </div>
         </div>
+        )}
       </div>
 
       {task.jobInfo.jobStatus === "INSPECTION" && (

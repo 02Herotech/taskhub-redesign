@@ -28,7 +28,7 @@ const ApprovePopup = ({ approvePaymentPopup, setApprovePaymentPopup, paymentAppr
         setPaymentError("Something went wrong, please try again");
       } else {
         setPaymentApproved(true);
-        router.push("/customer/tasks?tab=Completed%20tasks");
+        router.push("/customer/tasks/ongoing-tasks");
       }
     } catch (error) {
       console.error("Payment approval failed:", error);
