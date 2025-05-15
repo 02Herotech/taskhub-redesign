@@ -12,10 +12,10 @@ const AssignedTask = () => {
   const { profile: user } = useSelector(
     (state: RootState) => state.userProfile,
   );
-  const { data } = useGetServiceProviderJobsQuery({ serviceProviderId: user?.serviceProviderId, page }, {
+  const { data, } = useGetServiceProviderJobsQuery({ serviceProviderId: user?.serviceProviderId, page }, {
     skip: !user?.serviceProviderId
   })
-  const { data: assignedJobs, isLoading } = useGetServiceProviderAssignedJobsQuery({ serviceProviderId: user?.serviceProviderId, page }, {
+  const { data: assignedJobs, isLoading, isError } = useGetServiceProviderAssignedJobsQuery({ serviceProviderId: user?.serviceProviderId, page }, {
     skip: !user?.serviceProviderId
   })
 
@@ -23,6 +23,14 @@ const AssignedTask = () => {
 
   if (isLoading) {
     return <Loading />;
+  }
+
+  if (isError) {
+    return <div className="flex flex-col items-center justify-center space-y-5 h-[50vh]">
+      <h2 className="text-2xl font-bold text-primary text-center">
+        No jobs found for this service provider </h2>
+    </div>
+
   }
 
   return (
