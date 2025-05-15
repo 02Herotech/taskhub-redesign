@@ -51,7 +51,6 @@ type taskZodType = z.infer<typeof taskSchema>;
 
 const EditTaskForm = ({ taskDetails, setShowEditModal }: TaskCardProps) => {
   const { taskInfo: task } = taskDetails;
-  console.log(task, "from edittask");
   const [activeEditModalLink, setActiveEditModalLink] =
     useState<string>("Task Details");
   const [categories, setCategories] = useState<
@@ -511,7 +510,7 @@ const EditTaskForm = ({ taskDetails, setShowEditModal }: TaskCardProps) => {
                   <Button
                     theme="primary"
                     type="button"
-                    onClick={() => setActiveEditModalLink("Location")}
+                    onClick={() => setActiveEditModalLink("Budget")}
                     className="rounded-full px-10"
                     size="sm"
                   >
