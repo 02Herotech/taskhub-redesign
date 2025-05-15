@@ -61,16 +61,16 @@ export const homeMobileLinks: LinkRouteTypes[] = [
   //   icon: RentShopSvg,
   // },
   {
-    label: "Monetize your skills",
+    label: "Make money on Oloja",
     url: "/monetize-your-skills",
     icon: FaRegMoneyBillAlt,
   },
   {
     label: "Log in",
     url: "/auth/login",
-    icon: FiLogIn, 
+    icon: FiLogIn,
   },
-  { label: "Sign up", url: "/auth/signup", icon: IoCreateOutline },
+  { label: "Sign up", url: "/auth/sign-up", icon: IoCreateOutline },
 ];
 
 export const customerLinks: LinkRouteTypes[] = [
@@ -175,11 +175,11 @@ export const mobileServiceProviderLinks: LinkRouteTypes[] = [
     url: "/marketplace",
     icon: LuStore,
   },
-  {
-    label: "Messages",
-    url: "/message",
-    icon: MdMailOutline,
-  },
+  // {
+  //   label: "Messages",
+  //   url: "/message",
+  //   icon: MdMailOutline,
+  // },
   {
     label: "Settings",
     url: "/service-provider/settings",
@@ -228,11 +228,11 @@ export const mobileCustomerLinks: LinkRouteTypes[] = [
     url: "/marketplace",
     icon: LuStore,
   },
-  {
-    label: "Messages",
-    url: "/message",
-    icon: MdMailOutline,
-  },
+  // {
+  //   label: "Messages",
+  //   url: "/message",
+  //   icon: MdMailOutline,
+  // },
   {
     label: "Settings",
     url: "/customer/settings/profile",
