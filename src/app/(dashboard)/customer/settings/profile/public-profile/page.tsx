@@ -123,7 +123,7 @@ function Page() {
           "",
         postCode:
           manualPostCode ||
-          currentSuburb.postcode.toString() ||
+          currentSuburb?.postcode?.toString() ||
           userProfileData?.postalCode ||
           "",
       };
