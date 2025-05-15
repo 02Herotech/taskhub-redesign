@@ -1,5 +1,6 @@
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
+import { useGetCustomerProfileQuery } from "@/services/user-profile";
 import useUserProfileData from "./useUserProfileData";
 
 export const options = {
@@ -14,7 +15,7 @@ export const options = {
 
 export function useCustomerProfileCompletion(verificationState?: string) {
   const { profile } = useSelector((state: RootState) => state.userProfile);
-  const userProfileData = useUserProfileData();
+  const { data: userProfileData } = useGetCustomerProfileQuery();
 
   const profileData: { field: string; available: boolean }[] = [
     {
@@ -36,7 +37,7 @@ export function useCustomerProfileCompletion(verificationState?: string) {
     },
     {
       field: "Verified",
-      available: userProfileData.verificationStatus === "VERIFIED",
+      available: userProfileData?.verificationStatus === "VERIFIED",
     },
   ];
 

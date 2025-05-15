@@ -7,15 +7,20 @@ export const updateProfileSchema = z
     dateOfBirth: z.date(),
     phoneNumber: z.string().min(1, "Phone number is required"),
     email: z.string().email(),
-    idType: z.enum(
-      [
-        "MEDICARE_CARD",
-        "INTERNATIONAL_PASSPORT",
-        "PHOTO_ID",
-        "DRIVERS_LICENSE",
-      ],
-      { errorMap: () => ({ message: "Please select a type of ID" }) },
-    ),
+    idType: z
+      .enum(
+        [
+          "MEDICARE_CARD",
+          "INTERNATIONAL_PASSPORT",
+          "PHOTO_ID",
+          "DRIVERS_LICENSE",
+        ],
+        {
+          errorMap: () => ({ message: "Please select a type of ID" }),
+        },
+      )
+      .optional()
+      .nullable(),
     idNumber: z.string().min(1, "Enter your ID number"),
     idImageFront: z
       .any()
