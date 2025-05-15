@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useCallback, useState } from "react"
 import Image from "next/image"
 import { FiMapPin, FiCalendar, FiDollarSign, FiChevronDown, FiChevronUp } from "react-icons/fi"
 import { useGetJobByIdQuery } from "@/services/bookings"
@@ -9,13 +9,12 @@ import PostReview from "./postReview"
 import RebookTask from "./rebookTask"
 import Popup from "@/components/global/Popup"
 import DeleteTask from "../../taskmodule/DeleteTask"
-import ImageViewer from "@/components/imageviewer"
 import { BiNotepad } from "react-icons/bi"
 import MoreButtonDropdown from "../../taskmodule/components/dropdown"
 import { formatDateFromArray } from "@/utils"
 import { FaCalendar } from "react-icons/fa"
 import RecurringTaskForm from "./reoccuringtask"
-
+import ImageViewer from 'react-simple-image-viewer';
 
 
 const CompletedTaskDetailsPage = ({
@@ -28,15 +27,28 @@ const CompletedTaskDetailsPage = ({
   const [deleteModalOpen, setIsDeleteModalOpen] = useState(false)
   const [showReoccuringModal, setShowReoccuringModal] = useState(false)
   const [currentStep, setCurrentStep] = useState(1)
+  const [currentImage, setCurrentImage] = useState(0);
+  const [isViewerOpen, setIsViewerOpen] = useState(false);
   const {
     data: completedTask,
     isLoading,
     error,
-  } = useGetJobByIdQuery(id as unknown as number);
+  } = useGetJobByIdQuery(id);
 
   const toggleExpand = () => {
     setIsExpanded(!isExpanded)
   }
+
+
+  const openImageViewer = useCallback((index: number) => {
+    setCurrentImage(index);
+    setIsViewerOpen(true);
+  }, []);
+
+  const closeImageViewer = () => {
+    setCurrentImage(0);
+    setIsViewerOpen(false);
+  };
 
 
   if (isLoading) {
@@ -114,16 +126,16 @@ const CompletedTaskDetailsPage = ({
 
         <div className="mb-4">
           <p className="text-primary font-medium whitespace-pre-line">
-            {isExpanded ? completedTask.jobInfo.jobDescription : completedTask.jobInfo.jobDescription?.length > 100 ? `${completedTask.jobInfo.jobDescription.substring(0, 150)}...` : completedTask.jobInfo.jobDescription}
+            {isExpanded ? completedTask.jobInfo.jobDescription : completedTask.jobInfo.jobDescription?.length > 200 ? `${completedTask.jobInfo.jobDescription.substring(0, 150)}...` : completedTask.jobInfo.jobDescription}
           </p>
-          {completedTask.jobInfo.jobDescription?.length > 150 && (
+          {completedTask.jobInfo.jobDescription?.length > 200 && (
             <button onClick={toggleExpand} className="flex items-center text-gray-500 mt-2">
               {isExpanded ? <FiChevronUp className="w-4 h-4" /> : <FiChevronDown className="w-4 h-4" />}
             </button>
           )}
         </div>
 
-        {completedTask.taskImage && (
+        {/* {completedTask.taskImage.length > 0 && (
           <div className="mb-4">
             <div className="relative w-24 h-16 rounded-md overflow-hidden">
               <ImageViewer
@@ -133,7 +145,27 @@ const CompletedTaskDetailsPage = ({
               <Image src={completedTask.taskImage || "/placeholder.svg"} alt="Job thumbnail" fill className="object-cover" />
             </div>
           </div>
-        )}
+        )} */}
+        {Array.isArray(completedTask.taskImage) && completedTask.taskImage.length > 0 &&
+          <div className="my-8  relative  w-24 h-24 flex items-center justify-center ">
+            {completedTask.taskImage?.map((picture, index) =>
+              <Image onClick={() => openImageViewer(index)} key={picture} src={picture} alt="job image" fill className="w-20 h-20 text-gray-400" />
+            )}
+
+            {isViewerOpen && (
+              <ImageViewer
+                src={completedTask.taskImage}
+                currentIndex={currentImage}
+                disableScroll={false}
+                closeOnClickOutside={true}
+                onClose={closeImageViewer}
+                backgroundStyle={{
+                  backgroundColor: 'rgba(0, 0, 0, 0.85)',
+                  zIndex: 1000
+                }}
+              />
+            )}
+          </div>}
 
         {completedTask.assignedDTO.fullName && (
           <div className="w-full flex flex-col items-end justify-start pt-4 mt-4">
