@@ -254,7 +254,7 @@ export const mobileCustomerLinks: LinkRouteTypes[] = [
   },
   {
     label: "My Tasks",
-    url: "/customer/tasks",
+    url: "/customer/tasks/all-tasks",
     icon: LuClipboard,
   },
   {
