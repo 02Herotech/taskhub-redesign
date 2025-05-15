@@ -75,9 +75,8 @@ function Todos() {
                   className="mx-auto mb-14 w-1/2"
                 />
                 <p className="mb-4 text-center font-semibold text-[#2A1769]">
-                  You have no listing yet. Create a listing to <br /> get
-                  matched with people in need of your <br />
-                  expertise
+                  You have no active tasks yet. Make an offer <br /> on a task
+                  to get started with earning!
                 </p>
 
                 <Link

@@ -7,6 +7,8 @@ import { RootState } from "@/store";
 import { CgProfile } from "react-icons/cg";
 import { formatTimeFromDate } from "@/utils";
 import { useGetCustomerReceiptsQuery } from "@/services/bookings";
+import { truncateText } from "@/utils/marketplace";
+
 
 // const Error = () => {
 //   return (
@@ -110,7 +112,7 @@ function PaymentHistory() {
                         {payment.bookingTitle}
                       </h5>
                       <p className="font-satoshiMedium text-[#716F78]">
-                        {payment.bookingDescription}
+                        {truncateText(payment.bookingDescription, 66)}
                       </p>
                     </div>
 
