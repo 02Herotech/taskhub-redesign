@@ -15,7 +15,6 @@ import EditTaskForm from '../../EditTaskForm'
 import Popup from '@/components/global/Popup'
 import DeleteTask from '../../DeleteTask'
 import { useRouter } from 'next/navigation'
-// import ImageViewer from '@/components/imageviewer'
 import { formatDateFromArray } from '@/utils'
 import MoreButtonDropdown from '../../components/dropdown'
 import ImageViewer from 'react-simple-image-viewer';
