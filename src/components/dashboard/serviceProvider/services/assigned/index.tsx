@@ -19,8 +19,6 @@ const AssignedTask = () => {
     skip: !user?.serviceProviderId
   })
 
-  console.log(assignedJobs, "assigned Jobs")
-
   if (isLoading) {
     return <Loading />;
   }
