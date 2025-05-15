@@ -24,6 +24,7 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { PiSealCheckFill } from "react-icons/pi";
 import Popup from "@/components/global/Popup/PopupTwo";
+import { useGetCustomerProfileQuery } from "@/services/user-profile";
 
 const idTypes: { label: string; value: string }[] = [
   { label: "Medicare Card", value: "MEDICARE_CARD" },
@@ -32,16 +33,40 @@ const idTypes: { label: string; value: string }[] = [
   { label: "Driver's License", value: "DRIVERS_LICENSE" },
 ];
 
+function VerificationStatus({ status }: { status: string }) {
+  if (status == null) return null;
+  const colors = {
+    VERIFIED: { background: "#EAFFF7", button: "#0CB977", text: "Sucessful" },
+    PENDING: { background: "#F4ECE1", button: "#E58C06", text: "Pending" },
+    NOT_VERIFIED: { background: "#FFF0F0", button: "#B70F0F", text: "Failed" },
+  };
+  return (
+    <div
+      style={{ backgroundColor: colors[status].background }}
+      className="rounded-xl p-2 px-5"
+    >
+      <p className="mb-1 text-sm font-semibold">ID Verification</p>
+      <span
+        style={{ backgroundColor: colors[status].button }}
+        className="mx-auto block rounded-full px-3 py-1 text-center text-xs text-white"
+      >
+        {colors[status].text}
+      </span>
+    </div>
+  );
+}
+
 function Page() {
   const [value, setValue] = useState("");
   const frontImageInputRef = useRef<HTMLInputElement>(null);
   const backImageInputRef = useRef<HTMLInputElement>(null);
   const { profile } = useSelector((state: RootState) => state.userProfile);
   const dispatch = useDispatch();
-  const userProfileData = useUserProfileData();
   const router = useRouter();
   const [error, setError] = useState("");
   const [openSuccessModal, setOpenSuccessModal] = useState(false);
+  const { data: userProfileData, refetch } = useGetCustomerProfileQuery();
+  console.log(profile);
 
   useEffect(() => {
     dispatch(
@@ -61,10 +86,9 @@ function Page() {
   const methods = useForm<UpdateProfileSchema>({
     resolver: zodResolver(updateProfileSchema),
     defaultValues: {
-      // email: profile?.emailAddress,
+      email: profile?.emailAddress,
       phoneNumber: profile?.phoneNumber,
-      //@ts-ignore
-      idType: userProfileData.idType || "",
+      idType: userProfileData?.idType,
     },
   });
 
@@ -72,32 +96,22 @@ function Page() {
     watch,
     control,
     register,
-    reset,
+    setError: setFormError,
     clearErrors,
     formState: { errors, isSubmitting },
     setValue: setFormValue,
   } = methods;
 
+  console.log(errors)
+
   useEffect(() => {
-    if (profile) {
-      // setFormValue("email", profile.emailAddress);
+    if (userProfileData) {
+      setFormValue("dateOfBirth", new Date(userProfileData.dateOfBirth));
 
-      reset({
-        phoneNumber: profile.phoneNumber || "",
-        email: profile.emailAddress,
-      });
-
-      setValue(profile.phoneNumber);
-      // setFormValue("phoneNumber", profile?.phoneNumber);
+      //@ts-ignore
+      setFormValue("idType", userProfileData.idType);
+      setFormValue("idNumber", userProfileData.idNumber);
     }
-  }, [profile]);
-
-  useEffect(() => {
-    setFormValue("dateOfBirth", new Date(userProfileData?.dateOfBirth));
-
-    //@ts-ignore
-    setFormValue("idType", userProfileData.idType);
-    setFormValue("idNumber", userProfileData.idNumber);
   }, [userProfileData]);
 
   const selectedIdType = watch("idType");
@@ -116,8 +130,22 @@ function Page() {
 
   const onSubmit: SubmitHandler<UpdateProfileSchema> = async (data) => {
     setError("");
-    if (userProfileData.idImageFront) clearErrors("idImageFront");
-    if (userProfileData.idImageBack) clearErrors("idImageBack");
+    if (
+      userProfileData.verificationStatus !== "VERIFIED" &&
+      userProfileData.verificationStatus !== "PENDING"
+    ) {
+      //Do image verifications
+      if (!imageFront) {
+        setFormError("idImageFront", { message: "Image is required" });
+        return;
+      }
+      if (selectedIdType !== "INTERNATIONAL_PASSPORT" && !imageBack) {
+        setFormError("idImageBack", { message: "Image is required" });
+        return;
+      }
+    }
+    if (userProfileData?.idImageFront) clearErrors("idImageFront");
+    if (userProfileData?.idImageBack) clearErrors("idImageBack");
 
     const { idImageFront, idImageBack } = data;
     const submitData = {
@@ -135,8 +163,8 @@ function Page() {
       await authInstance.patch("/customer/update", submitData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
+      refetch();
       setOpenSuccessModal(true);
-      router.refresh();
     } catch (error) {
       console.error(error);
       setError("Something went wrong, please try again");
@@ -171,12 +199,7 @@ function Page() {
             </div>
 
             {/* Verification status  */}
-            <div className="rounded-xl bg-[#F4ECE1] p-2 px-5">
-              <p className="mb-1 text-sm font-semibold">ID Verification</p>
-              <span className="mx-auto block rounded-full bg-[#E58C06] px-3 py-1 text-center text-xs text-white">
-                Pending
-              </span>
-            </div>
+            <VerificationStatus status={userProfileData?.verificationStatus} />
           </div>
         </header>
 
@@ -206,6 +229,7 @@ function Page() {
                           dateFormat="dd/mm/yy"
                           placeholder="DD/MM/YYYY"
                           maxDate={maxDate}
+                          disabled={userProfileData?.dateOfBirth}
                           onChange={(e) => {
                             field.onChange(e.value);
                           }}
@@ -259,13 +283,13 @@ function Page() {
               <label className="block text-sm text-[#4E5158]" htmlFor="email">
                 Email
               </label>
-              <div className="mb-1 text-xs text-[#878C97]">
+              {/* <div className="mb-1 text-xs text-[#878C97]">
                 Click{" "}
                 <Link href="#" className="text-primary">
                   here
                 </Link>{" "}
                 to change
-              </div>
+              </div> */}
               <input
                 id="email"
                 type="email"
@@ -290,9 +314,14 @@ function Page() {
                     id="document-type"
                     className="w-full rounded-xl p-2 px-2 shadow-md outline-none disabled:bg-white sm:shadow-none"
                     {...register("idType")}
-                    // disabled={Boolean(userProfileData?.idType)}
+                    disabled={
+                      userProfileData?.verificationStatus === "PENDING" ||
+                      userProfileData?.verificationStatus == "VERIFIED"
+                    }
                   >
-                    <option value="">Select ID type</option>
+                    <option value="" disabled>
+                      {userProfileData?.idType || "Select ID type"}
+                    </option>
                     {idTypes.map((idType) => (
                       <option value={idType.value} key={idType.label}>
                         {idType.label}
@@ -325,10 +354,12 @@ function Page() {
                   type="text"
                   className="w-full rounded-xl p-2 px-2 shadow-md outline-none disabled:bg-white sm:shadow-none"
                   placeholder="123456789"
+                  disabled={
+                    userProfileData?.verificationStatus === "PENDING" ||
+                    userProfileData?.verificationStatus == "VERIFIED"
+                  }
                   {...register("idNumber", {
-                    // disabled:
-                    //   userProfileData.verificationStatus == "PENDING" ||
-                    //   userProfileData.verificationStatus == "VERIFIED",
+                    value: userProfileData?.idNUmber,
                   })}
                 />
                 {errors.idNumber && (
@@ -355,22 +386,23 @@ function Page() {
                       className="hidden"
                       accept="image/*"
                       ref={frontImageInputRef}
+                      disabled={
+                        userProfileData?.verificationStatus === "PENDING" ||
+                        userProfileData?.verificationStatus == "VERIFIED"
+                      }
                       onChange={(e) => {
                         clearErrors("idImageFront");
                         setFormValue("idImageFront", e.target.files?.[0], {
                           shouldValidate: true,
                         });
                       }}
-                      // disabled={
-                      //   userProfileData.verificationStatus == "PENDING" ||
-                      //   userProfileData.verificationStatus == "VERIFIED"
-                      // }
                     />
-                    {getImageUrl(imageFront) || userProfileData.idImageFront ? (
+                    {getImageUrl(imageFront) ||
+                    userProfileData?.idImageFront ? (
                       <Image
                         src={
                           getImageUrl(imageFront) ||
-                          userProfileData.idImageFront
+                          userProfileData?.idImageFront
                         }
                         alt="Front of image ID"
                         className="h-full w-full object-cover"
@@ -410,18 +442,19 @@ function Page() {
                         className="hidden"
                         accept="image/*"
                         ref={backImageInputRef}
+                        disabled={
+                          userProfileData?.verificationStatus === "PENDING" ||
+                          userProfileData?.verificationStatus == "VERIFIED"
+                        }
                         onChange={(e) => {
                           clearErrors("idImageBack");
                           setFormValue("idImageBack", e.target.files?.[0], {
                             shouldValidate: true,
                           });
                         }}
-                        // disabled={
-                        //   userProfileData.verificationStatus == "PENDING" ||
-                        //   userProfileData.verificationStatus == "VERIFIED"
-                        // }
                       />
-                      {getImageUrl(imageBack) || userProfileData.idImageBack ? (
+                      {getImageUrl(imageBack) ||
+                      userProfileData?.idImageBack ? (
                         <Image
                           width={400}
                           height={200}

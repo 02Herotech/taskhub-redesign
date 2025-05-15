@@ -20,7 +20,7 @@ export const updateProfileSchema = z
     idImageFront: z
       .any()
       .optional()
-      .refine((file) => file, "ID Image is required")
+      // .refine((file) => file, "ID Image is required")
       .refine((file) => {
         return file ? ACCEPTED_FILE_TYPES.includes(file?.type) : true;
       }, "Only images are allowed"),
@@ -33,13 +33,13 @@ export const updateProfileSchema = z
   })
   .superRefine(({ idType, idImageBack }, ctx) => {
     //Function for validating a field if another field isn't available
-    if (idType !== "INTERNATIONAL_PASSPORT" && !idImageBack) {
-      ctx.addIssue({
-        path: ["idImageBack"],
-        message: "ID Image is required",
-        code: z.ZodIssueCode.custom,
-      });
-    }
+    // if (idType !== "INTERNATIONAL_PASSPORT" && !idImageBack) {
+    //   ctx.addIssue({
+    //     path: ["idImageBack"],
+    //     message: "ID Image is required",
+    //     code: z.ZodIssueCode.custom,
+    //   });
+    // }
   });
 
 export type UpdateProfileSchema = z.infer<typeof updateProfileSchema>;
