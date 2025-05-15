@@ -68,7 +68,7 @@ export const homeMobileLinks: LinkRouteTypes[] = [
   {
     label: "Log in",
     url: "/auth/login",
-    icon: FiLogIn,
+    icon: FiLogIn, 
   },
   { label: "Sign up", url: "/auth/signup", icon: IoCreateOutline },
 ];
