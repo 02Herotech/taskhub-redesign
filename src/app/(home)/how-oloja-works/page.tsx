@@ -79,18 +79,18 @@ function Page() {
         <h1 className="mb-10 pt-28 text-center font-clashSemiBold text-3xl text-[#381F8C] sm:text-4xl">
           Get Tasks Done. <br /> Compare Offers. <br /> Save time and energy
         </h1>
-        <div className="mx-auto w-max space-x-1 font-satoshiBold sm:space-x-4">
+        <div className="mx-auto relative z-20 w-max space-x-1 font-satoshiBold sm:space-x-4">
           <Link
-            href="/auth"
+            href="/auth/sign-up"
             className="rounded-full bg-[#381F8C] px-3 py-3 font-bold text-[#EBE9F4] sm:px-5"
           >
             Get started now
           </Link>
           <Link
-            href="/monetize-your-skills"
+            href="/auth/sign-up"
             className="rounded-full border-[0.5px] border-[#381F8C] px-3 py-3 font-bold text-[#381F8C] sm:px-5"
           >
-            Monetize your skills
+            Make money on Oloja
           </Link>
         </div>
       </header>
@@ -542,10 +542,10 @@ function Page() {
               Get started now
             </Link>
             <Link
-              href="/monetize-your-skills"
+              href="/auth/sign-up"
               className="rounded-full border-[0.5px] border-[#381F8C] px-3 py-3 font-satoshiBold font-bold text-[#381F8C] sm:px-5"
             >
-              Monetize your skills
+              Make money on Oloja
             </Link>
           </div>
         </section>
