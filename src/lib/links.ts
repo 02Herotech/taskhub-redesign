@@ -13,6 +13,7 @@ import { LuLayoutDashboard } from "react-icons/lu";
 import { GoTasklist } from "react-icons/go";
 import { IoMdNotificationsOutline } from "react-icons/io";
 import { IoSettingsOutline } from "react-icons/io5";
+import { IoCreateOutline } from "react-icons/io5";
 
 export type LinkRouteTypes = {
   label: string;
@@ -39,11 +40,6 @@ export const homeMobileLinks: LinkRouteTypes[] = [
     url: "/marketplace",
     icon: LuStore,
   },
-  {
-    label: "Log in",
-    url: "/auth/login",
-    icon: FiLogIn,
-  },
   // {
   //   label: "About us",
   //   url: "/about",
@@ -69,6 +65,12 @@ export const homeMobileLinks: LinkRouteTypes[] = [
     url: "/monetize-your-skills",
     icon: FaRegMoneyBillAlt,
   },
+  {
+    label: "Log in",
+    url: "/auth/login",
+    icon: FiLogIn,
+  },
+  { label: "Sign up", url: "/auth/signup", icon: IoCreateOutline },
 ];
 
 export const customerLinks: LinkRouteTypes[] = [
@@ -158,47 +160,6 @@ export const mobileServiceProviderLinks: LinkRouteTypes[] = [
     url: "/service-provider/payment",
     icon: IoWalletOutline,
   },
-
-  // {
-  //   label: "My Dashboard",
-  //   icon: LuLayoutDashboard,
-  //   sublinks: [
-  //     {
-  //       label: "Profile",
-  //       url: "/service-provider/profile",
-  //     },
-  //     {
-  //       label: "My Services",
-  //       url: "/service-provider/services",
-  //     },
-  //     {
-  //       label: "View Jobs",
-  //       url: "/service-provider/jobs",
-  //     },
-  //     {
-  //       label: "My Notifications",
-  //       url: "/service-provider/notification",
-  //     },
-  //     {
-  //       label: "Payment and wallet",
-  //       url: "/service-provider/payment",
-  //     },
-  //     {
-  //       label: "Settings",
-  //       url: "/service-provider/settings",
-  //       sublinks: [
-  //         {
-  //           label: "Change Password",
-  //           url: "/service-provider/settings/password",
-  //         },
-  //         {
-  //           label: "Notification settings",
-  //           url: "/service-provider/settings/notification",
-  //         },
-  //       ],
-  //     },
-  //   ],
-  // },
   {
     label: "Explore Tasks",
     url: "/explore",
@@ -257,42 +218,6 @@ export const mobileCustomerLinks: LinkRouteTypes[] = [
     url: "/customer/payment?tab=paymentHistory",
     icon: IoWalletOutline,
   },
-  // {
-  //   label: "My Dashboard",
-  //   icon: DashboardSvg,
-  //   sublinks: [
-  //     {
-  //       label: "Profile",
-  //       url: "/customer/profile",
-  //     },
-  //     {
-  //       label: "My Tasks",
-  //       url: "/customer/tasks",
-  //     },
-  //     {
-  //       label: "My Notifications",
-  //       url: "/customer/notifications",
-  //     },
-  //     {
-  //       label: "Payment",
-  //       url: "/customer/payment?tab=paymentHistory",
-  //     },
-  //     {
-  //       label: "Settings",
-  //       url: "/customer/settings",
-  //       sublinks: [
-  //         {
-  //           label: "Change Password",
-  //           url: "/customer/password",
-  //         },
-  //         {
-  //           label: "Notification settings",
-  //           url: "/customer/notification-settings",
-  //         },
-  //       ],
-  //     },
-  //   ],
-  // },
   {
     label: "Marketplace",
     url: "/marketplace",
