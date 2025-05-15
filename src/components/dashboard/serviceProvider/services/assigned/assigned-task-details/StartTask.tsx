@@ -31,8 +31,8 @@ const StartTaskModal = ({ startTaskPopup, setStartTaskPopup }: StartTaskModalPro
     <Popup isOpen={startTaskPopup} onClose={() => setStartTaskPopup(false)}>
       {step === 1 &&
         <ConfirmationModal
-          title="Are you sure you want to complete this task?"
-          description="Please confirm to proceed , remember to only do this if you are done with the task."
+        title="Are you sure you want to Start this task?"
+        description="Please confirm to proceed,remember to only do this if you want to start the task."
           confirmText="Start Task"
         isLoading={isLoading}
         error={error?.data.message as unknown as any}

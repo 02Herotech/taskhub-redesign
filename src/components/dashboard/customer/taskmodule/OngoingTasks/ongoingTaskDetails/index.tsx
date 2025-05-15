@@ -381,7 +381,7 @@ type InSpectionTimeProps = {
 }
 const InSpectionTimer = ({ inspectionStarted, selectedTime, inspectionEndTime, endInspection }: InSpectionTimeProps) => {
   return (
-    <div className="py-7">
+    <div className="py-7 max-w-3xl mx-auto">
       {inspectionStarted ? (
         <div className="items-center justify-between max-sm:space-y-5 lg:flex">
           <h2 className="mb-4 text-lg font-semibold text-primary">

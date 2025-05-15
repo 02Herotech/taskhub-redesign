@@ -1103,7 +1103,7 @@ const AddTaskForm: React.FC = () => {
           <PopupTwo
             isOpen={isSuccessPopupOpen}
             onClose={() => {
-              router.push("/customer/tasks");
+              router.push("/customer/tasks/all-tasks");
               setIsSuccessPopupOpen(false);
             }}
           >
