@@ -65,7 +65,8 @@ function Page() {
   const router = useRouter();
   const [error, setError] = useState("");
   const [openSuccessModal, setOpenSuccessModal] = useState(false);
-  const { data: userProfileData } = useGetCustomerProfileQuery();
+  const { data: userProfileData, refetch } = useGetCustomerProfileQuery();
+  console.log(profile);
 
   useEffect(() => {
     dispatch(
@@ -85,6 +86,7 @@ function Page() {
   const methods = useForm<UpdateProfileSchema>({
     resolver: zodResolver(updateProfileSchema),
     defaultValues: {
+      email: profile?.emailAddress,
       phoneNumber: profile?.phoneNumber,
       idType: userProfileData?.idType,
     },
@@ -94,25 +96,17 @@ function Page() {
     watch,
     control,
     register,
-    reset,
+    setError: setFormError,
     clearErrors,
     formState: { errors, isSubmitting },
     setValue: setFormValue,
   } = methods;
 
-  // useEffect(() => {
-  //   if (profile) {
-  //     reset({
-  //       phoneNumber: profile.phoneNumber || "",
-  //       email: profile.emailAddress,
-  //     });
-  //     setValue(profile.phoneNumber);
-  //   }
-  // }, [profile]);
+  console.log(errors)
 
   useEffect(() => {
     if (userProfileData) {
-      setFormValue("dateOfBirth", new Date(userProfileData?.dateOfBirth));
+      setFormValue("dateOfBirth", new Date(userProfileData.dateOfBirth));
 
       //@ts-ignore
       setFormValue("idType", userProfileData.idType);
@@ -136,8 +130,22 @@ function Page() {
 
   const onSubmit: SubmitHandler<UpdateProfileSchema> = async (data) => {
     setError("");
-    if (userProfileData.idImageFront) clearErrors("idImageFront");
-    if (userProfileData.idImageBack) clearErrors("idImageBack");
+    if (
+      userProfileData.verificationStatus !== "VERIFIED" &&
+      userProfileData.verificationStatus !== "PENDING"
+    ) {
+      //Do image verifications
+      if (!imageFront) {
+        setFormError("idImageFront", { message: "Image is required" });
+        return;
+      }
+      if (selectedIdType !== "INTERNATIONAL_PASSPORT" && !imageBack) {
+        setFormError("idImageBack", { message: "Image is required" });
+        return;
+      }
+    }
+    if (userProfileData?.idImageFront) clearErrors("idImageFront");
+    if (userProfileData?.idImageBack) clearErrors("idImageBack");
 
     const { idImageFront, idImageBack } = data;
     const submitData = {
@@ -155,6 +163,7 @@ function Page() {
       await authInstance.patch("/customer/update", submitData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
+      refetch();
       setOpenSuccessModal(true);
     } catch (error) {
       console.error(error);
@@ -191,12 +200,6 @@ function Page() {
 
             {/* Verification status  */}
             <VerificationStatus status={userProfileData?.verificationStatus} />
-            {/* <div className="rounded-xl bg-[#F4ECE1] p-2 px-5">
-              <p className="mb-1 text-sm font-semibold">ID Verification</p>
-              <span className="mx-auto block rounded-full bg-[#E58C06] px-3 py-1 text-center text-xs text-white">
-                Pending
-              </span>
-            </div> */}
           </div>
         </header>
 
@@ -226,6 +229,7 @@ function Page() {
                           dateFormat="dd/mm/yy"
                           placeholder="DD/MM/YYYY"
                           maxDate={maxDate}
+                          disabled={userProfileData?.dateOfBirth}
                           onChange={(e) => {
                             field.onChange(e.value);
                           }}
