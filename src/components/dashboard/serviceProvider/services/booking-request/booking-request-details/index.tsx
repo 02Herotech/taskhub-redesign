@@ -1,6 +1,4 @@
 "use client"
-import MoreButtonDropdown from '@/components/dashboard/customer/taskmodule/components/dropdown'
-import { formatTime24Hour } from '@/lib/utils'
 import { booking, useGetServiceProviderBookingRequestDetailsQuery } from '@/services/bookings'
 import Loading from '@/shared/loading'
 import { formatDateFromArray } from '@/utils'
@@ -8,9 +6,8 @@ import Image from 'next/image'
 import React, { useCallback, useState } from 'react'
 import { BiChevronDown, BiChevronUp, BiXCircle } from 'react-icons/bi'
 import { CiCalendar, CiLocationOn } from 'react-icons/ci'
-import { FiRefreshCw } from 'react-icons/fi'
-import { MdWarning } from 'react-icons/md'
-import { PiCurrencyDollarSimple, PiSealWarningFill } from 'react-icons/pi'
+
+import { PiCurrencyDollarSimple } from 'react-icons/pi'
 import Requests from './booking-request-chat'
 
 const BookingRequestDetails = ({ params }: { params: { id: string } }) => {

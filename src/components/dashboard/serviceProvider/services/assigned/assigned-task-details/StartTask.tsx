@@ -15,16 +15,17 @@ const StartTaskModal = ({ startTaskPopup, setStartTaskPopup }: StartTaskModalPro
   const [step, setStep] = useState(1)
   const pathname = usePathname()
   const jobId = pathname.split("/").pop()!
-  const [startTask, { isLoading }] = useStartTaskMutation()
+  const [startTask, { isLoading, error, isSuccess }] = useStartTaskMutation()
+  console.log(isSuccess, "isSuccess")
 
   const handleStartTask = async () => {
     try {
-      await startTask({ jobId })
-      setStep(2)
-    } catch (error) {
-      console.error(error)
-    }
+    await startTask({ jobId }).unwrap();
+    setStep(2);
+  } catch (err) {
+    console.error("Failed to start task:", err);
   }
+};
 
   return (
     <Popup isOpen={startTaskPopup} onClose={() => setStartTaskPopup(false)}>
@@ -33,6 +34,8 @@ const StartTaskModal = ({ startTaskPopup, setStartTaskPopup }: StartTaskModalPro
           title="Are you sure you want to complete this task?"
           description="Please confirm to proceed , remember to only do this if you are done with the task."
           confirmText="Start Task"
+        isLoading={isLoading}
+        error={error?.data.message as unknown as any}
           onCancel={() => setStartTaskPopup(false)}
           onConfirm={() => handleStartTask()} />
 

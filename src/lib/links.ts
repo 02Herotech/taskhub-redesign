@@ -144,6 +144,11 @@ export const mobileServiceProviderLinks: LinkRouteTypes[] = [
     icon: FiUser,
   },
   {
+    label: "My Services",
+    url: "/service-provider/services/all-services",
+    icon: LuClipboard,
+  },
+  {
     label: "View Jobs",
     url: "/service-provider/jobs",
     icon: GoTasklist,

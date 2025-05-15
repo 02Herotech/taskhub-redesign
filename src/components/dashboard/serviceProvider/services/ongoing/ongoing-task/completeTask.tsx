@@ -15,15 +15,17 @@ const CompleteTaskModal = ({ completeTaskPopup, setCompleteTaskPopup }: StartTas
   const [step, setStep] = useState(1)
   const pathname = usePathname()
   const jobId = pathname.split("/").pop()!
-  const [completeTask, { isLoading }] = useCompleteTaskMutation()
+  const [completeTask, { isLoading, isSuccess, error }] = useCompleteTaskMutation()
 
   const handleStartTask = async () => {
     try {
       await completeTask({ jobId })
       setStep(2)
-    } catch (error) {
-      console.error(error)
+
+    } catch (err) {
+      console.error("Failed to start task:", err);
     }
+
   }
 
   return (
@@ -32,7 +34,9 @@ const CompleteTaskModal = ({ completeTaskPopup, setCompleteTaskPopup }: StartTas
         <ConfirmationModal
           title="Are you sure you want to complete this task?"
           description="Please confirm to proceed , remember to only do this if you are done with the task."
-          confirmText="Start Task"
+        isLoading={isLoading}
+        confirmText="Complete Task"
+        error={error?.data.message as unknown as any}
           onCancel={() => setCompleteTaskPopup(false)}
           onConfirm={() => handleStartTask()} />
 

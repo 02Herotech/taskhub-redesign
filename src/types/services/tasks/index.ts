@@ -188,7 +188,7 @@ export type GetTasksResponse = {
 export type JobDataDetails = {
   jobInfo: JobInfo;
   assignedDTO: AssignedDTO;
-  taskImage: string;
+  taskImage: string[];
 };
 
 export type JobInfo = {

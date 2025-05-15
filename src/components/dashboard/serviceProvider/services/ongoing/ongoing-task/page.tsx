@@ -30,7 +30,7 @@ const OngoingTask = ({ params }: { params: { id: string } }) => {
     data: task,
     isLoading,
     error,
-  } = useGetJobByIdQuery(id as unknown as number);
+  } = useGetJobByIdQuery(id);
 
 
   const openImageViewer = useCallback((index: number) => {
