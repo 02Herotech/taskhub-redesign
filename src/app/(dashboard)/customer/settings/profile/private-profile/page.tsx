@@ -357,9 +357,7 @@ function Page() {
                     userProfileData?.verificationStatus === "PENDING" ||
                     userProfileData?.verificationStatus == "VERIFIED"
                   }
-                  {...register("idNumber", {
-                    value: userProfileData?.idNUmber,
-                  })}
+                  {...register("idNumber")}
                 />
                 {errors.idNumber && (
                   <p className="w-full text-sm font-medium text-red-500">
