@@ -98,7 +98,7 @@ const OngoingTask = ({ params }: { params: { id: string } }) => {
       <div className="max-w-3xl mx-auto">
         <div className="mb-4 flex items-center justify-between">
           <p className="bg-indigo-100 text-primary border border-[#381F8C] px-4 py-1 rounded-full text-sm uppercase">{task.jobInfo.jobStatus}</p>
-          <MoreButtonDropdown dropdownItems={dropdownItems} />
+          {/* <MoreButtonDropdown dropdownItems={dropdownItems} /> */}
         </div>
 
         <h1 className="text-2xl  md:text-3xl font-bold mb-4 capitalize ">{task.jobInfo.jobTitle}</h1>
