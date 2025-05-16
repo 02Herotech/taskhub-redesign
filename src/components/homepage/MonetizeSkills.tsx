@@ -113,7 +113,7 @@ function MonetizeSkills() {
               ))}
             </ul>
             <button className="block rounded-[50px] bg-[#FE9B07] px-6 py-3 font-satoshiBold text-base font-bold text-white hover:bg-[#e79823]">
-              <Link href="/monetize-your-skills">Monetize your skills</Link>
+              <Link href="/monetize-your-skills">Earn on Oloja</Link>
             </button>
           </div>
         </div>
