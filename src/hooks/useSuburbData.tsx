@@ -31,7 +31,7 @@ function useSuburbData(searchValue: string, currentSuburb: SurburbInfo | null) {
         if (suburbList.length < 1) setIsLoading(true);
         const { data } = await axios.get<SurburbInfo[]>(
           process.env.NEXT_PUBLIC_API_URL +
-            "/util/addresses?query=" +
+            "/util/addresses?suburb=" +
             searchValue,
         );
         setIsLoading(false);
