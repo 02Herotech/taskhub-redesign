@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import Provider from "@/store/Provider";
 import { TokenExpirationCheck } from "@/components/auth/TokenExpirationCheck";
+import Script from "next/script";
 
 export const metadata: Metadata = {
   title: "Olojà",
@@ -65,6 +66,17 @@ export default function RootLayout({
         />
       </head>
       <body>
+        {process.env.BRANCH === "production" && (
+          <Script id="clarity-script" strategy="afterInteractive">
+            {`
+            (function(c,l,a,r,i,t,y){
+                c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+                t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+                y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+            })(window, document, "clarity", "script", "${process.env.NEXT_PUBLIC_CLARITY_PROJECT_ID}");
+          `}
+          </Script>
+        )}
         <Provider>
           <TokenExpirationCheck>
             <main className="min-w-80">{children}</main>
