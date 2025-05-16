@@ -25,6 +25,11 @@ export default function TaskLayout({
     router.push(tab)
   }
 
+
+  const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    router.push(e.target.value);
+  };
+
   const TabItems = [
     {
       label: "All Tasks",
@@ -51,9 +56,9 @@ export default function TaskLayout({
   const tabLabel = TabItems.find((tabitem) => tabitem.path.split("/").at(-1) === tab)
 
   return (
-    <main className=" pt-8">
-      <h1 className="text-2xl font-bold my-2  ">My Tasks</h1>
-      <div className="flex items-center mb-3 gap-2">
+    <main className="pt-8">
+      <h1 className="text-2xl font-bold my-2">My Tasks</h1>
+      <div className="hidden sm:flex items-center mb-3 gap-2 ">
         <button onClick={() => router.back()} className="flex items-center text-gray-600 hover:text-gray-900">
           <MdArrowBackIos />
           Back
@@ -66,7 +71,7 @@ export default function TaskLayout({
         {title && <span className="cursor-pointer text-[#55535A] capitalize w-20 truncate md:w-64"> {"/  "}{title}</span>}
       </div>
 
-      <div className="mb-6 overflow-x-auto font-manrope">
+      <div className="mb-6 overflow-x-auto font-manrope hidden sm:block">
         <div className="flex space-x-1 min-w-max border-b border-gray-200">
           {(TabItems).map((tabName) => {
 
@@ -85,6 +90,17 @@ export default function TaskLayout({
             )
           })}
         </div>
+      </div>
+
+      <div className="bg-[#EBE9F4] rounded-md px-4 sm:hidden font-manrope mt-2 mb-4">
+        <select onChange={handleChange} className="px-4 py-2 text-primary text-sm font-medium bg-[#EBE9F4] border-none outline-none w-full">
+          {TabItems.map((tab) => (
+            <option className="text-primary" key={tab.label} value={tab.path}>
+              {tab.label}
+            </option>
+          ))}
+        </select>
+
       </div>
       <Suspense>{children}</Suspense>
     </main>
