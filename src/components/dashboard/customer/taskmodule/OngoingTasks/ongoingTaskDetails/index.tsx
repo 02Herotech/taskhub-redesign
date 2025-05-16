@@ -245,7 +245,7 @@ const OnogoingTaskDetailsPage = ({ params }: { params: { id: string } }) => {
 
             {/* Dropdown menu */}
             {isDropdownOpen && (
-              <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg z-10">
+              <div className="absolute  right-4  sm:right-0 mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg z-10">
                 <div className="p-2">
                   <div className="bg-indigo-100 text-primary border border-[#381F8C] px-4 py-1 rounded-full text-sm uppercase">Inspect task</div>
                   <div className="space-y-2">
@@ -274,9 +274,9 @@ const OnogoingTaskDetailsPage = ({ params }: { params: { id: string } }) => {
           <p className="text-primary font-medium text-lg  flex-1 whitespace-pre-line">
             {isExpanded ? task.jobInfo.jobDescription : `${task.jobInfo.jobDescription.substring(0, 200)}...`}
           </p>
-          <span className="text-gray-500 mt-1 cursor-pointer" onClick={() => setIsExpanded(!isExpanded)}>
+          {task.jobInfo.jobDescription.length > 300 && <span className="text-gray-500 mt-1 cursor-pointer" onClick={() => setIsExpanded(!isExpanded)}>
             {isExpanded ? <BiChevronUp className="w-8 h-8" /> : <BiChevronDown className="w-8 h-8" />}
-          </span>
+          </span>}
         </div>
 
         {/* Image placeholder */}
