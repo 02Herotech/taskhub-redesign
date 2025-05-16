@@ -94,6 +94,11 @@ export const serviceProviderDashboardLinks: DashboardLinks[] = [
     link: "/service-provider/payment",
     icon: IoWalletOutline,
   },
+  {
+    label: "Settings",
+    link: "/service-provider/settings/profile",
+    icon: IoSettingsOutline,
+  },
   // {
   //   label: "Rewards",
   //   link: "/service-provider/rewards",

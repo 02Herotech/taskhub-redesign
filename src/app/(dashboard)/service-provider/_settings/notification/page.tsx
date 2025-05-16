@@ -1,7 +1,7 @@
 import NotificationsSettings from "@/components/dashboard/general/NotificationSettings";
 
-const CustomerNotificationSettings = () => {
+const Notification = () => {
   return <NotificationsSettings />;
 };
 
-export default CustomerNotificationSettings;
+export default Notification;
