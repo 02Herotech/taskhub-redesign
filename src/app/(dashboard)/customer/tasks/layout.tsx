@@ -47,10 +47,10 @@ export default function TaskLayout({
       label: "Completed Tasks",
       path: "/customer/tasks/completed-tasks",
     },
-    {
-      label: "Booking Requests",
-      path: "/customer/tasks/booking-requests",
-    },
+    // {
+    //   label: "Booking Requests",
+    //   path: "/customer/tasks/booking-requests",
+    // },
   ];
 
   const tabLabel = TabItems.find((tabitem) => tabitem.path.split("/").at(-1) === tab)
