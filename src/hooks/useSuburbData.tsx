@@ -40,7 +40,7 @@ function useSuburbData(
         if (suburbList.length < 1) setIsLoading(true);
         const { data } = await axios.get<SurburbInfo[]>(
           process.env.NEXT_PUBLIC_API_URL +
-            "/util/addresses?suburb=" +
+            "/util/addresses?query=" +
             searchValue,
         );
         setIsLoading(false);
