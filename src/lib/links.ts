@@ -235,8 +235,18 @@ export const mobileCustomerLinks: LinkRouteTypes[] = [
   // },
   {
     label: "Settings",
-    url: "/customer/settings/profile",
+    url: "/customer/settings",
     icon: IoSettingsOutline,
+    sublinks: [
+      {
+        label: "Change Password",
+        url: "/customer/password",
+      },
+      {
+        label: "Notification settings",
+        url: "/customer/notification-settings",
+      },
+    ],
   },
   // {
   //   label: "Contact us",

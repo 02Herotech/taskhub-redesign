@@ -13,6 +13,7 @@ import {
 import Link from "next/link";
 import { useDispatch } from "react-redux";
 import { removeUserProfile } from "@/store/Features/userProfile";
+import { IoSettingsOutline } from "react-icons/io5";
 
 /**Dashboard sidebar navigation */
 const DashboardSidebar = () => {
@@ -62,6 +63,18 @@ const DashboardSidebar = () => {
               {item.label}
             </Link>
           ))}
+
+          {/* Settings Dropdown section */}
+          <button
+            onClick={() => setShowSettings((prev) => !prev)}
+            className={`flex items-center gap-4 rounded-md px-4 py-3 text-sm font-medium text-white ${isServiceProvider ? "gap-4" : "gap-6"} transition-all duration-300 max-md:text-sm ${
+              pathname.includes("/service-provider/dashboard/settings")
+                ? "bg-yellow-500 hover:bg-opacity-90"
+                : "bg-violet-normal hover:bg-violet-950"
+            } `}
+          >
+            <IoSettingsOutline /> <span>Settings</span>
+          </button>
 
           <div
             className={`space-y-2 overflow-hidden px-4 transition-all duration-300 ${showSettings ? "max-h-80" : "max-h-0"} `}

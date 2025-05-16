@@ -184,14 +184,14 @@ const Navigation = () => {
               <SmallLogo />
             </Link>
             <div className="flex items-center gap-3 lg:hidden">
-              <Link href="/message" className="relative cursor-pointer">
+              {/* <Link href="/message" className="relative cursor-pointer">
                 <BsChat className="size-7 text-black" />
                 {totalUnreadMessages > 0 && (
                   <span className="absolute -right-1 -top-1 flex size-5 items-center justify-center rounded-full bg-tc-orange text-xs text-white">
                     {totalUnreadMessages}
                   </span>
                 )}
-              </Link>
+              </Link> */}
               <button
                 className="relative cursor-pointer"
                 onClick={() => router.push(notificationRoute)}
@@ -250,14 +250,14 @@ const Navigation = () => {
               ) : (
                 <>
                   {/* UnreadMessages */}
-                  <Link href="/message" className="relative cursor-pointer">
+                  {/* <Link href="/message" className="relative cursor-pointer">
                     <BsChat className="size-7 text-primary" />
                     {totalUnreadMessages > 0 && (
                       <span className="absolute -right-1 -top-1 flex size-5 items-center justify-center rounded-full bg-tc-orange text-xs text-white">
                         {totalUnreadMessages}
                       </span>
                     )}
-                  </Link>
+                  </Link> */}
                   <button
                     className="relative cursor-pointer"
                     onClick={() => router.push(notificationRoute)}
