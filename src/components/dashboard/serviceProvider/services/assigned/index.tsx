@@ -26,7 +26,7 @@ const AssignedTask = () => {
   if (isError) {
     return <div className="flex flex-col items-center justify-center space-y-5 h-[50vh]">
       <h2 className="text-2xl font-bold text-primary text-center">
-        No jobs found for this service provider </h2>
+        Oops!!, No job have been assigned to you yet </h2>
     </div>
 
   }
