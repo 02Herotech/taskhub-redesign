@@ -75,7 +75,7 @@ const WithdrawalPage: React.FC = () => {
   useEffect(() => {
     async function fetchUserData() {
       try {
-        const { data } = await authInstance.get("service_provider/profile");
+        const { data } = await authInstance.get("service-provider/profile");
         setUserData({ isVerified: data.isVerified });
       } catch (error) {
         console.error("Error fetching profile data", error);

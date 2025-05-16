@@ -6,7 +6,7 @@ import { setAuthStatus } from "@/store/Features/authStatus";
 import { RootState } from "@/store";
 
 const authInstance = axios.create({
-  timeout: 20000,
+  timeout: 600000,
   baseURL: process.env.NEXT_PUBLIC_API_URL,
 });
 
@@ -19,6 +19,7 @@ function useAxios() {
     const requestInterceptor = authInstance.interceptors.request.use(
       async (request) => {
         const session = await getSession();
+        console.log(session, "session")
         if (!session) {
           dispatch(setAuthStatus(true));
           throw new Error("No session available");

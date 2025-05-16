@@ -19,7 +19,7 @@ interface DashboardLinks {
 }
 
 export const customerDashboardLinks: DashboardLinks[] = [
-  // { label: "Home", link: "/customer/home", icon: TbSmartHome },
+  { label: "Home", link: "/customer/home", icon: TbSmartHome },
   {
     label: "Profile",
     link: "/customer/profile",
@@ -27,7 +27,7 @@ export const customerDashboardLinks: DashboardLinks[] = [
   },
   {
     label: "My Tasks",
-    link: "/customer/tasks",
+    link: "/customer/tasks/all-tasks",
     icon: LuClipboard,
   },
   {
@@ -62,13 +62,13 @@ export const customerDashboardLinks: DashboardLinks[] = [
   // },
   // {
   //   label: "Settings",
-  //   link: "/customer/settings",
-  //   icon: SettingsIcon,
+  //   link: "/customer/settings/profile",
+  //   icon: IoSettingsOutline,
   // },
 ];
 
 export const serviceProviderDashboardLinks: DashboardLinks[] = [
-  // { label: "Home", link: "/service-provider/home", icon: TbSmartHome },
+  { label: "Home", link: "/service-provider/home", icon: TbSmartHome },
   {
     label: "Profile",
     link: "/service-provider/profile",
@@ -76,7 +76,7 @@ export const serviceProviderDashboardLinks: DashboardLinks[] = [
   },
   {
     label: "My Services",
-    link: "/service-provider/services",
+    link: "/service-provider/services/all-services",
     icon: LuClipboard,
   },
   {
@@ -94,6 +94,11 @@ export const serviceProviderDashboardLinks: DashboardLinks[] = [
     link: "/service-provider/payment",
     icon: IoWalletOutline,
   },
+  // {
+  //   label: "Settings",
+  //   link: "/service-provider/settings/profile",
+  //   icon: IoSettingsOutline,
+  // },
   // {
   //   label: "Rewards",
   //   link: "/service-provider/rewards",

@@ -13,8 +13,6 @@ const listingZodSchema = z.object({
     .refine((str) => str.split(" ").filter(Boolean).length >= 5, {
       message: `Description must have ${5} words or more`,
     }),
-  // category: z.string(),
-  // subCategory: z.string(),
   availableDays: z.array(z.string()),
   available: z.boolean(),
   taskType: z.string(),
@@ -31,32 +29,4 @@ const listingZodSchema = z.object({
   image3: z.string().optional(),
   image4: z.string().optional(),
 }); 
-// .refine(
-//   (data) => {
-//     // Check if planTwoDescription is not "", null, or undefined, and ensure planTwoPrice is provided
-//     if (
-//       data.planTwoDescription &&
-//       data.planTwoDescription.trim().length > 0 &&
-//       !data.planTwoPrice
-//     ) {
-//       return false;
-//     }
-
-//     // Check if planThreeDescription is not "", null, or undefined, and ensure planThreePrice is provided
-//     if (
-//       data.planThreeDescription &&
-//       data.planThreeDescription.trim().length > 0 &&
-//       !data.planThreePrice
-//     ) {
-//       return false;
-//     }
-
-//     return true;
-//   },
-//   {
-//     message: "Price is required if description is provided",
-//     path: ["planTwoPrice", "planThreePrice"], // This will show error on both fields
-//   },
-// );
-
 export default listingZodSchema;

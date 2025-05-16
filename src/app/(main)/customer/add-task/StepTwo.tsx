@@ -143,7 +143,7 @@ function StepTwo() {
     const finalTask = {
       taskBriefDescription,
       taskDescription,
-      taskImage: taskImage ? base64ToFile(taskImage, "task-image") : null,
+      image1: taskImage ? base64ToFile(taskImage, "task-image") : null,
       taskDate: taskDate ? formatDate(new Date(taskDate)) : "",
       taskTime: taskTime ? formatTimeFromDate(new Date(taskTime)) : "",
       taskType,
@@ -154,14 +154,12 @@ function StepTwo() {
       termAccepted: true,
     };
     try {
-      await Promise.race([
-        authInstance.post("task/post", finalTask, {
+      await authInstance.post("task/post", finalTask, {
           headers: {
             "Content-Type": "multipart/form-data",
           },
         }),
-        timeout(10000),
-      ]);
+
       setPopupState({ open: true, status: "success" });
       reset();
     } catch (error) {
@@ -243,7 +241,7 @@ function StepTwo() {
                       id="suburb"
                       type="text"
                       className="-ml-2 block w-full appearance-none bg-transparent p-3 placeholder-[#76757A61] outline-none placeholder:font-satoshiMedium"
-                      placeholder="Enter your address"
+                      placeholder="Enter a suburb"
                       autoComplete="off"
                       {...register("suburb", {
                         onChange: (e) => {
@@ -493,7 +491,7 @@ function StepTwo() {
         isOpen={popupState.open && popupState.status === "success"}
         onClose={() => {
           dispatch(resetSavedTask());
-          router.push("/customer/tasks");
+          router.push("/customer/tasks/all-tasks");
           setPopupState({ open: false, status: "" });
         }}
       >
@@ -509,7 +507,7 @@ function StepTwo() {
           </p>
           <div className="flex justify-center gap-3 sm:gap-5">
             <Link
-              href="/customer/tasks"
+              href="/customer/tasks/all-tasks"
               onClick={() => dispatch(resetSavedTask())}
               className="rounded-full border-[0.5px] border-primary bg-[#EBE9F4] px-3 py-2 font-bold text-primary"
             >

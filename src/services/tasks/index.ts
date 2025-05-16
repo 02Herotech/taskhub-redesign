@@ -8,10 +8,15 @@ import {
   GetTasksResponse,
   GetCustomerCompletedTasksResponse,
   GetAllCustomerTasksResponse,
+  ServiceProviderReciepts,
+  AcceptOfferData,
 } from "@/types/services/tasks";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { Middleware } from "@reduxjs/toolkit";
 import { getSession } from "next-auth/react";
+import { LIMIT_NINE } from "@/utils/constant";
+import { GetAllTasksByServicesProviderResponse } from "@/types/services/serviceprovider";
+import { Offer } from "@/types/chat";
 
 const getRequest = <T>(url: string, params?: T) => {
   const paramsReducer = (acc: any, [key, value]: any) => {
@@ -114,34 +119,63 @@ export const task = createApi({
       query: (pageNumber) => getRequest(`/task/task-price-desc/${pageNumber}`),
       providesTags: ["Task"],
     }),
-    getAllTaskByCustomerId: builder.query<GetAllCustomerTasksResponse, number>({
-      query: (customerId) =>
-        getRequest(`/task/all-tasks-by-customerId/${customerId}`),
+    getAllTaskByCustomerId: builder.query<
+      GetAllCustomerTasksResponse,
+      { customerId: number; page: number }
+    >({
+      query: ({ customerId, page }) =>
+        getRequest(
+          `/task/all-tasks-by-customerId/${customerId}?page=${page}&size=${LIMIT_NINE}`,
+        ),
       providesTags: ["Task"],
     }),
-    getTaskByCustomerId: builder.query<GetCustomerTasksResponse, number>({
-      query: (customerId) =>
-        getRequest(`/task/tasks-by-customerId/${customerId}`),
+    getAllTaskByServiceProvider: builder.query<
+      GetAllTasksByServicesProviderResponse,
+      { serviceProviderId: number; page: number }
+    >({
+      query: ({ serviceProviderId, page }) =>
+        getRequest(
+          `/task/all-task-by-service-provider/${serviceProviderId}?page=${page}&size=${LIMIT_NINE}`,
+        ),
+      providesTags: ["Task"],
+    }),
+
+    getTaskByCustomerId: builder.query<
+      GetCustomerTasksResponse,
+      { customerId: number; page: number }
+    >({
+      query: ({ customerId, page }) =>
+        getRequest(
+          `/task/tasks-by-customerId/${customerId}?page=${page}&size=${LIMIT_NINE}`,
+        ),
       providesTags: ["Task"],
     }),
     getCustomerOngoingTasks: builder.query<
       GetCustomerOngoingTasksResponse,
-      number
+      { customerId: number; page: number }
     >({
-      query: (customerId) =>
-        getRequest(`/task/customer-ongoing-tasks/${customerId}`),
+      query: ({ customerId, page }) =>
+        getRequest(
+          `/task/customer-ongoing-tasks/${customerId}?page=${page}&size=${LIMIT_NINE}`,
+        ),
       providesTags: ["Task"],
     }),
     getCustomerCompletedTasks: builder.query<
       GetCustomerCompletedTasksResponse,
-      number
+      { customerId: number; page: number }
     >({
-      query: (customerId) =>
-        getRequest(`/task/customer-completed-tasks/${customerId}`),
+      query: ({ customerId, page }) =>
+        getRequest(
+          `/task/customer-completed-tasks/${customerId}?page=${page}&size=${LIMIT_NINE}`,
+        ),
       providesTags: ["Task"],
     }),
-    deleteTask: builder.mutation<void, number>({
+    deleteJob: builder.mutation<void, number>({
       query: (id) => postRequest(`/booking/deleteCompletedJob/${id}`, {}),
+      invalidatesTags: ["Task"],
+    }),
+    deleteTask: builder.mutation<void, number>({
+      query: (id) => postRequest(`/task/${id}`, {}),
       invalidatesTags: ["Task"],
     }),
     searchTaskByText: builder.query<GetTasksResponse, GetTaskByTextRequest>({
@@ -181,6 +215,26 @@ export const task = createApi({
         ),
       invalidatesTags: ["Task"],
     }),
+    acceptOffer: builder.mutation<
+      AcceptOfferData,
+      { taskId: number; serviceProviderId: number }
+    >({
+      query: (credentials) =>
+        putRequest(
+          `/task/accept-offer/${credentials.taskId}/${credentials.serviceProviderId}`,
+          {},
+        ),
+      invalidatesTags: ["Task"],
+    }),
+    getServiceProviderPaymentHistory: builder.query<
+      ServiceProviderReciepts,
+      { serviceProviderId: number }
+    >({
+      query: ({ serviceProviderId }) =>
+        getRequest(
+          `task/service-provider-payment-history/${serviceProviderId}?size=10`,
+        ),
+    }),
   }),
 });
 
@@ -196,9 +250,13 @@ export const {
   useGetCustomerOngoingTasksQuery,
   useGetCustomerCompletedTasksQuery,
   useDeleteTaskMutation,
+  useDeleteJobMutation,
   useSearchTaskByTextQuery,
   useFilterTasksQuery,
   useUpdateTaskMutation,
   useGetTasksOffersQuery,
   useAssignTaskMutation,
+  useGetAllTaskByServiceProviderQuery,
+  useGetServiceProviderPaymentHistoryQuery,
+  useAcceptOfferMutation,
 } = task;

@@ -6,13 +6,21 @@ const MAX_FILE_SIZE = 5 * 1024 * 1024;
 const ACCEPTED_FILE_TYPES = ["image/png", "image/jpeg", "image/jpg"];
 
 const taskSchema = z.object({
-  taskBriefDescription: z.string().min(1, "Task brief description is required"),
-  taskDescription: z.string().min(1, "Task description is required"),
+  taskBriefDescription: z
+    .string()
+    .min(1, "Task title is required")
+    .min(10, "Minimum of 10 characters is required")
+    .max(50, "Maximum of 50 characters is allowed"),
+  taskDescription: z
+    .string()
+    .min(1, "Task description is required")
+    .min(30, "Minimum of 30 characters is required")
+    .max(500, "Maximum of 500 characters is allowed"),
   taskImage: z
     .any()
     .optional()
     .refine((file) => {
-      return typeof file !== "string"
+      return typeof file !== "string" && file !== null
         ? ACCEPTED_FILE_TYPES.includes(file?.type)
         : true;
     }, "Only images are allowed")

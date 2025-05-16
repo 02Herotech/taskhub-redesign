@@ -179,7 +179,7 @@ function UploadIdPopup({
       if (selectedFile && isEditingProfilePicture.isEditing) {
         setIsUploadImageLoading(true);
         let url = isServiceProvider
-          ? "service_provider/profile_picture"
+          ? "service-provider/profile-picture"
           : "customer/profile_picture";
         try {
           await authInstance.post(
@@ -214,9 +214,13 @@ function UploadIdPopup({
       isOpen={isFormModalShown}
       onClose={handleCloseModal}
       popUpTitle={
-        <h3 className="max-w-[320px] font-clashSemiBold text-lg text-[#140B31] sm:max-w-full lg:text-2xl">
-          Upload your identification document
-        </h3>
+        <>
+          {!isProfileUpdatedSuccessfully && (
+            <h3 className="max-w-[320px] font-clashSemiBold text-lg text-[#140B31] sm:max-w-full lg:text-2xl">
+              Upload your identification document
+            </h3>
+          )}
+        </>
       }
     >
       <div className="relative mt-10 max-h-[750px] min-w-[320px] max-w-[750px] bg-white p-3 px-4 sm:mt-7 sm:min-w-[560px]">
@@ -271,8 +275,8 @@ function UploadIdPopup({
                       <path
                         d="M-22 140.427C135.2 72.0269 132.833 22.5936 112 6.42689C91.1667 -9.73977 106.845 58.9374 112 91.9269C144.389 299.199 685 7.5 685 7.5"
                         stroke="#EBE9F4"
-                        stroke-opacity="0.18"
-                        stroke-width="16"
+                        strokeOpacity="0.18"
+                        strokeWidth="16"
                       />
                     </svg>
                     <div className="relative z-10 mx-auto flex w-max items-center">

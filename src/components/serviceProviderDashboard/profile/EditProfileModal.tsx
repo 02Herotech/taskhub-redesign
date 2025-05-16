@@ -158,7 +158,7 @@ const EditProfileModal = ({
       if (selectedFile && isEditingProfilePicture.isEditing) {
         setIsUploadImageLoading(true);
         let url = isServiceProvider
-          ? "service_provider/profile_picture"
+          ? "service-provider/profile_picture"
           : "customer/profile_picture";
         try {
           await authInstance.post(

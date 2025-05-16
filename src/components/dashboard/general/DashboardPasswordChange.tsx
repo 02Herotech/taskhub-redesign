@@ -4,7 +4,7 @@ import Button from "@/components/global/Button";
 import Input from "@/components/global/Input";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FormProvider, set, SubmitHandler, useForm } from "react-hook-form";
 import { IoMdEye, IoMdEyeOff } from "react-icons/io";
 import { motion, AnimatePresence } from "framer-motion";
@@ -12,6 +12,8 @@ import { FiAlertTriangle } from "react-icons/fi";
 import { PiSealCheckFill } from "react-icons/pi";
 import { BsExclamationTriangle } from "react-icons/bs";
 import useAxios from "@/hooks/useAxios";
+import { useDispatch } from "react-redux";
+import { setBreadCrumbs } from "@/store/Features/breadcrumbs";
 
 type ChangePasswordRequest = {
   password: string;
@@ -30,6 +32,21 @@ const DashboardPasswordChange = () => {
 
   const isServiceProvider =
     session?.data?.user?.user?.roles[0] === "SERVICE_PROVIDER";
+
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(
+      setBreadCrumbs({
+        header: "Change password",
+        links: [
+          {
+            url: "/customer/settings/notification-settings",
+            text: "Change Password",
+          },
+        ],
+      }),
+    );
+  }, []);
 
   const handlePasswordVerification = async (e: any) => {
     e.preventDefault();
@@ -89,7 +106,7 @@ const DashboardPasswordChange = () => {
   };
 
   return (
-    <div className="relative mt-24 p-4 lg:px-20">
+    <div className="relative p-4 lg:px-20 mt-20">
       {success && (
         <section className="fixed inset-0 z-50 flex h-screen w-screen items-center justify-center bg-black bg-opacity-70">
           <div

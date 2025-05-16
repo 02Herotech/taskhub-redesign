@@ -30,37 +30,37 @@ const notificationRoute = [
   {
     type: "TASK",
     subtype: "ASSIGNED",
-    customerRoute: "/customer/tasks?tab=New tasks",
+    customerRoute: "/customer/tasks/posted-by-me",
     providerRoute: "/service-provider/jobs",
   },
   {
     type: "TASK",
     subtype: "COMPLETED",
-    customerRoute: "/customer/tasks?tab=Completed tasks",
+    customerRoute: "/customer/tasks/completed-tasks",
     providerRoute: "",
   },
   {
     type: "TASK",
     subtype: "OFFER",
-    customerRoute: "/customer/tasks?tab=New tasks",
+    customerRoute: "/customer/tasks/posted-by-me",
     providerRoute: "",
   },
   {
     type: "JOB",
     subtype: "PENDING",
-    customerRoute: "/customer/tasks?tab=Ongoing tasks",
+    customerRoute: "/customer/tasks/ongoing-tasks",
     providerRoute: "",
   },
   {
     type: "JOB",
     subtype: "ONGOING",
-    customerRoute: "/customer/tasks?tab=Ongoing tasks",
+    customerRoute: "/customer/tasks/ongoing-tasks",
     providerRoute: "",
   },
   {
     type: "JOB",
     subtype: "COMPLETED",
-    customerRoute: "/customer/tasks?tab=Completed tasks",
+    customerRoute: "/customer/tasks/completed-tasks",
     providerRoute: "/service-provider/services",
   },
   {
@@ -170,7 +170,7 @@ const NotificationList = ({
 
   return (
     <div className="flex flex-col gap-4 pb-4">
-      <dialog
+      {/* <dialog
         ref={dialogRef}
         onClick={handleBackdropClick}
         className="bg-transparent"
@@ -193,16 +193,20 @@ const NotificationList = ({
           </div>
           <div className="flex items-center justify-center">
             {currentRoute && (
-              <Link
-                href={currentRoute}
-                className="rounded-full bg-violet-normal px-4 py-2 text-white"
-              >
-                View
-              </Link>
+              // <Link
+              //   href={currentRoute}
+              //   className="rounded-full bg-violet-normal px-4 py-2 text-white"
+              // >
+              //   View
+              // </Link>
+              <p
+                className="cursor-pointer font-bold text-[#140B31]"
+                dangerouslySetInnerHTML={{ __html: currentRoute }}
+              />
             )}
           </div>
         </div>
-      </dialog>
+      </dialog> */}
 
       <h1 className="border-b border-violet-light py-3 font-satoshiBold text-2xl font-bold text-violet-normal">
         {heading}
@@ -232,9 +236,10 @@ const NotificationList = ({
               {/* </div> */}
               <div className="space-y-">
                 <div className="flex items-start gap-2 ">
-                  <p className="cursor-pointer font-bold text-[#140B31]">
-                    {item.message}
-                  </p>
+                  <p
+                    className="cursor-pointer font-bold text-[#140B31]"
+                    dangerouslySetInnerHTML={{ __html: item.message }}
+                  />
                 </div>
               </div>
             </div>

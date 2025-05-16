@@ -17,7 +17,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
           {label}
         </label>
         <input
-          className="w-full rounded-2xl border-[1.5px] border-[#E9ECF1] p-2 px-3 font-satoshiMedium shadow-md outline-none placeholder:text-[#D3D2D5]"
+          className="w-full rounded-2xl border-[1.5px] border-[#E9ECF1] p-2 px-3 font-satoshiMedium shadow-sm outline-none placeholder:text-[#D3D2D5]"
           {...props}
           ref={ref}
         />
@@ -43,7 +43,7 @@ export const PasswordInput = forwardRef<HTMLInputElement, PasswordInputProps>(
         >
           {label}
         </label>
-        <div className="flex w-full items-center rounded-2xl border-[1.5px] border-[#E9ECF1] p-2 px-3 shadow-md">
+        <div className="flex w-full items-center rounded-2xl border-[1.5px] border-[#E9ECF1] p-2 px-3 shadow-sm">
           <input
             {...props}
             ref={ref}

@@ -1,6 +1,5 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import useAxios from "@/hooks/useAxios";
 import Image from "next/image";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
@@ -9,6 +8,8 @@ import { IoLocationOutline } from "react-icons/io5";
 import { CiCalendar } from "react-icons/ci";
 import { truncateText } from "@/utils/marketplace";
 import Link from "next/link";
+import { useGetServiceProviderJobsQuery } from "@/services/bookings";
+import { JobItem } from "@/types/services/jobs";
 
 function getOrdinalSuffix(day: number) {
   if (day > 3 && day < 21) return "th";
@@ -29,30 +30,25 @@ function convertMonthInDateArray(dates: number[]) {
 }
 
 function Todos() {
-  const [data, setData] = useState<undefined | JobsType[]>(undefined);
-  const [isLoading, setIsLoading] = useState(false);
-  const authInstance = useAxios();
+  const [data, setData] = useState<undefined | JobItem[]>(undefined);
+
   const { profile: user } = useSelector(
     (state: RootState) => state.userProfile,
   );
-  useEffect(() => {
-    const fetchJobs = async () => {
-      if (!user) return;
-      try {
-        setIsLoading(true);
-        const url = `booking/job/service-provider/` + user?.serviceProviderId;
-        const { data } = await authInstance.get(url);
-        const completedJobs = data.filter((job) => job.jobStatus === "PENDING");
-        setData(completedJobs);
-      } catch (error: any) {
-        console.error(error.response || error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
 
-    fetchJobs();
-  }, [user]);
+  const { data: jobs, isLoading } = useGetServiceProviderJobsQuery(
+    { serviceProviderId: user?.serviceProviderId, page: 0 },
+    { skip: !user?.serviceProviderId },
+  );
+
+  useEffect(() => {
+    if (jobs) {
+      const completedJobs = jobs.content.filter(
+        (job) => job.jobInfo.jobStatus === "PENDING",
+      );
+      setData(completedJobs);
+    }
+  }, [jobs]);
   return (
     <section className="w-full md:w-2/5">
       <h3 className="mb-1 font-semibold text-[#0000009E]">To-do</h3>
@@ -69,7 +65,7 @@ function Todos() {
         )}
         {data && (
           <>
-            {data.length < 1 ? (
+            {data?.length < 1 ? (
               <div className=" py-10">
                 <Image
                   src="/assets/images/dashboard/empty-listing.png"
@@ -79,9 +75,8 @@ function Todos() {
                   className="mx-auto mb-14 w-1/2"
                 />
                 <p className="mb-4 text-center font-semibold text-[#2A1769]">
-                  You have no listing yet. Create a listing to <br /> get
-                  matched with people in need of your <br />
-                  expertise
+                  You have no active tasks yet. Make an offer <br /> on a task
+                  to get started with earning!
                 </p>
 
                 <Link
@@ -106,26 +101,28 @@ function Todos() {
                         Assigned
                       </div>
                       <p className="mb-4 font-satoshiBold text-base font-bold text-[#01353D] sm:text-xs">
-                        {task.jobTitle}
+                        {task.jobInfo.jobTitle}
                       </p>
                       <p className="max-w-[200px] text-sm text-[#00323A] sm:text-xs">
-                        {truncateText(task.jobDescription, 66)}
+                        {truncateText(task.jobInfo.jobDescription, 66)}
                       </p>
                     </div>
                     <div className="text-right">
                       <div className="mb-3 text-right font-satoshiBold text-2xl font-bold text-[#E58C06]">
-                        ${task.total}
+                        ${task.jobInfo.total}
                       </div>
                       <div className="mb-1 flex items-center gap-2 text-right text-[#716F78]">
                         <IoLocationOutline />
                         <span className="text-[10px] font-medium">
-                          {task.jobAddress}
+                          {task.jobInfo.jobAddress}
                         </span>
                       </div>
                       <div className="flex items-center gap-2 text-right text-[#716F78]">
                         <CiCalendar />
                         <span className="text-[10px] font-medium">
-                          {formatDate(convertMonthInDateArray(task.createdAt))}
+                          {formatDate(
+                            convertMonthInDateArray(task.jobInfo.createdAt),
+                          )}
                         </span>
                       </div>
                     </div>

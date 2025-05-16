@@ -1,11 +1,14 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, use } from "react";
 import Image from "next/image";
 import { useGetReceiptsByCustomerIdQuery } from "@/services/bookings";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
 import { CgProfile } from "react-icons/cg";
 import { formatTimeFromDate } from "@/utils";
+import { useGetCustomerReceiptsQuery } from "@/services/bookings";
+import { truncateText } from "@/utils/marketplace";
+
 
 // const Error = () => {
 //   return (
@@ -33,8 +36,13 @@ function PaymentHistory() {
   const { profile: user } = useSelector(
     (state: RootState) => state.userProfile,
   );
-  const { data, isLoading, error } = useGetReceiptsByCustomerIdQuery(
-    user?.customerId!,
+
+  const { data, isLoading } = useGetCustomerReceiptsQuery(
+    {
+      customerId: user?.customerId!,
+      size: 10,
+    },
+    { skip: !user?.customerId },
   );
 
   const [today, setToday] = useState([]);
@@ -43,13 +51,13 @@ function PaymentHistory() {
 
   //Todo
   useEffect(() => {
-    if (data && data.length > 1) {
-      //Loop through the first 7 but loop backwards
-      //Check if the date is before yesterday and older
-      //Check if the date is posted yesterday
-      //Check if the date is posted today
-      // for ()
-    }
+    // if (data && data.length > 1) {
+    //   //Loop through the first 7 but loop backwards
+    //   //Check if the date is before yesterday and older
+    //   //Check if the date is posted yesterday
+    //   //Check if the date is posted today
+    //   // for ()
+    // }
   }, [data]);
   function convertMonthInDateArray(dates: number[]) {
     const [year, month, ...rest] = dates;
@@ -71,7 +79,7 @@ function PaymentHistory() {
         )}
         {data && (
           <>
-            {data.length < 1 ? (
+            {data.content.length < 1 ? (
               <div className="py-10">
                 <Image
                   src="/assets/images/dashboard/empty-transaction-history.png"
@@ -90,22 +98,22 @@ function PaymentHistory() {
                 {/* <h4 className="mb-3 font-satoshiMedium text-[#756F6F]">
                   Today
                 </h4> */}
-                {data.slice(0, 7).map((payment) => (
+                {data.content.slice(0, 7).map((payment) => (
                   <li className="flex gap-2" key={Math.random() * 5678}>
                     <Image
-                      src="/assets/images/placeholder.png"
+                      src={payment.image ?? "/assets/images/placeholder.png"}
                       alt="Profile picture"
                       width={40}
                       height={40}
-                      className="size-10 rounded-full object-cover object-top md:size-14"
+                      className="size-10 rounded-full bg-[#c1badb] object-cover object-top md:size-14"
                     />
                     <div>
                       <h5 className="font-satoshiBold text-lg font-bold text-[#140B31]">
                         {payment.bookingTitle}
                       </h5>
-                      {/* <p className="font-satoshiMedium text-[#716F78]">
-                        I need a graphic designer
-                      </p> */}
+                      <p className="font-satoshiMedium text-[#716F78]">
+                        {truncateText(payment.bookingDescription, 66)}
+                      </p>
                     </div>
 
                     <div className="ml-auto space-y-2 text-right">
@@ -115,7 +123,7 @@ function PaymentHistory() {
                         )}
                       </p>
                       {/* Colors: Successful -> #17A851, Pending -> #FEA621, Failed -> #EA323E */}
-                      {/* <p className="text-[#17A851]">Successful</p> */}
+                      <p className="text-[#17A851]">Successful</p>
                     </div>
                   </li>
                 ))}

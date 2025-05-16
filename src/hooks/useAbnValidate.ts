@@ -16,7 +16,7 @@ function useAbnValidate({ abnInput, setAbnError }: Props) {
     const validateABN = async () => {
       if (abnInput) {
         try {
-          const url = `${process.env.NEXT_PUBLIC_API_URL}/service_provider/validate-abn/${abnInput}`;
+          const url = `${process.env.NEXT_PUBLIC_API_URL}/auth/validate-abn/${abnInput}`;
           const response = await axios.get(url);
           if (response?.data) {
             setIsValidABN(true);

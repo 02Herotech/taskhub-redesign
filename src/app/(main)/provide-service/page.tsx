@@ -561,12 +561,13 @@ const ProvideService: React.FC = () => {
           const type = "REMOTE_SERVICE";
           finalTask = { ...finalTask, taskType: type };
         } else {
-
           finalTask = {
             ...finalTask,
             taskType: "PHYSICAL_SERVICE",
             suburb: currentSuburb?.name || altSuburb || "",
-            postCode: currentSuburb?.postcode ? String(currentSuburb.postcode) : altPostCode,
+            postCode: currentSuburb?.postcode
+              ? String(currentSuburb.postcode)
+              : altPostCode,
             state: currentSuburb?.state ? currentSuburb.state.name : altState,
           };
         }

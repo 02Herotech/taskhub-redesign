@@ -10,7 +10,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 
 const offerSchema = z.object({
-  offerPrice: z
+  offerAmount: z
     .number({ invalid_type_error: "Offer amount is required" })
     .min(1, "Offer must be above $1"),
   message: z.string().min(1, "Please enter your message"),
@@ -51,11 +51,10 @@ function ReplyForm({ taskId, offerId, refetch }: Props) {
           userId: user.customerId,
           fullName: `${user.firstName} ${user.lastName}`,
           message: data.message,
-          offerPrice: data.offerPrice,
+          offerAmount: data.offerAmount || "",
         },
       ],
     };
-
     try {
       socket.emit("offer/replies", payload, () => {
         reset();
@@ -72,7 +71,7 @@ function ReplyForm({ taskId, offerId, refetch }: Props) {
       <AnimatePresence initial={false} mode="wait">
         {!showReplyForm ? (
           <motion.button
-            className="mt-3 flex items-center gap-1 text-primary sm:gap-2"
+            className=" flex items-center gap-1 text-primary sm:gap-2 pl-10"
             key="button"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -83,7 +82,7 @@ function ReplyForm({ taskId, offerId, refetch }: Props) {
               strokeWidth={1.2}
               className="rotate-180 text-base md:text-xl"
             />
-            <span className="font-satoshiBold text-base font-bold sm:text-xl ">
+            <span className="font-satoshiBold text-base font-semibold sm:text-xl ">
               Reply
             </span>
           </motion.button>
@@ -113,13 +112,12 @@ function ReplyForm({ taskId, offerId, refetch }: Props) {
                 </label>
                 <input
                   id="price"
-                  type="number"
-                  required
+                    type="number"
                   min={1}
                   placeholder="0"
                   autoComplete="off"
                   className="max-w-14 appearance-none bg-transparent font-bold outline-none placeholder:text-[#E58C06] sm:max-w-24 sm:text-lg"
-                  {...register("offerPrice", { valueAsNumber: true })}
+                  {...register("offerAmount", { valueAsNumber: true })}
                 />
               </div>
               <button
@@ -137,7 +135,7 @@ function ReplyForm({ taskId, offerId, refetch }: Props) {
               <IoClose />
             </button>
             <div className="w-full text-red-500">
-              {errors.message?.message || errors.offerPrice?.message}
+              {errors.offerAmount?.message}
             </div>
           </motion.form>
         )}
