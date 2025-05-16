@@ -8,18 +8,18 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/store";
 import {
   options,
-  useCustomerProfileCompletion,
+  useServiceProviderProfileCompletion,
 } from "@/hooks/useUserProfileCompletion";
 import { usePathname } from "next/navigation";
 
 const headerLinks: { url: string; text: string }[] = [
-  { url: "/customer/settings/profile", text: "Profile" },
+  { url: "/service-provider/settings/profile", text: "Profile" },
   {
-    url: "/customer/settings/notification-settings",
+    url: "/service-provider/settings/notification-settings",
     text: "Notification preference",
   },
   {
-    url: "/customer/settings/password",
+    url: "/service-provider/settings/password",
     text: "Change password",
   },
   {
@@ -33,13 +33,13 @@ function SettingsHeader() {
   const { links, header } = useSelector(
     (state: RootState) => state.breadcrumbs,
   );
-  const { data, completionPercentage } = useCustomerProfileCompletion();
+  const { data, completionPercentage } = useServiceProviderProfileCompletion();
   const pathname = usePathname();
 
   const shouldRender =
-    pathname == "/customer/settings/profile" ||
-    pathname == "/customer/settings/profile/public-profile" ||
-    pathname == "/customer/settings/profile/private-profile";
+    pathname == "/service-provider/settings/profile" ||
+    pathname == "/service-provider/settings/profile/public-profile" ||
+    pathname == "/service-provider/settings/profile/private-profile";
   return (
     <div>
       <h2 className="mb-2 hidden text-3xl font-semibold text-[#2A1769] sm:block">
@@ -108,7 +108,9 @@ function SettingsHeader() {
               }
               key={Math.random() * 4562278}
             >
-              <Link href={link.url} className="text-lg">{link.text}</Link>
+              <Link href={link.url} className="text-lg">
+                {link.text}
+              </Link>
             </li>
           ))}
         </ul>

@@ -23,6 +23,9 @@ import Button from "@/components/global/Button";
 import useSuburbData, { SurburbInfo } from "@/hooks/useSuburbData";
 import { CiLocationOn } from "react-icons/ci";
 import useUserProfileData from "@/hooks/useUserProfileData";
+import { PiSealCheckFill } from "react-icons/pi";
+import { useRouter } from "next/navigation";
+import { FaLocationDot } from "react-icons/fa6";
 
 function Page() {
   const { profile } = useSelector((state: RootState) => state.userProfile);
@@ -34,16 +37,18 @@ function Page() {
   const profilePictureInputRef = useRef<HTMLInputElement>(null);
   const [initialImageUrl, setInitialImageUrl] = useState("");
   const [currentSuburb, setCurrentSuburb] = useState<SurburbInfo | null>(null);
+  const [openSuccessModal, setOpenSuccessModal] = useState(false);
   const [error, setError] = useState("");
+  const router = useRouter();
 
   useEffect(() => {
     dispatch(
       setBreadCrumbs({
         header: "Public Profile",
         links: [
-          { url: "/customer/new-settings/profile", text: "Profile" },
+          { url: "/service-provider/settings/profile", text: "Profile" },
           {
-            url: "/customer/new-settings/profile/public-profile",
+            url: "/service-provider/settings/profile/public-profile",
             text: "Public profile",
           },
         ],
@@ -73,19 +78,11 @@ function Page() {
     defaultValues: {
       firstName: profile?.firstName,
       lastName: profile?.lastName,
-      location: profile?.address?.suburb || "",
     },
   });
 
-  const userProfileData = useUserProfileData();
-
-  useEffect(() => {
-    if (userProfileData?.suburbs) {
-      setValue("location", userProfileData.suburbs);
-    }
-  }, [userProfileData]);
-
   const location = watch("location");
+  const userProfileData = useUserProfileData();
 
   const {
     suburbList,
@@ -93,6 +90,11 @@ function Page() {
     error: suburbError,
     isLoading,
   } = useSuburbData(location, currentSuburb, userProfileData?.suburbs);
+
+  const [showManualAddress, setShowManualAddress] = useState(false);
+  const [manualState, setManualState] = useState("");
+  const [manualSuburb, setManualSuburb] = useState("");
+  const [manualPostCode, setManualPostCode] = useState("");
 
   const authInstance = useAxios();
 
@@ -103,7 +105,7 @@ function Page() {
     try {
       if (data.profileImage) {
         await authInstance.post(
-          "/customer/profile_picture",
+          "/service_provider/profile_picture",
           { image: data.profileImage },
           { headers: { "Content-Type": "multipart/form-data" } },
         );
@@ -112,17 +114,26 @@ function Page() {
       const submitData = {
         firstName: data.firstName,
         lastName: data.lastName,
-        suburb: currentSuburb?.name || "",
-        state: currentSuburb?.state.name || "",
-        postCode: currentSuburb?.postcode
-          ? currentSuburb.postcode.toString().padStart(4, "0")
-          : "",
+        suburb:
+          manualSuburb || currentSuburb?.name || userProfileData?.suburbs || "",
+        state:
+          manualState ||
+          currentSuburb?.state.name ||
+          userProfileData?.state ||
+          "",
+        postCode:
+          manualPostCode ||
+          currentSuburb?.postcode?.toString() ||
+          userProfileData?.postalCode ||
+          "",
       };
 
-      await authInstance.patch("/customer/update", submitData, {
+      await authInstance.patch("/service_provider/update", submitData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
+      setOpenSuccessModal(true);
+      setShowManualAddress(false);
       //Update redux value with latest data
       const profileUrl =
         `${process.env.NEXT_PUBLIC_API_URL}/user/user-profile/` + user?.id;
@@ -210,7 +221,7 @@ function Page() {
             </header>
 
             {/* Bio details  */}
-            {/* <div>
+            <div>
               <label
                 htmlFor="bio-detail"
                 className="mb-2 block text-[15px] font-black"
@@ -229,7 +240,7 @@ function Page() {
                   {errors.bioDescription.message}
                 </p>
               )}
-            </div> */}
+            </div>
 
             {/* First name and last name  */}
             <div className="flex flex-col items-center gap-3 sm:flex-row sm:gap-2">
@@ -275,74 +286,148 @@ function Page() {
               >
                 Location
               </label>
-              <div className="relative">
-                <div className="flex items-center overflow-hidden rounded-xl bg-white px-2 py-1 shadow-md sm:shadow-none">
-                  <IoLocationOutline color="#BFBDC6" />
-                  <input
-                    id="location"
-                    type="text"
-                    className="h-full w-full appearance-none p-2 outline-none "
-                    placeholder="Enter a suburb"
-                    {...register("location", {
-                      onChange: (e) => {
-                        if (currentSuburb) {
-                          setCurrentSuburb(null);
-                          const enteredInput = e.target.value.slice(-1);
-                          e.target.value = enteredInput;
-                          setValue("location", enteredInput);
-                        }
-                        setValue("location", e.target.value);
-                      },
-                    })}
-                  />
+              {!showManualAddress && (
+                <div className="relative">
+                  <div className="flex items-center overflow-hidden rounded-xl bg-white px-2 py-1 shadow-md sm:shadow-none">
+                    <IoLocationOutline color="#BFBDC6" />
+                    <input
+                      id="location"
+                      type="text"
+                      className="h-full w-full appearance-none p-2 outline-none"
+                      placeholder="Enter your address"
+                      {...register("location", {
+                        onChange: (e) => {
+                          if (currentSuburb) {
+                            setCurrentSuburb(null);
+                            const enteredInput = e.target.value.slice(-1);
+                            e.target.value = enteredInput;
+                            setValue("location", enteredInput);
+                          }
+                          setValue("location", e.target.value);
+                        },
+                      })}
+                    />
+                  </div>
+                  {userProfileData.suburbs && (
+                    <small className="mt-2">{`${userProfileData?.suburbs} ${userProfileData?.state}, ${userProfileData.postalCode}`}</small>
+                  )}
+                  <div className="absolute left-0 top-10 z-10 w-full rounded-b-lg bg-white shadow-lg">
+                    {isLoading && (
+                      <p className="py-2 text-center font-satoshiMedium text-[#76757A61]">
+                        Loading...
+                      </p>
+                    )}
+                    {suburbError && !isLoading && (
+                      <p className="py-2 text-center font-satoshiMedium text-red-600">
+                        Error occured while loading suburb data
+                      </p>
+                    )}
+                    {suburbList.length > 0 && (
+                      <ul className="roundeed-lg max-h-52 overflow-y-auto overflow-x-hidden">
+                        {suburbList.map((suburb) => (
+                          <li
+                            className="flex cursor-pointer items-center gap-1 bg-white px-4 py-3 text-[13px]"
+                            key={Math.random() * 12345}
+                            onClick={() => {
+                              setCurrentSuburb(suburb);
+                              setValue("location", suburb.formattedAddress);
+                              setSuburbList([]);
+                            }}
+                          >
+                            <CiLocationOn
+                              stroke="#0F052E"
+                              size={20}
+                              strokeWidth={1}
+                            />
+                            <span className="text-[#0F052E]">
+                              {suburb.formattedAddress}
+                            </span>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                    {location && !currentSuburb && !showManualAddress && (
+                      <div
+                        className="flex max-w-sm cursor-pointer items-center gap-3 p-2 font-satoshiBold font-bold shadow-sm"
+                        onClick={() => {
+                          setShowManualAddress(true);
+                          setSuburbList([]);
+                        }}
+                      >
+                        <FaLocationDot color="#2D1970" size={25} />
+                        <div>
+                          <h6 className="">Can&apos;t find your address?</h6>
+                          <p className="font-satoshiMedium text-sm text-[#4E5158]">
+                            Enter manually{" "}
+                            <span className="text-primary">here</span>
+                          </p>
+                        </div>
+                      </div>
+                    )}
+                  </div>
                 </div>
-                <div className="absolute left-0 z-10 w-full rounded-b-lg bg-white shadow-lg">
-                  {isLoading && (
-                    <p className="py-2 text-center font-satoshiMedium text-[#76757A61]">
-                      Loading...
-                    </p>
-                  )}
-                  {suburbError && !isLoading && (
-                    <p className="py-2 text-center font-satoshiMedium text-red-600">
-                      Error occured while loading suburb data
-                    </p>
-                  )}
-                  {suburbList.length > 1 && (
-                    <ul className="roundeed-lg max-h-52 overflow-y-auto overflow-x-hidden">
-                      {suburbList.map((suburb) => (
-                        <li
-                          className="flex cursor-pointer items-center gap-1 bg-white px-4 py-3 text-[13px]"
-                          key={Math.random() * 12345}
-                          onClick={() => {
-                            setCurrentSuburb(suburb);
-                            setValue(
-                              "location",
-                              `${suburb.name}, ${suburb.state.abbreviation}, Australia`,
-                            );
-                            setSuburbList([]);
-                          }}
-                        >
-                          <CiLocationOn
-                            stroke="#0F052E"
-                            size={20}
-                            strokeWidth={1}
-                          />
-                          <span className="text-[#0F052E]">
-                            {suburb.name},{" "}
-                            {suburb.locality ? `${suburb.locality},` : ""}{" "}
-                            {suburb.state.name}, AUS
-                          </span>
-                        </li>
-                      ))}
-                    </ul>
-                  )}
+              )}
+            </div>
+            {/* Manual address input */}
+            {showManualAddress && (
+              <div className="grid grid-cols-2 gap-2">
+                <div className="col-span-2 mb-3">
+                  <label
+                    htmlFor="state"
+                    className="mb-1 block text-sm text-[#4E5158]"
+                  >
+                    State / Territory
+                  </label>
+                  <div className="rounded-lg bg-white px-3 pl-2">
+                    <input
+                      id="state"
+                      type="text"
+                      className="w-full rounded-xl  p-2 px-2 shadow-md outline-none sm:shadow-none"
+                      value={manualState}
+                      onChange={(e) => setManualState(e.target.value)}
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label
+                    htmlFor="postcode"
+                    className="mb-1 block text-sm text-[#4E5158]"
+                  >
+                    Post Code
+                  </label>
+                  <div className="rounded-lg bg-white px-3 pl-2">
+                    <input
+                      id="postcode"
+                      type="text"
+                      className="w-full rounded-xl  p-2 px-2 shadow-md outline-none sm:shadow-none"
+                      value={manualPostCode}
+                      onChange={(e) => setManualPostCode(e.target.value)}
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label
+                    htmlFor="suburb"
+                    className="mb-1 block text-sm text-[#4E5158]"
+                  >
+                    Suburb
+                  </label>
+                  <div className="rounded-lg bg-white px-3 pl-2">
+                    <input
+                      id="suburb"
+                      type="text"
+                      className="w-full rounded-xl p-2 px-2 shadow-md outline-none sm:shadow-none"
+                      value={manualSuburb}
+                      onChange={(e) => setManualSuburb(e.target.value)}
+                    />
+                  </div>
                 </div>
               </div>
-            </div>
+            )}
           </div>
 
           {error && (
-            <p className="font-semibold text-status-error-100">{error}</p>
+            <p className="mb-3 font-semibold text-status-error-100">{error}</p>
           )}
 
           <Button
@@ -392,6 +477,41 @@ function Page() {
             </div>
           </main>
         </section>
+      </Popup>
+
+      <Popup
+        isOpen={openSuccessModal}
+        onClose={() => setOpenSuccessModal(false)}
+      >
+        <div className="relative mt-10 max-h-[750px] min-w-[320px] max-w-[750px] bg-white p-3 px-4 sm:mt-7 sm:min-w-[560px]">
+          <div className=" flex flex-col items-center justify-center gap-4 pb-4">
+            <div className="flex size-20 items-center justify-center rounded-full bg-[#C1F6C3] bg-opacity-60">
+              <div className=" flex size-14 items-center justify-center rounded-full bg-[#A6F8AA] p-2">
+                <PiSealCheckFill className="size-10 text-green-500" />
+              </div>
+            </div>
+            <p className="text-center font-satoshiBold text-2xl font-extrabold text-violet-normal">
+              Request Sent!
+            </p>
+            <p className="text-center font-semibold text-violet-darker">
+              Your profile has been updated successfully
+            </p>
+            <div className="flex items-center gap-6">
+              <button
+                onClick={() => setOpenSuccessModal(false)}
+                className="rounded-full bg-violet-active px-4 py-2 font-bold text-violet-dark max-sm:text-sm"
+              >
+                Close
+              </button>
+              <button
+                onClick={() => router.push("/marketplace")}
+                className="rounded-full bg-violet-normal px-4 py-2 font-bold text-white max-sm:text-sm"
+              >
+                Proceed to marketplace
+              </button>
+            </div>
+          </div>
+        </div>
       </Popup>
     </>
   );

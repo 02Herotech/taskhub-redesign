@@ -12,7 +12,7 @@ const publicProfileSchema = z.object({
   bioDescription: z.string().optional(),
   firstName: z.string().min(1, "First name is required"),
   lastName: z.string().min(1, "Last name is required"),
-  location: z.string().min(1, "Location is required"),
+  location: z.string(),
 });
 
 export type PublicProfileSchema = z.infer<typeof publicProfileSchema>;

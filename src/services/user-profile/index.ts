@@ -1,5 +1,4 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { Middleware } from "@reduxjs/toolkit";
 import { getSession } from "next-auth/react";
 
 const getRequest = <T>(url: string, params?: T) => {
@@ -45,11 +44,16 @@ export const profile = createApi({
     },
   }),
   endpoints: (builder) => ({
-    getCustomerProfile: builder.query<any, void>({
+    getCustomerProfile: builder.query<DefaultUserDetailsType, void>({
       query: () => getRequest(`/customer/profile`),
+      providesTags: ["Profile"],
+    }),
+    getServiceProviderProfile: builder.query<DefaultUserDetailsType, void>({
+      query: () => getRequest(`/service-provider/profile`),
       providesTags: ["Profile"],
     }),
   }),
 });
 
-export const { useGetCustomerProfileQuery } = profile;
+export const { useGetCustomerProfileQuery, useGetServiceProviderProfileQuery } =
+  profile;
