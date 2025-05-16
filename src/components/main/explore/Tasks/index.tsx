@@ -40,7 +40,7 @@ const Tasks: React.FC = () => {
   const [filteredCategories, setFilteredCategories] = useState(categories);
 
   const [filterDataStructure, setfilterDataStructure] =
-    useState<FilterDataStructureTypes>({
+    useState<FilterDataStructure>({
       category: "",
       location: "",
       typeOfService: "",
