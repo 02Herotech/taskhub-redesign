@@ -37,10 +37,10 @@ export default function ServicesLayout({
       label: "Posted by Me",
       path: "/service-provider/services/posted-by-me",
     },
-    {
-      label: "Booking Requests",
-      path: "/service-provider/services/booking-requests",
-    },
+    // {
+    //   label: "Booking Requests",
+    //   path: "/service-provider/services/booking-requests",
+    // },
     {
       label: "My Offers",
       path: "/service-provider/services/my-offers",
