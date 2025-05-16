@@ -27,7 +27,7 @@ export const customerDashboardLinks: DashboardLinks[] = [
   },
   {
     label: "My Tasks",
-    link: "/customer/tasks",
+    link: "/customer/tasks/all-tasks",
     icon: LuClipboard,
   },
   {
@@ -93,6 +93,11 @@ export const serviceProviderDashboardLinks: DashboardLinks[] = [
     label: "Payment",
     link: "/service-provider/payment",
     icon: IoWalletOutline,
+  },
+  {
+    label: "Settings",
+    link: "/service-provider/settings/profile",
+    icon: IoSettingsOutline,
   },
   // {
   //   label: "Rewards",

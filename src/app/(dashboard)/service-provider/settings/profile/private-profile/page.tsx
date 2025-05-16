@@ -18,10 +18,12 @@ import "primereact/resources/primereact.min.css";
 import useAxios from "@/hooks/useAxios";
 import { RootState } from "@/store";
 import { setBreadCrumbs } from "@/store/Features/breadcrumbs";
-import useUserProfileData from "@/hooks/useUserProfileData";
 import { formatDateAsYYYYMMDD } from "@/utils";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { PiSealCheckFill } from "react-icons/pi";
+import Popup from "@/components/global/Popup/PopupTwo";
+import { useGetCustomerProfileQuery } from "@/services/user-profile";
 
 const idTypes: { label: string; value: string }[] = [
   { label: "Medicare Card", value: "MEDICARE_CARD" },
@@ -30,23 +32,48 @@ const idTypes: { label: string; value: string }[] = [
   { label: "Driver's License", value: "DRIVERS_LICENSE" },
 ];
 
+function VerificationStatus({ status }: { status: string }) {
+  if (status == null) return null;
+  const colors = {
+    VERIFIED: { background: "#EAFFF7", button: "#0CB977", text: "Sucessful" },
+    PENDING: { background: "#F4ECE1", button: "#E58C06", text: "Pending" },
+    NOT_VERIFIED: { background: "#FFF0F0", button: "#B70F0F", text: "Failed" },
+  };
+  return (
+    <div
+      style={{ backgroundColor: colors[status].background }}
+      className="rounded-xl p-2 px-5"
+    >
+      <p className="mb-1 text-sm font-semibold">ID Verification</p>
+      <span
+        style={{ backgroundColor: colors[status].button }}
+        className="mx-auto block rounded-full px-3 py-1 text-center text-xs text-white"
+      >
+        {colors[status].text}
+      </span>
+    </div>
+  );
+}
+
 function Page() {
   const [value, setValue] = useState("");
   const frontImageInputRef = useRef<HTMLInputElement>(null);
   const backImageInputRef = useRef<HTMLInputElement>(null);
   const { profile } = useSelector((state: RootState) => state.userProfile);
   const dispatch = useDispatch();
-  const userProfileData = useUserProfileData();
   const router = useRouter();
+  const [error, setError] = useState("");
+  const [openSuccessModal, setOpenSuccessModal] = useState(false);
+  const { data: userProfileData, refetch } = useGetCustomerProfileQuery();
 
   useEffect(() => {
     dispatch(
       setBreadCrumbs({
         header: "Private Profile",
         links: [
-          { url: "/customer/new-settings/profile", text: "Profile" },
+          { url: "/service-provider/settings/profile", text: "Profile" },
           {
-            url: "/customer/new-settings/profile/private-profile",
+            url: "/service-provider/settings/profile/private-profile",
             text: "Private profile",
           },
         ],
@@ -58,10 +85,8 @@ function Page() {
     resolver: zodResolver(updateProfileSchema),
     defaultValues: {
       email: profile?.emailAddress,
-      //@ts-ignore
-      phoneNumber: userProfileData.phoneNumber,
-      //@ts-ignore
-      idType: userProfileData.idType || "",
+      phoneNumber: profile?.phoneNumber,
+      idType: userProfileData?.idType as unknown as any,
     },
   });
 
@@ -69,26 +94,19 @@ function Page() {
     watch,
     control,
     register,
-    setError,
+    setError: setFormError,
     clearErrors,
     formState: { errors, isSubmitting },
     setValue: setFormValue,
   } = methods;
 
   useEffect(() => {
-    if (profile) {
-      setFormValue("email", profile.emailAddress);
+    if (userProfileData) {
+      setFormValue("dateOfBirth", new Date(userProfileData.dateOfBirth));
+      //@ts-ignore
+      setFormValue("idType", userProfileData.idType);
+      setFormValue("idNumber", userProfileData.idNumber);
     }
-  }, [profile]);
-
-  useEffect(() => {
-    setFormValue("dateOfBirth", new Date(userProfileData?.dateOfBirth));
-    //@ts-ignore
-    setFormValue("phoneNumber", userProfileData?.phoneNumber);
-    //@ts-ignore
-    setFormValue("idType", userProfileData.idType);
-    setFormValue("idNumber", userProfileData.idNumber);
-    console.log(userProfileData);
   }, [userProfileData]);
 
   const selectedIdType = watch("idType");
@@ -106,11 +124,32 @@ function Page() {
   const authInstance = useAxios();
 
   const onSubmit: SubmitHandler<UpdateProfileSchema> = async (data) => {
-    if (userProfileData.idImageFront) clearErrors("idImageFront");
-    if (userProfileData.idImageBack) clearErrors("idImageBack");
+    setError("");
+    if (
+      userProfileData.verificationStatus !== "VERIFIED" &&
+      userProfileData.verificationStatus !== "PENDING"
+    ) {
+      if (!data.idType) {
+        setFormError("idType", { message: "Please select an ID type" });
+        return;
+      }
+      //Do image verifications
+      if (!imageFront) {
+        setFormError("idImageFront", { message: "Image is required" });
+        return;
+      }
+      if (selectedIdType !== "INTERNATIONAL_PASSPORT" && !imageBack) {
+        setFormError("idImageBack", { message: "Image is required" });
+        return;
+      }
+    }
+    if (userProfileData?.idImageFront) clearErrors("idImageFront");
+    if (userProfileData?.idImageBack) clearErrors("idImageBack");
 
     const { idImageFront, idImageBack } = data;
     const submitData = {
+      firstName: profile?.firstName,
+      lastName: profile?.lastName,
       dateOfBirth: formatDateAsYYYYMMDD(data.dateOfBirth as Date),
       phoneNumber: data.phoneNumber,
       idType: data.idType,
@@ -119,11 +158,16 @@ function Page() {
       ...(idImageBack ? { idImageBack } : {}),
     };
 
-    console.log(submitData)
-    await authInstance.patch("/customer/update", submitData, {
-      headers: { "Content-Type": "multipart/form-data" },
-    });
-    router.refresh();
+    try {
+      await authInstance.patch("/service_provider/update", submitData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+      refetch();
+      setOpenSuccessModal(true);
+    } catch (error) {
+      console.error(error);
+      setError("Something went wrong, please try again");
+    }
   };
 
   const today = new Date();
@@ -154,12 +198,7 @@ function Page() {
             </div>
 
             {/* Verification status  */}
-            <div className="rounded-xl bg-[#F4ECE1] p-2 px-5">
-              <p className="mb-1 text-sm font-semibold">ID Verification</p>
-              <span className="mx-auto block rounded-full bg-[#E58C06] px-3 py-1 text-center text-xs text-white">
-                Pending
-              </span>
-            </div>
+            <VerificationStatus status={userProfileData?.verificationStatus} />
           </div>
         </header>
 
@@ -171,35 +210,38 @@ function Page() {
                 name="dateOfBirth"
                 control={methods.control}
                 rules={{ required: "You must enter your age" }}
-                render={({ field }) => (
-                  <div className="w-full sm:w-1/2">
-                    <label
-                      className="mb-1 block text-sm text-[#4E5158]"
-                      htmlFor="date-of-birth"
-                    >
-                      Date of birth
-                    </label>
-                    <div className="overflow-hidden rounded-xl bg-white px-3 shadow-md">
-                      <Calendar
-                        className="h-10 w-full bg-white"
-                        inputClassName=""
-                        inputId="date-of-birth"
-                        value={field.value ?? maxDate}
-                        dateFormat="dd/mm/yy"
-                        placeholder="DD/MM/YYYY"
-                        maxDate={maxDate}
-                        onChange={(e) => {
-                          field.onChange(e.value);
-                        }}
-                      />
+                render={({ field }) => {
+                  return (
+                    <div className="w-full sm:w-1/2">
+                      <label
+                        className="mb-1 block text-sm text-[#4E5158]"
+                        htmlFor="date-of-birth"
+                      >
+                        Date of birth
+                      </label>
+                      <div className="overflow-hidden rounded-xl bg-white px-3 shadow-md">
+                        <Calendar
+                          className="h-10 w-full bg-white"
+                          inputClassName=""
+                          inputId="date-of-birth"
+                          value={field.value ? new Date(field.value) : maxDate}
+                          dateFormat="dd/mm/yy"
+                          placeholder="DD/MM/YYYY"
+                          maxDate={maxDate}
+                          disabled={Boolean(userProfileData?.dateOfBirth)}
+                          onChange={(e) => {
+                            field.onChange(e.value);
+                          }}
+                        />
+                      </div>
+                      {errors.dateOfBirth && (
+                        <p className="w-full text-sm font-medium text-red-500">
+                          {errors.dateOfBirth.message}
+                        </p>
+                      )}
                     </div>
-                    {errors.dateOfBirth && (
-                      <p className="w-full text-sm font-medium text-red-500">
-                        {errors.dateOfBirth.message}
-                      </p>
-                    )}
-                  </div>
-                )}
+                  );
+                }}
               />
 
               {/* Phone number input  */}
@@ -210,34 +252,15 @@ function Page() {
                 >
                   Phone number
                 </label>
-                {/* <Controller
-                  name="phoneNumber"
-                  control={control}
-                  rules={{
-                    required: true,
-                    validate: isValidPhoneNumber,
-                  }}
-                  render={({ field }) => (
-                    <PhoneInput
-                      {...field}
-                      id="phone-number"
-                      defaultCountry="AU"
-                      placeholder="Enter phone number"
-                      international
-                      countryCallingCodeEditable={false}
-                      country="AU"
-                      countrySelectProps={{ disabled: true }}
-                      className="phone-input h-10 appearance-none rounded-xl bg-white p-2 px-3 shadow-md"
-                    />
-                  )}
-                /> */}
+
                 <PhoneInput
                   id="phone-number"
                   name="phoneNumber"
                   defaultCountry="AU"
                   control={control}
                   placeholder="Enter phone number"
-                  value={value}
+                  defaultValue={(profile?.phoneNumber as unknown as any) || ""}
+                  // value={profile?.phoneNumber || ""}
                   international
                   countryCallingCodeEditable={false}
                   country="AU"
@@ -259,13 +282,13 @@ function Page() {
               <label className="block text-sm text-[#4E5158]" htmlFor="email">
                 Email
               </label>
-              <div className="mb-1 text-xs text-[#878C97]">
+              {/* <div className="mb-1 text-xs text-[#878C97]">
                 Click{" "}
                 <Link href="#" className="text-primary">
                   here
                 </Link>{" "}
                 to change
-              </div>
+              </div> */}
               <input
                 id="email"
                 type="email"
@@ -288,11 +311,16 @@ function Page() {
                   </label>
                   <select
                     id="document-type"
-                    className="w-full rounded-xl p-2 px-2 shadow-md outline-none disabled:bg-white sm:shadow-none"
+                    className="w-full rounded-xl border p-2 px-2 shadow-md outline-none disabled:bg-white sm:shadow-none"
                     {...register("idType")}
-                    disabled={Boolean(userProfileData?.idType)}
+                    disabled={
+                      userProfileData?.verificationStatus === "PENDING" ||
+                      userProfileData?.verificationStatus == "VERIFIED"
+                    }
                   >
-                    <option value="">Select ID type</option>
+                    <option value="" disabled>
+                      {userProfileData?.idType || "Select ID type"}
+                    </option>
                     {idTypes.map((idType) => (
                       <option value={idType.value} key={idType.label}>
                         {idType.label}
@@ -325,11 +353,11 @@ function Page() {
                   type="text"
                   className="w-full rounded-xl p-2 px-2 shadow-md outline-none disabled:bg-white sm:shadow-none"
                   placeholder="123456789"
-                  {...register("idNumber", {
-                    // disabled:
-                    //   userProfileData.verificationStatus == "PENDING" ||
-                    //   userProfileData.verificationStatus == "VERIFIED",
-                  })}
+                  disabled={
+                    userProfileData?.verificationStatus === "PENDING" ||
+                    userProfileData?.verificationStatus == "VERIFIED"
+                  }
+                  {...register("idNumber")}
                 />
                 {errors.idNumber && (
                   <p className="w-full text-sm font-medium text-red-500">
@@ -355,22 +383,23 @@ function Page() {
                       className="hidden"
                       accept="image/*"
                       ref={frontImageInputRef}
+                      disabled={
+                        userProfileData?.verificationStatus === "PENDING" ||
+                        userProfileData?.verificationStatus == "VERIFIED"
+                      }
                       onChange={(e) => {
                         clearErrors("idImageFront");
                         setFormValue("idImageFront", e.target.files?.[0], {
                           shouldValidate: true,
                         });
                       }}
-                      // disabled={
-                      //   userProfileData.verificationStatus == "PENDING" ||
-                      //   userProfileData.verificationStatus == "VERIFIED"
-                      // }
                     />
-                    {getImageUrl(imageFront) || userProfileData.idImageFront ? (
+                    {getImageUrl(imageFront) ||
+                    userProfileData?.idImageFront ? (
                       <Image
                         src={
                           getImageUrl(imageFront) ||
-                          userProfileData.idImageFront
+                          userProfileData?.idImageFront
                         }
                         alt="Front of image ID"
                         className="h-full w-full object-cover"
@@ -410,18 +439,19 @@ function Page() {
                         className="hidden"
                         accept="image/*"
                         ref={backImageInputRef}
+                        disabled={
+                          userProfileData?.verificationStatus === "PENDING" ||
+                          userProfileData?.verificationStatus == "VERIFIED"
+                        }
                         onChange={(e) => {
                           clearErrors("idImageBack");
                           setFormValue("idImageBack", e.target.files?.[0], {
                             shouldValidate: true,
                           });
                         }}
-                        // disabled={
-                        //   userProfileData.verificationStatus == "PENDING" ||
-                        //   userProfileData.verificationStatus == "VERIFIED"
-                        // }
                       />
-                      {getImageUrl(imageBack) || userProfileData.idImageBack ? (
+                      {getImageUrl(imageBack) ||
+                      userProfileData?.idImageBack ? (
                         <Image
                           width={400}
                           height={200}
@@ -459,6 +489,10 @@ function Page() {
             </div>
           </div>
 
+          {error && (
+            <p className="mb-3 font-semibold text-status-error-100">{error}</p>
+          )}
+
           <Button
             type="submit"
             loading={isSubmitting}
@@ -469,6 +503,40 @@ function Page() {
           </Button>
         </form>
       </div>
+      <Popup
+        isOpen={openSuccessModal}
+        onClose={() => setOpenSuccessModal(false)}
+      >
+        <div className="relative mt-10 max-h-[750px] min-w-[320px] max-w-[750px] bg-white p-3 px-4 sm:mt-7 sm:min-w-[560px]">
+          <div className=" flex flex-col items-center justify-center gap-4 pb-4">
+            <div className="flex size-20 items-center justify-center rounded-full bg-[#C1F6C3] bg-opacity-60">
+              <div className=" flex size-14 items-center justify-center rounded-full bg-[#A6F8AA] p-2">
+                <PiSealCheckFill className="size-10 text-green-500" />
+              </div>
+            </div>
+            <p className="text-center font-satoshiBold text-2xl font-extrabold text-violet-normal">
+              Request Sent!
+            </p>
+            <p className="text-center font-semibold text-violet-darker">
+              Your profile has been updated successfully
+            </p>
+            <div className="flex items-center gap-6">
+              <button
+                onClick={() => setOpenSuccessModal(false)}
+                className="rounded-full bg-violet-active px-4 py-2 font-bold text-violet-dark max-sm:text-sm"
+              >
+                Close
+              </button>
+              <button
+                onClick={() => router.push("/marketplace")}
+                className="rounded-full bg-violet-normal px-4 py-2 font-bold text-white max-sm:text-sm"
+              >
+                Proceed to marketplace
+              </button>
+            </div>
+          </div>
+        </div>
+      </Popup>
     </>
   );
 }
