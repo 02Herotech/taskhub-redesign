@@ -187,7 +187,6 @@ const OnogoingTaskDetailsPage = ({ params }: { params: { id: string } }) => {
 
   return (
     <div className="">
-
       <ConfirmationModal
         isOpen={showConfirmModal}
         onClose={() => setShowConfirmModal(false)}
@@ -215,9 +214,7 @@ const OnogoingTaskDetailsPage = ({ params }: { params: { id: string } }) => {
         {/* Task title */}
         <h1 className="text-2xl  md:text-3xl font-bold mb-4 capitalize ">{task.jobInfo.jobTitle}</h1>
 
-        {/* Task details and inspect task in a flex container */}
         <div className="flex flex-col sm:flex-row gap-y-4 justify-between items-start mb-6">
-          {/* Task details */}
           <div className="flex flex-wrap gap-4 text-gray-600">
             <div className="flex items-center">
               <CiLocationOn className="w-4 h-4 mr-1" />
@@ -245,9 +242,8 @@ const OnogoingTaskDetailsPage = ({ params }: { params: { id: string } }) => {
 
             {/* Dropdown menu */}
             {isDropdownOpen && (
-              <div className="absolute  right-4  sm:right-0 mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg z-10">
+              <div className="absolute  left-4  sm:-right-4 lg:right-6 mt-2 w-40 bg-white border border-gray-200 rounded-md shadow-lg z-10">
                 <div className="p-2">
-                  <div className="bg-indigo-100 text-primary border border-[#381F8C] px-4 py-1 rounded-full text-sm uppercase">Inspect task</div>
                   <div className="space-y-2">
                     {inspectionTimes.map((time) => (
                       <label key={time} className="flex items-center">
