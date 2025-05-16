@@ -106,7 +106,7 @@ const DashboardPasswordChange = () => {
   };
 
   return (
-    <div className="relative p-4 lg:px-20">
+    <div className="relative p-4 lg:px-20 mt-20">
       {success && (
         <section className="fixed inset-0 z-50 flex h-screen w-screen items-center justify-center bg-black bg-opacity-70">
           <div

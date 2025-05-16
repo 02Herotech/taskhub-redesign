@@ -140,7 +140,7 @@ const NotificationsSettings = () => {
           <Loading />
         </div>
       ) : (
-        <div className="p-4 lg:px-10">
+        <div className="p-4 lg:px-10 mt-20">
           <div className="flex items-center justify-between rounded-2xl bg-[#EBE9F4] px-6 py-3 lg:px-8 lg:py-4">
             <div className="space-y-3">
               <h3 className="font-satoshiBold text-xl font-bold text-[#140B31] lg:text-2xl">
