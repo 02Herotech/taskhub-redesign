@@ -158,47 +158,6 @@ export const mobileServiceProviderLinks: LinkRouteTypes[] = [
     url: "/service-provider/payment",
     icon: IoWalletOutline,
   },
-
-  // {
-  //   label: "My Dashboard",
-  //   icon: LuLayoutDashboard,
-  //   sublinks: [
-  //     {
-  //       label: "Profile",
-  //       url: "/service-provider/profile",
-  //     },
-  //     {
-  //       label: "My Services",
-  //       url: "/service-provider/services",
-  //     },
-  //     {
-  //       label: "View Jobs",
-  //       url: "/service-provider/jobs",
-  //     },
-  //     {
-  //       label: "My Notifications",
-  //       url: "/service-provider/notification",
-  //     },
-  //     {
-  //       label: "Payment and wallet",
-  //       url: "/service-provider/payment",
-  //     },
-  //     {
-  //       label: "Settings",
-  //       url: "/service-provider/settings",
-  //       sublinks: [
-  //         {
-  //           label: "Change Password",
-  //           url: "/service-provider/settings/password",
-  //         },
-  //         {
-  //           label: "Notification settings",
-  //           url: "/service-provider/settings/notification",
-  //         },
-  //       ],
-  //     },
-  //   ],
-  // },
   {
     label: "Explore Tasks",
     url: "/explore",
