@@ -51,7 +51,7 @@ function ReplyForm({ taskId, offerId, refetch }: Props) {
           userId: user.customerId,
           fullName: `${user.firstName} ${user.lastName}`,
           message: data.message,
-          offerAmount: data.offerAmount,
+          offerAmount: data.offerAmount || "",
         },
       ],
     };
@@ -112,8 +112,7 @@ function ReplyForm({ taskId, offerId, refetch }: Props) {
                 </label>
                 <input
                   id="price"
-                  type="number"
-                  required
+                    type="number"
                   min={1}
                   placeholder="0"
                   autoComplete="off"
