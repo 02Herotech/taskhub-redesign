@@ -22,7 +22,7 @@ function useUserProfileData(
     const fetchUserData = async () => {
       if (!token) return;
       try {
-        const url = `${isServiceProvider ? "service_provider" : "customer"}/profile`;
+        const url = `${isServiceProvider ? "service-provider" : "customer"}/profile`;
         const { data } = await authInstance.get(url);
         setFetchedUserData(data);
         const user = session.data?.user;

@@ -143,7 +143,7 @@ function StepTwo() {
     const finalTask = {
       taskBriefDescription,
       taskDescription,
-      taskImage: taskImage ? base64ToFile(taskImage, "task-image") : null,
+      image1: taskImage ? base64ToFile(taskImage, "task-image") : null,
       taskDate: taskDate ? formatDate(new Date(taskDate)) : "",
       taskTime: taskTime ? formatTimeFromDate(new Date(taskTime)) : "",
       taskType,
@@ -243,7 +243,7 @@ function StepTwo() {
                       id="suburb"
                       type="text"
                       className="-ml-2 block w-full appearance-none bg-transparent p-3 placeholder-[#76757A61] outline-none placeholder:font-satoshiMedium"
-                      placeholder="Enter your address"
+                      placeholder="Enter a suburb"
                       autoComplete="off"
                       {...register("suburb", {
                         onChange: (e) => {

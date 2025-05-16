@@ -121,17 +121,17 @@ const TaskDetailsPage = ({ params }: { params: { id: string } }) => {
     };
   }, []);
 
-  useEffect(() => {
-    if (task && !isLoading) {
-      // Create the correct slug format: id-task-description
-      const correctSlug = `${id}-${createSlug(task.taskBriefDescription)}`;
+  // useEffect(() => {
+  //   if (task && !isLoading) {
+  //     // Create the correct slug format: id-task-description
+  //     const correctSlug = `${id}-${createSlug(task?.taskInfo?.taskBriefDescription)}`;
 
-      // If current URL doesn't match the correct slug, redirect
-      if (params.id !== correctSlug) {
-        router.replace(`/task-details/${correctSlug}`);
-      }
-    }
-  }, [task, isLoading, id, params.id, router]);
+  //     // If current URL doesn't match the correct slug, redirect
+  //     if (params.id !== correctSlug) {
+  //       router.replace(`/task-details/${correctSlug}`);
+  //     }
+  //   }
+  // }, [task, isLoading, id, params.id, router]);
 
   // Show loading state only during initial load
   if (isUninitialized || isLoading) {
@@ -164,8 +164,12 @@ const TaskDetailsPage = ({ params }: { params: { id: string } }) => {
     );
   }
 
-  const date = task?.taskDate
-    ? new Date(task.taskDate[0], task.taskDate[1] - 1, task.taskDate[2])
+  const date = task?.taskInfo?.taskDate
+    ? new Date(
+        task?.taskInfo.taskDate[0],
+        task?.taskInfo.taskDate[1] - 1,
+        task?.taskInfo.taskDate[2],
+      )
     : new Date();
   const day = date.getDate();
   const month = date.getMonth();
@@ -180,7 +184,6 @@ const TaskDetailsPage = ({ params }: { params: { id: string } }) => {
     daySuffix = suffixes[day % 10] || suffixes[0]; // Default to "th" if suffix is undefined
   }
   const formattedDate = `${dayOfWeekName}, ${monthName} ${day}${daySuffix}`;
-
   return (
     <section className="container py-20 font-satoshi">
       {isLoading ? (
@@ -197,24 +200,24 @@ const TaskDetailsPage = ({ params }: { params: { id: string } }) => {
           <div className="grid w-full grid-cols-1 gap-10 sm:mt-10 md:grid-cols-2 lg:space-x-5">
             <div className="space-y-7 font-satoshi lg:space-y-10">
               <h2 className="font-satoshiBold text-2xl font-black text-primary lg:text-4xl">
-                {task?.taskBriefDescription}
+                {task?.taskInfo?.taskBriefDescription}
               </h2>
               <div className="space-y-3">
                 <h2 className="font-satoshiBold text-lg font-bold text-primary underline lg:text-2xl">
                   Task Description
                 </h2>
                 <p className="font-satoshiMedium text-base font-medium text-[#221354] lg:text-xl">
-                  {task?.taskDescription}
+                  {task?.taskInfo?.taskDescription}
                 </p>
               </div>
 
               {/* Share Service */}
               <div className="w-full items-center justify-between rounded-xl bg-[#F8F7FA] px-5 py-3 lg:flex">
                 <ShareTask
-                  title={task.taskBriefDescription}
-                  description={task.taskDescription}
-                  image={task.taskImage}
-                  pathname={`/guest/${id}-${createSlug(task.taskBriefDescription)}`}
+                  title={task?.taskInfo.taskBriefDescription}
+                  description={task?.taskInfo.taskDescription}
+                  image={task?.taskInfo.displayPictures?.[0]}
+                  pathname={`/guest/${id}-${createSlug(task?.taskInfo.taskBriefDescription)}`}
                 />
                 <div className="relative max-sm:my-4" ref={dropdownRef}>
                   {/* <Button
@@ -294,8 +297,8 @@ const TaskDetailsPage = ({ params }: { params: { id: string } }) => {
                 <div className="flex w-full items-center space-x-2 text-[#716F78]">
                   <HiOutlineLocationMarker className="h-6 w-6 font-bold" />
                   <h5 className="font-satoshiMedium text-[15px] font-medium lg:text-xl">
-                    {task.state
-                      ? `${task.postCode}, ${task.suburb}, ${task.state}`
+                    {task?.taskInfo.state
+                      ? `${task?.taskInfo.postCode}, ${task?.taskInfo.suburb}, ${task?.taskInfo.state}`
                       : "Remote"}
                   </h5>
                 </div>
@@ -314,7 +317,7 @@ const TaskDetailsPage = ({ params }: { params: { id: string } }) => {
                 <div className="flex items-center space-x-3 text-[#716F78] max-lg:text-xs">
                   <FiClock className="h-6 w-6" />
                   <h5 className="font-satoshiMedium text-[15px] font-medium lg:text-xl">
-                    {formatTime24Hour(task.taskTime) || "Flexible"}
+                    {formatTime24Hour(task?.taskInfo.taskTime) || "Flexible"}
                   </h5>
                 </div>
               </div>
@@ -328,7 +331,12 @@ const TaskDetailsPage = ({ params }: { params: { id: string } }) => {
                 <div className="mb-6 mt-4 border-2 border-primary" />
                 <div className="flex w-full items-center justify-between">
                   <h2 className="font-satoshi text-lg font-bold text-primary lg:text-3xl">
-                    AUD {formatAmount(task?.customerBudget!, "USD", false)}
+                    AUD{" "}
+                    {formatAmount(
+                      task?.taskInfo?.customerBudget!,
+                      "USD",
+                      false,
+                    )}
                   </h2>
                   <div className="relative" ref={offerButtonRef}>
                     <Button
@@ -341,10 +349,7 @@ const TaskDetailsPage = ({ params }: { params: { id: string } }) => {
                       aria-expanded={showOfferForm}
                       aria-haspopup="true"
                       className="rounded-full"
-                      disabled={
-                        task?.taskStatus === "ASSIGNED" ||
-                        !fetchedUserData.firstName
-                      }
+                      disabled={task?.taskInfo?.taskStatus === "ASSIGNED"}
                     >
                       Make an offer
                     </Button>
@@ -356,7 +361,7 @@ const TaskDetailsPage = ({ params }: { params: { id: string } }) => {
                       isVerified={fetchedUserData.isVerified}
                       user={user}
                       refetchOffers={refetch}
-                      taskPosterId={task?.posterId}
+                      taskPosterId={task?.taskInfo.posterId}
                     />
                   </div>
                 </div>
@@ -364,9 +369,9 @@ const TaskDetailsPage = ({ params }: { params: { id: string } }) => {
               <h2 className="font-satoshiBold text-xl font-bold text-primary lg:text-3xl">
                 Reference Image
               </h2>
-              {task.taskImage ? (
+              {task?.taskInfo.displayPictures.length > 0 ? (
                 <Image
-                  src={task.taskImage}
+                  src={task?.taskInfo.displayPictures[0]}
                   width={200}
                   height={100}
                   alt="Explore task"
@@ -383,7 +388,7 @@ const TaskDetailsPage = ({ params }: { params: { id: string } }) => {
       {offers && offers.length > 0 && (
         <TaskOffers
           // offers={offers}
-          posterId={task?.posterId}
+          posterId={task?.taskInfo.posterId}
           currentUserId={user?.serviceProviderId!}
           taskId={Number(id)}
         />

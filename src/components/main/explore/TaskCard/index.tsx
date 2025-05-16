@@ -59,7 +59,7 @@ const TaskCard = ({ task }: TaskCardProps) => {
           {task.taskBriefDescription}
         </h2>
         <Image
-          src={task?.taskImage ?? "/assets/images/placeholder.png"}
+          src={task?.displayPictures[0] ?? "/assets/images/placeholder.png"}
           alt="Logo"
           width={100}
           height={100}
