@@ -1,17 +1,13 @@
 "use client";
 import React from "react";
-import { useSession } from "next-auth/react";
+import { useGetWalletBalanceQuery } from "@/services/wallet";
 
-//!Todo Add wallet balance to it when wallet balance is available
-//!Todo Update wallet balance in session after wallet is funded or debited
+//Todo Move component to home page
 function WalletBalance() {
-  const session = useSession();
-  const userSignUpBonus = (
-    session?.data?.user?.signUpBonusWallet?.balance ?? 0
-  ).toFixed(2);
+  const { data: result } = useGetWalletBalanceQuery();
   return (
     <p className="text-5xl font-semibold">
-      ${userSignUpBonus ? userSignUpBonus : "--"}
+      ${result ? result.data.balance : "--"}
     </p>
   );
 }
