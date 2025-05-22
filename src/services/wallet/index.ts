@@ -27,13 +27,52 @@ const getRequest = <T>(url: string, params?: T) => {
   };
 };
 
-type Wallet = {
+type WalletResponse = {
   data: {
     balance: string;
     customerId: number;
+    signUpBonus: string;
+    rewardPoints: string;
   };
   message: string;
   successful: boolean;
+};
+
+type Funding = {
+  customerId: number;
+  transactionId: string;
+  externalPaymentId: string;
+  paymentProvider: "STRIPE";
+  createdAt: number[];
+  updatedAt: number[];
+  amount: number;
+  description: string;
+  status: "SUCCESSFUL";
+  transactionType: "FUNDING";
+};
+
+type FundingResponse = {
+  data: {
+    transactions: Funding[];
+    totalOutgoingAmount: number;
+    totalPages: number;
+    totalElements: number;
+    hasPrevious: boolean;
+    hasNext: boolean;
+    hasContent: boolean;
+    numberOfElement: number;
+    size: number;
+    pageIndex: number;
+    last: boolean;
+    first: boolean;
+  };
+  message: string;
+  successful: boolean;
+};
+
+type Params = {
+  size: number;
+  pageIndex: number;
 };
 
 export const wallet = createApi({
@@ -53,12 +92,12 @@ export const wallet = createApi({
     },
   }),
   endpoints: (builder) => ({
-    getWalletBalance: builder.query<Wallet, void>({
+    getWalletBalance: builder.query<WalletResponse, void>({
       query: () => getRequest(`balance`),
       providesTags: ["Wallet"],
     }),
-    getFundHistory: builder.query<DefaultUserDetailsType, void>({
-      query: () => getRequest(`fund-history`),
+    getFundHistory: builder.query<FundingResponse, Params>({
+      query: (params) => getRequest(`fund-history`, params),
       providesTags: ["Wallet", "History"],
     }),
     getPaymentHistory: builder.query<DefaultUserDetailsType, void>({
@@ -68,4 +107,4 @@ export const wallet = createApi({
   }),
 });
 
-export const { useGetWalletBalanceQuery } = wallet;
+export const { useGetWalletBalanceQuery, useGetFundHistoryQuery } = wallet;

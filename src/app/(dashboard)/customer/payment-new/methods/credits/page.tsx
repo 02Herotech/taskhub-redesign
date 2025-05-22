@@ -15,8 +15,8 @@ function Page() {
         header: "Task points",
         links: [
           {
-            url: "/customer/payment-new/update/make",
-            text: "Make payments",
+            url: "/customer/payment-new/methods",
+            text: "Payment methods",
           },
           { url: "#", text: "Task credits" },
         ],
@@ -25,7 +25,7 @@ function Page() {
   }, []);
   const { data: result } = useGetWalletBalanceQuery();
   return (
-    <section className="flex min-h-[55vh] items-center justify-center">
+    <section className="mt-4 flex min-h-[55vh] w-full items-center justify-center pb-10">
       <div className="w-full space-y-4 p-2 sm:w-10/12 sm:p-4">
         <h3 className="mb-5 text-center text-2xl font-bold text-[#0F052E]">
           Task Credit

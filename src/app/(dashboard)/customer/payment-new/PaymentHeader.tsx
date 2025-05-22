@@ -14,8 +14,8 @@ const headerLinks: { url: string; text: string }[] = [
     text: "Payment history",
   },
   {
-    url: "/customer/payment-new/update",
-    text: "Update payment methods",
+    url: "/customer/payment-new/methods",
+    text: "Payment methods",
   },
 ];
 
@@ -66,11 +66,11 @@ function PaymentHeader() {
 
       {/* Navigation  */}
       <nav className="mt-7 overflow-x-auto border-b border-[#0000001F] md:mt-0">
-        <ul className="flex min-w-[450px] items-center gap-3">
+        <ul className="flex min-w-[350px] items-center gap-3">
           {headerLinks.map((link) => (
             <li
               className={
-                "border-[#FE9B07] px-2 " +
+                "border-[#FE9B07] pb-1 px-2 " +
                 (pathname == link.url ? "border-b text-[#FE9B07]" : "")
               }
               key={Math.random() * 4562278}

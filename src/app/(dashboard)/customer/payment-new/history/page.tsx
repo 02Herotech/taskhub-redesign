@@ -6,6 +6,7 @@ import { LuDownload } from "react-icons/lu";
 import { useDispatch } from "react-redux";
 import { setBreadCrumbs } from "@/store/Features/breadcrumbs";
 import { useEffect } from "react";
+import Fundings from "./Fundings";
 
 type Tab = "Earnings" | "Outgoings";
 
@@ -34,7 +35,7 @@ function Page() {
             }
             onClick={() => setCurrentTab("Earnings")}
           >
-            Fundings
+            Credits
           </button>
           <button
             className={
@@ -45,11 +46,10 @@ function Page() {
             }
             onClick={() => setCurrentTab("Outgoings")}
           >
-            Outgoings
+            Debits
           </button>
         </div>
-        <div className="mb-5 flex flex-col items-start justify-between gap-2 sm:flex-row sm:items-center">
-          {/* Calendar icon/all button  */}
+        {/* <div className="mb-5 flex flex-col items-start justify-between gap-2 sm:flex-row sm:items-center">
           <button className="flex items-center gap-5">
             <IoCalendar color="#381F8C" />
             <p className="flex items-center gap-1 text-lg font-bold">
@@ -60,19 +60,12 @@ function Page() {
           <p className="text-sm text-[#8C8A93]">
             20 Transactions from March 10th - April 13th
           </p>
-        </div>
+        </div> */}
       </header>
-      <div className="mb-7 flex items-center justify-between rounded-xl bg-[#EBE9F4] p-3">
-        <div>
-          <h4 className="mb-2 text-sm sm:text-base">Net Outgoing</h4>
-          <p className="text-2xl text-primary sm:text-4xl">$4,000.20</p>
-        </div>
-        <div className="flex flex-col items-center text-[#938F8F]">
-          <LuDownload size={25} />
-          <p className="text-xs text-[#938F8F]">Download History</p>
-        </div>
-      </div>
-      <ul>
+
+      {currentTab === "Earnings" && <Fundings />}
+
+      {/* <ul>
         <li>
           <div className="flex justify-between rounded-lg px-3 py-2 shadow-lg">
             <div>
@@ -101,7 +94,7 @@ function Page() {
             </div>
           </div>
         </li>
-      </ul>
+      </ul> */}
     </section>
   );
 }

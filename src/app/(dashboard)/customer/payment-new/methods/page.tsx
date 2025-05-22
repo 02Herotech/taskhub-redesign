@@ -19,21 +19,21 @@ function Page() {
   return (
     <div className="max-h-[300px] flex-grow space-y-2 rounded-xl bg-[#EBE9F4] p-3">
       <Link
-        href="/customer/payment-new/update/make/fund"
+        href="/customer/payment-new/methods/fund"
         className="flex items-center justify-between rounded-lg bg-white px-3 py-2 font-medium"
       >
         <span className="text-lg md:text-xl">Fund wallet</span>
         <FaChevronRight size={16} color="#381F8C" />
       </Link>
       <Link
-        href="/customer/payment-new/update/make/points"
+        href="/customer/payment-new/methods/points"
         className="flex items-center justify-between rounded-lg bg-white px-3 py-2 font-medium"
       >
         <span className="text-lg md:text-xl">Task points</span>
         <FaChevronRight size={16} color="#381F8C" />
       </Link>
       <Link
-        href="/customer/payment-new/update/make/credits"
+        href="/customer/payment-new/methods/credits"
         className="flex items-center justify-between rounded-lg bg-white px-3 py-2 font-medium"
       >
         <span className="text-lg md:text-xl">Task credits</span>

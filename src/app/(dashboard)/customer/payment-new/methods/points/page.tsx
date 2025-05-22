@@ -27,8 +27,8 @@ function Page() {
         header: "Task points",
         links: [
           {
-            url: "/customer/payment-new/update/make",
-            text: "Make payments",
+            url: "/customer/payment-new/methods",
+            text: "Payment methods",
           },
           { url: "#", text: "Task points" },
         ],
@@ -53,8 +53,8 @@ function Page() {
     ],
   };
   return (
-    <section className="flex min-h-[55vh] items-center justify-center">
-      <div className="w-full space-y-4 p-2 sm:w-10/12 sm:p-4">
+    <section className="mt-4 flex min-h-[55vh] w-full items-center justify-center pb-10">
+      <div className="mx-auto w-full space-y-4 p-2 sm:w-10/12 sm:p-4">
         <h4 className="text-center text-lg font-bold text-[#221354]">
           Task points
         </h4>

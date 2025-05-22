@@ -43,7 +43,7 @@ function Page() {
       setBreadCrumbs({
         header: "Fund wallet",
         links: [
-          { url: "/customer/payment-new/update/make", text: "Make payments" },
+          { url: "/customer/payment-new/methods", text: "Payment methods" },
           { url: "#", text: "Fund wallet" },
         ],
       }),
@@ -54,6 +54,7 @@ function Page() {
   const [amount, setAmount] = useState("");
   const {
     reset,
+    watch,
     register,
     setError,
     handleSubmit,
@@ -72,8 +73,9 @@ function Page() {
       setError("root", { message: "Error occured while initializing payment" });
     }
   };
+  // className="mt-4 w-full pb-10"
   return (
-    <section className="flex min-h-[55vh] items-center justify-center">
+    <section className="mt-4 flex min-h-[55vh] w-full items-center justify-center pb-10">
       <div className="rounded-xl bg-[#EBE9F4] p-3 sm:w-10/12 sm:p-4">
         <h3 className="mb-2 text-xl font-bold sm:text-2xl">Fund wallet</h3>
         <p className="mb-4 text-[#546276]">

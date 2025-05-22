@@ -12,20 +12,6 @@ import Link from "next/link";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-const isComplete = false;
-
-const data = {
-  datasets: [
-    {
-      data: [3, 100],
-      backgroundColor: isComplete
-        ? ["#FE9B07", "#FE9B07"]
-        : ["#FE9B07", "#FDF4EA"],
-      borderWidth: 0,
-    },
-  ],
-};
-
 export const options = {
   cutout: "30%",
   plugins: {
@@ -48,11 +34,26 @@ function Page() {
   }, []);
 
   const { data: result } = useGetWalletBalanceQuery();
+
+  const rewardPoints = result ? parseInt(result.data.rewardPoints) : 0;
+
+  const data = {
+    datasets: [
+      {
+        data: [rewardPoints, 200],
+        backgroundColor:
+          rewardPoints === 200
+            ? ["#FE9B07", "#FE9B07"]
+            : ["#FE9B07", "#FDF4EA"],
+        borderWidth: 0,
+      },
+    ],
+  };
   return (
     <section className="w-full pb-10">
-      <div className="mb-14 flex flex-col gap-2 md:flex-row">
+      <div className="mb-14 flex flex-col gap-3 md:gap-2 md:flex-row">
         {/* Balance  */}
-        <div className="w-full rounded-2xl bg-white p-3 text-white shadow-xl md:w-1/2">
+        <div className="w-full rounded-2xl bg-white p-3 text-white shadow-md md:w-1/2">
           <div className="relative mb-4 overflow-hidden rounded-2xl bg-primary p-2">
             <h3 className="mb-10 font-satoshiBold font-bold">Total Balance</h3>
             <p className="mr-4 text-right font-clash text-lg">AUD$</p>
@@ -77,22 +78,22 @@ function Page() {
           </div>
           <div className="flex justify-between">
             <Link
-              href="/customer/payment-new/update/make/fund"
-              className="w-full rounded-full bg-[#FE9B07] px-8 py-2 sm:w-max"
+              href="/customer/payment-new/methods/fund"
+              className="w-full rounded-full bg-[#FE9B07] px-8 py-2 text-center font-semibold sm:w-max"
             >
               Fund wallet
             </Link>
-            <Link
+            {/* <Link
               href="/customer/payment-new/update/receive/withdraw"
               className="hidden rounded-full border border-[#F6921E] bg-[#FCF4E6] px-8 py-2 text-[#F6921E] sm:block"
             >
               Withdraw
-            </Link>
+            </Link> */}
           </div>
         </div>
 
         {/* Credit points  */}
-        <div className="w-full rounded-2xl bg-white p-3 shadow-xl md:w-1/2">
+        <div className="w-full rounded-2xl bg-white p-3 shadow-md md:w-1/2">
           <div className="relative mb-4 overflow-hidden rounded-2xl bg-[#F6F3FF] p-2">
             <h3 className="mb-5 font-satoshiBold font-bold text-[#221354]">
               Task credits
@@ -101,7 +102,9 @@ function Page() {
               <FaStar size={100} fill="#C1BADB" />
               {/* <FaStar size={100} fill='#2D1970' /> */}
               <div className="text-center">
-                <p className="mb-3 text-5xl font-bold">$10</p>
+                <p className="mb-3 text-5xl font-bold">
+                  ${result ? parseInt(result.data.signUpBonus) : 0}
+                </p>
                 <p className="text-sm font-medium text-[#000000B0]">
                   Valid until <span className="text-[#2A1962]">April 10th</span>
                 </p>
@@ -119,11 +122,10 @@ function Page() {
         <h4 className="font-bold text-[#221354]">Task points</h4>
         <div className="relative mx-auto mb-5 mt-6 flex max-w-[170px] items-center justify-center">
           <Doughnut data={data} options={options} />
-          {/* Animate this with motion.div after reducing cutout */}
           <div className="absolute flex size-[110px] items-center justify-center rounded-full bg-white">
             <p className="text-center text-lg font-semibold">
               <span className="mb-2 block text-3xl font-bold text-[#140B31]">
-                10
+                {rewardPoints}
               </span>
               <span className="text-sm font-semibold text-[#140B3191]">
                 of 200 pts
