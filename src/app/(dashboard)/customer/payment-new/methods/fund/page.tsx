@@ -19,7 +19,7 @@ const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY);
 const schema = z.object({
   amount: z.coerce
     .number({ message: "Invalid input, please enter a number" })
-    .min(1),
+    .min(5, "Minimum of $5"),
 });
 
 type Schema = z.infer<typeof schema>;
@@ -59,7 +59,9 @@ function Page() {
     setError,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm<Schema>({ resolver: zodResolver(schema) });
+  } = useForm<Schema>({ resolver: zodResolver(schema), mode: "onChange" });
+
+  const price = watch("amount");
 
   const onSubmit: SubmitHandler<Schema> = async (payload) => {
     try {
@@ -73,7 +75,6 @@ function Page() {
       setError("root", { message: "Error occured while initializing payment" });
     }
   };
-  // className="mt-4 w-full pb-10"
   return (
     <section className="mt-4 flex min-h-[55vh] w-full items-center justify-center pb-10">
       <div className="rounded-xl bg-[#EBE9F4] p-3 sm:w-10/12 sm:p-4">
@@ -84,20 +85,25 @@ function Page() {
         </p>
         <form onSubmit={handleSubmit(onSubmit)}>
           <label htmlFor="amount" className="block text-sm text-[#4E5158]">
-            Amount
+            Amount{" "}
           </label>
           <input
-            type="text"
+            type="tel"
             id="amount"
             className="block w-full rounded-lg p-2 outline-none"
             placeholder="$ 500"
             {...register("amount")}
           />
-          {errors.amount && (
-            <p className="w-full text-sm font-medium text-red-500">
-              {errors.amount.message}
-            </p>
-          )}
+          <div className="mt-1 flex items-center justify-between">
+            {errors.amount && (
+              <p className="w-full text-sm font-medium text-red-500">
+                {errors.amount.message}
+              </p>
+            )}
+            <div className="ml-auto min-w-20 border text-xs">
+              {price && <>Charge: ${(price * 0.017 + 0.3).toFixed(2)}</>}
+            </div>
+          </div>
           <Button
             type="submit"
             disabled={isSubmitting}

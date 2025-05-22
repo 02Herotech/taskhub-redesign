@@ -28,15 +28,6 @@ function Fundings() {
     pageIndex: page,
   });
   const session = useSession();
-
-  const totalCredits = result
-    ? result.data.transactions
-        .reduce((acc, curr) => {
-          const amount = curr.amount - curr.amount * 0.017 - 0.3;
-          return acc + amount;
-        }, 0)
-        .toFixed(2)
-    : 0;
   return (
     <div>
       {isLoading && <Loading />}
