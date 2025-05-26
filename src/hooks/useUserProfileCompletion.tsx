@@ -75,7 +75,6 @@ export function useCustomerProfileCompletion(verificationState?: string) {
 export function useServiceProviderProfileCompletion() {
   const { profile } = useSelector((state: RootState) => state.userProfile);
   const { data: userProfileData } = useGetServiceProviderProfileQuery();
-  console.log({ userProfileData });
 
   const profileData: { field: string; available: boolean }[] = [
     {
