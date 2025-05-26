@@ -1,7 +1,7 @@
 import axios, { AxiosError } from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { getSession } from "next-auth/react";
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 import { setAuthStatus } from "@/store/Features/authStatus";
 import { RootState } from "@/store";
 
@@ -19,7 +19,6 @@ function useAxios() {
     const requestInterceptor = authInstance.interceptors.request.use(
       async (request) => {
         const session = await getSession();
-        console.log(session, "session")
         if (!session) {
           dispatch(setAuthStatus(true));
           throw new Error("No session available");

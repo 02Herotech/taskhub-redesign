@@ -22,6 +22,7 @@ import apiErrorMiddleware from "./apiMiddleware";
 import { profile } from "@/services/user-profile";
 import { user } from "@/services/user";
 import { chat } from "@/services/chat";
+import { wallet } from "@/services/wallet";
 import { dispute } from "@/services/dispute";
 
 const persistConfig = {
@@ -42,6 +43,7 @@ export const store = configureStore({
     [listing.reducerPath]: listing.reducer,
     [stripe.reducerPath]: stripe.reducer,
     [profile.reducerPath]: profile.reducer,
+    [wallet.reducerPath]: wallet.reducer,
     [dispute.reducerPath]: dispute.reducer,
     market: marketReducer,
     userProfile: userProfileReducer,
@@ -66,6 +68,7 @@ export const store = configureStore({
       stripe.middleware,
       listing.middleware,
       profile.middleware,
+      wallet.middleware,
       dispute.middleware,
       apiErrorMiddleware,
     ),
