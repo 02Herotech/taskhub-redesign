@@ -26,6 +26,7 @@ import useUserProfileData from "@/hooks/useUserProfileData";
 import { PiSealCheckFill } from "react-icons/pi";
 import { useRouter } from "next/navigation";
 import { FaLocationDot } from "react-icons/fa6";
+import { useGetServiceProviderProfileQuery } from "@/services/user-profile";
 
 function Page() {
   const { profile } = useSelector((state: RootState) => state.userProfile);
@@ -40,6 +41,7 @@ function Page() {
   const [openSuccessModal, setOpenSuccessModal] = useState(false);
   const [error, setError] = useState("");
   const router = useRouter();
+  const { data: userProfile } = useGetServiceProviderProfileQuery();
 
   useEffect(() => {
     dispatch(
@@ -65,6 +67,13 @@ function Page() {
     setValue("firstName", profile?.firstName);
     setValue("lastName", profile?.lastName);
   }, [profile]);
+
+  useEffect(() => {
+    if (userProfile) {
+      console.log({ userProfile });
+      setValue("bioDescription", userProfile.bio);
+    }
+  }, [userProfile]);
 
   const {
     watch,
@@ -105,7 +114,7 @@ function Page() {
     try {
       if (data.profileImage) {
         await authInstance.post(
-          "/service_provider/profile_picture",
+          "/service-provider/profile_picture",
           { image: data.profileImage },
           { headers: { "Content-Type": "multipart/form-data" } },
         );
@@ -114,6 +123,7 @@ function Page() {
       const submitData = {
         firstName: data.firstName,
         lastName: data.lastName,
+        bio: data.bioDescription,
         suburb:
           manualSuburb || currentSuburb?.name || userProfileData?.suburbs || "",
         state:
@@ -128,10 +138,11 @@ function Page() {
           "",
       };
 
-      await authInstance.patch("/service_provider/update", submitData, {
+      console.log(submitData)
+      await authInstance.patch("/service-provider/update", submitData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
-
+      
       setOpenSuccessModal(true);
       setShowManualAddress(false);
       //Update redux value with latest data

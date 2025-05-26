@@ -126,6 +126,15 @@ const EditProfile = () => {
   const suburbValue = watch("suburb"); // Watch the suburb field
   const [showManualAddress, setShowManualAddress] = useState(false);
 
+  useEffect(() => {
+    if (currentSuburb && Object.keys(currentSuburb).length > 0) {
+      const { postcode } = currentSuburb;
+      setValue("state", currentSuburb.state.name);
+      setValue("suburb", currentSuburb.name);
+      setValue("postcode", postcode ? String(postcode) : " ");
+    }
+  }, [currentSuburb]);
+
   // Sync input value with react-hook-form's field value
   useEffect(() => {
     if (suburbValue) {
@@ -150,7 +159,9 @@ const EditProfile = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const url = `${isServiceProvider ? "service_provider" : "customer"}/profile`;
+        const url = `${
+          isServiceProvider ? "service-provider" : "customer"
+        }/profile`;
         const { data } = await authInstance.get(url);
         setUserDetails(data);
         setIsDocumentEditable(
@@ -187,7 +198,7 @@ const EditProfile = () => {
           abn: isServiceProvider ? data.abn || "" : "",
         });
         //@ts-ignore
-        //Stops API from making the request when suburb input is prefilled
+        //Stops api request to address api from sending when suburb input is prefilled
         setCurrentSuburb({});
       } catch (error) {
         console.error("Error fetching user data:", error);
@@ -255,7 +266,6 @@ const EditProfile = () => {
       setEditProfileError(
         `Missing required fields: ${missingFields.join(", ")}`,
       );
-      console.log("Missing fields:", missingFields);
       return;
     }
 
@@ -270,15 +280,11 @@ const EditProfile = () => {
           dateOfBirth: data.dateOfBirth
             ? formatDateAsYYYYMMDD(data.dateOfBirth as Date)
             : "",
-          suburb: data.suburbName || currentSuburb?.name || userDetails.suburbs,
+          suburb: data.suburbName || userDetails.suburbs,
           // phoneNumber: data.phoneNumber,
-          state: data.state || currentSuburb?.state.name || userDetails.state,
+          state: data.state || userDetails.state,
           // postCode: data.postcode,
-          postCode: (
-            data.postcode ??
-            currentSuburb?.postcode ??
-            userDetails.postalCode
-          )
+          postCode: (data.postcode || userDetails.postalCode)
             .toString()
             .padStart(4, "0"),
           ...(selectedDocumentFront
@@ -349,11 +355,6 @@ const EditProfile = () => {
       );
       setEditProfileError("Something went wrong, please try again");
     }
-  };
-
-  const handleChangeProfilePicture = () => {
-    setIsEditingProfilePicture({ isEditing: true, image: null });
-    setIsFormModalShown(true);
   };
 
   const handleChangeFront = () => {
@@ -506,6 +507,7 @@ const EditProfile = () => {
                         dateFormat="dd/mm/yy"
                         showIcon
                         placeholder="DD/MM/YYYY"
+                        disabled={Boolean(userDetails.dateOfBirth)}
                         maxDate={
                           new Date(
                             new Date().setFullYear(
@@ -674,7 +676,8 @@ const EditProfile = () => {
                             {watchField.suburb &&
                               !showManualAddress &&
                               (!currentSuburb ||
-                                Object.keys(currentSuburb).length > 0) && (
+                                (Object.keys(currentSuburb).length < 1 &&
+                                  !userDetails.suburbs)) && (
                                 <div
                                   className="flex max-w-sm cursor-pointer items-center gap-3 p-2 font-satoshiBold font-bold shadow-sm"
                                   onClick={() => {
@@ -859,7 +862,7 @@ const EditProfile = () => {
                           alt="Captured or Selected"
                           width={300}
                           height={300}
-                          className="rounded-xl"
+                          className="h-[200px] rounded-xl object-cover sm:h-[250px]"
                         />
                       </button>
                     ) : (
@@ -908,7 +911,7 @@ const EditProfile = () => {
                             alt="Captured or Selected"
                             width={300}
                             height={300}
-                            className="rounded-xl"
+                            className="h-[200px] rounded-xl object-cover sm:h-[250px]"
                           />
                         </button>
                       ) : (
