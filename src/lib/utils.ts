@@ -230,6 +230,16 @@ export const cancellationReasons = [
   "Others",
 ];
 
+export const disputeReasons = [
+  {
+    label: "I'm dissatisfied with the service",
+    value: "DISSATISFACTION_WITH_SERVICE",
+  },
+  { label: "Task no longer needed", value: "SERVICE_NO_LONGER_NEEDED" },
+  { label: "Change in priorities", value: "CHANGE_IN_PRIORITIES" },
+  // "Others",
+];
+
 export const inspectionTimes = [
   "1 hour",
   "3 hours",

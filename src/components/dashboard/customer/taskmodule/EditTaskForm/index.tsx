@@ -311,8 +311,8 @@ const EditTaskForm = ({ taskDetails, setShowEditModal }: TaskCardProps) => {
           Task Details
         </div>
         <div
-          className={`cursor-pointer text-center text-lg font-bold text-[#E58C06] ${activeEditModalLink === "Location" && "rounded-lg border border-[#E58C06] bg-[#FCF4E6] py-2 pl-2 pr-5"}`}
-          onClick={() => setActiveEditModalLink("Location")}
+          className={`cursor-pointer text-center text-lg font-bold text-[#E58C06] ${activeEditModalLink === "Budget" && "rounded-lg border border-[#E58C06] bg-[#FCF4E6] py-2 pl-2 pr-5"}`}
+          onClick={() => setActiveEditModalLink("Budget")}
         >
           Location and Budget
         </div>
@@ -400,7 +400,6 @@ const EditTaskForm = ({ taskDetails, setShowEditModal }: TaskCardProps) => {
                     {...register("taskDescription")}
                   ></textarea>
                 </div>
-                <h2>hey a testing</h2>
 
                 <div className="space-y-3">
                   <label className="text-[13px] font-semibold text-status-darkpurple lg:text-[16px]">

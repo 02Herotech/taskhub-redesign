@@ -52,7 +52,7 @@ const ChatNavigation = () => {
         ...prev,
         isFiltering: true,
       }));
-      const unreadContacts = contacts.filter(
+      const unreadContacts = contacts?.filter(
         (item) => item.newMessages && item.newMessages > 0,
       );
       setFilteredContact((prev) => ({ ...prev, contact: unreadContacts }));
@@ -69,7 +69,7 @@ const ChatNavigation = () => {
       ...prev,
       isFiltering: searchData.length > 0,
     }));
-    const filteredContact = contacts.filter((contact) =>
+    const filteredContact = contacts?.filter((contact) =>
       contact.name.includes(searchData),
     );
     setFilteredContact((prev) => ({ ...prev, contact: filteredContact }));
@@ -132,8 +132,8 @@ const ChatNavigation = () => {
       </div>
 
       <article className="no-scrollbar flex max-h-[55vh] flex-col gap-4 overflow-y-auto">
-        {displayContacts.length > 0 ? (
-          displayContacts.map((item, index) => (
+        {displayContacts?.length > 0 ? (
+          displayContacts?.map((item, index) => (
             <Link
               href={{
                 pathname: "/message/" + item.id,
