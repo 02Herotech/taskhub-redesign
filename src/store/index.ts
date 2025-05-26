@@ -23,6 +23,7 @@ import { profile } from "@/services/user-profile";
 import { user } from "@/services/user";
 import { chat } from "@/services/chat";
 import { wallet } from "@/services/wallet";
+import { dispute } from "@/services/dispute";
 
 const persistConfig = {
   key: "taskDetails",
@@ -43,6 +44,7 @@ export const store = configureStore({
     [stripe.reducerPath]: stripe.reducer,
     [profile.reducerPath]: profile.reducer,
     [wallet.reducerPath]: wallet.reducer,
+    [dispute.reducerPath]: dispute.reducer,
     market: marketReducer,
     userProfile: userProfileReducer,
     explore: exploreReducer,
@@ -67,6 +69,7 @@ export const store = configureStore({
       listing.middleware,
       profile.middleware,
       wallet.middleware,
+      dispute.middleware,
       apiErrorMiddleware,
     ),
 });
