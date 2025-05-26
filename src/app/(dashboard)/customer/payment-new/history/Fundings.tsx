@@ -76,12 +76,15 @@ function Fundings() {
                     <p className="mb-1 text-right font-satoshiMedium text-xs text-[#9B9AA9]">
                       Pay-in
                     </p>
-                    <p className="text-black">
+                    <p className="text-right text-black">
                       $
                       {(funding.amount - funding.amount * 0.017 - 0.3).toFixed(
                         2,
                       )}
                     </p>
+                    <small className="text-[10px] text-[#9B9AA9]">
+                      Charge: ${funding.fee}
+                    </small>
                   </div>
                 </div>
               </li>

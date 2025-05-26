@@ -456,7 +456,7 @@ export function formatTimestamp(timestamp: number | string): string {
   }
 }
 
-const getDaySuffix = (day: number): string => {
+export const getDaySuffix = (day: number): string => {
   if (day >= 11 && day <= 13) return "th";
   switch (day % 10) {
     case 1:

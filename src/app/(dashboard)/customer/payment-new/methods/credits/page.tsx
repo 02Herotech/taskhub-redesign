@@ -6,6 +6,16 @@ import { setBreadCrumbs } from "@/store/Features/breadcrumbs";
 import { FaStar } from "react-icons/fa6";
 import { FiAlertOctagon } from "react-icons/fi";
 import { useGetWalletBalanceQuery } from "@/services/wallet";
+import { getDaySuffix } from "@/utils";
+
+function formatDate(dateStr: string) {
+  const date = new Date(dateStr);
+  const month = new Intl.DateTimeFormat("en-US", { month: "short" }).format(
+    date,
+  );
+  const day = date.getDate();
+  return `${month} ${day}${getDaySuffix(day)}`;
+}
 
 function Page() {
   const dispatch = useDispatch();
@@ -36,9 +46,15 @@ function Page() {
           {" "}
           ${result ? parseInt(result.data.signUpBonus) : 0}
         </p>
-        <p className="text-center text-xs font-medium text-[#000000B0]">
-          Valid until <span className="text-[#2A1962]">April 10th</span>{" "}
-        </p>
+        {result?.data.signUpBonusExpiryDate && (
+          <p className="text-center text-xs font-medium text-[#000000B0]">
+            Valid until{" "}
+            <span className="text-[#2A1962]">
+              {" "}
+              {formatDate(result.data.signUpBonusExpiryDate)}
+            </span>{" "}
+          </p>
+        )}
         <div className="mt-5 flex items-center gap-2">
           <FiAlertOctagon strokeWidth={2.5} color="#FE9B07" />
           <p className="font-semibold text-primary">

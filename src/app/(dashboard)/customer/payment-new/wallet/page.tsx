@@ -9,6 +9,16 @@ import { setBreadCrumbs } from "@/store/Features/breadcrumbs";
 import { useEffect } from "react";
 import { useGetWalletBalanceQuery } from "@/services/wallet";
 import Link from "next/link";
+import { getDaySuffix } from "@/utils";
+
+function formatDate(dateStr: string) {
+  const date = new Date(dateStr);
+  const month = new Intl.DateTimeFormat("en-US", { month: "short" }).format(
+    date,
+  );
+  const day = date.getDate();
+  return `${month} ${day}${getDaySuffix(day)}`;
+}
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -51,7 +61,7 @@ function Page() {
   };
   return (
     <section className="w-full pb-10">
-      <div className="mb-14 flex flex-col gap-3 md:gap-2 md:flex-row">
+      <div className="mb-14 flex flex-col gap-3 md:flex-row md:gap-2">
         {/* Balance  */}
         <div className="w-full rounded-2xl bg-white p-3 text-white shadow-md md:w-1/2">
           <div className="relative mb-4 overflow-hidden rounded-2xl bg-primary p-2">
@@ -105,9 +115,14 @@ function Page() {
                 <p className="mb-3 text-5xl font-bold">
                   ${result ? parseInt(result.data.signUpBonus) : 0}
                 </p>
-                <p className="text-sm font-medium text-[#000000B0]">
-                  Valid until <span className="text-[#2A1962]">April 10th</span>
-                </p>
+                {result?.data.signUpBonusExpiryDate && (
+                  <p className="text-sm font-medium text-[#000000B0]">
+                    Valid until{" "}
+                    <span className="text-[#2A1962]">
+                      {formatDate(result.data.signUpBonusExpiryDate)}
+                    </span>
+                  </p>
+                )}
               </div>
             </div>
           </div>

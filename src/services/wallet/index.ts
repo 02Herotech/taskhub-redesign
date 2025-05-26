@@ -32,6 +32,7 @@ type WalletResponse = {
     balance: string;
     customerId: number;
     signUpBonus: string;
+    signUpBonusExpiryDate: string;
     rewardPoints: string;
   };
   message: string;
@@ -49,7 +50,7 @@ type Funding = {
   fee: number;
   total: number;
   description: string;
-  status: "SUCCESSFUL";
+  status: "SUCCESSFUL" | "PENDING";
   transactionType: "FUNDING";
 };
 
@@ -102,11 +103,15 @@ export const wallet = createApi({
       query: (params) => getRequest(`fund-history`, params),
       providesTags: ["Wallet", "History"],
     }),
-    getPaymentHistory: builder.query<DefaultUserDetailsType, void>({
+    getPaymentHistory: builder.query<{}, Params>({
       query: () => getRequest(`pay-history`),
       providesTags: ["Wallet", "History"],
     }),
   }),
 });
 
-export const { useGetWalletBalanceQuery, useGetFundHistoryQuery } = wallet;
+export const {
+  useGetWalletBalanceQuery,
+  useGetFundHistoryQuery,
+  useGetPaymentHistoryQuery,
+} = wallet;
