@@ -12,6 +12,7 @@ import { FiRefreshCw } from 'react-icons/fi';
 import { PiCurrencyDollarSimple, PiSealWarningFill } from 'react-icons/pi';
 import ImageViewer from 'react-simple-image-viewer';
 import CompleteTaskModal from './completeTask';
+import DisputePopup from './Dispute';
 
 
 
@@ -24,7 +25,7 @@ const OngoingTask = ({ params }: { params: { id: string } }) => {
   const [currentImage, setCurrentImage] = useState(0);
   const [isViewerOpen, setIsViewerOpen] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false)
-  const [cancelPopup, setCancelPopup] = useState(false)
+  const [disputePopup, setDisputePopup] = useState(false)
   const [completeTaskPopup, setCompleteTaskPopup] = useState(false)
   const {
     data: task,
@@ -80,7 +81,7 @@ const OngoingTask = ({ params }: { params: { id: string } }) => {
       id: 3,
       icon: BiXCircle,
       label: "Dispute",
-      onClick: () => setCancelPopup(true),
+      onClick: () => setDisputePopup(true),
     },
   ]
 
@@ -98,7 +99,7 @@ const OngoingTask = ({ params }: { params: { id: string } }) => {
       <div className="max-w-3xl mx-auto">
         <div className="mb-4 flex items-center justify-between">
           <p className="bg-indigo-100 text-primary border border-[#381F8C] px-4 py-1 rounded-full text-sm uppercase">{task.jobInfo.jobStatus}</p>
-          {/* <MoreButtonDropdown dropdownItems={dropdownItems} /> */}
+          <MoreButtonDropdown dropdownItems={dropdownItems} />
         </div>
 
         <h1 className="text-2xl  md:text-3xl font-bold mb-4 capitalize ">{task.jobInfo.jobTitle}</h1>
@@ -189,6 +190,7 @@ const OngoingTask = ({ params }: { params: { id: string } }) => {
       </div>
 
       <CompleteTaskModal completeTaskPopup={completeTaskPopup} setCompleteTaskPopup={setCompleteTaskPopup} />
+      <DisputePopup disputePopup={disputePopup} setDisputePopup={setDisputePopup} jobId={task.jobInfo.id} />
 
     </div>
   );

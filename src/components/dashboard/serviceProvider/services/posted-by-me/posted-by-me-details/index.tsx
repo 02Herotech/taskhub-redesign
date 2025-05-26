@@ -207,18 +207,18 @@ const PostedByMeDetails = ({ params }: { params: { id: string } }) => {
               }}
             />
           )}
-        </div>}
+        </div>
+        }
 
 
-      <div className="max-w-4xl mx-auto">
+      {/* <div className="max-w-4xl mx-auto">
         <h2 className="text-xl font-bold mb-4">Ratings and reviews</h2>
-
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {reviews.map((review) => (
             <ReviewCard key={review.id} review={review} />
           ))}
         </div>
-      </div>
+      </div> */}
 
       <EditListing showEditModal={showEditModal} setShowEditModal={setShowEditModal} />
     </div>

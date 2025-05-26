@@ -33,6 +33,7 @@ import { FiRefreshCw } from "react-icons/fi";
 import MoreButtonDropdown from "../../components/dropdown";
 import { formatDateFromArray } from "@/utils";
 import ImageViewer from 'react-simple-image-viewer';
+import DisputePopup from "./disputePopup";
 
 const OnogoingTaskDetailsPage = ({ params }: { params: { id: string } }) => {
   const id = params.id;
@@ -41,7 +42,7 @@ const OnogoingTaskDetailsPage = ({ params }: { params: { id: string } }) => {
   const [selectedTime, setSelectedTime] = useState("");
   const [requestRevisionPopup, setRequestRevisionPopup] = useState(false);
   const [revisionSent, setRevisionSent] = useState(false);
-  const [selectedRevision, setSelectedRevision] = useState("");
+  const [disputePopup, setDisputePopup] = useState(false)
   const [approvePaymentPopup, setApprovePaymentPopup] = useState(false);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [inspectionStarted, setInspectionStarted] = useState(false);
@@ -134,6 +135,12 @@ const OnogoingTaskDetailsPage = ({ params }: { params: { id: string } }) => {
       label: "Cancel task",
       onClick: () => setCancelPopup(true),
     },
+    {
+      id: 4,
+      icon: BiXCircle,
+      label: "Dispute",
+      onClick: () => setDisputePopup(true),
+    }
   ]
 
   const handleTimeSelection = (time: string) => {
@@ -361,6 +368,9 @@ const OnogoingTaskDetailsPage = ({ params }: { params: { id: string } }) => {
         requestRevisionPopup={requestRevisionPopup}
         setRequestRevisionPopup={setRequestRevisionPopup}
         jobId={task.jobInfo.id} />
+
+      <DisputePopup disputePopup={disputePopup} setDisputePopup={setDisputePopup} jobId={task.jobInfo.id} />
+
     </div>
   );
 };
