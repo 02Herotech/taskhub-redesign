@@ -16,7 +16,6 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { BiCheck, BiXCircle } from "react-icons/bi";
 import { PiFileArrowDownDuotone, PiSealCheckFill } from "react-icons/pi";
 import { useDispatch } from "react-redux";
 import { BeatLoader } from "react-spinners";
@@ -352,8 +351,8 @@ function UploadIdPopup({
                       <path
                         d="M-22 140.427C135.2 72.0269 132.833 22.5936 112 6.42689C91.1667 -9.73977 106.845 58.9374 112 91.9269C144.389 299.199 685 7.5 685 7.5"
                         stroke="#EBE9F4"
-                        stroke-opacity="0.18"
-                        stroke-width="16"
+                        strokeOpacity="0.18"
+                        strokeWidth="16"
                       />
                     </svg>
                     <div className="relative z-10 mx-auto w-10/12 md:w-1/2">

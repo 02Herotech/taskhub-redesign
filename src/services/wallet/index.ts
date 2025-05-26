@@ -46,6 +46,8 @@ type Funding = {
   createdAt: number[];
   updatedAt: number[];
   amount: number;
+  fee: number;
+  total: number;
   description: string;
   status: "SUCCESSFUL";
   transactionType: "FUNDING";
