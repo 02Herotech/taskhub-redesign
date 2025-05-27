@@ -24,6 +24,12 @@ import Image from "next/image";
 import { PiSealCheckFill } from "react-icons/pi";
 import Popup from "@/components/global/Popup/PopupTwo";
 import { useGetCustomerProfileQuery } from "@/services/user-profile";
+import { useSession } from "next-auth/react";
+import {
+  refreshUserProfile,
+  updateUserProfile,
+} from "@/store/Features/userProfile";
+import axios from "axios";
 
 const idTypes: { label: string; value: string }[] = [
   { label: "Medicare Card", value: "MEDICARE_CARD" },
@@ -56,7 +62,6 @@ function VerificationStatus({ status }: { status: string }) {
 }
 
 function Page() {
-  const [value, setValue] = useState("");
   const frontImageInputRef = useRef<HTMLInputElement>(null);
   const backImageInputRef = useRef<HTMLInputElement>(null);
   const { profile } = useSelector((state: RootState) => state.userProfile);
@@ -65,6 +70,9 @@ function Page() {
   const [error, setError] = useState("");
   const [openSuccessModal, setOpenSuccessModal] = useState(false);
   const { data: userProfileData, refetch } = useGetCustomerProfileQuery();
+  const session = useSession();
+  const user = session?.data?.user?.user;
+  console.log({ userProfileData });
 
   useEffect(() => {
     dispatch(
@@ -83,15 +91,11 @@ function Page() {
 
   const methods = useForm<UpdateProfileSchema>({
     resolver: zodResolver(updateProfileSchema),
-    defaultValues: {
-      email: profile?.emailAddress,
-      phoneNumber: profile?.phoneNumber,
-      idType: userProfileData?.idType,
-    },
   });
 
   const {
     watch,
+    reset,
     control,
     register,
     setError: setFormError,
@@ -101,15 +105,22 @@ function Page() {
   } = methods;
 
   useEffect(() => {
-    if (userProfileData) {
-      setFormValue("dateOfBirth", new Date(userProfileData.dateOfBirth));
-      //@ts-ignore
-      setFormValue("idType", userProfileData.idType);
-      setFormValue("idNumber", userProfileData.idNumber);
+    if (userProfileData || profile) {
+      reset({
+        email: profile?.emailAddress || "",
+        phoneNumber: profile?.phoneNumber || "",
+        dateOfBirth: userProfileData?.dateOfBirth
+          ? new Date(userProfileData.dateOfBirth)
+          : null,
+        idNumber: userProfileData?.idNumber || "",
+        //@ts-ignore
+        idType: userProfileData?.idType || "" || "",
+      });
     }
-  }, [userProfileData]);
+  }, [userProfileData, profile]);
 
   const selectedIdType = watch("idType");
+  console.log({ selectedIdType });
   const imageFront = watch("idImageFront");
   const imageBack = watch("idImageBack");
 
@@ -157,13 +168,20 @@ function Page() {
       ...(idImageFront ? { idImageFront } : {}),
       ...(idImageBack ? { idImageBack } : {}),
     };
-
+    console.log(submitData);
     try {
       await authInstance.patch("/customer/update", submitData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
       refetch();
       setOpenSuccessModal(true);
+
+      //Fetch and update redux value with latest data
+      const profileUrl =
+        `${process.env.NEXT_PUBLIC_API_URL}/user/user-profile/` + user?.id;
+      const { data: profile } = await axios.get(profileUrl);
+      dispatch(updateUserProfile(profile));
+      dispatch(refreshUserProfile());
     } catch (error) {
       console.error(error);
       setError("Something went wrong, please try again");
@@ -228,7 +246,7 @@ function Page() {
                           dateFormat="dd/mm/yy"
                           placeholder="DD/MM/YYYY"
                           maxDate={maxDate}
-                          disabled={userProfileData?.dateOfBirth}
+                          disabled={Boolean(userProfileData?.dateOfBirth)}
                           onChange={(e) => {
                             field.onChange(e.value);
                           }}
@@ -260,13 +278,12 @@ function Page() {
                   control={control}
                   placeholder="Enter phone number"
                   defaultValue={(profile?.phoneNumber as unknown as any) || ""}
-                  // value={profile?.phoneNumber || ""}
                   international
                   countryCallingCodeEditable={false}
                   country="AU"
                   countrySelectProps={{ disabled: true }}
                   // @ts-ignore
-                  onChange={(e) => setValue(e as string)}
+                  // onChange={(e) => setValue(e as string)}
                   rules={{ required: true, validate: isValidPhoneNumber }}
                   className="phone-input h-10 appearance-none rounded-xl bg-white p-2 px-3 shadow-md"
                 />
@@ -318,9 +335,6 @@ function Page() {
                       userProfileData?.verificationStatus == "VERIFIED"
                     }
                   >
-                    <option value="" disabled>
-                      {userProfileData?.idType || "Select ID type"}
-                    </option>
                     {idTypes.map((idType) => (
                       <option value={idType.value} key={idType.label}>
                         {idType.label}

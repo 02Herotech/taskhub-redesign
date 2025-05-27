@@ -22,10 +22,10 @@ import axios from "axios";
 import Button from "@/components/global/Button";
 import useSuburbData, { SurburbInfo } from "@/hooks/useSuburbData";
 import { CiLocationOn } from "react-icons/ci";
-import useUserProfileData from "@/hooks/useUserProfileData";
 import { PiSealCheckFill } from "react-icons/pi";
 import { useRouter } from "next/navigation";
 import { FaLocationDot } from "react-icons/fa6";
+import { useGetCustomerProfileQuery } from "@/services/user-profile";
 
 function Page() {
   const { profile } = useSelector((state: RootState) => state.userProfile);
@@ -82,7 +82,7 @@ function Page() {
   });
 
   const location = watch("location");
-  const userProfileData = useUserProfileData();
+  const { data: userProfileData, refetch } = useGetCustomerProfileQuery();
 
   const {
     suburbList,
@@ -132,8 +132,9 @@ function Page() {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
+      refetch();
       setOpenSuccessModal(true);
-      setShowManualAddress(false)
+      setShowManualAddress(false);
       //Update redux value with latest data
       const profileUrl =
         `${process.env.NEXT_PUBLIC_API_URL}/user/user-profile/` + user?.id;
@@ -220,28 +221,6 @@ function Page() {
               )}
             </header>
 
-            {/* Bio details  */}
-            {/* <div>
-              <label
-                htmlFor="bio-detail"
-                className="mb-2 block text-[15px] font-black"
-              >
-                Bio Details(Optional)
-              </label>
-              <textarea
-                id="bio-detail"
-                rows={3}
-                {...register("bioDescription")}
-                className="block w-full resize-none appearance-none rounded-xl p-2 font-medium shadow-md outline-none placeholder:text-[15px] placeholder:text-[#AEACBB] sm:shadow-none"
-                placeholder="Brief intro on who you are and what you do on Olójà"
-              ></textarea>
-              {errors.bioDescription && (
-                <p className="w-full text-sm font-medium text-red-500">
-                  {errors.bioDescription.message}
-                </p>
-              )}
-            </div> */}
-
             {/* First name and last name  */}
             <div className="flex flex-col items-center gap-3 sm:flex-row sm:gap-2">
               <div className="w-full sm:w-1/2">
@@ -308,7 +287,7 @@ function Page() {
                       })}
                     />
                   </div>
-                  {userProfileData.suburbs && (
+                  {userProfileData?.suburbs && (
                     <small className="mt-2">{`${userProfileData?.suburbs} ${userProfileData?.state}, ${userProfileData.postalCode}`}</small>
                   )}
                   <div className="absolute left-0 top-10 z-10 w-full rounded-b-lg bg-white shadow-lg">
