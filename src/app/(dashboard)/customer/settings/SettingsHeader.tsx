@@ -98,17 +98,19 @@ function SettingsHeader() {
       </div>
 
       {/* Navigation  */}
-      <nav className="mt-7 overflow-x-auto border-b border-[#0000001F] pb-2 md:mt-0">
-        <ul className="flex min-w-[550px] items-center gap-3">
+      <nav className="border-[#0000001F mt-7 overflow-x-auto border-b md:mt-0">
+        <ul className="flex min-w-[550px] items-center gap-3 ">
           {headerLinks.map((link) => (
             <li
               className={
-                "border-[#FE9B07] px-2 " +
+                "border-[#FE9B07] pb-1 px-2 " +
                 (pathname == link.url ? "border-b text-[#FE9B07]" : "")
               }
               key={Math.random() * 4562278}
             >
-              <Link href={link.url} className="text-lg">{link.text}</Link>
+              <Link href={link.url} className="text-lg">
+                {link.text}
+              </Link>
             </li>
           ))}
         </ul>
